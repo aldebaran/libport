@@ -7,11 +7,16 @@ for f in README AUTHORS NEWS INSTALL TODO THANKS LINKS ChangeLog LICENSE; do
     if [ -f "@top_srcdir@/$f" ]; then
       echo " * \section $f" >>doxygen.h
       cat "@top_srcdir@/$f" | sed '1s/^/<tt>/;
-                                   s/^[ \t]*\*/\\li/;
+                                   s/^[ 	]*\*/\\li/;
                                    s/^/ * /;
                                    s/\\\([^a-zA-Z]\)/\\\\\1/g;
+                                   s/\\mainpage/\\\\mainpage/g;
+                                   s/\\file/\\\\file/g;
+                                   s/@mainpage/\\@mainpage/g;
+                                   s/@file/\\@file/g;
                                    /^ \* $/! s/$/<br>/;
-                                   /^ \* $/  s/$/\n */;
+                                   /^ \* $/  s/$/\
+ */;
                                    $s@$@</tt>@' >>doxygen.h;
     fi;
 done;
@@ -41,9 +46,9 @@ TAB_SIZE               = 8
 OPTIMIZE_OUTPUT_FOR_C  = YES
 SUBGROUPING            = YES
 EXTRACT_ALL            = YES
-EXTRACT_PRIVATE        = NO
+EXTRACT_PRIVATE        = YES
 EXTRACT_STATIC         = YES
-EXTRACT_LOCAL_CLASSES  = NO
+EXTRACT_LOCAL_CLASSES  = YES
 HIDE_UNDOC_MEMBERS     = NO
 HIDE_UNDOC_CLASSES     = NO
 HIDE_FRIEND_COMPOUNDS  = NO
@@ -69,7 +74,7 @@ WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = YES
 WARN_FORMAT            = "\$file:\$line: \$text"
-INPUT                  = @top_srcdir@/src ./doxygen.h
+INPUT                  = @top_srcdir@/src @top_srcdir@/behavior-graphs ./doxygen.h
 FILE_PATTERNS          = *.c *.cpp *.cc *.cxx *.h *.hh *.hpp *.hcc *.hxx *.C
 RECURSIVE              = YES
 EXCLUDE                = 
