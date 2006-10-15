@@ -24,8 +24,7 @@ AM_INIT_AUTOMAKE([foreign -Wall])
 ## -------------------- ##
 
 # Look for a C++ compiler.
-AC_LANG([C++])
-AC_PROG_CXX
+URBI_PROG_CXX
 
 # If you need to create a library, USE libtool:
 AC_PROG_LIBTOOL
@@ -33,12 +32,6 @@ AC_PROG_LIBTOOL
 # If you happen to have some C code:
 AC_LANG([C])
 AC_PROG_CC
-
-# Speed the compilation up and tweak warning flags.
-if test "$GXX" = yes; then
-  AM_CXXFLAGS="$AM_CXXFLAGS -Wall -W -Weffc++ -pipe"
-  AC_SUBST([AM_CXXFLAGS])
-fi
 
 AC_CONFIG_FILES([
   Makefile

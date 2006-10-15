@@ -1,0 +1,16 @@
+							-*- text -*-
+
+This directory holds all the Autoconf/Automake (and maybe scripts) we
+rely on in several projects.
+
+Please, do not install standard files that are installed by the
+bootstrapping script, such as config.guess, install-sh, ltmain.sh etc.
+They should be svn:ignored.
+
+Do add an Makefile.am either: it is the top-level Makefile which
+should ship these files, for instance
+
+       EXTRA_DIST = build-aux/bootstrap
+
+But it should not be needed: Automake automatically ships included
+Makefile snippets, and Autoconf M4 bits.

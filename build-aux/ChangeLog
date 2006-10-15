@@ -1,0 +1,117 @@
+2006-10-10  Akim Demaille  <demaille@gostai.com>
+
+	svn-externals --upgrade=DIR.
+	* svn-externals: Support an argument for --upgrade.
+	* build-aux.mk (baux-up): Upgrade just build-aux.
+
+2006-10-09  Akim Demaille  <akim@lrde.epita.fr>
+
+	Add baux-pin.
+	* build-aux.mk (baux-pin): New.
+
+2006-10-09  Akim Demaille  <akim@lrde.epita.fr>
+
+	bootstrap makes.
+	* bootstrap: Re-make if possible.
+
+2006-10-09  Akim Demaille  <akim@lrde.epita.fr>
+
+	build-aux.mk.
+	* build-aux.mk: New.
+
+2006-10-09  Akim Demaille  <akim@lrde.epita.fr>
+
+	svn-externals.
+	* svn-externals: New.
+
+2006-10-06  Akim Demaille  <akim@lrde.epita.fr>
+
+	Use an initialized CLEANFILES.
+	* revision.mk: Do that.
+
+2006-10-06  Akim Demaille  <akim@lrde.epita.fr>
+
+	bison++ overhaul.
+	* bison++.in: No longer ask for a "srcdir", rather rely on the
+	paths of the input and output files.
+
+2006-10-06  Akim Demaille  <akim@lrde.epita.fr>
+
+	tc-prog.
+	* tc-prog.m4: New.
+	* urbi-arg-progs.m4: Rename as.
+	* urbi-var-progs.m4: this for consistency.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	* umake.in: No longer a symlink.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	Embed umake.in here.
+	* umake.in: New.
+	* urbi-sdk.m4: Adjust.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	Formatting changes.
+	* urbi-sdk.m4: Do it.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	Better bootstrap.
+	* bootstrap: Read bootstrap.cfg if there is one.
+	Preserve files listed in $keep.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	More common stuff.
+	From kernel1.
+	* move-if-change: New.
+	* revision.mk: New.
+	* bison++.in: New.
+
+2006-10-03  matthieu nottale  <nottale@gostai.com>
+
+	Force doc generation
+
+	* doxygen.mk: Add a all: $(EXTRA_DIST) to force doc generation.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	URBI_PROG_CXX.
+	* warning.m4: New.
+	From the Tiger Compiler.
+	* urbi-prog-cxx.m4: New.
+	Pass -Wall when supported.
+	* urbi-engine.m4: Use it.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	* urbi-engine.m4: Use AC_ENABLE_SHARED.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	* README: New.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	From urbiengine-linux.
+	* urbi-engine.m4: New.
+	* urbi-dirs.m4 (kerneldir, kernelincludedir): New.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	* bootstrap: New.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	More macros.
+	* urbi-pthread.m4, urbi-var-progs.m4: New.
+	From liburbi-cpp.
+
+2006-10-03  Akim Demaille  <demaille@gostai.com>
+
+	* vcs/local.rb, acx_pthread.m4, doxygen.mk, urbi-dirs.m4,
+	* urbi-dirs.m4, urbi-doc.m4, urbi-openr.m4, urbi-sdk.m4: New.
+	From liburbi-cpp.

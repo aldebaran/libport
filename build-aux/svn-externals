@@ -1,0 +1,181 @@
+#! /bin/sh
+
+# Avoid locale-related differences in the output (e.g., space before
+# colons).
+export LC_ALL=C
+
+set -e
+
+me=$(basename $0)
+
+## BEGIN
+#    svn-externals [OPTIONS]
+#
+# Options:
+#   --help, -h       display this message and exit
+#   --update[=DIR]   upgrade the pinned externals directory DIR to the
+#                    newest version, and upgrade.
+#                    By default upgrades all the directories
+#   --subscribe=URL  add a pinned external on URL, under the same directory
+#                    name.  If there was already a dependency, pin it.
+#
+# URL aliases:
+#   baux      https://svn.gostai.com/svn/common/project-template/trunk/build-aux
+#   share     https://svn.lrde.epita.fr/svn/lrde-publis/trunk/share
+#
+# An svn:externals dependency is "pinned" if it has an explicit
+# revision number.
+#
+# -h, --help               display this message and exit
+## END
+
+## --------------------- ##
+## Standard components.  ##
+## --------------------- ##
+
+
+stderr ()
+{
+    echo >&2 "$me: $@"
+}
+
+fatal ()
+{
+    stderr "$@"
+    exit 1
+}
+
+usage ()
+{
+  # BSD sed is real piece of s.*t.
+  sed -n '/^## BEGIN/,/^## END/{s/^#$/# /;s/^# //;/^#/!p;}' $0
+}
+
+
+## --------------------- ##
+## Business components.  ##
+## --------------------- ##
+
+# url_aliases URL
+# ---------------
+url_aliases ()
+{
+  case $1 in
+    http* )
+      echo "$1";;
+    *)
+      usage |
+      sed -n "/^URL aliases:/,/^# *\$/{/^ *$1 *\\(http.*\\)/{s//\1/;p;q;};}"
+      ;;
+  esac
+}
+
+# svn_youngest URL
+# ----------------
+# Return the youngest revision of repository URL.
+svn_youngest ()
+{
+  svn info "$1" | sed -n '/Revision: /{s///;p;q;}'
+}
+
+
+# svn_externals_update_stream [DIR]
+# ---------------------------------
+# Upgrade the pinned svn:externals corresponding to DIR in STDIN, and
+# pass to STDOUT.  If DIR is empty, do it for all the directories.
+svn_externals_update_stream ()
+{
+  local request=$1
+  while read e
+  do
+    case $e in
+    # Keep comments.
+    '' | '#'*)
+      echo "$e"
+      ;;
+
+    # With revision.
+    *' -r '[0-9]*)
+      # Decode the svn:externals.
+      # % svn pg svn:externals .
+      # share -r 1569 https://svn.lrde.epita.fr/svn/lrde-publis/trunk/share
+      dir=$(echo "$e" | sed 's/ .*//')
+      if test -z "$request" || test "$request" = "$dir"; then
+	rev=$(echo "$e" | sed -n 's/.*-r \([0-9][0-9]*\) *.*/\1/p')
+	url=$(echo "$e" | sed -n 's/.* \(http\)/\1/p')
+	if test -z "$url"; then
+		fatal "cannot fetch the URL of $e"
+	fi
+	new_rev=$(svn_youngest "$url")
+	if test -z "$new_rev"; then
+		fatal "cannot fetch the revision of $url"
+	fi
+	echo "$dir -r $new_rev $url"
+      else
+	echo "$e"
+      ;;
+
+    # Without revision.
+    *)
+      echo "$e"
+      ;;
+    esac
+  done
+}
+
+
+# svn_externals_update [DIR]
+# --------------------------
+# Update all the pinned svn:externals to the most recent version.
+svn_externals_update ()
+{
+  local externals=$(svn propget svn:externals . |
+		    svn_externals_update_stream "$1")
+  svn propset svn:externals "$externals" .
+}
+
+
+# svn_externals_subscribe URL
+# ---------------------------
+svn_externals_subscribe ()
+{
+  local url=$1
+  local dir=$(echo "$url" | sed -e 's,/$,,;s,.*/,,')
+  local rev=$(svn_youngest "$url")
+  externals=$(svn propget svn:externals . |
+	      sed -e "/^$dir /d")
+  externals="$externals
+$dir -r $rev $url"
+  svn propset svn:externals "$externals" .
+}
+
+
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
+for arg
+do
+  case $arg in
+      -h | --help )
+	  usage
+	  exit 0
+	  ;;
+      --update | --upgrade | --update=* | --upgrade=* )
+	  svn_externals_update $(echo $arg | sed 's/^[^=]*=//')
+	  svn up
+	  stderr "You should checkin the host project, externals were updated."
+	  ;;
+      --subscribe=* )
+	  svn_externals_subscribe $(url_aliases $(echo $arg | sed 's/^[^=]*=//'))
+	  svn up
+	  stderr "You should checkin the host project, externals were updated."
+	  ;;
+      *)
+	  fatal "unexpected argument: $arg"
+	  ;;
+  esac
+done
+
+exit 0

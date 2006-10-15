@@ -1,0 +1,69 @@
+#! /bin/sh
+
+# Exit status.
+status=0
+
+# Any tool failure is a failure of the script.
+set -e
+
+: ${BISON=@BISON@}
+
+# bison++ INPUT OUTPUT OPTIONS
+# ----------------------------
+
+me=$(basename $0)
+move_if_change='@abs_srcdir@/move-if-change'
+
+input=$1
+input_base=$(basename "$input")
+shift
+output=$1
+output_base=$(basename "$output")
+output_dir=$(dirname "$output")
+output_dir_abs=$(cd "$output_dir" && pwd)
+shift
+options="$@"
+
+# Alexandre Duret-Lutz also notes that in VPATH-builds $(srcdir) can
+# be an absolute path depending on how ./configure is called ...
+# In that case
+
+#   bison $(srcdir)/parsetiger.yy [...]
+
+# will hard code the path in the maintainer's tree.  Hence, do not use
+# paths with Bison, chdir there.
+
+# A tmp dir.
+tmp=$output_base.dir
+rm -rf $tmp
+mkdir $tmp
+
+# Compile in this dir.
+# Don't use `ln -s' as its semantics of paths sucks.
+cp $input $tmp
+cd $tmp
+set +e
+$BISON $options $input_base -o $output_base
+status=$?
+set -e
+
+if test $status = 0; then
+    for file in *
+    do
+	case $file in
+	$input_base)
+	    # Leave it here.
+	    ;;
+	*)
+	    # Fix doxygen tags.
+	    perl -pi -e "s|\Q\\file $file\E\b|\\\\file parse/$file|g;" "$file"
+	    $move_if_change "$file" "$output_dir_abs/$file"
+	    ;;
+	esac
+    done
+fi
+
+# Get rid of the tmp dir.
+cd ..
+rm -rf $tmp
+exit $status

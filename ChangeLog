@@ -1,0 +1,8 @@
+2006-10-15  Akim Demaille  <akim@lrde.epita.fr>
+
+	Import build-aux.
+	* build-aux: New.
+	* build-aux/urbi-prog-cxx.m4: Look for -Wextra and -Weffc++.
+	* build-aux/svn-externals: Adjust the location of build-aux.
+	* configure.ac: Use URBI macros.
+
