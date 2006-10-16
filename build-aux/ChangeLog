@@ -1,5 +1,11 @@
 2006-10-16  Akim Demaille  <akim.demaille@free.fr>
 
+	Fix svn-externals.
+	* svn-externals: Correctly remove the option when calling
+	svn_externals_update.
+
+2006-10-16  Akim Demaille  <akim.demaille@free.fr>
+
 	install-sh -C.
 	* install-sh: Support -C.
 	The point is to avoid install urbi headers over and over

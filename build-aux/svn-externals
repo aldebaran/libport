@@ -164,7 +164,7 @@ do
 	  exit 0
 	  ;;
       --update | --upgrade | --update=* | --upgrade=* )
-	  svn_externals_update $(echo $arg | sed 's/^[^=]*=//')
+	  svn_externals_update $(echo $arg | sed 's/^[^=]*//;s/^=//')
 	  svn up
 	  stderr "You should checkin the host project, externals were updated."
 	  ;;
