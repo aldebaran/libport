@@ -1,13 +1,13 @@
 #!/bin/sh
 # install - install a program, script, or datafile
 
-scriptversion=2005-05-14.22
+scriptversion=2006-10-16.21
 
 # This originates from X11R5 (mit/util/scripts/install.sh), which was
 # later released in X11R6 (xc/config/util/install.sh) with the
 # following copyright and license.
 #
-# Copyright (C) 1994 X Consortium
+# Copyright (C) 1994, 2006 X Consortium
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -49,28 +49,32 @@ doit="${DOITPROG-}"
 
 # put in absolute paths if you don't have them in your path; or use env. vars.
 
-mvprog="${MVPROG-mv}"
-cpprog="${CPPROG-cp}"
+chgrpprog="${CHGRPPROG-chgrp}"
 chmodprog="${CHMODPROG-chmod}"
 chownprog="${CHOWNPROG-chown}"
-chgrpprog="${CHGRPPROG-chgrp}"
-stripprog="${STRIPPROG-strip}"
-rmprog="${RMPROG-rm}"
+cpprog="${CPPROG-cp}"
+diffprog="${DIFFPROG-diff}"
 mkdirprog="${MKDIRPROG-mkdir}"
+mvprog="${MVPROG-mv}"
+rmprog="${RMPROG-rm}"
+stripprog="${STRIPPROG-strip}"
 
+chgrpcmd=
 chmodcmd="$chmodprog 0755"
 chowncmd=
-chgrpcmd=
-stripcmd=
-rmcmd="$rmprog -f"
 mvcmd="$mvprog"
+rmcmd="$rmprog -f"
+stripcmd=
+
 src=
 dst=
 dir_arg=
-dstarg=
+dst_arg=
+copy_on_change=false
 no_target_directory=
 
-usage="Usage: $0 [OPTION]... [-T] SRCFILE DSTFILE
+usage="\
+Usage: $0 [OPTION]... [-T] SRCFILE DSTFILE
    or: $0 [OPTION]... SRCFILES... DIRECTORY
    or: $0 [OPTION]... -t DIRECTORY SRCFILES...
    or: $0 [OPTION]... -d DIRECTORIES...
@@ -78,9 +82,9 @@ usage="Usage: $0 [OPTION]... [-T] SRCFILE DSTFILE
 In the 1st form, copy SRCFILE to DSTFILE.
 In the 2nd and 3rd, copy all SRCFILES to DIRECTORY.
 In the 4th, create DIRECTORIES.
-
 Options:
 -c         (ignored)
+-C         install only if different (preserve the modification time)
 -d         create directories instead of installing files.
 -g GROUP   $chgrpprog installed files to GROUP.
 -m MODE    $chmodprog installed files to MODE.
@@ -92,63 +96,68 @@ Options:
 --version  display version info and exit.
 
 Environment variables override the default commands:
-  CHGRPPROG CHMODPROG CHOWNPROG CPPROG MKDIRPROG MVPROG RMPROG STRIPPROG
+  CHGRPPROG CHMODPROG CHOWNPROG CPPROG DIFFPROG MKDIRPROG MVPROG RMPROG
+  STRIPPROG
 "
 
 while test -n "$1"; do
   case $1 in
     -c) shift
-        continue;;
+	;;
+
+    -C) copy_on_change=true
+	shift
+	;;
 
     -d) dir_arg=true
-        shift
-        continue;;
+	shift
+	;;
 
     -g) chgrpcmd="$chgrpprog $2"
-        shift
-        shift
-        continue;;
+	shift
+	shift
+	;;
 
     --help) echo "$usage"; exit $?;;
 
     -m) chmodcmd="$chmodprog $2"
-        shift
-        shift
-        continue;;
+	shift
+	shift
+	;;
 
     -o) chowncmd="$chownprog $2"
-        shift
-        shift
-        continue;;
+	shift
+	shift
+	;;
 
     -s) stripcmd=$stripprog
-        shift
-        continue;;
+	shift
+	;;
 
-    -t) dstarg=$2
+    -t) dst_arg=$2
 	shift
 	shift
-	continue;;
+	;;
 
     -T) no_target_directory=true
 	shift
-	continue;;
+	;;
 
     --version) echo "$0 $scriptversion"; exit $?;;
 
     *)  # When -d is used, all remaining arguments are directories to create.
 	# When -t is used, the destination is already specified.
-	test -n "$dir_arg$dstarg" && break
-        # Otherwise, the last argument is the destination.  Remove it from $@.
+	test -n "$dir_arg$dst_arg" && break
+	# Otherwise, the last argument is the destination.  Remove it from $@.
 	for arg
 	do
-          if test -n "$dstarg"; then
+	  if test -n "$dst_arg"; then
 	    # $@ is not empty: it contains at least $arg.
-	    set fnord "$@" "$dstarg"
+	    set fnord "$@" "$dst_arg"
 	    shift # fnord
 	  fi
 	  shift # arg
-	  dstarg=$arg
+	  dst_arg=$arg
 	done
 	break;;
   esac
@@ -190,12 +199,12 @@ do
       exit 1
     fi
 
-    if test -z "$dstarg"; then
+    if test -z "$dst_arg"; then
       echo "$0: no destination specified." >&2
       exit 1
     fi
 
-    dst=$dstarg
+    dst=$dst_arg
     # Protect names starting with `-'.
     case $dst in
       -*) dst=./$dst ;;
@@ -205,7 +214,7 @@ do
     # if double slashes aren't ignored.
     if test -d "$dst"; then
       if test -n "$no_target_directory"; then
-	echo "$0: $dstarg: Is a directory" >&2
+	echo "$0: $dst_arg: Is a directory" >&2
 	exit 1
       fi
       dst=$dst/`basename "$src"`
@@ -236,7 +245,7 @@ do
       pathcomp=$pathcomp$1
       shift
       if test ! -d "$pathcomp"; then
-        $mkdirprog "$pathcomp"
+	$mkdirprog "$pathcomp"
 	# mkdir can fail with a `File exist' error in case several
 	# install-sh are creating the directory concurrently.  This
 	# is OK.
@@ -273,10 +282,18 @@ do
     # ignore errors from any of these, just make sure not to ignore
     # errors from the above "$doit $cpprog $src $dsttmp" command.
     #
-    { test -z "$chowncmd" || $doit $chowncmd "$dsttmp"; } \
-      && { test -z "$chgrpcmd" || $doit $chgrpcmd "$dsttmp"; } \
-      && { test -z "$stripcmd" || $doit $stripcmd "$dsttmp"; } \
-      && { test -z "$chmodcmd" || $doit $chmodcmd "$dsttmp"; } &&
+    { test -z "$chowncmd" || $doit $chowncmd "$dsttmp"; } &&
+    { test -z "$chgrpcmd" || $doit $chgrpcmd "$dsttmp"; } &&
+    { test -z "$stripcmd" || $doit $stripcmd "$dsttmp"; } &&
+    { test -z "$chmodcmd" || $doit $chmodcmd "$dsttmp"; } &&
+
+    # Maybe we don't need to install the file.  Use diff, not cmp,
+    # to be robust to end-of-line encoding.
+    { if $copy_on_change &&
+	 "$diffprog" "$dsttmp" "$dstdir/$dstfile" >/dev/null 2>&1; then
+	   # No need to copy, that's the same file.
+	continue
+      else :; fi } &&
 
     # Now rename the file to the real destination.
     { $doit $mvcmd -f "$dsttmp" "$dstdir/$dstfile" 2>/dev/null \

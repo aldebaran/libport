@@ -3,6 +3,9 @@
 test -f bootstrap.cfg &&
   source bootstrap.cfg
 
+# We have our own install-sh script that support -C.
+keep="$keep build-aux/install-sh"
+
 for i in $keep
 do
   cp $i $i.bak

@@ -1,5 +1,14 @@
 2006-10-16  Akim Demaille  <akim.demaille@free.fr>
 
+	install-sh -C.
+	* install-sh: Support -C.
+	The point is to avoid install urbi headers over and over
+	again, to avoid useless recompilations.
+	* bootstrap: Protect install-sh from being overriden by
+	Automake's.
+
+2006-10-16  Akim Demaille  <akim.demaille@free.fr>
+
 	Add original install-sh.
 	* install-sh: New.
 
