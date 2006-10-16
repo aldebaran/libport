@@ -1,3 +1,8 @@
+2006-10-16  Akim Demaille  <akim.demaille@free.fr>
+
+	Add original install-sh.
+	* install-sh: New.
+
 2006-10-15  Akim Demaille  <demaille@gostai.com>
 
 	* svn-externals: Add missing fi.
