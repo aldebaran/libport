@@ -30,12 +30,16 @@ URBI_PROG_CXX
 AC_PROG_LIBTOOL
 
 # If you happen to have some C code:
-AC_LANG([C])
-AC_PROG_CC
+#AC_LANG([C])
+#AC_PROG_CC
+
+# AutoTroll with Qt.
+AT_WITH_QT
 
 AC_CONFIG_FILES([
   Makefile
     src/Makefile
+    gui/Makefile
     doc/Makefile
     tests/Makefile
 ])

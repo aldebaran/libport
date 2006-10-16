@@ -1,3 +1,21 @@
+2006-10-16  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	r40: Add AutoTroll.
+
+	* gui: New.
+	* gui/Makefile.am: New. Demo of AutoTroll.
+	* gui/lcdrange.cpp: New.
+	* gui/lcdrange.h: New.
+	* gui/main.cc: New.
+	* gui/qt_main.cpp: New.
+
+	* build-aux/autotroll.mk: New.
+	* build-aux/autotroll.m4: New.
+	* tests/test.sh: Enhance self-documentation.
+	* configure.ac: Don't look for a C compiler by default. Use AutoTroll.
+	* Makefile.am (ACLOCAL_AMFLAGS): New.
+          (SUBDIRS): Add gui/.
+
 2006-10-15  Akim Demaille  <akim@lrde.epita.fr>
 
 	Import build-aux.

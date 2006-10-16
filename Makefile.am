@@ -9,7 +9,9 @@
 # See the LICENSE file for more information.
 # For comments, bug reports and feedback: http://www.urbiforge.com
 
-SUBDIRS = src doc tests
+ACLOCAL_AMFLAGS = -I build-aux
+
+SUBDIRS = src gui doc tests
 EXTRA_DIST = bootstrap
 
 .PHONY: doc html
