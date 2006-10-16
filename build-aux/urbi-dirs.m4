@@ -64,8 +64,13 @@ AC_SUBST([sdkincludedir],  ['$(branddir)/$1/include'])
 # Possibly an alias.
 AC_SUBST([kernelincludedir],  ['$(branddir)/kernel/include'])
 
-CPPFLAGS="$CPPFLAGS -I$sdkincludedir"
-LDFLAGS="$LDFLAGS -L$envdir"
+# In the case we are compiling the kernel, we do not want to add
+# these, otherwise we might try to build a kernel using installed
+# files, instead of its own shipped files.
+if test "$1" != kernel; then
+  CPPFLAGS="$CPPFLAGS -I$sdkincludedir"
+  LDFLAGS="$LDFLAGS -L$envdir"
+fi
 ])
 
 # To be used by liburbi and sdks.
