@@ -1,3 +1,9 @@
+2006-10-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	r49: Handle more suffixes.
+
+	* autotroll.mk: Handle .cc, .cxx, .C (along with .cpp).
+
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
 	Use config, add version.hh.in.
