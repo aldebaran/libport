@@ -1,5 +1,13 @@
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
+	semaphore.hh, thread.hh.
+	* semaphore.hh: New.
+	* thread.hh: New.
+	From liburbi-c++/src/liburbi/lockable.h.
+	* lockable.hh (LOCKED): New.
+
+2006-10-17  Akim Demaille  <demaille@gostai.com>
+
 	Add lockable.hh.
 
 	* lockable.h: New.

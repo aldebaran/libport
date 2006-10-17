@@ -1,5 +1,5 @@
-#ifndef LOCKABLE_H
-# define LOCKABLE_H
+#ifndef LIBPORT_LOCKABLE_HH
+# define LIBPORT_LOCKABLE_HH
 
 # if defined WIN32
 #  define _WIN32_WINNT 0x0400
@@ -152,4 +152,12 @@ namespace urbi
   };
 
 }
+
+# define LOCKED(lock, cmd)			\
+  do {						\
+    lock.lock();				\
+    cmd;					\
+    lock.unlock();				\
+  } while (0)
+
 #endif
