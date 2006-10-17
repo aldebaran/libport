@@ -1,0 +1,7 @@
+2006-10-17  Akim Demaille  <demaille@gostai.com>
+
+	Add lockable.hh.
+
+	* lockable.h: New.
+	* README: New.
+

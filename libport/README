@@ -1,0 +1,4 @@
+This directory contains files that are used through out URBI projects.
+
+* lockable.h.
+class urbi::Lockable.
