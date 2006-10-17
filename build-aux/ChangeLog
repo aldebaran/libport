@@ -1,5 +1,10 @@
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
+	Initialize EXTRA_DIST.
+	* build-aux.mk: Do that.
+
+2006-10-17  Akim Demaille  <demaille@gostai.com>
+
 	Rename our install-sh as install-sh-c.
 	* install-sh-c: New.
 	* build-aux.mk: EXTRA_DIST it.

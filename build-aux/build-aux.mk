@@ -1,4 +1,4 @@
-EXTRA_DIST += $(top_srcdir)/build-aux/install-sh-c
+EXTRA_DIST = $(top_srcdir)/build-aux/install-sh-c
 
 ## ----------- ##
 ## Build-aux.  ##
