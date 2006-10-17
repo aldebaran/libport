@@ -8,7 +8,7 @@
 ## way, we avoid useless compilation.
 
 BUILT_SOURCES += $(REVISION_FILE)
-REVISION_FILE_IN = $(srcdir)/$(REVISION_FILE).in
+REVISION_FILE_IN = $(top_srcdir)/build-aux/version.hh.in
 REVISION_FILE_STAMP = $(REVISION_FILE).stamp
 
 EXTRA_DIST += $(REVISION_FILE_IN)

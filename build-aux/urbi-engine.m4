@@ -43,6 +43,7 @@ URBI_SDK
 ## Output.  ##
 ## -------- ##
 
+AC_CONFIG_HEADERS([sdk/config.h])
 AC_CONFIG_FILES([Makefile])
 ])
 

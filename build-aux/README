@@ -1,4 +1,4 @@
-							-*- text -*-
+							-*- outline -*-
 
 This directory holds all the Autoconf/Automake (and maybe scripts) we
 rely on in several projects.
@@ -14,3 +14,15 @@ should ship these files, for instance
 
 But it should not be needed: Automake automatically ships included
 Makefile snippets, and Autoconf M4 bits.
+
+* revision.mk, version.hh.in
+This is used to insert Subversion keywords in the programs, in the
+banners for instance.
+
+To use this module, insert something like this in your Makefile.am:
+
+   REVISION_FILE = version.hh
+   include $(top_srcdir)/build-aux/revision.mk
+
+since it extends (using +=), BUILT_SOURCES, EXTRA_DIST and CLEANFILES,
+they should be defined before the include.
