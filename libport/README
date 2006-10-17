@@ -1,4 +1,14 @@
 This directory contains files that are used through out URBI projects.
 
-* lockable.h.
-class urbi::Lockable.
+* lockable.hh.
+class urbi::Lockable and macro BLOCKED.
+
+* semaphore.hh.
+class urbi::Semaphore.
+
+* thread.hh.
+
+
+Local Variables:
+mode: outline
+End:

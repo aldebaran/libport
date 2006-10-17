@@ -8,7 +8,8 @@
 
 namespace urbi
 {
-  template<class T> class StartInfo
+  template<class T>
+  class StartInfo
   {
   public:
     T * inst;

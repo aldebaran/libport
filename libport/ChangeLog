@@ -1,5 +1,12 @@
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
+	Use new HAVE_ symbols.
+	* thread.hh: Formatting changes.
+	* lockable.hh: Check URBI_AIBO and HAVE_PTHREAD_H.
+	* README: More doc.
+
+2006-10-17  Akim Demaille  <demaille@gostai.com>
+
 	semaphore.hh, thread.hh.
 	* semaphore.hh: New.
 	* thread.hh: New.

@@ -1,6 +1,8 @@
 #ifndef LIBPORT_LOCKABLE_HH
 # define LIBPORT_LOCKABLE_HH
 
+# include "config.h"
+
 # if defined WIN32
 #  define _WIN32_WINNT 0x0400
 #  include <windows.h>
@@ -34,7 +36,7 @@ namespace urbi
   }
 }
 
-# elif defined OS && (OS == aibo)
+# elif defined URBI_AIBO && URBI_AIBO
 
 namespace urbi
 {
@@ -63,10 +65,11 @@ namespace urbi
 
 }
 
-#error "in aibo mode"
-
 # else
 
+# if !defined HAVE_PTHREAD_H || !HAVE_PTHREAD_H
+#  error "pthreads are required"
+# endif
 # include <pthread.h>
 
 namespace urbi
