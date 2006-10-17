@@ -1,5 +1,12 @@
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
+	Extend URBI_PTHREAD.
+	* urbi-pthread.m4: Check for pthread.h.
+	Fix typo.
+	Define PTHREAD_LIBS even for windows.
+
+2006-10-17  Akim Demaille  <demaille@gostai.com>
+
 	Fix libport-ci.
 	* build-aux.mk: Fix.
 
