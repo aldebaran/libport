@@ -1,5 +1,10 @@
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
+	pthreads or windows are not required.
+	* urbi-pthread.m4: Don't require one of the two: aibo for instance.
+
+2006-10-17  Akim Demaille  <demaille@gostai.com>
+
 	More doc.
 	* README: More doc.
 	* build-aux.mk (recheck): Run make.

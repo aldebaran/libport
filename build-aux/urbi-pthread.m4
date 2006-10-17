@@ -14,7 +14,7 @@ if $windows; then
 fi
 AM_CONDITIONAL([WIN32], [$windows])
 
-if $windows || $pthreads; then :; else
-  AC_MSG_ERROR([pthreads or WIN32 API is required])
-fi
+#if $windows || $pthreads; then :; else
+#  AC_MSG_ERROR([pthreads or WIN32 API is required])
+#fi
 ])
