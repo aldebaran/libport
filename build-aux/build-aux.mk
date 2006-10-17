@@ -1,5 +1,18 @@
 EXTRA_DIST = $(top_srcdir)/build-aux/install-sh-c
 
+
+## --------- ##
+## recheck.  ##
+## --------- ##
+
+# It is often helpful to rerun configure (well, config.status).
+# This is a convenient shorthand.
+.PHONY: recheck
+recheck:
+	$(top_builddir)/config.status --recheck
+	$(top_builddir)/config.status
+
+
 ## ----------- ##
 ## Build-aux.  ##
 ## ----------- ##
