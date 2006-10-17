@@ -1,6 +1,5 @@
 #! /bin/sh
 #
-# $Id$
 # Copyright (c) Gostai S.A.S., 2006.
 #
 # This software is provided "as is" without warranty of any kind,
@@ -10,8 +9,4 @@
 # See the LICENSE file for more information.
 # For comments, bug reports and feedback: http://www.urbiforge.com
 
-
-set -x
-set -e
-
-autoreconf -f -v -i
+exec build-aux/bootstrap
