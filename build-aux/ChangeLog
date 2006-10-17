@@ -1,5 +1,13 @@
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
+	Rename our install-sh as install-sh-c.
+	* install-sh-c: New.
+	* build-aux.mk: EXTRA_DIST it.
+	* bootstrap: We no longer have to protect install-sh.
+	* install-sh: Remove.
+
+2006-10-17  Akim Demaille  <demaille@gostai.com>
+
 	Upgrade URBI_OPENR.
 	* urbi-openr.m4: Define OPEN_R_SDK, as it's the straightforward
 	name.
