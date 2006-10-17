@@ -21,12 +21,11 @@ me=$(basename $0)
 #
 # URL aliases:
 #   baux      https://svn.gostai.com/svn/common/project-template/trunk/build-aux
+#   libport   https://svn.gostai.com/svn/common/project-template/trunk/libport
 #   share     https://svn.lrde.epita.fr/svn/lrde-publis/trunk/share
 #
 # An svn:externals dependency is "pinned" if it has an explicit
 # revision number.
-#
-# -h, --help               display this message and exit
 ## END
 
 ## --------------------- ##
