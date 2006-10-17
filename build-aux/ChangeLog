@@ -1,5 +1,11 @@
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
+	Upgrade URBI_OPENR.
+	* urbi-openr.m4: Define OPEN_R_SDK, as it's the straightforward
+	name.
+
+2006-10-17  Akim Demaille  <demaille@gostai.com>
+
 	Extend URBI_PTHREAD.
 	* urbi-pthread.m4: Check for pthread.h.
 	Fix typo.
