@@ -30,7 +30,7 @@ libport-up:
 
 # Check in a pinned external from a host project, and depend upon it.
 libport-ci:
-	cd $(top_srcdir)/build-aux && vcs-svn ci
+	cd $(top_srcdir)/libport && vcs-svn ci
 	$(MAKE) $(AM_MAKEFLAGS) libport-up
 
 # Pin the svn:external by subscribing to it.
