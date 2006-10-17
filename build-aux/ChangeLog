@@ -1,5 +1,11 @@
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
+	More doc.
+	* README: More doc.
+	* build-aux.mk (recheck): Run make.
+
+2006-10-17  Akim Demaille  <demaille@gostai.com>
+
 	recheck.
 	* build-aux.mk (recheck): New.
 

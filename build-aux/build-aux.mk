@@ -9,8 +9,9 @@ EXTRA_DIST = $(top_srcdir)/build-aux/install-sh-c
 # This is a convenient shorthand.
 .PHONY: recheck
 recheck:
-	$(top_builddir)/config.status --recheck
-	$(top_builddir)/config.status
+	cd $(top_builddir) && ./config.status --recheck
+	cd $(top_builddir) && ./config.status
+	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS)
 
 
 ## ----------- ##

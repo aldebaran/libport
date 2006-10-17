@@ -15,6 +15,38 @@ should ship these files, for instance
 But it should not be needed: Automake automatically ships included
 Makefile snippets, and Autoconf M4 bits.
 
+* build-aux.mk
+Provides convenient targets wrapping build-aux and libport handling.
+In the case of kernel1, the dependency on liburbi is implemented
+similarly.  Here are the EXTERNAL names:
+
+	    directory	 | EXTERNAL name
+	    -------------+---------------
+	    build-aux	 | baux
+	    liburbi-c++	 | liburbi
+	    libport	 | libport
+
+** EXTERNAL-up
+Update EXTERNAL to the most recent version, and pin it.
+
+** EXTERNAL-pin
+Subcribe to the most recent version.
+
+** EXTERNAL-ci
+You made modification in EXTERNAL.  So check them in, then run the
+corresponding EXTERNAL-up.
+
+** recheck
+Unrelated to the previous targets: just relauches configure and make
+again (in case something changed in the environment).  Named after
+./config.status --recheck.
+
+
+* install-sh-c
+Our own copy of install-sh that support -C in addition.  Useful to
+avoid installing headers that did not change.
+
+
 * revision.mk, version.hh.in
 This is used to insert Subversion keywords in the programs, in the
 banners for instance.
