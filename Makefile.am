@@ -9,6 +9,8 @@
 # See the LICENSE file for more information.
 # For comments, bug reports and feedback: http://www.urbiforge.com
 
+include build-aux/build-aux.mk
+
 ACLOCAL_AMFLAGS = -I build-aux
 
 SUBDIRS = src gui doc tests

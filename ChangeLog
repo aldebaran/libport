@@ -1,5 +1,11 @@
 2006-10-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	r54: Include build-aux.mk
+
+	* Makefile.am: include build-aux/build-aux.mk.
+
+2006-10-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	r53: Forward the bootstrap process in build-aux.
 
 	* bootstrap: exec build-aux/bootstrap.
