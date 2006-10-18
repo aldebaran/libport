@@ -1,5 +1,10 @@
 2006-10-18  Akim Demaille  <demaille@gostai.com>
 
+	Avoid warnings for unused arguments
+	* lockable.hh: Do that.
+
+2006-10-18  Akim Demaille  <demaille@gostai.com>
+
 	Check if defined before using 
 	* lockable.hh: Protect against "undefined macro" warnings.
 
