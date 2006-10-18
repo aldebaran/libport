@@ -36,7 +36,7 @@ namespace urbi
   }
 }
 
-# elif defined URBI_AIBO && URBI_AIBO
+# elif URBI_ENV_AIBO
 
 namespace urbi
 {
