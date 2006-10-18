@@ -1,13 +1,25 @@
 This directory contains files that are used through out URBI projects.
 
-* lockable.hh.
+* Components
+** hash.hh
+Hash tables.  Relies on either G++'s or MS'.
+
+** lockable.hh.
 class urbi::Lockable and macro BLOCKED.
 
-* semaphore.hh.
+** semaphore.hh.
 class urbi::Semaphore.
 
-* thread.hh.
+** thread.hh.
 
+* TODO
+
+** stdext.hh
+Define macros to reach the namespace of non standard extensions.
+Should be extracted from hash.hh.
+
+** test
+Write test for these components.
 
 Local Variables:
 mode: outline
