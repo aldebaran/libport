@@ -14,7 +14,7 @@ include build-aux/build-aux.mk
 ACLOCAL_AMFLAGS = -I build-aux
 
 SUBDIRS = src gui doc tests
-EXTRA_DIST = bootstrap
+EXTRA_DIST += bootstrap
 
 .PHONY: doc html
 doc html:

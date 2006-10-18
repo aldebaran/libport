@@ -1,3 +1,10 @@
+2006-10-18  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	r65: Fix Makefile.am
+
+	* Makefile.am (EXTRA_DIST): Use `+=' because EXTRA_DIST is already
+          defined in build-aux/build-aux.mk.
+
 2006-10-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	r54: Include build-aux.mk
