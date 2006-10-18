@@ -34,13 +34,27 @@ AC_SUBST([URBI_HOST])
 AC_ARG_ENABLE([env],
 	      [AC_HELP_STRING([--enable-env=urbi-env],
 			      [The environment this will run on:
-			       aibo, webots. posix [posix]])])
+			       aibo, webots, posix [posix]])])
 AC_MSG_CHECKING([for URBI environment type])
 case $enable_env in
  '') URBI_ENV=$2;;
   *) URBI_ENV=$enable_env;;
 esac
 AC_MSG_RESULT([$URBI_ENV])
+case $URBI_ENV in
+  aibo)  
+     AC_DEFINE([URBI_ENV_AIBO], [1], [Define if compiling for Aibo.])
+     ;;
+  posix)
+     AC_DEFINE([URBI_ENV_POSIX], [1], [Define if compiling for POSIX.])
+     ;;
+  webots)
+     AC_DEFINE([URBI_ENV_WEBOTS], [1], [Define if compiling for Webots.])
+     ;;
+  *)
+     AC_MSG_NOTICE([[unknow environment type: $URBI_ENV]])
+     ;;
+esac
 AC_SUBST([URBI_ENV])
 
 # Everything is installed in $prefix/gostai.

@@ -1,3 +1,10 @@
+2006-10-18  Akim Demaille  <demaille@gostai.com>
+
+	More for Aibo.
+	* urbi-dirs.m4: Define URBI_ENV_<ENV>.
+	* urbi-openr.m4 (MKBIN, MK_FLAGS, STUBGEN, OPEN_R_CPPFLAGS):
+	AC_SUBST them.
+
 2006-10-18  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Fix typos.

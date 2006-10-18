@@ -34,6 +34,17 @@ else
   AC_MSG_RESULT([no])
 fi
 
+if $openr; then
+  # More tools for OPENR.
+  AC_SUBST([MKBIN],       ['$(OPEN_R_SDK)/OPEN_R/bin/mkbin'])
+  AC_SUBST([MKBIN_FLAGS], ['-p $(OPEN_R_SDK)'])
+  AC_SUBST([STUBGEN],     ['$(OPEN_R_SDK)/OPEN_R/bin/stubgen2'])
+  AC_SUBST([OPEN_R_CPPFLAGS],
+  ['-I$(OPEN_R_SDK)/OPEN_R/include/R4000 \
+    -I$(OPEN_R_SDK)/OPEN_R/include/MCOOP \
+    -I$(OPEN_R_SDK)/OPEN_R/include'])
+fi  
+
 AM_CONDITIONAL([OPENR], [$openr])
 AC_SUBST([OPEN_R_SDK])
 ])
