@@ -2,7 +2,8 @@ This directory contains files that are used through out URBI projects.
 
 * Components
 ** hash.hh
-Hash tables.  Relies on either G++'s or MS'.
+Hash tables.  Relies on either G++'s or MS'.  We should check for
+ext/hash_map and hash_map.h instead of relying on !Windows.
 
 ** lockable.hh.
 class urbi::Lockable and macro BLOCKED.

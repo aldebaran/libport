@@ -1,5 +1,11 @@
 2006-10-18  Akim Demaille  <demaille@gostai.com>
 
+	r66: Avoid backward compatibility warnings
+	* hash.hh: Include ext/hash_map, not hash_map.h.
+	* README: More to do.
+
+2006-10-18  Akim Demaille  <demaille@gostai.com>
+
 	* hash.hh: New.
 	* README: More doc, more todo.
 

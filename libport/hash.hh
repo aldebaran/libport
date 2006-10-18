@@ -4,7 +4,7 @@
 # define LIBPORT_HASH_HH
 
 # ifndef _MSC_VER  //GCC
-#  include <hash_map.h>
+#  include <ext/hash_map>
 # elif (_MSC_VER == 1400)
 #  pragma warning( disable : 4355 4996)
 #  include <hash_map>
@@ -66,7 +66,9 @@ namespace urbi
   class hash_map_type<const char *, V>
   {
   public:
-    typedef __gnu_cxx::hash_map<const char *, V, hash<const char *>, eqStr> type;
+    typedef __gnu_cxx::hash_map<const char *, V,
+				__gnu_cxx::hash<const char *>,
+				eqStr> type;
   };
 }
 
