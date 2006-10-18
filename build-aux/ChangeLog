@@ -1,5 +1,11 @@
 2006-10-18  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Fix typos.
+
+	* autotroll.m4: Fix typos (thanks aspell).
+
+2006-10-18  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	r64: Enhance AT_WITH_QT.
 
 	* autotroll.m4 (AT_WITH_QT): Take 3 arguments to tweak the build
