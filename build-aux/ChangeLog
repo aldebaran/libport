@@ -1,3 +1,10 @@
+2006-10-18  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	r64: Enhance AT_WITH_QT.
+
+	* autotroll.m4 (AT_WITH_QT): Take 3 arguments to tweak the build
+          process of Qt apps.
+
 2006-10-17  Akim Demaille  <demaille@gostai.com>
 
 	pthreads or windows are not required.
