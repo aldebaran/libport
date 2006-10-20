@@ -1,3 +1,9 @@
+2006-10-20  Matthieu Nottale  <nottale@gostai.com>
+
+	typo fix 
+
+	* lockable.hh: Fix typo.
+
 2006-10-18  Akim Demaille  <demaille@gostai.com>
 
 	Avoid warnings for unused arguments
