@@ -1,3 +1,13 @@
+2006-10-20  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Handle Qt3.
+
+	* autotroll.m4: Take QT_DIR into account. If the build fail, it might
+          be because QObject was introduced in Qt4. In this case, try again
+          with #include <qobject.h> instead. Depending on this test,
+          QT_VERSION_MAJOR is set to 3 or 4 and AC_SUBST'ed. This is not a
+          reliable way of knowing the real version of Qt though.
+
 2006-10-18  Akim Demaille  <demaille@gostai.com>
 
 	More for Aibo.
