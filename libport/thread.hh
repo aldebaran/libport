@@ -4,6 +4,11 @@
 # if defined WIN32
 #  define _WIN32_WINNT 0x0400
 #  include <windows.h>
+# else
+#  if !defined HAVE_PTHREAD_H || !HAVE_PTHREAD_H
+#   error "pthread.h is required"
+#  endif
+# include <pthread.h>
 # endif
 
 namespace urbi

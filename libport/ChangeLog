@@ -1,5 +1,10 @@
 2006-10-21  Akim Demaille  <akim.demaille@free.fr>
 
+	Diagnose missing pthread.h.
+	* thread.hh: Do that.
+
+2006-10-21  Akim Demaille  <akim.demaille@free.fr>
+
 	utime.hh
 	* utime.hh: New, from kernel1/src/console.cc.
 	* README: Complete.
