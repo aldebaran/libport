@@ -13,11 +13,21 @@ class urbi::Semaphore.
 
 ** thread.hh.
 
+** utime.hh
+long long urbi::utime().
+
 * TODO
 
 ** stdext.hh
 Define macros to reach the namespace of non standard extensions.
 Should be extracted from hash.hh.
+
+** documentation
+Doxygenation of these components
+
+** lib
+It would be useful to compile some parts instead of putting
+everything in header files (e.g., utime.cc).
 
 ** test
 Write test for these components.

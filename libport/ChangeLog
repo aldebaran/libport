@@ -1,3 +1,9 @@
+2006-10-21  Akim Demaille  <akim.demaille@free.fr>
+
+	utime.hh
+	* utime.hh: New, from kernel1/src/console.cc.
+	* README: Complete.
+
 2006-10-20  Matthieu Nottale  <nottale@gostai.com>
 
 	typo fix 
