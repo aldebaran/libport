@@ -1,3 +1,8 @@
+2006-10-21  Akim Demaille  <akim.demaille@free.fr>
+
+	Minor completion
+	* urbi-openr.m4: Complete doc and fix spelling.
+
 2006-10-20  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Handle Qt3.

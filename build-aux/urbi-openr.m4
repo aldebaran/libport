@@ -2,12 +2,14 @@
 # ----------
 # Look for the OpenR SDK.  Support --with-openr=PATH.  Check the compiler
 # is there.
+#
 # Output variable OPEN_R_SDK point to the installation location.
+# Set "$openr" to "true" or "false".
 AC_DEFUN([URBI_OPENR],
 [AC_ARG_WITH([openr],
-	    [AC_HELP_STRING([--with-openr=sdk-path],
-			    [Turn on OPENR client [/usr/local/OPEN_R_SDK]])],
-	    [], [with_openr=yes])
+	     [AC_HELP_STRING([--with-openr=sdk-path],
+			     [Turn on OPENR client [/usr/local/OPEN_R_SDK]])],
+	     [], [with_openr=yes])
 
 case $with_openr in
   yes) openr=true
@@ -20,9 +22,8 @@ case $with_openr in
        ;;
 esac
 
-
-# checking if openr sdk is realy there
-AC_MSG_CHECKING([for openr SDK])
+# Checking whether OPENR sdk is really there.
+AC_MSG_CHECKING([for OPENR SDK])
 if $openr; then
   if test -f $OPEN_R_SDK/bin/mipsel-linux-c++; then
     AC_MSG_RESULT([$OPEN_R_SDK])
@@ -43,7 +44,7 @@ if $openr; then
   ['-I$(OPEN_R_SDK)/OPEN_R/include/R4000 \
     -I$(OPEN_R_SDK)/OPEN_R/include/MCOOP \
     -I$(OPEN_R_SDK)/OPEN_R/include'])
-fi  
+fi
 
 AM_CONDITIONAL([OPENR], [$openr])
 AC_SUBST([OPEN_R_SDK])
