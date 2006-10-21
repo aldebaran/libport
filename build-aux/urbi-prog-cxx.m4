@@ -6,6 +6,10 @@ AC_PREREQ([2.60])
 # URBI_PROG_CXX
 # -------------
 # Look for a C++ compiler, and pass interesting warning options.
+#
+# Define PARSER_CXXFLAGS to -O0 if the compiler is mipsel-linux-*, since
+# it is known not to be able to compile the rather large switch statement
+# produced by Bison.
 AC_DEFUN([URBI_PROG_CXX],
 [# Look for a C++ compiler.
 AC_LANG([C++])
@@ -98,6 +102,13 @@ TC_CXX_WARNINGS([-Wno-deprecated])
 #                ^
 #
 TC_CXX_WARNINGS([[[-wd111,193,279,383,444,522,654,810,981,1418]]])
+
+# If using mipsel-linux-c++, then we cannot use optimization flags
+# to compile Bison's output.  Don't just look at its name, we
+# might have ccache prefixing it.
+case $($CXX --version | sed 1q) in
+  mipsel-linux-*) AC_SUBST([PARSER_CXXFLAGS], ['-O0']);;
+esac
 ])
 
 

@@ -9,12 +9,9 @@ AC_DEFUN([URBI_OPENR],
 [AC_ARG_WITH([openr],
 	     [AC_HELP_STRING([--with-openr=sdk-path],
 			     [Turn on OPENR client [/usr/local/OPEN_R_SDK]])],
-	     [], [with_openr=yes])
+	     [], [with_openr=/usr/local/OPEN_R_SDK])
 
 case $with_openr in
-  yes) openr=true
-       OPEN_R_SDK=/usr/local/OPEN_R_SDK
-       ;;
    no) openr=false
        ;;
     *) openr=true

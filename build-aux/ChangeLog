@@ -1,5 +1,14 @@
 2006-10-21  Akim Demaille  <akim.demaille@free.fr>
 
+	Upgrades
+	* urbi-prog-cxx.m4: Define PARSER_CXXFLAGS, although I don't
+	know yet how to use this cleanly, since -O2 is actually included
+	in the CXXFLAGS, and they appear last...
+	* version.hh.in (PACKAGE_VERSION_REV): New.
+	* urbi-openr.m4: Minor simplification.
+
+2006-10-21  Akim Demaille  <akim.demaille@free.fr>
+
 	Minor completion
 	* urbi-openr.m4: Complete doc and fix spelling.
 
