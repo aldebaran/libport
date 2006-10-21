@@ -8,7 +8,7 @@
 AC_DEFUN([URBI_OPENR],
 [AC_ARG_WITH([openr],
 	     [AC_HELP_STRING([--with-openr=sdk-path],
-			     [Turn on OPENR client [/usr/local/OPEN_R_SDK]])],
+			     [Turn on OpenR client [/usr/local/OPEN_R_SDK]])],
 	     [], [with_openr=/usr/local/OPEN_R_SDK])
 
 case $with_openr in
@@ -19,8 +19,8 @@ case $with_openr in
        ;;
 esac
 
-# Checking whether OPENR sdk is really there.
-AC_MSG_CHECKING([for OPENR SDK])
+# Checking whether OpenR SDK is really there.
+AC_MSG_CHECKING([for OpenR SDK])
 if $openr; then
   if test -f $OPEN_R_SDK/bin/mipsel-linux-c++; then
     AC_MSG_RESULT([$OPEN_R_SDK])
@@ -33,7 +33,7 @@ else
 fi
 
 if $openr; then
-  # More tools for OPENR.
+  # More tools for OpenR.
   AC_SUBST([MKBIN],       ['$(OPEN_R_SDK)/OPEN_R/bin/mkbin'])
   AC_SUBST([MKBIN_FLAGS], ['-p $(OPEN_R_SDK)'])
   AC_SUBST([STUBGEN],     ['$(OPEN_R_SDK)/OPEN_R/bin/stubgen2'])

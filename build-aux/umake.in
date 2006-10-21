@@ -297,7 +297,7 @@ case $target:$core in
 	target="$target$EXEEXT";;
 esac
 
-# Remove ourselve from library list in lib generation mode, add OUTBIN
+# Remove ourselves from library list in lib generation mode, add OUTBIN
 # option otherwise.
 if test x$core == x; then
   libs=$(echo $libs | sed -e "s/$target//")

@@ -30,14 +30,14 @@ similarly.  Here are the EXTERNAL names:
 Update EXTERNAL to the most recent version, and pin it.
 
 ** EXTERNAL-pin
-Subcribe to the most recent version.
+Subscribe to the most recent version.
 
 ** EXTERNAL-ci
 You made modification in EXTERNAL.  So check them in, then run the
 corresponding EXTERNAL-up.
 
 ** recheck
-Unrelated to the previous targets: just relauches configure and make
+Unrelated to the previous targets: just relaunches configure and make
 again (in case something changed in the environment).  Named after
 ./config.status --recheck.
 

@@ -1,3 +1,11 @@
+2006-10-21  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Fix typos.
+
+	* README,
+	* urbi-openr.m4,
+	* umake.in: Typos.
+
 2006-10-21  Akim Demaille  <akim.demaille@free.fr>
 
 	Upgrades
