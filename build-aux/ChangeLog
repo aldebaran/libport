@@ -1,3 +1,9 @@
+2006-10-22  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Workaround for libtool's lake of support of -F on Darwin.
+	* autotroll.m4 (QT_LIBS): Rewrite -F's as -Wl,-F's on Darwin because
+          as of today, libtool doesn't handle them correctly.
+
 2006-10-22  Akim Demaille  <akim.demaille@free.fr>
 
 	Let svn-externals support short options
