@@ -12,12 +12,12 @@ me=$(basename $0)
 #    svn-externals [OPTIONS]
 #
 # Options:
-#   --help, -h       display this message and exit
-#   --update[=DIR]   upgrade the pinned externals directory DIR to the
-#                    newest version, and upgrade.
-#                    By default upgrades all the directories
-#   --subscribe=URL  add a pinned external on URL, under the same directory
-#                    name.  If there was already a dependency, pin it.
+#   -h, --help, -h      display this message and exit
+#   -u, --update=DIR    upgrade the pinned externals directory DIR to the
+#                       newest version, and upgrade.
+#   -U, --update-all    upgrades all pinned externals
+#   -s, --subscribe=URL add a pinned external on URL, under the same directory
+#                       name.  If there was already a dependency, pin it.
 #
 # URL aliases:
 #   baux      https://svn.gostai.com/svn/common/project-template/trunk/build-aux
@@ -155,27 +155,52 @@ $dir -r $rev $url"
 ## Main.  ##
 ## ------ ##
 
-for arg
+# Should we run svn up at the end?
+update=false
+
+while test $# != 0
 do
-  case $arg in
+  case $1 in
+    # Handle --option=value by splitting apart and putting back on argv.
+    --*=*)
+      opt=`echo "$1" | sed -e 's/=.*//'`
+      val=`echo "$1" | sed -e 's/[^=]*=//'`
+      shift
+      set dummy "$opt" "$val" ${1+"$@"}; shift
+      ;;
+
+    # Handle --update-all as --update ""
+    -U | --update-all | --upgrade-all )
+      shift
+      set dummy --update "" ${1+"$@"}; shift
+      ;;
+  esac
+
+  case $1 in
       -h | --help )
 	  usage
 	  exit 0
 	  ;;
-      --update | --upgrade | --update=* | --upgrade=* )
-	  svn_externals_update $(echo $arg | sed 's/^[^=]*//;s/^=//')
-	  svn up
-	  stderr "You should checkin the host project, externals were updated."
+      -u | --update | --upgrade )
+	  svn_externals_update "$2"
+	  update=true
+	  shift
 	  ;;
-      --subscribe=* )
-	  svn_externals_subscribe $(url_aliases $(echo $arg | sed 's/^[^=]*=//'))
-	  svn up
-	  stderr "You should checkin the host project, externals were updated."
+      -s | --subscribe )
+	  svn_externals_subscribe $(url_aliases "$2")
+	  update=true
+	  shift
 	  ;;
       *)
-	  fatal "unexpected argument: $arg"
+	  fatal "unexpected argument: $1"
 	  ;;
   esac
+  shift
 done
+
+if $update; then
+  svn up
+  stderr "You should checkin the host project, externals were updated."
+fi
 
 exit 0
