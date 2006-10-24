@@ -41,6 +41,9 @@ if $openr; then
   ['-I$(OPEN_R_SDK)/OPEN_R/include/R4000 \
     -I$(OPEN_R_SDK)/OPEN_R/include/MCOOP \
     -I$(OPEN_R_SDK)/OPEN_R/include'])
+  AC_SUBST([OPEN_R_LDFLAGS],
+  ['-L$(OPEN_R_SDK)/OPEN_R/lib \
+    -lObjectComm -lOPENR -lInternet -lantMCOOP -lm'])
 fi
 
 AM_CONDITIONAL([OPENR], [$openr])
