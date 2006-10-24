@@ -71,7 +71,7 @@ url_aliases ()
     *)
       local loc=$1
       local alias=$(echo "$loc" | sed 's,/.*,,')
-      local ext=$(echo   "$loc" | sed -n 's,/\(.*\),\1,p')
+      local ext=$(echo   "$loc" | sed -n 's,^[^/]*/\(.*\),\1,p')
       local url=$(usage |
 		  sed -n "/^URL aliases:/,/^# *\$/{
 			     /^ *$alias *\\([^ ].*\\)/{s//\1/;p;q;};

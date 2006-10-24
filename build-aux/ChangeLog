@@ -1,8 +1,12 @@
 2006-10-24  Akim Demaille  <demaille@gostai.com>
 
-        * svn-externals: More aliases.
-        Support recursive aliases.
-        Support --dry-run.
+	* svn-externals (url_aliases): Fix the computation of ext.
+
+2006-10-24  Akim Demaille  <demaille@gostai.com>
+
+	* svn-externals: More aliases.
+	Support recursive aliases.
+	Support --dry-run.
 
 2006-10-24  Akim Demaille  <demaille@gostai.com>
 
