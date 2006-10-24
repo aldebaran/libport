@@ -1,5 +1,10 @@
 2006-10-24  Akim Demaille  <demaille@gostai.com>
 
+	Typo
+	* urbi-ufloat.m4: Fix it.
+
+2006-10-24  Akim Demaille  <demaille@gostai.com>
+
 	URBI_FLOAT
 	* urbi-ufloat.m4: New.
 

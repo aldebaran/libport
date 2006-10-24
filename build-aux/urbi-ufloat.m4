@@ -1,3 +1,4 @@
+
 # URBI_UFLOAT
 # -----------
 AC_DEFUN([URBI_UFLOAT],
@@ -7,7 +8,7 @@ AC_ARG_ENABLE([ufloat],
 			      [use ufloats instead of doubles])],
 	      [], [enable_ufloat=no])
 AC_MSG_CHECKING([whether using ufloats])
-AC_MSG_RESULT([$enable_ufloats])
+AC_MSG_RESULT([$enable_ufloat])
 AM_CONDITIONAL([UFLOAT], [test x"$enable_ufloat" = xyes])
 if test x"$enable_ufloat" = xyes; then
   AC_DEFINE([HAVE_LIBPORT_UFLOAT_HH], [1],
