@@ -1,5 +1,11 @@
 2006-10-24  Akim Demaille  <demaille@gostai.com>
 
+	Add ufloat.h
+	* ufloat.h: New.
+	QnD, eventually should be removed.
+
+2006-10-24  Akim Demaille  <demaille@gostai.com>
+
 	Import ufloat, there are too many copies already
 	* ufloat.hh, ufloat.cc: New.
 	From the kernel1.
