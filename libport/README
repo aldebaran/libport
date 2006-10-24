@@ -1,5 +1,10 @@
 This directory contains files that are used through out URBI projects.
 
+* Auxiliary tools
+** libport.mk
+Include this Makefile if you want to install libport.  Only liburbi
+should.
+
 * Components
 ** hash.hh
 Hash tables.  Relies on either G++'s or MS'.  We should check for
