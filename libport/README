@@ -18,14 +18,14 @@ class urbi::Semaphore.
 
 ** thread.hh.
 
+** ufloat.hh, ufloat.cc
+urbi::ufloat.  The latter must be compiled in if
+HAVE_LIBPORT_UFLOAT_HH is defined.
+
 ** utime.hh
 long long urbi::utime().
 
 * TODO
-
-** stdext.hh
-Define macros to reach the namespace of non standard extensions.
-Should be extracted from hash.hh.
 
 ** documentation
 Doxygenation of these components
@@ -34,8 +34,16 @@ Doxygenation of these components
 It would be useful to compile some parts instead of putting
 everything in header files (e.g., utime.cc).
 
+** stdext.hh
+Define macros to reach the namespace of non standard extensions.
+Should be extracted from hash.hh.
+
 ** test
 Write test for these components.
+
+** ufloat
+We need a more powerful Autoconf macro to select the version of ufloat
+we want to use.
 
 Local Variables:
 mode: outline

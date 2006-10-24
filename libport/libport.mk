@@ -11,4 +11,5 @@ $(libport_srcdir)/hash.hh			\
 $(libport_srcdir)/lockable.hh			\
 $(libport_srcdir)/semaphore.hh			\
 $(libport_srcdir)/thread.hh			\
+$(libport_srcdir)/ufloat.hh			\
 $(libport_srcdir)/utime.hh

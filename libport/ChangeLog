@@ -1,5 +1,12 @@
 2006-10-24  Akim Demaille  <demaille@gostai.com>
 
+	Import ufloat, there are too many copies already
+	* ufloat.hh, ufloat.cc: New.
+	From the kernel1.
+	* libport.mk, README: Adjust.
+
+2006-10-24  Akim Demaille  <demaille@gostai.com>
+
 	Installable libport
 	* libport.mk: New.
 	* README: Adjust.
