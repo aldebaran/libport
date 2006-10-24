@@ -18,10 +18,13 @@ me=$(basename $0)
 #   -U, --update-all    upgrades all pinned externals
 #   -s, --subscribe=URL add a pinned external on URL, under the same directory
 #                       name.  If there was already a dependency, pin it.
+#   -n, --dry-run       display the commands, don't run them
 #
 # URL aliases:
-#   baux      https://svn.gostai.com/svn/common/project-template/trunk/build-aux
-#   libport   https://svn.gostai.com/svn/common/project-template/trunk/libport
+#   common    https://svn.gostai.com/svn/common
+#   jpeg      common/libjpeg-6b/jpeg-6b
+#   baux      common/project-template/trunk/build-aux
+#   libport   common/project-template/trunk/libport
 #   share     https://svn.lrde.epita.fr/svn/lrde-publis/trunk/share
 #
 # An svn:externals dependency is "pinned" if it has an explicit
@@ -57,14 +60,27 @@ usage ()
 
 # url_aliases URL
 # ---------------
+# Decode the address URL, which might use other URL aliases.
+# Aliases are read from the usage notice, the big comment
+# at the start of this script.
 url_aliases ()
 {
   case $1 in
     http* )
       echo "$1";;
     *)
-      usage |
-      sed -n "/^URL aliases:/,/^# *\$/{/^ *$1 *\\(http.*\\)/{s//\1/;p;q;};}"
+      local loc=$1
+      local alias=$(echo "$loc" | sed 's,/.*,,')
+      local ext=$(echo   "$loc" | sed -n 's,/\(.*\),\1,p')
+      local url=$(usage |
+		  sed -n "/^URL aliases:/,/^# *\$/{
+			     /^ *$alias *\\([^ ].*\\)/{s//\1/;p;q;};
+			 }")
+      url=$(url_aliases "$url")
+      if test x"$ext" != x; then
+	url=$url/$ext
+      fi
+      echo "$url"
       ;;
   esac
 }
@@ -131,7 +147,7 @@ svn_externals_update ()
 {
   local externals=$(svn propget svn:externals . |
 		    svn_externals_update_stream "$1")
-  svn propset svn:externals "$externals" .
+  $run svn propset svn:externals "$externals" .
 }
 
 
@@ -146,7 +162,7 @@ svn_externals_subscribe ()
 	      sed -e "/^$dir /d")
   externals="$externals
 $dir -r $rev $url"
-  svn propset svn:externals "$externals" .
+  $run svn propset svn:externals "$externals" .
 }
 
 
@@ -191,6 +207,9 @@ do
 	  update=true
 	  shift
 	  ;;
+      -n | --dry-run )
+	  run=stderr
+	  ;;
       *)
 	  fatal "unexpected argument: $1"
 	  ;;
@@ -199,7 +218,7 @@ do
 done
 
 if $update; then
-  svn up
+  $run svn up
   stderr "You should checkin the host project, externals were updated."
 fi
 
