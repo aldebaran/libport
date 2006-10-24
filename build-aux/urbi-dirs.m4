@@ -7,7 +7,17 @@ AC_PREREQ([2.60])
 # KIND should be "core" or "kernel".
 # DEFAULT-URBI-ENV should probably be something like "aibo", "webots" etc.
 #
-# Define the directory variables we are about to use.
+# Define the directory variables we are about to use:
+#
+# branddir	   = $(prefix)/$(PACKAGE_BRAND)
+#                    /usr/local/gostai
+# hostdir	   = $(branddir)/KIND/$(URBI_HOST)
+# envdir	   = $(hostdir)/$(URBI_ENV)
+#                    /usr/local/gostai/core/aibo
+# kerneldir	   = $(branddir)/kernel/$(URBI_HOST)/$(URBI_ENV)
+#                    /usr/local/gostai/kernel/aibo
+# sdkincludedir	   = $(branddir)/KIND/include
+# kernelincludedir = $(branddir)/kernel/include
 m4_define([_URBI_DIRS],
 [m4_bmatch([$1],
 	   [core\|kernel], [],
@@ -42,7 +52,7 @@ case $enable_env in
 esac
 AC_MSG_RESULT([$URBI_ENV])
 case $URBI_ENV in
-  aibo)  
+  aibo)
      AC_DEFINE([URBI_ENV_AIBO], [1], [Define if compiling for Aibo.])
      ;;
   posix)
