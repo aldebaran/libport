@@ -1,3 +1,13 @@
+2006-10-25  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Try to enforce release mode when build fails.
+	* autotroll.m4: When the sample Qt app built by AutoTroll fails to
+          compile, it might be because qmake (erroneously) enforces debugging
+          support (eg by adding -lQtXml_debug in the LIBS) whereas no
+          debugging support was installed with Qt (which is the default on
+          Debian for instance). In this case, AutoTroll tries to enforce
+          CONFIG += release.
+
 2006-10-24  Akim Demaille  <demaille@gostai.com>
 
 	Typo
