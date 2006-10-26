@@ -13,6 +13,9 @@ Forward declaration for classes.
 Hash tables.  Relies on either G++'s or MS'.  We should check for
 ext/hash_map and hash_map.h instead of relying on !Windows.
 
+** singleton-ptr.hh
+Macros STATIC_INSTANCE(Cl, Name), EXTERN_STATIC_INSTANCE(Cl, Name).
+
 ** lockable.hh.
 class urbi::Lockable and macro BLOCKED.
 
