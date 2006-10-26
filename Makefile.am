@@ -19,3 +19,10 @@ EXTRA_DIST += bootstrap
 .PHONY: doc html
 doc html:
 	cd doc && $(MAKE) $(AM_MAKEFLAGS) $@
+
+# Manually list the files you're using from build-aux here.
+EXTRA_DIST += \
+		build-aux/test.sh		\
+		build-aux/autotroll.m4		\
+		build-aux/urbi-prog-cxx.m4	\
+		build-aux/warning.m4

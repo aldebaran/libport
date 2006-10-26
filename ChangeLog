@@ -1,5 +1,13 @@
 2006-10-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Add a sample test to show how to use the test-suite.
+	* tests/testme.stdout: New.
+	* tests/testme.cc: New.
+	* tests/Makefile.am: Add a sample test.
+	* Makefile.am (EXTRA_DIST): Complete.
+
+2006-10-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Be silent by default.
 	* tests/test.sh: Remove the SILENT "option". Now the env var VERBOSE
           must be set (and non empty) in order to display the output of the
