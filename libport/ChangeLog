@@ -1,5 +1,13 @@
 2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
 
+	Split ufloat.hh and ufloat.cc
+	* uffloat.cc: New, extracted from...
+	* ufloat.cc: here.
+	* ulong-fixed-point.hh, uffloat.hh: New, extracted from...
+	* ufloat.hh: Here.
+
+2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
+
 	Fix include
 	* ufloat.cc: Include ufloat.hh, not ufloat.h.
 
