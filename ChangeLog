@@ -1,3 +1,10 @@
+2006-10-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Be silent by default.
+	* tests/test.sh: Remove the SILENT "option". Now the env var VERBOSE
+          must be set (and non empty) in order to display the output of the
+          test.
+
 2006-10-18  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	r65: Fix Makefile.am
