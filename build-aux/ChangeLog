@@ -1,3 +1,9 @@
+2006-10-26  Akim Demaille  <demaille@gostai.com>
+
+	Typo
+	* urbi-openr.m4 (OPENR_SDK_PATH): OPEN_R_SDK.
+	Reported by Matthieu.
+
 2006-10-25  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Try to enforce release mode when build fails.

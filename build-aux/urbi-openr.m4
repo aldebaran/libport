@@ -15,7 +15,7 @@ case $with_openr in
    no) openr=false
        ;;
     *) openr=true
-       OPENR_SDK_PATH=$with_openr
+       OPEN_R_SDK=$with_openr
        ;;
 esac
 
