@@ -1,5 +1,12 @@
 2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
 
+	fwd.hh
+	* fwd.hh: New.
+	* libport.mk, README: Adjust, and also complete with recent
+	ufloat split.
+
+2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
+
 	Split ufloat.hh and ufloat.cc
 	* uffloat.cc: New, extracted from...
 	* ufloat.cc: here.

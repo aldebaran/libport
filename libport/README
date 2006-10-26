@@ -6,6 +6,9 @@ Include this Makefile if you want to install libport.  Only liburbi
 should.
 
 * Components
+** fwd.hh
+Forward declaration for classes.
+
 ** hash.hh
 Hash tables.  Relies on either G++'s or MS'.  We should check for
 ext/hash_map and hash_map.h instead of relying on !Windows.
@@ -18,9 +21,19 @@ class urbi::Semaphore.
 
 ** thread.hh.
 
+** ufloat.h.
+A nasty wrapper around ufloat.hh and ufloat.cc that, in addition,
+imports urbi::ufloat in ::.  Should be removed eventually.
+
 ** ufloat.hh, ufloat.cc
 urbi::ufloat.  The latter must be compiled in if
 HAVE_LIBPORT_UFLOAT_HH is defined.
+
+*** uffloat.hh, uffloat.cc
+class urbi::UFFloat.
+
+*** ulong-fixed-point.hh
+class urbi::ULongFixedPoint.
 
 ** utime.hh
 long long urbi::utime().
