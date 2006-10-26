@@ -1,3 +1,8 @@
+2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
+
+	Fix include
+	* ufloat.cc: Include ufloat.hh, not ufloat.h.
+
 2006-10-24  Akim Demaille  <demaille@gostai.com>
 
 	install ufloat.h too.
