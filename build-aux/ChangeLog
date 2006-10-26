@@ -1,3 +1,10 @@
+2006-10-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Add the generic test suite in build-aux.
+        This way it's usable easily throughout different projects.
+	* tests/test.sh: Move to...
+	* build-aux/test.sh: ... here.
+
 2006-10-26  Akim Demaille  <demaille@gostai.com>
 
 	Typo

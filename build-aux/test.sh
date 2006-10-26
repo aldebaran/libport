@@ -80,7 +80,7 @@
 # new_reference_output_file [ret|stdout|stderr] <ref-file>
 new_reference_output_file()
 {
-  test -s $bprog.my_$1 && return 0 # Skip empty files.
+  test -s $bprog.my_$1 || return 0 # Skip empty files.
   # Simply update existing reference output file.
   if test x"$2" != x; then
     cp -f $bprog.my_$1 $2
