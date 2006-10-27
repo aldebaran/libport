@@ -1,5 +1,12 @@
 2006-10-27  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Put AM_<FLAGS> after QT_<FLAGS>
+        So that the package's flags prevail on Qt's flags.
+	* gui/Makefile.am,
+	* build-aux/autotroll.m4: Here.
+
+2006-10-27  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Fix EXTRA_DIST.
 	* Makefile.am (EXTRA_DIST): Fix.
 
