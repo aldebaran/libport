@@ -5,7 +5,7 @@
 namespace urbi
 {
 
-  std::ostream& 
+  std::ostream&
   operator <<(std::ostream &s, ULLFixedPoint u)
   {
     long long uh  = (u.v >> LONG_NBIT);
@@ -33,7 +33,7 @@ namespace urbi
   }
 
 
-  std::istream& 
+  std::istream&
   operator >>(std::istream &s, ULLFixedPoint &u)
   {
     long ir=0;

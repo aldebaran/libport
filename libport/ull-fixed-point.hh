@@ -122,7 +122,7 @@ namespace urbi
       return r;
     }
 
-    inline ULLFixedPoint 
+    inline ULLFixedPoint
     operator /(const ULLFixedPoint b) const
     {
       ULLFixedPoint result;
@@ -198,7 +198,7 @@ namespace urbi
 #endif
 
   /// FIXME: This is duplicated with the bottom of ufloat.hh.
-  
+
   static const ufloat PI = ufloat(3.14159265358979323846264338327950288);
   /// return the tabulated sinus of given value in radian, using linear interpolation
   ufloat tabulatedSin(ufloat angle);
