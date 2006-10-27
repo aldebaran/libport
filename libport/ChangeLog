@@ -1,3 +1,10 @@
+2006-10-27  Akim Demaille  <akim@lrde.epita.fr>
+
+	More ufloat splitting
+	* ull-fixed-point.cc, ull-fixed-point.hh: New.
+	* ufloat.hh, ufloat.cc: Extracted from here.
+	* libport.mk: Adjust.
+
 2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
 
 	singleton-ptr.hh

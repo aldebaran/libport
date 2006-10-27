@@ -15,9 +15,11 @@ $(libport_srcdir)/thread.hh			\
 $(libport_srcdir)/ufloat.h			\
 $(libport_srcdir)/ufloat.hh			\
 $(libport_srcdir)/uffloat.hh			\
+$(libport_srcdir)/ull-fixed-point.hh		\
 $(libport_srcdir)/ulong-fixed-point.hh		\
 $(libport_srcdir)/utime.hh
 
 libport_sources = 				\
 $(libport_srcdir)/ufloat.cc			\
-$(libport_srcdir)/uffloat.cc
+$(libport_srcdir)/uffloat.cc			\
+$(libport_srcdir)/ull-fixed-point.cc
