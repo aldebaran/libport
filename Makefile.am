@@ -21,8 +21,6 @@ doc html:
 	cd doc && $(MAKE) $(AM_MAKEFLAGS) $@
 
 # Manually list the files you're using from build-aux here.
+# Note: Automake already takes care of the .mk and .m4 files you use.
 EXTRA_DIST += \
-		build-aux/test.sh		\
-		build-aux/autotroll.m4		\
-		build-aux/urbi-prog-cxx.m4	\
-		build-aux/warning.m4
+		build-aux/test.sh
