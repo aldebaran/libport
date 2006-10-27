@@ -1,3 +1,10 @@
+2006-10-27  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Don't skip empty files when generating reference outputs.
+	* test.sh: Because it might be confusing and because it might leads to
+          dist problems (eg: EXTRA_DIST = $(TESTS:.test=.stdout) will make
+          "make dist" fail because a .stdout is missing because it was empty).
+
 2006-10-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Add the generic test suite in build-aux.
