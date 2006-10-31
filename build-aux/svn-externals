@@ -21,10 +21,13 @@ me=$(basename $0)
 #   -n, --dry-run       display the commands, don't run them
 #
 # URL aliases:
-#   common    https://svn.gostai.com/svn/common
-#   jpeg      common/libjpeg-6b/jpeg-6b
-#   baux      common/project-template/trunk/build-aux
-#   libport   common/project-template/trunk/libport
+#   gostai    https://svn.gostai.com/svn
+#   common      gostai/common
+#   jpeg           common/libjpeg-6b/jpeg-6b
+#   baux           common/project-template/trunk/build-aux
+#   libport        common/project-template/trunk/libport
+#   lurbi       gostai/liburbi-cpp/trunk
+#   uobj           lurbi/src/liburbi/uobject
 #   share     https://svn.lrde.epita.fr/svn/lrde-publis/trunk/share
 #
 # An svn:externals dependency is "pinned" if it has an explicit
@@ -90,7 +93,11 @@ url_aliases ()
 # Return the youngest revision of repository URL.
 svn_youngest ()
 {
-  svn info "$1" | sed -n '/Revision: /{s///;p;q;}'
+  # Beware not to ignore the failure: pipes are not good.
+  local info=$(svn info "$1")
+  test -n "$info" ||
+    fatal "cannot get youngest revision number"
+  echo "$info" | sed -n '/Revision: /{s///;p;q;}'
 }
 
 
@@ -118,13 +125,11 @@ svn_externals_update_stream ()
       if test -z "$request" || test "$request" = "$dir"; then
 	rev=$(echo "$e" | sed -n 's/.*-r \([0-9][0-9]*\) *.*/\1/p')
 	url=$(echo "$e" | sed -n 's/.* \(http\)/\1/p')
-	if test -z "$url"; then
-		fatal "cannot fetch the URL of $e"
-	fi
+	test -n "$url" ||
+	  fatal "cannot fetch the URL of $e"
 	new_rev=$(svn_youngest "$url")
-	if test -z "$new_rev"; then
-		fatal "cannot fetch the revision of $url"
-	fi
+	test -n "$new_rev" ||
+	  fatal "cannot fetch the revision of $url"
 	echo "$dir -r $new_rev $url"
       else
 	echo "$e"

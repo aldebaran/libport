@@ -1,5 +1,13 @@
 2006-10-31  Akim Demaille  <demaille@gostai.com>
 
+	More external aliases
+	* svn-externals (lurbi, uobj): New.
+	More assertions.
+	Unfortunately, in some situations I don't understand well yet,
+	my exit 1 are ignored!
+
+2006-10-31  Akim Demaille  <demaille@gostai.com>
+
 	make help
 	* build-aux.mk (help): New target.
 	(SVN): New variable.
