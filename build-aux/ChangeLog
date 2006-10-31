@@ -1,3 +1,8 @@
+2006-10-31  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Handle multiple extensions properly.
+	* autotroll.mk: Here.
+
 2006-10-27  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Don't skip empty files when generating reference outputs.
