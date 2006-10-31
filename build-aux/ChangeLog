@@ -1,5 +1,11 @@
 2006-10-31  Akim Demaille  <demaille@gostai.com>
 
+	rebox.el
+	* rebox.el: New.
+	* README: Adjust.
+
+2006-10-31  Akim Demaille  <demaille@gostai.com>
+
 	Reindent
 	* reindent: New.
 	* README: Update.
