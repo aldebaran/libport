@@ -1,5 +1,12 @@
 2006-10-31  Akim Demaille  <demaille@gostai.com>
 
+	make help
+	* build-aux.mk (help): New target.
+	(SVN): New variable.
+	Accept aliases of target names.
+
+2006-10-31  Akim Demaille  <demaille@gostai.com>
+
 	Extend URBI_FLOAT
 	* urbi-ufloat.m4: Support 5 supports, tabulated or not.
 
