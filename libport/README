@@ -32,6 +32,19 @@ imports urbi::ufloat in ::.  Should be removed eventually.
 urbi::ufloat.  The latter must be compiled in if
 HAVE_LIBPORT_UFLOAT_HH is defined.
 
+The generation of the tables should be part of a single object.  There
+is already a dummy class, let's make it less dummy by moving
+everything into it.  Besides, there is code to factor.
+
+We have five supports
+- float
+- double
+- long
+- long long
+- floating, i.e., a long for the mantissa, a long for the exponent.
+
+Additionally, functions might be tabulated or not.
+
 *** uffloat.hh, uffloat.cc
 class urbi::UFFloat.
 

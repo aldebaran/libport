@@ -34,14 +34,11 @@ namespace urbi
   static const long long LONG_VAL = (1LL<<LONG_NBIT);
 
 
-  /** Fixed point implementation on a long long, expected to be twice the size of a long
-   *
-   */
-
+  /// Fixed point implementation on a long long.
+  /// Expected to be twice the size of a long
   class ULLFixedPoint
   {
   public:
-
     explicit ULLFixedPoint():v(0) {}
     ULLFixedPoint(const ULLFixedPoint &b):v(b.v) {}
     explicit ULLFixedPoint(double d) {v=(long long)(d*(double)LONG_VAL);}
@@ -196,37 +193,22 @@ namespace urbi
     return r;
   }
 
-
-#ifndef SINTABLE_POWER
-#define SINTABLE_POWER 10  //the tables will containe 2^sintable_power elements
-#endif
-
-  /// FIXME: This is duplicated with the bottom of ufloat.hh.
-
-  static const ufloat PI = ufloat(3.14159265358979323846264338327950288);
-  /// return the tabulated sinus of given value in radian, using linear interpolation
-  ufloat tabulatedSin(ufloat angle);
-  /// return the tabulated cosinus of given value in radian, using linear interpolation
-  ufloat tabulatedCos(ufloat angle);
-  /// return the tabulated arcsinus of given value, in radian, using linear interpolation
-  ufloat tabulatedASin(ufloat val);
-  /// return the tabulated arccosinus of given value, in radian, using linear interpolation
-  inline ufloat tabulatedACos(ufloat val) {return (PI>>1)-tabulatedASin(val);}
-
-  inline ufloat sin(ufloat angle) {return tabulatedSin(angle);}
-  inline ufloat cos(ufloat angle) {return tabulatedCos(angle);}
-  inline ufloat tan(ufloat angle) {return sin(angle)/cos(angle);}
-
-  inline ufloat asin(ufloat angle) {return tabulatedASin(angle);}
-  inline ufloat acos(ufloat angle) {return tabulatedACos(angle);}
-
   inline ufloat atan(ufloat a) {return ufloat(atan(a.getDouble()));}
   inline ufloat pow(ufloat a, ufloat b) {return ufloat(pow(a.getDouble(), b.getDouble()));}
   inline ufloat exp(ufloat a) {return ufloat(exp(a.getDouble()));}
   inline ufloat log(ufloat a) {return ufloat(log(a.getDouble()));}
   inline ufloat sqrt(ufloat a) {return ufloat(sqrt(a.getDouble()));}
   inline ufloat fabs(ufloat a) {return (a>0)?a:-a;}
-  inline ufloat trunc(ufloat a) {ufloat b; b.v = a.v & (-1LL ^ ((1LL<<LONG_NBIT)-1LL)); if (b.v<0) b++;return b;}
+
+  inline ufloat trunc(ufloat a)
+  {
+    ufloat b;
+    b.v = a.v & (-1LL ^ ((1LL<<LONG_NBIT)-1LL));
+    if (b.v<0)
+      b++;
+    return b;
+  }
+
   inline ufloat fmod(ufloat a, ufloat b) {ufloat q = trunc(a/b); return a-q*b;}
 
 }

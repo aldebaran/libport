@@ -24,10 +24,10 @@
 
 namespace urbi
 {
-  /* Floating point implementation on a double long.  Representation:
-   * v* 2^exp, with v normalized: high bit is sign, next bit has value
-   * 1-sign
-   */
+  /// Floating point implementation on a double long.
+  ///
+  /// Representation: v* 2^exp, with v normalized: high bit is sign,
+  /// next bit has value 1-sign
   class UFFloat
   {
   public:
@@ -216,24 +216,26 @@ namespace urbi
     {
       UFFloat big,small;
       if (e<b.e)
-      {
-	small = *this;
-	big = b;
-      }
+	{
+	  small = *this;
+	  big = b;
+	}
       else if (e>b.e)
-      {
-	small = b;
-	big = *this;
-      }
-      else if (abs(v)>abs(b.v)) { //we need exact absolute value ordering
-	small = b;
-	big = *this;
-      }
+	{
+	  small = b;
+	  big = *this;
+	}
+      else if (abs(v)>abs(b.v))
+	{
+	  //we need exact absolute value ordering
+	  small = b;
+	  big = *this;
+	}
       else
-      {
-	small = *this;
-	big = b;
-      }
+	{
+	  small = *this;
+	  big = b;
+	}
 
       long drift = big.e-small.e;
       if (drift>= LONG_NBIT)

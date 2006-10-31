@@ -1,3 +1,17 @@
+2006-10-31  Akim Demaille  <demaille@gostai.com>
+
+	Another stab at cleaning ufloats.
+	* ufloat.h: Always use the real ufloat files.
+	Import UINFINITY.
+	* uffloat.cc: Move the tabulatedSin code here.
+	* ufloat.cc: from here.
+	* ufloat.hh: Remove useless includes.
+	Factor the definition of PI.
+	Use all the files depending on results of URBI_UFLOAT.
+	* uffloat.hh: Formatting changes.
+	* ull-fixed-point.hh: Remove code duplicated compared to
+	ufloat.hh.
+
 2006-10-31  Matthieu Nottale  <nottale@gostai.com>
 
 	Install fwd.hh

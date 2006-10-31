@@ -18,63 +18,52 @@
 
 #ifndef LIBPORT_UFLOAT_HH
 # define LIBPORT_UFLOAT_HH
-# include <iostream>
-# include <cmath>
-# include <algorithm>
 
-# ifndef DEBUG
-#  define DEBUG 0
+# include "config.h"
+
+/*-----------------.
+| Ufloat support.  |
+`-----------------*/
+
+# ifdef URBI_UFLOAT_FLOAT
+namespace urbi
+{
+  typedef float ufloat;
+}
 # endif
 
-# if 0
+# ifdef URBI_UFLOAT_DOUBLE
+namespace urbi
+{
+  typedef double ufloat;
+}
+# endif
+
+# ifdef URBI_UFLOAT_LONG
 #  include "libport/ulong-fixed-point.hh"
 # endif
 
-# if 0
+# ifdef URBI_UFLOAT_LONG_LONG
+#  include "libport/ull-fixed-point.hh"
+# endif
+
+# ifdef URBI_UFLOAT_FLOATING
 #  include "libport/uffloat.hh"
 # endif
 
-# ifdef FLOAT_FAST
 
-#  include "libport/ull-fixed-point.hh"
-
-# elif FLOAT_FLOAT
 namespace urbi
 {
-  typedef  float ufloat;
-  static const ufloat PI = ufloat(3.14159265358979323846264338327950288);
+  static const ufloat PI(3.14159265358979323846264338327950288);
+  static const ufloat UINFINITY(999999999999999.0);
 }
 
-# elif FLOAT_TABFLOAT
 
-# define FLOAT_TABULATED
-namespace urbi
-{
-  typedef  float ufloat;
-  static const ufloat PI = ufloat(3.14159265358979323846264338327950288);
-}
+/*-------------------.
+| Ufloat tabulated.  |
+`-------------------*/
 
-# elif FLOAT_TABDOUBLE
-
-# define FLOAT_TABULATED
-namespace urbi
-{
-  typedef double ufloat;
-  static const ufloat PI = ufloat(3.14159265358979323846264338327950288);
-}
-
-# else
-namespace urbi
-{
-  typedef double ufloat;
-  static const ufloat PI = ufloat(3.14159265358979323846264338327950288);
-}
-
-# endif
-
-
-
-# if FLOAT_TABULATED
+# if URBI_UFLOAT_TABULATED
 namespace urbi
 {
   /// return the tabulated sinus of given value in radian, using linear interpolation
