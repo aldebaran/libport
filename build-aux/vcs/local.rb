@@ -9,6 +9,7 @@ class Vcs
     common_commit!("build-aux <%= rev %>: <%= title %>", *args) do |subject|
       mail!(:to => %w[akim@lrde.epita.fr
                       matthieu.nottale@ensta.fr
+		      tsuna@lrde.epita.fr
                       baillie@gostai.com],
             :subject => subject)
     end

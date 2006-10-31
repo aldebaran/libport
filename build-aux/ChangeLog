@@ -1,3 +1,9 @@
+2006-10-31  Akim Demaille  <demaille@gostai.com>
+
+	Reindent
+	* reindent: New.
+	* README: Update.
+
 2006-10-31  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Handle multiple extensions properly.

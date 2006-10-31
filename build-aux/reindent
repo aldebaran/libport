@@ -1,0 +1,126 @@
+#! /usr/bin/perl -w
+
+use strict;
+use IO::File;
+use File::Glob ':glob';
+use Getopt::Long qw(GetOptions);
+
+sub help ()
+{
+  print <<EOF;
+Usage: $0 [OPTIONS] FILES
+
+Reindent roughly the FILES.  A back up of the files is left.
+
+- Normalize white spaces
+- No open prace not alone on the line
+  (except for try and catch, but this is not implemented yet).
+
+Once reindent passed, you should use Emacs or similar to finish
+the reindentation.
+EOF
+  exit 0;
+}
+
+# Location of the share directory.
+my $share = 'share';
+
+# The sed program to update old cite keys.
+my $updater = '';
+
+# contents ($FILE_NAME)
+# ---------------------
+sub contents ($)
+{
+  my ($file) = @_;
+  local $/;			# Turn on slurp-mode.
+  my $f = new IO::File "< $file";
+  my $contents = $f->getline;
+  $f->close;
+  return $contents;
+}
+
+# Backup this FILE, return the back up file name.
+sub backup ($)
+{
+  my ($from) = @_;
+  my $SIMPLE_BACKUP_SUFFIX = $ENV{'SIMPLE_BACKUP_SUFFIX'} || '~';
+  my $to = "$from$SIMPLE_BACKUP_SUFFIX";
+  use File::Copy;
+  move ($from, $to)
+    or die "cannot backup $from: $!";
+  return $to;
+}
+
+# Reindent this FILE.
+sub reindent ($)
+{
+  my ($file) = @_;
+  my $backup = backup ($file);
+
+  $_ = contents ($backup);
+
+  # Beware that \s includes \n and often does not do what we want.
+  # Use [ \t] instead.
+
+  # Trailing.
+  s/[ \t]+$//gm;
+
+  # Leading.
+  while (s/^(\t*) {8}/$1\t/gm
+	 || s/^(\t+) {1,7}\t/$1\t/gm)
+    {
+      next;
+    }
+
+  # Trailing open paren possibly followed by empty lines (common in Urbi).
+  s/^([ \t]*)(.+\S)[ \t]*\{\n+/$1$2\n$1\{\n/gm;
+
+  # Update.
+  my $out = new IO::File ">$file" or die;
+  print $out $_;
+}
+
+# Parse ARGV, return the list of files to update.
+sub parse_options ()
+{
+  use Getopt::Long;
+  Getopt::Long::config ("bundling", "pass_through");
+  Getopt::Long::GetOptions
+    (
+     'h|help'   => sub { help; },
+    )
+    or die;
+
+  foreach my $arg (@ARGV)
+    {
+      if ($arg =~ /^-./)
+	{
+	  print STDERR "$0: unrecognized option `$arg'\n";
+	  print STDERR "Try `$0 --help' for more information.\n";
+	  exit (1);
+	}
+    }
+  return @ARGV;
+}
+
+my @tex = parse_options ();
+reindent ($_)
+  foreach @tex;
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:
