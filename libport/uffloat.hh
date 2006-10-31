@@ -35,7 +35,8 @@ namespace urbi
     UFFloat(int val) {v=val;e=0;normalize();}
     UFFloat(long val) {v=val;e=0;normalize();}
     UFFloat(long val, int exp) {v=val;e=exp; normalize();}
-    UFFloat(double d) {
+    UFFloat(double d)
+    {
       float f = (float)d;
       unsigned int l  = *((long*) ((void* )&f));
       long sign = l & 0x80000000;
@@ -50,7 +51,8 @@ namespace urbi
       e = exp - 31;
 
     }
-    UFFloat(float f) {
+    UFFloat(float f)
+    {
       unsigned int l  = *((long*) ((void* )&f));
       long sign = l & 0x80000000;
       long mant = l&0x7fffff00;
@@ -213,11 +215,13 @@ namespace urbi
     UFFloat operator -(const UFFloat &b) const
     {
       UFFloat big,small;
-      if (e<b.e) {
+      if (e<b.e)
+      {
 	small = *this;
 	big = b;
       }
-      else if (e>b.e) {
+      else if (e>b.e)
+      {
 	small = b;
 	big = *this;
       }
@@ -225,7 +229,8 @@ namespace urbi
 	small = b;
 	big = *this;
       }
-      else  {
+      else
+      {
 	small = *this;
 	big = b;
       }

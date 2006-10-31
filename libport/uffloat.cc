@@ -36,15 +36,18 @@ namespace urbi
       negative = true;
     else if (c>='0' && c<='9')
       s.unget();
-    else if (c != '+') {
+    else if (c != '+')
+    {
       s.setstate(std::ios_base::failbit);
       return s;
     }
-    while (!s.eof()) {
+    while (!s.eof())
+    {
       c=s.get();
       if (!s)
 	break;
-      if (c<'0' || c>'9') {
+      if (c<'0' || c>'9')
+      {
 	s.unget();
 	break;
       }
@@ -58,19 +61,23 @@ namespace urbi
     c=s.get();
     if (c!='.')  //XXX ignoring locales
       s.unget();
-    else {
+    else
+    {
       //get decimal part, counting number of characters
       const int limit = (sizeof(long)*8*3)/10; //avoid storing too many of them
       int nc=0;
-      while (!s.eof()) {
+      while (!s.eof())
+      {
 	c=s.get();
 	if (!s)
 	  break;
-	if (c<'0' || c>'9') {
+	if (c<'0' || c>'9')
+	{
 	  s.unget();
 	  break;
 	}
-	if (nc != limit && factor<(1<<sizeof(long)-3)) {
+	if (nc != limit && factor<(1<<sizeof(long)-3))
+	{
 	  dr=dr*10+(c-'0');
 	  nc++;
 	  factor *=10;
@@ -83,21 +90,25 @@ namespace urbi
     c=s.get();
     if (c!='e' && c!='E')
       s.unget();
-    else {
+    else
+    {
       c=s.get();
       if (c=='-')
 	eneg = true;
       else if (c>='0' && c<='9')
 	s.unget();
-      else if (c != '+') {
+      else if (c != '+')
+      {
 	s.setstate(std::ios_base::failbit);
 	return s;
       }
-      while (!s.eof()) {
+      while (!s.eof())
+      {
 	c=s.get();
 	if (!s)
 	  break;
-	if (c<'0' || c>'9') {
+	if (c<'0' || c>'9')
+	{
 	  s.unget();
 	  break;
 	}
@@ -118,7 +129,8 @@ namespace urbi
       p10 = 10;
     else
       p10 = UFFloat(1) / UFFloat(10);
-    for (int i=0; (1<<i)<= abs(exponent);i++) {
+    for (int i=0; (1<<i)<= abs(exponent);i++)
+    {
       if (exponent & (1<<i))
 	expfactor = expfactor * p10;
       p10 = p10*p10;
@@ -132,8 +144,8 @@ namespace urbi
     return s;
   }
 
-  std::ostream& operator <<(std::ostream &s, UFFloat u) {
-
+  std::ostream& operator <<(std::ostream &s, UFFloat u)
+  {
     //we need biggest power of 10 smaller than u
     long starte = (u.e+30)* 30103 / 100000; //(u.e*ln(3)/ln(10): solution of 2^u.e=10^start)
     //get 10^ start
@@ -143,16 +155,19 @@ namespace urbi
       p10 = 10;
     else
       p10 = UFFloat(1) / UFFloat(10);
-    for (int i=0; (1<<i)<= abs(starte);i++) {
+    for (int i=0; (1<<i)<= abs(starte);i++)
+    {
       if (starte & (1<<i))
 	start = start * p10;
       p10 = p10*p10;
     }
-    while (start<u) {
+    while (start<u)
+    {
       starte++;
       start = start*10;
     }
-    while (start > u) {
+    while (start > u)
+    {
       starte--;
       start = start/10;
     }
@@ -160,7 +175,8 @@ namespace urbi
     //now loop
     if (u<0)
       s<<"-";
-    for (int d=0;d<8;d++) {
+    for (int d=0;d<8;d++)
+    {
       UFFloat ratio = u/start;
       int digit = ratio.getValue();
       u = u - (UFFloat(digit)*start);

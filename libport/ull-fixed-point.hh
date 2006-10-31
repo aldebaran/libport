@@ -137,18 +137,22 @@ namespace urbi
       else
 	ut=v;
       int cbit = LONG_NBIT;
-      while (sb > ut) {
+      while (sb > ut)
+      {
 	cbit--;
 	sb = sb >>1;
       }
-      while ((sb<<1) < ut) {
+      while ((sb<<1) < ut)
+      {
 	cbit++;
 	sb = sb << 1;
       }
       unsigned long long r=0;
       unsigned long long posmask = (1ULL<<cbit);
-      while (posmask) {
-	if (sb<=ut) {
+      while (posmask)
+      {
+	if (sb<=ut)
+	{
 	  r += posmask;
 	  ut -= sb;
 	}

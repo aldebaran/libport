@@ -1,3 +1,9 @@
+2006-10-31  Akim Demaille  <demaille@gostai.com>
+
+	Reindent
+	* hash.hh, utime.hh, uffloat.cc, uffloat.hh, singleton-ptr.hh,
+	* ull-fixed-point.hh: Use reindent.
+
 2006-10-27  Akim Demaille  <akim@lrde.epita.fr>
 
 	More ufloat splitting

@@ -18,16 +18,16 @@ namespace urbi
   class SingletonPtr
   {
   public:
-    operator T* () 
+    operator T* ()
     {
       return instance();
     }
-    operator T& () 
+    operator T& ()
     {
       return *instance();
     }
 
-    T* operator ->() 
+    T* operator ->()
     {
       return instance();
     }

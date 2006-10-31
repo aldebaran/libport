@@ -22,7 +22,8 @@
 #   if (__GNUC__ == 2)
   __STL_BEGIN_NAMESPACE
 #   else
-  namespace __gnu_cxx {
+  namespace __gnu_cxx
+  {
 #   endif
 
 template<>

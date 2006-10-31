@@ -4,7 +4,7 @@
 # if defined WIN32
 namespace urbi
 {
-  inline 
+  inline
   long long
   utime()
   {
