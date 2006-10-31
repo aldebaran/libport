@@ -1,3 +1,9 @@
+2006-10-31  Matthieu Nottale  <nottale@gostai.com>
+
+	Install fwd.hh
+
+	* libport.mk: .
+
 2006-10-31  Akim Demaille  <demaille@gostai.com>
 
 	Reindent

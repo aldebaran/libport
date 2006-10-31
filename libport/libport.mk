@@ -7,6 +7,7 @@ libport_srcdir = $(top_srcdir)/libport
 libportdir = $(includedir)/libport
 
 libport_HEADERS = 				\
+$(libport_srcdir)/fwd.hh       		        \
 $(libport_srcdir)/hash.hh			\
 $(libport_srcdir)/lockable.hh			\
 $(libport_srcdir)/semaphore.hh			\
