@@ -1,5 +1,10 @@
 2006-11-01  Akim Demaille  <akim@lrde.epita.fr>
 
+	Default is --without-openr
+	* urbi-openr.m4: Do that.
+
+2006-11-01  Akim Demaille  <akim@lrde.epita.fr>
+
 	URBI_LIBPORT
 	* urbi-libport.m4: New.
 

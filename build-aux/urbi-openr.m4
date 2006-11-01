@@ -8,11 +8,14 @@
 AC_DEFUN([URBI_OPENR],
 [AC_ARG_WITH([openr],
 	     [AC_HELP_STRING([--with-openr=sdk-path],
-			     [Turn on OpenR client [/usr/local/OPEN_R_SDK]])],
-	     [], [with_openr=/usr/local/OPEN_R_SDK])
+			     [turn on OpenR client [/usr/local/OPEN_R_SDK]])],
+	     [], [with_openr=no])
 
 case $with_openr in
    no) openr=false
+       ;;
+  yes) openr=true
+       OPEN_R_SDK=/usr/local/OPEN_R_SDK
        ;;
     *) openr=true
        OPEN_R_SDK=$with_openr
@@ -33,6 +36,10 @@ else
 fi
 
 if $openr; then
+  if test x"$cross_compiling" = xno; then
+    AC_MSG_NOTICE([**** WARNING **** Using OpenR, but not a cross compiler])
+  fi
+
   # More tools for OpenR.
   AC_SUBST([MKBIN],       ['$(OPEN_R_SDK)/OPEN_R/bin/mkbin'])
   AC_SUBST([MKBIN_FLAGS], ['-p $(OPEN_R_SDK)'])
