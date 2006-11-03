@@ -1,5 +1,11 @@
 2006-11-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Fix the test suite.
+
+	* tests/Makefile.am: Fix the test suite.
+
+2006-11-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Add test suite and fix somes bugs in ufloat implementation.
 
 	* ufloat.hh: Fix macro which enables tabulated ufloat impl.

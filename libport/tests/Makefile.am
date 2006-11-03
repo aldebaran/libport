@@ -31,7 +31,7 @@ TESTS =							\
 			ullfptab1.test
 
 config.h: $(top_srcdir)/src/config.h
-	sed  -e '/URBI_UFLOAT/d' $(top_srcdir)/src/config.h > config.h
+	sed  -e '/URBI_UFLOAT/d' $< > $@
 
 $(TESTS): config.h
 	for i in $(TESTS); do \
