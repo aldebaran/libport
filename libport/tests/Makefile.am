@@ -14,13 +14,6 @@ ufloat1_SOURCES =	ufloat1.cc
 ullfp1_SOURCES =	ullfp1.cc
 ullfptab1_SOURCES =	ullfptab1.cc
 
-singleton1_DEPENDENCIES = 	config.h
-singleton2_DEPENDENCIES = 	config.h
-udouble1_DEPENDENCIES = 	config.h
-ufloat1_DEPENDENCIES = 		config.h
-ullfp1_DEPENDENCIES = 		config.h
-ullfptab1_DEPENDENCIES = 	config.h
-
 # If your test programs includes header from the source tree:
 AM_CPPFLAGS =		-I $(top_srcdir)		\
 			-I $(top_srcdir)/src		\
@@ -31,11 +24,11 @@ TESTS =							\
 			singleton1.test			\
 			singleton2.test			\
 			udouble1.test			\
-			udoubletab1.test		\
 			ufloat1.test			\
-			ufloattab1.test			\
 			ullfp1.test			\
 			ullfptab1.test
+
+check-am: config.h
 
 config.h: $(top_srcdir)/src/config.h
 	sed  -e '/URBI_UFLOAT/d' $< > $@
