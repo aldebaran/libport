@@ -1,5 +1,10 @@
 2006-11-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Fix distcheck
+	* tests/Makefile.am: Fix EXTRA_FILES.
+
+2006-11-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Fix test suite.
 
 	* tests/Makefile.am: Improve the generation of config.h.

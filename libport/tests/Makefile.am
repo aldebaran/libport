@@ -17,7 +17,8 @@ ullfptab1_SOURCES =	ullfptab1.cc
 # If your test programs includes header from the source tree:
 AM_CPPFLAGS =		-I $(top_srcdir)		\
 			-I $(top_srcdir)/src		\
-			-I $(top_srcdir)/libport
+			-I $(top_srcdir)/libport	\
+			-I $(top_srcdir)/libport/tests
 
 # List your tests here:
 TESTS =							\
@@ -38,7 +39,8 @@ $(TESTS):
           $(LN_S) -f $(top_srcdir)/build-aux/test.sh $$i || exit 1; \
         done
 
-EXTRA_DIST = $(TESTS:.test=.stdout)
+EXTRA_DIST = $(TESTS:.test=.stdout) $(top_srcdir)/build-aux/test.sh \
+		 common_ufloat1.cc
 CLEANFILES = *.my_stdout *.my_stderr config.h
 TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
 
