@@ -1,3 +1,32 @@
+2006-11-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Add test suite and fix somes bugs in ufloat implementation.
+
+	* ufloat.hh: Fix macro which enables tabulated ufloat impl.
+	* uffloat.hh: Fix missing constants.
+	* tests: Adds test suite. New.
+	* tests/ullfp1.stdout: Idem. New.
+	* tests/ufloattab1.cc: Idem. New.
+	* tests/ullfp1.cc: Idem. New.
+	* tests/udoubletab1.cc: Idem. New.
+	* tests/ufloat1.stdout: Idem. New.
+	* tests/uffloattab1.cc: Idem. New.
+	* tests/ufloat1.cc: Idem. New.
+	* tests/udouble1.stdout: Idem. New.
+	* tests/udouble1.cc: Idem. New.
+	* tests/singleton1.stdout: Idem. New.
+	* tests/uffloat1.cc: Idem. New.
+	* tests/singleton2.stdout: Idem. New.
+	* tests/singleton1.cc: Idem. New.
+	* tests/common_ufloat1.cc: Idem. New.
+	* tests/singleton2.cc: Idem. New.
+	* tests/Makefile.am: Idem. New.
+	* tests/ullfptab1.stdout: Idem. New.
+	* tests/ullfptab1.cc: Idem. New.
+	* Makefile.am: Idem. New.
+	* ull-fixed-point.hh: Fix various mistakes, broken code are
+	currently disabled.
+
 2006-10-31  Akim Demaille  <demaille@gostai.com>
 
 	Another stab at cleaning ufloats.

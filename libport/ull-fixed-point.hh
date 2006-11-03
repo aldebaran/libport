@@ -19,7 +19,7 @@
 #ifndef LIBPORT_ULL_FIXED_POINT_HH
 # define LIBPORT_ULL_FIXED_POINT_HH
 
-# include <iofwd>
+# include <iosfwd>
 
 namespace urbi
 {
@@ -33,6 +33,8 @@ namespace urbi
   static const int LONG_SIGN_BIT_MASK=(1L<<(sizeof(long)*8-1));
   static const long long LONG_VAL = (1LL<<LONG_NBIT);
 
+  class ULLFixedPoint;
+  typedef ULLFixedPoint ufloat;
 
   /// Fixed point implementation on a long long.
   /// Expected to be twice the size of a long
@@ -193,12 +195,14 @@ namespace urbi
     return r;
   }
 
+  /*
   inline ufloat atan(ufloat a) {return ufloat(atan(a.getDouble()));}
   inline ufloat pow(ufloat a, ufloat b) {return ufloat(pow(a.getDouble(), b.getDouble()));}
   inline ufloat exp(ufloat a) {return ufloat(exp(a.getDouble()));}
   inline ufloat log(ufloat a) {return ufloat(log(a.getDouble()));}
   inline ufloat sqrt(ufloat a) {return ufloat(sqrt(a.getDouble()));}
   inline ufloat fabs(ufloat a) {return (a>0)?a:-a;}
+  */
 
   inline ufloat trunc(ufloat a)
   {

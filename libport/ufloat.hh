@@ -63,7 +63,7 @@ namespace urbi
 | Ufloat tabulated.  |
 `-------------------*/
 
-# if URBI_UFLOAT_TABULATED
+# ifdef URBI_UFLOAT_TABULATED
 namespace urbi
 {
   /// return the tabulated sinus of given value in radian, using linear interpolation

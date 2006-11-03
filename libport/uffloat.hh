@@ -24,6 +24,18 @@
 
 namespace urbi
 {
+  static const int LONG_NBIT=sizeof(long)*8;
+  static const int LONGLONG_NBIT=sizeof(long long)*8;
+
+  static const int HALFLONG_NBIT=sizeof(long)*4;
+
+  static const int LONG_NOSIGN_BIT_MASK=(1L<<(sizeof(long)*8-1))-1;
+  static const int LONG_SIGN_BIT_MASK=(1L<<(sizeof(long)*8-1));
+  static const long long LONG_VAL = (1LL<<LONG_NBIT);
+
+  class UFFloat;
+  typedef UFFloat ufloat;
+
   /// Floating point implementation on a double long.
   ///
   /// Representation: v* 2^exp, with v normalized: high bit is sign,
