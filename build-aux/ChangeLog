@@ -1,5 +1,10 @@
 2006-11-03  Akim Demaille  <akim.demaille@free.fr>
 
+	Fix -U
+	* svn-externals: Fix handling of -U.
+
+2006-11-03  Akim Demaille  <akim.demaille@free.fr>
+
 	svn-externals: Accept dir list
 	* svn-externals: Accept dir list.
 	* build-aux.mk: Don't use $(top_srcdir) in EXTRA_DIST,

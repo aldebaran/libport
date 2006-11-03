@@ -17,7 +17,8 @@ me=$(basename $0)
 #   -h, --help, -h      display this message and exit
 #   -u, --update=DIR    upgrade the pinned externals directory DIR to the
 #                       newest version, and upgrade.
-#   -U, --update-all    upgrades all pinned externals
+#                       "all" means all the externals
+#   -U, --update-all    same as --update=all
 #   -s, --subscribe=URL add a pinned external on URL, under the same directory
 #                       name.  If there was already a dependency, pin it.
 #   -n, --dry-run       display the commands, don't run them
@@ -152,6 +153,11 @@ svn_externals_update_stream ()
 # Update all the pinned svn:externals to the most recent version.
 svn_externals_update ()
 {
+  # "all" means, any directory here.
+  local dir=$2
+  test x"$dir" != xall ||
+    dir=""
+
   local externals=$(svn propget svn:externals "$1" |
 		    svn_externals_update_stream "$2")
   $run svn propset svn:externals "$externals" "$1"
@@ -197,10 +203,10 @@ do
       set dummy "$opt" "$val" ${1+"$@"}; shift
       ;;
 
-    # Handle --update-all as --update ""
+    # Handle --update-all as --update "all"
     -U | --update-all | --upgrade-all )
       shift
-      set dummy --update "" ${1+"$@"}; shift
+      set dummy --update "all" ${1+"$@"}; shift
       ;;
   esac
 
@@ -242,6 +248,7 @@ do
     svn_externals_subscribe "$d" $(url_aliases "$s")
     update=true
   done
+
   for u in $updates
   do
     svn_externals_update "$d" "$u"
