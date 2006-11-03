@@ -1,5 +1,12 @@
 2006-11-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Fix test suite
+
+	* tests/Makefile.am: config.h must be generated
+	_before_ compilation.
+
+2006-11-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Fix the test suite.
 
 	* tests/Makefile.am: Fix the test suite.
