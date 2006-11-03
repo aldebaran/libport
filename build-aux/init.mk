@@ -1,0 +1,9 @@
+# Initialize some common variables so that we can always use +=.
+AM_CFLAGS =
+AM_CPPFLAGS =
+AM_CXXFLAGS =
+AM_LIBADD =
+BUILT_SOURCES =
+CLEANFILES =
+EXTRA_DIST =
+MAINTAINERCLEANFILES =

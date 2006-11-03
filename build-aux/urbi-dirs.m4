@@ -11,6 +11,8 @@ AC_PREREQ([2.60])
 #
 # branddir	   = $(prefix)/$(PACKAGE_BRAND)
 #                    /usr/local/gostai
+# urbiincludefir   = $(includedir)/urbi
+#                    /usr/local/include/urbi
 # hostdir	   = $(branddir)/KIND/$(URBI_HOST)
 # envdir	   = $(hostdir)/$(URBI_ENV)
 #                    /usr/local/gostai/core/aibo
@@ -71,8 +73,10 @@ AC_SUBST([URBI_ENV])
 AC_SUBST([PACKAGE_BRAND], [gostai])
 AC_SUBST([branddir], ['$(prefix)/$(PACKAGE_BRAND)'])
 
-# Standard headers and libraries are installed in regular
-# includedir and libdir under $prefix.
+# Standard headers and libraries are installed in regular includedir
+# and libdir under $prefix.  liburbi headers are installed in
+# urbiincludedir.
+AC_SUBST([urbiincludedir], [$(includedire)/urbi])
 
 # /usr/local/gostai/core/$host
 AC_SUBST([hostdir], ['$(branddir)/$1/$(URBI_HOST)'])

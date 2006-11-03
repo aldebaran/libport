@@ -41,6 +41,8 @@ Unrelated to the previous targets: just relaunches configure and make
 again (in case something changed in the environment).  Named after
 ./config.status --recheck.
 
+* init.mk
+Initializes some Automake variables so that we can always use += on them.
 
 * install-sh-c
 Our own copy of install-sh that support -C in addition.  Useful to
