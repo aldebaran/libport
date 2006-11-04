@@ -1,3 +1,8 @@
+2006-11-04  Akim Demaille  <akim@lrde.epita.fr>
+
+	Formatting changes
+	* thread.hh: here.
+
 2006-11-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
 	Fix distcheck

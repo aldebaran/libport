@@ -71,19 +71,19 @@ namespace urbi
     return r;
   }
 
-  template<class T> void* startThread(T * obj)
+  template<class T> void* startThread(T* obj)
   {
 # ifdef WIN32
     unsigned long id;
-    void *r = CreateThread(NULL, 0,  &_startThread<T> ,obj, 0, &id);
+    void *r = CreateThread(NULL, 0, &_startThread<T> ,obj, 0, &id);
 # else
     pthread_t *pt = new pthread_t;
     pthread_create(pt,0, &_startThread<T> ,obj);
-    void *r=pt;
+    void *r = pt;
 # endif
-    if (false) { //force instanciation
+    if (false)
+      //force instanciation
       _startThread<T>(0);
-    }
 
     return r;
   }
