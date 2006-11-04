@@ -1,3 +1,12 @@
+2006-11-04  Akim Demaille  <akim@lrde.epita.fr>
+
+	Fix svn-externals -U
+	* svn-externals: Use "all" instead of "" to denote the whole
+	set of externals.
+	* build-aux.mk (build_aux_dir, svn_externals): New.
+	Use them.
+	Pass host directories are arguments instead of cd'ing into them.
+
 2006-11-03  Akim Demaille  <akim.demaille@free.fr>
 
 	Fix -U

@@ -1,5 +1,6 @@
-EXTRA_DIST = build-aux/install-sh-c
-
+EXTRA_DIST = $(top_srcdir)/build-aux/install-sh-c
+build_aux_dir = $(top_srcdir)/build-aux
+svn_externals = $(build_aux_dir)/svn-externals
 SVN = svn-wrapper.sh
 
 ## ------ ##
@@ -45,16 +46,16 @@ baux-help build-aux-help:
 
 # Update a pinned svn:externals.
 baux-up build-aux-up:
-	cd $(top_srcdir) && build-aux/svn-externals --update=build-aux
+	$(svn_externals) --update=build-aux $(srcdir)
 
 # Check in a pinned external from a host project, and depend upon it.
 baux-ci build-aux-ci:
-	cd $(top_srcdir)/build-aux && $(SVN) ci
+	cd $(build_aux_dir) && $(SVN) ci
 	$(MAKE) $(AM_MAKEFLAGS) baux-up
 
 # Pin the svn:external by subscribing to it.
 baux-pin build-aux-pin:
-	cd $(top_srcdir) && build-aux/svn-externals --subscribe=baux
+	$(svn_externals) --subscribe=baux $(srcdir)
 
 
 ## --------- ##
@@ -70,7 +71,7 @@ libport-help:
 
 # Update a pinned svn:externals.
 libport-up:
-	cd $(top_srcdir) && build-aux/svn-externals --update=libport
+	$(svn_externals) --update=libport $(srcdir)
 
 # Check in a pinned external from a host project, and depend upon it.
 libport-ci:
@@ -79,7 +80,7 @@ libport-ci:
 
 # Pin the svn:external by subscribing to it.
 libport-pin:
-	cd $(top_srcdir) && build-aux/svn-externals --subscribe=libport
+	$(svn_externals) --subscribe=libport $(srcdir)
 
 
 ## ----- ##

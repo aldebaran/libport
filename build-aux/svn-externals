@@ -110,7 +110,11 @@ svn_youngest ()
 # pass to STDOUT.  If DIR is empty, do it for all the directories.
 svn_externals_update_stream ()
 {
+  # "all" means, any directory here.
   local request=$1
+  test x"$request" != xall ||
+    request=""
+
   while read e
   do
     case $e in
@@ -153,11 +157,6 @@ svn_externals_update_stream ()
 # Update all the pinned svn:externals to the most recent version.
 svn_externals_update ()
 {
-  # "all" means, any directory here.
-  local dir=$2
-  test x"$dir" != xall ||
-    dir=""
-
   local externals=$(svn propget svn:externals "$1" |
 		    svn_externals_update_stream "$2")
   $run svn propset svn:externals "$externals" "$1"
