@@ -1,3 +1,14 @@
+2006-11-06  Akim Demaille  <akim@lrde.epita.fr>
+
+	More Make macros, easier distcheck
+	* urbi-dirs.m4 (SDK_CPPFLAGS, SDK_LDFLAGS): New.
+	* init.mk (AM_LIBADD): Remove, Automake 1.10 doesn't like its name.
+	* build-aux.mk: Include init.mk.
+	This will requirement the adjustment of all its users.
+	* urbi-build-aux.m4: New.
+	* revision.mk (move_if_change): New.
+	Ship it.
+
 2006-11-04  Akim Demaille  <akim@lrde.epita.fr>
 
 	Fix svn-externals -U

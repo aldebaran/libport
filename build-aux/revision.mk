@@ -11,19 +11,21 @@ BUILT_SOURCES += $(REVISION_FILE)
 REVISION_FILE_IN = $(top_srcdir)/build-aux/version.hh.in
 REVISION_FILE_STAMP = $(REVISION_FILE).stamp
 
-EXTRA_DIST += $(REVISION_FILE_IN)
+move_if_change = $(top_srcdir)/build-aux/move-if-change
+
+EXTRA_DIST += $(REVISION_FILE_IN) $(move_if_change)
 CLEANFILES +=  $(REVISION_FILE) $(REVISION_FILE_STAMP)
 
 $(REVISION_FILE_STAMP): $(top_srcdir)/ChangeLog $(REVISION_FILE_IN) $(top_srcdir)/build-aux/revision.mk
 	@rm -f $(REVISION_FILE_STAMP).tmp
 	@touch $(REVISION_FILE_STAMP).tmp
 # Be sure not to have `/' in Id.  The embedded date may be
-# separated by `/' instead of `-', what sed dislikes.
+# separated by `/' instead of `-', which sed dislikes.
 	Date=`sed -n '/^\$$Date: \(.*\) \$$$$/{s,,\1,;s,/,-,g;p;q;}' $(top_srcdir)/ChangeLog`; \
 	Id=`sed -n '/^\$$Id: \(.*\) \$$$$/{s,,\1,;s,/,-,g;p;q;}' $(top_srcdir)/ChangeLog`; \
 	Rev=`sed -n '/^\$$Rev: \(.*\) \$$$$/{s,,\1,;s,/,-,g;p;q;}' $(top_srcdir)/ChangeLog`; \
 	sed -e "s/@DATE@/$$Date/;s/@ID@/$$Id/;s/@REV@/$$Rev/;" $(REVISION_FILE_IN) >$(REVISION_FILE).tmp
-	$(top_srcdir)/build-aux/move-if-change $(REVISION_FILE).tmp $(REVISION_FILE)
+	$(move_if_change) $(REVISION_FILE).tmp $(REVISION_FILE)
 	@mv -f $(REVISION_FILE_STAMP).tmp $(REVISION_FILE_STAMP)
 
 $(REVISION_FILE): $(REVISION_FILE_STAMP)
