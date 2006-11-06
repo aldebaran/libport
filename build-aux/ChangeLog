@@ -1,3 +1,8 @@
+2006-11-06  POTHIER Benoit  <pothier@gostai.com>
+
+	Fix QT resource generation.
+	* autotroll.mk: RCC instead of QRC.
+
 2006-11-06  Akim Demaille  <akim@lrde.epita.fr>
 
 	More Make macros, easier distcheck
