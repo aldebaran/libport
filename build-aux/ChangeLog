@@ -1,5 +1,10 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	Execute URBI_LIBPORT earlier
+	* urbi-engine.ac: to catch cmd line error earlier.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	Work around AC_REQUIRE issues
 	* urbi-engine.m4: Rename as...
 	* urbi-engine.ac: this.
