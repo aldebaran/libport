@@ -1,5 +1,10 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	nostdinc
+	* urbi-engine.ac: Pass it to Automake.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	Execute URBI_LIBPORT earlier
 	* urbi-engine.ac: to catch cmd line error earlier.
 

@@ -14,7 +14,7 @@
 AC_PREREQ([2.60])
 
 # Automake.
-AM_INIT_AUTOMAKE([foreign 1.9.6 -Wall dist-zip])
+AM_INIT_AUTOMAKE([foreign 1.9.6 -Wall dist-zip nostdinc])
 
 # build-aux etc.
 URBI_BUILD_AUX
