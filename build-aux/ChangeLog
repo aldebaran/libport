@@ -1,5 +1,12 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	Work around AC_REQUIRE issues
+	* urbi-engine.m4: Rename as...
+	* urbi-engine.ac: this.
+	Adjust to be included, not to define a macro.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	Fixes and improvements
 	* ax-prefix-config-h.m4: Use config_headers, not CONFIG_HEADERS,
 	since the former contains all the declared headers, while the latter

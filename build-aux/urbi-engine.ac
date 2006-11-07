@@ -4,26 +4,24 @@
 # be factored because of limitation in the Autotools, otherwise this
 # would be named URBI_INIT for instance, and also include AC_INIT.
 #
+# We also tried to make it a macro, but it does not work as expected
+# because of unexpected behavior from AC_REQUIRE.  I currently don't
+# understand everything that happens, and I no longer want to dive
+# into the AC_REQUIRE machinery...
+#
 # Try to use it in every URBI engine, and keep their copy in sync.
-
-m4_pattern_forbid([^ACX_])dnl
-m4_pattern_forbid([^URBI_])dnl
 
 AC_PREREQ([2.60])
 
-# URBI_ENGINE([DEFAULT-URBI-ENV])
-# -------------------------------
-AC_DEFUN([URBI_ENGINE],
-[# Automake.
+# Automake.
 AM_INIT_AUTOMAKE([foreign 1.9.6 -Wall dist-zip])
 
+# build-aux etc.
+URBI_BUILD_AUX
 
 ## ------------ ##
 ## Parameters.  ##
 ## ------------ ##
-
-# Urbi standard locations.
-URBI_DIRS([$1])
 
 # doc/srcdoc.
 URBI_DOC
@@ -43,9 +41,11 @@ URBI_SDK
 ## Output.  ##
 ## -------- ##
 
+URBI_LIBPORT
 AC_CONFIG_HEADERS([sdk/config.h])
+
 AC_CONFIG_FILES([Makefile])
-])
+
 
 ## Local Variables:
 ## mode: autoconf
