@@ -1,5 +1,10 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	Finish importing svn sugars
+	* libport.mk: Stolen from build-aux.mk.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	libport is installed by everyone
 	Requested by Matthieu Nottale: all the sdks should do that
 	to make sure libport is available (liburbi needs not being

@@ -39,18 +39,22 @@ $(libport_srcdir)/ull-fixed-point.cc
 ## svn sugars.  ##
 ## ------------ ##
 
-.PHONY: libport-help svn-up svn-ci
+.PHONY: libport-help libport-up libport-ci libport-pin
 help: libport-help
 libport-help:
-	@echo "svn-up:    upgrade in parent dir"
-	@echo "svn-ci:    checkin and upgrade parent dir"
-
+	@echo "libport-up:    same as baux-up, but for libport"
+	@echo "libport-ci:    likewise"
+	@echo "libport-pin:   likewise"
 
 # Update a pinned svn:externals.
-svn-up:
-	$(svn_externals) --update=libport $(top_srcdir)
+libport-up:
+	$(svn_externals) --update=libport $(srcdir)
 
 # Check in a pinned external from a host project, and depend upon it.
-svn-ci:
+libport-ci:
 	cd $(top_srcdir)/libport && $(SVN) ci
-	$(MAKE) $(AM_MAKEFLAGS) svn-up
+	$(MAKE) $(AM_MAKEFLAGS) libport-up
+
+# Pin the svn:external by subscribing to it.
+libport-pin:
+	$(svn_externals) --subscribe=libport $(srcdir)
