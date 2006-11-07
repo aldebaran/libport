@@ -144,7 +144,7 @@ _LOW=`echo _$_PKG | sed -e "y:m4_cr_LETTERS-:m4_cr_letters[]_:"`
 _UPP=`echo $_PKG | sed -e "y:m4_cr_letters-:m4_cr_LETTERS[]_:"  -e "/^@<:@m4_cr_digits@:>@/s/^/_/"`
 _INP=`echo "ifelse($3,,,$3)" | sed -e 's/ *//'`
 if test ".$_INP" = "."; then
-   for ac_file in : $CONFIG_HEADERS; do test "_$ac_file" = _: && continue
+   for ac_file in : $config_headers; do test "_$ac_file" = _: && continue
      case "$ac_file" in
 	*.h) _INP=$ac_file ;;
 	*)

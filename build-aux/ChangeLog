@@ -1,5 +1,15 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	Fixes and improvements
+	* ax-prefix-config-h.m4: Use config_headers, not CONFIG_HEADERS,
+	since the former contains all the declared headers, while the latter
+	contains only those about to be instantiated.
+	* urbi-config-headers-prefixed.m4 (URBI_PREFIX_CONFIG_H): New.
+	* urbi-libport.m4: Require the instantiation of libport/config.h.
+	* build-aux.mk: Remove libport svn sugar.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	SVN
 	* urbi-build-aux.m4 (SVN): Define it.
 

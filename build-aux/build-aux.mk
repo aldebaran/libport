@@ -59,31 +59,6 @@ baux-pin build-aux-pin:
 	$(svn_externals) --subscribe=baux $(srcdir)
 
 
-## --------- ##
-## libport.  ##
-## --------- ##
-
-.PHONY: libport-help libport-up libport-ci libport-pin
-help: libport-help
-libport-help:
-	@echo "libport-up:    same as baux-up, but for libport"
-	@echo "libport-ci:    likewise"
-	@echo "libport-pin:   likewise"
-
-# Update a pinned svn:externals.
-libport-up:
-	$(svn_externals) --update=libport $(srcdir)
-
-# Check in a pinned external from a host project, and depend upon it.
-libport-ci:
-	cd $(top_srcdir)/libport && $(SVN) ci
-	$(MAKE) $(AM_MAKEFLAGS) libport-up
-
-# Pin the svn:external by subscribing to it.
-libport-pin:
-	$(svn_externals) --subscribe=libport $(srcdir)
-
-
 ## ----- ##
 ## All.  ##
 ## ----- ##
