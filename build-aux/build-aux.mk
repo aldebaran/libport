@@ -2,7 +2,7 @@ include $(top_srcdir)/build-aux/init.mk
 EXTRA_DIST += $(top_srcdir)/build-aux/install-sh-c
 build_aux_dir = $(top_srcdir)/build-aux
 svn_externals = $(build_aux_dir)/svn-externals
-SVN = svn-wrapper.sh
+
 
 ## ------ ##
 ## Help.  ##

@@ -14,6 +14,9 @@ AC_DEFUN([URBI_BUILD_AUX],
 # Use install-sh -C for headers.
 AC_SUBST([install_sh_c_DATA], ['$(install_sh)-c -c -m 644'])
 AC_SUBST([INSTALL_HEADER], ['$(install_sh_c_DATA) -C'])
+
+# Default value.
+AC_SUBST([SVN], [svn])
 ])
 
 
