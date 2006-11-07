@@ -24,3 +24,6 @@ libport_sources = 				\
 $(libport_srcdir)/ufloat.cc			\
 $(libport_srcdir)/uffloat.cc			\
 $(libport_srcdir)/ull-fixed-point.cc
+
+
+include $(top_srcdir)/build-aux/config-headers-prefixed.mk
