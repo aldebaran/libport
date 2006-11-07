@@ -26,7 +26,7 @@ m4_define([_URBI_DIRS],
 	   [m4_fatal([incorrect kind: $1])])
 
 # We need to know the host (the type of architecture it will run on),
-# the environment (the runtime, the event loop: posix, webots, aibo).
+# the environment (the runtime, the event loop: engine, webots, aibo).
 
 # URBI_HOST
 AC_ARG_ENABLE([host],
@@ -46,7 +46,7 @@ AC_SUBST([URBI_HOST])
 AC_ARG_ENABLE([env],
 	      [AC_HELP_STRING([--enable-env=urbi-env],
 			      [The environment this will run on:
-			       aibo, webots, posix [posix]])])
+			       aibo, webots, engine [engine]])])
 AC_MSG_CHECKING([for URBI environment type])
 case $enable_env in
  '') URBI_ENV=$2;;
@@ -84,7 +84,7 @@ AC_SUBST([hostdir], ['$(branddir)/$1/$(URBI_HOST)'])
 # /usr/local/gostai/core/$host/$env.
 # Could have been named sdklibdir too.
 AC_SUBST([envdir], ['$(hostdir)/$(URBI_ENV)'])
-# Possibly an alias: /usr/local/gostai/kernel/powerpc-apple-darwin8.7.0/posix
+# Possibly an alias: /usr/local/gostai/kernel/powerpc-apple-darwin8.7.0/engine
 AC_SUBST([kerneldir],  ['$(branddir)/kernel/$(URBI_HOST)/$(URBI_ENV)'])
 
 # Where we install, and expect to find, headers.

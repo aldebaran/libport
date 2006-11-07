@@ -1,5 +1,10 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	More posix -> engine
+	* urbi-dirs.m4: here.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	posix -> engine
 	* urbi-dirs.m4: Expect engine, not posix as an urbi_env.
 
