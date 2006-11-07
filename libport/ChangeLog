@@ -1,5 +1,13 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	Only liburbi should install libport
+	* libport.mk (libport_HEADERS, nodist_libport_HEADERS): Rename as...
+	(libport_headers, nodist_libport_headers): these.
+	(svn-up, svn-ci, EXTRA_HEADERS): New
+	* Makefile.am (libport_HEADERS, nodist_libport_HEADERS): New.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	Be ready to use libport/config.h
 	* libport.mk: Create and install it.
 	* ufloat.hh, thread.hh, lockable.hh, ufloat.cc: Use it.
@@ -164,7 +172,7 @@
 
 2006-10-20  Matthieu Nottale  <nottale@gostai.com>
 
-	typo fix 
+	typo fix
 
 	* lockable.hh: Fix typo.
 
@@ -175,7 +183,7 @@
 
 2006-10-18  Akim Demaille  <demaille@gostai.com>
 
-	Check if defined before using 
+	Check if defined before using
 	* lockable.hh: Protect against "undefined macro" warnings.
 
 2006-10-18  Akim Demaille  <demaille@gostai.com>
