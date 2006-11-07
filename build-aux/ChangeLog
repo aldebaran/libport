@@ -1,5 +1,11 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	Define LIBPORT_CPPFLAGS
+	* urbi-libport.m4: Do that.
+	* init.mk (EXTRA_HEADERS): New.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	Simplify
 	* config-headers-prefixed.mk: No need for a stamp file.
 
