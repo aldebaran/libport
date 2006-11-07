@@ -57,8 +57,8 @@ case $URBI_ENV in
   aibo)
      AC_DEFINE([URBI_ENV_AIBO], [1], [Define if compiling for Aibo.])
      ;;
-  posix)
-     AC_DEFINE([URBI_ENV_POSIX], [1], [Define if compiling for POSIX.])
+  engine)
+     AC_DEFINE([URBI_ENV_ENGINE], [1], [Define if compiling generic engine.])
      ;;
   webots)
      AC_DEFINE([URBI_ENV_WEBOTS], [1], [Define if compiling for Webots.])
