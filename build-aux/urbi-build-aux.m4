@@ -7,7 +7,9 @@ AC_PREREQ([2.60])
 # Initialize various things for build-aux/.
 AC_DEFUN([URBI_BUILD_AUX],
 [# Auxiliary files.
-AC_CONFIG_AUX_DIR([build-aux])
+# Currently, because libtoolize does not support traces, don't move the
+# AC_CONFIG_AUX_DIR here.
+# AC_CONFIG_AUX_DIR([build-aux])
 
 # Use install-sh -C for headers.
 AC_SUBST([install_sh_c_DATA], ['$(install_sh)-c -c -m 644'])

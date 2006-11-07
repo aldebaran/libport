@@ -1,3 +1,12 @@
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
+	URBI_CONFIG_HEADERS_PREFIXED
+	* config-headers-prefixed.mk, urbi-config-headers-prefixed.m4: New.
+	* ax-prefix-config-h.m4: New.
+	* README: Complete.
+	* urbi-build-aux.m4: Don't issue AC_CONFIG_AUX_DIR here until
+	libtoolize support traces.
+
 2006-11-06  POTHIER Benoit  <pothier@gostai.com>
 
 	Fix QT resource generation.

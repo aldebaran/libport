@@ -15,7 +15,9 @@ should ship these files, for instance
 But it should not be needed: Automake automatically ships included
 Makefile snippets, and Autoconf M4 bits.
 
-* build-aux.mk
+* Makefile snippets
+
+** build-aux.mk
 Provides convenient targets wrapping build-aux and libport handling.
 In the case of kernel1, the dependency on liburbi is implemented
 similarly.  Here are the EXTERNAL names:
@@ -26,43 +28,25 @@ similarly.  Here are the EXTERNAL names:
 	    liburbi-c++	 | liburbi
 	    libport	 | libport
 
-** EXTERNAL-up
+*** EXTERNAL-up
 Update EXTERNAL to the most recent version, and pin it.
 
-** EXTERNAL-pin
+*** EXTERNAL-pin
 Subscribe to the most recent version.
 
-** EXTERNAL-ci
+*** EXTERNAL-ci
 You made modification in EXTERNAL.  So check them in, then run the
 corresponding EXTERNAL-up.
 
-** recheck
+*** recheck
 Unrelated to the previous targets: just relaunches configure and make
 again (in case something changed in the environment).  Named after
 ./config.status --recheck.
 
-* init.mk
+** init.mk
 Initializes some Automake variables so that we can always use += on them.
 
-* install-sh-c
-Our own copy of install-sh that support -C in addition.  Useful to
-avoid installing headers that did not change.
-
-* rebox.el
-An Emacs file to build nice comment boxes
-
-		/*------------.
-		| Like this.  |
-		`------------*/
-
-automatically.
-		
-* reindent
-A simplistic Perl script that try to normalize the look of the code.
-It is very stupid and has no form of knowledge of C++, so use with
-care.
-
-* revision.mk, version.hh.in
+** revision.mk, version.hh.in
 This is used to insert Subversion keywords in the programs, in the
 banners for instance.
 
@@ -73,3 +57,38 @@ To use this module, insert something like this in your Makefile.am:
 
 since it extends (using +=), BUILT_SOURCES, EXTRA_DIST and CLEANFILES,
 they should be defined before the include.
+
+** config-headers-prefixed.mk.
+See URBI_CONFIG_HEADERS_PREFIXED.
+
+* Scripts
+
+** install-sh-c
+Our own copy of install-sh that support -C in addition.  Useful to
+avoid installing headers that did not change.
+
+** reindent
+A simplistic Perl script that try to normalize the look of the code.
+It is very stupid and has no form of knowledge of C++, so use with
+care.
+
+
+* Autoconf extensions
+** urbi-build-aux.m4
+URBI_BUILD_AUX.  Should be called by users of build-aux.mk.
+
+** urbi-config-headers-prefixed.m4
+To prefix config.h with a given symbol.  Very useful when one wants to
+install a config.h, as otherwise there will be conflicts with other
+config.h.  See also urbi-config-headers-prefixed.mk.
+
+* Miscelaneous
+
+** rebox.el
+An Emacs file to build nice comment boxes
+
+		/*------------.
+		| Like this.  |
+		`------------*/
+
+automatically.
