@@ -1,5 +1,10 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	Simplify
+	* config-headers-prefixed.mk: No need for a stamp file.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	URBI_CONFIG_HEADERS_PREFIXED
 	* config-headers-prefixed.mk, urbi-config-headers-prefixed.m4: New.
 	* ax-prefix-config-h.m4: New.
