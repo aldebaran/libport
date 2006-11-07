@@ -1,7 +1,7 @@
 #ifndef LIBPORT_LOCKABLE_HH
 # define LIBPORT_LOCKABLE_HH
 
-# include "config.h"
+# include "libport/config.h"
 
 # if defined WIN32
 #  define _WIN32_WINNT 0x0400
@@ -36,7 +36,7 @@ namespace urbi
   }
 }
 
-# elif defined URBI_ENV_AIBO && URBI_ENV_AIBO
+# elif defined LIBPORT_URBI_ENV_AIBO && LIBPORT_URBI_ENV_AIBO
 
 namespace urbi
 {
@@ -67,7 +67,7 @@ namespace urbi
 
 # else
 
-# if !defined HAVE_PTHREAD_H || !HAVE_PTHREAD_H
+# if !defined LIBPORT_HAVE_PTHREAD_H || !LIBPORT_HAVE_PTHREAD_H
 #  error "pthreads are required"
 # endif
 # include <pthread.h>

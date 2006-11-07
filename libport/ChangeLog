@@ -1,5 +1,11 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	Be ready to use libport/config.h
+	* libport.mk: Create and install it.
+	* ufloat.hh, thread.hh, lockable.hh, ufloat.cc: Use it.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	Use config-headers-prefixed.mk
 	* libport.mk: Do that.
 	* Makefile.am: include init.mk.

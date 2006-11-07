@@ -19,35 +19,35 @@
 #ifndef LIBPORT_UFLOAT_HH
 # define LIBPORT_UFLOAT_HH
 
-# include "config.h"
+# include "libport/config.h"
 
 /*-----------------.
 | Ufloat support.  |
 `-----------------*/
 
-# ifdef URBI_UFLOAT_FLOAT
+# ifdef LIBPORT_URBI_UFLOAT_FLOAT
 namespace urbi
 {
   typedef float ufloat;
 }
 # endif
 
-# ifdef URBI_UFLOAT_DOUBLE
+# ifdef LIBPORT_URBI_UFLOAT_DOUBLE
 namespace urbi
 {
   typedef double ufloat;
 }
 # endif
 
-# ifdef URBI_UFLOAT_LONG
+# ifdef LIBPORT_URBI_UFLOAT_LONG
 #  include "libport/ulong-fixed-point.hh"
 # endif
 
-# ifdef URBI_UFLOAT_LONG_LONG
+# ifdef LIBPORT_URBI_UFLOAT_LONG_LONG
 #  include "libport/ull-fixed-point.hh"
 # endif
 
-# ifdef URBI_UFLOAT_FLOATING
+# ifdef LIBPORT_URBI_UFLOAT_FLOATING
 #  include "libport/uffloat.hh"
 # endif
 
@@ -63,7 +63,7 @@ namespace urbi
 | Ufloat tabulated.  |
 `-------------------*/
 
-# ifdef URBI_UFLOAT_TABULATED
+# ifdef LIBPORT_URBI_UFLOAT_TABULATED
 namespace urbi
 {
   /// return the tabulated sinus of given value in radian, using linear interpolation

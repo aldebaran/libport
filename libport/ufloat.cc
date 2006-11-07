@@ -2,17 +2,17 @@
 #include <cmath>
 #include "libport/ufloat.hh"
 
-#ifdef URBI_UFLOAT_LONG_LONG
+#ifdef LIBPORT_URBI_UFLOAT_LONG_LONG
 # include "libport/ull-fixed-point.cc"
 #endif
 
-#ifdef URBI_UFLOAT_FLOATING
+#ifdef LIBPORT_URBI_UFLOAT_FLOATING
 # include "libport/uffloat.cc"
 #endif
 
 namespace urbi
 {
-#ifdef URBI_UFLOAT_TABULATED
+#ifdef LIBPORT_URBI_UFLOAT_TABULATED
 
 # ifndef SINTABLE_POWER
 #  define SINTABLE_POWER 10  //the tables will containe 2^sintable_power elements
@@ -62,7 +62,8 @@ namespace urbi
 #endif
 
 
-#if defined URBI_UFLOAT_TABULATED && !defined URBI_UFLOAT_FLOATING
+#if defined LIBPORT_URBI_UFLOAT_TABULATED \
+ && !defined LIBPORT_URBI_UFLOAT_FLOATING
 
   ufloat tabulatedSin(ufloat val)
   {

@@ -1,11 +1,13 @@
 #ifndef LIBPORT_THREAD_HH
 # define LIBPORT_THREAD_HH
 
+# include "libport/config.h"
+
 # if defined WIN32
 #  define _WIN32_WINNT 0x0400
 #  include <windows.h>
 # else
-#  if !defined HAVE_PTHREAD_H || !HAVE_PTHREAD_H
+#  if !defined LIBPORT_HAVE_PTHREAD_H || !LIBPORT_HAVE_PTHREAD_H
 #   error "pthread.h is required"
 #  endif
 # include <pthread.h>
