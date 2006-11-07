@@ -1,5 +1,13 @@
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
+	libport is installed by everyone
+	Requested by Matthieu Nottale: all the sdks should do that
+	to make sure libport is available (liburbi needs not being
+	already installed).
+	* libport.mk, Makefile.am: Basically revert the previous patch.
+
+2006-11-07  Akim Demaille  <demaille@gostai.com>
+
 	Only liburbi should install libport
 	* libport.mk (libport_HEADERS, nodist_libport_HEADERS): Rename as...
 	(libport_headers, nodist_libport_headers): these.

@@ -1,6 +1,4 @@
-# The point of this file is to ship (not to install) libport.  Only
-# liburbi installs libport.  Other users simply want the files to be
-# distributed, and to be given some sugar (e.g., libport_srcdir etc.).
+# The point of this file is to ship *and* to install libport.
 
 include $(top_srcdir)/build-aux/config-headers-prefixed.mk
 
@@ -14,7 +12,7 @@ libport_builddir = $(top_builddir)/libport
 # Where we install them.
 libportdir = $(includedir)/libport
 
-libport_headers = 				\
+libport_HEADERS = 				\
 $(libport_srcdir)/fwd.hh       		        \
 $(libport_srcdir)/hash.hh			\
 $(libport_srcdir)/lockable.hh			\
@@ -28,17 +26,13 @@ $(libport_srcdir)/ull-fixed-point.hh		\
 $(libport_srcdir)/ulong-fixed-point.hh		\
 $(libport_srcdir)/utime.hh
 
-nodist_libport_headers = 			\
+nodist_libport_HEADERS = 			\
 $(libport_builddir)/config.h
 
 libport_sources = 				\
 $(libport_srcdir)/ufloat.cc			\
 $(libport_srcdir)/uffloat.cc			\
 $(libport_srcdir)/ull-fixed-point.cc
-
-EXTRA_HEADERS += 				\
-$(libport_headers)				\
-$(libport_sources)
 
 
 ## ------------ ##
