@@ -1,5 +1,10 @@
 2006-11-09  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	AC_SUBST QSCINTILLA2_LDFLAGS.
+	* qscintilla2.m4: Here.
+
+2006-11-09  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Add a macro to detect QScintilla2.
 	* qscintilla2.m4: New. Defines the macro WITH_QSCINTILLA2. The way I
           find libqscintilla2 seem rather fragile.
