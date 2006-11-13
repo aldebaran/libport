@@ -1,11 +1,11 @@
 #! /bin/sh
 # Basic test script.
 # Copyright (C) Gostai S.A.S., 2006.
-# 
+#
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
 # implied warranties of fitness for a particular purpose.
-# 
+#
 # See the LICENSE file for more information.
 # For comments, bug reports and feedback: http://www.urbiforge.com
 
@@ -35,7 +35,7 @@
 # SUFFIXES = .test
 # .c.test:
 # 	$(LN_S) -f $(srcdir)/test.sh $@
-                           # ^^^^^^^ where test.sh is this script.
+			   # ^^^^^^^ where test.sh is this script.
 #
 # EXTRA_DIST = test.sh
 # CLEANFILES = *.my_stdout *.my_stderr
@@ -44,7 +44,7 @@
 # Alternatively, you can generate the .test files like this:
 # $(TESTS): Makefile.am
 # 	for i in $(TESTS); do $(LN_S) -f $(srcdir)/test.sh $$i; done
-                  # where test.sh is this script.  ^^^^^^^
+		  # where test.sh is this script.  ^^^^^^^
 # If all your tests use the script, you don't have to bother with TESTS:
 # TESTS = $(check_PROGRAMS:=.test)
 
@@ -124,12 +124,12 @@ for i in ret stdout stderr; do
   for f in ./$bprog.$i $prog.$i $SRCDIR/$bprog.$i; do
     if [ -f "$f" ]; then
       if [ -r "$f" ]; then
-        # Meta-programming in Sh \o/
-        eval ref_$i="$f"
-        eval check_$i='yes'
-        break
+	# Meta-programming in Sh \o/
+	eval ref_$i="$f"
+	eval check_$i='yes'
+	break
       else
-        echo "$0: warning: "$f" isn't readable" >&2
+	echo "$0: warning: "$f" isn't readable" >&2
       fi
     fi
   done
@@ -175,7 +175,10 @@ for i in stdout stderr; do
   ref_var=`eval echo \\\$$ref_var`
 
   # Display their output (a bit late...).
-  test "x$VERBOSE" != x && cat $bprog.my_$i
+  if test x"$VERBOSE" != x; then
+    echo >&2 "========== $bprog.my_$i"
+    cat >&2 $bprog.my_$i
+  fi
 
   # Are we trying to generate reference output files?
   if test "x$GEN" = x$i; then

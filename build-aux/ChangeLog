@@ -1,3 +1,9 @@
+2006-11-13  Akim Demaille  <akim.demaille@free.fr>
+
+	Add check.mk
+	* check.mk: New, from Vaucanson.
+	* test.sh: Use a banner when reporting files.
+
 2006-11-09  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	AC_SUBST QSCINTILLA2_LDFLAGS.
