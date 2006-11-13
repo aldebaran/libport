@@ -1,3 +1,8 @@
+2006-11-13  Akim Demaille  <demaille@gostai.com>
+
+	Adjust to libport/config.h
+	* uffloat.cc: Prefix config.h symbols with LIBPORT_.
+
 2006-11-07  Akim Demaille  <demaille@gostai.com>
 
 	Finish importing svn sugars

@@ -204,7 +204,7 @@ namespace urbi
     if (extraidx&1) //sin(pi/2+x) = sin(pi/2-x)
       idx = (tableSize-idx-1)&(tableSize-1);
     ufloat v1 = sinTable[idx];
-#if TABULATEDSIN_NO_INTERPOLATE
+#if LIBPORT_TABULATEDSIN_NO_INTERPOLATE
     return v1;
 #else
     ufloat rem = fidx<<tableShift;
@@ -245,7 +245,7 @@ namespace urbi
     if (!(extraidx&1)) //sin(pi/2+x) = sin(pi/2-x)
       idx = (tableSize-idx-1)&(tableSize-1);
     ufloat v1 = sinTable[idx];
-#if TABULATEDSIN_NO_INTERPOLATE
+#if LIBPORT_TABULATEDSIN_NO_INTERPOLATE
     return v1;
 #else
     ufloat rem = fidx<<tableShift;
@@ -285,7 +285,7 @@ namespace urbi
 
     //std::cerr <<"** "<<idx<<std::endl;
     ufloat v1 = asinTable[idx];
-#if TABULATEDSIN_NO_INTERPOLATE
+#if LIBPORT_TABULATEDSIN_NO_INTERPOLATE
     return v1;
 #else
     ufloat rem = fidx << tableShift;
