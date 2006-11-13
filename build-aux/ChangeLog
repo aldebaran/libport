@@ -1,3 +1,8 @@
+2006-11-13  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Add a work-around for Windows.
+	* qscintilla2.m4: #undef main if necessary.
+
 2006-11-13  Akim Demaille  <akim.demaille@free.fr>
 
 	Add check.mk
