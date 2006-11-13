@@ -1,5 +1,12 @@
 2006-11-13  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Improve detection of qscintilla2.
+	* autotroll.m4: Make more robust.
+	* qscintilla2.m4: Use a Makefile when building the test application to
+          see whether qscintilla2 is working or not.
+
+2006-11-13  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Fix the compilation test for qscintilla2.
 	* qscintilla2.m4: Place conftest.cpp -o conftest$EXEEXT before the
           LDFLAGS and LIBS.
