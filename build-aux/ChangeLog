@@ -1,5 +1,11 @@
 2006-11-13  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Fix the compilation test for qscintilla2.
+	* qscintilla2.m4: Place conftest.cpp -o conftest$EXEEXT before the
+          LDFLAGS and LIBS.
+
+2006-11-13  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Add a work-around for Windows.
 	* qscintilla2.m4: #undef main if necessary.
 
