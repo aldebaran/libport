@@ -1,5 +1,12 @@
 2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
 
+	Fix handling of libport/config.h
+	* urbi-config-headers-prefixed.m4 (PREFIXED_CONFIG_HEADER_basename):
+	Define it.
+	* config-headers-prefixed.mk: Use it.
+
+2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
+
 	Make svn bits more alike to prepare factoring
 	* build-aux.mk: Do that based on libport bits.
 
