@@ -1,9 +1,11 @@
-#ifndef LIBPORT_STRING_HH
-# define LIBPORT_STRING_HH
+//				                            -*- C++ -*-
+
+#ifndef LIBPORT_CSTRING
+# define LIBPORT_CSTRING
 
 # include <cstring>
 
 /// Whether the C string \a Lhs and \a Rhs are equal.
 # define STREQ(Lhs, Rhs) (!strcmp (Lhs, Rhs))
 
-#endif
+#endif // !LIBPORT_CSTRING

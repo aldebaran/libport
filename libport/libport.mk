@@ -12,13 +12,17 @@ libport_builddir = $(top_builddir)/libport
 # Where we install them.
 libportdir = $(includedir)/libport
 
+# C headers.
 libport_HEADERS = 				\
+$(libport_srcdir)/cstring
+
+# C++ headers.
+libport_HEADERS += 				\
 $(libport_srcdir)/fwd.hh       		        \
 $(libport_srcdir)/hash.hh			\
 $(libport_srcdir)/lockable.hh			\
 $(libport_srcdir)/semaphore.hh			\
 $(libport_srcdir)/singleton-ptr.hh		\
-$(libport_srcdir)/string.hh			\
 $(libport_srcdir)/thread.hh			\
 $(libport_srcdir)/ufloat.h			\
 $(libport_srcdir)/ufloat.hh			\
@@ -27,9 +31,11 @@ $(libport_srcdir)/ull-fixed-point.hh		\
 $(libport_srcdir)/ulong-fixed-point.hh		\
 $(libport_srcdir)/utime.hh
 
+# Generated headers.
 nodist_libport_HEADERS = 			\
 $(libport_builddir)/config.h
 
+# Sources to compile to use libport.
 libport_sources = 				\
 $(libport_srcdir)/ufloat.cc			\
 $(libport_srcdir)/uffloat.cc			\
@@ -43,19 +49,20 @@ $(libport_srcdir)/ull-fixed-point.cc
 .PHONY: libport-help libport-up libport-ci libport-pin
 help: libport-help
 libport-help:
-	@echo "libport-up:    same as baux-up, but for libport"
-	@echo "libport-ci:    likewise"
-	@echo "libport-pin:   likewise"
+	@ext=$(@:-help=);
+	echo "$$ext-up:    update the svn:externals revision for $$ext";
+	echo "$$ext-ci:    check in $$ext and up it";
+	echo "$$ext-pin:   subscribe to the latest $$ext"
 
-# Update a pinned svn:externals.
+# Update the pinned external.
 libport-up:
-	$(svn_externals) --update=libport $(srcdir)
+	$(svn_externals) --update=$(@:-up=) $(srcdir)
 
-# Check in a pinned external from a host project, and depend upon it.
+# Checkin the pinned external and update it.
 libport-ci:
-	cd $(top_srcdir)/libport && $(SVN) ci
-	$(MAKE) $(AM_MAKEFLAGS) libport-up
+	cd $(srcdir)/$(@:-up=) && $(SVN) ci
+	$(MAKE) $(AM_MAKEFLAGS) $(@:-up=-ci)
 
 # Pin the svn:external by subscribing to it.
 libport-pin:
-	$(svn_externals) --subscribe=libport $(srcdir)
+	$(svn_externals) --subscribe=$(@:-pin=) $(srcdir)

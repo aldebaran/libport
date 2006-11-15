@@ -1,5 +1,13 @@
 2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
 
+	cstring instead of string.hh
+	* string.hh: Rename as...
+	* cstring: this.
+	* libport.mk: Adjust.
+	Make the svn bits factorable.
+
+2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
+
 	libport/string.hh
 	* string.hh: New.
 	* libport.mk: Adjust.
