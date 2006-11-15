@@ -1,5 +1,10 @@
 2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
 
+	Make svn bits more alike to prepare factoring
+	* build-aux.mk: Do that based on libport bits.
+
+2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
+
 	More reindent
 	* reindent: Use libport/cstring.
 

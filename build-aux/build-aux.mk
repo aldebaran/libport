@@ -36,27 +36,31 @@ recheck:
 ## Build-aux.  ##
 ## ----------- ##
 
-.PHONY: baux-help baux-up baux-ci baux-pin
 .PHONY: build-aux-help build-aux-up build-aux-ci build-aux-pin
+help: build-aux-help
+build-aux-help:
+	@ext=$(@:-help=);
+	echo "$$ext-up:    update the svn:externals revision for $$ext";
+	echo "$$ext-ci:    check in $$ext and up it";
+	echo "$$ext-pin:   subscribe to the latest $$ext"
 
-help: baux-help
-baux-help build-aux-help:
-	@echo "baux-up:    update the dependencies on build-aux"
-	@echo "baux-ci:    checkin build-aux, and upgrade dependency"
-	@echo "baux-pin:   subscribe to build-aux"
+# Update the pinned external.
+build-aux-up:
+	$(svn_externals) --update=$(@:-up=) $(srcdir)
 
-# Update a pinned svn:externals.
-baux-up build-aux-up:
-	$(svn_externals) --update=build-aux $(srcdir)
-
-# Check in a pinned external from a host project, and depend upon it.
-baux-ci build-aux-ci:
-	cd $(build_aux_dir) && $(SVN) ci
-	$(MAKE) $(AM_MAKEFLAGS) baux-up
+# Checkin the pinned external and update it.
+build-aux-ci:
+	cd $(srcdir)/$(@:-up=) && $(SVN) ci
+	$(MAKE) $(AM_MAKEFLAGS) $(@:-up=-ci)
 
 # Pin the svn:external by subscribing to it.
-baux-pin build-aux-pin:
-	$(svn_externals) --subscribe=baux $(srcdir)
+build-aux-pin:
+	$(svn_externals) --subscribe=$(@:-pin=) $(srcdir)
+
+# Short cuts
+.PHONY: baux-help baux-up baux-ci baux-pin
+baux-up baux-ci baux-pin:
+	$(MAKE) $(AM_MAKEFLAGS) $$(echo "$@" | sed s/baux/build-aux/)
 
 
 ## ----- ##
