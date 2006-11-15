@@ -18,6 +18,7 @@ $(libport_srcdir)/hash.hh			\
 $(libport_srcdir)/lockable.hh			\
 $(libport_srcdir)/semaphore.hh			\
 $(libport_srcdir)/singleton-ptr.hh		\
+$(libport_srcdir)/string.hh			\
 $(libport_srcdir)/thread.hh			\
 $(libport_srcdir)/ufloat.h			\
 $(libport_srcdir)/ufloat.hh			\

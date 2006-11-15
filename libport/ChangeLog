@@ -1,3 +1,9 @@
+2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
+
+	libport/string.hh
+	* string.hh: New.
+	* libport.mk: Adjust.
+
 2006-11-13  Akim Demaille  <demaille@gostai.com>
 
 	Adjust to libport/config.h
