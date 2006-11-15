@@ -73,8 +73,21 @@ sub reindent ($)
       next;
     }
 
-  # Trailing open paren possibly followed by empty lines (common in Urbi).
-  s/^([ \t]*)(.+\S)[ \t]*\{\n+/$1$2\n$1\{\n/gm;
+  # Trailing open paren followed by empty lines (common in Urbi).
+  s(^([ \t]*)(.+\S)[ \t]*\{\n+)
+   ($1$2\n$1\{\n)gm;
+
+  # An opening brace with comments.
+  s(^([ \t]*)\{[ \t]*//[ \t]*)
+   ($1\{\n$1  // )gm;
+
+  # strcmp (foo, bar) == 0 -> STREQ (foo, bar).
+  s(strcmp *(\(.*?\))[ \t]*==[ \t]*0)
+    (STREQ$1)gm;
+
+  # include <stdio.h> -> <cstdio>.
+  s((# *include) *<(stdio|stdlib|math|strings).h>)
+   ($1 <$1>)gm;
 
   # Update.
   my $out = new IO::File ">$file" or die;

@@ -1,3 +1,10 @@
+2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
+
+	Improve reindent to catch common patterns to factor
+	* reindent: Also handle comments on the same line as the
+	brace.
+	strcmp == 0 -> STREQ.
+
 2006-11-13  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Improve detection of qscintilla2.
