@@ -1,5 +1,10 @@
 2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
 
+	More reindent
+	* reindent: Use libport/cstring.
+
+2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
+
 	Improve reindent to catch common patterns to factor
 	* reindent: Also handle comments on the same line as the
 	brace.
