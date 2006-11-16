@@ -1,3 +1,9 @@
+2006-11-16  Akim Demaille  <akim.demaille@gmail.com>
+
+	containers.*
+	* containers.hh, containers.hxx: New.
+	* README, libport.mk: Adjust.
+
 2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
 
 	cstring instead of string.hh

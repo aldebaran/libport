@@ -10,6 +10,9 @@ cycles).
 ** fwd.hh
 Forward declaration for classes.
 
+** containers.hh, containers.hxx
+Syntactic sugar around containers.
+
 ** hash.hh
 Hash tables.  Relies on either G++'s or MS'.  We should check for
 ext/hash_map and hash_map.h instead of relying on !Windows.

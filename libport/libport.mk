@@ -19,6 +19,8 @@ $(libport_srcdir)/cstring
 # C++ headers.
 libport_HEADERS += 				\
 $(libport_srcdir)/fwd.hh       		        \
+$(libport_srcdir)/containers.hh			\
+$(libport_srcdir)/containers.hxx		\
 $(libport_srcdir)/hash.hh			\
 $(libport_srcdir)/lockable.hh			\
 $(libport_srcdir)/semaphore.hh			\
