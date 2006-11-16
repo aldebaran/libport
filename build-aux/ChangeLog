@@ -1,3 +1,18 @@
+2006-11-16  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Properly handle Windows' CRLF.
+        When we're on Windows, the output of the programs are first filtered
+        so that any \r at end of line is removed.
+
+        The script is also named test.sh.in so that you can list it in
+        AC_CONFIG_FILES which allows you to run ./some.test directly (see the
+        end of the documentation within the file). However, this doesn't break
+        backward compatibility and test.sh.in can still be run without being an
+        AC_CONFIG_FILES.
+
+	* test.sh: Move to...
+	* test.sh.in: ... this.
+
 2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
 
 	Fix handling of libport/config.h

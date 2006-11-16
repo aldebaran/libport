@@ -76,6 +76,14 @@
 # tree. You might want to move them to the source tree and `svn add' them. You
 # might also want to distribute them (using EXTRA_DIST = $(TESTS:.test=.stdout)
 # for instance, or list the .stdout/.stderr/.ret manually).
+#
+# Note: this script requires SRCDIR to be set. This implies that you must set
+# the TESTS_ENVIRONMENT variable in your Makefile.am and that you *cannot* run
+# ./some.test. If you want to be able to do that (recommended) you must add the
+# following to your configure.ac:
+# AC_CONFIG_FILES([build-aux/test.sh], [chmod a=rx build-aux/test.sh])
+# Warning: this entails that test.sh will be accessible from
+#          $(top_builddir)/build-aux.
 
 # new_reference_output_file [ret|stdout|stderr] <ref-file>
 new_reference_output_file()
@@ -110,7 +118,24 @@ test -x $prog || {
 }
 
 # We NEED the env var SRCDIR
-test x"$SRCDIR" = x && echo "$0: \$SRCDIR is empty" >&2 && exit 42
+: ${SRCDIR=@srcdir@}
+test x"${SRCDIR%@}" = 'x@srcdir' && echo "$0: \$SRCDIR is empty" >&2 && exit 42
+
+# If we are on Windows we must remove the trailing carriage returns.
+remove_trailing_cr='no'
+host_os='@host_os@'
+if [ x"${host_os%@}" = 'x@host_os' ]; then
+  # We don't have host_os, let's try uname -s:
+  if (uname -s) >/dev/null 2>/dev/null; then
+    case "`uname -s`" in
+      [cC][yY][gG][wW][iI][nN]*) remove_trailing_cr='yes';
+    esac
+  fi
+else
+  case "$host_os" in
+    cygwin*) remove_trailing_cr='yes';;
+  esac
+fi
 
 # default values
 ref_ret=0;     check_ret='no'
@@ -186,6 +211,10 @@ for i in stdout stderr; do
   fi
 
   if [ $check_var = 'yes' ]; then
+    test x$remove_trailing_cr = xyes \
+      && perl -e 'while(<>) { s/\r$//; print; }' \
+              $bprog.my_$i > $bprog.nocr.my_$i \
+      && mv $bprog.nocr.my_$i $bprog.my_$i
     if cmp -s $bprog.my_$i $ref_var; then
       rm -f $bprog.my_$i # Good output, remove temporary file.
     else
