@@ -73,53 +73,46 @@ TEST_LOGS ?= $(TESTS:.test=.log)
 TEST_SUITE_LOG = test-suite.log
 
 $(TEST_SUITE_LOG): $(TEST_LOGS)
-	@results=$$(for f in $(TEST_LOGS); do sed 1q $$f; done);	    \
-	all=$$(echo "$$results" | wc -l | sed -e 's/^[ \t]*//');	    \
-	fail=$$(echo "$$results" | grep -c '^FAIL');			    \
-	pass=$$(echo "$$results" | grep -c '^PASS');			    \
-	skip=$$(echo "$$results" | grep -c '^SKIP');			    \
-	xfail=$$(echo "$$results" | grep -c '^XFAIL');			    \
-	xpass=$$(echo "$$results" | grep -c '^XPASS');			    \
-	case fail=$$fail:xfail=$$xfail:xpass=$$xpass in			    \
-	  fail=0:xfail=0:xpass=*)					    \
-	    banner="All $$all tests passed";;				    \
-	  fail=0:xfail=*:xpass=*)					    \
-	    banner="All $$all tests behaved as expected";		    \
-	    banner="$$banner ($$xfail expected failures)";;		    \
-	  fail=*:xfail=*:xpass=0)					    \
-	    banner="$$fail of $$all tests failed";;			    \
-	  fail=*:xfail=*:xpass=*)					    \
-	    banner="$$fail of $$all tests did not behave as expected";	    \
-	    banner="$$banner ($$xpass unexpected passes)";;		    \
-	  *)								    \
-            echo >&2 "incorrect case"; exit 4;;				    \
-	esac;								    \
-	for f in $(TEST_LOGS);						    \
-	do								    \
-	  case $$(sed 1q $$f) in					    \
-	    SKIP:*|PASS:*|XFAIL:*);;					    \
-	    *) cat $$f >>$(TEST_SUITE_LOG);				    \
-	  esac;								    \
-	done;								    \
-	dashes="$$banner";						    \
-	skipped="";							    \
-	if test "$$skip" -ne 0; then					    \
-	  skipped="($$skip tests were not run)";			    \
-	  test `echo "$$skipped" | wc -c` -le `echo "$$banner" | wc -c` ||  \
-	    dashes="$$skipped";						    \
-	fi;								    \
-	report="";							    \
-	if test "$$fail" -ne 0 && test -n "$(PACKAGE_BUGREPORT)"; then	    \
-	  report="Please report $(TEST_SUITE_LOG) to $(PACKAGE_BUGREPORT)"; \
-	  test `echo "$$report" | wc -c` -le `echo "$$banner" | wc -c` ||   \
-	    dashes="$$report";						    \
-	fi;								    \
-	dashes=`echo "$$dashes" | sed s/./=/g`;				    \
-	echo "$$dashes";						    \
-	echo "$$banner";						    \
-	test -z "$$skipped" || echo "$$skipped";			    \
-	test -z "$$report" || echo "$$report";				    \
-	echo "$$dashes";						    \
+	@for f in $(TEST_LOGS);						\
+	do								\
+	  case $$(sed 1q $$f) in					\
+	    SKIP:*|PASS:*|XFAIL:*);;					\
+	    *) cat $$f;							\
+	  esac;								\
+	done >$(TEST_SUITE_LOG);					\
+	results=$$(for f in $(TEST_LOGS); do sed 1q $$f; done);		\
+	all=$$(echo "$$results" | wc -l | sed -e 's/^[ \t]*//');	\
+	fail=$$(echo "$$results" | grep -c '^FAIL');			\
+	pass=$$(echo "$$results" | grep -c '^PASS');			\
+	skip=$$(echo "$$results" | grep -c '^SKIP');			\
+	xfail=$$(echo "$$results" | grep -c '^XFAIL');			\
+	xpass=$$(echo "$$results" | grep -c '^XPASS');			\
+	case fail=$$fail:xfail=$$xfail:xpass=$$xpass in			\
+	  fail=0:xfail=0:xpass=*)					\
+	    msg="All $$all tests passed";;				\
+	  fail=0:xfail=*:xpass=*)					\
+	    msg="All $$all tests behaved as expected";			\
+	    msg="$$msg ($$xfail expected failures)";;			\
+	  fail=*:xfail=*:xpass=0)					\
+	    msg="$$fail of $$all tests failed";;			\
+	  fail=*:xfail=*:xpass=*)					\
+	    msg="$$fail of $$all tests did not behave as expected";	\
+	    msg="$$msg ($$xpass unexpected passes)";;			\
+	  *)								\
+            echo >&2 "incorrect case"; exit 4;;				\
+	esac;								\
+	{								\
+	  echo "$$msg";							\
+	  if test "$$skip" -ne 0; then					\
+	    echo "($$skip tests were not run)";				\
+	  fi;								\
+	  if test "$$fail" -ne 0; then					\
+	    echo "See $(subdir)/$(TEST_SUITE_LOG)";			\
+	    if test -n "$(PACKAGE_BUGREPORT)"; then			\
+	      echo "Please report it to $(PACKAGE_BUGREPORT)";		\
+	    fi;								\
+	  fi;								\
+	} | sed -e '1h;1s/./=/g;1p;1x;$$p;$$x';				\
 	test "$$fail" -eq 0
 
 # Run all the tests.

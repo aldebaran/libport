@@ -109,6 +109,10 @@ sub reindent ($)
   s(strcmp *(\(.*?\))[ \t]*==[ \t]*0)
     (STREQ$1)gm;
 
+  # if ((foo) && (bar)) -> if (foo && bar).
+  s{(if|while)\s*\( *\(([\w\->]+)\)\s*(&&|\|\|)\s*\(([\w\->]+)\)\)}
+   <$1 ($2 $3 $4)>gm;
+
 
   ## ---------- ##
   ## Includes.  ##

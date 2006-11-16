@@ -1,0 +1,22 @@
+#! /bin/sh
+
+set -x
+
+# rename header HEADER.H
+# ----------------------
+# Rename HEADER.H to HEADER.Hh
+rename ()
+{
+  header=$1
+  perl -pi -e "s/\\\\file +$header\\b/\\\\file ${header}h/g;" \
+	   -e 's/_H(_DEFINED)?$/_HH/g;' \
+	$header
+  perl -pi -e "s/(#[ \\t]*include \"$header)\"/\${1}h\"/g" *[ch]
+  perl -pi -e "s/$header/${header}h/g" Makefile.am
+  svn mv --force $i ${i}h
+}
+
+for i in *.h
+do
+  rename $i
+done
