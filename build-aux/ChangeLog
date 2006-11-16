@@ -1,5 +1,14 @@
 2006-11-16  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Remove spurious warnings from aclocal.
+	* qscintilla2.m4: Use quadrigraphs to remove spurious warnings:
+        aclocal:build-aux/qscintilla2.m4:53: warning: macro `AM_CPPFLAGS' not
+        found in library
+        aclocal:build-aux/qscintilla2.m4:56: warning: macro `AM_CXXFLAGS' not
+        found in library
+
+2006-11-16  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Properly handle Windows' CRLF.
         When we're on Windows, the output of the programs are first filtered
         so that any \r at end of line is removed.
