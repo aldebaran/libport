@@ -1,5 +1,10 @@
 2006-11-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Fix valgrind/libtool issues.
+	* test.sh.in: Here.
+
+2006-11-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Add valgrind support.
 	* test.sh.in: Here. See the "built in" documentation.
 
