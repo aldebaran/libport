@@ -1,3 +1,8 @@
+2006-11-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Add a macro to check Qt's version.
+	* autotroll.m4 (AT_REQUIRE_QT_VERSION): New.
+
 2006-11-16  Akim Demaille  <akim.demaille@free.fr>
 
 	Improve check.mk
