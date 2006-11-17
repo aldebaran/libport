@@ -1,5 +1,10 @@
 2006-11-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Make valgrind errors non-fatal by default.
+	* test.sh.in: Here.
+
+2006-11-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Fix valgrind/libtool issues.
 	* test.sh.in: Here.
 
