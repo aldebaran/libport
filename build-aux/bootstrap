@@ -29,8 +29,8 @@ done
 # If the pseudo-standard name "_build" is used, then how about trying
 # to continue the re-build?
 if test -f _build/config.status; then
-    cd _build
-    ./config.status --recheck
-    ./config.status
+    cd _build &&
+    ./config.status --recheck &&
+    ./config.status &&
     make
 fi

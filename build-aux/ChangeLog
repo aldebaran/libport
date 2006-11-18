@@ -1,3 +1,12 @@
+2006-11-18  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Check that the libkernel.la is present.
+	* bootstrap: Make safer.
+	* urbi-engine.ac: Check that the libkernel.la exists in $(kerneldir)
+          since it's a frequent error to forget that the --prefix must point
+          to where the kernel was installed.
+	* urbi-sdk.m4: param.mk is now provided by an svn:external.
+
 2006-11-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Add a workaround so that the BuildFarm can compile uengine-pc.

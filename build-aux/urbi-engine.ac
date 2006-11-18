@@ -35,10 +35,28 @@ AC_ENABLE_SHARED([no])
 AC_PROG_LIBTOOL
 
 # Every engine comes with an SDK.
-#URBI _SDK
-AC_CONFIG_FILES([sdk/umake:build-aux/umake.in], [chmod +x sdk/umake])
-AC_CONFIG_FILES([sdk/Makefile
-		 sdk/sdk/param.mk])
+URBI_SDK
+
+# Every engine needs the libkernel.
+dnl NOTE: this requires kerneldir to be defined (by URBI_DIRS)
+if test x"$kerneldir" != x; then
+  AC_CACHE_CHECK([for libkernel.la], [urbi_cv_has_libkernel_la],
+  [urbi_cv_has_libkernel_la=no
+  # Expand the $(MAKE-style) variables.
+  my_kerneldir=`echo "$kerneldir" | sed 's/(\(@<:@a-zA-Z0-9_@:>@*\))/{\1}/g'`
+  eval my_kerneldir="$my_kerneldir"
+  # Again. Because in the first expansion,
+  # $(branddir) is expanded in $(prefix)/$(PACKAGE_BRAND)
+  my_kerneldir=`echo "$my_kerneldir" | sed 's/(\(@<:@a-zA-Z0-9_@:>@*\))/{\1}/g'`
+  eval my_kerneldir="$my_kerneldir"
+  echo "$as_me:$LINENO: Looking for libkernel.la in $my_kerneldir" \
+    >&AS_MESSAGE_LOG_FD
+  test -f "$my_kerneldir/libkernel.la" &&
+    urbi_cv_has_libkernel_la="$my_kerneldir/libkernel.la"])
+  if test x"$urbi_cv_has_libkernel_la" = xno; then
+    AC_MSG_ERROR([Cannot find libkernel.la])
+  fi
+fi
 
 ## -------- ##
 ## Output.  ##
@@ -51,3 +69,4 @@ AC_CONFIG_FILES([Makefile])
 ## Local Variables:
 ## mode: autoconf
 ## End:
+## vim:ft=config
