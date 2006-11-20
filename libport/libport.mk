@@ -48,23 +48,5 @@ $(libport_srcdir)/ull-fixed-point.cc
 ## svn sugars.  ##
 ## ------------ ##
 
-.PHONY: libport-help libport-up libport-ci libport-pin
-help: libport-help
-libport-help:
-	@ext=$(@:-help=);
-	echo "$$ext-up:    update the svn:externals revision for $$ext";
-	echo "$$ext-ci:    check in $$ext and up it";
-	echo "$$ext-pin:   subscribe to the latest $$ext"
-
-# Update the pinned external.
-libport-up:
-	$(svn_externals) --update=$(@:-up=) $(srcdir)
-
-# Checkin the pinned external and update it.
-libport-ci:
-	cd $(srcdir)/$(@:-up=) && $(SVN) ci
-	$(MAKE) $(AM_MAKEFLAGS) $(@:-up=-ci)
-
-# Pin the svn:external by subscribing to it.
-libport-pin:
-	$(svn_externals) --subscribe=$(@:-pin=) $(srcdir)
+# svn-externals.mk must be included.
+SVN_EXTERNALS += libport

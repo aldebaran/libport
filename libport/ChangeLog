@@ -1,3 +1,7 @@
+2006-11-20  Akim Demaille  <akim@lrde.epita.fr>
+
+	* Makefile.am: Use svn-externals.mk.
+
 2006-11-16  Akim Demaille  <akim.demaille@gmail.com>
 
 	containers.*
