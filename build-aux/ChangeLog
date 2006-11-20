@@ -1,3 +1,9 @@
+2006-11-20  Akim Demaille  <akim.demaille@free.fr>
+
+	Factor svn:externals handling
+	* svn-externals.mk: New.
+	* build-aux.mk: Use it.
+
 2006-11-18  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Check that the libkernel.la is present.

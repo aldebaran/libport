@@ -1,7 +1,8 @@
 include $(top_srcdir)/build-aux/init.mk
+include $(top_srcdir)/build-aux/svn-externals.mk
+
 EXTRA_DIST += $(top_srcdir)/build-aux/install-sh-c
 build_aux_dir = $(top_srcdir)/build-aux
-svn_externals = $(build_aux_dir)/svn-externals
 
 
 ## ------ ##
@@ -36,43 +37,10 @@ recheck:
 ## Build-aux.  ##
 ## ----------- ##
 
-.PHONY: build-aux-help build-aux-up build-aux-ci build-aux-pin
-help: build-aux-help
-build-aux-help:
-	@ext=$(@:-help=);
-	echo "$$ext-up:    update the svn:externals revision for $$ext";
-	echo "$$ext-ci:    check in $$ext and up it";
-	echo "$$ext-pin:   subscribe to the latest $$ext"
-
-# Update the pinned external.
-build-aux-up:
-	$(svn_externals) --update=$(@:-up=) $(srcdir)
-
-# Checkin the pinned external and update it.
-build-aux-ci:
-	cd $(srcdir)/$(@:-up=) && $(SVN) ci
-	$(MAKE) $(AM_MAKEFLAGS) $(@:-up=-ci)
-
-# Pin the svn:external by subscribing to it.
-build-aux-pin:
-	$(svn_externals) --subscribe=$(@:-pin=) $(srcdir)
-
 # Short cuts
 .PHONY: baux-help baux-up baux-ci baux-pin
 baux-up baux-ci baux-pin:
 	$(MAKE) $(AM_MAKEFLAGS) $$(echo "$@" | sed s/baux/build-aux/)
 
+SVN_EXTERNALS += build-aux
 
-## ----- ##
-## All.  ##
-## ----- ##
-
-.PHONY: all-up-help all-up
-
-help: all-up-help
-all-up-help:
-	@echo "all-up:    update all the svn:externals dependencies"
-
-# Update a pinned svn:externals.
-all-up:
-	cd $(top_srcdir) && build-aux/svn-externals --update-all
