@@ -28,6 +28,9 @@
 ## Define TEST_LOGS to the set of logs to include in it.  It defaults
 ## to $(TESTS:.test=.log).
 
+## We use GNU Make extensions.
+AUTOMAKE_OPTIONS += -Wno-portability
+
 SUFFIXES = .log .test
 # From a test file to a log file.
 # Do not use a regular `.test.log:' rule here, since in that case the

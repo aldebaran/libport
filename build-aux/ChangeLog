@@ -1,5 +1,12 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Support SVN_EXTERNALS_PROXY
+	* svn-externals.mk: here.
+	* check.mk: Specify -Wno-portability.
+	* init.mk: Initialize AUTOMAKE_OPTIONS.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Simplify more if/while
 	* reindent (&strip_parens): New.
 	Use it to simplify more if patterns.
