@@ -3,7 +3,8 @@
 
 using namespace urbi;
 
-struct foo {
+struct foo
+{
   void bar()
   {
     std::cout << "foo::bar()" << std::endl;

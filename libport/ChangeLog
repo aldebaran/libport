@@ -1,5 +1,13 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Fix the tests
+	* Makefile.am: Remove.
+	Now libport.mk must only be included by the top-level Makefile.am.
+	* tests/Makefile.am: Don't pass arbitrary -I, in particular
+	do not pass -I??/libport since we include cstdlib.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Use svn-externals.mk
 	* Makefile.am: here.
 
