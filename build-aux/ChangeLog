@@ -1,5 +1,12 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	param-pc.mk.in
+	* param-pc.mk.in: New.
+	From liburbi-cpp/sdk
+	* urbi-sdk.m4: Adjust: chose the right precursor of param.mk.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	use set -e
 	* bootstrap: here.
 	Adjust the code to avoid false failures.
