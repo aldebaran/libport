@@ -116,6 +116,9 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	    fi;								\
 	  fi;								\
 	} | sed -e '1h;1s/./=/g;1p;1x;$$p;$$x';				\
+	if test x"$$VERBOSE" != x; then					\
+	  cat $(TEST_SUITE_LOG);					\
+	fi;
 	test "$$fail" -eq 0
 
 # Run all the tests.

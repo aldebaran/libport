@@ -1,5 +1,9 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	* check.mk: If VERBOSE, dump the logs.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Fix svn up
 	* svn-externals: here.
 
