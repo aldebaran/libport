@@ -96,7 +96,7 @@ AC_SUBST([SDK_CPPFLAGS], ['-I$(sdkincludedir) -I$(kernelincludedir)'])
 AC_SUBST([SDK_LDFLAGS],  ['-L$(envdir)'])
 ])
 
-# To be used by liburbi and sdks.
+# To be used by urbi-sdk and sdks.
 AC_DEFUN([URBI_DIRS],         [_URBI_DIRS([core],   [$1])])
 # To be used by core developpers for the kernels.
 AC_DEFUN([URBI_KERNEL_DIRS],  [_URBI_DIRS([kernel], [$1])])
