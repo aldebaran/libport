@@ -186,6 +186,9 @@ sub reindent ($)
   s{return\s*\( *(([\s\w\->]|==)+) *\) *;}
    {return $1;}gm;
 
+  # Use the traditional notation for pointers.
+  s{\(\*(\w+)\)\.}
+   {$1->}gm;
 
   ## ---------- ##
   ## Includes.  ##

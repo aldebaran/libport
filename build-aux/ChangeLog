@@ -1,5 +1,10 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	"*foo." -> "foo->"
+	* build-aux/reindent: Do that.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	restyle returns too
 	* reindent: Handle returns.
 	(&update_file): New, from Automake.
