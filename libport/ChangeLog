@@ -3,6 +3,11 @@
 	Use svn-externals.mk
 	* Makefile.am: here.
 
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
+	Use svn-externals.mk
+	* Makefile.am: here.
+
 2006-11-20  Akim Demaille  <akim@lrde.epita.fr>
 
 	* Makefile.am: Use svn-externals.mk.
