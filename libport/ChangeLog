@@ -1,5 +1,10 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Clean valgrind files
+	* tests/Makefile.am (CLEANFILES): Here.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Improve win32 use
 	* utime.hh: Include win32.
 	Avoid cast using LARGE_INTEGER.
