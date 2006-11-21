@@ -1,4 +1,4 @@
-# param-pc.mk.in, precursor of param.mk for liburbi-c++ and urbiengine-linux.
+# param-pc.mk.in, precursor of param.mk for urbi-sdk and urbiengine-linux.
 
 # @configure_input@
 

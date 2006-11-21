@@ -19,14 +19,6 @@ Makefile snippets, and Autoconf M4 bits.
 
 ** build-aux.mk
 Provides convenient targets wrapping build-aux and libport handling.
-In the case of kernel1, the dependency on liburbi is implemented
-similarly.  Here are the EXTERNAL names:
-
-	    directory	 | EXTERNAL name
-	    -------------+---------------
-	    build-aux	 | baux
-	    liburbi-c++	 | liburbi
-	    libport	 | libport
 
 *** EXTERNAL-up
 Update EXTERNAL to the most recent version, and pin it.

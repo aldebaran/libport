@@ -1,5 +1,10 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Adjust to liburbi-c++ renamed as urbi-sdk
+	* README, param-pc.mk.in, urbi-dirs.m4, urbi-sdk.m4: Adjust.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	* check.mk: If VERBOSE, dump the logs.
 
 2006-11-21  Akim Demaille  <demaille@gostai.com>

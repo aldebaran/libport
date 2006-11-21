@@ -74,7 +74,7 @@ AC_SUBST([PACKAGE_BRAND], [gostai])
 AC_SUBST([branddir], ['$(prefix)/$(PACKAGE_BRAND)'])
 
 # Standard headers and libraries are installed in regular includedir
-# and libdir under $prefix.  liburbi headers are installed in
+# and libdir under $prefix.  urbi-sdk headers are installed in
 # urbiincludedir.
 AC_SUBST([urbiincludedir], ['$(includedir)/urbi'])
 

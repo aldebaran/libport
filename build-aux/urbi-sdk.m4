@@ -15,12 +15,12 @@ AC_DEFUN([URBI_SDK],
 [AC_CONFIG_FILES([sdk/umake:build-aux/umake.in], [chmod +x sdk/umake])
 
 AC_CONFIG_FILES([sdk/Makefile])
-# If we are in Liburbi-C++, then the precursor is in build-aux.
+# If we are in Urbi-SDK, then the precursor is in build-aux.
 m4_pushdef([AC_param_mk_in],
-	   [m4_case(AC_PACKAGE_NAME,
-		    [liburbi-c++],      [build-aux/param-pc.mk.in],
-		    [urbiengine-linux], [build-aux/param-pc.mk.in],
-		    [sdk/param.mk])])
+	   [m4_bmatch(AC_PACKAGE_NAME,
+		      [liburbi-c++\|urbi-sdk], [build-aux/param-pc.mk.in],
+		      [urbiengine-linux],      [build-aux/param-pc.mk.in],
+		      [sdk/param.mk])])
 AC_CONFIG_FILES([sdk/param.mk:]AC_param_mk_in)
 m4_popdef([AC_param_mk_in])
 ])
