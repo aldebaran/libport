@@ -1,5 +1,9 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	* check.mk: Pass -Wno-override in check.mk.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Support SVN_EXTERNALS_PROXY
 	* svn-externals.mk: here.
 	* check.mk: Specify -Wno-portability.
