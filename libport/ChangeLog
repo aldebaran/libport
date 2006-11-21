@@ -1,5 +1,11 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Formatting changes
+	* hash.hh, tests/singleton2.cc, uffloat.hh,
+	* ull-fixed-point.cc, ulong-fixed-point.hh: Run reindent.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Clean valgrind files
 	* tests/Makefile.am (CLEANFILES): Here.
 

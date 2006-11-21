@@ -73,7 +73,8 @@ namespace urbi
       {
 	c=s.get();
 	if (c!='.')
-	  { //XXX ignoring locales
+	  {
+	    // XXX ignoring locales
 	    s.unget();
 	    return s;
 	  }

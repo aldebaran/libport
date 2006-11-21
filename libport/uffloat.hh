@@ -189,7 +189,8 @@ namespace urbi
 	  big = *this;
 	}
       else if (abs(v)>abs(b.v))
-	{ //we need exact absolute value ordering
+	{
+	  // we need exact absolute value ordering
 	  small = b;
 	  big = *this;
 	}

@@ -12,7 +12,7 @@
 #  include <hash_map>
 # endif
 # include <string>
-# include <cstring>
+# include "libport/cstring"
 
 
 // A quick hack to be able to use hash_map with string easily
@@ -52,7 +52,7 @@ namespace urbi
   {
     bool operator()(const char* s1, const char* s2) const
     {
-      return strcmp(s1, s2) == 0;
+      return STREQ(s1, s2);
     }
   };
 
@@ -89,7 +89,8 @@ class hash_compare<const char*>
 {
  public:
   enum
-  {	// parameters for hash table
+  {
+    // parameters for hash table
     bucket_size = 4,	// 0 < bucket_size
     min_buckets = 8
   };	// min_buckets = 2 ^^ N, 0 < N
@@ -116,7 +117,8 @@ class hash_compare<std::string>
 {
  public:
   enum
-  {	// parameters for hash table
+  {
+    // parameters for hash table
     bucket_size = 4,	// 0 < bucket_size
     min_buckets = 8
   };	// min_buckets = 2 ^^ N, 0 < N
