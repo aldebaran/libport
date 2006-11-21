@@ -255,8 +255,8 @@ do
   done
 
   if $update; then
-    $run svn up
-    stderr "You should checkin $d, externals were updated."
+    $run svn up $dirs
+    stderr "You should checkin $dirs, externals were updated."
   fi
 done
 
