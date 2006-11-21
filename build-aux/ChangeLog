@@ -1,5 +1,13 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Simplify the creation of libport/config.h
+	* config-headers-prefixed.mk: No longer try to work from
+	another Makefile.am that the top-level's one.
+	* urbi-config-headers-prefixed.m4: Simplify accordingly.
+	* test.sh.in: Formatting changes.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	* check.mk: Pass -Wno-override in check.mk.
 
 2006-11-21  Akim Demaille  <demaille@gostai.com>
