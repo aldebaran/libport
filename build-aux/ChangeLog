@@ -1,5 +1,11 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Simplify more if/while
+	* reindent (&strip_parens): New.
+	Use it to simplify more if patterns.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	param-pc.mk.in
 	* param-pc.mk.in: New.
 	From liburbi-cpp/sdk

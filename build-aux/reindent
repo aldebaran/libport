@@ -58,6 +58,15 @@ sub backup ($)
   return $to;
 }
 
+# Remove all the parens.
+sub strip_parens ($$)
+{
+  my ($inst, $in) = @_;
+  $in =~ s/\(\s*//mg;
+  $in =~ s/\s*\)//mg;
+  return "$inst ($in)";
+}
+
 # Reindent this FILE.
 sub reindent ($)
 {
@@ -94,7 +103,7 @@ sub reindent ($)
    ($1$2\n$1\{\n)gm;
 
   # Exceptions are "do {" and "try {".
-  s(\b(do|try)\s+\{)($1 {)gm;
+  s(\b(do|try)\s+{)($1 {)gsm;
 
   # An opening brace with comments.
   s(^([ \t]*)\{[ \t]*//[ \t]*)
@@ -110,8 +119,8 @@ sub reindent ($)
     (STREQ$1)gm;
 
   # if ((foo) && (bar)) -> if (foo && bar).
-  s{(if|while)\s*\( *\(([\w\->]+)\)\s*(&&|\|\|)\s*\(([\w\->]+)\)\)}
-   <$1 ($2 $3 $4)>gm;
+  s{(if|while)\s*\( *(\([\s\w\->=]+\)(\s*(&&|\|\|)\s*\([\s\w\->=]+\))*)\)}
+   <&strip_parens($1, $2)>gme;
 
 
   ## ---------- ##
