@@ -3,7 +3,7 @@ This directory contains files that are used through out URBI projects.
 * Auxiliary tools
 ** libport.mk
 Include this Makefile if you want to use and install libport.  To
-check libport, use its Makefile.am, but ony liburbi should (to save
+check libport, use its Makefile.am, but ony urbi-sdk should (to save
 cycles).
 
 * Components
