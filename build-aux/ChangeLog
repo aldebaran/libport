@@ -1,5 +1,12 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	restyle returns too
+	* reindent: Handle returns.
+	(&update_file): New, from Automake.
+	Use it to save cycles.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Fix check.mk
 	* check.mk: Add missing backslash.
 	* svn-externals.mk: Fix.

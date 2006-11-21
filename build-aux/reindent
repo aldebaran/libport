@@ -19,14 +19,74 @@ Reindent roughly the FILES.  A back up of the files is left.
   - strcmp == 0 => STREQ
 - Use libport headers when appropriate
 
-Todo:
- - Change the time stamp only if the file actually changed.
-
 Once reindent passed, you should use Emacs or similar to finish
 the reindentation.
 EOF
   exit 0;
 }
+
+sub fatal (@)
+{
+  print STDERR "$0: @_\n";
+  exit 1;
+}
+
+=item C<update_file ($from, $to, [$force])>
+
+Rename C<$from> as C<$to>, preserving C<$to> timestamp if it has not
+changed, unless C<$force> is true (defaults to false).  Recognize
+C<$to> = C<-> standing for C<STDIN>.  C<$from> is always
+removed/renamed.
+
+=cut
+
+# &update_file ($FROM, $TO; $FORCE)
+# ---------------------------------
+sub update_file ($$;$)
+{
+  my ($from, $to, $force) = @_;
+  $force = 0
+    unless defined $force;
+  my $SIMPLE_BACKUP_SUFFIX = $ENV{'SIMPLE_BACKUP_SUFFIX'} || '~';
+  use File::Compare;
+  use File::Copy;
+
+  if ($to eq '-')
+    {
+      my $in = new IO::File ("$from");
+      my $out = new IO::File (">-");
+      while ($_ = $in->getline)
+        {
+          print $out $_;
+        }
+      $in->close;
+      unlink ($from) || fatal "cannot remove $from: $!";
+      return;
+    }
+
+  if (!$force && -f "$to" && compare ("$from", "$to") == 0)
+    {
+      # File didn't change, so don't update its mod time.
+      unlink ($from)
+        or fatal "cannot remove $from: $!";
+      return
+    }
+
+  if (-f "$to")
+    {
+      # Back up and install the new one.
+      move ("$to",  "$to$SIMPLE_BACKUP_SUFFIX")
+        or fatal "cannot backup $to: $!";
+      move ("$from", "$to")
+        or fatal "cannot rename $from as $to: $!";
+    }
+  else
+    {
+      move ("$from", "$to")
+        or fatal "cannot rename $from as $to: $!";
+    }
+}
+
 
 # Location of the share directory.
 my $share = 'share';
@@ -122,6 +182,10 @@ sub reindent ($)
   s{(if|while)\s*\( *(\([\s\w\->=]+\)(\s*(&&|\|\|)\s*\([\s\w\->=]+\))*)\)}
    <&strip_parens($1, $2)>gme;
 
+  # return needs no parens.
+  s{return\s*\( *(([\s\w\->]|==)+) *\) *;}
+   {return $1;}gm;
+
 
   ## ---------- ##
   ## Includes.  ##
@@ -135,8 +199,9 @@ sub reindent ($)
   s(<cstring>)("libport/cstring")gm;
 
   # Update.
-  my $out = new IO::File ">$file" or die;
+  my $out = new IO::File ">$file.new" or die;
   print $out $_;
+  update_file "$file.new", $file;
 }
 
 # Parse ARGV, return the list of files to update.
