@@ -1,5 +1,11 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Improve win32 use
+	* utime.hh: Include win32.
+	Avoid cast using LARGE_INTEGER.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Fix the test suite
 	* tests/Makefile.am: Create libport/config.h inside tests/.
 	* tests/common_ufloat1.cc, tests/singleton1.cc, tests/udouble1.cc,

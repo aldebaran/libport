@@ -2,23 +2,26 @@
 # define LIBPORT_UTIME_HH
 
 # if defined WIN32
+
+#  include <win32.h>
+
 namespace urbi
 {
   inline
   long long
   utime()
   {
-    static long long pfreq= 0LL; //cps
-    static long long base = 0LL;
+    static LARGE_INTEGER pfreq = 0;
+    static LARGE_INTEGER base = 0;
     if (pfreq == 0)
-      {
-	QueryPerformanceFrequency((LARGE_INTEGER *)&pfreq);
-	QueryPerformanceCounter((LARGE_INTEGER *)&base);
-	std::cerr <<"perfcounter at frequency of "<<pfreq<<"\n";
-      }
-    long long val;
-    QueryPerformanceCounter((LARGE_INTEGER *)&val);
-    return ((val-base) * 1000000LL)/ pfreq;
+    {
+      QueryPerformanceFrequency(&pfreq);
+      QueryPerformanceCounter(&base);
+      std::cerr <<"perfcounter at frequency of " << pfreq << "\n";
+    }
+    LARGE_INTEGER val;
+    QueryPerformanceCounter(&val);
+    return (long long) ((val-base) * 1000000LL) / pfreq;
   }
 }
 
