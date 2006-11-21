@@ -42,8 +42,8 @@ $(SVN_EXTERNALS_UP):
 
 # Checkin the pinned external and update it.
 $(SVN_EXTERNALS_CI):
-	cd $(srcdir)/$(@:-up=) && $(SVN) ci
-	$(MAKE) $(AM_MAKEFLAGS) $(@:-up=-ci)
+	cd $(srcdir)/$(@:-ci=) && $(SVN) ci
+	$(MAKE) $(AM_MAKEFLAGS) $(@:-ci=-up)
 
 # Pin the svn:external by subscribing to it.
 $(SVN_EXTERNALS_PIN):

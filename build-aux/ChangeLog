@@ -1,5 +1,11 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Fix check.mk
+	* check.mk: Add missing backslash.
+	* svn-externals.mk: Fix.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	* urbi-sdk.m4: Check the tarball name.
 
 2006-11-21  Akim Demaille  <demaille@gostai.com>
