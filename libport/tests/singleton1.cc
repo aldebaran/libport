@@ -1,8 +1,6 @@
 #include <iostream>
 #include "libport/singleton-ptr.hh"
 
-using namespace urbi;
-
 struct foo
 {
   void bar()
@@ -13,7 +11,7 @@ struct foo
 
 int main()
 {
-  SingletonPtr<foo> test = SingletonPtr<foo>();
+  urbi::SingletonPtr<foo> test;
   test->bar();
   (*test).bar();
   return 0;

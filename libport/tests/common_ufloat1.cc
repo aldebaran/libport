@@ -1,6 +1,13 @@
 #include <iostream>
 #include "libport/ufloat.h"
 
+// Make sure we are using the test config.h, that does not define
+// the UFLOAT kind.
+#ifndef LIBPORT_TEST
+# error we are using the libport/config.h to be installed instead of \
+	the one meant to be used for tests
+#endif
+
 # define TESTME(x)					\
 	std::cout << #x << ": "				\
 	<< ((x) ? "true" : "false") << std::endl

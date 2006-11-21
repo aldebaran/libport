@@ -14,9 +14,6 @@ ufloat1_SOURCES =	ufloat1.cc
 ullfp1_SOURCES =	ullfp1.cc
 ullfptab1_SOURCES =	ullfptab1.cc
 
-# If your test programs includes header from the source tree:
-AM_CPPFLAGS =		-I $(top_builddir)
-
 # List your tests here:
 TESTS =							\
 			singleton1.test			\
@@ -26,11 +23,29 @@ TESTS =							\
 			ullfp1.test			\
 			ullfptab1.test
 
-BUILT_SOURCES = config.h
+## ---------------- ##
+## libport/config.h ##
+## ---------------- ##
+
+# Create a false libport/config.h just for tests, which
+# does not specify the sort of ufloats to use.
+BUILT_SOURCES = libport/config.h
 # Do not define the variety of ufloats to use.
-config.h: $(top_builddir)/libport/config.h
-	sed -e '/URBI_UFLOAT/d' $< > $@.t
+libport/config.h: $(top_builddir)/libport/config.h
+	test -d libport || mkdir libport
+	{							\
+	  echo "#define LIBPORT_TEST 1";			\
+	  sed -e '/# *define.*URBI_UFLOAT.*/s,,/* & */,' $<;	\
+	} > $@.t
 	mv $@.t $@
+clean-local:
+	rm -rf libport
+
+# Find the libport files, but our config.h for tests first.
+AM_CPPFLAGS = -I. -I$(top_srcdir)
+
+
+
 
 $(TESTS):
 	for i in $(TESTS); do \
@@ -38,7 +53,8 @@ $(TESTS):
         done
 
 EXTRA_DIST = $(TESTS:.test=.stdout) common_ufloat1.cc
-CLEANFILES = *.my_stdout *.my_stderr config.h
+CLEANFILES = *.my_stdout *.my_stderr
+
 TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
 
 # List the tests that are expected to fail:

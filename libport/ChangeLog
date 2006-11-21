@@ -1,5 +1,16 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	Fix the test suite
+	* tests/Makefile.am: Create libport/config.h inside tests/.
+	* tests/common_ufloat1.cc, tests/singleton1.cc, tests/udouble1.cc,
+	* tests/udoubletab1.cc, tests/uffloat1.cc, tests/uffloattab1.cc,
+	* tests/ufloat1.cc, tests/ufloattab1.cc, tests/ullfp1.cc,
+	* tests/ullfptab1.cc:
+	Prefix symbols by LIBPORT_ according to changes in libport.
+	Check that we use tests/libport/config.h, not libport/config.h.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	test.sh is not to be shipped
 	* tests/Makefile.am: Adjust.
 
