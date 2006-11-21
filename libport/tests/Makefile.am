@@ -37,8 +37,7 @@ $(TESTS):
           $(LN_S) -f $(top_builddir)/build-aux/test.sh $$i || exit 1; \
         done
 
-EXTRA_DIST = $(TESTS:.test=.stdout) $(top_srcdir)/build-aux/test.sh \
-		 common_ufloat1.cc
+EXTRA_DIST = $(TESTS:.test=.stdout) common_ufloat1.cc
 CLEANFILES = *.my_stdout *.my_stderr config.h
 TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
 

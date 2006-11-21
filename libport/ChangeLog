@@ -1,5 +1,10 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	test.sh is not to be shipped
+	* tests/Makefile.am: Adjust.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Fix the tests
 	* Makefile.am: Remove.
 	Now libport.mk must only be included by the top-level Makefile.am.
