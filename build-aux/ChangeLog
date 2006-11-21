@@ -1,5 +1,9 @@
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
+	* urbi-sdk.m4: Check the tarball name.
+
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
 	Adjust to liburbi-c++ renamed as urbi-sdk
 	* README, param-pc.mk.in, urbi-dirs.m4, urbi-sdk.m4: Adjust.
 

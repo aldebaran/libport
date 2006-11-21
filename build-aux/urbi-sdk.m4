@@ -17,7 +17,7 @@ AC_DEFUN([URBI_SDK],
 AC_CONFIG_FILES([sdk/Makefile])
 # If we are in Urbi-SDK, then the precursor is in build-aux.
 m4_pushdef([AC_param_mk_in],
-	   [m4_bmatch(AC_PACKAGE_NAME,
+	   [m4_bmatch(m4_defn([AC_PACKAGE_TARNAME]),
 		      [liburbi-c++\|urbi-sdk], [build-aux/param-pc.mk.in],
 		      [urbiengine-linux],      [build-aux/param-pc.mk.in],
 		      [sdk/param.mk])])
