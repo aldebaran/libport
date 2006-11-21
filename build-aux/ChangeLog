@@ -1,3 +1,9 @@
+2006-11-21  Akim Demaille  <demaille@gostai.com>
+
+	use set -e
+	* bootstrap: here.
+	Adjust the code to avoid false failures.
+
 2006-11-20  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Add an M4 macro to easily disable debugging.
