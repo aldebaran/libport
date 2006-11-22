@@ -1,3 +1,13 @@
+2006-11-22  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Move some files to the new sdk folder.
+        Now in common/sdk:
+	* param-pc.mk.in: Remove.
+	* umake.in: Remove.
+	* urbi-dirs.m4: Remove.
+	* urbi-engine.ac: Remove.
+	* urbi-sdk.m4: Remove.
+
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
 	"*foo." -> "foo->"
