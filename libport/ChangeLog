@@ -1,3 +1,9 @@
+2006-11-22  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Fix includes.
+	* lockable.hh: win32.h doesn't exist, include windows.h instead.
+	* utime.hh: Be careful since _WIN32_WINNT can be already defined.
+
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
 	Formatting changes

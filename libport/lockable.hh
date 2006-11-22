@@ -4,7 +4,10 @@
 # include "libport/config.h"
 
 # if defined WIN32
-#  define _WIN32_WINNT 0x0400
+
+#  ifndef _WIN32_WINNT
+#   define _WIN32_WINNT 0x0400
+#  endif
 #  include <windows.h>
 
 namespace urbi

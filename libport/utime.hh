@@ -3,7 +3,11 @@
 
 # if defined WIN32
 
-#  include <win32.h>
+#  include <iostream>
+#  ifndef _WIN32_WINNT
+#   define _WIN32_WINNT 0x0400
+#  endif
+#  include <windows.h>
 
 namespace urbi
 {
