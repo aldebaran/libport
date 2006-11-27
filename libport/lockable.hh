@@ -3,7 +3,7 @@
 
 # include "libport/config.h"
 
-# if defined WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
 
 #  ifndef _WIN32_WINNT
 #   define _WIN32_WINNT 0x0400

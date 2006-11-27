@@ -3,7 +3,7 @@
 
 # include "libport/config.h"
 
-# if defined WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
 #  define _WIN32_WINNT 0x0400
 #  include <windows.h>
 # else
@@ -19,15 +19,15 @@ namespace urbi
   class StartInfo
   {
   public:
-    T * inst;
+    T* inst;
     void (T::*func)(void);
   };
 
-# if defined WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
   typedef DWORD ThreadStartRet;
 #  define THREADSTARTCALL WINAPI
 # else
-  typedef void * ThreadStartRet;
+  typedef void* ThreadStartRet;
 #  define THREADSTARTCALL
 # endif
 
@@ -55,13 +55,13 @@ namespace urbi
     si->inst = obj;
     si->func = func;
 
-# ifdef WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
     unsigned long id;
-    void *r = CreateThread(NULL, 0,  &_startThread2<T> ,si, 0, &id);
+    void* r = CreateThread(NULL, 0, &_startThread2<T>, si, 0, &id);
 # else
-    pthread_t *pt = new pthread_t;
-    pthread_create(pt,0, &_startThread2<T> ,si);
-    void *r = pt;
+    pthread_t* pt = new pthread_t;
+    pthread_create(pt, 0, &_startThread2<T>, si);
+    void* r = pt;
 # endif
 
     if (false)
@@ -75,13 +75,13 @@ namespace urbi
 
   template<class T> void* startThread(T* obj)
   {
-# ifdef WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
     unsigned long id;
-    void *r = CreateThread(NULL, 0, &_startThread<T> ,obj, 0, &id);
+    void* r = CreateThread(NULL, 0, &_startThread<T>, obj, 0, &id);
 # else
-    pthread_t *pt = new pthread_t;
-    pthread_create(pt,0, &_startThread<T> ,obj);
-    void *r = pt;
+    pthread_t* pt = new pthread_t;
+    pthread_create(pt, 0, &_startThread<T>, obj);
+    void* r = pt;
 # endif
     if (false)
       //force instanciation
@@ -91,9 +91,9 @@ namespace urbi
   }
 
 
-  inline void joinThread(void *t)
+  inline void joinThread(void* t)
   {
-# ifdef WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
     WaitForSingleObject(t, INFINITE);
 # else
     pthread_join(*(pthread_t*)t, 0);
