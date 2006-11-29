@@ -31,30 +31,41 @@ namespace urbi
 }
 # else
 #  include <semaphore.h>
+#  include <sstream>
 # endif
 
 namespace urbi
 {
   class Semaphore
   {
-  public:
-    Semaphore(int cnt=0)
-    {
-      sem_init(&sem,0,cnt);
-    }
-    ~Semaphore()
-    {
-      sem_destroy(&sem);
-    }
-    void operator ++(int) {sem_post(&sem);}
-    void operator --(int) {sem_wait(&sem);}
-    void operator ++() {sem_post(&sem);}
-    void operator --() {sem_wait(&sem);}
-    operator int()  {int t;sem_getvalue(&sem,&t); return t;}
+    public:
+      Semaphore(int cnt=0)
+      {
+	std::stringstream s;
 
-  private:
-    sem_t sem;
+	s << "sema_";
+	s << counter_++;
+	sem = sem_open (s.str ().c_str (), O_CREAT, 0777, cnt);
+	if ((int) sem == SEM_FAILED)
+	  sem_init(sem, 0, cnt);
+	assert ((int) sem != SEM_FAILED);
+      }
+      ~Semaphore()
+      {
+	sem_destroy(sem);
+      }
+      void operator ++(int) {sem_post(sem);}
+      void operator --(int) {sem_wait(sem);}
+      void operator ++() {sem_post(sem);}
+      void operator --() {sem_wait(sem);}
+      operator int()  {int t;sem_getvalue(sem,&t); return t;}
+
+    private:
+      sem_t* sem;
+      static unsigned int counter_;
   };
+
+  unsigned int Semaphore::counter_ = 0;
 
 } // namespace urbi
 
