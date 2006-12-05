@@ -1,5 +1,13 @@
 2006-12-05  Akim Demaille  <akim.demaille@free.fr>
 
+	More restyle
+	* reindent: Rename as...
+	* restyle: this.
+	Also handle comments behind }.
+	* svn-externals: Add sdk.
+
+2006-12-05  Akim Demaille  <akim.demaille@free.fr>
+
 	More restyling
 	* build-aux/reindent: Rename as...
 	* build-aux/restyle: this.

@@ -59,7 +59,7 @@ See URBI_CONFIG_HEADERS_PREFIXED.
 Our own copy of install-sh that support -C in addition.  Useful to
 avoid installing headers that did not change.
 
-** reindent
+** restyle
 A simplistic Perl script that try to normalize the look of the code.
 It is very stupid and has no form of knowledge of C++, so use with
 care.

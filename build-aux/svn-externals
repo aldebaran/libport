@@ -29,6 +29,7 @@ me=$(basename $0)
 #   jpeg           common/libjpeg-6b/jpeg-6b
 #   baux           common/project-template/trunk/build-aux
 #   libport        common/project-template/trunk/libport
+#   sdk            common/sdk
 #   lurbi       gostai/liburbi-cpp/trunk
 #   uobj           lurbi/src/liburbi/uobject
 #   share     https://svn.lrde.epita.fr/svn/lrde-publis/trunk/share

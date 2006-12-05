@@ -10,7 +10,7 @@ sub help ()
   print <<EOF;
 Usage: $0 [OPTIONS] FILES
 
-Reindent roughly the FILES.  A back up of the files is left.
+Restyle roughly the FILES.  A back up of the files is left.
 
 - Normalize white spaces
 - No open prace not alone on the line
@@ -25,9 +25,14 @@ EOF
   exit 0;
 }
 
-sub fatal (@)
+sub stderr (@)
 {
   print STDERR "$0: @_\n";
+}
+
+sub fatal (@)
+{
+  stderr @_;
   exit 1;
 }
 
@@ -69,7 +74,8 @@ sub update_file ($$;$)
       # File didn't change, so don't update its mod time.
       unlink ($from)
 	or fatal "cannot remove $from: $!";
-      return
+      stderr "$to unchanged";
+      return;
     }
 
   if (-f "$to")
@@ -85,6 +91,7 @@ sub update_file ($$;$)
       move ("$from", "$to")
 	or fatal "cannot rename $from as $to: $!";
     }
+  stderr "$to updated";
 }
 
 
@@ -127,6 +134,23 @@ sub strip_parens ($$)
   return "$inst ($in)";
 }
 
+# Handle the comments following a closing brace.
+sub clear_closing_brace ($)
+{
+  my ($comment) = @_;
+  # comments about namespaces are ok.
+  $comment = ""
+    unless $comment =~ m/namespace/;
+  if ($comment)
+    {
+      return "} $comment";
+    }
+  else
+    {
+      return "}";
+    }
+}
+
 # Reindent this FILE.
 sub reindent ($)
 {
@@ -154,6 +178,24 @@ sub reindent ($)
     }
 
 
+  ## ---------- ##
+  ## Comments.  ##
+  ## ---------- ##
+
+  # Some comments are useless, such as tagging the end of a syntactic
+  # construct.  This does not apply to those ending a namespace.
+  s<}[\t ]*(//.*)><&clear_closing_brace($1)>gme;
+
+
+
+  ## ------------- ##
+  ## Expressions.  ##
+  ## ------------- ##
+
+  # 0 has all the pointer types.
+  s{\(\w+ *\*+\) *0}{0}gm;
+
+
   ## -------- ##
   ## Braces.  ##
   ## -------- ##
@@ -168,6 +210,7 @@ sub reindent ($)
   # An opening brace with comments.
   s(^([ \t]*)\{[ \t]*//[ \t]*)
    ($1\{\n$1  // )gm;
+
 
 
   ## ------------- ##
@@ -186,9 +229,6 @@ sub reindent ($)
   s{return\s*\( *(([\s\w\->]|==)+) *\) *;}
    {return $1;}gm;
 
-  # Use the traditional notation for pointers.
-  s{\(\*(\w+)\)\.}
-   {$1->}gm;
 
   ## ---------- ##
   ## Includes.  ##
@@ -201,7 +241,7 @@ sub reindent ($)
   # <cstring> -> "libport/cstring"
   s(<cstring>)("libport/cstring")gm;
 
-  # Update.
+  # Update if needed.
   my $out = new IO::File ">$file.new" or die;
   print $out $_;
   update_file "$file.new", $file;
