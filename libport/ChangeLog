@@ -1,3 +1,8 @@
+2006-12-05  Akim Demaille  <akim.demaille@free.fr>
+
+	Restyle
+	* ull-fixed-point.hh: here.
+
 2006-11-27  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Test whether LIBPORT_WIN32 is defined when looking for WIN32.

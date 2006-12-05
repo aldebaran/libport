@@ -78,15 +78,17 @@ namespace urbi
     inline bool operator >=(const ULLFixedPoint b) const {return v>=b.v;}
     inline bool operator ==(const ULLFixedPoint b) const
     {
-      long long l=(v-b.v);
-      if (l<0) l=-l;
-      return (l<4);
+      long long l = v - b.v;
+      if (l<0)
+	l=-l;
+      return l<4;
     }
     inline bool operator !=(const ULLFixedPoint b) const
     {
-      long long l=(v-b.v);
-      if (l<0) l=-l;
-      return (l>4);
+      long long l = v - b.v;
+      if (l<0)
+	l=-l;
+      return l>4;
     }
 
     inline ULLFixedPoint operator >>(int b) const {ULLFixedPoint r;r.v=v>>b; return r;}
