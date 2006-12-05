@@ -221,11 +221,20 @@ sub reindent ($)
   s(strcmp *(\(.*?\))[ \t]*==[ \t]*0)
     (STREQ$1)gm;
 
+  # !strcmp (foo, bar) -> STREQ (foo, bar).
+  s(!strcmp *(\(.*?\)))
+    (STREQ$1)gm;
+
   # if ((foo) && (bar)) -> if (foo && bar).
   s{(if|while)\s*\( *(\([\s\w\->=]+\)(\s*(&&|\|\|)\s*\([\s\w\->=]+\))*)\)}
    <&strip_parens($1, $2)>gme;
 
   # return needs no parens.
+  # This does not work properly on examples such as:
+  # -       return (*retr)->getUObject();
+  # +       return *retr)->getUObject(;
+  # We really need to write a function that check that the first
+  # and last parens do match together.
   s{return\s*\( *(.*?) *\) *;}
    {return $1;}gm;
 
