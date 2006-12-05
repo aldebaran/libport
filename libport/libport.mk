@@ -31,7 +31,8 @@ $(libport_srcdir)/ufloat.hh			\
 $(libport_srcdir)/uffloat.hh			\
 $(libport_srcdir)/ull-fixed-point.hh		\
 $(libport_srcdir)/ulong-fixed-point.hh		\
-$(libport_srcdir)/utime.hh
+$(libport_srcdir)/utime.hh			\
+$(libport_srcdir)/windows.hh
 
 # Generated headers.
 nodist_libport_HEADERS = 			\

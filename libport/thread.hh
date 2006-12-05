@@ -4,8 +4,7 @@
 # include "libport/config.h"
 
 # if defined WIN32 || defined LIBPORT_WIN32
-#  define _WIN32_WINNT 0x0400
-#  include <windows.h>
+#  include "libport/windows.hh"
 # else
 #  if !defined LIBPORT_HAVE_PTHREAD_H || !LIBPORT_HAVE_PTHREAD_H
 #   error "pthread.h is required"

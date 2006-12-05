@@ -58,6 +58,10 @@ class urbi::ULongFixedPoint.
 ** utime.hh
 long long urbi::utime().
 
+** windows.hh
+Wrap the inclusion of windows.hh with the expected magic.  Can be
+included unconditionally on non Windows hosts.
+
 * TODO
 
 ** documentation
