@@ -226,7 +226,7 @@ sub reindent ($)
    <&strip_parens($1, $2)>gme;
 
   # return needs no parens.
-  s{return\s*\( *(([\s\w\->]|==)+) *\) *;}
+  s{return\s*\( *(.*?) *\) *;}
    {return $1;}gm;
 
 

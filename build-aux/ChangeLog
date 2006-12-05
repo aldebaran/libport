@@ -1,5 +1,10 @@
 2006-12-05  Akim Demaille  <akim.demaille@free.fr>
 
+	Always remove useless parens for returns.
+	* restyle: here.
+
+2006-12-05  Akim Demaille  <akim.demaille@free.fr>
+
 	More restyle
 	* reindent: Rename as...
 	* restyle: this.
