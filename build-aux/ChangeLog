@@ -1,3 +1,13 @@
+2006-12-05  Akim Demaille  <akim.demaille@free.fr>
+
+	More restyling
+	* build-aux/reindent: Rename as...
+	* build-aux/restyle: this.
+	(&stderr): New.
+	(&update_file): Say when a file is changed.
+	(&clear_closing_brace): Strip comments behind the }s.
+	* build-aux/README: Adjust.
+
 2006-11-22  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Move some files to the new sdk folder.
