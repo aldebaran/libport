@@ -1,14 +1,12 @@
 #ifndef LIBPORT_LOCKABLE_HH
 # define LIBPORT_LOCKABLE_HH
 
+// FIXME: Shouldn't this include "config.h" ?
 # include "libport/config.h"
 
-# if defined WIN32 || defined LIBPORT_WIN32
+# if defined WIN32
 
-#  ifndef _WIN32_WINNT
-#   define _WIN32_WINNT 0x0400
-#  endif
-#  include <windows.h>
+#  include "windows.h"
 
 namespace urbi
 {

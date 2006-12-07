@@ -14,35 +14,37 @@ libportdir = $(includedir)/libport
 
 # C headers.
 libport_HEADERS = 				\
-$(libport_srcdir)/cstring
+	$(libport_srcdir)/cstring
 
 # C++ headers.
 libport_HEADERS += 				\
-$(libport_srcdir)/fwd.hh       		        \
-$(libport_srcdir)/containers.hh			\
-$(libport_srcdir)/containers.hxx		\
-$(libport_srcdir)/hash.hh			\
-$(libport_srcdir)/lockable.hh			\
-$(libport_srcdir)/semaphore.hh			\
-$(libport_srcdir)/singleton-ptr.hh		\
-$(libport_srcdir)/thread.hh			\
-$(libport_srcdir)/ufloat.h			\
-$(libport_srcdir)/ufloat.hh			\
-$(libport_srcdir)/uffloat.hh			\
-$(libport_srcdir)/ull-fixed-point.hh		\
-$(libport_srcdir)/ulong-fixed-point.hh		\
-$(libport_srcdir)/utime.hh			\
-$(libport_srcdir)/windows.hh
+	$(libport_srcdir)/containers.hh		\
+	$(libport_srcdir)/containers.hxx	\
+	$(libport_srcdir)/detect_win32.h	\
+	$(libport_srcdir)/fwd.hh		\
+	$(libport_srcdir)/hash.hh		\
+	$(libport_srcdir)/lockable.hh		\
+	$(libport_srcdir)/network.h		\
+	$(libport_srcdir)/semaphore.hh		\
+	$(libport_srcdir)/singleton-ptr.hh	\
+	$(libport_srcdir)/thread.hh		\
+	$(libport_srcdir)/uffloat.hh		\
+	$(libport_srcdir)/ufloat.h		\
+	$(libport_srcdir)/ufloat.hh		\
+	$(libport_srcdir)/ull-fixed-point.hh	\
+	$(libport_srcdir)/ulong-fixed-point.hh	\
+	$(libport_srcdir)/utime.hh		\
+	$(libport_srcdir)/windows.h
 
 # Generated headers.
 nodist_libport_HEADERS = 			\
-$(libport_builddir)/config.h
+	$(libport_builddir)/config.h
 
 # Sources to compile to use libport.
 libport_sources = 				\
-$(libport_srcdir)/ufloat.cc			\
-$(libport_srcdir)/uffloat.cc			\
-$(libport_srcdir)/ull-fixed-point.cc
+	$(libport_srcdir)/ufloat.cc		\
+	$(libport_srcdir)/uffloat.cc		\
+	$(libport_srcdir)/ull-fixed-point.cc
 
 
 ## ------------ ##

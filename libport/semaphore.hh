@@ -1,9 +1,9 @@
 #ifndef LIBPORT_SEMAPHORE_HH
 # define LIBPORT_SEMAPHORE_HH
 
-# include "libport/windows.hh"
+# include "libport/windows.h"
 
-# if defined WIN32 || defined LIBPORT_WIN32
+# if defined WIN32
 
 namespace urbi
 {

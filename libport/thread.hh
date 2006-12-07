@@ -3,8 +3,8 @@
 
 # include "libport/config.h"
 
-# if defined WIN32 || defined LIBPORT_WIN32
-#  include "libport/windows.hh"
+# if defined WIN32
+#  include "libport/windows.h"
 # else
 #  if !defined LIBPORT_HAVE_PTHREAD_H || !LIBPORT_HAVE_PTHREAD_H
 #   error "pthread.h is required"
@@ -22,7 +22,7 @@ namespace urbi
     void (T::*func)(void);
   };
 
-# if defined WIN32 || defined LIBPORT_WIN32
+# if defined WIN32
   typedef DWORD ThreadStartRet;
 #  define THREADSTARTCALL WINAPI
 # else
@@ -54,7 +54,7 @@ namespace urbi
     si->inst = obj;
     si->func = func;
 
-# if defined WIN32 || defined LIBPORT_WIN32
+# if defined WIN32
     unsigned long id;
     void* r = CreateThread(NULL, 0, &_startThread2<T>, si, 0, &id);
 # else
@@ -74,7 +74,7 @@ namespace urbi
 
   template<class T> void* startThread(T* obj)
   {
-# if defined WIN32 || defined LIBPORT_WIN32
+# if defined WIN32
     unsigned long id;
     void* r = CreateThread(NULL, 0, &_startThread<T>, obj, 0, &id);
 # else
@@ -92,7 +92,7 @@ namespace urbi
 
   inline void joinThread(void* t)
   {
-# if defined WIN32 || defined LIBPORT_WIN32
+# if defined WIN32
     WaitForSingleObject(t, INFINITE);
 # else
     pthread_join(*(pthread_t*)t, 0);

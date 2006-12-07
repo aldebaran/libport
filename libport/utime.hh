@@ -1,10 +1,10 @@
 #ifndef LIBPORT_UTIME_HH
 # define LIBPORT_UTIME_HH
 
-# if defined WIN32 || defined LIBPORT_WIN32
+# if defined WIN32
 
 #  include <iostream>
-#  include "libport/windows.hh"
+#  include "libport/windows.h"
 
 namespace urbi
 {
