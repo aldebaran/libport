@@ -26,6 +26,7 @@ libport_HEADERS += 				\
 	$(libport_srcdir)/lockable.hh		\
 	$(libport_srcdir)/network.h		\
 	$(libport_srcdir)/semaphore.hh		\
+	$(libport_srcdir)/semaphore.hxx		\
 	$(libport_srcdir)/singleton-ptr.hh	\
 	$(libport_srcdir)/thread.hh		\
 	$(libport_srcdir)/uffloat.hh		\

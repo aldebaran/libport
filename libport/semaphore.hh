@@ -2,36 +2,30 @@
 # define LIBPORT_SEMAPHORE_HH
 
 # include "libport/windows.h"
+# include <cassert>
 
 # if defined WIN32 || defined LIBPORT_WIN32
 
 namespace urbi
 {
   typedef HANDLE sem_t;
-  inline void sem_init(HANDLE* sem, int useless, int cnt)
-  {
-    *sem = CreateSemaphore(NULL, cnt, 100000, NULL);
-  }
-  inline void sem_post(HANDLE* sem)
-  {
-    ReleaseSemaphore(*sem, 1, NULL);
-  }
-  inline void sem_wait(HANDLE* sem)
-  {
-    WaitForSingleObject(*sem, INFINITE);
-  }
-  inline void sem_destroy(HANDLE* sem)
-  {
-    DeleteObject(*sem);
-  }
-  inline void sem_getvalue(HANDLE* sem, int* v)
-  {
-    *v = 1; //TODO: implement
-  }
+  void sem_init(HANDLE* sem, int useless, int cnt);
+  void sem_post(HANDLE* sem);
+  void sem_wait(HANDLE* sem);
+  void sem_destroy(HANDLE* sem);
+  void sem_getvalue(HANDLE* sem, int* v);
 }
 # else /* !WIN32 */
 #  include <semaphore.h>
 #  include <sstream>
+# endif
+
+# if defined __linux
+/* Linux defines SEM_FAILED as  (sem_t *) 0 */
+#  define IS_SEM_FAILED(sem)   ((sem) == SEM_FAILED)
+# else
+/* MacOSX (and thus BSD?) defines it as -1 */
+#  define IS_SEM_FAILED(sem)   ((long) (sem) == (long) SEM_FAILED)
 # endif
 
 namespace urbi
@@ -39,26 +33,15 @@ namespace urbi
   class Semaphore
   {
     public:
-      Semaphore(int cnt = 0)
-      {
-	std::stringstream s;
+      Semaphore (int cnt = 0);
 
-	s << "sema_";
-	s << counter_++;
-	sem = sem_open (s.str ().c_str (), O_CREAT, 0777, cnt);
-	if ((int) sem == SEM_FAILED)
-	  sem_init(sem, 0, cnt);
-	assert ((int) sem != SEM_FAILED);
-      }
-      ~Semaphore()
-      {
-	sem_destroy(sem);
-      }
-      void operator ++(int) {sem_post(sem);}
-      void operator --(int) {sem_wait(sem);}
-      void operator ++() {sem_post(sem);}
-      void operator --() {sem_wait(sem);}
-      operator int()  {int t;sem_getvalue(sem, &t); return t;}
+      ~Semaphore ();
+
+      void operator++ (int);
+      void operator-- (int);
+      void operator++ ();
+      void operator-- ();
+      operator int ();
 
     private:
       sem_t* sem;
@@ -68,5 +51,7 @@ namespace urbi
   unsigned int Semaphore::counter_ = 0;
 
 } // namespace urbi
+
+# include "semaphore.hxx"
 
 #endif /* !LIBPORT_SEMAPHORE_HH */
