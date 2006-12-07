@@ -3,7 +3,7 @@
 
 # include "detect_win32.h"
 
-# if defined WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
 
 /* We don't want to include WinSock1 stuff that are included by Windows.h and
  * this is the official workaround used by Windows' headers. We're doing this

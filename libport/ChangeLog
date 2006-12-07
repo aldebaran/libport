@@ -1,5 +1,17 @@
 2006-12-07  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Use LIBPORT_WIN32.
+        Because we now AC_DEFINE WIN32 and it gets prefixed.
+	* detect_win32.h,
+	* lockable.hh,
+	* network.h,
+	* semaphore.hh,
+	* thread.hh,
+	* utime.hh,
+	* windows.h: Here.
+
+2006-12-07  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Properly detect G++.
 	* hash.hh: Properly detect G++.
 	* semaphore.hh,

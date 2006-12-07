@@ -3,6 +3,10 @@
 
 # include "libport/config.h"
 
+# ifdef LIBPORT_WIN32
+#  define WIN32
+# endif
+
 # if defined WIN32
 #  include "libport/windows.h"
 # else

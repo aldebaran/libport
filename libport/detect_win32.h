@@ -2,6 +2,12 @@
 # define LIBPORT_DETECT_WIN32_H_
 
 # ifndef WIN32
+#  ifdef LIBPORT_WIN32
+#   define WIN32
+#  endif
+# endif
+
+# ifndef WIN32
 #  ifdef _MSC_VER /* Are we compiling with Microsoft's compiler? */
 #    define WIN32
 #  endif

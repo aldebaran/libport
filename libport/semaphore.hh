@@ -3,7 +3,7 @@
 
 # include "libport/windows.h"
 
-# if defined WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
 
 namespace urbi
 {

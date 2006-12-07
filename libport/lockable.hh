@@ -4,7 +4,7 @@
 // FIXME: Shouldn't this include "config.h" ?
 # include "libport/config.h"
 
-# if defined WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
 
 #  include "windows.h"
 

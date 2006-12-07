@@ -3,7 +3,7 @@
 
 # include "detect_win32.h"
 
-# ifdef WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
 
 /* WinSock.h is incompatible with WinSock2.h (and Windows.h includes
  * WinSock.h). This isn't caught by Windows' headers, so it's caught here.

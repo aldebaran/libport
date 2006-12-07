@@ -1,7 +1,7 @@
 #ifndef LIBPORT_UTIME_HH
 # define LIBPORT_UTIME_HH
 
-# if defined WIN32
+# if defined WIN32 || defined LIBPORT_WIN32
 
 #  include <iostream>
 #  include "libport/windows.h"
