@@ -13,8 +13,8 @@
 2006-11-27  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Test whether LIBPORT_WIN32 is defined when looking for WIN32.
-        Because config.h's define might be prefixed by "LIBPORT_", we look for
-        either LIBPORT_WIN32 or just WIN32.
+	Because config.h's define might be prefixed by "LIBPORT_", we look for
+	either LIBPORT_WIN32 or just WIN32.
 	* lockable.hh,
 	* semaphore.hh,
 	* thread.hh,
@@ -23,9 +23,9 @@
 2006-11-22  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Don't use LARGE_INTEGER. Use __int64 instead.
-        See:
-        http://msdn.microsoft.com/library/default.asp
-         `-> ?url=/library/en-us/winprog/winprog/large_integer_str.asp
+	See:
+	http://msdn.microsoft.com/library/default.asp
+	 `-> ?url=/library/en-us/winprog/winprog/large_integer_str.asp
 	This works for sure on mingw/cygwin and MSVC++ which is enough for us.
 	* utime.hh: Here.
 
