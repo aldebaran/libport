@@ -3,14 +3,17 @@
 #ifndef LIBPORT_HASH_HH
 # define LIBPORT_HASH_HH
 
-# ifndef _MSC_VER  //GCC
+# if defined __GNUG__ // G++
 #  include <ext/hash_map>
-# elif (_MSC_VER == 1400)
-#  pragma warning( disable : 4355 4996)
+# elif defined _MSC_VER
+#  if (_MSC_VER == 1400)
+#    pragma warning( disable : 4355 4996)
+#  endif
 #  include <hash_map>
 # else
-#  include <hash_map>
+#  error Don't know where hash_map is.
 # endif
+
 # include <string>
 # include "libport/cstring"
 
@@ -19,12 +22,12 @@
 
 # ifndef _MSC_VER
 
-#   if (__GNUC__ == 2)
+#  if (__GNUC__ == 2)
   __STL_BEGIN_NAMESPACE
-#   else
+#  else
   namespace __gnu_cxx
   {
-#   endif
+#  endif
 
 template<>
 struct hash<std::string>
@@ -35,14 +38,11 @@ struct hash<std::string>
   }
 };
 
-#   if (__GNUC__ == 2)
+#  if (__GNUC__ == 2)
   __STL_END_NAMESPACE
-#   else
+#  else
   }
-#   endif
-
-
-
+#  endif
 
 namespace urbi
 {
@@ -73,15 +73,15 @@ namespace urbi
   };
 }
 
-#else //_MSC_VER
+# else //_MSC_VER
 
-#if (_MSC_VER == 1400)
-#define HASH_NS stdext
+#  if (_MSC_VER == 1400)
+#   define HASH_NS stdext
 _STDEXT_BEGIN
-#else
-#define HASH_NS std
+#  else
+#   define HASH_NS std
 _STD_BEGIN
-#endif
+#  endif
 //msc does not define a hash function for hash_compare
 
 template<>
@@ -134,11 +134,11 @@ class hash_compare<std::string>
   }
 };
 
-#if (_MSC_VER == 1400)
+#  if (_MSC_VER == 1400)
 _STDEXT_END
-#else
+#  else
 _STD_END
-#endif
+#  endif
 namespace urbi
 {
   template<class K, class V>
@@ -149,8 +149,7 @@ namespace urbi
   };
 
 }
-#undef HASH_NS
-#endif // _MSC_VER
-
+#  undef HASH_NS
+# endif // _MSC_VER
 
 #endif // !LIBPORT_HASH_HH

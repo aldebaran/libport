@@ -8,28 +8,28 @@
 namespace urbi
 {
   typedef HANDLE sem_t;
-  inline void sem_init(HANDLE *sem, int useless, int cnt)
+  inline void sem_init(HANDLE* sem, int useless, int cnt)
   {
     *sem = CreateSemaphore(NULL, cnt, 100000, NULL);
   }
-  inline void sem_post(HANDLE * sem)
+  inline void sem_post(HANDLE* sem)
   {
     ReleaseSemaphore(*sem, 1, NULL);
   }
-  inline void sem_wait(HANDLE *sem)
+  inline void sem_wait(HANDLE* sem)
   {
     WaitForSingleObject(*sem, INFINITE);
   }
-  inline void sem_destroy(HANDLE * sem)
+  inline void sem_destroy(HANDLE* sem)
   {
     DeleteObject(*sem);
   }
-  inline void sem_getvalue(HANDLE *sem, int *v)
+  inline void sem_getvalue(HANDLE* sem, int* v)
   {
-    *v=1; //TODO: implement
+    *v = 1; //TODO: implement
   }
 }
-# else
+# else /* !WIN32 */
 #  include <semaphore.h>
 #  include <sstream>
 # endif
@@ -39,7 +39,7 @@ namespace urbi
   class Semaphore
   {
     public:
-      Semaphore(int cnt=0)
+      Semaphore(int cnt = 0)
       {
 	std::stringstream s;
 
@@ -58,7 +58,7 @@ namespace urbi
       void operator --(int) {sem_wait(sem);}
       void operator ++() {sem_post(sem);}
       void operator --() {sem_wait(sem);}
-      operator int()  {int t;sem_getvalue(sem,&t); return t;}
+      operator int()  {int t;sem_getvalue(sem, &t); return t;}
 
     private:
       sem_t* sem;
@@ -69,4 +69,4 @@ namespace urbi
 
 } // namespace urbi
 
-#endif
+#endif /* !LIBPORT_SEMAPHORE_HH */

@@ -95,7 +95,7 @@ namespace urbi
     // pthread_mutexattr_setkind_np(&ma, PTHREAD_MUTEX_RECURSIVE_NP);
     pthread_mutexattr_settype(&ma, PTHREAD_MUTEX_RECURSIVE_NP);
 #endif
-    pthread_mutex_init(&l,&ma);
+    pthread_mutex_init(&l, &ma);
   }
 
   inline void lockLock(Lock& l)
