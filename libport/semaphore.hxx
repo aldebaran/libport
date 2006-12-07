@@ -7,27 +7,36 @@ namespace urbi
 {
 
 # if defined WIN32 || defined LIBPORT_WIN32
-  inline void sem_init(HANDLE* sem, int useless, int cnt)
+  inline sem_t*
+  sem_open (const char* name,
+            int oflag,
+            unsigned int /*mode_t*/ mode,
+            unsigned int value)
+  {
+    return SEM_FAILED; // Use sem_init instead.
+  }
+
+  inline void sem_init(sem_t* sem, int useless, int cnt)
   {
     *sem = CreateSemaphore(0, cnt, 100000, 0);
   }
 
-  inline void sem_post(HANDLE* sem)
+  inline void sem_post(sem_t* sem)
   {
     ReleaseSemaphore(*sem, 1, 0);
   }
 
-  inline void sem_wait(HANDLE* sem)
+  inline void sem_wait(sem_t* sem)
   {
     WaitForSingleObject(*sem, INFINITE);
   }
 
-  inline void sem_destroy(HANDLE* sem)
+  inline void sem_destroy(sem_t* sem)
   {
     DeleteObject(*sem);
   }
 
-  inline void sem_getvalue(HANDLE* sem, int* v)
+  inline void sem_getvalue(sem_t* sem, int* v)
   {
     *v = 1; //TODO: implement
   }
