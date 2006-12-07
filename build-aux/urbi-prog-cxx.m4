@@ -20,29 +20,28 @@ if test "$GXX" = yes; then
   CXXFLAGS="$CXXFLAGS -pipe"
 fi
 
-# Useful warnings.  -Wextra is the new name for -W.
-TC_CXX_WARNINGS([[-Wall], [-Wextra]])
-
 # Warn about violations of some of the style guidelines from Scott
 # Meyers' "Effective C++" and "More Effective C++" books.
-TC_CXX_WARNINGS([-Weffc++])
+#TC_CXX_WARNINGS([-Weffc++])
 
 # For the time being, we are not interested about deprecated
 # headers such as hash_map.h.  We should use ext/hash_map.
 TC_CXX_WARNINGS([-Wno-deprecated])
 
+dnl 		 [-Wcast-align],
+dnl 		 [-Wcast-qual],
+dnl 		 [-Wformat],
+dnl 		 [-Wmissing-prototypes],
+dnl 		 [-Wstrict-prototypes],
+dnl 		 [-Wwrite-strings],
+dnl 		 [-Wbad-function-cast],
+dnl 		 [-Wmissing-declarations],
+dnl 		 [-Wnested-externs],
+dnl		 [-Wold-style-cast],
 # Use good warnings.
-# TC_CXX_WARNINGS([[-Wall],
-# 		 [-W],
-# 		 [-Wcast-align],
-# 		 [-Wcast-qual],
-# 		 [-Wformat],
-# 		 [-Wmissing-prototypes],
-# 		 [-Wstrict-prototypes],
-# 		 [-Wwrite-strings],
-# 		 [-Wbad-function-cast],
-# 		 [-Wmissing-declarations],
-# 		 [-Wnested-externs]])
+TC_CXX_WARNINGS([[-Wall],
+                 [-W],
+                 [-Woverloaded-virtual]])
 
 # Pacify g++ on Boost Variants.
 # TC_CXX_WARNINGS([[-Wno-shadow]])
@@ -102,6 +101,40 @@ TC_CXX_WARNINGS([-Wno-deprecated])
 #                ^
 #
 TC_CXX_WARNINGS([[[-wd111,193,279,383,444,522,654,810,981,1418]]])
+
+# ------- #
+# MS VC++ #
+# ------- #
+
+# If the compiler is MS VC++, we want to manually define WIN32.
+AC_CACHE_CHECK([whether $CXX is Microsoft's compiler], [ac_cv_cxx_compiler_ms],
+[AC_COMPILE_IFELSE([[
+#ifndef _MSC_VER
+# error This is not a Microsoft compiler
+#endif
+]],
+   [ac_cv_cxx_compiler_ms=yes], [ac_cv_cxx_compiler_ms=no])
+])
+
+if test "$ac_cv_cxx_compiler_ms" = yes; then
+  AC_DEFINE([WIN32], [], [Whether or not we're on Windows])
+
+# /EHsc: enable C++ exception handling + extern "C" defaults to nothrow.
+#
+# warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
+#
+# When a base class hides its copy constructor (private):
+# warning C4625: 'classname' : copy constructor could not be generated because
+#                              a base class copy constructor is inaccessible
+#
+# warning C4710: 'method_inline' : function not inlined
+#
+# warning C4668: 'MACRO' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+  AM_CXXFLAGS="$AM_CXXFLAGS /EHsc /wd4820 /wd4625 /wd4710 /wd4668"
+  AC_SUBST([AM_CXXFLAGS])
+  # FIXME: Workaround because the above doesn't work (AM_CXXFLAGS is empty in Makefiles)
+  CXXFLAGS="$CXXFLAGS /EHsc /wd4820 /wd4625 /wd4710 /wd4668"
+fi
 
 # If using mipsel-linux-c++, then we cannot use optimization flags
 # to compile Bison's output.  Don't just look at its name, we
