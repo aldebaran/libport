@@ -129,11 +129,21 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
 #
 # warning C4710: 'method_inline' : function not inlined
 #
-# warning C4668: 'MACRO' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-  AM_CXXFLAGS="$AM_CXXFLAGS /EHsc /wd4820 /wd4625 /wd4710 /wd4668"
+# warning C4668: 'MACRO' is not defined as a preprocessor macro, replacing
+#                 with '0' for '#if/#elif'
+#
+# warning C4571: Informational: catch(...) semantics changed since Visual
+#                C++ 7.1; structured exceptions (SEH) are no longer caught.
+# http://msdn2.microsoft.com/en-us/library/55s8esw4.aspx:
+# "When compiling with /EHs, a catch(...) block will not catch a structured
+#  exception (divide by zero, null pointer, for example); a catch(...) block
+#  will only catch explicitly-thrown, C++ exceptions."
+# Reminder: SEH are Windows' exceptions (with __try, __catch etc..) we don'
+# care about them so we just drop that warning.
+  AM_CXXFLAGS="$AM_CXXFLAGS /EHsc /wd4820 /wd4625 /wd4710 /wd4668 /wd4571"
   AC_SUBST([AM_CXXFLAGS])
   # FIXME: Workaround because the above doesn't work (AM_CXXFLAGS is empty in Makefiles)
-  CXXFLAGS="$CXXFLAGS /EHsc /wd4820 /wd4625 /wd4710 /wd4668"
+  CXXFLAGS="$CXXFLAGS /EHsc /wd4820 /wd4625 /wd4710 /wd4668 /wd4571"
 fi
 
 # If using mipsel-linux-c++, then we cannot use optimization flags
