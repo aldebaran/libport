@@ -5,7 +5,6 @@
 # include <cassert>
 
 # if defined WIN32 || defined LIBPORT_WIN32
-
 namespace urbi
 {
   typedef HANDLE sem_t;
@@ -17,8 +16,9 @@ namespace urbi
 }
 # else /* !WIN32 */
 #  include <semaphore.h>
-#  include <sstream>
 # endif
+
+# include <sstream>
 
 # if defined __linux
 /* Linux defines SEM_FAILED as  (sem_t *) 0 */
