@@ -45,6 +45,7 @@ namespace urbi
   }
 #endif /* !WIN32 */
 
+} // namespace urbi
 
 /* Darwin doesn't implement sem_init/sem_close (although the functions exists
  * and is defined, in fact it just returns ENOSYS). That's why need to use
@@ -59,6 +60,9 @@ namespace urbi
 # ifdef __APPLE__
 #  include <sstream>
 # endif
+
+namespace urbi
+{
 
   inline Semaphore::Semaphore (int cnt)
   {
