@@ -15,17 +15,15 @@ namespace urbi
                    int oflag,
                    unsigned int /*mode_t*/ mode,
                    unsigned int value);
-  void sem_init(sem_t* sem, int useless, int cnt);
-  void sem_post(sem_t* sem);
-  void sem_wait(sem_t* sem);
-  void sem_destroy(sem_t* sem);
-  void sem_getvalue(sem_t* sem, int* v);
+  int sem_init(sem_t* sem, int useless, int cnt);
+  int sem_post(sem_t* sem);
+  int sem_wait(sem_t* sem);
+  int sem_destroy(sem_t* sem);
+  int sem_getvalue(sem_t* sem, int* v);
 }
 # else /* !WIN32 */
 #  include <semaphore.h>
 # endif
-
-# include <sstream>
 
 # if defined __linux || defined WIN32
 /* Linux defines SEM_FAILED as  (sem_t *) 0 */
