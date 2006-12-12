@@ -40,8 +40,8 @@ dnl 		 [-Wnested-externs],
 dnl		 [-Wold-style-cast],
 # Use good warnings.
 TC_CXX_WARNINGS([[-Wall],
-                 [-W],
-                 [-Woverloaded-virtual]])
+		 [-W],
+		 [-Woverloaded-virtual]])
 
 # Pacify g++ on Boost Variants.
 # TC_CXX_WARNINGS([[-Wno-shadow]])
