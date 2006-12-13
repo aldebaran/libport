@@ -146,12 +146,14 @@ if [ x"${host_os%@}" = 'x@host_os' ]; then
   # We don't have host_os, let's try uname -s:
   if (uname -s) >/dev/null 2>/dev/null; then
     case "`uname -s`" in
-      [cC][yY][gG][wW][iI][nN]*) remove_trailing_cr='yes';
+      CYGWIN* | MINGW* | [wW]indows* | PW* | Interix* | UWIN*)
+        remove_trailing_cr='yes'
+        ;;
     esac
   fi
 else
   case "$host_os" in
-    cygwin*) remove_trailing_cr='yes';;
+    cygwin* | mingw* | pw32* | interix*) remove_trailing_cr='yes';;
   esac
 fi
 
