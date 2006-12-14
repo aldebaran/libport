@@ -1,5 +1,5 @@
-#ifndef LIBPORT_WINDOWS_H
-# define LIBPORT_WINDOWS_H
+#ifndef LIBPORT_WINDOWS_HH
+# define LIBPORT_WINDOWS_HH
 
 # include "detect_win32.h"
 
@@ -34,4 +34,4 @@
 
 # endif // !WIN32
 
-#endif // !LIBPORT_WINDOWS_H
+#endif // !LIBPORT_WINDOWS_HH

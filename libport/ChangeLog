@@ -1,3 +1,11 @@
+2006-12-14  Akim Demaille  <akim.demaille@free.fr>
+
+	windows.h -> windows.hh
+	* windows.h: Rename as...
+	* windows.hh: this.
+	* README, libport.mk, lockable.hh, semaphore.hh, thread.hh: .
+	* utime.hh: Adjust.
+
 2006-12-08  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Don't include system headers within the URBI namespace.

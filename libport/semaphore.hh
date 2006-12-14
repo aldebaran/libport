@@ -1,7 +1,7 @@
 #ifndef LIBPORT_SEMAPHORE_HH
 # define LIBPORT_SEMAPHORE_HH
 
-# include "libport/windows.h"
+# include "libport/windows.hh"
 # include <cassert>
 
 # if defined WIN32
@@ -12,9 +12,9 @@ namespace urbi
 #  endif
   typedef HANDLE sem_t;
   sem_t* sem_open (const char* name,
-                   int oflag,
-                   unsigned int /*mode_t*/ mode,
-                   unsigned int value);
+		   int oflag,
+		   unsigned int /*mode_t*/ mode,
+		   unsigned int value);
   int sem_init(sem_t* sem, int useless, int cnt);
   int sem_post(sem_t* sem);
   int sem_wait(sem_t* sem);

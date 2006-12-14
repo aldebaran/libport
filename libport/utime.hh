@@ -4,7 +4,7 @@
 # if defined WIN32 || defined LIBPORT_WIN32
 
 #  include <iostream>
-#  include "libport/windows.h"
+#  include "libport/windows.hh"
 
 namespace urbi
 {

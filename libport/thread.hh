@@ -8,7 +8,7 @@
 # endif
 
 # if defined WIN32
-#  include "libport/windows.h"
+#  include "libport/windows.hh"
 # else
 #  if !defined LIBPORT_HAVE_PTHREAD_H || !LIBPORT_HAVE_PTHREAD_H
 #   error "pthread.h is required"
