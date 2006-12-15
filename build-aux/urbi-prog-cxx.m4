@@ -119,18 +119,21 @@ AC_CACHE_CHECK([whether $CXX is Microsoft's compiler], [ac_cv_cxx_compiler_ms],
 if test "$ac_cv_cxx_compiler_ms" = yes; then
   AC_DEFINE([WIN32], [], [Whether or not we're on Windows])
 
+# --------------------------------------------- #
+# Remove MS Visual Compiler's spurious warnings #
+# --------------------------------------------- #
+
 # /EHsc: enable C++ exception handling + extern "C" defaults to nothrow.
 #
-# warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
+# warning C4121: 'symbol' : alignment of a member was sensitive to packing
+# "A structure member is aligned on a memory offset whose value is not a
+#  multiple of the member's size."
+# (Quoting http://msdn2.microsoft.com/en-US/library/kabt0ka3.aspx)
+# I see this as a spurious warning because the Visual's compiler align members
+# on word boundaries by default.
 #
-# When a base class hides its copy constructor (private):
-# warning C4625: 'classname' : copy constructor could not be generated because
-#                              a base class copy constructor is inaccessible
-#
-# warning C4710: 'method_inline' : function not inlined
-#
-# warning C4668: 'MACRO' is not defined as a preprocessor macro, replacing
-#                 with '0' for '#if/#elif'
+# warning C4127: conditional expression is constant
+# eg in: while (true) ...
 #
 # warning C4571: Informational: catch(...) semantics changed since Visual
 #                C++ 7.1; structured exceptions (SEH) are no longer caught.
@@ -138,12 +141,37 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
 # "When compiling with /EHs, a catch(...) block will not catch a structured
 #  exception (divide by zero, null pointer, for example); a catch(...) block
 #  will only catch explicitly-thrown, C++ exceptions."
-# Reminder: SEH are Windows' exceptions (with __try, __catch etc..) we don'
+# Reminder: SEH are Windows' exceptions (with __try, __catch etc..) we don't
 # care about them so we just drop that warning.
-  AM_CXXFLAGS="$AM_CXXFLAGS /EHsc /wd4820 /wd4625 /wd4710 /wd4668 /wd4571"
-  AC_SUBST([AM_CXXFLAGS])
+#
+# When a base class hides its copy constructor (private):
+# warning C4625: 'classname' : copy constructor could not be generated because
+#                              a base class copy constructor is inaccessible
+#
+# warning C4626: 'derived class' : assignment operator could not be generated
+#                 because a base class assignment operator is inaccessible
+# "An assignment operator was not accessible in a base class and was therefore
+#  not generated for a derived class."
+#
+# warning C4668: 'MACRO' is not defined as a preprocessor macro, replacing
+#                 with '0' for '#if/#elif'
+#
+# warning C4710: 'method_inline' : function not inlined
+#
+# warning C4800: 'type' : forcing value to bool 'true' or 'false' (performance
+#                warning)
+# "This warning is generated when a value that is not bool is assigned or
+#  coerced into type bool."
+# http://msdn2.microsoft.com/en-us/library/b6801kcy.aspx
+#
+# warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
+#
+  MSVC_CXXFLAGS="/EHsc /wd4121 /wd4127 /wd4571 /wd4625 /wd4626 /wd4668 /wd4710"
+  MSVC_CXXFLAGS="$MSVC_CXXFLAGS /wd4800 /wd4820"
+  AC_SUBST([MSVC_CXXFLAGS])
+  AC_SUBST([AM_CXXFLAGS], ["$MSVC_CXXFLAGS"])
   # FIXME: Workaround because the above doesn't work (AM_CXXFLAGS is empty in Makefiles)
-  CXXFLAGS="$CXXFLAGS /EHsc /wd4820 /wd4625 /wd4710 /wd4668 /wd4571"
+  CXXFLAGS="$CXXFLAGS $MSVC_CXXFLAGS"
 fi
 
 # If using mipsel-linux-c++, then we cannot use optimization flags

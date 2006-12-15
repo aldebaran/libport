@@ -1,3 +1,9 @@
+2006-12-15  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Remove more spurious warnings from VC++.
+	* urbi-prog-cxx.m4: Here. Also sort the warnings in numerical order.
+          (MSVC_CXXFLAGS): New.
+
 2006-12-13  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Detect more Windows platforms.
