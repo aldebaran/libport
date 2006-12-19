@@ -159,7 +159,7 @@ fi
 
 use_valgrind='no'
 valgrind_libtool='no' # Are we trying to valgrind a libtool wrapper?
-if [ x"USE_VALGRIND" != x ] || [ x"WITH_VALGRIND" != x ]; then
+if [ x"$USE_VALGRIND" != x ] || [ x"$WITH_VALGRIND" != x ]; then
   : ${VALGRIND=valgrind}
   if ($VALGRIND --version) >/dev/null 2>/dev/null; then
     valgrind="$VALGRIND"
