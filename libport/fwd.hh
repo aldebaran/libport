@@ -12,6 +12,9 @@ namespace urbi
 
   // semaphore.hh.
   class Semaphore;
+
+  // refpt.hh
+  template <class T> class RefPt;
 }
 
 #endif // ! LIBPORT_FWD_HH

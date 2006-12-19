@@ -34,6 +34,7 @@ libport_HEADERS += 				\
 	$(libport_srcdir)/ufloat.hh		\
 	$(libport_srcdir)/ull-fixed-point.hh	\
 	$(libport_srcdir)/ulong-fixed-point.hh	\
+	$(libport_srcdir)/ref-pt.hh		\
 	$(libport_srcdir)/utime.hh		\
 	$(libport_srcdir)/windows.hh
 

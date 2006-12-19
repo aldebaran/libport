@@ -23,6 +23,9 @@ Macros STATIC_INSTANCE(Cl, Name), EXTERN_STATIC_INSTANCE(Cl, Name).
 ** lockable.hh.
 class urbi::Lockable and macro BLOCKED.
 
+** ref-pt.hh
+RefPt, ref counted pointers.
+
 ** semaphore.hh.
 class urbi::Semaphore.
 

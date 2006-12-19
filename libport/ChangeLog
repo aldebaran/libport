@@ -1,5 +1,11 @@
 2006-12-19  Akim Demaille  <demaille@gostai.com>
 
+	RefPt
+	* ref-pt.hh: New.
+	From k1/utypes.hh.
+
+2006-12-19  Akim Demaille  <demaille@gostai.com>
+
 	Fix compilation for Aibo
 	* hash.hh: Cannot use quotes in #error.
 	Move to the libport:: namespace.
