@@ -1,3 +1,9 @@
+2006-12-19  Akim Demaille  <demaille@gostai.com>
+
+	Fix compilation for Aibo
+	* hash.hh: Cannot use quotes in #error.
+	Move to the libport:: namespace.
+
 2006-12-14  Akim Demaille  <akim.demaille@free.fr>
 
 	windows.h -> windows.hh

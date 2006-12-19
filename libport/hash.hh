@@ -11,7 +11,7 @@
 #  endif
 #  include <hash_map>
 # else
-#  error Don't know where hash_map is.
+#  error Do not know where hash_map is.
 # endif
 
 # include <string>
@@ -44,7 +44,7 @@ struct hash<std::string>
   }
 #  endif
 
-namespace urbi
+namespace libport
 {
 
   //! Used in the hash_map object to define equality of two variable names
@@ -139,7 +139,7 @@ _STDEXT_END
 #  else
 _STD_END
 #  endif
-namespace urbi
+namespace libport
 {
   template<class K, class V>
   class hash_map_type
