@@ -1,0 +1,14 @@
+//				                            -*- C++ -*-
+
+#ifndef LIBPORT_CSTDIO
+# define LIBPORT_CSTDIO
+
+# include <cstdio>
+
+#ifdef _MSC_VER
+/* MS Visual C++ doesn't have snprintf and co. */
+# define snprintf _snprintf
+# define vsnprintf _vsnprintf
+#endif
+
+#endif // !LIBPORT_CSTDIO
