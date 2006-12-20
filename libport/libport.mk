@@ -14,6 +14,7 @@ libportdir = $(includedir)/libport
 
 # C headers.
 libport_HEADERS = 				\
+	$(libport_srcdir)/cstdio		\
 	$(libport_srcdir)/cstring
 
 # C++ headers.
