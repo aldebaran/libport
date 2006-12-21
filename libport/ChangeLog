@@ -1,5 +1,10 @@
 2006-12-21  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	List sys/stat.h in libport.mk
+	* libport.mk (libport_HEADERS): Here.
+
+2006-12-21  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Wrap sys/stat.h.
 	* sys/stat.h: New.
 	* sys: New.
