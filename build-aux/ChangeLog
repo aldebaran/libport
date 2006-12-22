@@ -1,5 +1,10 @@
 2006-12-22  Akim Demaille  <demaille@gostai.com>
 
+	Add missing trunk
+	* svn-externals: For alias urbivalid.
+
+2006-12-22  Akim Demaille  <demaille@gostai.com>
+
 	svn-externals: urbivalid
 	* svn-externals (url_aliases): Catch unknown aliases.
 	Add an alias for urbivalid.

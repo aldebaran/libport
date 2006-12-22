@@ -32,7 +32,7 @@ me=$(basename $0)
 #   sdk            common/sdk
 #   lurbi       gostai/liburbi-cpp/trunk
 #   uobj           lurbi/src/liburbi/uobject
-#   urbivalid   gostai/urbivalid
+#   urbivalid   gostai/urbivalid/trunk
 #   share     https://svn.lrde.epita.fr/svn/lrde-publis/trunk/share
 #
 # An svn:externals dependency is "pinned" if it has an explicit
