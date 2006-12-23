@@ -20,7 +20,7 @@ namespace urbi
     {
       QueryPerformanceFrequency((LARGE_INTEGER*) &pfreq);
       QueryPerformanceCounter ((LARGE_INTEGER*) &base);
-      std::cerr << "perfcounter at frequency of " << pfreq << "\n";
+      // std::cerr << "perfcounter at frequency of " << pfreq << "\n";
     }
     __int64 val;
     QueryPerformanceCounter((LARGE_INTEGER*) &val);
