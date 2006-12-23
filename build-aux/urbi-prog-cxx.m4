@@ -174,11 +174,15 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
   CXXFLAGS="$CXXFLAGS $MSVC_CXXFLAGS"
 fi
 
-# If using mipsel-linux-c++, then we cannot use optimization flags
-# to compile Bison's output.  Don't just look at its name, we
-# might have ccache prefixing it.
+# If using mipsel-linux-c++, then we cannot use optimization flags to compile
+# Bison's output: the compiler generates branches that are `out of range'.
+# Instead we disable optimizations and pass -relax-branch to the assembler so
+# that the assembler can work around the problem. See this thread for a
+# complete discussion of this issue:
+# http://sourceware.org/ml/binutils/2002-10/msg00275.html
+# Don't just look at its name, we might have ccache prefixing it.
 case $($CXX --version | sed 1q) in
-  mipsel-linux-*) AC_SUBST([PARSER_CXXFLAGS], ['-O0']);;
+  mipsel-linux-*) AC_SUBST([PARSER_CXXFLAGS], ['-O0 -Wa,-relax-branch']);;
 esac
 ])
 
