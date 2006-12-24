@@ -1,5 +1,11 @@
 2006-12-24  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
+	Handle more casts.
+	* restyle: Change the regexp to match a cast. Instead of matching a
+	  single word, match one or more, eg: (const unsigned long*).
+
+2006-12-24  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
 	Use static_cast where possible.
 	* restyle: Skip directories. Use static_cast to cast malloc's return
 	  (handle calloc and realloc), to cast realloc, memmove and memcpy

@@ -196,7 +196,7 @@ sub reindent ($)
   ## Expressions.  ##
   ## ------------- ##
 
-  my $cast = '\(\s*(\w+)\s*(\*+)\s*\)\s*';
+  my $cast = '\(\s*([0-9a-zA-Z_ ]+)\s*(\*+)\s*\)\s*';
 
   # 0 has all the pointer types.
   s{${cast}0}{0}gm;
