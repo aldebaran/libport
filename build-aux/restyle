@@ -13,7 +13,7 @@ Usage: $0 [OPTIONS] FILES
 Restyle roughly the FILES.  A back up of the files is left.
 
 - Normalize white spaces
-- No open prace not alone on the line
+- No open brace not alone on the line
   (except for try and catch, but this is not implemented yet).
 - Factor some constructs
   - strcmp == 0 => STREQ
@@ -155,6 +155,11 @@ sub clear_closing_brace ($)
 sub reindent ($)
 {
   my ($file) = @_;
+  if (!-f $file)
+    {
+      stderr "$file is not a file, skipping it.";
+      return 0;
+    }
   my $backup = backup ($file);
 
   $_ = contents ($backup);
@@ -187,14 +192,32 @@ sub reindent ($)
   s<}[\t ]*(//.*)><&clear_closing_brace($1)>gme;
 
 
-
   ## ------------- ##
   ## Expressions.  ##
   ## ------------- ##
 
-  # 0 has all the pointer types.
-  s{\(\w+ *\*+\) *0}{0}gm;
+  my $cast = '\(\s*(\w+)\s*(\*+)\s*\)\s*';
 
+  # 0 has all the pointer types.
+  s{${cast}0}{0}gm;
+
+  # Use static_cast instead of old-style C cast for malloc's return.
+  # (type*) malloc(args) -> static_cast<type*> (malloc (args))
+  # It might fail in this kind of case:
+  # -  int* p = (int*) malloc (sizeof(int)
+  # -                         + 42);
+  # +  int* p = static_cast<int*> (malloc (sizeof(int))
+  # +  			     + 42);
+  s{$cast(m|c|re)alloc\s*\((.*)\)}
+   {static_cast<$1$2> ($3alloc ($4))}gm;
+
+  # Use static_cast also for memmove/memcpy 2nd argument.
+  s{(memmove|memcpy)\s*\(([^,]*),\s*$cast([^(),]*)\s*,}
+   {$1 ($2, static_cast<$3$4> ($5),};
+
+  # Use static_cast also for realloc/memmove/memcpy 1st argument.
+  s{(realloc|memmove|memcpy)\s*\(\s*$cast([^(),]*)\s*,}
+   {$1 (static_cast<$2$3> ($4),}gm;
 
   ## -------- ##
   ## Braces.  ##
@@ -210,7 +233,6 @@ sub reindent ($)
   # An opening brace with comments.
   s(^([ \t]*)\{[ \t]*//[ \t]*)
    ($1\{\n$1  // )gm;
-
 
 
   ## ------------- ##
@@ -230,12 +252,13 @@ sub reindent ($)
    <&strip_parens($1, $2)>gme;
 
   # return needs no parens.
-  # This does not work properly on examples such as:
+  # This used to not work properly on examples such as:
   # -       return (*retr)->getUObject();
   # +       return *retr)->getUObject(;
+  # That's why we're changing the return only if has no other parens.
   # We really need to write a function that check that the first
   # and last parens do match together.
-  s{return\s*\( *(.*?) *\) *;}
+  s{return\s*\(\s*([^()]*?)\s*\)\s*;}
    {return $1;}gm;
 
 
@@ -244,16 +267,18 @@ sub reindent ($)
   ## ---------- ##
 
   # include <stdio.h> -> <cstdio>.
-  s((# *include) *<(stdio|stdlib|math|string).h>)
-   ($1 <c$2>)gm;
+  s{(# *include) *<(stdio|stdlib|math|string).h>}
+   {$1 <c$2>}gm;
 
-  # <cstring> -> "libport/cstring"
-  s(<cstring>)("libport/cstring")gm;
+  # include <cstring> -> "libport/cstring"
+  s{(# *include) *<(cstring|cstdio|sys/stat.h)>}
+   {$1 "libport/$2"}gm;
 
   # Update if needed.
   my $out = new IO::File ">$file.new" or die;
   print $out $_;
   update_file "$file.new", $file;
+  return 1
 }
 
 # Parse ARGV, return the list of files to update.
@@ -280,6 +305,7 @@ sub parse_options ()
 }
 
 my @tex = parse_options ();
+help if ($#tex == -1);
 reindent ($_)
   foreach @tex;
 
@@ -299,3 +325,5 @@ reindent ($_)
 ## cperl-merge-trailing-else: nil
 ## cperl-continued-statement-offset: 2
 ## End:
+### Vim modelines:
+## vi: set noexpandtab:
