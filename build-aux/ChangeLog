@@ -1,3 +1,10 @@
+2006-12-25  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Handle one-line if, if/else, else and cases.
+	* restyle: Here. There are many limitations though (because I prefered
+	  to play it safe with more restrictive regexps rather than having the
+	  user carefuly review all the mistakes the naive script made).
+
 2006-12-24  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Handle more casts.
