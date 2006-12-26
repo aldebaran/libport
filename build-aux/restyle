@@ -159,6 +159,8 @@ sub one_stm_per_line($)
 
   # Don't do anything if this is a for loop.
   return "$_" if $2 =~ /\bfor\b/;
+  # Don't do anything if there's a string with a semi-colon (too complicated).
+  return "$_" if $_ =~ /".*;.*"/;
 
   my $indent = $1;
   my $res = '';
@@ -206,8 +208,11 @@ sub reindent ($)
   # Match a simple statement.
   my $stm = '([^;\n]+)\s*;';
 
-  # Match if(condition) statement; in simple cases.
-  my $if_stm = 'if\s*\(([^()]+)\)[ \t]*' . $stm;
+  # Match a simple condition eg, if (condition) or while (condition).
+  my $condition = '\s*\(([^()]+)\)[ \t]*';
+
+  # Match if(condition) statement;
+  my $if_stm = 'if' . $condition . $stm;
 
   # Rewrite if written on a single line on two lines.
   # if (condition) something(); else doit();  ->  if (condition)
@@ -230,6 +235,10 @@ sub reindent ($)
   # Same thing but only the else-part is on a single line.
   s{^([ \t]*)else[ \t]*$stm}
    {$1else\n$1  $2;}gm;
+
+  # Same thing but with a while.
+  s{^([ \t]*)while$condition$stm}
+   {$1while ($2)\n$1  $3;}gm;
 
   my $case = '(case\s+([^:]+)|default)\s*:\s*';
 
@@ -374,6 +383,10 @@ sub reindent ($)
   # include <cstring> -> "libport/cstring"
   s{(# *include) *<(cstring|cstdio|sys/stat.h)>}
    {$1 "libport/$2"}gm;
+
+  # include <Windows.h> -> "libport/windows.hh"
+  s{(# *include) *<windows.h>}
+   {$1 "libport/windows.hh"}gmi;
 
 
   ## -------- ##
