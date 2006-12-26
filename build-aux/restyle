@@ -151,6 +151,34 @@ sub clear_closing_brace ($)
     }
 }
 
+# Rewrite multiple statements written on a single line.
+sub one_stm_per_line($)
+{
+  $_ = shift;
+  /^([ \t]*)([^;\n]+)\s*;/ or die;
+
+  # Don't do anything if this is a for loop.
+  return "$_" if $2 =~ /\bfor\b/;
+
+  my $indent = $1;
+  my $res = '';
+  while (/^[ \t]*([^;\n]+)\s*;/)
+    {
+      $_ = $';
+      $res .= "$indent$1;";
+      if (m{^\s*/(/|\*)}) # The remaining is a comment, stop here.
+        {
+	  $res .= "$_";
+	  last;
+	}
+      else
+        {
+	  $res .= "\n" unless /^\s*$/;
+	}
+    }
+  return $res;
+};
+
 # Reindent this FILE.
 sub reindent ($)
 {
@@ -216,21 +244,25 @@ sub reindent ($)
   # Same thing but with a foo() statement as in the example above.
   s{^([ \t]*)$case$stm\s*(break|return[^;]*)\s*;}
    {$1$2:\n$1  $4;\n$1  $5;}gm;
-  
+
+  # Inline methods written on a single line.
+  # eg:  virtual int* doit(int* arg1, int* arg2 )  { return arg1 + arg2; };
+  # is rewritten in:
+  #      virtual int* doit (int* arg1, int* arg2 )
+  #      {
+  #        return arg1 + arg2;
+  #      }
+  s<^([ \t]*)([\w \t*&:\<\>]*?)\s*\(\s*([^)]*)\s*\)[ \t]*\{\s*([^{}]+)\s*\}(\s*;)?>
+   <$1$2 ($3)\n$1\{\n$1  $4\n$1\}>gm;
+
   # Multiple statements on a single line.
-  # Buggy: s{^([ \t]*)${stm}[ \t]*$stm}{$1$2;\n$1$3;}gm;
-  # Problem: Matches lines such as: for (a; b; c)
-  # More restrictive regexp instead:
-  s{^([ \t]*)([^(;\n]+)\s*;[ \t]*([^;\n]+)\s*;}
-   {$1$2;\n$1$3;}gm;
-  # It can style be confused by comments:
-  # -  bool           discard_;       ///< True when a commentary is active;
-  # +  bool           discard_;
-  # +  ///< True when a commentary is active;
-  # It doesn't handle more than two statements:
-  # -    delete e1; delete e2; delete e3;
-  # +    delete e1;
-  # +    delete e2; delete e3;
+  # The first statement must not contain { or , because in this case it's
+  # usually not a statement, eg:
+  # class Foo {
+  #   void bar () { ...; };
+  # };
+  s<^([ \t]*)([^{,;\n]+)\s*;([ \t]*([^;\n]+)\s*;)+>
+   <&one_stm_per_line($&)>gme;
 
   ## ---------- ##
   ## Comments.  ##
@@ -280,7 +312,7 @@ sub reindent ($)
   # Exceptions are "do {" and "try {".
   s(\b(do|try)\s+{)($1 {)gsm;
 
-  # An opening brace with comments.
+  # An opening brace followed with comments.
   s(^([ \t]*)\{[ \t]*//[ \t]*)
    ($1\{\n$1  // )gm;
 
@@ -290,15 +322,15 @@ sub reindent ($)
   ## ------------- ##
 
   # strcmp (foo, bar) == 0 -> STREQ (foo, bar).
-  s(strcmp *(\(.*?\))[ \t]*==[ \t]*0)
+  s(strcmp[ \t]*(\(.*?\))[ \t]*==[ \t]*0)
     (STREQ$1)gm;
 
   # !strcmp (foo, bar) -> STREQ (foo, bar).
-  s(!strcmp *(\(.*?\)))
+  s(!strcmp[ \t]*(\(.*?\)))
     (STREQ$1)gm;
 
   # if ((foo) && (bar)) -> if (foo && bar).
-  s{(if|while)\s*\( *(\([\s\w\->=]+\)(\s*(&&|\|\|)\s*\([\s\w\->=]+\))*)\)}
+  s{(if|while)\s*\(\s*(\([\s\w\->=!]+\)(\s*(&&|\|\|)\s*\([\s\w\->=!]+\))*)\s*\)}
    <&strip_parens($1, $2)>gme;
 
   # return needs no parens.
@@ -323,6 +355,12 @@ sub reindent ($)
   #   default: /* skip */ break;
   # and this regexp wouldn't match.
   s/^[ \t]*default\s*:\s*break\s*;\n?(\s*})/$1/gm;
+
+  # i++; -> ++i;
+  s{^([ \t]*)([\w:<>]+)\s*(\+\+|--)\s*([;)])}{$1$3$2$4}gm;
+
+  # for(...; ...; i++) -> for(...; ...; ++i)
+  s{;[ \t]*([\w:<>]+)\s*(\+\+|--)\s*([;)])}{; $2$1$3}gm;
 
 
   ## ---------- ##
