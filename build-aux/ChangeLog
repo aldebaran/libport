@@ -1,3 +1,14 @@
+2006-12-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	More restyling.
+	* restyle: Handle spaces at the end (excepted for trailing spaces that
+	  are removed both at the beginning and at the end). Factor some
+	  regexps using variables. Re-indent properly 'else if' statements
+	  written on a single line. Handle cases with no statement and a
+	  break on a single line. Remove potentially dangerous default cases.
+	  Re-indent multiple statements written on a single line. Don't touch
+	  Doxygen syntax: \{.
+
 2006-12-25  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Handle one-line if, if/else, else and cases.
