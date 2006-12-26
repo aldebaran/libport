@@ -160,7 +160,7 @@ sub one_stm_per_line($)
   # Don't do anything if this is a for loop.
   return "$_" if $2 =~ /\bfor\b/;
   # Don't do anything if there's a string with a semi-colon (too complicated).
-  return "$_" if $_ =~ /".*;.*"/;
+  return "$_" if /".*;.*"/ or /';'/;
 
   my $indent = $1;
   my $res = '';
@@ -240,6 +240,10 @@ sub reindent ($)
   s{^([ \t]*)while$condition$stm}
    {$1while ($2)\n$1  $3;}gm;
 
+  # Same thing but with a for.
+  s{^([ \t]*)for\s*\(([^()]+)\)[ \t]*$stm}
+   {$1for ($2)\n$1  $3;}gm;
+
   my $case = '(case\s+([^:]+)|default)\s*:\s*';
 
   # Rewrite cases written on a single line on three lines.
@@ -261,8 +265,9 @@ sub reindent ($)
   #      {
   #        return arg1 + arg2;
   #      }
-  s<^([ \t]*)([\w \t*&:\<\>]*?)\s*\(\s*([^)]*)\s*\)[ \t]*\{\s*([^{}]+)\s*\}(\s*;)?>
-   <$1$2 ($3)\n$1\{\n$1  $4\n$1\}>gm;
+  # FIXME: factor this regexp using variables to make it readable.
+  s<^([ \t]*)([\w \t*&:\<\>]*?)\s*\(\s*([^)]*)\s*\)(([ \t]*const)?)[ \t]*\{\s*([^{}]+)\s*\}(\s*;)?>
+   <$1$2 ($3)$4\n$1\{\n$1  $6\n$1\}>gm;
 
   # Multiple statements on a single line.
   # The first statement must not contain { or , because in this case it's
@@ -272,6 +277,11 @@ sub reindent ($)
   # };
   s<^([ \t]*)([^{,;\n]+)\s*;([ \t]*([^;\n]+)\s*;)+>
    <&one_stm_per_line($&)>gme;
+
+  # Keywords followed by a parenthesis must be followed by a white space
+  # first, eg: if (a), while (a) ...
+  s{\b(if|for|throw|try|typeid|sizeof|switch|while)\s*\(}
+   {$1 (}gm;
 
   ## ---------- ##
   ## Comments.  ##

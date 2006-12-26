@@ -1,3 +1,11 @@
+2006-12-27  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	More restyling.
+	* restyle (one_stm_per_line): Skip lines containing ';' (too hard to
+	  handle).
+	  (reindent): Re-indent one-line for loops. Handle const-methods
+	  written on a single line. Keywords must be followed by a space.
+
 2006-12-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	More restyling.
