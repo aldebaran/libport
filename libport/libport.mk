@@ -11,11 +11,14 @@ libport_srcdir = $(top_srcdir)/libport
 libport_builddir = $(top_builddir)/libport
 # Where we install them.
 libportdir = $(includedir)/libport
+libportsysdir = $(libportdir)/sys
 
 # C headers.
 libport_HEADERS = 				\
 	$(libport_srcdir)/cstdio		\
-	$(libport_srcdir)/cstring		\
+	$(libport_srcdir)/cstring
+
+libportsys_HEADERS =				\
         $(libport_srcdir)/sys/stat.h
 
 # C++ headers.

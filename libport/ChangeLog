@@ -1,3 +1,9 @@
+2006-12-27  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Fix installation directory.
+	* libport.mk: install sys/stat.h under libport/sys/stat.h. We cannot
+	  use nobase_ here so libportsysdir is defined to be libportdir/sys.
+
 2006-12-23  Akim Demaille  <demaille@gostai.com>
 
 	Remove debugging output
