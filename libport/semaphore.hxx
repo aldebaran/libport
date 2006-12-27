@@ -74,6 +74,7 @@ namespace urbi
     sem = sem_open (s.str ().c_str (), O_CREAT, 0777, cnt);
     assert (!IS_SEM_FAILED (sem));
 # else
+    sem = new sem_t;
     assert (sem_init(sem, 0, cnt) == 0);
 # endif
   }
