@@ -76,13 +76,19 @@ TEST_LOGS ?= $(TESTS:.test=.log)
 TEST_SUITE_LOG = test-suite.log
 
 $(TEST_SUITE_LOG): $(TEST_LOGS)
-	@for f in $(TEST_LOGS);						\
-	do								\
-	  case $$(sed 1q $$f) in					\
-	    SKIP:*|PASS:*|XFAIL:*);;					\
-	    *) cat $$f;							\
-	  esac;								\
-	done >$(TEST_SUITE_LOG);					\
+	@{								\
+	  echo "$(subdir)/$(TEST_SUITE_LOG)" | sed -e 'p;s/./=/g';	\
+	  echo;								\
+	  echo ".. contents:: :depth: 2";				\
+	  echo;								\
+	  for f in $(TEST_LOGS);					\
+	  do								\
+	    case $$(sed 1q $$f) in					\
+	      SKIP:*|PASS:*|XFAIL:*);;					\
+	      *) cat $$f;						\
+	    esac;							\
+	  done;								\
+	} >$(TEST_SUITE_LOG);						\
 	results=$$(for f in $(TEST_LOGS); do sed 1q $$f; done);		\
 	all=$$(echo "$$results" | wc -l | sed -e 's/^[ \t]*//');	\
 	fail=$$(echo "$$results" | grep -c '^FAIL');			\
