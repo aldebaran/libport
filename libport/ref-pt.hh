@@ -19,9 +19,6 @@ namespace libport
       delete p;
     }
 
-    int   cpt;
-    T* p;
-
     T* ref()
     {
       return p;
@@ -38,11 +35,21 @@ namespace libport
       return cpt;
     }
 
+    const RefPt *copy() const
+    {
+      cpt++;
+      return this;
+    }
+
     RefPt *copy()
     {
       cpt++;
       return this;
     }
+
+  private:
+    mutable int cpt;
+    T* p;
   };
 
 
