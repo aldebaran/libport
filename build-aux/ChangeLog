@@ -1,18 +1,14 @@
 2006-12-29  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
-	Remove restyle.
-	Now available under common/restyle.
-	* restyle: Remove.
+	Remove references to restyle/reindent.
+	* ChangeLog,
+	* README: Here.
 
 2006-12-29  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
-	Simplify, add options and better regexps.
-	* restyle: Add GPL header and GPL banners in --help.
-	Remove unused top-level variables.
-	(&backup): Remove. Its job is already done by &update_file.
-	(&reindent): Better regexps. Treat delete as return: no parenthesis
-	needed. #include directives must be at the beginning of the line.
-	(&parse_options): Handle -q|--quiet and -n|--no-backup.
+	Remove restyle.
+	Now available under common/restyle.
+	* restyle: Remove.
 
 2006-12-29  Akim Demaille  <akim.demaille@free.fr>
 
@@ -39,71 +35,6 @@
 
 	Produce a Rst ready log
 	* check.mk: here.
-
-2006-12-27  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
-
-	More restyling.
-	* restyle (one_stm_per_line): Skip lines containing ';' (too hard to
-	  handle).
-	  (reindent): Re-indent one-line for loops. Handle const-methods
-	  written on a single line. Keywords must be followed by a space.
-
-2006-12-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
-
-	More restyling.
-	* restyle (one_stm_per_line): Skip lines containing a string with a
-	  semi-colon (case too hard to handle properly).
-	  (reindent): Re-indent one-line while loops. Use libport/windows.hh
-	  instead of Windows.h.
-
-2006-12-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
-
-	Handle more cases.
-	* restyle: Enhance regexps for better matches.
-
-2006-12-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
-
-	More restyling.
-	* restyle: Handle more than 2 exps on a single line.
-	  (one_stm_per_line): New sub. Rewrite one line statements by putting
-	  them on their own line.
-	  (reindent): Re-indent one-line inline methods. Match more cases for
-	  strcmp and useless parenthesis used in if/while statements. Use
-	  post-incrementation (++i) which is useful when i is an iterator.
-
-2006-12-26  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
-
-	More restyling.
-	* restyle: Handle spaces at the end (excepted for trailing spaces that
-	  are removed both at the beginning and at the end). Factor some
-	  regexps using variables. Re-indent properly 'else if' statements
-	  written on a single line. Handle cases with no statement and a
-	  break on a single line. Remove potentially dangerous default cases.
-	  Re-indent multiple statements written on a single line. Don't touch
-	  Doxygen syntax: \{.
-
-2006-12-25  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
-
-	Handle one-line if, if/else, else and cases.
-	* restyle: Here. There are many limitations though (because I prefered
-	  to play it safe with more restrictive regexps rather than having the
-	  user carefuly review all the mistakes the naive script made).
-
-2006-12-24  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
-
-	Handle more casts.
-	* restyle: Change the regexp to match a cast. Instead of matching a
-	  single word, match one or more, eg: (const unsigned long*).
-
-2006-12-24  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
-
-	Use static_cast where possible.
-	* restyle: Skip directories. Use static_cast to cast malloc's return
-	  (handle calloc and realloc), to cast realloc, memmove and memcpy
-	  arguments. Fix includes: cstdio and sys/stat.h must be taken from
-	  libport.
-	  reindent: return 0 if the file was skiped, 1 otherwise.
-	  Print usage if invoked without arguments.
 
 2006-12-23  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
@@ -153,16 +84,6 @@
 	Tweak flags and define WIN32 for VC++.
 	* urbi-prog-cxx.m4: Here.
 
-2006-12-05  Akim Demaille  <demaille@gostai.com>
-
-	More restyling
-	* restyle: !strcmp -> STREQ.
-
-2006-12-05  Akim Demaille  <akim.demaille@free.fr>
-
-	Always remove useless parens for returns.
-	* restyle: here.
-
 2006-12-05  Akim Demaille  <akim.demaille@free.fr>
 
 	More restyle
@@ -190,18 +111,6 @@
 	* urbi-dirs.m4: Remove.
 	* urbi-engine.ac: Remove.
 	* urbi-sdk.m4: Remove.
-
-2006-11-21  Akim Demaille  <demaille@gostai.com>
-
-	"*foo." -> "foo->"
-	* build-aux/reindent: Do that.
-
-2006-11-21  Akim Demaille  <demaille@gostai.com>
-
-	restyle returns too
-	* reindent: Handle returns.
-	(&update_file): New, from Automake.
-	Use it to save cycles.
 
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
@@ -245,12 +154,6 @@
 	* svn-externals.mk: here.
 	* check.mk: Specify -Wno-portability.
 	* init.mk: Initialize AUTOMAKE_OPTIONS.
-
-2006-11-21  Akim Demaille  <demaille@gostai.com>
-
-	Simplify more if/while
-	* reindent (&strip_parens): New.
-	Use it to simplify more if patterns.
 
 2006-11-21  Akim Demaille  <demaille@gostai.com>
 
@@ -315,7 +218,6 @@
 	Improve check.mk
 	* check.mk: Simplify the reporting.
 	Use $(subdir).
-	* reindent: Try to remove some useless parens.
 	* rename: New.
 	Not very safe, yet useful.
 
@@ -354,18 +256,6 @@
 
 	Make svn bits more alike to prepare factoring
 	* build-aux.mk: Do that based on libport bits.
-
-2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
-
-	More reindent
-	* reindent: Use libport/cstring.
-
-2006-11-15  Akim Demaille  <akim.demaille@gmail.com>
-
-	Improve reindent to catch common patterns to factor
-	* reindent: Also handle comments on the same line as the
-	brace.
-	strcmp == 0 -> STREQ.
 
 2006-11-13  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
