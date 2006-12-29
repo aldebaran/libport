@@ -1,37 +1,64 @@
 #! /usr/bin/perl -w
+# Restyle (re-indent, clean up) C++ files.
+# Copyright (C) 2006  Akim Demaille and Benoit Sigoure.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+# USA.
 
 use strict;
 use IO::File;
 use File::Glob ':glob';
 use Getopt::Long qw(GetOptions);
 
+# --------------- #
+# Default values. #
+# --------------- #
+
+my $backup = 1;
+my $quiet = 0;
+
+
 sub help ()
 {
   print <<EOF;
-Usage: $0 [OPTIONS] FILES
+Usage: restyle [OPTIONS] FILES
+Restyle roughly the C++ FILES.  A back up of the files is left.
 
-Restyle roughly the FILES.  A back up of the files is left.
+Options:
+  -q, --quiet: Don't print informational messages on stderr.
+  -n, --no-backup: Don't backup files.
 
-- Normalize white spaces
-- No open brace not alone on the line
-  (except for try and catch, but this is not implemented yet).
-- Factor some constructs
-  - strcmp == 0 => STREQ
-- Use libport headers when appropriate
+Once restyle passed, you should use your editor to finish the
+reindentation and review the diff to make sure the code wasn't
+erroneously altered.
 
-Once reindent passed, you should use Emacs or similar to finish
-the reindentation.
+Copyright (C) 2006  Akim Demaille and Benoit Sigoure.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 EOF
   exit 0;
 }
 
 sub stderr (@)
 {
-  print STDERR "$0: @_\n";
+  print STDERR "restyle: @_\n" unless $quiet;
 }
 
 sub fatal (@)
 {
+  $quiet = 0;
   stderr @_;
   exit 1;
 }
@@ -78,7 +105,7 @@ sub update_file ($$;$)
       return;
     }
 
-  if (-f "$to")
+  if (-f "$to" && $backup)
     {
       # Back up and install the new one.
       move ("$to",  "$to$SIMPLE_BACKUP_SUFFIX")
@@ -94,13 +121,6 @@ sub update_file ($$;$)
   stderr "$to updated";
 }
 
-
-# Location of the share directory.
-my $share = 'share';
-
-# The sed program to update old cite keys.
-my $updater = '';
-
 # contents ($FILE_NAME)
 # ---------------------
 sub contents ($)
@@ -111,18 +131,6 @@ sub contents ($)
   my $contents = $f->getline;
   $f->close;
   return $contents;
-}
-
-# Backup this FILE, return the back up file name.
-sub backup ($)
-{
-  my ($from) = @_;
-  my $SIMPLE_BACKUP_SUFFIX = $ENV{'SIMPLE_BACKUP_SUFFIX'} || '~';
-  my $to = "$from$SIMPLE_BACKUP_SUFFIX";
-  use File::Copy;
-  move ($from, $to)
-    or die "cannot backup $from: $!";
-  return $to;
 }
 
 # Remove all the parens.
@@ -185,14 +193,14 @@ sub one_stm_per_line($)
 sub reindent ($)
 {
   my ($file) = @_;
+
   if (!-f $file)
     {
       stderr "$file is not a file, skipping it.";
       return 0;
     }
-  my $backup = backup ($file);
 
-  $_ = contents ($backup);
+  $_ = contents ($file);
 
   # Beware that \s includes \n and often does not do what we want.
   # Use [ \t] instead.
@@ -312,11 +320,11 @@ sub reindent ($)
    {static_cast<$1$2> ($3alloc ($4))}gm;
 
   # Use static_cast also for memmove/memcpy 2nd argument.
-  s{(memmove|memcpy)\s*\(([^,]*),\s*$cast([^(),]*)\s*,}
+  s{\b(memmove|memcpy)\s*\(([^,]*),\s*$cast([^(),]*)\s*,}
    {$1 ($2, static_cast<$3$4> ($5),};
 
   # Use static_cast also for realloc/memmove/memcpy 1st argument.
-  s{(realloc|memmove|memcpy)\s*\(\s*$cast([^(),]*)\s*,}
+  s{\b(realloc|memmove|memcpy)\s*\(\s*$cast([^(),]*)\s*,}
    {$1 (static_cast<$2$3> ($4),}gm;
 
   ## -------- ##
@@ -341,7 +349,7 @@ sub reindent ($)
   ## ------------- ##
 
   # strcmp (foo, bar) == 0 -> STREQ (foo, bar).
-  s(strcmp[ \t]*(\(.*?\))[ \t]*==[ \t]*0)
+  s(\bstrcmp[ \t]*(\(.*?\))[ \t]*==[ \t]*0)
     (STREQ$1)gm;
 
   # !strcmp (foo, bar) -> STREQ (foo, bar).
@@ -349,18 +357,18 @@ sub reindent ($)
     (STREQ$1)gm;
 
   # if ((foo) && (bar)) -> if (foo && bar).
-  s{(if|while)\s*\(\s*(\([\s\w\-:<>=!]+\)(\s*(&&|\|\|)\s*\([\s\w\-:<>=!]+\))*)\s*\)}
+  s{\b(if|while)\s*\(\s*(\([\s\w\-:<>=!]+\)(\s*(&&|\|\|)\s*\([\s\w\-:<>=!]+\))*)\s*\)}
    <&strip_parens($1, $2)>gme;
 
-  # return needs no parens.
+  # return and delete don't need parenthesis.
   # This used to not work properly on examples such as:
   # -       return (*retr)->getUObject();
   # +       return *retr)->getUObject(;
-  # That's why we're changing the return only if has no other parens.
+  # That's why we're changing the return only if has no other parenthesis.
   # We really need to write a function that check that the first
-  # and last parens do match together.
-  s{return\s*\(\s*([^()]*?)\s*\)\s*;}
-   {return $1;}gm;
+  # and last parenthesis do match together.
+  s{\b(return|delete)\s*\(\s*([^()]*?)\s*\)\s*;}
+   {$1 $2;}gm;
 
   # Remove useless yet dangerous default cases at the end of a switch, eg:
   # switch (...)
@@ -387,15 +395,15 @@ sub reindent ($)
   ## ---------- ##
 
   # include <stdio.h> -> <cstdio>.
-  s{(# *include) *<(stdio|stdlib|math|string).h>}
+  s{(^#[ \t]*include)\s*<(stdio|stdlib|math|string).h>}
    {$1 <c$2>}gm;
 
   # include <cstring> -> "libport/cstring"
-  s{(# *include) *<(cstring|cstdio|sys/stat.h)>}
+  s{(^#[ \t]*include)\s*<(cstring|cstdio|sys/stat.h)>}
    {$1 "libport/$2"}gm;
 
   # include <Windows.h> -> "libport/windows.hh"
-  s{(# *include) *<windows.h>}
+  s{(^#[ \t]*include)\s*<windows.h>}
    {$1 "libport/windows.hh"}gmi;
 
 
@@ -431,7 +439,9 @@ sub parse_options ()
   Getopt::Long::config ("bundling", "pass_through");
   Getopt::Long::GetOptions
     (
-     'h|help'   => sub { help; },
+     'h|help'      => sub { help; },
+     'n|no-backup' => sub { $backup = 0; },
+     'q|quiet'     => sub { $quiet = 1; },
     )
     or die;
 
@@ -447,10 +457,10 @@ sub parse_options ()
   return @ARGV;
 }
 
-my @tex = parse_options ();
-help if ($#tex == -1);
+my @input_files = parse_options ();
+help if ($#input_files == -1);
 reindent ($_)
-  foreach @tex;
+  foreach @input_files;
 
 ### Setup "GNU" style for perl-mode and cperl-mode.
 ## Local Variables:

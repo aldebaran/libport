@@ -1,3 +1,13 @@
+2006-12-29  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Simplify, add options and better regexps.
+	* restyle: Add GPL header and GPL banners in --help.
+	Remove unused top-level variables.
+	(&backup): Remove. Its job is already done by &update_file.
+	(&reindent): Better regexps. Treat delete as return: no parenthesis
+	needed. #include directives must be at the beginning of the line.
+	(&parse_options): Handle -q|--quiet and -n|--no-backup.
+
 2006-12-29  Akim Demaille  <akim.demaille@free.fr>
 
 	Fix XFAIL_TESTS handling
