@@ -1,5 +1,13 @@
 2006-12-29  Akim Demaille  <akim.demaille@free.fr>
 
+	Fix XFAIL_TESTS handling
+	* build-aux/check.mk: We need to take the basename of $<.
+	But that is still not right: this breaks if there are / in
+	the test name.
+	But that's good enough an approximation for now.
+
+2006-12-29  Akim Demaille  <akim.demaille@free.fr>
+
 	Upgrade check.mk
 	* check.mk (am__rst_section, am__rst_subsection)
 	(am__text_box, am__check_pre, am__check_post): New.

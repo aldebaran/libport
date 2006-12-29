@@ -60,14 +60,14 @@ $(TESTS_ENVIRONMENT)
 
 # To be appended to the command running the test.  Handles the stdout
 # and stderr redirection, and catch the exit status.
-am__check_post=						\
+am__check_post =					\
 >$@-t 2>&1;						\
 status=$$?;						\
 case $$status:" $(XFAIL_TESTS) " in			\
-    0:*' $< '*) res='XPASS';;				\
+    0:*" $$(basename $<) "*) res='XPASS';;		\
     0:*)        res='PASS' ;;				\
     77:*)       res='SKIP' ;;				\
-    *:*' $< '*) res='XFAIL';;				\
+    *:*" $$(basename $<) "*) res='XFAIL';;		\
     *:*)        res='FAIL' ;;				\
    esac;						\
 echo "$$res: $$(basename $<)";				\
