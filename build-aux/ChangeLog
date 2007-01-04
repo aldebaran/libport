@@ -1,3 +1,9 @@
+2007-01-04  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Add a macro to check for OpenSSL.
+	* openssl.m4: Check for OpenSSL. New.
+	* vcs/local.rb: Add my e-mail.
+
 2006-12-29  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Remove references to restyle/reindent.

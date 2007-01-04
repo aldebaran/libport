@@ -10,7 +10,8 @@ class Vcs
       mail!(:to => %w[akim@lrde.epita.fr
                       matthieu.nottale@ensta.fr
 		      tsuna@lrde.epita.fr
-                      baillie@gostai.com],
+                      baillie@gostai.com
+		      thomas.moulard@lrde.epita.fr],
             :subject => subject)
     end
   end
