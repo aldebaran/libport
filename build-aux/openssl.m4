@@ -120,7 +120,7 @@ AC_DEFUN([OPENSSL_REQUIRED], [
    AC_REQUIRE([OPENSSL])
 
    if test -z $openssl -o $openssl = false; then
-      AC_MSG_ERROR([Failed to find require OpenSSL library. Please install it or check config.log])
+      AC_MSG_ERROR([Failed to find the OpenSSL library. Please install it or check config.log])
    fi
 ])
 

@@ -1,5 +1,11 @@
 2007-01-04  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Add a macro that checks for Webots.
+	* openssl.m4: Typo.
+	* webots.m4: Check for Webots. New.
+
+2007-01-04  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Add a macro to check for OpenSSL.
 	* openssl.m4: Check for OpenSSL. New.
 	* vcs/local.rb: Add my e-mail.
