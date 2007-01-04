@@ -1,5 +1,10 @@
 2007-01-04  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Add a macro that check for LibUrbi.
+	* liburbi.m4: Check for LibUrbi. New.
+
+2007-01-04  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Add a macro that checks for Webots.
 	* openssl.m4: Typo.
 	* webots.m4: Check for Webots. New.
