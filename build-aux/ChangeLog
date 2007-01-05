@@ -1,5 +1,10 @@
 2007-01-05  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Fix OpenSSL check.
+	* openssl.m4: Various fix.
+
+2007-01-05  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Fix broken path in the Webots macro.
 	* webots.m4: Fix broken path.
 

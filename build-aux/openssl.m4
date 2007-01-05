@@ -14,7 +14,7 @@ saved_LDFLAGS="$LDFLAGS"
 saved_CPPFLAGS="$CPPFLAGS"
 
 LIBS="$saved_LIBS -lcrypto"
-if test -z $ssldir; then
+if test -z "$ssldir"; then
    LDFLAGS="$saved_LDFLAGS -L$ssldir"
 fi
 
@@ -29,6 +29,7 @@ int main(void)
 	memset(a, 0, sizeof(a));
 	RAND_add(a, sizeof(a), sizeof(a));
 	return(RAND_status() <= 0);
+}
 ],
 [
 	found_ssl=true
@@ -65,16 +66,18 @@ case $with_openssl in
 		# Check the library
 		OPENSSL_CHECK
 		# If it succeed, exit.
-		if test ! -z "$found_ssl" ; then
+		if test "$found_ssl" = "true"; then
 		   break;
 		fi
 	done
 
-	if test -z "$found_ssl"; then
+	if test -z "$found_ssl" -o "$found_ssl" = "false"; then
 	   AC_MSG_ERROR([Could not find working OpenSSL library, please install or check config.log])
-	fi
-	if test -z "$ssldir"; then
-	   ssldir="(system)"
+	   ssldir=""
+	else
+	   if test -z "$ssldir"; then
+	      ssldir="(system)"
+	    fi
 	fi
 
 	ac_cv_openssldir=$ssldir;
@@ -94,7 +97,7 @@ case $with_openssl in
 	# Check the library.
 	OPENSSL_CHECK
 	# If it succeed, exit.
-	if test ! -z "$found_ssl" ; then
+	if test "$found_ssl" = "true"; then
           OPENSSL_PATH=$with_openssl
 	else
 	  AC_MSG_ERROR([I didn't succeed to compile with this library. Please check the path and the configure.log])
@@ -119,7 +122,7 @@ AC_SUBST([OPENSSL_PATH])
 AC_DEFUN([OPENSSL_REQUIRED], [
    AC_REQUIRE([OPENSSL])
 
-   if test -z $openssl -o $openssl = false; then
+   if test -z "$openssl" -o "$openssl" = "false"; then
       AC_MSG_ERROR([Failed to find the OpenSSL library. Please install it or check config.log])
    fi
 ])
