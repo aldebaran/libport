@@ -1,5 +1,10 @@
 2007-01-05  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Typo
+	* webots.m4: Typo.
+
+2007-01-05  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Fix Webots Macro on Mac and Windows.
 	* webots.m4: Add webots path on Mac and Windows.
 

@@ -31,7 +31,7 @@ if $webots; then
     AC_MSG_RESULT([$WEBOTS_PATH])
     webots=true
   else
-    AC_MSG_RESULT([no, webots no found in $WEBOTS_PATH])
+    AC_MSG_RESULT([no, webots not found in $WEBOTS_PATH])
     webots=false
   fi
 else
