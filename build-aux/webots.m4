@@ -27,7 +27,7 @@ AC_MSG_CHECKING([for Webots])
 if $webots; then
   if test -f $WEBOTS_PATH/webots -o \
 	  -f $WEBOTS_PATH/webots.exe -o \
-	  -f $WEBOTS_PATH/webots.app/Contents/MacOS; then
+	  -f $WEBOTS_PATH/webots.app/Contents/MacOS/webots; then
     AC_MSG_RESULT([$WEBOTS_PATH])
     webots=true
   else
