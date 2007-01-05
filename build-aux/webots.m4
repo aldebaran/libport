@@ -1,6 +1,7 @@
 # WEBOTS
 # ----------
-# Look for Webots.  Support --with-webots=PATH. Check the software.
+# Look for Webots.  Support --with-webots=PATH. Check the software
+# location.
 #
 # Output variable WEBOTS_PATH point to the installation location.
 # Set "$webots" to "true" or "false".
@@ -24,7 +25,9 @@ esac
 # Checking whether Webots is really there.
 AC_MSG_CHECKING([for Webots])
 if $webots; then
-  if test -f $WEBOTS_PATH/webots; then
+  if test -f $WEBOTS_PATH/webots -o \
+	  -f $WEBOTS_PATH/webots.exe -o \
+	  -f $WEBOTS_PATH/webots.app/Contents/MacOS; then
     AC_MSG_RESULT([$WEBOTS_PATH])
     webots=true
   else

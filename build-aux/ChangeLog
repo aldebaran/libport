@@ -1,3 +1,8 @@
+2007-01-05  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Fix Webots Macro on Mac and Windows.
+	* webots.m4: Add webots path on Mac and Windows.
+
 2007-01-04  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
 	Add a macro that check for LibUrbi.
