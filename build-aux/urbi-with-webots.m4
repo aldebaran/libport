@@ -1,11 +1,11 @@
-# WEBOTS
+# URBI_WITH_WEBOTS
 # ----------
 # Look for Webots.  Support --with-webots=PATH. Check the software
 # location.
 #
 # Output variable WEBOTS_PATH point to the installation location.
 # Set "$webots" to "true" or "false".
-AC_DEFUN([WEBOTS],
+AC_DEFUN([URBI_WITH_WEBOTS],
 [AC_ARG_WITH([webots],
 	     [AC_HELP_STRING([--with-webots=webots-path],
 			     [enable webots support [/usr/local/webots]])],
@@ -25,9 +25,9 @@ esac
 # Checking whether Webots is really there.
 AC_MSG_CHECKING([for Webots])
 if $webots; then
-  if test -f $WEBOTS_PATH/webots -o \
-	  -f $WEBOTS_PATH/webots.exe -o \
-	  -f $WEBOTS_PATH/webots.app/Contents/MacOS/webots; then
+  if (test -f "$WEBOTS_PATH/webots" ||
+	   -f "$WEBOTS_PATH/webots.exe" ||
+	   -f "$WEBOTS_PATH/webots.app/Contents/MacOS/webots"); then
     AC_MSG_RESULT([$WEBOTS_PATH])
     webots=true
   else
@@ -45,17 +45,19 @@ if $webots; then
   AC_SUBST([WEBOTS_LDFLAGS],  ['-L$(WEBOTS_PATH)/lib -lController'])
 fi
 
-AM_CONDITIONAL([WEBOTS], [$webots])
+AM_CONDITIONAL([WITH_WEBOTS], [$webots])
 AC_SUBST([WEBOTS_PATH])
 ])
 
-AC_DEFUN([WEBOTS_REQUIRED],
+AC_DEFUN([URBI_WITH_WEBOTS_REQUIRED],
 [
-   AC_REQUIRE([WEBOTS])
+   AC_REQUIRE([URBI_WITH_WEBOTS])
 
-   if test -z $webots -o $webots = false; then
-      AC_MSG_ERROR([Failed to find Webots. Please install it or check config.log])
-   fi
+   case $webots in
+     '' | false)
+       AC_MSG_ERROR([Failed to find Webots. Please install it or check config.log])
+     ;;
+   esac
 ])
 
 
