@@ -1,5 +1,11 @@
 2007-01-07  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Rename OpenSSL macro, formatting changes.
+	* openssl.m4: Renaming as...
+	* urbi-with-openssl.m4: This.
+
+2007-01-07  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Fix macro names, formatting changes.
 	* liburbi.m4: Rename as...
 	* urbi-with-urbi-sdk.m4: this.

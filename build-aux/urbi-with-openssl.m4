@@ -1,4 +1,4 @@
-# OPENSSL
+# URBI_OPENSSL
 # ----------
 # Look for the OpenSSL.  Support --with-openssl=PATH.  Check the library
 # is there.
@@ -6,7 +6,7 @@
 # Output variable OPENSSL_PATH point to the installation location.
 # Set "$openssl" to "true" or "false".
 
-AC_DEFUN([OPENSSL_CHECK],
+AC_DEFUN([URBI_OPENSSL_CHECK],
 [
 found_ssl=false
 saved_LIBS="$LIBS"
@@ -40,7 +40,7 @@ LDFLAGS="$saved_LDFLAGS"
 CPPFLAGS="$saved_CPPFLAGS"
 ])
 
-AC_DEFUN([OPENSSL],
+AC_DEFUN([URBI_WITH_OPENSSL],
 [AC_ARG_WITH([openssl],
 	     [AC_HELP_STRING([--with-openssl=openssl-path],
 			     [turn on OpenSSL [/usr/lib]])],
@@ -60,25 +60,29 @@ case $with_openssl in
         for ssldir in "" /usr/local/openssl /usr/lib/openssl /usr/local/ssl \
 			/usr/lib/ssl /usr/local /usr/pkg /opt /opt/openssl; do
 		# Skip directories if they don't exist
-		if test ! -z "$ssldir" -a ! -d "$ssldir" ; then
+		if test ! -z "$ssldir" && test ! -d "$ssldir" ; then
 		   continue;
 		fi
 		# Check the library
-		OPENSSL_CHECK
+		URBI_OPENSSL_CHECK
 		# If it succeed, exit.
-		if test "$found_ssl" = "true"; then
+		if test "x$found_ssl" = "xtrue"; then
 		   break;
 		fi
 	done
 
-	if test -z "$found_ssl" -o "$found_ssl" = "false"; then
-	   AC_MSG_ERROR([Could not find working OpenSSL library, please install or check config.log])
+	case "$found_ssl" in
+	  '' | false )
+	   AC_MSG_ERROR(
+  [Could not find working OpenSSL library, please install or check config.log])
 	   ssldir=""
-	else
+	  ;;
+          * )
 	   if test -z "$ssldir"; then
 	      ssldir="(system)"
-	    fi
-	fi
+	   fi
+          ;;
+	esac
 
 	ac_cv_openssldir=$ssldir;
        ])
@@ -95,9 +99,9 @@ case $with_openssl in
         # Define the path.
         ssldir=$with_openssl
 	# Check the library.
-	OPENSSL_CHECK
+	URBI_OPENSSL_CHECK
 	# If it succeed, exit.
-	if test "$found_ssl" = "true"; then
+	if test "x$found_ssl" = "xtrue"; then
           OPENSSL_PATH=$with_openssl
 	else
 	  AC_MSG_ERROR([I didn't succeed to compile with this library. Please check the path and the configure.log])
@@ -107,7 +111,7 @@ esac
 
 if $openssl; then
   # More tools for OpenSSL.
-  if test "(system)" = "$OPENSSL_PATH"; then
+  if test "x(system)" = "x$OPENSSL_PATH"; then
     AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto"])
   else
     AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto -L$OPENSSL_PATH"])
@@ -119,12 +123,15 @@ AC_SUBST([OPENSSL_PATH])
 ])
 
 
-AC_DEFUN([OPENSSL_REQUIRED], [
-   AC_REQUIRE([OPENSSL])
+AC_DEFUN([URBI_WITH_OPENSSL_REQUIRED], [
+   AC_REQUIRE([URBI_WITH_OPENSSL])
 
-   if test -z "$openssl" -o "$openssl" = "false"; then
-      AC_MSG_ERROR([Failed to find the OpenSSL library. Please install it or check config.log])
-   fi
+   case "$openssl" in
+     '' | false )
+      AC_MSG_ERROR(
+   [Failed to find the OpenSSL library. Please install it or check config.log])
+     ;;
+   esac
 ])
 
 ## Local Variables:
