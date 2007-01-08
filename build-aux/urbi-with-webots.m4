@@ -26,8 +26,8 @@ esac
 AC_MSG_CHECKING([for Webots])
 if $webots; then
   if (test -f "$WEBOTS_PATH/webots" ||
-	   -f "$WEBOTS_PATH/webots.exe" ||
-	   -f "$WEBOTS_PATH/webots.app/Contents/MacOS/webots"); then
+      test -f "$WEBOTS_PATH/webots.exe" ||
+      test -f "$WEBOTS_PATH/webots.app/Contents/MacOS/webots"); then
     AC_MSG_RESULT([$WEBOTS_PATH])
     webots=true
   else

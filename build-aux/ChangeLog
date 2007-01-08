@@ -1,3 +1,8 @@
+2007-01-08  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Fix webots script.
+	* urbi-with-webots.m4: Fix missing "test" in this script.
+
 2007-01-07  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
 	Rename OpenSSL macro, formatting changes.
