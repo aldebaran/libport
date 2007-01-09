@@ -14,7 +14,7 @@ saved_LDFLAGS="$LDFLAGS"
 saved_CPPFLAGS="$CPPFLAGS"
 
 LIBS="$saved_LIBS -lcrypto"
-if test -z "$ssldir"; then
+if test -n "$ssldir"; then
    LDFLAGS="$saved_LDFLAGS -L$ssldir"
 fi
 

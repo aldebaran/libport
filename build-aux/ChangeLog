@@ -1,3 +1,8 @@
+2007-01-09  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Correct wrong behavior in OpenSSL macro.
+	* urbi-with-openssl.m4: Correct behavior.
+
 2007-01-08  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
 	Fix webots script.
