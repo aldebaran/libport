@@ -1,5 +1,10 @@
 2007-01-11  Akim Demaille  <demaille@gostai.com>
 
+	Fix semaphores on OSX
+	* semaphore.hxx: Typo in a var name.
+
+2007-01-11  Akim Demaille  <demaille@gostai.com>
+
 	Semaphore cleanup
 	* semaphore.hh, semaphore.hxx (Semaphore::sem): Rename as...
 	(Semaphore::sem_): this.

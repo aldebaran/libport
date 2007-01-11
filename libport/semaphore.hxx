@@ -69,7 +69,7 @@ namespace libport
 # ifdef __APPLE__
     static unsigned int counter = 0;
     std::stringstream s;
-    s << "sema_" << counter_++;
+    s << "sema_" << counter++;
     sem_ = sem_open (s.str ().c_str (), O_CREAT, 0777, cnt);
     assert (!IS_SEM_FAILED (sem_));
 # else
