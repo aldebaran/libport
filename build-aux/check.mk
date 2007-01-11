@@ -1,5 +1,5 @@
 ## Vaucanson, a generic library for finite state machines.
-## Copyright (C) 2006 The Vaucanson Group.
+## Copyright (C) 2006, 2007 The Vaucanson Group.
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -127,7 +127,7 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	  do								\
 	    case $$(sed 1q $$f) in					\
 	      SKIP:*|PASS:*|XFAIL:*);;					\
-	      *) cat $$f;;						\
+	      *) echo; cat $$f;;					\
 	    esac;							\
 	  done;								\
 	} >$(TEST_SUITE_LOG);						\

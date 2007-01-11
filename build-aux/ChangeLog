@@ -1,3 +1,8 @@
+2007-01-11  Akim Demaille  <demaille@gostai.com>
+
+	Separate sections
+	* check.mk: When compiling the logs, prepend an empty line.
+
 2007-01-09  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
 	Correct wrong behavior in OpenSSL macro.
