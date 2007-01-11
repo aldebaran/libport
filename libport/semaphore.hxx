@@ -16,7 +16,7 @@ namespace libport
     return SEM_FAILED; // Use sem_init instead.
   }
 
-  inline int sem_init(sem_t* sem, int useless, int cnt)
+  inline int sem_init(sem_t* sem, int, int cnt)
   {
     *sem = CreateSemaphore(0, cnt, 100000, 0);
     return !sem;
