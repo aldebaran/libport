@@ -19,7 +19,7 @@ namespace libport
   inline int sem_init(sem_t* sem, int useless, int cnt)
   {
     *sem = CreateSemaphore(0, cnt, 100000, 0);
-    return !sem_;
+    return !sem;
   }
 
   inline int sem_post(sem_t* sem)

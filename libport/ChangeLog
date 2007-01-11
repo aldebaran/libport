@@ -1,5 +1,10 @@
 2007-01-11  Akim Demaille  <demaille@gostai.com>
 
+	Fix semaphore on Windows
+	* semaphore.hxx: Another typo in var name.
+
+2007-01-11  Akim Demaille  <demaille@gostai.com>
+
 	Fix test suite
 	* tests/singleton1.cc, tests/singleton2.cc: namespace fixes.
 
