@@ -11,7 +11,7 @@ struct foo
 
 int main()
 {
-  urbi::SingletonPtr<foo> test;
+  libport::SingletonPtr<foo> test;
   test->bar();
   (*test).bar();
   return 0;

@@ -1,7 +1,7 @@
 #include <iostream>
 #include "libport/singleton-ptr.hh"
 
-using namespace urbi;
+using namespace libport;
 
 struct foo
 {
