@@ -19,7 +19,7 @@ namespace libport
   inline int sem_init(sem_t* sem, int useless, int cnt)
   {
     *sem = CreateSemaphore(0, cnt, 100000, 0);
-    return !sem;
+    return !sem_;
   }
 
   inline int sem_post(sem_t* sem)
@@ -67,57 +67,64 @@ namespace libport
   inline Semaphore::Semaphore (int cnt)
   {
 # ifdef __APPLE__
+    static unsigned int counter = 0;
     std::stringstream s;
-
-    s << "sema_";
-    s << counter_++;
-    sem = sem_open (s.str ().c_str (), O_CREAT, 0777, cnt);
-    assert (!IS_SEM_FAILED (sem));
+    s << "sema_" << counter_++;
+    sem_ = sem_open (s.str ().c_str (), O_CREAT, 0777, cnt);
+    assert (!IS_SEM_FAILED (sem_));
 # else
-    sem = new sem_t;
-    assert (sem_init(sem, 0, cnt) == 0);
+    sem_ = new sem_t;
+    int err = sem_init(sem_, 0, cnt);
+    assert (!err);
 # endif
   }
 
   inline Semaphore::~Semaphore ()
   {
 # ifdef __APPLE__
-    assert (sem_close(sem) == 0);
+    int err = sem_close(sem_);
 # else
-    assert (sem_destroy(sem) == 0);
+    int err = sem_destroy(sem_);
+    delete sem_;
 # endif
+    assert (err);
   }
 
 
   inline void
   Semaphore::operator++ (int)
   {
-    assert (sem_post(sem) == 0);
+    int err = sem_post(sem_);
+    assert (!err);
   }
 
   inline void
   Semaphore::operator-- (int)
   {
-    assert (sem_wait(sem) == 0);
+    int err = sem_wait(sem_);
+    assert (!err);
   }
 
   inline void
   Semaphore::operator++ ()
   {
-    assert (sem_post(sem) == 0);
+    int err = sem_post(sem_);
+    assert (!err);
   }
 
   inline void
   Semaphore::operator-- ()
   {
-    assert (sem_wait(sem) == 0);
+    int err = sem_wait(sem_);
+    assert (!err);
   }
 
   inline
   Semaphore::operator int ()
   {
     int t;
-    assert (sem_getvalue(sem, &t) == 0);
+    int err = sem_getvalue(sem_, &t);
+    assert (!err);
     return t;
   }
 

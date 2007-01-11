@@ -1,5 +1,14 @@
 2007-01-11  Akim Demaille  <demaille@gostai.com>
 
+	Semaphore cleanup
+	* semaphore.hh, semaphore.hxx (Semaphore::sem): Rename as...
+	(Semaphore::sem_): this.
+	(Semaphore::counter_): remove, should be a simple static variable.
+	Do not use assert to check the return value of code that must
+	be run.
+
+2007-01-11  Akim Demaille  <demaille@gostai.com>
+
 	urbi -> libport
 	* fwd.hh, lockable.hh, semaphore.hh, semaphore.hxx,
 	* singleton-ptr.hh, thread.hh: Move these in the libport namespace.

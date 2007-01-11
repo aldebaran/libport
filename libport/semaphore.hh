@@ -49,11 +49,8 @@ namespace libport
       operator int ();
 
     private:
-      sem_t* sem;
-      static unsigned int counter_;
+      sem_t* sem_;
   };
-
-  unsigned int Semaphore::counter_ = 0;
 
 } // namespace libport
 
