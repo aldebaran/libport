@@ -7,16 +7,14 @@ namespace libport
   template<class K, class V>
   class hash_map_type;
 
-  // ref-pt.hh
-  template <class T> class RefPt;
-}
-
-namespace urbi
-{
   // lockable.hh.
   class Lockable;
+
+  // ref-pt.hh
+  template <class T> class RefPt;
 
   // semaphore.hh.
   class Semaphore;
 }
+
 #endif // ! LIBPORT_FWD_HH

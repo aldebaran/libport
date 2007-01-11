@@ -2,16 +2,16 @@
 # define LIBPORT_SINGLETON_PTR_HH
 
 # define STATIC_INSTANCE(Cl, Name)		\
-  urbi::SingletonPtr<Cl ## Name> Name
+  libport::SingletonPtr<Cl ## Name> Name
 
 # define EXTERN_STATIC_INSTANCE(Cl, Name)	\
   class Cl ## Name				\
     : public Cl					\
   {};						\
-  extern urbi::SingletonPtr<Cl ## Name> Name
+  extern libport::SingletonPtr<Cl ## Name> Name
 
 
-namespace urbi
+namespace libport
 {
   /// Singleton smart pointer that creates the object on demand.
   template<class T>
@@ -40,9 +40,8 @@ namespace urbi
 	ptr = new T();
       return ptr;
     }
-  private:
   };
 
-}
+}  // namespace libport
 
 #endif // !LIBPORT_SINGLETON_PTR_HH

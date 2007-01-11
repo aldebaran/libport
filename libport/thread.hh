@@ -16,7 +16,7 @@
 # include <pthread.h>
 # endif
 
-namespace urbi
+namespace libport
 {
   template<class T>
   class StartInfo
@@ -103,6 +103,6 @@ namespace urbi
 # endif
   }
 
-} // namespace urbi
+} // namespace libport
 
 #endif

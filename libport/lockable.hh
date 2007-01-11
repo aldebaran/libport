@@ -7,7 +7,7 @@
 
 #  include "libport/windows.hh"
 
-namespace urbi
+namespace libport
 {
   typedef CRITICAL_SECTION Lock;
   inline void initLock(Lock& l)
@@ -34,11 +34,11 @@ namespace urbi
   {
     return TryEnterCriticalSection(&l);
   }
-}
+} // namespace libport
 
 # elif defined LIBPORT_URBI_ENV_AIBO && LIBPORT_URBI_ENV_AIBO
 
-namespace urbi
+namespace libport
 {
 
   typedef int Lock;
@@ -63,7 +63,7 @@ namespace urbi
     return true;
   }
 
-}
+} // namespace libport
 
 # else
 
@@ -72,7 +72,7 @@ namespace urbi
 # endif
 # include <pthread.h>
 
-namespace urbi
+namespace libport
 {
   typedef pthread_mutex_t Lock;
 
@@ -117,10 +117,10 @@ namespace urbi
     return !pthread_mutex_trylock(&l);
   }
 
-}
+} // namespace libport
 # endif
 
-namespace urbi
+namespace libport
 {
 
   class Lockable
@@ -161,7 +161,7 @@ namespace urbi
     Lockable& l;
   };
 
-}
+} // namespace libport
 
 # define LOCKED(lock, cmd)			\
   do {						\

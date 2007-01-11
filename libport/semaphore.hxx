@@ -3,15 +3,15 @@
 
 # include "semaphore.hh"
 
-namespace urbi
+namespace libport
 {
 
 # if defined WIN32 || defined LIBPORT_WIN32
   inline sem_t*
   sem_open (const char* name,
-            int oflag,
-            unsigned int /*mode_t*/ mode,
-            unsigned int value)
+	    int oflag,
+	    unsigned int /*mode_t*/ mode,
+	    unsigned int value)
   {
     return SEM_FAILED; // Use sem_init instead.
   }
@@ -45,7 +45,7 @@ namespace urbi
   }
 #endif /* !WIN32 */
 
-} // namespace urbi
+} // namespace libport
 
 /* Darwin doesn't implement sem_init/sem_close (although the functions exists
  * and is defined, in fact it just returns ENOSYS). That's why need to use
@@ -61,7 +61,7 @@ namespace urbi
 #  include <sstream>
 # endif
 
-namespace urbi
+namespace libport
 {
 
   inline Semaphore::Semaphore (int cnt)
@@ -121,6 +121,6 @@ namespace urbi
     return t;
   }
 
-} // namespace urbi
+} // namespace libport
 
 #endif /* !SEMAPHORE_HXX_ */

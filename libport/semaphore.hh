@@ -5,7 +5,7 @@
 # include <cassert>
 
 # if defined WIN32
-namespace urbi
+namespace libport
 {
 #  ifndef SEM_FAILED
 #   define SEM_FAILED 0
@@ -33,7 +33,7 @@ namespace urbi
 #  define IS_SEM_FAILED(sem)   ((long) (sem) == (long) SEM_FAILED)
 # endif
 
-namespace urbi
+namespace libport
 {
   class Semaphore
   {
@@ -55,7 +55,7 @@ namespace urbi
 
   unsigned int Semaphore::counter_ = 0;
 
-} // namespace urbi
+} // namespace libport
 
 # include "semaphore.hxx"
 
