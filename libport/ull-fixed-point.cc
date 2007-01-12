@@ -113,6 +113,4 @@ namespace urbi
     return s;
   }
 
-#endif
-
 }

@@ -1,3 +1,8 @@
+2007-01-12  Akim Demaille  <demaille@gostai.com>
+
+	Fix
+	* ull-fixed-point.cc: Remove a trailing #endif.
+
 2007-01-11  Akim Demaille  <demaille@gostai.com>
 
 	Warning fix
