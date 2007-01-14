@@ -115,30 +115,31 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	if test "$$skip" -ne 0; then					\
 	  msg="$$msg($$skip tests were not run).  ";			\
 	fi;								\
-	{								\
-	  echo "$(PACKAGE_STRING): $(subdir)/$(TEST_SUITE_LOG)" |	\
-	    $(am__rst_section);						\
-	  echo;								\
-	  echo "$$msg";							\
-	  echo;								\
-	  echo ".. contents:: :depth: 2";				\
-	  echo;								\
-	  for f in $(TEST_LOGS);					\
-	  do								\
-	    case $$(sed 1q $$f) in					\
-	      SKIP:*|PASS:*|XFAIL:*);;					\
-	      *) echo; cat $$f;;					\
-	    esac;							\
-	  done;								\
-	} >$(TEST_SUITE_LOG);						\
 	if test "$$fail" -ne 0; then					\
+	  {								\
+	    echo "$(PACKAGE_STRING): $(subdir)/$(TEST_SUITE_LOG)" |	\
+	      $(am__rst_section);					\
+	    echo;							\
+	    echo "$$msg";						\
+	    echo;							\
+	    echo ".. contents:: :depth: 2";				\
+	    echo;							\
+	    for f in $(TEST_LOGS);					\
+	    do								\
+	      case $$(sed 1q $$f) in					\
+	        SKIP:*|PASS:*|XFAIL:*);;				\
+	        *) echo; cat $$f;;					\
+	      esac;							\
+	    done;							\
+	  } >$(TEST_SUITE_LOG).tmp;					\
+	  mv $(TEST_SUITE_LOG).tmp $(TEST_SUITE_LOG);			\
 	  msg="$${msg}See $(subdir)/$(TEST_SUITE_LOG).  ";		\
 	  if test -n "$(PACKAGE_BUGREPORT)"; then			\
 	    msg="$${msg}Please report it to $(PACKAGE_BUGREPORT).  ";	\
 	  fi;								\
 	fi;								\
 	echo "$$msg" | $(am__text_box);					\
-	if test x"$$VERBOSE" != x; then					\
+	if test x"$$VERBOSE" != x && test "$$fail" -ne 0; then		\
 	  cat $(TEST_SUITE_LOG);					\
 	fi;								\
 	test "$$fail" -eq 0

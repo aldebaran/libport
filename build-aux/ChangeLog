@@ -1,3 +1,9 @@
+2007-01-14  Akim Demaille  <akim.demaille@free.fr>
+
+	Don't create and dump the log file if there is no failure
+	* build-aux/check.mk: I.e., put the "if" at the right place.
+	Also, use a tmp file and move it when done.
+
 2007-01-11  Akim Demaille  <demaille@gostai.com>
 
 	Separate sections
