@@ -1,3 +1,8 @@
+2007-01-15  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Address portability issues for Cygwin/Mingw32
+	* urbi-with-openssl.m4: Add library and header OpenSSL default paths.
+
 2007-01-14  Akim Demaille  <akim.demaille@free.fr>
 
 	Don't create and dump the log file if there is no failure

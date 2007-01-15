@@ -13,9 +13,13 @@ saved_LIBS="$LIBS"
 saved_LDFLAGS="$LDFLAGS"
 saved_CPPFLAGS="$CPPFLAGS"
 
-LIBS="$saved_LIBS -lcrypto"
+CPPFLAGS="$CPPFLAGS -I/usr/include"
+
+LIBS="$LIBS -lcrypto"
 if test -n "$ssldir"; then
-   LDFLAGS="$saved_LDFLAGS -L$ssldir"
+   LDFLAGS="$LDFLAGS -L$ssldir"
+else
+  LDFLAGS="$LDFLAGS -L/usr/lib"
 fi
 
 # Basic test about OpenSSL
