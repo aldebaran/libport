@@ -106,7 +106,7 @@ TC_CXX_WARNINGS([[[-wd111,193,279,383,444,522,654,810,981,1418]]])
 # MS VC++ #
 # ------- #
 
-# If the compiler is MS VC++, we want to manually define WIN32.
+# If the compiler is MS VC++, define WIN32.
 AC_CACHE_CHECK([whether $CXX is Microsoft's compiler], [ac_cv_cxx_compiler_ms],
 [AC_COMPILE_IFELSE([[
 #ifndef _MSC_VER
@@ -170,7 +170,8 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
   MSVC_CXXFLAGS="$MSVC_CXXFLAGS /wd4800 /wd4820"
   AC_SUBST([MSVC_CXXFLAGS])
   AC_SUBST([AM_CXXFLAGS], ["$MSVC_CXXFLAGS"])
-  # FIXME: Workaround because the above doesn't work (AM_CXXFLAGS is empty in Makefiles)
+  # FIXME: Workaround because the above doesn't work (AM_CXXFLAGS is empty
+  # in Makefiles).
   CXXFLAGS="$CXXFLAGS $MSVC_CXXFLAGS"
 fi
 
