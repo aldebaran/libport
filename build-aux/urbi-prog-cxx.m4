@@ -175,6 +175,16 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
   CXXFLAGS="$CXXFLAGS $MSVC_CXXFLAGS"
 fi
 
+# --------------------- #
+# Warnings are errors.  #
+# --------------------- #
+
+# We currently have too many unresolved warnings with this compiler.
+# (Not its fault, ours.)
+if test $ac_cv_cxx_compiler_ms != yes; then
+  TC_CXX_WARNINGS([-Werror])
+fi
+
 # If using mipsel-linux-c++, then we cannot use optimization flags to compile
 # Bison's output: the compiler generates branches that are `out of range'.
 # Instead we disable optimizations and pass -relax-branch to the assembler so
