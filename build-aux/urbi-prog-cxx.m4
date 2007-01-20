@@ -169,10 +169,6 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
   MSVC_CXXFLAGS="/EHsc /wd4121 /wd4127 /wd4571 /wd4625 /wd4626 /wd4668 /wd4710"
   MSVC_CXXFLAGS="$MSVC_CXXFLAGS /wd4800 /wd4820"
   AC_SUBST([MSVC_CXXFLAGS])
-  AC_SUBST([AM_CXXFLAGS], ["$MSVC_CXXFLAGS"])
-  # FIXME: Workaround because the above doesn't work (AM_CXXFLAGS is empty
-  # in Makefiles).
-  CXXFLAGS="$CXXFLAGS $MSVC_CXXFLAGS"
 fi
 
 # --------------------- #

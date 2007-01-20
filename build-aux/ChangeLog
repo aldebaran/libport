@@ -1,3 +1,10 @@
+2007-01-20  Akim Demaille  <demaille@gostai.com>
+
+	vc80.pdb
+	* init.mk (CLEANFILES): Remove it.
+	(AM_CXXFLAGS): Include $(MSVC_CXXFLAGS).
+	* urbi-prog-cxx.m4: Don't.
+
 2007-01-19  Akim Demaille  <demaille@gostai.com>
 
 	-Werror
