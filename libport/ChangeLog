@@ -1,5 +1,10 @@
 2007-01-20  Akim Demaille  <akim.demaille@free.fr>
 
+	Bad typo
+	* libport/tests/Makefile.am: Add missing rparen.
+
+2007-01-20  Akim Demaille  <akim.demaille@free.fr>
+
 	Use init.mk
 	* libport/tests/Makefile.am: here.
 	Adjust.

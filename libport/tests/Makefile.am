@@ -46,7 +46,7 @@ $(TESTS):
         done
 
 EXTRA_DIST += $(TESTS:.test=.stdout) common_ufloat1.cc
-CLEANFILES += $(TESTS:.test=.{my_stdout,my_stderr,valgrind.log}
+CLEANFILES += $(TESTS:.test=.{my_stdout,my_stderr,valgrind.log})
 
 TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
 
