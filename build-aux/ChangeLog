@@ -1,5 +1,10 @@
 2007-01-20  Akim Demaille  <akim@lrde.epita.fr>
 
+	Don't use status as a shell var name
+	* build-aux/check.mk: It is read-only in Zsh.
+
+2007-01-20  Akim Demaille  <akim@lrde.epita.fr>
+
 	Add missing empty line for rst titles
 	* check.mk (am__rst_section, am__rst_subsection): here.
 

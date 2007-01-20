@@ -1,6 +1,6 @@
 #! /bin/sh
 # Basic test script.
-# Copyright (C) Gostai S.A.S., 2006.
+# Copyright (C) 2006, 2007, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -147,8 +147,8 @@ if [ x"${host_os%@}" = 'x@host_os' ]; then
   if (uname -s) >/dev/null 2>/dev/null; then
     case "`uname -s`" in
       CYGWIN* | MINGW* | [wW]indows* | PW* | Interix* | UWIN*)
-        remove_trailing_cr='yes'
-        ;;
+	remove_trailing_cr='yes'
+	;;
     esac
   fi
 else

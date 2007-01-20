@@ -62,8 +62,8 @@ $(TESTS_ENVIRONMENT)
 # and stderr redirection, and catch the exit status.
 am__check_post =					\
 >$@-t 2>&1;						\
-status=$$?;						\
-case $$status:" $(XFAIL_TESTS) " in			\
+estatus=$$?;						\
+case $$estatus:" $(XFAIL_TESTS) " in			\
     0:*" $$(basename $<) "*) res='XPASS';;		\
     0:*)        res='PASS' ;;				\
     77:*)       res='SKIP' ;;				\
@@ -71,7 +71,7 @@ case $$status:" $(XFAIL_TESTS) " in			\
     *:*)        res='FAIL' ;;				\
    esac;						\
 echo "$$res: $$(basename $<)";				\
-echo "$$res: $$(basename $<) (exit: $$status)" |	\
+echo "$$res: $$(basename $<) (exit: $$estatus)" |	\
   $(am__rst_subsection) >$@;				\
 cat $@-t >>$@;						\
 rm $@-t
