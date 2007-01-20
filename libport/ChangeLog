@@ -1,5 +1,11 @@
 2007-01-20  Akim Demaille  <akim.demaille@free.fr>
 
+	Use init.mk
+	* libport/tests/Makefile.am: here.
+	Adjust.
+
+2007-01-20  Akim Demaille  <akim.demaille@free.fr>
+
 	conversion from ufloats to long long
 	* ufloat.hh: here.
 
