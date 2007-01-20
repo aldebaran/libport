@@ -32,8 +32,8 @@
 AUTOMAKE_OPTIONS += -Wno-portability -Wno-override
 
 # Restructured Text section and subsection.
-am__rst_section =    sed 'p;s/./=/g'
-am__rst_subsection = sed 'p;s/./-/g'
+am__rst_section =    sed 'p;s/./=/g;p;g'
+am__rst_subsection = sed 'p;s/./-/g;p;g'
 
 # Put in a box.
 am__text_box = $(AWK) '{gsub ("\\.  ", "\n"); print $$0; }' |	\
