@@ -29,6 +29,12 @@
 namespace urbi
 {
   typedef float ufloat;
+
+  inline
+  long long to_long_long (ufloat u)
+  {
+    return static_cast <long long> (u);
+  }
 }
 # endif
 
@@ -36,6 +42,12 @@ namespace urbi
 namespace urbi
 {
   typedef double ufloat;
+
+  inline
+  long long to_long_long (ufloat u)
+  {
+    return static_cast <long long> (u);
+  }
 }
 # endif
 

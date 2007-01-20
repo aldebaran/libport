@@ -1,5 +1,10 @@
 2007-01-20  Akim Demaille  <akim.demaille@free.fr>
 
+	conversion from ufloats to long long
+	* ufloat.hh: here.
+
+2007-01-20  Akim Demaille  <akim.demaille@free.fr>
+
 	urbi -> libport
 	* README, utime.hh: here.
 
