@@ -21,13 +21,13 @@ ext/hash_map and hash_map.h instead of relying on !Windows.
 Macros STATIC_INSTANCE(Cl, Name), EXTERN_STATIC_INSTANCE(Cl, Name).
 
 ** lockable.hh.
-class urbi::Lockable and macro BLOCKED.
+class libport::Lockable and macro BLOCKED.
 
 ** ref-pt.hh
 RefPt, ref counted pointers.
 
 ** semaphore.hh.
-class urbi::Semaphore.
+class libport::Semaphore.
 
 ** thread.hh.
 
@@ -59,7 +59,7 @@ class urbi::UFFloat.
 class urbi::ULongFixedPoint.
 
 ** utime.hh
-long long urbi::utime().
+long long libport::utime().
 
 ** windows.hh
 Wrap the inclusion of windows.h with the expected magic.  Can be

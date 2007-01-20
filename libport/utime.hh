@@ -6,7 +6,7 @@
 #  include <iostream>
 #  include "libport/windows.hh"
 
-namespace urbi
+namespace libport
 {
   inline
   long long
@@ -33,7 +33,7 @@ namespace urbi
 #  include <sys/time.h>
 #  include <time.h>
 
-namespace urbi
+namespace libport
 {
   inline
   long long
