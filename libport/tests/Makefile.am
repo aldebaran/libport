@@ -17,7 +17,7 @@ ullfp1_SOURCES =	ullfp1.cc
 ullfptab1_SOURCES =	ullfptab1.cc
 
 # List your tests here:
-TESTS = $(check_PROGRAMS:=.test)
+TESTS = $(check_PROGRAMS:$(EXEEXT)=.test)
 
 ## ---------------- ##
 ## libport/config.h ##
