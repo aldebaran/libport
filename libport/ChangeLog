@@ -1,5 +1,10 @@
 2007-01-23  Akim Demaille  <akim@lrde.epita.fr>
 
+	Comments removal
+	* network.h: Remove obsolete comments.
+
+2007-01-23  Akim Demaille  <akim@lrde.epita.fr>
+
 	LIBPORT_FD_SET
 	* libport/network.h: Define it here.
 
