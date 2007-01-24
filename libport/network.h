@@ -18,6 +18,11 @@
 
 typedef int socklen_t;
 
+// http://msdn2.microsoft.com/en-us/library/ms740481.aspx
+#  define SHUT_RDWR SD_BOTH
+#  define SHUT_RD SD_RECEIVE
+#  define SHUT_WR SD_SEND
+
 # else /* !WIN32: Assume UNIX-style headers for networking. */
 
 #  include <sys/types.h>
