@@ -1,5 +1,10 @@
 2007-01-24  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
+	setsockopt on Windows.
+	* network.h: Cast the fourth argument to const void*.
+
+2007-01-24  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
 	Handle shutdown(2) macros for Windows.
 	* network.h (SHUT_RD, SHUT_WR, SHUT_RDWR): Define for Windows.
 
