@@ -1,3 +1,7 @@
+2007-01-25  Akim Demaille  <demaille@gostai.com>
+
+	* compiler.hh (passert, ECHO, PING): New.
+
 2007-01-24  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
 	setsockopt on Windows.
