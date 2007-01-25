@@ -1,5 +1,15 @@
 2007-01-25  Akim Demaille  <demaille@gostai.com>
 
+	assert.hh & pabort
+	* compiler.hh: Extract assert stuff to...
+	* assert.hh: this new file.
+	(pabort): New.
+	(passert): Simplify by concatenating the location string before
+	using it.
+	* libport.mk: Adjust.
+
+2007-01-25  Akim Demaille  <demaille@gostai.com>
+
 	* compiler.hh (passert, ECHO, PING): New.
 
 2007-01-24  SIGOURE Benoit  <tsuna@lrde.epita.fr>

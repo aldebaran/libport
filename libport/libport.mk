@@ -24,6 +24,7 @@ libportsys_HEADERS =				\
 # C++ headers.
 libport_HEADERS += 				\
 	$(libport_srcdir)/compiler.hh		\
+	$(libport_srcdir)/assert.hh		\
 	$(libport_srcdir)/containers.hh		\
 	$(libport_srcdir)/containers.hxx	\
 	$(libport_srcdir)/detect_win32.h	\
