@@ -1,3 +1,10 @@
+2007-01-28  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
+	Fix setsockopt portability for Windows.
+	* network.h: Cast the 4th argument to const char* instead of
+	  const void* because the implicit conversion from const void* to
+	  const char* does not work in C++.
+
 2007-01-25  Akim Demaille  <demaille@gostai.com>
 
 	assert.hh & pabort

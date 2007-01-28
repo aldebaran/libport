@@ -26,7 +26,7 @@ typedef int socklen_t;
 /* The 4th argument is usually a const void* on UNIX and a const char* on
  * Windows. */
 #  define setsockopt(Fd, Lvl, Optname, Optval, Optlen) \
-          setsockopt((Fd), (Lvl), (Optname), (const void*) (Optval), (Optlen))
+          setsockopt((Fd), (Lvl), (Optname), (const char*) (Optval), (Optlen))
 
 # else /* !WIN32: Assume UNIX-style headers for networking. */
 
