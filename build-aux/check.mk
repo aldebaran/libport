@@ -31,9 +31,9 @@
 ## We use GNU Make extensions, and override check-TESTS.
 AUTOMAKE_OPTIONS += -Wno-portability -Wno-override
 
-# Restructured Text section and subsection.
-am__rst_section =    sed 'p;s/./=/g;p;g'
-am__rst_subsection = sed 'p;s/./-/g;p;g'
+# Restructured Text title and section.
+am__rst_title   = sed 's/.*/   &   /;h;s/./=/g;p;x;p;g;p;s/.*//'
+am__rst_section = sed 'p;s/./=/g;p;g'
 
 # Put in a box.
 am__text_box = $(AWK) '{gsub ("\\.  ", "\n"); print $$0; }' |	\
@@ -72,7 +72,7 @@ case $$estatus:" $(XFAIL_TESTS) " in			\
    esac;						\
 echo "$$res: $$(basename $<)";				\
 echo "$$res: $$(basename $<) (exit: $$estatus)" |	\
-  $(am__rst_subsection) >$@;				\
+  $(am__rst_section) >$@;				\
 cat $@-t >>$@;						\
 rm $@-t
 
@@ -118,8 +118,7 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	if test "$$fail" -ne 0; then					\
 	  {								\
 	    echo "$(PACKAGE_STRING): $(subdir)/$(TEST_SUITE_LOG)" |	\
-	      $(am__rst_section);					\
-	    echo;							\
+	      $(am__rst_title);						\
 	    echo "$$msg";						\
 	    echo;							\
 	    echo ".. contents:: :depth: 2";				\
@@ -151,7 +150,41 @@ check-TESTS:
 	fi
 	@$(MAKE) $(TEST_SUITE_LOG)
 
+
+## -------------- ##
+## Produce HTML.  ##
+## -------------- ##
+
+TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
+
+%.html: %.log
+	for r2h in $(RST2HTML) $$RST2HTML rst2html rst2html.py;	\
+	do							\
+	  if ($$r2h --version) >/dev/null 2>&1; then		\
+	    R2H=$$r2h;						\
+	  fi;							\
+	done;							\
+	if test -z "$$R2H"; then				\
+	  echo >&2 "cannot find rst2html, cannot create $@";	\
+	  exit 2;						\
+	fi;							\
+	$$R2H $< >$@.tmp
+	mv $@.tmp $@
+
+# Be sure to run check-TESTS first, and then to convert the result.
+# Beware of concurrent executions.
+check-html: check-TESTS
+	@if test -f $(TEST_SUITE_LOG); then	\
+	  $(MAKE) $(TEST_SUITE_HTML);		\
+	fi
+
+.PHONY: check-html
+
+## ------- ##
+## Clean.  ##
+## ------- ##
+
 clean-check-TESTS:
-	rm -f $(TEST_SUITE_LOG) $(TEST_LOGS)
+	rm -f $(TEST_SUITE_LOG) $(TEST_SUITE_HTML) $(TEST_LOGS)
 .PHONY: clean-check-TESTS
 clean-local: clean-check-TESTS

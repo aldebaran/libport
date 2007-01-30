@@ -1,5 +1,10 @@
 2007-01-30  Akim Demaille  <demaille@gostai.com>
 
+	Upgrade check.mk to produce html
+	* check.mk: here.
+
+2007-01-30  Akim Demaille  <demaille@gostai.com>
+
 	Make foo-ci more useful
 	* svn-externals.mk (SVN): Defaults to svn-wrapper.sh, not svn.
 	There is a nasty problem when we run "make libport-ci
