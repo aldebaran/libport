@@ -1,5 +1,10 @@
 2007-01-30  Akim Demaille  <demaille@gostai.com>
 
+	Can't use {} in Makefile targets
+	* libport.mk: Revert the use of {} globbing.
+
+2007-01-30  Akim Demaille  <demaille@gostai.com>
+
 	unistd.h -> io.h
 	* unistd.h: Include io.h on Windows.
 

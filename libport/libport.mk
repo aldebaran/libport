@@ -26,13 +26,15 @@ libportsys_HEADERS =				\
 libport_HEADERS +=				\
 	$(libport_srcdir)/compiler.hh		\
 	$(libport_srcdir)/assert.hh		\
-	$(libport_srcdir)/containers.{hh,hxx}	\
+	$(libport_srcdir)/containers.hh		\
+	$(libport_srcdir)/containers.hxx	\
 	$(libport_srcdir)/detect_win32.h	\
 	$(libport_srcdir)/fwd.hh		\
 	$(libport_srcdir)/hash.hh		\
 	$(libport_srcdir)/lockable.hh		\
 	$(libport_srcdir)/network.h		\
-	$(libport_srcdir)/semaphore.{hh,hxx}	\
+	$(libport_srcdir)/semaphore.hh		\
+	$(libport_srcdir)/semaphore.hxx		\
 	$(libport_srcdir)/singleton-ptr.hh	\
 	$(libport_srcdir)/thread.hh		\
 	$(libport_srcdir)/uffloat.hh		\
