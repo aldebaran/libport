@@ -118,10 +118,11 @@ AC_CACHE_CHECK([whether $CXX is Microsoft's compiler], [ac_cv_cxx_compiler_ms],
 
 if test "$ac_cv_cxx_compiler_ms" = yes; then
   AC_DEFINE([WIN32], [], [Whether or not we're on Windows])
+fi
 
-# --------------------------------------------- #
-# Remove MS Visual Compiler's spurious warnings #
-# --------------------------------------------- #
+# ----------------------------------------------- #
+# Remove MS Visual Compiler's spurious warnings.  #
+# ----------------------------------------------- #
 
 # /EHsc: enable C++ exception handling + extern "C" defaults to nothrow.
 #
@@ -166,10 +167,17 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
 #
 # warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
 #
-  MSVC_CXXFLAGS="/EHsc /wd4121 /wd4127 /wd4571 /wd4625 /wd4626 /wd4668 /wd4710"
-  MSVC_CXXFLAGS="$MSVC_CXXFLAGS /wd4800 /wd4820"
-  AC_SUBST([MSVC_CXXFLAGS])
-fi
+TC_CXX_WARNINGS([[/EHsc],
+                 [/wd4121],
+                 [/wd4127],
+                 [/wd4571],
+                 [/wd4625],
+                 [/wd4626],
+                 [/wd4668],
+                 [/wd4710],
+                 [/wd4800],
+                 [/wd4820]])
+     
 
 # --------------------- #
 # Warnings are errors.  #

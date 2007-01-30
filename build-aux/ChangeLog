@@ -1,3 +1,10 @@
+2007-01-30  Akim Demaille  <demaille@gostai.com>
+
+	Treat MS warnings as the others
+	* build-aux/urbi-prog-cxx.m4: here.
+	* build-aux/init.mk (AM_CXXFLAGS): Don't use the dead MSVC_CXXFLAGS
+	variable.
+
 2007-01-21  Akim Demaille  <akim@lrde.epita.fr>
 
 	URBI_LIBPORT_INSTALLED

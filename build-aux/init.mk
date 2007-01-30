@@ -1,7 +1,7 @@
 # Initialize some common variables so that we can always use +=.
 AM_CFLAGS =
 AM_CPPFLAGS =
-AM_CXXFLAGS = $(MSVC_CXXFLAGS)
+AM_CXXFLAGS =
 AUTOMAKE_OPTIONS =
 BUILT_SOURCES =
 # Visual Studio Debugger PDB Files (C++).
