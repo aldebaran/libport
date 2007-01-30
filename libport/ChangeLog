@@ -1,5 +1,10 @@
 2007-01-30  Akim Demaille  <demaille@gostai.com>
 
+	unistd.h -> io.h
+	* unistd.h: Include io.h on Windows.
+
+2007-01-30  Akim Demaille  <demaille@gostai.com>
+
 	libport/unistd.h
 	* unistd.h: New.
 	* libport.mk: Adjust.
