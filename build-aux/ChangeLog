@@ -1,5 +1,15 @@
 2007-01-30  Akim Demaille  <demaille@gostai.com>
 
+	Make foo-ci more useful
+	* svn-externals.mk (SVN): Defaults to svn-wrapper.sh, not svn.
+	There is a nasty problem when we run "make libport-ci
+	SVN=svn-wrapper.sh" for instance: in that case SVN is exported
+	by make, and svn-wrapper.sh read the envvar SVN to look for the
+	real SVN.  And there comes the endless loop of recursive svn-wrapper
+	invocations.
+
+2007-01-30  Akim Demaille  <demaille@gostai.com>
+
 	Treat MS warnings as the others
 	* build-aux/urbi-prog-cxx.m4: here.
 	* build-aux/init.mk (AM_CXXFLAGS): Don't use the dead MSVC_CXXFLAGS

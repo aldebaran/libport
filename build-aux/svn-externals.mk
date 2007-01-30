@@ -16,7 +16,7 @@
 SVN_EXTERNALS =
 SVN_EXTERNALS_PROXY =
 
-SVN = svn
+SVN = svn-wrapper.sh
 svn_externals = $(top_srcdir)/build-aux/svn-externals
 
 # I would like to get rid of this, but Automake is too conservative
