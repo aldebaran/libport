@@ -24,6 +24,7 @@
 namespace libport
 {
 
+  // FIXME: This is duplicated with uffloat.hh.
   static const int LONG_NBIT=sizeof(long)*8;
   static const int LONGLONG_NBIT=sizeof(long long)*8;
 
