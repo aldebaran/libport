@@ -13,7 +13,7 @@
 
 ## Override the definition from Automake to generate a log file with
 ## failed tests.  It also supports parallel make checks.
-## 
+##
 ## This file provides special support for "unit tests", that is to
 ## say, tests that (once run) no longer need to be re-compiled and
 ## re-run at each "make check", unless their sources changed.  To
@@ -172,10 +172,12 @@ TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 	mv $@.tmp $@
 
 # Be sure to run check-TESTS first, and then to convert the result.
-# Beware of concurrent executions.
-check-html: check-TESTS
-	@if test -f $(TEST_SUITE_LOG); then	\
-	  $(MAKE) $(TEST_SUITE_HTML);		\
+# Beware of concurrent executions.  And expect check-TESTS to fail.
+check-html:
+	@if $(MAKE) $(AM_MAKEFLAGS) check-TESTS; then :; else	\
+	  rv=$?;						\
+	  $(MAKE) $(AM_MAKEFLAGS) $(TEST_SUITE_HTML);		\
+	  exit $$rv;						\
 	fi
 
 .PHONY: check-html
