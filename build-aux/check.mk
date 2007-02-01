@@ -35,7 +35,7 @@ AUTOMAKE_OPTIONS += -Wno-portability -Wno-override
 am__rst_title   = sed 's/.*/   &   /;h;s/./=/g;p;x;p;g;p;s/.*//'
 am__rst_section = sed 'p;s/./=/g;p;g'
 
-# Put in a box.
+# Put stdin (possibly several lines) in a box.
 am__text_box = $(AWK) '{gsub ("\\.  ", "\n"); print $$0; }' |	\
 $(AWK) '							\
 max < length($$0) {						\
@@ -50,6 +50,15 @@ END { 								\
   print line;							\
 }'
 
+# If stdout is a tty, use colors.
+am__tty_colors = 				\
+if test -t 1; then				\
+  red='[0;31m';				\
+  grn='[0;32m';				\
+  blu='[0;34m';				\
+  std='[m';					\
+fi
+
 # To be inserted before the command running the test.  Stores in $dir
 # the directory containing $<, and passes the TEST_ENVIRONMENT.
 am__check_pre =					\
@@ -63,12 +72,7 @@ $(TESTS_ENVIRONMENT)
 am__check_post =					\
 >$@-t 2>&1;						\
 estatus=$$?;						\
-if test -t 1; then					\
-  red='[0;31m';					\
-  grn='[0;32m';					\
-  blu='[0;34m';					\
-  std='[m';						\
-fi;							\
+$(am__tty_colors);					\
 case $$estatus:" $(XFAIL_TESTS) " in			\
     0:*" $$(basename $<) "*) col=$$red; res=XPASS;;	\
     0:*)                     col=$$grn; res=PASS ;;	\
@@ -143,7 +147,10 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	    msg="$${msg}Please report it to $(PACKAGE_BUGREPORT).  ";	\
 	  fi;								\
 	fi;								\
-	echo "$$msg" | $(am__text_box);					\
+	$(am__tty_colors);						\
+	if test "$$fail" -eq 0; then echo $$grn; else echo $$red; fi;	\
+	  echo "$$msg" | $(am__text_box);				\
+	echo $$std;							\
 	if test x"$$VERBOSE" != x && test "$$fail" -ne 0; then		\
 	  cat $(TEST_SUITE_LOG);					\
 	fi;								\
@@ -164,16 +171,16 @@ check-TESTS:
 TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 
 %.html: %.log
-	for r2h in $(RST2HTML) $$RST2HTML rst2html rst2html.py;	\
-	do							\
-	  if ($$r2h --version) >/dev/null 2>&1; then		\
-	    R2H=$$r2h;						\
-	  fi;							\
-	done;							\
-	if test -z "$$R2H"; then				\
-	  echo >&2 "cannot find rst2html, cannot create $@";	\
-	  exit 2;						\
-	fi;							\
+	@for r2h in $(RST2HTML) $$RST2HTML rst2html rst2html.py;	\
+	do								\
+	  if ($$r2h --version) >/dev/null 2>&1; then			\
+	    R2H=$$r2h;							\
+	  fi;								\
+	done;								\
+	if test -z "$$R2H"; then					\
+	  echo >&2 "cannot find rst2html, cannot create $@";		\
+	  exit 2;							\
+	fi;								\
 	$$R2H $< >$@.tmp
 	mv $@.tmp $@
 
