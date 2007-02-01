@@ -18,7 +18,7 @@
 
 #include "libport/uffloat.hh"
 
-namespace urbi
+namespace libport
 {
 
   std::istream& operator >>(std::istream & s,UFFloat &u)

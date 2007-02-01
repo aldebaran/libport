@@ -33,10 +33,10 @@ class libport::Semaphore.
 
 ** ufloat.h.
 A nasty wrapper around ufloat.hh and ufloat.cc that, in addition,
-imports urbi::ufloat in ::.  Should be removed eventually.
+imports libport::ufloat in ::.  Should be removed eventually.
 
 ** ufloat.hh, ufloat.cc
-urbi::ufloat.  The latter must be compiled in if
+libport::ufloat.  The latter must be compiled in if
 HAVE_LIBPORT_UFLOAT_HH is defined.
 
 The generation of the tables should be part of a single object.  There

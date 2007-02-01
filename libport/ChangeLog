@@ -1,5 +1,15 @@
 2007-02-01  Akim Demaille  <akim.demaille@free.fr>
 
+	Move ufloats into libport::
+	No compatilibity issue, there is a "using ...::ufloats" already.
+	* libport/README, libport/uffloat.cc, libport/uffloat.hh,
+	* libport/ufloat.cc, libport/ufloat.h, libport/ufloat.hh,
+	* libport/ull-fixed-point.cc, libport/ull-fixed-point.hh,
+	* libport/ulong-fixed-point.hh:
+	Do it.
+
+2007-02-01  Akim Demaille  <akim.demaille@free.fr>
+
 	Use enum to declare int constants
 	* uffloat.hh: here.
 	* ufloat.h: Complete CPP guards.

@@ -21,7 +21,7 @@
 
 # include <iosfwd>
 
-namespace urbi
+namespace libport
 {
 
   static const int LONG_NBIT=sizeof(long)*8;

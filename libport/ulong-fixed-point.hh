@@ -22,7 +22,7 @@
 # include <cmath>
 # include <algorithm>
 
-namespace urbi
+namespace libport
 {
   /** Fixed point implementation on a long. Point is the number of
    * bits of the DECIMAL part, ie <sz(long)-point>.<point>

@@ -2,7 +2,7 @@
 #include <cmath>
 #include "libport/ull-fixed-point.hh"
 
-namespace urbi
+namespace libport
 {
 
   std::ostream&

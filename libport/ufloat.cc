@@ -10,7 +10,7 @@
 # include "libport/uffloat.cc"
 #endif
 
-namespace urbi
+namespace libport
 {
 #ifdef LIBPORT_URBI_UFLOAT_TABULATED
 

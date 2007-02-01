@@ -5,8 +5,8 @@
 # include "libport/ufloat.hh"
 
 // Currently we don't prefix all the uses in the kernel.
-using urbi::ufloat;
-using urbi::PI;
-using urbi::UINFINITY;
+using libport::ufloat;
+using libport::PI;
+using libport::UINFINITY;
 
 #endif // !LIBPORT_UFLOAT_H

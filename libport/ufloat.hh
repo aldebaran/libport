@@ -26,7 +26,7 @@
 `-----------------*/
 
 # ifdef LIBPORT_URBI_UFLOAT_FLOAT
-namespace urbi
+namespace libport
 {
   typedef float ufloat;
 
@@ -39,7 +39,7 @@ namespace urbi
 # endif
 
 # ifdef LIBPORT_URBI_UFLOAT_DOUBLE
-namespace urbi
+namespace libport
 {
   typedef double ufloat;
 
@@ -64,7 +64,7 @@ namespace urbi
 # endif
 
 
-namespace urbi
+namespace libport
 {
   static const ufloat PI(3.14159265358979323846264338327950288);
   static const ufloat UINFINITY(999999999999999.0);
@@ -76,7 +76,7 @@ namespace urbi
 `-------------------*/
 
 # ifdef LIBPORT_URBI_UFLOAT_TABULATED
-namespace urbi
+namespace libport
 {
   /// return the tabulated sinus of given value in radian, using linear interpolation
   ufloat tabulatedSin(ufloat angle);

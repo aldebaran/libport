@@ -22,7 +22,7 @@
 # include <cmath>
 # include <algorithm>
 
-namespace urbi
+namespace libport
 {
   enum { LONG_NBIT =     sizeof(long)*8 };
   enum { LONGLONG_NBIT = sizeof(long long)*8 };
