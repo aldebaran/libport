@@ -1,5 +1,5 @@
-#ifndef UFLOAT_H
-# define UFLOAT_H
+#ifndef LIBPORT_UFLOAT_H
+# define LIBPORT_UFLOAT_H
 
 // Floating point definition (emulated or real)
 # include "libport/ufloat.hh"
@@ -9,4 +9,4 @@ using urbi::ufloat;
 using urbi::PI;
 using urbi::UINFINITY;
 
-#endif
+#endif // !LIBPORT_UFLOAT_H
