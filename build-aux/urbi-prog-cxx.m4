@@ -168,16 +168,16 @@ fi
 # warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
 #
 TC_CXX_WARNINGS([[/EHsc],
-                 [/wd4121],
-                 [/wd4127],
-                 [/wd4571],
-                 [/wd4625],
-                 [/wd4626],
-                 [/wd4668],
-                 [/wd4710],
-                 [/wd4800],
-                 [/wd4820]])
-     
+		 [/wd4121],
+		 [/wd4127],
+		 [/wd4571],
+		 [/wd4625],
+		 [/wd4626],
+		 [/wd4668],
+		 [/wd4710],
+		 [/wd4800],
+		 [/wd4820]])
+
 
 # --------------------- #
 # Warnings are errors.  #
