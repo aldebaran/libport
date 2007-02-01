@@ -63,14 +63,20 @@ $(TESTS_ENVIRONMENT)
 am__check_post =					\
 >$@-t 2>&1;						\
 estatus=$$?;						\
+if test -t 1; then					\
+  red='[0;31m';					\
+  grn='[0;32m';					\
+  blu='[0;34m';					\
+  std='[m';						\
+fi;							\
 case $$estatus:" $(XFAIL_TESTS) " in			\
-    0:*" $$(basename $<) "*) res='XPASS';;		\
-    0:*)        res='PASS' ;;				\
-    77:*)       res='SKIP' ;;				\
-    *:*" $$(basename $<) "*) res='XFAIL';;		\
-    *:*)        res='FAIL' ;;				\
-   esac;						\
-echo "$$res: $$(basename $<)";				\
+    0:*" $$(basename $<) "*) col=$$red; res=XPASS;;	\
+    0:*)                     col=$$grn; res=PASS ;;	\
+    77:*)                    col=$$blu; res=SKIP ;;	\
+    *:*" $$(basename $<) "*) col=$$grn; res=XFAIL;;	\
+    *:*)                     col=$$red; res=FAIL ;;	\
+esac;							\
+echo "$${col}$$res$${std}: $$(basename $<)";		\
 echo "$$res: $$(basename $<) (exit: $$estatus)" |	\
   $(am__rst_section) >$@;				\
 cat $@-t >>$@;						\
