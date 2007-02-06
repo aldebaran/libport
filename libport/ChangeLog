@@ -1,9 +1,9 @@
-2007-02-01  Akim Demaille  <akim.demaille@free.fr>
+2007-02-01  Akim Demaille  demaille.com>
 
 	Add a FIXME
 	* libport/ull-fixed-point.hh: here.
 
-2007-02-01  Akim Demaille  <akim.demaille@free.fr>
+2007-02-01  Akim Demaille  demaille.com>
 
 	Move ufloats into libport::
 	No compatilibity issue, there is a "using ...::ufloats" already.
@@ -13,7 +13,7 @@
 	* libport/ulong-fixed-point.hh:
 	Do it.
 
-2007-02-01  Akim Demaille  <akim.demaille@free.fr>
+2007-02-01  Akim Demaille  demaille.com>
 
 	Use enum to declare int constants
 	* uffloat.hh: here.
@@ -66,44 +66,44 @@
 	Handle shutdown(2) macros for Windows.
 	* network.h (SHUT_RD, SHUT_WR, SHUT_RDWR): Define for Windows.
 
-2007-01-23  Akim Demaille  <akim@lrde.epita.fr>
+2007-01-23  Akim Demaille  demaille.com>
 
 	Comments removal
 	* network.h: Remove obsolete comments.
 
-2007-01-23  Akim Demaille  <akim@lrde.epita.fr>
+2007-01-23  Akim Demaille  demaille.com>
 
 	LIBPORT_FD_SET
 	* libport/network.h: Define it here.
 
-2007-01-21  Akim Demaille  <akim@lrde.epita.fr>
+2007-01-21  Akim Demaille  demaille.com>
 
 	Windows portability
 	* tests/Makefile.am (TESTS): $(EXEEXT) can be appended to
 	check_PROGRAMS.
 
-2007-01-20  Akim Demaille  <akim.demaille@free.fr>
+2007-01-20  Akim Demaille  demaille.com>
 
 	Bad typo
 	* libport/tests/Makefile.am: Add missing rparen.
 
-2007-01-20  Akim Demaille  <akim.demaille@free.fr>
+2007-01-20  Akim Demaille  demaille.com>
 
 	Use init.mk
 	* libport/tests/Makefile.am: here.
 	Adjust.
 
-2007-01-20  Akim Demaille  <akim.demaille@free.fr>
+2007-01-20  Akim Demaille  demaille.com>
 
 	conversion from ufloats to long long
 	* ufloat.hh: here.
 
-2007-01-20  Akim Demaille  <akim.demaille@free.fr>
+2007-01-20  Akim Demaille  demaille.com>
 
 	urbi -> libport
 	* README, utime.hh: here.
 
-2007-01-17  Akim Demaille  <akim.demaille@free.fr>
+2007-01-17  Akim Demaille  demaille.com>
 
 	compiler.hh
 	* compiler.hh: New.
@@ -149,7 +149,7 @@
 	* fwd.hh, lockable.hh, semaphore.hh, semaphore.hxx,
 	* singleton-ptr.hh, thread.hh: Move these in the libport namespace.
 
-2006-12-27  Akim Demaille  <akim.demaille@free.fr>
+2006-12-27  Akim Demaille  demaille.com>
 
 	ref-pt: const copy
 	* libport/ref-pt.hh (copy): Add a const one.
@@ -210,7 +210,7 @@
 	* hash.hh: Cannot use quotes in #error.
 	Move to the libport:: namespace.
 
-2006-12-14  Akim Demaille  <akim.demaille@free.fr>
+2006-12-14  Akim Demaille  demaille.com>
 
 	windows.h -> windows.hh
 	* windows.h: Rename as...
@@ -297,7 +297,7 @@
 	* README, libport.mk, semaphore.hh, thread.hh, utime.hh:
 	Adjust.
 
-2006-12-05  Akim Demaille  <akim.demaille@free.fr>
+2006-12-05  Akim Demaille  demaille.com>
 
 	Restyle
 	* ull-fixed-point.hh: here.
@@ -378,7 +378,7 @@
 	Use svn-externals.mk
 	* Makefile.am: here.
 
-2006-11-20  Akim Demaille  <akim@lrde.epita.fr>
+2006-11-20  Akim Demaille  demaille.com>
 
 	* Makefile.am: Use svn-externals.mk.
 
@@ -440,7 +440,7 @@
 	* libport.mk: Do that.
 	* Makefile.am: include init.mk.
 
-2006-11-04  Akim Demaille  <akim@lrde.epita.fr>
+2006-11-04  Akim Demaille  demaille.com>
 
 	Formatting changes
 	* thread.hh: here.
@@ -524,27 +524,27 @@
 	* hash.hh, utime.hh, uffloat.cc, uffloat.hh, singleton-ptr.hh,
 	* ull-fixed-point.hh: Use reindent.
 
-2006-10-27  Akim Demaille  <akim@lrde.epita.fr>
+2006-10-27  Akim Demaille  demaille.com>
 
 	More ufloat splitting
 	* ull-fixed-point.cc, ull-fixed-point.hh: New.
 	* ufloat.hh, ufloat.cc: Extracted from here.
 	* libport.mk: Adjust.
 
-2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
+2006-10-26  Akim Demaille  demaille.com>
 
 	singleton-ptr.hh
 	* singleton-ptr.hh: New.
 	* libport.mk, README: Adjust.
 
-2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
+2006-10-26  Akim Demaille  demaille.com>
 
 	fwd.hh
 	* fwd.hh: New.
 	* libport.mk, README: Adjust, and also complete with recent
 	ufloat split.
 
-2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
+2006-10-26  Akim Demaille  demaille.com>
 
 	Split ufloat.hh and ufloat.cc
 	* uffloat.cc: New, extracted from...
@@ -552,7 +552,7 @@
 	* ulong-fixed-point.hh, uffloat.hh: New, extracted from...
 	* ufloat.hh: Here.
 
-2006-10-26  Akim Demaille  <akim@lrde.epita.fr>
+2006-10-26  Akim Demaille  demaille.com>
 
 	Fix include
 	* ufloat.cc: Include ufloat.hh, not ufloat.h.
@@ -581,12 +581,12 @@
 	* libport.mk: New.
 	* README: Adjust.
 
-2006-10-21  Akim Demaille  <akim.demaille@free.fr>
+2006-10-21  Akim Demaille  demaille.com>
 
 	Diagnose missing pthread.h.
 	* thread.hh: Do that.
 
-2006-10-21  Akim Demaille  <akim.demaille@free.fr>
+2006-10-21  Akim Demaille  demaille.com>
 
 	utime.hh
 	* utime.hh: New, from kernel1/src/console.cc.
