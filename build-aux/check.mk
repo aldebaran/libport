@@ -28,14 +28,14 @@
 ## Define TEST_LOGS to the set of logs to include in it.  It defaults
 ## to $(TESTS:.test=.log).
 
-## We use GNU Make extensions, and override check-TESTS.
+## We use GNU Make extensions (%-rules), and override check-TESTS.
 AUTOMAKE_OPTIONS += -Wno-portability -Wno-override
 
 # Restructured Text title and section.
 am__rst_title   = sed 's/.*/   &   /;h;s/./=/g;p;x;p;g;p;s/.*//'
 am__rst_section = sed 'p;s/./=/g;p;g'
 
-# Put stdin (possibly several lines) in a box.
+# Put stdin (possibly several lines separated by ".  ") in a box.
 am__text_box = $(AWK) '{gsub ("\\.  ", "\n"); print $$0; }' |	\
 $(AWK) '							\
 max < length($$0) {						\
@@ -50,12 +50,14 @@ END { 								\
   print line;							\
 }'
 
-# If stdout is a tty, use colors.
+# If stdout is a tty, use colors.  If test -t is not supported, then
+# this fails; a conservative approach.  Of course do not redirect
+# stdout here, just stderr...
 am__tty_colors = 				\
-if test -t 1; then				\
+if test -t 1 2>/dev/null; then			\
   red='[0;31m';				\
   grn='[0;32m';				\
-  blu='[0;34m';				\
+  blu='[1;34m';				\
   std='[m';					\
 fi
 
@@ -86,15 +88,14 @@ echo "$$res: $$(basename $<) (exit: $$estatus)" |	\
 cat $@-t >>$@;						\
 rm $@-t
 
-SUFFIXES = .log .test
 # From a test file to a log file.
 # Do not use a regular `.test.log:' rule here, since in that case the
 # following rule (without incoming extension) will mask this one.
 %.log: %.test
 	@$(am__check_pre) $${dir}$< $(am__check_post)
 
-# The exact same commands, but for programs without extensions.
-%.log: %
+# The exact same commands, but for programs.
+%.log: %$(EXEEXT)
 	@$(am__check_pre) $${dir}$< $(am__check_post)
 
 TEST_LOGS ?= $(TESTS:.test=.log)
@@ -195,11 +196,12 @@ check-html:
 
 .PHONY: check-html
 
+
 ## ------- ##
 ## Clean.  ##
 ## ------- ##
 
-clean-check-TESTS:
-	rm -f $(TEST_SUITE_LOG) $(TEST_SUITE_HTML) $(TEST_LOGS)
-.PHONY: clean-check-TESTS
-clean-local: clean-check-TESTS
+check-clean: check-clean-local
+	rm -f $(CHECK_CLEANFILES) $(TEST_SUITE_LOG) $(TEST_SUITE_HTML) $(TEST_LOGS)
+.PHONY: check-clean check-clean-local
+clean-local: check-clean

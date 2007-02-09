@@ -1,3 +1,13 @@
+2007-02-09  Akim Demaille  <akim@lrde.epita.fr>
+
+	* check.mk: Improve comments.
+	(am__tty_colors): More resilient.
+	Lighter blue.
+	(SUFFIXES): Remove, useless since we use GNU Make %-rules.
+	(clean-check-TESTS): Rename as...
+	(check-clean): this.
+	Support check-clean-local and CHECK_CLEANFILES for consistency.
+
 2007-02-02  Akim Demaille  <akim@lrde.epita.fr>
 
 	Clean manifest files.
