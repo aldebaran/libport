@@ -1,16 +1,18 @@
 include $(top_srcdir)/build-aux/init.mk
 
 # Program to check:
-check_PROGRAMS =					\
-			singleton1			\
-			singleton2			\
-			udouble1			\
-			ufloat1				\
-			ullfp1				\
-			ullfptab1
+check_PROGRAMS =		\
+singleton1			\
+singleton2			\
+test-escapes			\
+udouble1			\
+ufloat1				\
+ullfp1				\
+ullfptab1
 
 singleton1_SOURCES =	singleton1.cc
 singleton2_SOURCES =	singleton2.cc
+test_escape_SOURCES =   test-escape.cc
 udouble1_SOURCES =	udouble1.cc
 ufloat1_SOURCES =	ufloat1.cc
 ullfp1_SOURCES =	ullfp1.cc

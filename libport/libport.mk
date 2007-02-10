@@ -1,4 +1,7 @@
-# The point of this file is to ship *and* to install libport.
+# The point of this file is to ship *and* to install libport.  It must
+# be included by the top level Makefile.am.  It is not another
+# Makefile.am to spare Autotools cycles, but it might be time now for
+# a more traditional appraoch.
 
 include $(top_srcdir)/build-aux/config-headers-prefixed.mk
 
@@ -6,12 +9,7 @@ include $(top_srcdir)/build-aux/config-headers-prefixed.mk
 ## libport.  ##
 ## --------- ##
 
-# Where we find them in this package.
-libport_srcdir = $(top_srcdir)/libport
-libport_builddir = $(top_builddir)/libport
-# Where we install them.
-libportdir = $(includedir)/libport
-libportsysdir = $(libportdir)/sys
+include $(top_srcdir)/libport/libport-sources.mk
 
 # C headers.
 libport_HEADERS = 				\
@@ -29,6 +27,8 @@ libport_HEADERS +=				\
 	$(libport_srcdir)/containers.hh		\
 	$(libport_srcdir)/containers.hxx	\
 	$(libport_srcdir)/detect_win32.h	\
+	$(libport_srcdir)/escape.hh		\
+	$(libport_srcdir)/escape.hxx		\
 	$(libport_srcdir)/fwd.hh		\
 	$(libport_srcdir)/hash.hh		\
 	$(libport_srcdir)/lockable.hh		\
@@ -49,12 +49,6 @@ libport_HEADERS +=				\
 # Generated headers.
 nodist_libport_HEADERS = 			\
 	$(libport_builddir)/config.h
-
-# Sources to compile to use libport.
-libport_sources = 				\
-	$(libport_srcdir)/ufloat.cc		\
-	$(libport_srcdir)/uffloat.cc		\
-	$(libport_srcdir)/ull-fixed-point.cc
 
 
 ## ------------ ##

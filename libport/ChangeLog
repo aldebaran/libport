@@ -1,3 +1,12 @@
+2007-02-10  Akim Demaille  <akim.demaille@free.fr>
+
+	Import Escape from tc
+	* escape.cc, escape.hh, escape.hxx: New.
+	* libport-sources.mk: New.
+	* libport.mk: Use it.
+	* tests/test-escape.cc: New.
+	* tests/Makefile.am: Adjust.
+
 2007-02-01  Akim Demaille  <demaille@gostai.com>
 
 	Add a FIXME
