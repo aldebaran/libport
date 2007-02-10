@@ -143,6 +143,8 @@ svn_externals_update_stream ()
 	test -n "$new_rev" ||
 	  fatal "cannot fetch the revision of $url"
 	echo "$dir -r $new_rev $url"
+	# Also update the working copy.
+	svn up "$dir" -r $new_rev $url >&2
       else
 	echo "$e"
       fi
@@ -244,7 +246,7 @@ test -n "$dirs" || dirs=.
 
 for d in $dirs
 do
-  # Should we run svn up at the end?
+  # Did we do something in this directory.
   update=false
 
   for s in $subscriptions
@@ -260,7 +262,6 @@ do
   done
 
   if $update; then
-    $run svn up $dirs
     stderr "You should checkin $dirs, externals were updated."
   fi
 done
