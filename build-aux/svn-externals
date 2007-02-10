@@ -109,14 +109,15 @@ svn_youngest ()
 }
 
 
-# svn_externals_update_stream [DIR]
-# ---------------------------------
+# svn_externals_update_stream HOST-DIR [DIR]
+# ------------------------------------------
 # Upgrade the pinned svn:externals corresponding to DIR in STDIN, and
 # pass to STDOUT.  If DIR is empty, do it for all the directories.
 svn_externals_update_stream ()
 {
   # "all" means, any directory here.
-  local request=$1
+  local hostdir=$1
+  local request=$2
   test x"$request" != xall ||
     request=""
 
@@ -144,7 +145,7 @@ svn_externals_update_stream ()
 	  fatal "cannot fetch the revision of $url"
 	echo "$dir -r $new_rev $url"
 	# Also update the working copy.
-	svn up "$dir" -r $new_rev $url >&2
+	svn up "$hostdir/$dir" -r $new_rev $url >&2
       else
 	echo "$e"
       fi
@@ -165,7 +166,7 @@ svn_externals_update_stream ()
 svn_externals_update ()
 {
   local externals=$(svn propget svn:externals "$1" |
-		    svn_externals_update_stream "$2")
+		    svn_externals_update_stream "$1" "$2")
   $run svn propset svn:externals "$externals" "$1"
 }
 

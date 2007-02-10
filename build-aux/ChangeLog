@@ -1,5 +1,10 @@
 2007-02-10  Akim Demaille  <akim.demaille@free.fr>
 
+	* svn-externals (svn_externals_update_stream): Take the host
+	dir path into account.
+
+2007-02-10  Akim Demaille  <akim.demaille@free.fr>
+
 	svn-externals: Don't up the host dir
 	* svn-externals (svn_externals_update_stream): up the updated
 	directories.
