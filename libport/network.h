@@ -40,11 +40,49 @@ typedef int socklen_t;
 # endif /* WIN32 */
 
 
-#ifdef WIN32
+/*---------.
+| fd_set.  |
+`---------*/
+
+# ifdef WIN32
 // On windows, file descriptors are defined as u_int (i.e., unsigned int).
-# define LIBPORT_FD_SET(N, P) FD_SET(static_cast<u_int>(N), P)
-#else
-# define LIBPORT_FD_SET(N, P) FD_SET(N, P)
-#endif
+#  define LIBPORT_FD_SET(N, P) FD_SET(static_cast<u_int>(N), P)
+# else
+#  define LIBPORT_FD_SET(N, P) FD_SET(N, P)
+# endif
+
+# include <iostream>
+
+namespace std
+{
+  std::ostream&
+  operator<< (std::ostream& o, const fd_set& s)
+  {
+    o << "fd_set {";
+    bool not_first = false;
+    for (int i = 0; i < FD_SETSIZE; ++i)
+      if (FD_ISSET(i, &s))
+	o << (not_first++ ? "" : ", ") << i;
+    return o << '}';
+  }
+}
+
+
+/*----------.
+| timeval.  |
+`----------*/
+
+namespace std
+{
+  std::ostream&
+  operator<< (std::ostream& o, const timeval& t)
+  {
+    return o
+      << "time_val"
+      << "{ tv_sec = " << t.tv_sec
+      << ", tv_usec = " << t.tv_usec
+      << '}';
+  }
+}
 
 #endif /* !LIBPORT_NETWORK_H_ */
