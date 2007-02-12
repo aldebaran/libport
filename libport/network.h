@@ -63,7 +63,7 @@ namespace std
     bool not_first = false;
     for (int i = 0; i < FD_SETSIZE; ++i)
       if (FD_ISSET(i, &s))
-	o << (not_first++ ? "" : ", ") << i;
+	o << (not_first++ ? ", " : "") << i;
     return o << '}';
   }
 }

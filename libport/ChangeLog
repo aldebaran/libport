@@ -1,5 +1,10 @@
 2007-02-12  Akim Demaille  <akim.demaille@free.fr>
 
+	Fix separator usage
+	* network.h (operator<< (fd_set)): here.
+
+2007-02-12  Akim Demaille  <akim.demaille@free.fr>
+
 	Add missing inline
 	* network.h (operator<<): For timeval and fd_set.
 
