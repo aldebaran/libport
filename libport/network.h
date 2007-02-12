@@ -55,6 +55,7 @@ typedef int socklen_t;
 
 namespace std
 {
+  inline
   std::ostream&
   operator<< (std::ostream& o, const fd_set& s)
   {
@@ -74,6 +75,7 @@ namespace std
 
 namespace std
 {
+  inline
   std::ostream&
   operator<< (std::ostream& o, const timeval& t)
   {
