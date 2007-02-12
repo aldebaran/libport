@@ -1,5 +1,12 @@
 2007-02-12  Akim Demaille  <akim.demaille@free.fr>
 
+	Nicer debug traces
+	* network.h: here.
+	* compiler.hh: CPP indentation.
+	Use ifdef, not if.
+
+2007-02-12  Akim Demaille  <akim.demaille@free.fr>
+
 	Fix separator usage
 	* network.h (operator<< (fd_set)): here.
 

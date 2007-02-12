@@ -20,15 +20,15 @@
 | ECHO & PING.  |
 `--------------*/
 
-#if ENABLE_DEBUG_TRACES
-# define ECHO(Msg)							\
+# ifdef ENABLE_DEBUG_TRACES
+#  define ECHO(Msg)							\
   std::cerr << __FILE__ << ":" << __LINE__ << ": "			\
 	    << __PRETTY_FUNCTION__ << ": "				\
 	    << Msg << std::endl
-#else
-# define ECHO(Msg) (void) 0
-#endif
+# else
+#  define ECHO(Msg) (void) 0
+# endif
 
-#define PING()  ECHO("ping");
+# define PING()  ECHO("ping")
 
 # endif // !LIBPORT_COMPILER_HH

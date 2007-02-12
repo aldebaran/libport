@@ -64,7 +64,7 @@ namespace std
     for (int i = 0; i < FD_SETSIZE; ++i)
       if (FD_ISSET(i, &s))
 	o << (not_first++ ? ", " : "") << i;
-    return o << '}';
+    return o << " }";
   }
 }
 
@@ -83,7 +83,7 @@ namespace std
       << "time_val"
       << "{ tv_sec = " << t.tv_sec
       << ", tv_usec = " << t.tv_usec
-      << '}';
+      << " }";
   }
 }
 
