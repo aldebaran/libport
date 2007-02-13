@@ -4,6 +4,8 @@
 #ifndef LIBPORT_COMPILER_HH
 #  define LIBPORT_COMPILER_HH
 
+# include "libport/config.h"
+
 /*----------------.
 | __attribute__.  |
 `----------------*/
@@ -16,18 +18,51 @@
 # endif
 
 
+/*--------.
+| SLEEP.  |
+`--------*/
+
+# ifdef LIBPORT_URBI_ENV_AIBO
+
+// On aibo, make sure the log message arrives.
+
+#  define SLEEP(C)					\
+  do {							\
+    long sum = 0;					\
+    for (long i = 0; i < C * 100000000; ++i)		\
+      sum += i;						\
+  } while(0)
+
+# else
+
+#  define SLEEP(C) ((void) 0)
+
+# endif
+
 /*--------------.
 | ECHO & PING.  |
 `--------------*/
 
 # ifdef ENABLE_DEBUG_TRACES
-#  define ECHO(Msg)							\
-  std::cerr << __FILE__ << ":" << __LINE__ << ": "			\
-	    << __PRETTY_FUNCTION__ << ": "				\
-	    << Msg << std::endl
+
+#  define ECHO(Msg)					\
+  do {							\
+    std::cerr << __FILE__ << ":" << __LINE__ << ": "	\
+	      << __PRETTY_FUNCTION__ << ": "		\
+	      << Msg << std::endl;			\
+    SLEEP(1);						\
+  } while (0)
+
 # else
 #  define ECHO(Msg) (void) 0
 # endif
+
+# define ECHO_CMD(Cmd)						\
+  do {								\
+    ECHO("Running " << #Cmd << "..." << std::endl);		\
+    Cmd;							\
+    ECHO("Running " << #Cmd << "... done" << std::endl);	\
+  } while (0)
 
 # define PING()  ECHO("ping")
 
