@@ -51,6 +51,12 @@ typedef int socklen_t;
 #  define LIBPORT_FD_SET(N, P) FD_SET(N, P)
 # endif
 
+// On MingW, using "mingw32-gcc.exe (GCC) 3.4.5 (mingw special)", it
+// seems that FD_ISSSET casts its argument as "fd_set*", without
+// const.
+# define LIBPORT_FD_ISSET(I, S) FD_ISSET(I, const_cast<fd_set*> (S))
+
+
 # include <iostream>
 
 namespace std
@@ -62,7 +68,7 @@ namespace std
     o << "fd_set {";
     bool not_first = false;
     for (int i = 0; i < FD_SETSIZE; ++i)
-      if (FD_ISSET(i, &s))
+      if (LIBPORT_FD_ISSET(i, &s))
 	o << (not_first++ ? ", " : "") << i;
     return o << " }";
   }
