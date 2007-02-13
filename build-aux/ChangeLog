@@ -1,3 +1,8 @@
+2007-02-13  Akim Demaille  <demaille@gostai.com>
+
+	Don't ignore failures
+	* check.mk: Fix a typo: $? => $$?.
+
 2007-02-12  Akim Demaille  <akim@lrde.epita.fr>
 
 	* svn-externals.mk (<external>-upci): New.

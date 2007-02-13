@@ -183,13 +183,13 @@ TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 	  exit 2;							\
 	fi;								\
 	$$R2H $< >$@.tmp
-	mv $@.tmp $@
+	@mv $@.tmp $@
 
 # Be sure to run check-TESTS first, and then to convert the result.
 # Beware of concurrent executions.  And expect check-TESTS to fail.
 check-html:
 	@if $(MAKE) $(AM_MAKEFLAGS) check-TESTS; then :; else	\
-	  rv=$?;						\
+	  rv=$$?;						\
 	  $(MAKE) $(AM_MAKEFLAGS) $(TEST_SUITE_HTML);		\
 	  exit $$rv;						\
 	fi
