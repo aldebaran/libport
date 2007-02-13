@@ -57,6 +57,7 @@ am__tty_colors = 				\
 if test -t 1 2>/dev/null; then			\
   red='[0;31m';				\
   grn='[0;32m';				\
+  lgn='[1;32m';				\
   blu='[1;34m';				\
   std='[m';					\
 fi
@@ -79,7 +80,7 @@ case $$estatus:" $(XFAIL_TESTS) " in			\
     0:*" $$(basename $<) "*) col=$$red; res=XPASS;;	\
     0:*)                     col=$$grn; res=PASS ;;	\
     77:*)                    col=$$blu; res=SKIP ;;	\
-    *:*" $$(basename $<) "*) col=$$grn; res=XFAIL;;	\
+    *:*" $$(basename $<) "*) col=$$lgn; res=XFAIL;;	\
     *:*)                     col=$$red; res=FAIL ;;	\
 esac;							\
 echo "$${col}$$res$${std}: $$(basename $<)";		\
