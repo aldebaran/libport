@@ -1,5 +1,10 @@
 2007-02-15  Akim Demaille  <akim@lrde.epita.fr>
 
+	Xpass triggers the verbose display
+	* check.mk: here.
+
+2007-02-15  Akim Demaille  <akim@lrde.epita.fr>
+
 	Fix exit for test suites
 	* check.mk: Stupid novice typo: use $$ for shell variables.
 	* svn-externals.mk (*-ci-ci): New.
