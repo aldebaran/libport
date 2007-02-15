@@ -154,13 +154,13 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	  fi;								\
 	fi;								\
 	$(am__tty_colors);						\
-	if $exit; then echo $$grn; else echo $$red; fi;			\
+	if $$exit; then echo $$grn; else echo $$red; fi;		\
 	  echo "$$msg" | $(am__text_box);				\
 	echo $$std;							\
 	if test x"$$VERBOSE" != x && test "$$fail" -ne 0; then		\
 	  cat $(TEST_SUITE_LOG);					\
 	fi;								\
-	$exit
+	$$exit
 
 # Run all the tests.
 check-TESTS:
