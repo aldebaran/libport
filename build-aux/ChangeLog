@@ -1,5 +1,10 @@
 2007-02-15  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Add ORBIX autodetection.
+	* urbi-with-orbix.m4: Add macro. New.
+
+2007-02-15  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Add OpenHRP SDK detection.
 	* urbi-with-openhrp.m4: Add macro. New.
 
