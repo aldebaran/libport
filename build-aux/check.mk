@@ -111,16 +111,20 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	xfail=$$(echo "$$results" | grep -c '^XFAIL');			\
 	xpass=$$(echo "$$results" | grep -c '^XPASS');			\
 	case fail=$$fail:xfail=$$xfail:xpass=$$xpass in			\
-	  fail=0:xfail=0:xpass=*)					\
-	    msg="All $$all tests passed.  ";;				\
-	  fail=0:xfail=*:xpass=*)					\
+	  fail=0:xfail=0:xpass=0)					\
+	    msg="All $$all tests passed.  ";				\
+	    exit=true;;							\
+	  fail=0:xfail=*:xpass=0)					\
 	    msg="All $$all tests behaved as expected";			\
-	    msg="$$msg ($$xfail expected failures).  ";;		\
+	    msg="$$msg ($$xfail expected failures).  ";			\
+	    exit=true;;							\
 	  fail=*:xfail=*:xpass=0)					\
-	    msg="$$fail of $$all tests failed.  ";;			\
+	    msg="$$fail of $$all tests failed.  ";			\
+	    exit=false;;						\
 	  fail=*:xfail=*:xpass=*)					\
 	    msg="$$fail of $$all tests did not behave as expected";	\
-	    msg="$$msg ($$xpass unexpected passes).  ";;		\
+	    msg="$$msg ($$xpass unexpected passes).  ";			\
+	    exit=false;;						\
 	  *)								\
             echo >&2 "incorrect case"; exit 4;;				\
 	esac;								\
@@ -150,13 +154,13 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	  fi;								\
 	fi;								\
 	$(am__tty_colors);						\
-	if test "$$fail" -eq 0; then echo $$grn; else echo $$red; fi;	\
+	if $exit; then echo $$grn; else echo $$red; fi;			\
 	  echo "$$msg" | $(am__text_box);				\
 	echo $$std;							\
 	if test x"$$VERBOSE" != x && test "$$fail" -ne 0; then		\
 	  cat $(TEST_SUITE_LOG);					\
 	fi;								\
-	test "$$fail" -eq 0
+	$exit
 
 # Run all the tests.
 check-TESTS:
