@@ -14,7 +14,15 @@
 #   define LIBPORT_DEFINED_WINSOCKAPI_
 #  endif
 
-#  include <Windows.h>
+/* We don't want the min and max macros that conflict with std::min
+   and std::max.  We might need some magic to bind _cpp_min and
+   _cpp_max to min and max eventually.  See
+   <http://raduking.homeip.net/raduking/forumwin/index.php?showtopic=270>.
+   */
+
+#  define NOMINMAX
+#   include <Windows.h>
+#  undef NOMINMAX
 
 /* If we defined _WINSOCKAPI_ to prevent WinSock1 stuff to be imported,
  * restore the situation since the user might really want to import WinSock.h
@@ -22,11 +30,6 @@
 #  ifdef LIBPORT_DEFINED_WINSOCKAPI_
 #   undef _WINSOCKAPI_
 #   undef LIBPORT_DEFINED_WINSOCKAPI_
-#  endif
-
-/* Windows has a min macro that conflicts with std::min */
-#  ifdef min
-#   undef min
 #  endif
 
 #  define usleep(a) Sleep((a) < 1000 ? 1 : (a) / 1000)
