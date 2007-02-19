@@ -36,6 +36,11 @@ namespace libport
   inline bool
   has (const Container& c, const typename Container::value_type& v);
 
+  /// Is \a v member of \a c?  Use member find (set, map, hash_map).
+  template<typename Container>
+  inline bool
+  mhas (const Container& c, const typename Container::key_type& v);
+
   /// Insert or update \a key -> \a value in \a map, return iterator to it.
   template<typename Map>
   typename Map::iterator

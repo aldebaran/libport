@@ -9,6 +9,7 @@
 # include <ostream>
 # include <algorithm>
 # include <functional>
+
 # include "libport/containers.hh"
 
 namespace libport
@@ -73,6 +74,15 @@ namespace libport
     // two finds above, that compete against each other because
     // the parameter Container can embed a "const".
     return find<Container> (c, v) != c.end ();
+  }
+
+
+  // Is \a v member of \a c?
+  template<typename Container>
+  inline bool
+  mhas (const Container& c, const typename Container::key_type& v)
+  {
+    return c.find(v) != c.end ();
   }
 
 
