@@ -263,7 +263,10 @@ do
   done
 
   if $update; then
-    stderr "You should checkin $dirs, externals were updated."
+    # We really to update the local directory, otherwise we can
+    # check in, yet.  But don't go into the sub dirs though.
+    $run svn up -N "$d"
+    stderr "You should checkin $d, externals were updated."
   fi
 done
 
