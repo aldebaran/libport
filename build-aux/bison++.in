@@ -47,7 +47,8 @@ $BISON $options $input_base -o $output_base
 status=$?
 set -e
 
-if test $status = 0; then
+case $status in
+  0)
     for file in *
     do
 	case $file in
@@ -61,7 +62,14 @@ if test $status = 0; then
 	    ;;
 	esac
     done
-fi
+    ;;
+  *) # We really want to keep the *.output files.
+    for file in *.output
+    do
+	$move_if_change "$file" "$output_dir_abs/$file"
+    done
+    ;;
+esac
 
 # Get rid of the tmp dir.
 cd ..
