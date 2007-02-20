@@ -110,19 +110,20 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	skip=$$(echo "$$results" | grep -c '^SKIP');			\
 	xfail=$$(echo "$$results" | grep -c '^XFAIL');			\
 	xpass=$$(echo "$$results" | grep -c '^XPASS');			\
-	case fail=$$fail:xfail=$$xfail:xpass=$$xpass in			\
-	  fail=0:xfail=0:xpass=0)					\
+	failures=$$(expr $$fail + $$xpass);				\
+	case fail=$$fail:xpass=$$xpass:xfail=$$xfail in			\
+	  fail=0:xpass=0:xfail=0)					\
 	    msg="All $$all tests passed.  ";				\
 	    exit=true;;							\
-	  fail=0:xfail=*:xpass=0)					\
+	  fail=0:xpass=0:xfail=*)					\
 	    msg="All $$all tests behaved as expected";			\
 	    msg="$$msg ($$xfail expected failures).  ";			\
 	    exit=true;;							\
-	  fail=*:xfail=*:xpass=0)					\
+	  fail=*:xpass=0:xfail=*)					\
 	    msg="$$fail of $$all tests failed.  ";			\
 	    exit=false;;						\
-	  fail=*:xfail=*:xpass=*)					\
-	    msg="$$fail of $$all tests did not behave as expected";	\
+	  fail=*:xpass=*:xfail=*)					\
+	    msg="$$failures of $$all tests did not behave as expected";	\
 	    msg="$$msg ($$xpass unexpected passes).  ";			\
 	    exit=false;;						\
 	  *)								\
@@ -131,7 +132,7 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	if test "$$skip" -ne 0; then					\
 	  msg="$$msg($$skip tests were not run).  ";			\
 	fi;								\
-	if test "$$fail" -ne 0; then					\
+	if test "$$failures" -ne 0; then				\
 	  {								\
 	    echo "$(PACKAGE_STRING): $(subdir)/$(TEST_SUITE_LOG)" |	\
 	      $(am__rst_title);						\
