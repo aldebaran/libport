@@ -53,13 +53,25 @@ namespace libport
   }
 
 
+  template<typename Container>
+  inline typename Container::mapped_type
+  find0 (Container& c, const typename Container::key_type& k)
+  {
+    typename Container::const_iterator i = c.find(k);
+    if (i != c.end())
+      return i->second;
+    else
+      return 0;
+  }
+
+
   // Apply \a f to all the members of \a c, and return it.
   template<typename Container, typename Functor>
   inline Functor&
   for_each (Container& c, Functor& f)
   {
-    typename Container::const_iterator end = c.end ();
-    for (typename Container::const_iterator i = c.begin (); i != end; ++i)
+    for (typename Container::const_iterator i = c.begin (), end = c.end();
+	 i != end; ++i)
       f (*i);
     return f;
   }

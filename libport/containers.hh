@@ -26,6 +26,13 @@ namespace libport
   inline typename Container::iterator
   find (Container& c, const typename Container::value_type& v);
 
+  /// Look up for \c k in \a c, return its value, or 0 if unknown.
+  ///
+  /// For associative containers mapping pointers.
+  template<typename Container>
+  inline typename Container::mapped_type
+  find0 (Container& c, const typename Container::key_type& k);
+
   /// Apply \a f to all the members of \a c, and return it.
   template<typename Container, typename Functor>
   inline Functor&
