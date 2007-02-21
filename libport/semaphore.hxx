@@ -61,6 +61,8 @@ namespace libport
 #  include <sstream>
 # endif
 
+# include <cerrno>
+
 namespace libport
 {
 
@@ -101,7 +103,12 @@ namespace libport
   inline void
   Semaphore::operator-- (int)
   {
-    int err = sem_wait(sem_);
+    int err;
+    do
+      {
+	err = sem_wait(sem_);
+      }
+    while (err == -1 && errno == EINTR);
     assert (!err);
   }
 
@@ -115,7 +122,12 @@ namespace libport
   inline void
   Semaphore::operator-- ()
   {
-    int err = sem_wait(sem_);
+    int err;
+    do
+      {
+	err = sem_wait(sem_);
+      }
+    while (err == -1 && errno == EINTR);
     assert (!err);
   }
 
