@@ -1,3 +1,8 @@
+2007-02-21  Akim Demaille  <demaille@gostai.com>
+
+	Don't use -relax-branch
+	* urbi-prog-cxx.m4: Do not compute PARSER_CXXFLAGS.
+
 2007-02-20  Akim Demaille  <demaille@gostai.com>
 
 	bison++: Preserve *output on failure
