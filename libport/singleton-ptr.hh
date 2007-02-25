@@ -1,14 +1,13 @@
 #ifndef LIBPORT_SINGLETON_PTR_HH
 # define LIBPORT_SINGLETON_PTR_HH
 
-# define STATIC_INSTANCE(Cl, Name)		\
-  libport::SingletonPtr<Cl ## Name> Name
+/// Define a singleton of class \a Class named \a Name.
+# define STATIC_INSTANCE(Class, Name)		\
+  libport::SingletonPtr<Class> Name
 
-# define EXTERN_STATIC_INSTANCE(Cl, Name)	\
-  class Cl ## Name				\
-    : public Cl					\
-  {};						\
-  extern libport::SingletonPtr<Cl ## Name> Name
+/// Declare a singleton of class \a Class named \a Name.
+# define EXTERN_STATIC_INSTANCE(Class, Name)	\
+  extern STATIC_INSTANCE(Class, Name)
 
 
 namespace libport
