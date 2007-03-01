@@ -1,3 +1,9 @@
+2007-03-01  Akim Demaille  <demaille@gostai.com>
+
+	Force verbosity for the BF
+	* check.mk: Use set -x at various places.
+	To be removed once I understand why check-html does not work.
+
 2007-03-01  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
 	Fix OpenHRP and ORBIX macros.

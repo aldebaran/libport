@@ -180,7 +180,7 @@ check-TESTS:
 TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 
 %.html: %.log
-	@for r2h in $(RST2HTML) $$RST2HTML rst2html rst2html.py;	\
+	set -x ; for r2h in $(RST2HTML) $$RST2HTML rst2html rst2html.py;	\
 	do								\
 	  if ($$r2h --version) >/dev/null 2>&1; then			\
 	    R2H=$$r2h;							\
@@ -196,7 +196,7 @@ TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 # Be sure to run check-TESTS first, and then to convert the result.
 # Beware of concurrent executions.  And expect check-TESTS to fail.
 check-html:
-	@if $(MAKE) $(AM_MAKEFLAGS) check-TESTS; then :; else	\
+	set -x ; if $(MAKE) $(AM_MAKEFLAGS) check-TESTS; then :; else	\
 	  rv=$$?;						\
 	  $(MAKE) $(AM_MAKEFLAGS) $(TEST_SUITE_HTML);		\
 	  exit $$rv;						\
