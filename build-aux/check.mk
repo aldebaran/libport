@@ -158,9 +158,7 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	if $$exit; then echo $$grn; else echo $$red; fi;		\
 	  echo "$$msg" | $(am__text_box);				\
 	echo $$std;							\
-	if ! $$exit; then						\
-	  cat $(TEST_SUITE_LOG);					\
-	fi;								\
+	test x"$$VERBOSE" = x || $$exit || cat $(TEST_SUITE_LOG);	\
 	$$exit
 
 # if test x"$$VERBOSE" != x && ! $exit; then
@@ -180,7 +178,7 @@ check-TESTS:
 TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 
 %.html: %.log
-	set -x ; for r2h in $(RST2HTML) $$RST2HTML rst2html rst2html.py;	\
+	@for r2h in $(RST2HTML) $$RST2HTML rst2html rst2html.py;	\
 	do								\
 	  if ($$r2h --version) >/dev/null 2>&1; then			\
 	    R2H=$$r2h;							\
@@ -196,7 +194,7 @@ TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 # Be sure to run check-TESTS first, and then to convert the result.
 # Beware of concurrent executions.  And expect check-TESTS to fail.
 check-html:
-	set -x ; if $(MAKE) $(AM_MAKEFLAGS) check-TESTS; then :; else	\
+	@if $(MAKE) $(AM_MAKEFLAGS) check-TESTS; then :; else	\
 	  rv=$$?;						\
 	  $(MAKE) $(AM_MAKEFLAGS) $(TEST_SUITE_HTML);		\
 	  exit $$rv;						\

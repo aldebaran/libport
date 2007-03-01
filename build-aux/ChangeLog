@@ -1,5 +1,10 @@
 2007-03-01  Akim Demaille  <demaille@gostai.com>
 
+	Stop forcing VERBOSE=1
+	* check.mk: here.
+
+2007-03-01  Akim Demaille  <demaille@gostai.com>
+
 	Clarify/simplify the KERNEL_*FLAGS
 	* urbi-dirs.m4: More documentation.
 	For the core, do not define SDK_*FLAGS, define KERNEL_*FLAGS.
