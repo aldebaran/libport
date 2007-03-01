@@ -3,8 +3,16 @@
 # We use an installed libport, most probably that of the kernel we
 # use.  We don't run URBI_UFLOAT since, of course, we use the same
 # kind of ufloat as the kernel does.
+#
+# Cores use an installed libport (in kernelincludedir), *and* install it
+# (in sdkincludedir).
 AC_DEFUN([URBI_LIBPORT_INSTALLED],
 [AC_REQUIRE([URBI_PTHREAD])
+
+# Where we install the libport files.
+URBI_PACKAGE_KIND_SWITCH(
+  [kernel],     [AC_SUBST([libportdir], ['${kernelincludedir}/libport'])],
+  [sdk\|core],  [AC_SUBST([libportdir], ['${sdkincludedir}/libport'])])
 ])
 
 # URBI_LIBPORT

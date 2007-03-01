@@ -1,5 +1,10 @@
 2007-03-01  Akim Demaille  <demaille@gostai.com>
 
+	* urbi-dirs.m4: Use AU_DEFUN for obsolete macros.
+	* urbi-libport.m4: Define libportdir.
+
+2007-03-01  Akim Demaille  <demaille@gostai.com>
+
 	PACKAGE_KIND
 	* urbi-package-kind.m4 (URBI_PACKAGE_KIND, URBI_PACKAGE_KIND_SWITCH):
 	New.

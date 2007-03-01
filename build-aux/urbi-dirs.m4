@@ -108,17 +108,17 @@ URBI_PACKAGE_KIND_SWITCH(
 # These are obsolete, and should be replaced by their current value.
 
 # To be used by cores and engines.
-AC_DEFUN([URBI_CORE_DIRS],
+AU_DEFUN([URBI_CORE_DIRS],
 [URBI_PACKAGE_KIND([core])
 URBI_DIRS([$1])])
 
 # To be used by urbi-sdk and sdks.
-AC_DEFUN([URBI_SDK_DIRS],
+AU_DEFUN([URBI_SDK_DIRS],
 [URBI_PACKAGE_KIND([sdk])
 URBI_DIRS([$1])])
 
 # To be used by core developers for the kernels.
-AC_DEFUN([URBI_KERNEL_DIRS],
+AU_DEFUN([URBI_KERNEL_DIRS],
 [URBI_PACKAGE_KIND([kernel])
 URBI_DIRS([$1])])
 
