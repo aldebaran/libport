@@ -1,3 +1,9 @@
+2007-03-01  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Add robot name support for OpenHRP.
+	* urbi-with-openhrp.m4: Add with-robot macro.
+	* urbi-with-orbix.m4: Lowercase variables.
+
 2007-03-01  Akim Demaille  <demaille@gostai.com>
 
 	Let the kernel install the urbi header in its include directory

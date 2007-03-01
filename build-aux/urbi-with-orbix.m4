@@ -6,19 +6,19 @@
 # Output variable ORBIX_PATH point to the installation location.
 # Set "$ORBIX" to "true" or "false".
 AC_DEFUN([URBI_WITH_ORBIX],
-[AC_ARG_WITH([ORBIX],
-	     [AC_HELP_STRING([--with-ORBIX=ORBIX-path],
+[AC_ARG_WITH([orbix],
+	     [AC_HELP_STRING([--with-orbix=orbix-path],
 			     [enable ORBIX support [/usr/local/IONA/OBE/2.2n]])],
-	     [], [with_ORBIX=yes])
+	     [], [with_orbix=yes])
 
-case $with_ORBIX in
+case $with_orbix in
    no) ORBIX=false
        ;;
   yes) ORBIX=true
        ORBIX_PATH=/usr/local/IONA/OBE/2.2n
        ;;
     *) ORBIX=true
-       ORBIX_PATH=$with_ORBIX
+       ORBIX_PATH=$with_orbix
        ;;
 esac
 
