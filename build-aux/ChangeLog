@@ -1,5 +1,10 @@
 2007-03-01  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
 
+	Simplify urbi-with-openhrp.
+	* urbi-with-openhrp.m4: Simplify macro.
+
+2007-03-01  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
 	Add robot name support for OpenHRP.
 	* urbi-with-openhrp.m4: Add with-robot macro.
 	* urbi-with-orbix.m4: Lowercase variables.

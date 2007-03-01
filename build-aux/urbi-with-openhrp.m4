@@ -59,19 +59,16 @@ AC_DEFUN([URBI_WITH_OPENHRP_REQUIRED],
 ])
 
 
-
+# URBI_WITH_ROBOT
+# ----------
+# Defines the name of the robot in the OpenHRP framework.
 AC_DEFUN([URBI_WITH_ROBOT],
 [AC_ARG_WITH([robot],
 	     [AC_HELP_STRING([--with-robot=robot-name],
 			     [define robot name [HRP2JRL]])],
 	     [], [with_robot=HRP2JRL])
 
-case $with_robot in
-   "") ROBOT=HRP2JRL
-       ;;
-    *) ROBOT=$with_robot
-       ;;
-esac
+AC_SUBST([ROBOT], [$with_robot])
 ])
 
 
