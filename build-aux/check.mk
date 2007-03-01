@@ -158,10 +158,12 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	if $$exit; then echo $$grn; else echo $$red; fi;		\
 	  echo "$$msg" | $(am__text_box);				\
 	echo $$std;							\
-	if test x"$$VERBOSE" != x && ! $$exit; then			\
+	if ! $$exit; then						\
 	  cat $(TEST_SUITE_LOG);					\
 	fi;								\
 	$$exit
+
+# if test x"$$VERBOSE" != x && ! $exit; then
 
 # Run all the tests.
 check-TESTS:
