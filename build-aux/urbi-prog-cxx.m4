@@ -6,10 +6,6 @@ AC_PREREQ([2.60])
 # URBI_PROG_CXX
 # -------------
 # Look for a C++ compiler, and pass interesting warning options.
-#
-# Define PARSER_CXXFLAGS to -O0 if the compiler is mipsel-linux-*, since
-# it is known not to be able to compile the rather large switch statement
-# produced by Bison.
 AC_DEFUN([URBI_PROG_CXX],
 [# Look for a C++ compiler.
 AC_LANG([C++])
@@ -183,11 +179,18 @@ TC_CXX_WARNINGS([[/EHsc],
 # Warnings are errors.  #
 # --------------------- #
 
-# We currently have too many unresolved warnings with this compiler.
-# (Not its fault, ours.)
-if test $ac_cv_cxx_compiler_ms != yes; then
-  TC_CXX_WARNINGS([-Werror])
-fi
+# There are too many warnings in OPEN-R (its fault).
+# Don't just look at its name, we might have ccache prefixing it.
+case $($CXX --version | sed 1q) in
+  mipsel-linux-*) ;;
+  *)
+    # We currently have too many unresolved warnings with this compiler.
+    # (Not its fault, ours.)
+    if test $ac_cv_cxx_compiler_ms != yes; then
+      TC_CXX_WARNINGS([-Werror])
+    fi
+  ;;
+esac
 ])
 
 

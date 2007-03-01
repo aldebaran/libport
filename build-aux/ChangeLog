@@ -1,5 +1,10 @@
 2007-03-01  Akim Demaille  <demaille@gostai.com>
 
+	Don't pass -Werror to aibo because of OPEN-R
+	* urbi-prog-cxx.m4: here.
+
+2007-03-01  Akim Demaille  <demaille@gostai.com>
+
 	Stop forcing VERBOSE=1
 	* check.mk: here.
 
