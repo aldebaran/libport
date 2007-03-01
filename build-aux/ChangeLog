@@ -328,7 +328,7 @@
 
 2006-12-28  POTHIER Benoit  <benoit.pothier@gmx.net>
 
-	Fix header inclusion in test for qscintilla presence. 
+	Fix header inclusion in test for qscintilla presence.
 	* qscintilla2.m4: Prepend Qsci subdir in include.
 
 2006-12-27  Akim Demaille  <akim.demaille@free.fr>
@@ -367,7 +367,7 @@
 
 	Remove more spurious warnings from VC++.
 	* urbi-prog-cxx.m4: Here. Also sort the warnings in numerical order.
-          (MSVC_CXXFLAGS): New.
+	  (MSVC_CXXFLAGS): New.
 
 2006-12-13  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
@@ -405,7 +405,7 @@
 2006-11-22  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
 
 	Move some files to the new sdk folder.
-        Now in common/sdk:
+	Now in common/sdk:
 	* param-pc.mk.in: Remove.
 	* umake.in: Remove.
 	* urbi-dirs.m4: Remove.
@@ -484,8 +484,8 @@
 	Check that the libkernel.la is present.
 	* bootstrap: Make safer.
 	* urbi-engine.ac: Check that the libkernel.la exists in $(kerneldir)
-          since it's a frequent error to forget that the --prefix must point
-          to where the kernel was installed.
+	  since it's a frequent error to forget that the --prefix must point
+	  to where the kernel was installed.
 	* urbi-sdk.m4: param.mk is now provided by an svn:external.
 
 2006-11-17  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
