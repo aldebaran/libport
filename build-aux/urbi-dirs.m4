@@ -81,7 +81,7 @@ URBI_PACKAGE_KIND_SWITCH(
 # urbiincludedir.
 URBI_PACKAGE_KIND_SWITCH(
    [kernel], [AC_SUBST([urbiincludedir], ['${kernelincludedir}/urbi'])],
-             [AC_SUBST([urbiincludedir], ['${includedir}/urbi'])])
+	     [AC_SUBST([urbiincludedir], ['${includedir}/urbi'])])
 
 # /usr/local/gostai/core/$host
 URBI_PACKAGE_KIND_SWITCH(
