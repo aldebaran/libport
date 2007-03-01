@@ -1,3 +1,7 @@
+2007-03-01  Akim Demaille  <demaille@gostai.com>
+
+	* urbi-dirs.m4 (_URBI_DIRS): Fix default value display.
+
 2007-03-01  Akim Demaille  <akim.demaille@free.fr>
 
 	Force VERBOSE for the test suite

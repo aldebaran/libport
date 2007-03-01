@@ -4,12 +4,19 @@ AC_PREREQ([2.60])
 
 # _URBI_DIRS(KIND, DEFAULT-URBI-ENV)
 # ----------------------------------
-# KIND should be "core" or "kernel", depending on the environment using
-# this macro (a core, or the kernel).  See URBI_DIRS and URBI_KERNEL_DIRS
-# below.
+# depending on the environment using this macro, KIND should be:
+#  - core
+#    engines and cores.
+#  - sdk
+#    liburbi-cpp and other sdks.
+#  - kernel
+#    kernels.
 #
-# DEFAULT-URBI-ENV should probably be something like "aibo", "webots" etc.
-# This macro *MUST* be invoked *AFTER* URBI_WITH_KERNEL (with-urbi-kernel.m4).
+# See URBI_DIRS and URBI_KERNEL_DIRS below.
+#
+# DEFAULT-URBI-ENV should probably be something like "aibo", "webots"
+# etc.  This macro *MUST* be invoked *AFTER* URBI_WITH_KERNEL
+# (sdk/urbi-with-kernel.m4).
 #
 # Define the directory variables we are about to use:
 #
@@ -52,7 +59,7 @@ AC_SUBST([URBI_HOST])
 AC_ARG_ENABLE([env],
 	      [AC_HELP_STRING([--enable-env=urbi-env],
 			      [The environment this will run on:
-			       aibo, webots, engine [engine]])])
+			       aibo, webots, engine [$2]])])
 AC_MSG_CHECKING([for URBI environment type])
 case $enable_env in
  '') URBI_ENV=$2;;
@@ -61,17 +68,13 @@ esac
 AC_MSG_RESULT([$URBI_ENV])
 case $URBI_ENV in
   aibo)
-     AC_DEFINE([URBI_ENV_AIBO], [1], [Define if compiling for Aibo.])
-     ;;
+     AC_DEFINE([URBI_ENV_AIBO], [1], [Define if compiling for Aibo.]);;
   engine)
-     AC_DEFINE([URBI_ENV_ENGINE], [1], [Define if compiling generic engine.])
-     ;;
+     AC_DEFINE([URBI_ENV_ENGINE], [1], [Define if compiling generic engine.]);;
   webots)
-     AC_DEFINE([URBI_ENV_WEBOTS], [1], [Define if compiling for Webots.])
-     ;;
+     AC_DEFINE([URBI_ENV_WEBOTS], [1], [Define if compiling for Webots.]);;
   *)
-     AC_MSG_NOTICE([[unknown environment type: $URBI_ENV]])
-     ;;
+     AC_MSG_NOTICE([[unknown environment type: $URBI_ENV]]);;
 esac
 AC_SUBST([URBI_ENV])
 
