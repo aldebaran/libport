@@ -39,15 +39,13 @@ fi
 
 if $ORBIX; then
   # More tools for ORBIX.
-  AC_SUBST([ORBIX_PATH], ['$(ORBIX_PATH)'])
   AC_SUBST([ORBIX_INCLUDE],
-    ['-I$(top_srcdir)/$(ORBIX_PATH)/acpp/include
-      -I$(top_srcdir)/$(ORBIX_PATH)/c/include'])
+    ['-I$(ORBIX_PATH)/acpp/include -I$(ORBIX_PATH)/c/include'])
   AC_SUBST([ORBIX_ORB], ['ORBIXE'])
   AC_SUBST([ORBIX_VERSION], ['2'])
 
   AC_SUBST([ORBIX_CPPFLAGS],
-    ['$(ORBIX_INCLUDE) -D$(ORBIX_ORB) -DVERSION=$(ORBIX_VERSION)'])
+    ['$(ORBIX_INCLUDE) -D$(ORBIX_ORB) -DORBIX_VERSION=$(ORBIX_VERSION)'])
 fi
 
 AM_CONDITIONAL([WITH_ORBIX], [$ORBIX])

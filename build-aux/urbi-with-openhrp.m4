@@ -39,7 +39,6 @@ fi
 
 if $openhrp; then
   # More tools for OpenHRP.
-  AC_SUBST([OPENHRP_PATH], ['$(OPENHRP_PATH)'])
   AC_SUBST([OPENHRP_COMMON_DIR],  ['$(OPENHRP_PATH)/Common'])
   AC_SUBST([OPENHRP_CONTROLLER_DIR],  ['$(OPENHRP_PATH)/Controller'])
 fi
