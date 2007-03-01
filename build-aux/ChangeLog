@@ -1,5 +1,14 @@
 2007-03-01  Akim Demaille  <demaille@gostai.com>
 
+	PACKAGE_KIND
+	* urbi-package-kind.m4 (URBI_PACKAGE_KIND, URBI_PACKAGE_KIND_SWITCH):
+	New.
+	* urbi-dirs.m4: Extracted from here.
+	(_URBI_DIRS): Rename as...
+	(URBI_DIRS): this.
+
+2007-03-01  Akim Demaille  <demaille@gostai.com>
+
 	* urbi-dirs.m4 (_URBI_DIRS): Fix default value display.
 
 2007-03-01  Akim Demaille  <akim.demaille@free.fr>

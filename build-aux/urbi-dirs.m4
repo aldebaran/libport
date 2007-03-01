@@ -2,16 +2,8 @@ m4_pattern_forbid([^URBI_])
 
 AC_PREREQ([2.60])
 
-# _URBI_DIRS(KIND, DEFAULT-URBI-ENV)
-# ----------------------------------
-# depending on the environment using this macro, KIND should be:
-#  - core
-#    engines and cores.
-#  - sdk
-#    liburbi-cpp and other sdks.
-#  - kernel
-#    kernels.
-#
+# URBI_DIRS(DEFAULT-URBI-ENV)
+# ---------------------------
 # See URBI_DIRS and URBI_KERNEL_DIRS below.
 #
 # DEFAULT-URBI-ENV should probably be something like "aibo", "webots"
@@ -33,12 +25,8 @@ AC_PREREQ([2.60])
 #                    /usr/local/gostai/kernel/aibo
 # sdkincludedir	   = ${branddir}/KIND/include
 # kernelincludedir = ${kbranddir}/kernel/include
-m4_define([_URBI_DIRS],
-[m4_bmatch([$1],
-	   [core\|kernel\|sdk], [],
-	   [m4_fatal([$0: invalid kind: $1])])
-
-# We need to know the host (the type of architecture it will run on),
+AC_DEFUN([URBI_DIRS],
+[# We need to know the host (the type of architecture it will run on),
 # the environment (the runtime, the event loop: engine, webots, aibo).
 
 # URBI_HOST
@@ -59,10 +47,10 @@ AC_SUBST([URBI_HOST])
 AC_ARG_ENABLE([env],
 	      [AC_HELP_STRING([--enable-env=urbi-env],
 			      [The environment this will run on:
-			       aibo, webots, engine [$2]])])
+			       aibo, webots, engine [$1]])])
 AC_MSG_CHECKING([for URBI environment type])
 case $enable_env in
- '') URBI_ENV=$2;;
+ '') URBI_ENV=$1;;
   *) URBI_ENV=$enable_env;;
 esac
 AC_MSG_RESULT([$URBI_ENV])
@@ -81,7 +69,7 @@ AC_SUBST([URBI_ENV])
 # Everything is installed in $URBI_KERNEL_PATH/gostai.
 AC_SUBST([PACKAGE_BRAND], [gostai])
 AC_SUBST([branddir], ['${prefix}/${PACKAGE_BRAND}'])
-m4_case([$1],
+URBI_PACKAGE_KIND_SWITCH(
   [core],   [AC_SUBST([kbranddir], ['${URBI_KERNEL_PATH}/${PACKAGE_BRAND}'])],
   [kernel], [AC_SUBST([kbranddir], ['${branddir}'])])
 
@@ -91,7 +79,7 @@ m4_case([$1],
 AC_SUBST([urbiincludedir], ['${includedir}/urbi'])
 
 # /usr/local/gostai/core/$host
-m4_bmatch([$1],
+URBI_PACKAGE_KIND_SWITCH(
   [core\|sdk], [AC_SUBST([hostdir], ['${branddir}/core/${URBI_HOST}'])],
   [kernel],    [AC_SUBST([hostdir], ['${branddir}/kernel/${URBI_HOST}'])])
 
@@ -99,30 +87,40 @@ m4_bmatch([$1],
 # Could have been named sdklibdir too.
 AC_SUBST([envdir], ['${hostdir}/${URBI_ENV}'])
 # Possibly an alias: /usr/local/gostai/kernel/powerpc-apple-darwin8.7.0/engine
-m4_case([$1], [sdk], [],
+URBI_PACKAGE_KIND_SWITCH([sdk], [],
 	[AC_SUBST([kerneldir],
 		  ['${kbranddir}/kernel/${URBI_HOST}/${URBI_ENV}'])])
 
 # Where we install, and expect to find, headers.
-m4_bmatch([$1], [core\|sdk],
-	  [AC_SUBST([sdkincludedir], ['${branddir}/core/include'])])
-m4_case([$1], [sdk], [],
+URBI_PACKAGE_KIND_SWITCH([core\|sdk],
+	[AC_SUBST([sdkincludedir], ['${branddir}/core/include'])])
+URBI_PACKAGE_KIND_SWITCH([sdk], [],
 	[AC_SUBST([kernelincludedir], ['${kbranddir}/kernel/include'])])
 
-m4_bmatch([$1],
+URBI_PACKAGE_KIND_SWITCH(
   [core\|sdk],
    [AC_SUBST([SDK_CPPFLAGS], ['-I${sdkincludedir} -I${kernelincludedir}'])
     AC_SUBST([SDK_LDFLAGS],  ['-L${envdir}'])])
 ])
 
+
+
+# These are obsolete, and should be replaced by their current value.
+
 # To be used by cores and engines.
-AC_DEFUN([URBI_CORE_DIRS],    [_URBI_DIRS([core],   [$1])])
+AC_DEFUN([URBI_CORE_DIRS],
+[URBI_PACKAGE_KIND([core])
+URBI_DIRS([$1])])
+
 # To be used by urbi-sdk and sdks.
-AC_DEFUN([URBI_SDK_DIRS],     [_URBI_DIRS([sdk],   [$1])])
+AC_DEFUN([URBI_SDK_DIRS],
+[URBI_PACKAGE_KIND([sdk])
+URBI_DIRS([$1])])
+
 # To be used by core developers for the kernels.
-AC_DEFUN([URBI_KERNEL_DIRS],  [_URBI_DIRS([kernel], [$1])])
-
-
+AC_DEFUN([URBI_KERNEL_DIRS],
+[URBI_PACKAGE_KIND([kernel])
+URBI_DIRS([$1])])
 
 ## Local Variables:
 ## mode: autoconf
