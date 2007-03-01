@@ -73,10 +73,15 @@ URBI_PACKAGE_KIND_SWITCH(
   [core],   [AC_SUBST([kbranddir], ['${URBI_KERNEL_PATH}/${PACKAGE_BRAND}'])],
   [kernel], [AC_SUBST([kbranddir], ['${branddir}'])])
 
-# Standard headers and libraries are installed in regular includedir
-# and libdir under $prefix.  urbi-sdk headers are installed in
+# UObject headers
+# ---------------
+# The kernel installs them in its kernelincludedir.  The other
+# package kinds install the standard headers and libraries in regular
+# includedir and libdir under $prefix.  urbi-sdk headers are installed in
 # urbiincludedir.
-AC_SUBST([urbiincludedir], ['${includedir}/urbi'])
+URBI_PACKAGE_KIND_SWITCH(
+   [kernel], [AC_SUBST([urbiincludedir], ['${kernelincludedir}/urbi'])],
+             [AC_SUBST([urbiincludedir], ['${includedir}/urbi'])])
 
 # /usr/local/gostai/core/$host
 URBI_PACKAGE_KIND_SWITCH(

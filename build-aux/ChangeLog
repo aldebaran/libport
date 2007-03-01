@@ -1,5 +1,11 @@
 2007-03-01  Akim Demaille  <demaille@gostai.com>
 
+	Let the kernel install the urbi header in its include directory
+	* urbi-dirs.m4 (urbiincludedir): When the package is a kernel,
+	define it using kernelincludedir.
+
+2007-03-01  Akim Demaille  <demaille@gostai.com>
+
 	Force verbosity for the BF
 	* check.mk: Use set -x at various places.
 	To be removed once I understand why check-html does not work.
