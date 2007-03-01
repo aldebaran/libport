@@ -14,16 +14,29 @@ AC_PREREQ([2.60])
 #
 # branddir	   = ${prefix}/${PACKAGE_BRAND}
 #                    /usr/local/gostai
-# kbranddir	   = ${URBI_KERNEL_PATH}/${PACKAGE_BRAND}
-#                    /usr/local/gostai
-# urbiincludedir   = ${includedir}/urbi
+#
+# kbranddir	   - Where the kernel is installed.
+#                  = ${brandir} for kernels
+#                  = ${URBI_KERNEL_PATH}/${PACKAGE_BRAND} for others
+#                    /usr/local/gostai           via --with-urbi-kernel.
+#
+# urbiincludedir   - Where the UObject headers are installed
+#                  = ${kernelincludedir}/urbi for kernels
+#                    /usr/local/gostai/kernel/include/urbi
+#                  = ${includedir}/urbi for others
 #                    /usr/local/include/urbi
+#
 # hostdir	   = ${branddir}/KIND/${URBI_HOST}
-# envdir	   = ${hostdir}/${URBI_ENV}
+#
+# envdir	   - Where the kernel libraries are installed.
+#                  = ${hostdir}/${URBI_ENV}
 #                    /usr/local/gostai/core/aibo
+#
 # kerneldir	   = ${kbranddir}/kernel/${URBI_HOST}/${URBI_ENV}
 #                    /usr/local/gostai/kernel/aibo
+#
 # sdkincludedir	   = ${branddir}/KIND/include
+#
 # kernelincludedir = ${kbranddir}/kernel/include
 AC_DEFUN([URBI_DIRS],
 [# We need to know the host (the type of architecture it will run on),
@@ -102,8 +115,12 @@ URBI_PACKAGE_KIND_SWITCH([core\|sdk],
 URBI_PACKAGE_KIND_SWITCH([sdk], [],
 	[AC_SUBST([kernelincludedir], ['${kbranddir}/kernel/include'])])
 
+# When compiling a core, we need to find the kernel headers and libraries.
 URBI_PACKAGE_KIND_SWITCH(
-  [core\|sdk],
+  [core],
+   [AC_SUBST([KERNEL_CPPFLAGS], ['-I${kernelincludedir}'])
+    AC_SUBST([KERNEL_LDFLAGS],  ['-L${envdir}'])],
+  [sdk],
    [AC_SUBST([SDK_CPPFLAGS], ['-I${sdkincludedir} -I${kernelincludedir}'])
     AC_SUBST([SDK_LDFLAGS],  ['-L${envdir}'])])
 ])
