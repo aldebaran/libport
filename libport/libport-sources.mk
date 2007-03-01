@@ -8,8 +8,8 @@
 # Where we find libport sources in this package.
 libport_srcdir = $(top_srcdir)/libport
 libport_builddir = $(top_builddir)/libport
-# Where we install libport.
-libportdir = $(includedir)/libport
+
+# URBI_LIBPORT defines where we install libport.
 libportsysdir = $(libportdir)/sys
 
 # Sources to compile to use libport.
