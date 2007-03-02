@@ -1,3 +1,8 @@
+2007-03-02  Matthieu Nottale  <nottale@gostai.com>
+
+	Revert commit 628
+	* singleton-ptr.hh: Restore STATIC_INSTANCE which is used to define multiple "singleton" of the same class (reason: delay initialisation of object to first time its needed).
+
 2007-03-01  Akim Demaille  <demaille@gostai.com>
 
 	* libport-sources.mk (libportdir): No longer define it.
