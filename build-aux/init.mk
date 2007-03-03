@@ -8,7 +8,7 @@ BUILT_SOURCES =
 # http://msdn2.microsoft.com/en-us/library/yd4f8bd1.aspx.
 CLEANFILES = vc80.pdb
 # Files created by MSC++.
-CLEANFILES += *.exe.manifest
+CLEANFILES += *.exe.manifest *.exe.intermediate.manifest
 EXTRA_DIST =
 EXTRA_HEADERS =
 MAINTAINERCLEANFILES =

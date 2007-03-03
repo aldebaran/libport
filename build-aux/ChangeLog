@@ -1,3 +1,7 @@
+2007-03-03  Akim Demaille  <akim.demaille@free.fr>
+
+	* init.mk (CLEANFILES): Get rid of more manifest files.
+
 2007-03-01  Akim Demaille  <demaille@gostai.com>
 
 	Don't pass -Werror to aibo because of OPEN-R
