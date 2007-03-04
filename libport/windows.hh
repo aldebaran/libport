@@ -15,18 +15,17 @@
 #  endif
 
 /* We don't want the min and max macros that conflict with std::min
-   and std::max.  We might need some magic to bind _cpp_min and
-   _cpp_max to min and max eventually.  See
-   <http://raduking.homeip.net/raduking/forumwin/index.php?showtopic=270>.
-
-   Mingw defines this macro in 3.4.5/mingw32/bits/os_defines.h, beware of
-   multiple definitions. */
+ * and std::max.  We might need some magic to bind _cpp_min and
+ * _cpp_max to min and max eventually.  See
+ * <http://raduking.homeip.net/raduking/forumwin/index.php?showtopic=270>.
+ *
+ * This must be done conditionnaly because MinGW already defines NOMINMAX in
+ * some headers.  */
 #  ifndef NOMINMAX
-#   define NOMINMAX
-#   define LIBPORT_DEFINED_NOMINMAX_
+#   define NOMINMAX 1
 #  endif
 
-#   include <Windows.h>
+#  include <Windows.h>
 
 /* If we defined _WINSOCKAPI_ to prevent WinSock1 stuff to be imported,
  * restore the situation since the user might really want to import WinSock.h
@@ -35,12 +34,6 @@
 #   undef _WINSOCKAPI_
 #   undef LIBPORT_DEFINED_WINSOCKAPI_
 #  endif
-
-#  ifdef LIBPORT_DEFINED_NOMINMAX_
-#   undef NOMINMAX
-#   undef LIBPORT_DEFINED_NOMINMAX_
-#  endif
-
 
 #  define usleep(a) Sleep((a) < 1000 ? 1 : (a) / 1000)
 #  define sleep(a) Sleep((a) * 1000)
