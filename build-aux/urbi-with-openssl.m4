@@ -61,8 +61,9 @@ case $with_openssl in
 
   yes) openssl=true
        AC_CACHE_CHECK([for OpenSSL directory], ac_cv_openssldir, [
-        for ssldir in "" /usr/local/openssl /usr/lib/openssl /usr/local/ssl \
-			/usr/lib/ssl /usr/local /usr/pkg /opt /opt/openssl; do
+        for ssldir in "" /usr/lib /lib /usr/local/openssl /usr/lib/openssl \
+                         /usr/local/ssl /usr/lib/ssl /usr/local /usr/pkg \
+                         /opt /opt/openssl; do
 		# Skip directories if they don't exist
 		if test ! -z "$ssldir" && test ! -d "$ssldir" ; then
 		   continue;
@@ -108,7 +109,7 @@ case $with_openssl in
 	if test "x$found_ssl" = "xtrue"; then
           OPENSSL_PATH=$with_openssl
 	else
-	  AC_MSG_ERROR([I didn't succeed to compile with this library. Please check the path and the configure.log])
+	  AC_MSG_ERROR([I didn't succeed to compile with this library. Please check the path and the config.log])
 	fi
        ;;
 esac
