@@ -21,7 +21,7 @@ TESTS = testme.test
 
 $(TESTS):
 	for i in $(TESTS); do \
-          $(LN_S) -f $(top_srcdir)/build-aux/test.sh $$i || exit 1; \
+          $(LN_S) -f $(top_builddir)/build-aux/test.sh $$i || exit 1; \
         done
 
 EXTRA_DIST = $(TESTS:.test=.stdout)

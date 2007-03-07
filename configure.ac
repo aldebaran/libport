@@ -45,5 +45,6 @@ AC_CONFIG_FILES([
 ])
 
 AC_CONFIG_FILES([doc/doxygen.sh], [chmod a=rx doc/doxygen.sh])
+AC_CONFIG_FILES([build-aux/test.sh], [chmod a=rx build-aux/test.sh])
 
 AC_OUTPUT
