@@ -1,3 +1,8 @@
+2007-03-08  Akim Demaille  <demaille@gostai.com>
+
+	I don't understand how it managed to remain unnoticed.
+	* libport.mk (EXTRA_DIST): Ship libport_sources. 
+
 2007-03-04  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
 	Cleanup the NOMINMAX issue.

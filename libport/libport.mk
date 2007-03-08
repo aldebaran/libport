@@ -51,6 +51,9 @@ nodist_libport_HEADERS = 			\
 	$(libport_builddir)/config.h
 
 
+EXTRA_DIST = $(libport_sources)
+
+
 ## ------------ ##
 ## svn sugars.  ##
 ## ------------ ##
