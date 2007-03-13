@@ -1,5 +1,16 @@
 2007-03-13  Akim Demaille  <akim.demaille@free.fr>
 
+	Strengthen libport macros
+	* disable-debug.m4: Indentation changes.
+	* m4-after.m4 (AC_AFTER): New.
+	* urbi-resolve-dir.m4: New.
+	* urbi-libport.m4 (_URBI_LIBPORT_COMMON): New.
+	(URBI_LIBPORT_INSTALLED): Check that URBI_DIRS was run.
+	Check that we can find libport/config.h, the BF seems to have
+	problems sometimes.
+
+2007-03-13  Akim Demaille  <akim.demaille@free.fr>
+
 	m4_after
 	We have several bad dependencu issues, let's track them down.
 	* m4-after.m4: New.

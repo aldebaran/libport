@@ -23,10 +23,15 @@ AC_DEFUN([m4_after],
 # be equipped with the m4_defun'ed check.
 m4_define([m4_after],
 [m4_ifndef([m4_location($2)],
-           [m4_fatal([$0: $2 must be defined with m4_defun])])dnl
+	   [m4_fatal([$0: $2 must be defined with m4_defun])])dnl
 m4_provide_if([$2], [],
 	      [m4_fatal([$2 must be invoked before $1])])dnl
 ])
+
+
+# AC_AFTER(THIS-MACRO-NAME, CALLED-MACRO-NAME)
+# --------------------------------------------
+m4_copy([m4_after], [AC_AFTER])
 
 
 ## Local Variables:
