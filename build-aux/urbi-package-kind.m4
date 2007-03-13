@@ -28,7 +28,9 @@ AC_SUBST([PACKAGE_KIND], [$1])
 #                          [DEFAULT EXPANSION])
 # ----------------------------------------------
 m4_define([URBI_PACKAGE_KIND_SWITCH],
-[m4_bmatch(m4_defn([PACKAGE_KIND]), $@)])
+[m4_after([$0], [URBI_PACKAGE_KIND])dnl
+m4_bmatch(m4_defn([PACKAGE_KIND]), $@)dnl
+])
 
 ## Local Variables:
 ## mode: autoconf

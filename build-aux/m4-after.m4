@@ -1,0 +1,34 @@
+AC_PREREQ([2.50])
+
+# Fake definition to please aclocal.  Overriden below.
+AC_DEFUN([m4_after],
+[m4_fatal([this code must not run, it is here only to let aclocal
+	  know that we define m4_after in this file
+	  (we use m4_define, and aclocal looks only for AC_DEFUN)])dnl
+])
+
+
+
+# m4_after(THIS-MACRO-NAME, CALLED-MACRO-NAME)
+# --------------------------------------------
+# Error out if THIS-MACRO-NAME was not run before the CALLED-MACRO-NAME.
+#
+# Contrary to m4_require, it does not invoke the macro, it triggers
+# an autoconf-time error.  Similar to m4_before.
+#
+# The macro *must* be defined with AC_DEFUN or m4_defun, m4_define won't
+# do.
+#
+# This macros should be part of Autoconf.  And m4_before should also
+# be equipped with the m4_defun'ed check.
+m4_define([m4_after],
+[m4_ifndef([m4_location($2)],
+           [m4_fatal([$0: $2 must be defined with m4_defun])])dnl
+m4_provide_if([$2], [],
+	      [m4_fatal([$2 must be invoked before $1])])dnl
+])
+
+
+## Local Variables:
+## mode: autoconf
+## End:
