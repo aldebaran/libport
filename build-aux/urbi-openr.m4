@@ -50,7 +50,7 @@ if $openr; then
     -I$(OPEN_R_SDK)/OPEN_R/include'])
   AC_SUBST([OPEN_R_LDFLAGS],
   ['-L$(OPEN_R_SDK)/OPEN_R/lib \
-    -lObjectComm -lOPENR -lInternet -lantMCOOP -lm'])
+    -lObjectComm -lERA201D1 -lOPENR -lInternet -lantMCOOP -lm'])
 fi
 
 AM_CONDITIONAL([OPENR], [$openr])
