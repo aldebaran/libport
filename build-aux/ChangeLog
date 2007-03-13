@@ -1,3 +1,8 @@
+2007-03-13  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Remove default include path from urbi_with_openssl.
+	* urbi-with-openssl.m4: Here.
+
 2007-03-13  Akim Demaille  <akim.demaille@free.fr>
 
 	Strengthen libport macros

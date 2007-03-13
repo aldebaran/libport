@@ -13,8 +13,6 @@ saved_LIBS="$LIBS"
 saved_LDFLAGS="$LDFLAGS"
 saved_CPPFLAGS="$CPPFLAGS"
 
-CPPFLAGS="$CPPFLAGS -I/usr/include"
-
 LIBS="$LIBS -lcrypto"
 if test -n "$ssldir"; then
    LDFLAGS="$LDFLAGS -L$ssldir"
@@ -116,7 +114,7 @@ esac
 
 if $openssl; then
   # More tools for OpenSSL.
-  AC_SUBST([OPENSSL_CPPFLAGS],["-I/usr/include"])
+  AC_SUBST([OPENSSL_CPPFLAGS],[""])
   if test "x(system)" = "x$OPENSSL_PATH"; then
     AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto"])
   else
@@ -143,3 +141,9 @@ AC_DEFUN([URBI_WITH_OPENSSL_REQUIRED], [
 ## Local Variables:
 ## mode: autoconf
 ## End:
+
+
+
+
+
+
