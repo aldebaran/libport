@@ -116,6 +116,7 @@ esac
 
 if $openssl; then
   # More tools for OpenSSL.
+  AC_SUBST([OPENSSL_CPPFLAGS],["-I/usr/include"])
   if test "x(system)" = "x$OPENSSL_PATH"; then
     AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto"])
   else

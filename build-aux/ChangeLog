@@ -1,3 +1,8 @@
+2007-03-13  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Add required CPPFLAGS for Windows in the urbi-with-openssl macro.
+	* urbi-with-openssl.m4: Add required CPPFLAGS.
+
 2007-03-13  POTHIER Benoit  <pothier@gostai.com>
 
 	Add libERA201D1 in aibo core link process to allow access to wifi stats.
