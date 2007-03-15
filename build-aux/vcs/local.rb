@@ -7,11 +7,7 @@ class Vcs
 
   def local_commit! ( *args )
     common_commit!("build-aux <%= rev %>: <%= title %>", *args) do |subject|
-      mail!(:to => %w[akim@lrde.epita.fr
-                      matthieu.nottale@ensta.fr
-		      tsuna@lrde.epita.fr
-                      baillie@gostai.com
-		      thomas.moulard@lrde.epita.fr],
+      mail!(:to => %w[techteam@gostai.com],
             :subject => subject)
     end
   end
