@@ -1,5 +1,9 @@
 2007-03-20  Rémi Humbert  <humbert@gostai.com>
 
+	update svn:externals for build-aux from rev706 to rev711
+
+2007-03-20  Rémi Humbert  <humbert@gostai.com>
+
 	Replace use of cygwin openssl dll by use of free openssl dll for mingw
 	* urbi-with-openssl.m4: use libeay.dll instead of cygcrypto.*.dll on
 	windows with mingw.
