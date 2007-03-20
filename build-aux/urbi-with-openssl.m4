@@ -13,12 +13,23 @@ saved_LIBS="$LIBS"
 saved_LDFLAGS="$LDFLAGS"
 saved_CPPFLAGS="$CPPFLAGS"
 
-LIBS="$LIBS -lcrypto"
-if test -n "$ssldir"; then
-   LDFLAGS="$LDFLAGS -L$ssldir"
-else
-  LDFLAGS="$LDFLAGS -L/usr/lib"
-fi
+case "$host_os" in
+     mingw*)
+	LIBS="$LIBS -leay32"
+	if test -n "$ssldir"; then
+	   LDFLAGS="$LDFLAGS -L$ssldir"
+	fi
+	;;
+     *)
+	LIBS="$LIBS -lcrypto"
+	if test -n "$ssldir"; then
+	   LDFLAGS="$LDFLAGS -L$ssldir"
+	else
+           LDFLAGS="$LDFLAGS -L/usr/lib"
+	fi
+	;;
+esac
+
 
 # Basic test about OpenSSL
 AC_TRY_RUN(
@@ -29,8 +40,8 @@ int main(void)
 {
 	char a[2048];
 	memset(a, 0, sizeof(a));
-	RAND_add(a, sizeof(a), sizeof(a));
 	return(0);
+	RAND_add(a, sizeof(a), sizeof(a));
 }
 ],
 [
@@ -116,9 +127,23 @@ if $openssl; then
   # More tools for OpenSSL.
   AC_SUBST([OPENSSL_CPPFLAGS],[""])
   if test "x(system)" = "x$OPENSSL_PATH"; then
-    AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto"])
+    case "$host_os" in
+      mingw*)
+        AC_SUBST([OPENSSL_LDFLAGS],["-leay32"])
+        ;;
+      *)
+        AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto"])
+        ;;
+     esac
   else
-    AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto -L$OPENSSL_PATH"])
+    case "$host_os" in
+      mingw*)
+        AC_SUBST([OPENSSL_LDFLAGS],["-leay32 -L$OPENSSL_PATH"])
+        ;;
+      *)
+        AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto -L$OPENSSL_PATH"])
+        ;;
+     esac
   fi
 fi
 
