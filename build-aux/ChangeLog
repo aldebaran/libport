@@ -1,5 +1,11 @@
 2007-03-21  Akim Demaille  <akim.demaille@free.fr>
 
+	INSTALLCHECK
+	* urbi-tests.m4: Compute the AM conditional INSTALLCHECK, which
+	will decide whether installcheck makes sense for the package.
+
+2007-03-21  Akim Demaille  <akim.demaille@free.fr>
+
 	URBI_TESTS
 	* urbi-tests.m4: New.
 
