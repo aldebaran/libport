@@ -1,5 +1,15 @@
 2007-03-21  Akim Demaille  <akim.demaille@free.fr>
 
+	Fix URBI_PROG_CXX
+	Address https://core.gostai.com/projects/urbiengine-aibo/ticket/14
+	* urbi-prog-cxx.m4: Don't set the language to C++ permanently
+	as it confuses the rest of the script.  In particular, tests
+	run by Libtools (e.g., findind dlfcn.h) were run in C++ context,
+	although some bits of the set up were not complete (CXXCPP was
+	not properly set).
+
+2007-03-21  Akim Demaille  <akim.demaille@free.fr>
+
 	INSTALLCHECK
 	* urbi-tests.m4: Compute the AM conditional INSTALLCHECK, which
 	will decide whether installcheck makes sense for the package.

@@ -8,7 +8,7 @@ AC_PREREQ([2.60])
 # Look for a C++ compiler, and pass interesting warning options.
 AC_DEFUN([URBI_PROG_CXX],
 [# Look for a C++ compiler.
-AC_LANG([C++])
+AC_LANG_PUSH([C++])
 AC_PROG_CXX
 
 # Speed GCC compilation up.
@@ -191,6 +191,8 @@ case $($CXX --version | sed 1q) in
     fi
   ;;
 esac
+
+AC_LANG_POP([C++])
 ])
 
 
