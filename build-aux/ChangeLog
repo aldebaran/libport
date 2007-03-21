@@ -1,3 +1,8 @@
+2007-03-21  Akim Demaille  <akim.demaille@free.fr>
+
+	URBI_TESTS
+	* urbi-tests.m4: New.
+
 2007-03-20  Rémi Humbert  <humbert@gostai.com>
 
 	update svn:externals for build-aux from rev706 to rev711
