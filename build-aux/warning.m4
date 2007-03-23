@@ -1,6 +1,6 @@
 # Finding valid warning flags for the C Compiler.           -*-Autoconf-*-
 #
-# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -95,11 +95,13 @@ AS_VAR_PUSHDEF([ac_Option])dnl
 # but not when used alone.  This also demonstrates the importance of the
 # order.
 AC_DEFUN([TC_CXX_WARNINGS],
-[ac_save_compiler_flags=$TC_COMPILER_FLAGS_NAME
+[AC_LANG_PUSH([C++])
+ac_save_compiler_flags=$TC_COMPILER_FLAGS_NAME
 m4_foreach([AC_Option], [$1],
     [TC_COMPILER_OPTION_IF(AC_Option,
 	   [WARNING_CXXFLAGS="$WARNING_CXXFLAGS AC_Option"
 	    TC_COMPILER_FLAGS_NAME="$ac_save_compiler_flags $WARNING_FLAGS"])])
 TC_COMPILER_FLAGS_NAME=$ac_save_compiler_flags
 AC_SUBST([WARNING_CXXFLAGS])
+AC_LANG_POP([C++])
 ])# TC_CXX_WARNINGS(OPTIONS)

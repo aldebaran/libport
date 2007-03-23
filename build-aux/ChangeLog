@@ -1,3 +1,9 @@
+2007-03-23  Akim Demaille  <demaille@gostai.com>
+
+	Be sure to test c++ flags on a c++ compiler
+	This is needed now that URBI_PROG_CXX no longer leaves C++ on.
+	* warning.m4 (TC_CXX_WARNINGS): Push and pop C++.
+
 2007-03-21  Akim Demaille  <akim.demaille@free.fr>
 
 	Fix URBI_PROG_CXX
