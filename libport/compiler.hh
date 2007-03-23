@@ -45,6 +45,8 @@
 
 # ifdef ENABLE_DEBUG_TRACES
 
+# include <iostream>
+
 #  define ECHO(Msg)					\
   do {							\
     std::cerr << __FILE__ << ":" << __LINE__ << ": "	\

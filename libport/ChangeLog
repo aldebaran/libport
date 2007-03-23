@@ -1,3 +1,7 @@
+2007-03-23  Akim Demaille  <demaille@gostai.com>
+
+	* libport/compiler.hh: Include iostream when needed.
+
 2007-03-08  Akim Demaille  <akim.demaille@free.fr>
 
 	* libport.mk: Fix EXTRA_DIST assignment..
