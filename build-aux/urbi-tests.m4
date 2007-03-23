@@ -21,7 +21,7 @@ m4_pattern_allow([URBI_INSTALLCHECK])dnl
 AM_CONDITIONAL([URBI_INSTALLCHECK],
 	       [case $PACKAGE_NAME in
 		  urbiengine-pc|ucore-pc) true;;
-		                       *) false;;
+				       *) false;;
 		esac])
 
 # Prepare the Makefile.
