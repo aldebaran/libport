@@ -60,7 +60,7 @@ AC_SUBST([URBI_HOST])
 AC_ARG_ENABLE([env],
 	      [AC_HELP_STRING([--enable-env=urbi-env],
 			      [The environment this will run on:
-			       aibo, webots, engine [$1]])])
+			       aibo, webots, aldebaran, engine [$1]])])
 AC_MSG_CHECKING([for URBI environment type])
 case $enable_env in
  '') URBI_ENV=$1;;
@@ -70,6 +70,9 @@ AC_MSG_RESULT([$URBI_ENV])
 case $URBI_ENV in
   aibo)
      AC_DEFINE([URBI_ENV_AIBO], [1], [Define if compiling for Aibo.]);;
+  aldebaran)
+     AC_DEFINE([URBI_ENV_ALDEBARAN], [1],
+               [Define if compiling for Aldebaran's robot.]);;
   engine)
      AC_DEFINE([URBI_ENV_ENGINE], [1], [Define if compiling generic engine.]);;
   webots)

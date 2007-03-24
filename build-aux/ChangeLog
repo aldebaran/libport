@@ -1,3 +1,8 @@
+2007-03-24  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
+	Install Aldebaran's kernel in a different directory.
+	* urbi-dirs.m4 (URBI_DIRS): Handle --enable-env=aldebaran.
+
 2007-03-23  Akim Demaille  <demaille@gostai.com>
 
 	Be sure to test c++ flags on a c++ compiler
