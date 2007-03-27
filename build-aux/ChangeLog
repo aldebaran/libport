@@ -1,5 +1,10 @@
 2007-03-27  Rémi Humbert  <humbert@gostai.com>
 
+	OpenSll needs libdl, so add -ldl flag (usefull when openSSL lib is static)
+	* urbi-with-openssl.m4: .
+
+2007-03-27  Rémi Humbert  <humbert@gostai.com>
+
 	Correct small mistake again
 	* urbi-with-openssl.m4: .
 
