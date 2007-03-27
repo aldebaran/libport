@@ -1,3 +1,8 @@
+2007-03-27  Rémi Humbert  <humbert@gostai.com>
+
+	Correct small mistake in urbi-with-openssl.m4
+	* urbi-with-openssl.m4: .
+
 2007-03-24  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
 	Install Aldebaran's kernel in a different directory.
