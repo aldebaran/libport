@@ -138,10 +138,10 @@ if $openssl; then
   else
     case "$host_os" in
       mingw*)
-        AC_SUBST([OPENSSL_LDFLAGS],["-L$OPENSSL_PATH -leay32"])
+        AC_SUBST([OPENSSL_LDFLAGS],["-L$OPENSSL_PATH/lib -leay32"])
         ;;
       *)
-        AC_SUBST([OPENSSL_LDFLAGS],["-L$OPENSSL_PATH -lcrypto"])
+        AC_SUBST([OPENSSL_LDFLAGS],["-L$OPENSSL_PATH/lib -lcrypto"])
         ;;
      esac
   fi
