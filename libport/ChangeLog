@@ -1,3 +1,11 @@
+2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
+	Improve portability on Windows.
+	* network.h (socklen_t): typedef as UINT32 instead of int.
+	(in_addr_t): New (32-bit unsigned integer).
+	* windows.hh (uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t,
+	uint64_t, int64_t): Add typedefs for these POSIX types.
+
 2007-03-23  Akim Demaille  <demaille@gostai.com>
 
 	* libport/compiler.hh: Include iostream when needed.
