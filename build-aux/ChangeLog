@@ -1,3 +1,8 @@
+2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
+	Generalize Aldebaran's case to all Korebot-based robotos.
+	* urbi-dirs.m4: Rename the `aldebaran' environment as `korebot'.
+
 2007-03-29  Akim Demaille  <demaille@gostai.com>
 
 	Use EGREP
