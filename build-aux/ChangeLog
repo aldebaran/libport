@@ -1,5 +1,10 @@
 2007-03-29  Akim Demaille  <demaille@gostai.com>
 
+	/EHsc is not a warning option
+	* urbi-prog-cxx.m4: Put it in CXX if supported.
+
+2007-03-29  Akim Demaille  <demaille@gostai.com>
+
 	* urbi-prog-cxx.m4, warning.m4: Comment changes.
 
 2007-03-27  Rémi Humbert  <humbert@gostai.com>

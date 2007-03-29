@@ -116,12 +116,18 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
   AC_DEFINE([WIN32], [], [Whether we're on Windows])
 fi
 
+# There seems to be several models of exception handling with VC++.
+# There are weird warnings if we don't activate the C++ style exception
+# handling.  Let's play it safe and activate it.
+#
+# /EHsc: enable C++ exception handling + extern "C" defaults to nothrow.
+TC_COMPILER_OPTION_IF([[/EHsc]],
+		      [CXX="$CXX /EHsc"])
+
 # ----------------------------------------------- #
 # Remove MS Visual Compiler's spurious warnings.  #
 # ----------------------------------------------- #
 
-# /EHsc: enable C++ exception handling + extern "C" defaults to nothrow.
-#
 # warning C4121: 'symbol' : alignment of a member was sensitive to packing
 # "A structure member is aligned on a memory offset whose value is not a
 #  multiple of the member's size."
@@ -163,8 +169,7 @@ fi
 #
 # warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
 #
-TC_CXX_WARNINGS([[/EHsc],
-		 [/wd4121],
+TC_CXX_WARNINGS([[/wd4121],
 		 [/wd4127],
 		 [/wd4571],
 		 [/wd4625],
