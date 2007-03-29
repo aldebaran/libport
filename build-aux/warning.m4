@@ -68,11 +68,11 @@ AC_CACHE_CHECK([whether _AC_LANG compiler accepts $1],
 TC_COMPILER_FLAGS_NAME="$TC_COMPILER_FLAGS_NAME $1"
 ac_Option=no
 AC_COMPILE_STDERR_IFELSE([AC_LANG_PROGRAM],
-  [if (grep -E 'm4_do([ignoring option],
-		      [|ignoring command line option .$1.],
-		      [|unrecognized option .*$1],
-		      [|option.*$1.*not supported],
-		      [|$1.* is valid for.*but not for])' conftest.err
+  [if ($EGREP 'm4_do([ignoring option],
+		     [|ignoring command line option .$1.],
+		     [|unrecognized option .*$1],
+		     [|option.*$1.*not supported],
+		     [|$1.* is valid for.*but not for])' conftest.err
       ) >/dev/null 2>&1; then :; else
       ac_Option=yes
    fi])

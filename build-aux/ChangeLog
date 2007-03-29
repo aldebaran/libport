@@ -1,5 +1,10 @@
 2007-03-29  Akim Demaille  <demaille@gostai.com>
 
+	Use EGREP
+	* warning.m4: here.
+
+2007-03-29  Akim Demaille  <demaille@gostai.com>
+
 	/EHsc is not a warning option
 	* urbi-prog-cxx.m4: Put it in CXX if supported.
 
