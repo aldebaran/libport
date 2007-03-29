@@ -1,3 +1,7 @@
+2007-03-29  Akim Demaille  <demaille@gostai.com>
+
+	* urbi-prog-cxx.m4, warning.m4: Comment changes.
+
 2007-03-27  Rémi Humbert  <humbert@gostai.com>
 
 	OpenSll needs libdl, so add -ldl flag (usefull when openSSL lib is static)

@@ -85,8 +85,8 @@ AS_VAR_PUSHDEF([ac_Option])dnl
 
 # TC_CXX_WARNINGS(OPTIONS)
 # ------------------------
-# Check whether the C++ compiler support the OPTION, and if it
-# does, append it to WARNING_CXXFLAGS.
+# Check whether the C++ compiler supports all the OPTIONS (space separated).
+# If it does append them to WARNING_CXXFLAGS.
 # It is important to try the options all together, not just individually,
 # as for instance for GCC 3.2 '-Wbad-function-cast' after '-W' gives:
 #

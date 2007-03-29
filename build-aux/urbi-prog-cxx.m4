@@ -113,7 +113,7 @@ AC_CACHE_CHECK([whether $CXX is Microsoft's compiler], [ac_cv_cxx_compiler_ms],
 ])
 
 if test "$ac_cv_cxx_compiler_ms" = yes; then
-  AC_DEFINE([WIN32], [], [Whether or not we're on Windows])
+  AC_DEFINE([WIN32], [], [Whether we're on Windows])
 fi
 
 # ----------------------------------------------- #
