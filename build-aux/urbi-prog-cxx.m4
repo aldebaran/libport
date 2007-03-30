@@ -26,17 +26,17 @@ TC_CXX_WARNINGS([-Wno-deprecated])
 
 dnl 		 [-Wcast-align],
 dnl 		 [-Wcast-qual],
-dnl 		 [-Wmissing-prototypes],
-dnl 		 [-Wstrict-prototypes],
+dnl 		 [-Wmissing-prototypes],   C only
+dnl 		 [-Wstrict-prototypes],    C only
 dnl 		 [-Wwrite-strings],
-dnl 		 [-Wbad-function-cast],
-dnl 		 [-Wmissing-declarations],
+dnl 		 [-Wbad-function-cast],    C only
+dnl 		 [-Wnested-externs],       C only
+dnl 		 [-Wmissing-declarations], C only
 dnl		 [-Wold-style-cast],
 # Use good warnings.
 TC_CXX_WARNINGS([[-Wall],
 		 [-W],
 		 [-Woverloaded-virtual],
- 		 [-Wnested-externs],
 		 [-Wformat]])
 
 # Pacify g++ on Boost Variants.

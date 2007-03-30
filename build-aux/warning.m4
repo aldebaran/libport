@@ -60,7 +60,8 @@ m4_define([TC_COMPILER_FLAGS_NAME],
 #
 # Pay attention not to give grep a regexp starting with "-".
 AC_DEFUN([TC_COMPILER_OPTION_IF],
-[AS_VAR_PUSHDEF([ac_Option],
+[AC_REQUIRE([AC_PROG_EGREP])dnl
+AS_VAR_PUSHDEF([ac_Option],
 		[ac_cv_[]_AC_LANG_ABBREV[]_supports_$1])dnl
 AC_CACHE_CHECK([whether _AC_LANG compiler accepts $1],
 	       [ac_Option],
