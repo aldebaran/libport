@@ -38,6 +38,8 @@
 #  define usleep(a) Sleep((a) < 1000 ? 1 : (a) / 1000)
 #  define sleep(a) Sleep((a) * 1000)
 
+// Define POSIX types if compiling with Visual C++.
+#  ifdef _MSC_VER
 typedef UINT8 uint8_t;
 typedef INT8 int8_t;
 typedef UINT16 uint16_t;
@@ -46,6 +48,7 @@ typedef UINT32 uint32_t;
 typedef INT32 int32_t;
 typedef UINT64 uint64_t;
 typedef INT64 int64_t;
+#  endif
 
 # endif // !WIN32
 

@@ -1,5 +1,12 @@
 2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
+	Define POSIX types only when compiling with Visual C++.
+	* network.h,
+	* windows.hh: Here. Because MinGW has these types but hasn't got
+	Visual's UINT*/INT*.
+
+2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
 	Improve portability on Windows.
 	* network.h (socklen_t): typedef as UINT32 instead of int.
 	(in_addr_t): New (32-bit unsigned integer).

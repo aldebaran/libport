@@ -16,11 +16,14 @@
 #  include <WinSock2.h>
 #  undef GROUP
 
+// Define POSIX types if compiling with Visual C++.
+#  ifdef _MSC_VER
 typedef UINT32 socklen_t;
 /* In reality, the MS API says this is a `u_long' although it does not define
  * this type.  See: http://msdn2.microsoft.com/en-us/library/ms738571.aspx
  */
 typedef UINT32 in_addr_t;
+#  endif
 
 // http://msdn2.microsoft.com/en-us/library/ms740481.aspx
 #  define SHUT_RDWR SD_BOTH
