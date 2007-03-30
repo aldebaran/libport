@@ -1,5 +1,11 @@
 2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
+	Fix Windows portability.
+	* network.h: socklen_t must really be int, not uint32_t or something
+	similar.  Type correctness does not really matter on Windows.
+
+2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
 	Define POSIX types only when compiling with Visual C++.
 	* network.h,
 	* windows.hh: Here. Because MinGW has these types but hasn't got

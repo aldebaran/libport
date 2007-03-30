@@ -18,10 +18,10 @@
 
 // Define POSIX types if compiling with Visual C++.
 #  ifdef _MSC_VER
-typedef UINT32 socklen_t;
+// This ought to be something like an uint32_t but it won't work.
+typedef int socklen_t;
 /* In reality, the MS API says this is a `u_long' although it does not define
- * this type.  See: http://msdn2.microsoft.com/en-us/library/ms738571.aspx
- */
+ * this type.  See: http://msdn2.microsoft.com/en-us/library/ms738571.aspx  */
 typedef UINT32 in_addr_t;
 #  endif
 
