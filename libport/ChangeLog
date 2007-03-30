@@ -1,5 +1,11 @@
 2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
+	Fix MinGW portability...
+	* network.h: EVEN on MinGW, socklen_t must be signed, so typedef it as
+	an int.
+
+2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
 	More fixes for MinGW portability.
 	* network.h: Include stdint.h before using uint32_t.
 	* windows.hh: Add a comment.

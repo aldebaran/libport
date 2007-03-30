@@ -17,15 +17,15 @@
 #  undef GROUP
 
 // Define POSIX types if compiling with Visual C++.
-#  ifdef _MSC_VER
-// This ought to be something like an uint32_t but it won't work.
+
+// This ought to be something like an uint32_t but it won't work (VC++, GCC).
 typedef int socklen_t;
+#  ifdef _MSC_VER
 /* In reality, the MS API says this is a `u_long' although it does not define
  * this type.  See: http://msdn2.microsoft.com/en-us/library/ms738571.aspx  */
 typedef UINT32 in_addr_t;
 #  elif defined __GNUC__
 #   include <stdint.h>
-typedef uint32_t socklen_t;
 typedef uint32_t in_addr_t;
 #  else
 // Neither VC++ nor GCC: Let's try to continue ...
