@@ -1,5 +1,11 @@
 2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
+	More fixes for MinGW portability.
+	* network.h: Include stdint.h before using uint32_t.
+	* windows.hh: Add a comment.
+
+2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
 	Fix portability issue on MinGW.
 	* network.h: socklen_t and in_addr_t need to be typedef'ed even under
 	MinGW.

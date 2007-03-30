@@ -40,6 +40,7 @@
 
 // Define POSIX types if compiling with Visual C++.
 #  ifdef _MSC_VER
+// XXX: Maybe this ought to be in a new file, say, stdint.h?
 typedef UINT8 uint8_t;
 typedef INT8 int8_t;
 typedef UINT16 uint16_t;
