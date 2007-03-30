@@ -23,6 +23,9 @@ typedef int socklen_t;
 /* In reality, the MS API says this is a `u_long' although it does not define
  * this type.  See: http://msdn2.microsoft.com/en-us/library/ms738571.aspx  */
 typedef UINT32 in_addr_t;
+#  else // Assume GCC...
+typedef uint32_t socklen_t;
+typedef uint32_t in_addr_t;
 #  endif
 
 // http://msdn2.microsoft.com/en-us/library/ms740481.aspx
