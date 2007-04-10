@@ -1,3 +1,10 @@
+2007-04-10  POTHIER Benoit  <pothier@gostai.com>
+
+	Be more verbose if semaphore calls are failing.
+	* exception.hh: New.
+	* exception.hxx: New.
+	* semaphore.hxx: throw semaphore exceptions.
+
 2007-03-30  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
 	Fix MinGW portability...

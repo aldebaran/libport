@@ -2,6 +2,8 @@
 # define SEMAPHORE_HXX_
 
 # include "semaphore.hh"
+# include "exception.hh"
+# include <sstream>
 
 namespace libport
 {
@@ -19,17 +21,40 @@ namespace libport
   inline int sem_init(sem_t* sem, int, int cnt)
   {
     *sem = CreateSemaphore(0, cnt, 100000, 0);
+    if(sem == 0)
+    {
+      std::stringstream s;
+      s << GetLastError();
+      string msg = s.str();      
+      throw exception::Semaphore("sem_init","Windows system Error #"+msg+" in CreateSemaphore.");
+    }
     return !sem;
   }
 
   inline int sem_post(sem_t* sem)
   {
-    return !ReleaseSemaphore(*sem, 1, 0);
+    int result = ReleaseSemaphore(*sem, 1, 0);
+    if(!result)
+    {
+      std::stringstream s;
+      s << GetLastError();
+      string msg = s.str();      
+      throw exception::Semaphore("sem_post","Windows system Error #"+msg+" in ReleaseSemaphore.");
+    }
+    return !result;
   }
 
   inline int sem_wait(sem_t* sem)
   {
-    return WaitForSingleObject(*sem, INFINITE) != WAIT_FAILED;
+    int result = WaitForSingleObject(*sem, INFINITE);
+    if(result == WAIT_FAILED)
+    {
+      std::stringstream s;
+      s << GetLastError();
+      string msg = s.str();      
+      throw exception::Semaphore("sem_wait","Windows system Error #"+msg+" in WaitForSingleObject.");
+    }
+    return result != WAIT_FAILED;
   }
 
   inline int sem_destroy(sem_t* sem)
