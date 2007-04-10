@@ -4,6 +4,7 @@
 # include "semaphore.hh"
 # include "exception.hh"
 # include <sstream>
+# include <string>
 
 namespace libport
 {
@@ -25,7 +26,7 @@ namespace libport
     {
       std::stringstream s;
       s << GetLastError();
-      string msg = s.str();      
+      std::string msg = s.str();      
       throw exception::Semaphore("sem_init","Windows system Error #"+msg+" in CreateSemaphore.");
     }
     return !sem;
@@ -33,12 +34,12 @@ namespace libport
 
   inline int sem_post(sem_t* sem)
   {
-    int result = ReleaseSemaphore(*sem, 1, 0);
+    unsigned int result = ReleaseSemaphore(*sem, 1, 0);
     if(!result)
     {
       std::stringstream s;
       s << GetLastError();
-      string msg = s.str();      
+      std::string msg = s.str();      
       throw exception::Semaphore("sem_post","Windows system Error #"+msg+" in ReleaseSemaphore.");
     }
     return !result;
@@ -46,12 +47,12 @@ namespace libport
 
   inline int sem_wait(sem_t* sem)
   {
-    int result = WaitForSingleObject(*sem, INFINITE);
+    unsigned int result = WaitForSingleObject(*sem, INFINITE);
     if(result == WAIT_FAILED)
     {
       std::stringstream s;
       s << GetLastError();
-      string msg = s.str();      
+      std::string msg = s.str();      
       throw exception::Semaphore("sem_wait","Windows system Error #"+msg+" in WaitForSingleObject.");
     }
     return result != WAIT_FAILED;

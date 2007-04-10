@@ -1,5 +1,11 @@
 2007-04-10  POTHIER Benoit  <pothier@gostai.com>
 
+	Fix windows compilation. 
+	* libport.mk: Add missing exception headers.
+	* semaphore.hxx: Fix string use.
+
+2007-04-10  POTHIER Benoit  <pothier@gostai.com>
+
 	Be more verbose if semaphore calls are failing.
 	* exception.hh: New.
 	* exception.hxx: New.

@@ -29,6 +29,8 @@ libport_HEADERS +=				\
 	$(libport_srcdir)/detect_win32.h	\
 	$(libport_srcdir)/escape.hh		\
 	$(libport_srcdir)/escape.hxx		\
+	$(libport_srcdir)/exception.hxx		\
+	$(libport_srcdir)/exception.hh		\
 	$(libport_srcdir)/fwd.hh		\
 	$(libport_srcdir)/hash.hh		\
 	$(libport_srcdir)/lockable.hh		\
