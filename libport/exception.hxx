@@ -13,17 +13,20 @@
 #ifndef EXCEPTION_HXX_
 # define EXCEPTION_HXX_
 
-namespace exception
+namespace libport
 {
-  inline  Exception::Exception (const std::string& thrower, const std::string& msg)
-	: std::logic_error (msg), thrower (thrower)
-   {};
-  
-  inline Exception::~Exception () throw (){};
-
-  inline Semaphore::Semaphore (const std::string& thrower, const std::string& msg)
-	: Exception (thrower, msg)
-  {};
-  
+  namespace exception
+  {
+    inline  Exception::Exception (const std::string& thrower, const std::string& msg)
+      : std::logic_error (msg), thrower (thrower)
+    {};
+    
+    inline Exception::~Exception () throw (){};
+    
+    inline Semaphore::Semaphore (const std::string& thrower, const std::string& msg)
+      : Exception (thrower, msg)
+    {};    
+  }
 }
+
 #endif  /* !EXCEPTION_HXX_ */

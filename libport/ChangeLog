@@ -1,5 +1,12 @@
 2007-04-10  POTHIER Benoit  <pothier@gostai.com>
 
+	Be more verbose in semaphores. Fix windows return values.  
+	* exception.hh: Add libport namespace.
+	* exception.hxx: Same.
+	* semaphore.hxx: Fix return values and add disnostic messages.
+
+2007-04-10  POTHIER Benoit  <pothier@gostai.com>
+
 	Fix windows compilation. 
 	* libport.mk: Add missing exception headers.
 	* semaphore.hxx: Fix string use.

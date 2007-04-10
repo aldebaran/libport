@@ -14,27 +14,28 @@
 
 # include <stdexcept>
 
-namespace exception
+namespace libport
 {
-  /// Interface for all exceptions thrown by the libfsm.
-  struct Exception: public std::logic_error
+  namespace exception
   {
-    /** Ctor.
-     *  @param  thrower  Name of function/method throwing the exception. 
-     *  @param  msg      Reason for throwing the exception.
-     */
-    Exception (const std::string& thrower, const std::string& msg);
-	
-    virtual ~Exception () throw ();
-		
-    std::string thrower;
-  };
-
-  /// Exception.
-  struct  Semaphore : public Exception
-  {
-	Semaphore (const std::string& thrower, const std::string& msg);
-  };
+    /// Interface for all exceptions thrown by the libfsm.
+    struct Exception: public std::logic_error
+    {
+      /** Ctor.
+       *  @param  thrower  Name of function/method throwing the exception. 
+       *  @param  msg      Reason for throwing the exception.
+       */
+      Exception (const std::string& thrower, const std::string& msg);
+      virtual ~Exception () throw ();  
+      std::string thrower;
+    };
+    
+    /// Exception.
+    struct  Semaphore : public Exception
+    {
+      Semaphore (const std::string& thrower, const std::string& msg);
+    };
+  }
 }
 
 # include "exception.hxx"
