@@ -1,3 +1,8 @@
+2007-04-11  Rémi Humbert  <humbert@gostai.com>
+
+	Use openssl newly manually created libcrypto.la
+	* urbi-with-openssl.m4: .
+
 2007-04-02  Akim Demaille  <demaille@gostai.com>
 
 	URBI_INSTALLCHECK
