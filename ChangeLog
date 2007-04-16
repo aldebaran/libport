@@ -1,3 +1,11 @@
+2007-04-16  Nicolas Desprès  <despres@gostai.com>
+
+	Update vcs support.
+
+	* .: Add mailto property.
+	* vcs/no-diff-deleted.rb: New. Do not display deleted file in the diff.
+	* vcs/local.rb: Get recipients addresses from mailto property.
+
 2007-03-07  SIGOURE Benoit  <tsuna@lrde.epita.fr>
 
 	Put build-aux/test.sh in AC_CONFIG_FILES.

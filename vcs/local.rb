@@ -7,10 +7,7 @@ class Vcs
 
   def local_commit! ( *args )
     common_commit!("prj-tplt <%= rev %>: <%= title %>", *args) do |subject|
-      mail!(:to => %w[akim@lrde.epita.fr
-                      matthieu.nottale@ensta.fr
-                      tsuna@lrde.epita.fr
-                      baillie@gostai.com],
+      mail!(:to => `\\svn propget mailto #{Dir.pwd}`.chomp.split(/,\s*/),
             :subject => subject)
     end
   end
