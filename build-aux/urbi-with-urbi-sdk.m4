@@ -29,7 +29,7 @@ if $urbi_sdk; then
     AC_MSG_RESULT([$URBI_SDK_PATH])
     urbi_sdk=true
   else
-    AC_MSG_RESULT([no, urbi-sdk no found in $URBI_SDK_PATH])
+    AC_MSG_RESULT([no, urbi-sdk not found in $URBI_SDK_PATH])
     urbi_sdk=false
   fi
 else
@@ -45,6 +45,8 @@ if $urbi_sdk; then
 fi
 
 AM_CONDITIONAL([WITH_URBI_SDK], [$urbi_sdk])
+AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
+  ["$DISTCHECK_CONFIGURE_FLAGS --with-urbi-sdk='$URBI_SDK_PATH'"])
 AC_SUBST([URBI_SDK_PATH])
 ])
 
