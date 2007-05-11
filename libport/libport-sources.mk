@@ -14,7 +14,8 @@ libportsysdir = $(libportdir)/sys
 
 # Sources to compile to use libport.
 libport_sources = 				\
-	$(libport_srcdir)/escape.cc
+	$(libport_srcdir)/escape.cc		\
+	$(libport_srcdir)/symbol.cc
 
 # These are broken and someone will have to fix them...
 # libport_sources += 				\

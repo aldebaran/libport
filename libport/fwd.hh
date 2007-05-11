@@ -13,6 +13,10 @@ namespace libport
   // ref-pt.hh
   template <class T> class RefPt;
 
+  // select-const.hh.
+  template <typename T> struct constify_traits;
+  template <typename T> struct id_traits;
+
   // semaphore.hh.
   class Semaphore;
 }
