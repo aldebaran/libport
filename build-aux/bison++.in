@@ -51,30 +51,30 @@ case $status in
   0)
     for file in *
     do
-	case $file in
-	$input_base)
-	    # Leave it here.
-	    ;;
-	*)
-	    # Fix doxygen tags.
-	    perl -pi -e "s|\Q\\file $file\E\b|\\\\file parse/$file|g;" "$file"
+      case $file in
+      $input_base)
+        # Leave it here.
+        ;;
+      *)
+        # Fix doxygen tags.
+        perl -pi -e "s|\Q\\file $file\E\b|\\\\file parse/$file|g;" "$file"
 
-	    # Bison should really offer a means to include headers in
-	    # position.hh.
-	    perl -pi \
-	     -e 'print("# include \"libport/symbol.hh\"\n") if /namespace yy/'\
-	     "$file"
+        # Bison should really offer a means to include headers in
+        # position.hh.
+        perl -pi \
+             -e 'print("# include \"libport/symbol.hh\"\n") if /namespace yy/'\
+             "$file"
 
-	    # Install.
-	    $move_if_change "$file" "$output_dir_abs/$file"
-	    ;;
-	esac
+        # Install.
+        $move_if_change "$file" "$output_dir_abs/$file"
+        ;;
+      esac
     done
     ;;
   *) # We really want to keep the *.output files.
     for file in *.output
     do
-	$move_if_change "$file" "$output_dir_abs/$file"
+      $move_if_change "$file" "$output_dir_abs/$file"
     done
     ;;
 esac

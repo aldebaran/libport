@@ -1,5 +1,10 @@
 2007-05-25  Akim Demaille  <demaille@gostai.com>
 
+	Formatting changes
+	* bison++.in: here.
+
+2007-05-25  Akim Demaille  <demaille@gostai.com>
+
 	Fix a bison 2.3a+ shortcoming
 	* bison++.in: Include symbol.hh from position.hh so that it is
 	self contained.
