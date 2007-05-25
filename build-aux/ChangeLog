@@ -1,3 +1,9 @@
+2007-05-25  Akim Demaille  <demaille@gostai.com>
+
+	Fix a bison 2.3a+ shortcoming
+	* bison++.in: Include symbol.hh from position.hh so that it is
+	self contained.
+
 2007-04-20  Guillaume Deslandes  <deslandes@gostai.com>
 
 	Add --with-urbi-sdk to $DISTCHECK_CONFIGURE_FLAGS when sdk is needed
