@@ -2,6 +2,7 @@
 # define LIBPORT_NETWORK_H_
 
 # include "detect_win32.h"
+# include "unistd.h"
 
 # if defined WIN32 || defined LIBPORT_WIN32
 
