@@ -3,6 +3,8 @@
 
 # include "detect_win32.h"
 
+# include "config.h"
+
 // This is traditional Unix file.
 # ifdef HAVE_UNISTD_H
 #  include "unistd.h"
