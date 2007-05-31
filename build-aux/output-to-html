@@ -1,0 +1,62 @@
+#! /usr/bin/perl -w
+
+# Convert a bison automaton description file into an html file with
+# some navigation aids.  Better is needed, but that's definitely
+# something that bison should provide.
+
+use strict;
+use IO::File;
+
+my $in = $ARGV[0];
+my $out = $in;
+$out =~ s/output$/html/;
+
+my $inf = new IO::File ($in)
+   or die "cannot open $in";
+
+my $outf = new IO::File (">$out")
+   or die "cannot open $out";
+
+print $outf "<pre>\n";
+
+foreach my $i ("Conflicts", "Grammar", "Useless rules", "States",
+	       "Terminals, with rules where they appear",
+	       "Nonterminals, with rules where they appear",
+	       "Terminals which are not used",
+	       "Useless nonterminals")
+{
+    print $outf "<a href=\"\#$i\">$i</a>\n";
+}
+print $outf "\n\n";
+
+my $conflicts_seen = 0;
+
+while ($_ = $inf->getline())
+{
+    chop;
+    if (/^state (\d+)$/)
+    {
+	$_ = "<a name=\"$_\">$_</a>";
+	$_ = "<a name=\"States\">States</a>\n$_"
+	    if $1 == 0;
+    }
+    else
+    {
+	s/([Ss])(tate \d+)/<a href="#s$2">$1$2<\/a>/g;
+    }
+
+
+    if (/State.*\d+.*conflicts:/ && !$conflicts_seen)
+    {
+	$conflicts_seen = 1;
+	$_ = "<a name=\"Conflicts\">Conflicts</a>\n$_";
+    }
+
+    if (/^Grammar|Useless rules|Terminals, with rules where they appear|Nonterminals, with rules where they appear|Terminals which are not used|Useless nonterminals$/)
+    {
+	$_ = "<a name=\"$_\">$_</a>\n";
+    }
+
+    print $outf "$_\n";
+}
+print $outf "</pre>\n";

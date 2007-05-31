@@ -13,6 +13,7 @@ set -e
 
 me=$(basename $0)
 move_if_change='@abs_srcdir@/move-if-change'
+out_to_html='@abs_srcdir@/output-to-html'
 
 input=$1
 input_base=$(basename "$input")
@@ -47,6 +48,14 @@ $BISON $options $input_base -o $output_base
 status=$?
 set -e
 
+# Whatever happens, create the html output file.
+for i in *.output
+do
+    if ! $out_to_html $i; then
+	echo "$me: cannot run $out_to_html"
+    fi
+done
+
 case $status in
   0)
     for file in *
@@ -71,8 +80,9 @@ case $status in
       esac
     done
     ;;
+
   *) # We really want to keep the *.output files.
-    for file in *.output
+    for file in *.output *.html
     do
       $move_if_change "$file" "$output_dir_abs/$file"
     done
