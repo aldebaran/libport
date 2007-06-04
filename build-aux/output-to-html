@@ -52,6 +52,19 @@ while ($_ = $inf->getline())
 	$_ = "<a name=\"Conflicts\">Conflicts</a>\n$_";
     }
 
+    # Anchor to the rules in the grammar.
+    if (/^Grammar$/ ... /^Terminals/)
+    {
+	s/^(\s+)(\d+)/$1<a name="rule $2">$2<\/a>/;
+    }
+    else
+    {
+	# Reference a rule.
+	s/(rule \d+)/<a href="#$1">$1<\/a>/g;
+	s/^(\s+)(\d+)(\s)/$1<a href="#rule $2">$2<\/a>$3/;
+    }
+
+
     if (/^Grammar|Useless rules|Terminals, with rules where they appear|Nonterminals, with rules where they appear|Terminals which are not used|Useless nonterminals$/)
     {
 	$_ = "<a name=\"$_\">$_</a>\n";
