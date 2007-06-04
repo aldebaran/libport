@@ -1,3 +1,11 @@
+2007-06-04  Nicolas Desprès  <despres@gostai.com>
+
+	Add qtestlib support.
+	* README: Explain new files.
+	* emacsen-qtestlib.rb: New.
+	* enable-emacs-output.m4: New.
+	* qtestlib.mk: New.
+
 2007-06-04  Akim Demaille  <demaille@gostai.com>
 
 	* output-to-html: Navigate through rules too.

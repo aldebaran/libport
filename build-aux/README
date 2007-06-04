@@ -53,12 +53,17 @@ they should be defined before the include.
 ** config-headers-prefixed.mk.
 See URBI_CONFIG_HEADERS_PREFIXED.
 
+** qtestlib.mk
+Test environment to run Qt unit test.
+
 * Scripts
 
 ** install-sh-c
 Our own copy of install-sh that support -C in addition.  Useful to
 avoid installing headers that did not change.
 
+** emacsen-qtestlib.rb
+Make Qt unit test output, Emacs comptible.
 
 * Autoconf extensions
 ** urbi-build-aux.m4
@@ -68,6 +73,10 @@ URBI_BUILD_AUX.  Should be called by users of build-aux.mk.
 To prefix config.h with a given symbol.  Very useful when one wants to
 install a config.h, as otherwise there will be conflicts with other
 config.h.  See also urbi-config-headers-prefixed.mk.
+
+** enable-emacs-output.m4
+Add --enable-emacs-output. Useful for Emacs compatible output of Qt unit test
+system.
 
 * Miscelaneous
 
