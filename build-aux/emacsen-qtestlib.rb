@@ -29,6 +29,7 @@
 require 'pathname'
 
 error = nil
+info = []
 (
  if ARGV.empty?
    STDIN
@@ -38,14 +39,17 @@ error = nil
 ).each do |line|
   if line =~ /^FAIL! +: (.*)$/
     previousLine = line
-    error = $1
+    error = $1.strip
   elsif error
     if line =~ /^ *Loc: \[(.*?)\((.*?)\)\]$/
-      puts "#{Pathname.getwd + Pathname.new($1)}:#$2: #{error}"
+      path = Pathname.getwd + Pathname.new($1)
+      puts "#{path}:#$2: #{error}"
+      info.each { |i| puts "#{path}:#$2: #{i}" }
+      error = nil
+      info = []
     else
-      STDERR.puts "#$0: enable to parse:\n#{previousLine}#{line}"
+      info << line.strip
     end
-    error = nil
   else
     error = nil
     puts line
