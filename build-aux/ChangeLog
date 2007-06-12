@@ -1,3 +1,9 @@
+2007-06-12  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Work around QMake's strange behavior.
+	* autotroll.m4: Test QMake in a temporary directory.  See the comments
+	that explain the kludge.
+
 2007-06-10  Nicolas Desprès  <despres@gostai.com>
 
 	Handle multiple line error messages.
