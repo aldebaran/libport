@@ -1,3 +1,8 @@
+2007-06-14  Akim Demaille  <demaille@gostai.com>
+
+	There can be no *.output file
+	* bison++.in: Be robust to that.
+
 2007-06-12  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Work around QMake's strange behavior.

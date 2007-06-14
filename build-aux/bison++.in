@@ -49,11 +49,13 @@ status=$?
 set -e
 
 # Whatever happens, create the html output file.
-for i in *.output
+for i in $(ls *.output 2>/dev/null)
 do
-    if ! $out_to_html $i; then
-	echo "$me: cannot run $out_to_html"
-    fi
+  if test ! -x $out_to_html; then
+    echo "$me: $out_to_html is not executable"
+  elif ! $out_to_html $i; then
+    echo "$me: $out_to_html failed"
+  fi
 done
 
 case $status in
@@ -82,7 +84,7 @@ case $status in
     ;;
 
   *) # We really want to keep the *.output files.
-    for file in *.output *.html
+    for file in $(ls *.output *.html 2>/dev/null)
     do
       $move_if_change "$file" "$output_dir_abs/$file"
     done
