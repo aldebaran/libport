@@ -14,9 +14,26 @@ $out =~ s/output$/html/;
 my $inf = new IO::File ($in)
    or die "cannot open $in";
 
+my @line = $inf->getlines()
+    or die "cannot get lines";
+
 my $outf = new IO::File (">$out")
    or die "cannot open $out";
 
+# First pass to gather the predecessors.
+my %predecessors;
+{
+    my $state;
+    foreach (@line)
+    {
+	$state = $1
+	    if /^state (\d+)$/;
+	push @{$predecessors{$1}}, $state
+	    if /go to state (\d+)/;
+    }
+}
+
+# Output the result.
 print $outf "<pre>\n";
 
 foreach my $i ("Conflicts", "Grammar", "Useless rules", "States",
@@ -31,12 +48,20 @@ print $outf "\n\n";
 
 my $conflicts_seen = 0;
 
-while ($_ = $inf->getline())
+foreach (@line)
 {
     chop;
     if (/^state (\d+)$/)
     {
 	$_ = "<a name=\"$_\">$_</a>";
+	if (defined $predecessors{$1})
+	{
+	    $_ .= "\n   Predecessors:";
+	    for my $pred (@{$predecessors{$1}})
+	    {
+		$_ .= " <a href=\"#state $pred\">$pred</a>"
+	    }
+	}
 	$_ = "<a name=\"States\">States</a>\n$_"
 	    if $1 == 0;
     }
