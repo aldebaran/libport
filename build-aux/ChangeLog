@@ -1,3 +1,8 @@
+2007-06-15  Céline_Blaszykowski  <blaszykowski@gostai.com>
+
+	Errors fixed
+	* opencv_with_opencv.m4: Errors Fixed.
+
 2007-06-14  Akim Demaille  <demaille@gostai.com>
 
 	* output-to-html: Report predecessors.

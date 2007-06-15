@@ -1,10 +1,10 @@
-# URBI_WITH_URBI_SDK
+# OPENCV_WITH_OPENCV
 # ----------
-# Look for urbi-sdk.  Support --with-urbi-sdk=PATH. Check for
-# urbi-sdk.
+# Look for opencv library.  Support --with-opencv=PATH. Check for
+# opencv.
 #
-# Output variable URBI_SDK_PATH point to the installation location.
-# Set "$urbi_sdk" to "true" or "false".
+# Output variable OPENCV_PATH point to the installation location.
+# Set "$opencv" to "true" or "false".
 AC_DEFUN([OPENCV_WITH_OPENCV],
 [AC_ARG_WITH([opencv],
 	     [AC_HELP_STRING([--with-opencv=opencv-path],
@@ -22,7 +22,7 @@ case $with_opencv in
        ;;
 esac
 
-# Checking whether Urbi_Sdk is really there.
+# Checking whether Opencv library is really there.
 AC_MSG_CHECKING([for opencv])
 if $opencv; then
   if test -f "$OPENCV_PATH/lib/libcv.la"; then
@@ -37,11 +37,10 @@ else
   opencv=false
 fi
 
-if $urbi_sdk; then
-  # More tools for Urbi_Sdk.
+if $opencv_sdk; then
+  # More tools for Opencv.
   AC_SUBST([OPENCV_CPPFLAGS], ['-I$(OPENCV_PATH)/include/opencv'])
   AC_SUBST([OPENCV_LDFLAGS],  ['-L$(OPENCV_PATH)/lib'])
-  #AC_SUBST([URBI_SDK_LIBS],  ['$(OPENCV_PATH)/lib/liburbi.la'])
   AC_SUBST([OPENCV_LDADD], ['-lcxcore -lcv -lhighgui -lcvaux -lml'])
 fi
 
@@ -55,7 +54,7 @@ AC_DEFUN([OPENCV_WITH_OPENCV_REQUIRED],
 [
    AC_REQUIRE([OPENCV_WITH_OPENCV])
 
-   case "$opencv" in
+  case "$opencv" in
     '' | 'false')
      AC_MSG_ERROR(
       [Failed to find opencv. Please install it or check config.log])
