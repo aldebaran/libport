@@ -1,3 +1,9 @@
+2007-06-18  Céline_Blaszykowski  <blaszykowski@gostai.com>
+
+	opencv Macro renamed
+	* opencv_with_opencv.m4: Remove : remplaced by.
+	* urbi_with_opencv.m4: New : this file.
+
 2007-06-15  Céline_Blaszykowski  <blaszykowski@gostai.com>
 
 	Errors fixed

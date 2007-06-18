@@ -1,11 +1,11 @@
-# OPENCV_WITH_OPENCV
+# URBI_WITH_OPENCV
 # ----------
 # Look for opencv library.  Support --with-opencv=PATH. Check for
 # opencv.
 #
 # Output variable OPENCV_PATH point to the installation location.
 # Set "$opencv" to "true" or "false".
-AC_DEFUN([OPENCV_WITH_OPENCV],
+AC_DEFUN([URBI_WITH_OPENCV],
 [AC_ARG_WITH([opencv],
 	     [AC_HELP_STRING([--with-opencv=opencv-path],
 			     [enable opencv support [/usr/local]])],
@@ -50,9 +50,9 @@ AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
 AC_SUBST([OPENCV_PATH])
 ])
 
-AC_DEFUN([OPENCV_WITH_OPENCV_REQUIRED],
+AC_DEFUN([URBI_WITH_OPENCV_REQUIRED],
 [
-   AC_REQUIRE([OPENCV_WITH_OPENCV])
+   AC_REQUIRE([URBI_WITH_OPENCV])
 
   case "$opencv" in
     '' | 'false')
