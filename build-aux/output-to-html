@@ -53,13 +53,13 @@ foreach (@line)
     chop;
     if (/^state (\d+)$/)
     {
-	$_ = "<a name=\"$_\">$_</a>";
+	$_ = "<a name=\"state-$1\">$_</a>";
 	if (defined $predecessors{$1})
 	{
 	    $_ .= "\n   Predecessors:";
 	    for my $pred (@{$predecessors{$1}})
 	    {
-		$_ .= " <a href=\"#state $pred\">$pred</a>"
+		$_ .= " <a href=\"#state-$pred\">$pred</a>"
 	    }
 	}
 	$_ = "<a name=\"States\">States</a>\n$_"
@@ -67,7 +67,7 @@ foreach (@line)
     }
     else
     {
-	s/([Ss])(tate \d+)/<a href="#s$2">$1$2<\/a>/g;
+	s/([Ss]tate) (\d+)/<a href="#state-$2">$1 $2<\/a>/g;
     }
 
 
@@ -80,13 +80,13 @@ foreach (@line)
     # Anchor to the rules in the grammar.
     if (/^Grammar$/ ... /^Terminals/)
     {
-	s/^(\s+)(\d+)/$1<a name="rule $2">$2<\/a>/;
+	s/^(\s+)(\d+)/$1<a name="rule-$2">$2<\/a>/;
     }
     else
     {
 	# Reference a rule.
-	s/(rule \d+)/<a href="#$1">$1<\/a>/g;
-	s/^(\s+)(\d+)(\s)/$1<a href="#rule $2">$2<\/a>$3/;
+	s/(rule) (\d+)/<a href="#rule-$2">$1 $2<\/a>/g;
+	s/^(\s+)(\d+)(\s)/$1<a href="#rule-$2">$2<\/a>$3/;
     }
 
 

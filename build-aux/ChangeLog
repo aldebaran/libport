@@ -1,3 +1,7 @@
+2007-06-22  Akim Demaille  <demaille@gostai.com>
+
+	* output-to-html: Simple anchor names for states and rules.
+
 2007-06-19  Céline_Blaszykowski  <blaszykowski@gostai.com>
 
 	Name correction. 
