@@ -21,7 +21,6 @@ shift
 output=$1
 output_base=$(basename "$output")
 output_dir=$(dirname "$output")
-output_dir_abs=$(cd "$output_dir" && pwd)
 shift
 options="$@"
 
@@ -58,17 +57,21 @@ do
   fi
 done
 
+# Go back to where we were and use relative paths instead of using
+# absolute file names.  The messages look nicer.
+cd ..
 case $status in
   0)
-    for file in *
+    for file in $tmp/*
     do
-      case $file in
+      base=$(basename $file)
+      case $base in
       $input_base)
 	# Leave it here.
 	;;
       *)
 	# Fix doxygen tags.
-	perl -pi -e "s|\Q\\file $file\E\b|\\\\file parse/$file|g;" "$file"
+	perl -pi -e "s|\Q\\file $base\E\b|\\\\file parse/$base|g;" "$file"
 
 	# Bison should really offer a means to include headers in
 	# position.hh.
@@ -77,21 +80,20 @@ case $status in
 	     "$file"
 
 	# Install.
-	$move_if_change "$file" "$output_dir_abs/$file"
+	$move_if_change "$file" "$output_dir/$base"
 	;;
       esac
     done
     ;;
 
   *) # We really want to keep the *.output files.
-    for file in $(ls *.output *.html 2>/dev/null)
+    for file in $(ls $tmp/*.output $tmp/*.html 2>/dev/null)
     do
-      $move_if_change "$file" "$output_dir_abs/$file"
+      $move_if_change "$file" "$output_dir/$(basename $file)"
     done
     ;;
 esac
 
 # Get rid of the tmp dir.
-cd ..
 rm -rf $tmp
 exit $status

@@ -98,3 +98,5 @@ foreach (@line)
     print $outf "$_\n";
 }
 print $outf "</pre>\n";
+
+print STDERR "$out was created\n";

@@ -1,3 +1,9 @@
+2007-06-26  Akim Demaille  <demaille@gostai.com>
+
+	Better bison++
+	* bison++.in: Don't use absolute paths.
+	* output-to-html: Report that the output was created.
+
 2007-06-22  Akim Demaille  <demaille@gostai.com>
 
 	* output-to-html: Simple anchor names for states and rules.
