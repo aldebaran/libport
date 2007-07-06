@@ -3,153 +3,149 @@
 #ifndef LIBPORT_HASH_HH
 # define LIBPORT_HASH_HH
 
-# if defined __GNUG__ // G++
-#  include <ext/hash_map>
-# elif defined _MSC_VER
-#  if (_MSC_VER == 1400)
-#    pragma warning( disable : 4355 4996)
-#  endif
-#  include <hash_map>
-# else
-#  error Do not know where hash_map is.
-# endif
+// Define LIBPORT_HASH_NAMESPACE to the namespace name that contains
+// hash_map, and include the right header.
 
 # include <string>
 # include "libport/cstring"
 
+/*-----------.
+| GCC part.  |
+`-----------*/
 
-// A quick hack to be able to use hash_map with string easily
-
-# ifndef _MSC_VER
-
-#  if (__GNUC__ == 2)
-  __STL_BEGIN_NAMESPACE
-#  else
-  namespace __gnu_cxx
-  {
-#  endif
-
-template<>
-struct hash<std::string>
-{
-  size_t operator() (const std::string& x) const
-  {
-    return hash<const char*>() (x.c_str());
-  }
-};
+# if defined __GNUC__
 
 #  if (__GNUC__ == 2)
-  __STL_END_NAMESPACE
+#    define LIBPORT_HASH_NAMESPACE stl
 #  else
-  }
+#    define LIBPORT_HASH_NAMESPACE __gnu_cxx
 #  endif
+#  include <ext/hash_map>
 
-namespace libport
+namespace LIBPORT_HASH_NAMESPACE
 {
+  // Be able to use hash_map with string easily.
+  template<>
+  struct hash<std::string>
+  {
+    size_t operator() (const std::string& x) const
+    {
+      return hash<const char*>() (x.c_str());
+    }
+  };
 
-  //! Used in the hash_map object to define equality of two variable names
-  struct eqStr
+} // namespace LIBPORT_HASH_NAMESPACE
+
+namespace std
+{
+  //! Used in the hash_map object to define equality of two variable names.
+  template <>
+  struct equal_to<const char *>
   {
     bool operator()(const char* s1, const char* s2) const
     {
       return STREQ(s1, s2);
     }
   };
+} // namespace std
 
-  template<class K, class V>
-  class hash_map_type
-  {
-  public:
-    typedef __gnu_cxx::hash_map<K, V> type;
-  };
+# elif defined _MSC_VER
 
-  template<class V>
-  class hash_map_type<const char *, V>
-  {
-  public:
-    typedef __gnu_cxx::hash_map<const char *, V,
-				__gnu_cxx::hash<const char *>,
-				eqStr> type;
-  };
-}
-
-# else //_MSC_VER
+/*------------.
+| VC++ part.  |
+`------------*/
 
 #  if (_MSC_VER == 1400)
-#   define HASH_NS stdext
-_STDEXT_BEGIN
+#   define LIBPORT_HASH_NAMESPACE stdext
+#   pragma warning( disable : 4355 4996)
 #  else
-#   define HASH_NS std
-_STD_BEGIN
+#   define LIBPORT_HASH_NAMESPACE std
 #  endif
-//msc does not define a hash function for hash_compare
+#  include <hash_map>
 
-template<>
-class hash_compare<const char*>
+namespace LIBPORT_HASH_NAMESPACE
 {
- public:
-  enum
-  {
-    // parameters for hash table
-    bucket_size = 4,	// 0 < bucket_size
-    min_buckets = 8
-  };	// min_buckets = 2 ^^ N, 0 < N
+  //msc does not define a hash function for hash_compare
 
-  size_t operator ()(const char *c) const
+  template<>
+  class hash_compare<const char*>
   {
-    size_t r = 0;
-    while (*c!=0)
+    public:
+    enum
+    {
+      // parameters for hash table
+      bucket_size = 4,	// 0 < bucket_size
+      min_buckets = 8
+    };	// min_buckets = 2 ^^ N, 0 < N
+
+    size_t operator ()(const char *c) const
+    {
+      size_t r = 0;
+      while (*c!=0)
       {
 	r = (*c)+31*r;
 	c++;
       }
-    return r;
-  }
-  bool operator()(const char* _Keyval1, const char* _Keyval2) const
+      return r;
+    }
+    bool operator()(const char* _Keyval1, const char* _Keyval2) const
+    {
+      // Whether _Keyval1 < _Keyval2.
+      return strcmp(_Keyval1, _Keyval2) < 0;
+    }
+  };
+
+  template<>
+  class hash_compare<std::string>
   {
-    // Whether _Keyval1 < _Keyval2.
-    return strcmp(_Keyval1, _Keyval2) < 0;
-  }
-};
+    public:
+    enum
+    {
+      // parameters for hash table
+      bucket_size = 4,	// 0 < bucket_size
+      min_buckets = 8
+    };	// min_buckets = 2 ^^ N, 0 < N
 
-template<>
-class hash_compare<std::string>
-{
- public:
-  enum
-  {
-    // parameters for hash table
-    bucket_size = 4,	// 0 < bucket_size
-    min_buckets = 8
-  };	// min_buckets = 2 ^^ N, 0 < N
+    size_t
+      operator()( const std::string& x ) const
+    {
+      return hash_compare<const char*>()( x.c_str() );
+    }
 
-  size_t
-  operator()( const std::string& x ) const
-  { return hash_compare<const char*>()( x.c_str() );}
+    bool
+      operator()(const std::string& _Keyval1, const std::string& _Keyval2) const
+    {
+      return _Keyval1 < _Keyval2;
+    }
+  };
+} namespace // LIBPORT_HASH_NAMESPACE
 
-  bool
-  operator()(const std::string& _Keyval1, const std::string& _Keyval2) const
-  {
-    return _Keyval1 < _Keyval2;
-  }
-};
+# else
+#  error Do not know where hash_map is.
+# endif
 
-#  if (_MSC_VER == 1400)
-_STDEXT_END
-#  else
-_STD_END
-#  endif
+
+/*----------------------------.
+| Compiler independent part.  |
+`----------------------------*/
+
 namespace libport
 {
+  using LIBPORT_HASH_NAMESPACE::hash_map;
+
+  // FIXME: This is for compatibility with the previous approach.
+  // Instead of libport::hash_map_type<...>::type, use
+  // libport::hash_map<...>.
+
   template<class K, class V>
   class hash_map_type
   {
   public:
-    typedef ::HASH_NS::hash_map<K, V> type;
+    typedef hash_map<K, V> type;
   };
 
 }
-#  undef HASH_NS
-# endif // _MSC_VER
+
+# undef LIBPORT_HASH_NAMESPACE
 
 #endif // !LIBPORT_HASH_HH
