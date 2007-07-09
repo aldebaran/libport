@@ -1,5 +1,12 @@
 2007-07-09  Akim Demaille  <demaille@gostai.com>
 
+	* tc-boost.m4 (TC_HEADER_BOOST_GRAPH): New, extracted from...
+	(TC_HEADER_BOOST): here.
+	Use tc_cv_* instead of ac_cv_*.
+	Shorten variable scope.
+
+2007-07-09  Akim Demaille  <demaille@gostai.com>
+
 	TC_HEADER_BOOST
 	* build-aux/tc-boost.m4: New.
 	* build-aux/urbi-libport.m4: Use it.
