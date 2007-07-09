@@ -1,5 +1,12 @@
 2007-07-09  Akim Demaille  <demaille@gostai.com>
 
+	libport.la
+	* libport/libport.mk (noinst_LTLIBRARIES): Build libport.la.
+	* libport/tests/Makefile.am: Use it.
+	* libport/libport-sources.mk (libport_la): New.
+
+2007-07-09  Akim Demaille  <demaille@gostai.com>
+
 	Fixes
 	* libport/containers.hh: Formatting changes.
 	* libport/fwd.hh: Don't try to fwddecl hash.

@@ -11,10 +11,12 @@ ufloat1				\
 ullfp1				\
 ullfptab1
 
+LDADD = $(top_builddir)/libport.la
+
 singleton1_SOURCES =	singleton1.cc
 singleton2_SOURCES =	singleton2.cc
-test_escape_SOURCES =   test-escape.cc ../escape.cc
-test_escape_SOURCES =   test-indent.cc ../indent.cc
+test_escape_SOURCES =   test-escape.cc
+test_escape_SOURCES =   test-indent.cc
 udouble1_SOURCES =	udouble1.cc
 ufloat1_SOURCES =	ufloat1.cc
 ullfp1_SOURCES =	ullfp1.cc
