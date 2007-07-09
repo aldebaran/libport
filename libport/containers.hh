@@ -52,7 +52,8 @@ namespace libport
   template<typename Map>
   typename Map::iterator
   put (Map& map,
-       const typename Map::key_type& key, const typename Map::mapped_type& value);
+       const typename Map::key_type& key,
+       const typename Map::mapped_type& value);
 
 }
 

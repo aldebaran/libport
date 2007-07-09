@@ -1,5 +1,14 @@
 2007-07-09  Akim Demaille  <demaille@gostai.com>
 
+	Fixes
+	* libport/containers.hh: Formatting changes.
+	* libport/fwd.hh: Don't try to fwddecl hash.
+	Fwddecl Symbol.
+	* libport/hash.hh: Be ready to hash on Symbols.
+	* libport/indent.cc: Use cassert.
+
+2007-07-09  Akim Demaille  <demaille@gostai.com>
+
 	libport::indent
 	* hash.hh: Formatting changes.
 	* indent.cc, indent.hh: New.

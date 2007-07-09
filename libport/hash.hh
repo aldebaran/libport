@@ -9,6 +9,8 @@
 # include <string>
 # include "libport/cstring"
 
+# include "libport/symbol.hh"
+
 /*-----------.
 | GCC part.  |
 `-----------*/
@@ -24,6 +26,7 @@
 
 namespace LIBPORT_HASH_NAMESPACE
 {
+
   // Be able to use hash_map with string easily.
   template<>
   struct hash<std::string>
@@ -31,6 +34,16 @@ namespace LIBPORT_HASH_NAMESPACE
     size_t operator() (const std::string& x) const
     {
       return hash<const char*>() (x.c_str());
+    }
+  };
+
+  template<>
+  struct hash<libport::Symbol>
+  {
+    size_t operator() (const libport::Symbol& x) const
+    {
+      // The address of the string is unique, hash on it.
+      return reinterpret_cast<size_t>(&x.name_get());
     }
   };
 
@@ -47,6 +60,7 @@ namespace std
       return STREQ(s1, s2);
     }
   };
+
 } // namespace std
 
 # elif defined _MSC_VER
@@ -67,6 +81,9 @@ namespace LIBPORT_HASH_NAMESPACE
 {
   //msc does not define a hash function for hash_compare
 
+  /*--------.
+  | char*.  |
+  `--------*/
   template<>
   class hash_compare<const char*>
   {
@@ -95,6 +112,9 @@ namespace LIBPORT_HASH_NAMESPACE
     }
   };
 
+  /*--------------.
+  | std::string.  |
+  `--------------*/
   template<>
   class hash_compare<std::string>
   {
@@ -105,19 +125,50 @@ namespace LIBPORT_HASH_NAMESPACE
       bucket_size = 4,	// 0 < bucket_size
       min_buckets = 8
     };	// min_buckets = 2 ^^ N, 0 < N
-    
+
     size_t
     operator() (const std::string& x) const
     {
-      return hash_compare<const char*>()( x.c_str() );
+      return hash_compare<const char*>()(x.c_str());
     }
-    
+
     bool
     operator()(const std::string& _Keyval1, const std::string& _Keyval2) const
     {
       return _Keyval1 < _Keyval2;
     }
   };
+
+
+  /*------------------.
+  | libport::Symbol.  |
+  `------------------*/
+  template<>
+  class hash_compare<libport::Symbol>
+  {
+    public:
+    enum
+    {
+      // parameters for hash table
+      bucket_size = 4,	// 0 < bucket_size
+      min_buckets = 8
+    };	// min_buckets = 2 ^^ N, 0 < N
+
+    size_t
+    operator() (const libport::Symbol& x) const
+    {
+      // The address of the string is unique, hash on it.
+      return reinterpret_cast<size_t>(&x.name_get());
+    }
+
+    bool
+    operator()(const libport::Symbol& _Keyval1,
+	       const libport::Symbol& _Keyval2) const
+    {
+      return _Keyval1 < _Keyval2;
+    }
+  };
+
 } namespace // LIBPORT_HASH_NAMESPACE
 
 # else

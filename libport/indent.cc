@@ -5,9 +5,9 @@
 
 #include <iomanip>
 #include <ostream>
+#include <cassert>
 
 #include "libport/indent.hh"
-#include "libport/contract.hh"
 
 namespace libport
 {
@@ -31,7 +31,7 @@ namespace libport
 
   std::ostream& decindent (std::ostream& o)
   {
-    precondition (indent (o));
+    assert (indent (o));
     indent (o) -= 2;
     return o;
   }
