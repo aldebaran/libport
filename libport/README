@@ -14,8 +14,9 @@ Forward declaration for classes.
 Syntactic sugar around containers.
 
 ** hash.hh
-Hash tables.  Relies on either G++'s or MS'.  We should check for
-ext/hash_map and hash_map.h instead of relying on !Windows.
+libport::hash_map<K, V>, Hash tables.  Relies on either G++'s or MS'.
+We should check for ext/hash_map and hash_map.h instead of relying on
+!Windows.
 
 ** singleton-ptr.hh
 Macros STATIC_INSTANCE(Cl, Name), EXTERN_STATIC_INSTANCE(Cl, Name).
@@ -24,10 +25,15 @@ Macros STATIC_INSTANCE(Cl, Name), EXTERN_STATIC_INSTANCE(Cl, Name).
 class libport::Lockable and macro BLOCKED.
 
 ** ref-pt.hh
-RefPt, ref counted pointers.
+libport::RefPt, ref counted pointers.  Prefer libport::shared_ptr from
+now on.
 
 ** semaphore.hh.
 class libport::Semaphore.
+
+** shared-ref.hh
+libport::shared_ref<T> ref-counted pointers on top of
+boost::shared_ptr.
 
 ** thread.hh.
 

@@ -1,3 +1,8 @@
+2007-07-09  Akim Demaille  <demaille@gostai.com>
+
+	Ref couted pointer on top of boost
+	* shared-ref.hh, shared-ref.hxx: New.
+
 2007-07-06  Akim Demaille  <demaille@gostai.com>
 
 	Make hash table simpler to use
