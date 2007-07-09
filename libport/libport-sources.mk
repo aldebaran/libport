@@ -14,6 +14,7 @@ libportsysdir = $(libportdir)/sys
 
 # Sources to compile to use libport.
 libport_sources = 				\
+	$(libport_srcdir)/indent.cc		\
 	$(libport_srcdir)/escape.cc		\
 	$(libport_srcdir)/symbol.cc
 

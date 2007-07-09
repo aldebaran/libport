@@ -27,6 +27,8 @@ libport_HEADERS +=				\
 	$(libport_srcdir)/containers.hh		\
 	$(libport_srcdir)/containers.hxx	\
 	$(libport_srcdir)/detect_win32.h	\
+	$(libport_srcdir)/hash.hh		\
+	$(libport_srcdir)/indent.hh		\
 	$(libport_srcdir)/escape.hh		\
 	$(libport_srcdir)/escape.hxx		\
 	$(libport_srcdir)/exception.hxx		\
@@ -39,6 +41,8 @@ libport_HEADERS +=				\
 	$(libport_srcdir)/select-const.hh	\
 	$(libport_srcdir)/semaphore.hh		\
 	$(libport_srcdir)/semaphore.hxx		\
+	$(libport_srcdir)/shared-ptr.hh		\
+	$(libport_srcdir)/shared-ptr.hxx	\
 	$(libport_srcdir)/singleton-ptr.hh	\
 	$(libport_srcdir)/symbol.hh		\
 	$(libport_srcdir)/symbol.hxx		\

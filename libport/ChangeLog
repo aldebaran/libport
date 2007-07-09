@@ -1,5 +1,14 @@
 2007-07-09  Akim Demaille  <demaille@gostai.com>
 
+	libport::indent
+	* hash.hh: Formatting changes.
+	* indent.cc, indent.hh: New.
+	* README, fwd.hh, libport.mk, libport-sources.mk: Update.
+	* tests/test-indent.cc: New.
+	* tests/Makefile.am: Adjust.
+
+2007-07-09  Akim Demaille  <demaille@gostai.com>
+
 	Ref couted pointer on top of boost
 	* shared-ref.hh, shared-ref.hxx: New.
 

@@ -38,7 +38,7 @@ namespace LIBPORT_HASH_NAMESPACE
 
 namespace std
 {
-  //! Used in the hash_map object to define equality of two variable names.
+  /// Used in the hash_map object to define equality of two variable names.
   template <>
   struct equal_to<const char *>
   {
@@ -105,15 +105,15 @@ namespace LIBPORT_HASH_NAMESPACE
       bucket_size = 4,	// 0 < bucket_size
       min_buckets = 8
     };	// min_buckets = 2 ^^ N, 0 < N
-
+    
     size_t
-      operator()( const std::string& x ) const
+    operator() (const std::string& x) const
     {
       return hash_compare<const char*>()( x.c_str() );
     }
-
+    
     bool
-      operator()(const std::string& _Keyval1, const std::string& _Keyval2) const
+    operator()(const std::string& _Keyval1, const std::string& _Keyval2) const
     {
       return _Keyval1 < _Keyval2;
     }
