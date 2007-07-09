@@ -3,6 +3,7 @@
 # Code common to the use of an installed or shipped libport.
 AC_DEFUN([_URBI_LIBPORT_COMMON],
 [AC_REQUIRE([URBI_PTHREAD])dnl
+AC_REQUIRE([TC_HEADER_BOOST_1_34])dnl
 
 # Where we install the libport files.
 URBI_PACKAGE_KIND_SWITCH(
