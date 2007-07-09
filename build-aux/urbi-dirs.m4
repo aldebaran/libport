@@ -72,7 +72,7 @@ case $URBI_ENV in
      AC_DEFINE([URBI_ENV_AIBO], [1], [Define if compiling for Aibo.]);;
   korebot)
      AC_DEFINE([URBI_ENV_KOREBOT], [1],
-               [Define if compiling for Korebot-based robots.]);;
+	       [Define if compiling for Korebot-based robots.]);;
   engine)
      AC_DEFINE([URBI_ENV_ENGINE], [1], [Define if compiling generic engine.]);;
   webots)
