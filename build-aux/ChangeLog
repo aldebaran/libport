@@ -1,5 +1,10 @@
 2007-07-09  Akim Demaille  <demaille@gostai.com>
 
+	* build-aux/tc-boost.m4: Formatting changes.
+	Reorder some macros.
+
+2007-07-09  Akim Demaille  <demaille@gostai.com>
+
 	* tc-boost.m4 (TC_HEADER_BOOST_GRAPH): New, extracted from...
 	(TC_HEADER_BOOST): here.
 	Use tc_cv_* instead of ac_cv_*.

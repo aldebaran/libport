@@ -15,24 +15,24 @@ AC_DEFUN([TC_HEADER_BOOST_1_34],  [TC_HEADER_BOOST([1.34])])
 # ---------------------------------
 # Check for Boost headers version greater or equal than REQUIRED-VERSION.
 AC_DEFUN([TC_HEADER_BOOST],
-[ AC_ARG_WITH([boost],
-	      [AC_HELP_STRING([--with-boost=DIR],
-			      [location of Boost headers])])
-  m4_if([$1], [],
+[m4_if([$1], [],
 	[AC_FATAL([This macro requires an argument])])dnl
 
+  AC_ARG_WITH([boost],
+	      [AC_HELP_STRING([--with-boost=DIR],
+			      [location of Boost headers])])
   case $with_boost in
     '' | yes | no) ;;
 		*)
       CPPFLAGS="-I$with_boost $CPPFLAGS"
-      DISTCHECK_CONFIGURE_FLAGS="$DISTCHECK_CONFIGURE_FLAGS --with-boost=$with_boost"
-      AC_SUBST([DISTCHECK_CONFIGURE_FLAGS])
+      AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
+	       ["$DISTCHECK_CONFIGURE_FLAGS --with-boost=$with_boost"])
       ;;
   esac
 
   AC_CHECK_HEADER([boost/version.hpp], [],
     [AC_MSG_ERROR([Boost headers are required.
-      Use `--with-boost=DIR' or add `-I boost_include_path'
+      Use `--with-boost=DIR' or add `-Iboost_include_path'
       to `CPPFLAGS'.])])
 
   AC_CACHE_CHECK([for Boost headers >= $1],
@@ -65,6 +65,6 @@ AC_DEFUN([TC_HEADER_BOOST],
 AC_DEFUN([TC_HEADER_BOOST_GRAPH],
 [AC_CHECK_HEADER([boost/graph/exception.hpp], [],
     [AC_MSG_ERROR([Boost Generic Graph headers are required.
-      Use `--with-boost=DIR' or add `-I boost_include_path'
+      Use `--with-boost=DIR' or add `-Iboost_include_path'
       to `CPPFLAGS'.])])
 ])
