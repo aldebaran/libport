@@ -1,3 +1,25 @@
+2007-07-10  Thomas Moulard  <thomas.moulard@gmail.com>
+
+	Add boost related macros.
+
+        From the Autoconf Macro Archive
+        http://autoconf-archive.cryp.to/
+
+	* build-aux/ax_boost.m4: New.
+	* build-aux/ax_boost_base.m4: New.
+	* build-aux/ax_boost_date_time.m4: New.
+	* build-aux/ax_boost_filesystem.m4: New.
+	* build-aux/ax_boost_iostreams.m4: New.
+	* build-aux/ax_boost_program_options.m4: New.
+	* build-aux/ax_boost_python.m4: New.
+	* build-aux/ax_boost_regex.m4: New.
+	* build-aux/ax_boost_serialization.m4: New.
+	* build-aux/ax_boost_signals.m4: New.
+	* build-aux/ax_boost_test_exec_monitor.m4: New.
+	* build-aux/ax_boost_thread.m4: New.
+	* build-aux/ax_boost_unit_test_framework.m4: New.
+	* build-aux/ax_boost_wserialization.m4: New.
+
 2007-07-09  Akim Demaille  <demaille@gostai.com>
 
 	* build-aux/tc-boost.m4: Formatting changes.
