@@ -2,6 +2,7 @@
 AM_CFLAGS =
 AM_CPPFLAGS =
 AM_CXXFLAGS =
+AM_LDFLAGS =
 AUTOMAKE_OPTIONS =
 BUILT_SOURCES =
 # Visual Studio Debugger PDB Files (C++).
