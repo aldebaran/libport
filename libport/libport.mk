@@ -22,10 +22,13 @@ libportsys_HEADERS =				\
 
 # C++ headers.
 libport_HEADERS +=				\
-	$(libport_srcdir)/compiler.hh		\
 	$(libport_srcdir)/assert.hh		\
+	$(libport_srcdir)/compiler.hh		\
 	$(libport_srcdir)/containers.hh		\
 	$(libport_srcdir)/containers.hxx	\
+	$(libport_srcdir)/contract.hh		\
+	$(libport_srcdir)/deref.hh		\
+	$(libport_srcdir)/deref.hxx		\
 	$(libport_srcdir)/detect_win32.h	\
 	$(libport_srcdir)/hash.hh		\
 	$(libport_srcdir)/indent.hh		\
@@ -41,6 +44,8 @@ libport_HEADERS +=				\
 	$(libport_srcdir)/select-const.hh	\
 	$(libport_srcdir)/semaphore.hh		\
 	$(libport_srcdir)/semaphore.hxx		\
+	$(libport_srcdir)/separator.hh		\
+	$(libport_srcdir)/separator.hxx		\
 	$(libport_srcdir)/shared-ptr.hh		\
 	$(libport_srcdir)/shared-ptr.hxx	\
 	$(libport_srcdir)/singleton-ptr.hh	\

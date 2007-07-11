@@ -4,8 +4,10 @@ include $(top_srcdir)/build-aux/init.mk
 check_PROGRAMS =		\
 singleton1			\
 singleton2			\
+test-deref			\
 test-escape			\
 test-indent			\
+test-separator			\
 udouble1			\
 ufloat1				\
 ullfp1				\
@@ -15,8 +17,10 @@ LDADD = $(top_builddir)/libport.la
 
 singleton1_SOURCES =	singleton1.cc
 singleton2_SOURCES =	singleton2.cc
+test_deref_SOURCES =    test-deref.cc
 test_escape_SOURCES =   test-escape.cc
-test_escape_SOURCES =   test-indent.cc
+test_indent_SOURCES =   test-indent.cc
+test_separator_SOURCES =test-separator.cc
 udouble1_SOURCES =	udouble1.cc
 ufloat1_SOURCES =	ufloat1.cc
 ullfp1_SOURCES =	ullfp1.cc

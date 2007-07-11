@@ -13,6 +13,10 @@ Forward declaration for classes.
 ** containers.hh, containers.hxx
 Syntactic sugar around containers.
 
+** deref.hh, deref.hx, deref.cc
+Output values, references and pointers equally on a stream: they all
+print the value.
+
 ** hash.hh
 libport::hash_map<K, V>, Hash tables.  Relies on either G++'s or MS'.
 We should check for ext/hash_map and hash_map.h instead of relying on
@@ -21,9 +25,6 @@ We should check for ext/hash_map and hash_map.h instead of relying on
 ** indent.hh
 Function objects to implement indented pretty-printing on an ostream.
 See tests/test-indent.cc for examples.
-
-** singleton-ptr.hh
-Macros STATIC_INSTANCE(Cl, Name), EXTERN_STATIC_INSTANCE(Cl, Name).
 
 ** lockable.hh.
 class libport::Lockable and macro BLOCKED.
@@ -35,9 +36,15 @@ now on.
 ** semaphore.hh.
 class libport::Semaphore.
 
+** separator.hh.
+Output the content of containers with a separator between items.
+
 ** shared-ref.hh
 libport::shared_ref<T> ref-counted pointers on top of
 boost::shared_ptr.
+
+** singleton-ptr.hh
+Macros STATIC_INSTANCE(Cl, Name), EXTERN_STATIC_INSTANCE(Cl, Name).
 
 ** thread.hh.
 
