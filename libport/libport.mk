@@ -40,6 +40,8 @@ libport_HEADERS +=				\
 	$(libport_srcdir)/hash.hh		\
 	$(libport_srcdir)/lockable.hh		\
 	$(libport_srcdir)/network.h		\
+	$(libport_srcdir)/pair.hh		\
+	$(libport_srcdir)/pair.hxx		\
 	$(libport_srcdir)/ref-pt.hh		\
 	$(libport_srcdir)/select-const.hh	\
 	$(libport_srcdir)/semaphore.hh		\

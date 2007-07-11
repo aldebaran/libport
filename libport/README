@@ -29,6 +29,9 @@ See tests/test-indent.cc for examples.
 ** lockable.hh.
 class libport::Lockable and macro BLOCKED.
 
+** pair.hh, pair.hxx
+Same as std::pair, but with support for operator<<.
+
 ** ref-pt.hh
 libport::RefPt, ref counted pointers.  Prefer libport::shared_ptr from
 now on.

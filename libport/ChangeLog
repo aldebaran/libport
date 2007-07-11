@@ -1,5 +1,11 @@
 2007-07-11  Akim Demaille  <demaille@gostai.com>
 
+	libport::pair
+	* pair.hh, pair.hxx: New.
+	* README, libport.mk: Adjust.
+
+2007-07-11  Akim Demaille  <demaille@gostai.com>
+
 	Add contract, deref, and separator.
 	* libport/contract.cc, libport/contract.hh, libport/deref.cc,
 	* libport/deref.hh, libport/deref.hxx, libport/separator.hh,
