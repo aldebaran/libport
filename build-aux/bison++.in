@@ -57,6 +57,21 @@ do
   fi
 done
 
+# fix_bison_output FILE
+# ---------------------
+# Fixes in place.
+fix_bison_output ()
+{
+  # Fix doxygen tags.
+  perl -pi -e "s|\Q\\file $base\E\b|\\\\file parse/$base|g;" "$1"
+
+  # Bison should really offer a means to include headers in
+  # position.hh.
+  perl -pi \
+       -e 'print("# include \"libport/symbol.hh\"\n") if /namespace yy/'\
+       "$1"
+}
+
 # Go back to where we were and use relative paths instead of using
 # absolute file names.  The messages look nicer.
 cd ..
@@ -65,22 +80,26 @@ case $status in
     for file in $tmp/*
     do
       base=$(basename $file)
+      out=$output_dir/$base
       case $base in
       $input_base)
 	# Leave it here.
 	;;
+      *.hh)
+	fix_bison_output "$file"
+	# To save cycles, if the file differs only on sync lines,
+	# update it (to be right), but keep the original timestamps.
+	if test -r "$out" &&
+	   diff -I '^#line' -I '/\* Line .* of .*  \*/' -q "$file" "$out"; then
+	    touch -r "$out" "$file"
+	    cp "$out" "$out.bak"
+	    echo >&2 "Touched the stamps"
+	fi
+	$move_if_change "$file" "$out"
+	;;
       *)
-	# Fix doxygen tags.
-	perl -pi -e "s|\Q\\file $base\E\b|\\\\file parse/$base|g;" "$file"
-
-	# Bison should really offer a means to include headers in
-	# position.hh.
-	perl -pi \
-	     -e 'print("# include \"libport/symbol.hh\"\n") if /namespace yy/'\
-	     "$file"
-
-	# Install.
-	$move_if_change "$file" "$output_dir/$base"
+	fix_bison_output "$file"
+	$move_if_change "$file" "$out"
 	;;
       esac
     done

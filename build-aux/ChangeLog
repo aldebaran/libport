@@ -1,3 +1,10 @@
+2007-07-12  Akim Demaille  <akim.demaille@gmail.com>
+
+	Lazyness in bison++
+	* bison++.in: When updating the file, if there are differences
+	on synclines, keep the old time stamp.
+	Should be further improved.
+
 2007-07-10  Thomas Moulard  <thomas.moulard@gmail.com>
 
 	Add empty initialization of LDFLAGS.
