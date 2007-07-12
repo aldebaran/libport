@@ -6,6 +6,7 @@
 #ifndef LIBPORT_DEREF_HXX
 # define LIBPORT_DEREF_HXX
 
+# include <iostream>
 # include "libport/deref.hh"
 # include "libport/contract.hh"
 
@@ -15,35 +16,44 @@ namespace libport
   std::ostream&
   Deref::operator<< (const T* t) const
   {
-    return this->ostr_ << *t;
+    if (t)
+      return ostr_ << *t;
+    else
+      return ostr_ << "NULL";
   }
 
   template <typename T>
   std::ostream&
   Deref::operator<< (T* t) const
   {
-    return this->ostr_ << *t;
+    if (t)
+      return ostr_ << *t;
+    else
+      return ostr_ << "NULL";
   }
 
   template <typename T>
   std::ostream&
   Deref::operator<< (const shared_ptr<T>& t) const
   {
-    return this->ostr_ << *t;
+    if (t)
+      return ostr_ << *t;
+    else
+      return ostr_ << "NULL";
   }
 
   template <typename T>
   std::ostream&
   Deref::operator<< (const T& t) const
   {
-    return this->ostr_ << t;
+    return ostr_ << t;
   }
 
   template <typename T>
   std::ostream&
   Deref::operator<< (T& t) const
   {
-    return this->ostr_ << t;
+    return ostr_ << t;
   }
 
   inline

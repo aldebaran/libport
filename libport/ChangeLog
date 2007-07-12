@@ -1,3 +1,9 @@
+2007-07-12  Akim Demaille  <akim.demaille@gmail.com>
+
+	Simplify/improve deref
+	* deref.hxx: Remove useless this->.
+	Don't dump core on null pointers.
+
 2007-07-11  Akim Demaille  <demaille@gostai.com>
 
 	libport::pair
