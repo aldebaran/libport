@@ -1,3 +1,12 @@
+2007-07-13  Thomas Moulard  <thomas.moulard@gmail.com>
+
+	Improve boost detection in urbi-libport macro.
+
+        Use the macro from the Autoconf macro archive to detect Boost.
+        Pthread is no more necessary, but Boost.Thread is required.
+
+	* urbi-libport.m4: Use ax_boost instead of tc-boost.
+
 2007-07-12  Akim Demaille  <akim.demaille@gmail.com>
 
 	Lazyness in bison++
