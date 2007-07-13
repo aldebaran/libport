@@ -2,8 +2,7 @@
 # --------------------
 # Code common to the use of an installed or shipped libport.
 AC_DEFUN([_URBI_LIBPORT_COMMON],
-[
-# Check for Boost headers
+[# Check for Boost headers
 AX_BOOST_BASE([1.34])
 # Check for Boost.Thread
 AX_BOOST_THREAD
@@ -48,10 +47,12 @@ AC_DEFUN([URBI_LIBPORT],
 AC_REQUIRE([URBI_UFLOAT])dnl
 
 # Create libport/config.h.
-URBI_PREFIX_CONFIG_H([libport/config.h], [LIBPORT])
+URBI_PREFIX_CONFIG_H([config.h], [LIBPORT])
 
 # $(top_srcdir) to find sources, $(top_builddir) to find libport/config.h.
 AC_SUBST([LIBPORT_CPPFLAGS], ['-I$(top_srcdir) -I$(top_builddir)'])
+
+AC_CONFIG_FILES([libport/Makefile])
 ])
 
 ## Local Variables:

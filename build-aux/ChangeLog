@@ -1,5 +1,10 @@
 2007-07-13  Akim Demaille  <demaille@gostai.com>
 
+	libport/Makefile.am
+	* urbi-libport.m4 (URBI_LIBPORT): Adjust to it.
+
+2007-07-13  Akim Demaille  <demaille@gostai.com>
+
 	Improvements
 	* ax_boost_thread.m4: Better coding style.
 	* urbi-libport.m4: Fix macro invocation.
