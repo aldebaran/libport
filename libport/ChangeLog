@@ -1,5 +1,13 @@
 2007-07-13  Akim Demaille  <demaille@gostai.com>
 
+	Makefile.am
+	* Makefile.am: New.
+	Now users of a shipped libport should no longer include
+	libport.mk nor libport-sources.mk, rather they should use
+	this file like for any other directory.
+
+2007-07-13  Akim Demaille  <demaille@gostai.com>
+
 	* shared-ptr.hh, shared-ptr.hxx (make_shared_ptr): New.
 
 2007-07-12  Akim Demaille  <akim.demaille@gmail.com>
