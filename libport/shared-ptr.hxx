@@ -90,6 +90,17 @@ namespace libport
   {
     return dynamic_cast<U*> (this->get ());
   }
+
+  /*--------------------------.
+  | Free standing functions.  |
+  `--------------------------*/
+
+  template <typename T>
+  shared_ptr<T>
+  make_shared_ptr(T* t)
+  {
+    return shared_ptr<T> (t);
+  }
 }
 
 #endif // !LIBPORT_SHARED_REF_HXX

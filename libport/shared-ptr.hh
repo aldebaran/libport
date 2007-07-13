@@ -87,6 +87,10 @@ namespace libport
     template <typename U> bool is_a () const;
   };
 
+  /// Simple wrapper to spare the explicit instantiation parameters.
+  template <typename T>
+  shared_ptr<T>
+  make_shared_ptr(T* t);
 
 }
 

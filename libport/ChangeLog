@@ -1,3 +1,7 @@
+2007-07-13  Akim Demaille  <demaille@gostai.com>
+
+	* shared-ptr.hh, shared-ptr.hxx (make_shared_ptr): New.
+
 2007-07-12  Akim Demaille  <akim.demaille@gmail.com>
 
 	Simplify/improve deref
