@@ -93,7 +93,7 @@ case $status in
 	   diff -I '^#line' -I '/\* Line .* of .*  \*/' -q "$file" "$out"; then
 	    touch -r "$out" "$file"
 	    cp "$out" "$out.bak"
-	    echo >&2 "Touched the stamps"
+	    echo >&2 "$0: kept the stamps of $file"
 	fi
 	$move_if_change "$file" "$out"
 	;;

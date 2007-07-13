@@ -1,3 +1,10 @@
+2007-07-13  Akim Demaille  <demaille@gostai.com>
+
+	Improvements
+	* ax_boost_thread.m4: Better coding style.
+	* urbi-libport.m4: Fix macro invocation.
+	* bison++.in: Better message.
+
 2007-07-13  Thomas Moulard  <thomas.moulard@gmail.com>
 
 	Improve boost detection in urbi-libport macro.

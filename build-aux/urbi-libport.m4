@@ -6,7 +6,7 @@ AC_DEFUN([_URBI_LIBPORT_COMMON],
 # Check for Boost headers
 AX_BOOST_BASE([1.34])
 # Check for Boost.Thread
-AX_BOOST_THREAD([1.34])
+AX_BOOST_THREAD
 if test "x$BOOST_THREAD_LIB" = "x"; then
    echo "Sorry, we need the Boost.Thread library from Boost."
    echo "Please install from http://www.boost.org"
