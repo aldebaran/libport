@@ -10,7 +10,7 @@ libport_srcdir = $(top_srcdir)/libport
 libport_builddir = $(top_builddir)/libport
 # The library itself is compiled by the host directory.
 # We might stop that some day and have libport be an autonomous dir.
-libport_la = $(top_builddir)/libport.la
+libport_la = $(top_builddir)/libport/libport.la
 
 # URBI_LIBPORT defines where we install libport.
 libportsysdir = $(libportdir)/sys

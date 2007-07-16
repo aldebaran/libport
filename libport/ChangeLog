@@ -1,3 +1,17 @@
+2007-07-16  Akim Demaille  <demaille@gostai.com>
+
+	Remove libport.mk
+	libport.mk no longer exists, it became more of a problem than a
+	solution.  From now on, shipped libports must be used with its
+	own Makefile.am, which means that the following changes must be
+	done by the users:
+	- stop including libport.mk
+	- add libport in the beginning of the top-level Makefile.am's
+	  SUBDIRS.
+	* libport.mk: Remove...
+	* Makefile.am: inlined here.
+	* libport-sources.mk (libport_la): Fix location.
+
 2007-07-13  Akim Demaille  <demaille@gostai.com>
 
 	Makefile.am
