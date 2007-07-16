@@ -1,5 +1,11 @@
 2007-07-16  Akim Demaille  <demaille@gostai.com>
 
+	Simplify libport/Makefile.am
+	* libport/Makefile.am: libport_srcdir is no longer needed, and we
+	can use nobase_.
+
+2007-07-16  Akim Demaille  <demaille@gostai.com>
+
 	Remove libport.mk
 	libport.mk no longer exists, it became more of a problem than a
 	solution.  From now on, shipped libports must be used with its

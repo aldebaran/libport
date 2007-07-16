@@ -9,64 +9,64 @@ include $(top_srcdir)/build-aux/config-headers-prefixed.mk
 include $(top_srcdir)/libport/libport-sources.mk
 
 # C headers.
-libport_HEADERS = 				\
-	$(libport_srcdir)/cstdio		\
-	$(libport_srcdir)/cstring		\
-	$(libport_srcdir)/unistd.h
-
-# FIXME: Simplify using nobase.  See Automake doc.
-libportsys_HEADERS =				\
-        $(libport_srcdir)/sys/stat.h
+libport_HEADERS =				\
+	cstdio					\
+	cstring					\
+	unistd.h
 
 # C++ headers.
 libport_HEADERS +=				\
-	$(libport_srcdir)/assert.hh		\
-	$(libport_srcdir)/compiler.hh		\
-	$(libport_srcdir)/containers.hh		\
-	$(libport_srcdir)/containers.hxx	\
-	$(libport_srcdir)/contract.hh		\
-	$(libport_srcdir)/deref.hh		\
-	$(libport_srcdir)/deref.hxx		\
-	$(libport_srcdir)/detect_win32.h	\
-	$(libport_srcdir)/hash.hh		\
-	$(libport_srcdir)/indent.hh		\
-	$(libport_srcdir)/escape.hh		\
-	$(libport_srcdir)/escape.hxx		\
-	$(libport_srcdir)/exception.hxx		\
-	$(libport_srcdir)/exception.hh		\
-	$(libport_srcdir)/fwd.hh		\
-	$(libport_srcdir)/hash.hh		\
-	$(libport_srcdir)/lockable.hh		\
-	$(libport_srcdir)/network.h		\
-	$(libport_srcdir)/pair.hh		\
-	$(libport_srcdir)/pair.hxx		\
-	$(libport_srcdir)/ref-pt.hh		\
-	$(libport_srcdir)/select-const.hh	\
-	$(libport_srcdir)/semaphore.hh		\
-	$(libport_srcdir)/semaphore.hxx		\
-	$(libport_srcdir)/separator.hh		\
-	$(libport_srcdir)/separator.hxx		\
-	$(libport_srcdir)/shared-ptr.hh		\
-	$(libport_srcdir)/shared-ptr.hxx	\
-	$(libport_srcdir)/singleton-ptr.hh	\
-	$(libport_srcdir)/symbol.hh		\
-	$(libport_srcdir)/symbol.hxx		\
-	$(libport_srcdir)/thread.hh		\
-	$(libport_srcdir)/uffloat.hh		\
-	$(libport_srcdir)/ufloat.h		\
-	$(libport_srcdir)/ufloat.hh		\
-	$(libport_srcdir)/ull-fixed-point.hh	\
-	$(libport_srcdir)/ulong-fixed-point.hh	\
-	$(libport_srcdir)/utime.hh		\
-	$(libport_srcdir)/windows.hh
+	assert.hh				\
+	compiler.hh				\
+	containers.hh				\
+	containers.hxx				\
+	contract.hh				\
+	deref.hh				\
+	deref.hxx				\
+	detect_win32.h				\
+	hash.hh					\
+	indent.hh				\
+	escape.hh				\
+	escape.hxx				\
+	exception.hxx				\
+	exception.hh				\
+	fwd.hh					\
+	hash.hh					\
+	lockable.hh				\
+	network.h				\
+	pair.hh					\
+	pair.hxx				\
+	ref-pt.hh				\
+	select-const.hh				\
+	semaphore.hh				\
+	semaphore.hxx				\
+	separator.hh				\
+	separator.hxx				\
+	shared-ptr.hh				\
+	shared-ptr.hxx				\
+	singleton-ptr.hh			\
+	symbol.hh				\
+	symbol.hxx				\
+	thread.hh				\
+	uffloat.hh				\
+	ufloat.h				\
+	ufloat.hh				\
+	ull-fixed-point.hh			\
+	ulong-fixed-point.hh			\
+	utime.hh				\
+	windows.hh
+
+# sys/ headers
+nobase_libport_HEADERS =			\
+        sys/stat.h
+
 
 # Generated headers.
 nodist_libport_HEADERS = 			\
-	$(libport_builddir)/config.h
+	$(builddir)/config.h
 
 
 EXTRA_DIST += $(libport_sources)
-
 
 # Can be useful for some.  Other will use libport_sources directly.
 noinst_LTLIBRARIES = libport.la
