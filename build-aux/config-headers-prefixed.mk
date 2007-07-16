@@ -8,9 +8,7 @@ BUILT_SOURCES += $(PREFIXED_CONFIG_HEADER)
 # not documented.
 
 $(PREFIXED_CONFIG_HEADER): $(CONFIG_HEADER)
-# This does not work properly when used from another directory, so
-# let's make sure it dies if the directory is not the top level.
-#	cd $(top_builddir) &&
+	cd $(top_builddir) &&					\
 	$(SHELL) ./config.status $(PREFIXED_CONFIG_HEADER)
 
 CLEANFILES +=					\

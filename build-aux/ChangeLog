@@ -1,3 +1,10 @@
+2007-07-16  Akim Demaille  <demaille@gostai.com>
+
+	Upgrade libport support
+	* config-headers-prefixed.mk: Go into the top-level builddir to
+	run config.status.
+	* urbi-libport.m4: Request libport/config.h.
+
 2007-07-13  Akim Demaille  <demaille@gostai.com>
 
 	libport/Makefile.am
