@@ -1,3 +1,9 @@
+2007-07-16  Akim Demaille  <demaille@gostai.com>
+
+	Simplify libport handling
+	* config-headers-prefixed.mk: This file must be included for
+	the local Makefile.am only, no longer from the top level Makefile.
+
 2007-07-16  Thomas Moulard  <thomas.moulard@gmail.com>
 
 	Re-add pthread check in libport's macro.
