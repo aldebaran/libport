@@ -1,3 +1,8 @@
+2007-07-16  Guillaume Deslandes  <deslandes@gostai.com>
+
+	* output-to-dot: New.
+	Print dot grammar call graph from ugrammar.output file.
+
 2007-07-16  Akim Demaille  <demaille@gostai.com>
 
 	Simplify libport handling

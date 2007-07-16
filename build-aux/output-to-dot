@@ -1,0 +1,111 @@
+#! /usr/bin/perl -w
+
+# Convert a bison automaton description file into an dot file
+
+use strict;
+use IO::File;
+
+my $in = $ARGV[0];
+my $out = $in;
+$out =~ s/output$/dot/;
+
+my $inf = new IO::File ($in)
+   or die "cannot open $in";
+
+my @line = $inf->getlines()
+    or die "cannot get lines";
+
+my $outf = new IO::File (">$out")
+   or die "cannot open $out";
+
+my @gram_lines = ();
+my @links = ();
+
+# get grammar lines
+my $in_grammar = 0;
+foreach (@line)
+{
+    chomp;
+
+    if (/^Grammar$/)
+    {
+	$in_grammar = 1;
+	s/Grammar//;
+    }
+
+    $in_grammar = 0
+	if /^Terminals/;
+
+    next if ($in_grammar == 0);
+
+    # Extract links from a single line
+    if (!/^$/)
+    {
+	s/(\/\* empty \*\/)//g;
+	if ("$_")
+	{
+	    push (@gram_lines, "$_\n");
+	}
+    }
+}
+
+#FIXME: hack to force one more loop turn
+push (@gram_lines, "666 fake:\n");
+
+# get non terminal symbols
+my %nonterminals = ();
+foreach (@gram_lines)
+{
+    if (s/^\s+(\d+)\s+([\w.]+):/$1 $2:/)
+    {
+	$nonterminals{$2} = 1;
+    }
+}
+
+# get links from and to non terminals
+my $tmp_line = "";
+foreach (@gram_lines)
+{
+    chomp;
+    my $cur_line = $_;
+    # concat cases to current line
+    if ($cur_line =~ /^\s+\d+\s+\|\s+(.*)/)
+    {
+ 	$tmp_line = "$tmp_line $1";
+    }
+
+    # next state
+    if ($cur_line =~ /^\s*\d+\s+[\w.]+:/)
+    {
+	# get links
+	if ($tmp_line =~ m/^\s*(\d+)\s+([\w.]+):/)
+	{
+	    my $node = $2;
+	    $tmp_line =~ m/^.*:\s+(.*)/;
+	    foreach(split(/\s+/, $1))
+	    {
+		if ($nonterminals{$_})
+		{
+		    s/\"/\\\"/g;
+		    push (@links, "\"$node\" -> \"$_\";\n");
+		}
+	    }
+	}
+	# set next line
+	$tmp_line = $cur_line;
+    }
+}
+
+# Filter duplicate links
+my %seen = ();
+my @uniqu = grep { ! $seen{$_} ++ } @links;
+
+
+# Output result
+print $outf "digraph ugrammar\n{\n";
+print $outf @uniqu;
+print $outf "}\n";
+
+
+print STDERR "$out was created\n";
+exit(0);
