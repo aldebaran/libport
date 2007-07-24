@@ -1,3 +1,8 @@
+2007-07-24  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Properly use BOOST_CPPFLAGS.
+	* Makefile.am (libport_la_CPPFLAGS): Add BOOST_CPPFLAGS.
+
 2007-07-16  Akim Demaille  <demaille@gostai.com>
 
 	Simplify libport/Makefile.am

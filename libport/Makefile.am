@@ -71,4 +71,4 @@ EXTRA_DIST += $(libport_sources)
 # Can be useful for some.  Other will use libport_sources directly.
 noinst_LTLIBRARIES = libport.la
 libport_la_SOURCES = $(libport_sources)
-libport_la_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
+libport_la_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir) $(BOOST_CPPFLAGS)
