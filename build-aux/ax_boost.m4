@@ -279,7 +279,12 @@ AC_DEFUN([AX_BOOST],
 			 elif test "x$build_os" = "xming32" ; then
 				 CXXFLAGS="-mthreads $CXXFLAGS"
 			 else
-				CXXFLAGS="-pthread $CXXFLAGS"
+			 	case "$build_os" in
+					darwin*) # OSX does not need -pthread
+						CXXFLAGS="$CXXFLAGS";;
+					*)
+						CXXFLAGS="-pthread $CXXFLAGS";;
+				esac
 			 fi
 			 AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[@%:@include <boost/thread/thread.hpp>]],
                                    [[boost::thread_group thrds;

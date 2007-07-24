@@ -66,6 +66,7 @@ if test "x$with_boost_thread" = "xyes"; then
 	 case $build_os in
 	   solaris)  CXXFLAGS="-pthreads $CXXFLAGS";;
 	   ming32)   CXXFLAGS="-mthreads $CXXFLAGS";;
+	   darwin*)  : ;; # Does not require a -pthread flag
 	   *)        CXXFLAGS="-pthread  $CXXFLAGS";;
 	 esac
 	 AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[@%:@include <boost/thread/thread.hpp>]],
@@ -81,6 +82,7 @@ if test "x$with_boost_thread" = "xyes"; then
      case $build_os in
        solaris)  BOOST_CPPFLAGS="-pthreads $BOOST_CPPFLAGS";;
        ming32)   BOOST_CPPFLAGS="-mthreads $BOOST_CPPFLAGS";;
+       darwin*)  : ;; # Does not require a -pthread flag
        *)        BOOST_CPPFLAGS="-pthread  $BOOST_CPPFLAGS";;
      esac
     AC_SUBST([BOOST_CPPFLAGS])
