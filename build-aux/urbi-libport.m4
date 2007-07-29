@@ -4,7 +4,7 @@
 AC_DEFUN([_URBI_LIBPORT_COMMON],
 [AC_REQUIRE([URBI_PTHREAD])dnl
 # Check for Boost headers
-AX_BOOST_BASE([1.34])
+AX_BOOST_BASE([1.33])
 # Check for Boost.Thread
 AX_BOOST_THREAD
 if test "x$BOOST_THREAD_LIB" = "x"; then

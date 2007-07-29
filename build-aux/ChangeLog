@@ -1,3 +1,8 @@
+2007-07-29  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Don't require boost 1.34.
+	* urbi-libport.m4 (_URBI_LIBPORT_COMMON): 1.33 is enough.
+
 2007-07-24  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Don't hardcord -pthread on OSX.
