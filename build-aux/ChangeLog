@@ -1,3 +1,8 @@
+2007-07-30  Rémi Humbert  <humbert@gostai.com>
+
+	Add libssl to openssl ld flags 
+	* urbi-with-openssl.m4: .
+
 2007-07-29  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Don't require boost 1.34.

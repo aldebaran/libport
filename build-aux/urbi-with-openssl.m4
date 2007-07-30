@@ -132,7 +132,7 @@ if $openssl; then
         AC_SUBST([OPENSSL_LDFLAGS],["-leay32"])
         ;;
       *)
-        AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto -ldl"])
+        AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto -lssl -ldl"])
         ;;
      esac
   else
@@ -141,7 +141,7 @@ if $openssl; then
         AC_SUBST([OPENSSL_LDFLAGS],["-L$OPENSSL_PATH/lib -leay32"])
         ;;
       *)
-        AC_SUBST([OPENSSL_LDFLAGS],["$OPENSSL_PATH/lib/libcrypto.la -ldl"])
+        AC_SUBST([OPENSSL_LDFLAGS],["$OPENSSL_PATH/lib/libcrypto.la $OPENSSL_PATH/lib/libssl.la -ldl"])
         ;;
      esac
   fi
