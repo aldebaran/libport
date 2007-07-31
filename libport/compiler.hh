@@ -49,7 +49,7 @@
 
 #  define ECHO(Msg)					\
   do {							\
-    std::cerr << __FILE__ << ":" << __LINE__ << ": "	\
+    std::cerr << __FILE__ ":" << __LINE__ << ": "	\
 	      << __PRETTY_FUNCTION__ << ": "		\
 	      << Msg << std::endl;			\
     SLEEP(1);						\
