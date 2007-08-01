@@ -70,7 +70,7 @@ if test "x$want_boost" = "xyes"; then
 		BOOST_LDFLAGS="-L$ac_boost_path/lib"
 		BOOST_CPPFLAGS="-I$ac_boost_path/include"
 	else
-		for ac_boost_path_tmp in /usr /usr/local /opt ; do
+		for ac_boost_path_tmp in /usr /usr/local /opt /opt/local ; do
 			if test -d "$ac_boost_path_tmp/include/boost" && test -r "$ac_boost_path_tmp/include/boost"; then
 				BOOST_LDFLAGS="-L$ac_boost_path_tmp/lib"
 				BOOST_CPPFLAGS="-I$ac_boost_path_tmp/include"
@@ -124,7 +124,7 @@ if test "x$want_boost" = "xyes"; then
 				done
 			fi
 		else
-			for ac_boost_path in /usr /usr/local /opt ; do
+			for ac_boost_path in /usr /usr/local /opt /opt/local ; do
 				if test -d "$ac_boost_path" && test -r "$ac_boost_path"; then
 					for i in `ls -d $ac_boost_path/include/boost-* 2>/dev/null`; do
 						_version_tmp=`echo $i | sed "s#$ac_boost_path##" | sed 's/\/include\/boost-//' | sed 's/_/./'`

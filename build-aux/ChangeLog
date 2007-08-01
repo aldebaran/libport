@@ -1,3 +1,8 @@
+2007-08-01  Rémi Humbert  <humbert@gostai.com>
+
+	Add search for boost in /opt/local 
+	* ax_boost_base.m4: .
+
 2007-07-30  Rémi Humbert  <humbert@gostai.com>
 
 	Add libssl to openssl ld flags 
