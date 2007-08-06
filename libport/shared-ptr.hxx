@@ -1,5 +1,5 @@
 /**
- ** \file libport/shared_ptr.hxx
+ ** \file libport/shared-ptr.hxx
  ** \brief Implementation of libport::shared_ptr.
  **/
 

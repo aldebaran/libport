@@ -1,3 +1,8 @@
+2007-08-06  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	* shared-ptr.hh,
+	* shared-ptr.hxx: Fix Doxygen comments.
+
 2007-07-31  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Remove a useless call to op<<.
