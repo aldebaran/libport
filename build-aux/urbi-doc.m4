@@ -16,7 +16,7 @@ URBI_ARG_PROGS([doxygen], [the Doxygen documentation generation program])
 AC_SUBST([DOCDIR], [srcdoc])
 
 AC_CONFIG_FILES([doc/Makefile
-		 doc/Doxyfile])
+		 doc/Doxyfile:build-aux/Doxyfile.in])
 ])
 
 ## Local Variables:

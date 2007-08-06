@@ -1,3 +1,14 @@
+2007-08-06  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Enhance and fix Doxygen documentation generation.
+	* Doxyfile.in: New.  Universal template.
+	* doxygen-versionfilter.sh: New.
+	* doxygen.mk (all): Remove.
+	(doc, internal-doc, user-doc): New.
+	Substitute a couple of values in the Doxyfile before using it.
+	* urbi-doc.m4 (URBI_DOC): Generate the Doxyfile from the template in
+	build-aux.
+
 2007-08-01  Rémi Humbert  <humbert@gostai.com>
 
 	Add search for boost in /opt/local 
