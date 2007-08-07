@@ -2,7 +2,7 @@
 /// \brief Specific features from some compilers.
 
 #ifndef LIBPORT_COMPILER_HH
-#  define LIBPORT_COMPILER_HH
+# define LIBPORT_COMPILER_HH
 
 # include "libport/config.h"
 
@@ -43,9 +43,14 @@
 | ECHO & PING.  |
 `--------------*/
 
+// Disable debug traces when compiling with NDEBUG.
+# ifdef NDEBUG
+#  undef ENABLE_DEBUG_TRACES
+# endif
+
 # ifdef ENABLE_DEBUG_TRACES
 
-# include <iostream>
+#  include <iostream>
 
 #  define ECHO(Msg)					\
   do {							\
@@ -68,4 +73,4 @@
 
 # define PING()  ECHO("ping")
 
-# endif // !LIBPORT_COMPILER_HH
+#endif // !LIBPORT_COMPILER_HH

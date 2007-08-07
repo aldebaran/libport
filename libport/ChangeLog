@@ -1,3 +1,7 @@
+2007-08-07  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	* compiler.hh: Remove debug traces when compiling with NDEBUG.
+
 2007-08-06  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	* shared-ptr.hh,
