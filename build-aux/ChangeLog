@@ -1,3 +1,8 @@
+2007-08-28  Type Your Name Here  <your.mail.here@FIXME.com>
+
+	Add the urbi_with_qwt
+	* urbi-with-qwt.m4: New.
+
 2007-08-06  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Enhance and fix Doxygen documentation generation.
