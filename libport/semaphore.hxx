@@ -123,7 +123,7 @@ namespace libport
     int err = sem_destroy(sem_);
     delete sem_;
 # endif
-    assert (err);
+    assert (!err);
   }
 
 

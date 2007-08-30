@@ -1,3 +1,8 @@
+2007-08-30  Matthieu Nottale  <nottale@gostai.com>
+
+	Fix assert in ~Semaphore.
+	* semaphore.hxx: assert(!err) as sem_close and sem_destroy are returning 0 on success.
+
 2007-08-07  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	* compiler.hh: Remove debug traces when compiling with NDEBUG.
