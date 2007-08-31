@@ -1,3 +1,9 @@
+2007-08-31  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Build doc in builddir not in srcdir
+	* doxygen.mk: Here.
+	add all-local rule to force doc generation.	
+
 2007-08-28  Type Your Name Here  <your.mail.here@FIXME.com>
 
 	Add the urbi_with_qwt
