@@ -1,3 +1,10 @@
+2007-09-04  mefyl  <mefyl@lrde.epita.fr>
+
+	Add reference trait.
+	* select-ref.hh: New. Make a type a reference, without forming
+        reference to reference.
+	* Makefile.am: Add file.
+
 2007-08-30  Matthieu Nottale  <nottale@gostai.com>
 
 	Fix assert in ~Semaphore.

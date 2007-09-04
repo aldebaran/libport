@@ -38,6 +38,7 @@ libport_HEADERS +=				\
 	pair.hxx				\
 	ref-pt.hh				\
 	select-const.hh				\
+	select-ref.hh				\
 	semaphore.hh				\
 	semaphore.hxx				\
 	separator.hh				\
