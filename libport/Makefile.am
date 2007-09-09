@@ -30,6 +30,7 @@ libport_HEADERS +=				\
 	escape.hxx				\
 	exception.hxx				\
 	exception.hh				\
+	foreach.hh				\
 	fwd.hh					\
 	hash.hh					\
 	lockable.hh				\

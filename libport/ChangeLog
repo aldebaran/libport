@@ -1,3 +1,15 @@
+2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Add a wrapper header for Boost.Foreach.
+	Boost.Foreach was included in May 2005 but not released with 1.33.1
+	(which was released in December 2005).  Nevertheless, a less
+	optimized version was installed along with 1.33.1 in a test folder.
+	This enables us to fall back on this version if the user has 1.33.1
+	(which is convenient because 1.34 hasn't made its way to all
+	packaging systems at this time).
+	* Makefile.am: Add the new file.
+	* foreach.hh: New.
+
 2007-09-04  mefyl  <mefyl@lrde.epita.fr>
 
 	Add reference trait.
