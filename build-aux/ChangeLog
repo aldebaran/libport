@@ -1,3 +1,8 @@
+2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Require Boost 1.34.
+	* urbi-libport.m4 (_URBI_LIBPORT_COMMON): Here.
+
 2007-08-31  Guillaume Deslandes  <deslandes@gostai.com>
 
 	Build doc in builddir not in srcdir
