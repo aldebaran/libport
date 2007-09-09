@@ -1,5 +1,14 @@
 2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Remove the wrapper around Boost.Foreach.
+	This won't work because the Boost.Foreach released with 1.33.1 takes
+	3 arguments and can't be made compatible with that of 1.34.  I must
+	have tested too quickly to not notice this.
+	* Makefile.am: Remove the file.
+	* foreach.hh: Remove.
+
+2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add a wrapper header for Boost.Foreach.
 	Boost.Foreach was included in May 2005 but not released with 1.33.1
 	(which was released in December 2005).  Nevertheless, a less
