@@ -1,5 +1,11 @@
 2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix typos.
+	* ax_boost.m4,
+	* ax_boost_base.m4: s/to old/too old/.
+
+2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Require Boost 1.34.
 	* urbi-libport.m4 (_URBI_LIBPORT_COMMON): Here.
 
