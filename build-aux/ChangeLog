@@ -1,5 +1,12 @@
 2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	* doxygen.mk: Don't generate the documentation during `make all'.
+	It can take a *LOT* of time and resources (especially when
+	generating the various graphs) and most builds do not actually
+	need it.
+
+2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Fix typos.
 	* ax_boost.m4,
 	* ax_boost_base.m4: s/to old/too old/.

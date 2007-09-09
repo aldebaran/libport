@@ -7,8 +7,6 @@
 
 .PHONY: doc internal-doc user-doc
 
-all-local: doc
-
 doc: internal-doc
 
 internal-doc:
