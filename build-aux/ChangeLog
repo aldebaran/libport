@@ -1,3 +1,7 @@
+2007-09-13  Rémi Humbert  <humbert@gostai.com>
+
+	* urbi-with-openssl.m4: Add support of openssl for vc++.
+
 2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	* doxygen.mk: Don't generate the documentation during `make all'.

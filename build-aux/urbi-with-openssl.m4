@@ -20,6 +20,12 @@ case "$host_os" in
 	   LDFLAGS="$LDFLAGS -L$ssldir"
 	fi
 	;;
+     *cygwin*)
+	LIBS="$LIBS -leay32MT"
+	if test -n "$ssldir"; then
+	   LDFLAGS="$LDFLAGS -L$ssldir"
+	fi
+	;;
      *)
 	LIBS="$LIBS -lcrypto"
 	if test -n "$ssldir"; then
@@ -131,6 +137,9 @@ if $openssl; then
       mingw*)
         AC_SUBST([OPENSSL_LDFLAGS],["-leay32"])
         ;;
+     *cygwin*)
+        AC_SUBST([OPENSSL_LDFLAGS],["-leay32MT"])
+        ;;
       *)
         AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto -lssl -ldl"])
         ;;
@@ -139,6 +148,9 @@ if $openssl; then
     case "$host_os" in
       mingw*)
         AC_SUBST([OPENSSL_LDFLAGS],["-L$OPENSSL_PATH/lib -leay32"])
+        ;;
+     *cygwin*)
+        AC_SUBST([OPENSSL_LDFLAGS],["-L$OPENSSL_PATH/lib -leay32MT"])
         ;;
       *)
         AC_SUBST([OPENSSL_LDFLAGS],["$OPENSSL_PATH/lib/libcrypto.la $OPENSSL_PATH/lib/libssl.la -ldl"])
