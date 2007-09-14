@@ -1,5 +1,10 @@
 2007-09-14  Guillaume Deslandes  <deslandes@gostai.com>
 
+	Generate doc at install
+	* doxygen.mk: Here.
+
+2007-09-14  Guillaume Deslandes  <deslandes@gostai.com>
+
 	Restore Boost dependency
 	* urbi-libport.m4: Here.
 

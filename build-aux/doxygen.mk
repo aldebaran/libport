@@ -7,6 +7,8 @@
 
 .PHONY: doc internal-doc user-doc
 
+install: doc
+
 doc: internal-doc
 
 internal-doc:
