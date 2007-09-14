@@ -7,11 +7,7 @@ class Vcs
 
   def local_commit! ( *args )
     common_commit!("libport <%= rev %>: <%= title %>", *args) do |subject|
-      mail!(:to => %w[akim@lrde.epita.fr
-                      matthieu.nottale@ensta.fr
-		      thomas.moulard@lrde.epita.fr
-		      tsuna@lrde.epita.fr
-                      baillie@gostai.com],
+      mail!(:to => %w[common-patches@lists.gostai.com],
             :subject => subject)
     end
   end
