@@ -3,15 +3,6 @@
 # Code common to the use of an installed or shipped libport.
 AC_DEFUN([_URBI_LIBPORT_COMMON],
 [AC_REQUIRE([URBI_PTHREAD])dnl
-# Check for Boost headers
-AX_BOOST_BASE([1.34])
-# Check for Boost.Thread
-AX_BOOST_THREAD
-if test "x$BOOST_THREAD_LIB" = "x"; then
-   echo "Sorry, we need the Boost.Thread library from Boost."
-   echo "Please install from http://www.boost.org"
-   exit 1
-fi
 
 # Where we install the libport files.
 URBI_PACKAGE_KIND_SWITCH(
