@@ -1,5 +1,10 @@
 2007-09-14  Guillaume Deslandes  <deslandes@gostai.com>
 
+	Restore Boost dependency
+	* urbi-libport.m4: Here.
+
+2007-09-14  Guillaume Deslandes  <deslandes@gostai.com>
+
 	No Boost (rev to pin aibo, restored in next rev)
 	* urbi-libport.m4: Here.
 
