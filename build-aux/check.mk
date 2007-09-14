@@ -27,6 +27,11 @@
 ## Define TEST_SUITE_LOG to be the name of the global log to create.
 ## Define TEST_LOGS to the set of logs to include in it.  It defaults
 ## to $(TESTS:.test=.log).
+##
+## In addition to the magic "exit 77 means SKIP" feature (which was
+## imported from automake), there is a magic "exit 177 means FAIL" feature
+## which is useful if you need to issue a hard error no matter whether the
+## test is XFAIL or not.
 
 ## We use GNU Make extensions (%-rules), and override check-TESTS.
 AUTOMAKE_OPTIONS += -Wno-portability -Wno-override
@@ -80,6 +85,7 @@ case $$estatus:" $(XFAIL_TESTS) " in			\
     0:*" $$(basename $<) "*) col=$$red; res=XPASS;;	\
     0:*)                     col=$$grn; res=PASS ;;	\
     77:*)                    col=$$blu; res=SKIP ;;	\
+    177:*)                   col=$$red; res=FAIL ;;	\
     *:*" $$(basename $<) "*) col=$$lgn; res=XFAIL;;	\
     *:*)                     col=$$red; res=FAIL ;;	\
 esac;							\

@@ -1,3 +1,9 @@
+2007-09-14  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Add a way to issue a hard error during make check (exit 177).
+	* check.mk (am__check_post): Issue a hard FAIL error when a test
+	exits 177.
+
 2007-09-14  Guillaume Deslandes  <deslandes@gostai.com>
 
 	Generate doc at install
