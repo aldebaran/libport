@@ -1,3 +1,7 @@
+2007-09-17  HUMBERT Remi <humbert@gostai.com>
+
+	* hash.hh: Comment a trailing 'namespace' keyword.
+
 2007-09-09  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Remove the wrapper around Boost.Foreach.

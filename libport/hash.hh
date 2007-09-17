@@ -169,7 +169,7 @@ namespace LIBPORT_HASH_NAMESPACE
     }
   };
 
-} namespace // LIBPORT_HASH_NAMESPACE
+} // namespace LIBPORT_HASH_NAMESPACE
 
 # else
 #  error Do not know where hash_map is.
