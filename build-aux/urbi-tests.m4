@@ -14,6 +14,9 @@ AC_DEFUN([URBI_TESTS],
 [# Prepare the umake wrappers.
 URBI_CONFIG_WRAPPER([umake])
 URBI_CONFIG_WRAPPER([umake-engine])
+URBI_CONFIG_WRAPPER([umake-remote])
+URBI_CONFIG_WRAPPER([umake-clean])
+URBI_CONFIG_WRAPPER([umake-link])
 URBI_CONFIG_WRAPPER([umake-lib])
 
 # Prepare the Makefile.
