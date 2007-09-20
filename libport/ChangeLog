@@ -1,3 +1,9 @@
+2007-09-20  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Fix libport.la location and add header to test
+	* tests/Makefile.am: Fix libport location.
+	* tests/test-indent.cc: Add missing header.
+
 2007-09-17  HUMBERT Remi <humbert@gostai.com>
 
 	* hash.hh: Comment a trailing 'namespace' keyword.

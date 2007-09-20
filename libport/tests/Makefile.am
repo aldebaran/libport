@@ -13,7 +13,7 @@ ufloat1				\
 ullfp1				\
 ullfptab1
 
-LDADD = $(top_builddir)/libport.la
+LDADD = $(top_builddir)/libport/libport.la
 
 singleton1_SOURCES =	singleton1.cc
 singleton2_SOURCES =	singleton2.cc
