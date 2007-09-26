@@ -1,3 +1,9 @@
+2007-09-26  Rémi Humbert  <humbert@gostai.com>
+
+	Add a variable EXTRA_CPPFLAGS for moc compilation in autotroll.mk
+	* autotroll.mk: So that we are able to add some more flags from
+	inside calling makefiles.
+
 2007-09-20  Guillaume Deslandes  <deslandes@gostai.com>
 
 	Add new wrappers for test env.
