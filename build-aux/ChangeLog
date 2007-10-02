@@ -1,5 +1,10 @@
 2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix a greedy commit when updating externals.
+	* svn-externals.mk (externals-up-ci): Do a non-recursive commit.
+
+2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Allow a way to disable hard errors.
 	* check.mk (ENABLE_HARD_ERRORS): New.
 

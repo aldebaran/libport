@@ -43,12 +43,12 @@ $(SVN_EXTERNALS_HELP):							  \
 
 # Checkin the pinned external and update it.
 $(SVN_EXTERNALS_CI):
-	cd $(srcdir)/$(@:-ci=) && $(SVN) ci
+	cd $(srcdir)/$(@:-ci=) && $(SVN) commit
 	$(MAKE) $(AM_MAKEFLAGS) $(@:-ci=-up)
 
 $(SVN_EXTERNALS_CI_CI):
 	$(MAKE) $(AM_MAKEFLAGS) $(@:-ci-ci=-ci)
-	svn ci -m "Update $(@:-ci-ci=)." -N $(srcdir)
+	svn commit -m "Update $(@:-ci-ci=)." -N $(srcdir)
 
 # Pin the svn:external by subscribing to it.
 $(SVN_EXTERNALS_PIN):
@@ -62,7 +62,7 @@ $(SVN_EXTERNALS_UP):
 # FIXME: Does not work well: it does not check in subdirectories.
 $(SVN_EXTERNALS_UP_CI):
 	$(MAKE) $(AM_MAKEFLAGS) $(@:-up-ci=-up)
-	svn ci -m "Update $(@:-up-ci=)." -N $(srcdir)
+	svn commit -m "Update $(@:-up-ci=)." -N $(srcdir)
 
 
 ## ------------------- ##
@@ -80,4 +80,4 @@ externals-help:
 externals-ci: $(SVN_EXTERNALS_CI) $(SVN_EXTERNALS_PROXY:=-ci)
 externals-up: $(SVN_EXTERNALS_UP) $(SVN_EXTERNALS_PROXY:=-up)
 externals-up-ci: $(SVN_EXTERNALS_UP)
-	svn ci -m "Update externals." $(srcdir)
+	svn commit -m "Update externals." -N $(srcdir)
