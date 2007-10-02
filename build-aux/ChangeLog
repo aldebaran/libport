@@ -1,3 +1,8 @@
+2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Allow a way to disable hard errors.
+	* check.mk (ENABLE_HARD_ERRORS): New.
+
 2007-09-26  Rémi Humbert  <humbert@gostai.com>
 
 	Add a variable EXTRA_CPPFLAGS for moc compilation in autotroll.mk

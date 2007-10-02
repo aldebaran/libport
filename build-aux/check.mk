@@ -33,6 +33,9 @@
 ## which is useful if you need to issue a hard error no matter whether the
 ## test is XFAIL or not.
 
+# Set this to `false' to disable hard errors.
+ENABLE_HARD_ERRORS ?= :
+
 ## We use GNU Make extensions (%-rules), and override check-TESTS.
 AUTOMAKE_OPTIONS += -Wno-portability -Wno-override
 
@@ -80,6 +83,9 @@ $(TESTS_ENVIRONMENT)
 am__check_post =					\
 >$@-t 2>&1;						\
 estatus=$$?;						\
+if test $$estatus -eq 177; then				\
+  $(ENABLE_HARD_ERRORS) || estatus=1;			\
+fi;		        		        	\
 $(am__tty_colors);					\
 case $$estatus:" $(XFAIL_TESTS) " in			\
     0:*" $$(basename $<) "*) col=$$red; res=XPASS;;	\
