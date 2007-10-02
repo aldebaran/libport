@@ -35,7 +35,7 @@
      << Loc << ": failed assertion: " << #Assertion << std::endl	\
      << Loc << ": with "						\
      << #Subject << " = " << Subject << std::endl,			\
-   abort(),								\
+   std::abort(),                                                        \
    0)
 
 # endif // !NDEBUG
@@ -62,7 +62,7 @@
 
 #  define __pabort(Loc, Msg)						\
   (std::cerr << Loc << ": abort: " << Msg << std::endl,			\
-   abort())
+   std::abort())
 
 # endif // !NDEBUG
 
