@@ -1,3 +1,10 @@
+2007-10-04  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Provide replacement implementations for `trunc'.
+	* ufloat.hh [!LIBPORT_HAVE_TRUNC]: Here.
+	* ufloat.h [!LIBPORT_HAVE_TRUNC]: Import `trunc' in the global
+	namespace.
+
 2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Include `libport/config.h' instead of `config.h'.

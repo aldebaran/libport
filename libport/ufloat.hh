@@ -134,4 +134,22 @@ namespace libport
 }
 # endif /* !LIBPORT_HAVE_ROUND */
 
+/* trunc is not C++ standard (not even POSIX) and although gnulib says it
+ * provides a replacement in its manual, in fact it doesn't, nor does Boost.
+ * So here is my quick replacement.  */
+# ifndef LIBPORT_HAVE_TRUNC
+#  include <cmath>
+namespace libport
+{
+  inline double trunc (double d)
+  {
+    if (d < 0.0)
+      return ceil (d);
+    else
+      return floor (d);
+  }
+}
+# endif /* !LIBPORT_HAVE_TRUNC */
+
+
 #endif
