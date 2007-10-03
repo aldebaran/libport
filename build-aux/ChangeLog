@@ -1,3 +1,11 @@
+2007-10-04  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Check for the `trunc' function.
+	Like `round', it is not available on mipsel-linux-g++.
+	* urbi-float-check.m4 (URBI_FLOAT_CHECK): Here.
+	* urbi-libport.m4 (_URBI_LIBPORT_COMMON): Invoke URBI_FLOAT_CHECK.
+	* urbi-ufloat.m4 (URBI_UFLOAT): No longer invoke URBI_FLOAT_CHECK.
+
 2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Add a check for the `round' function.

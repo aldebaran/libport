@@ -3,6 +3,7 @@
 # Code common to the use of an installed or shipped libport.
 AC_DEFUN([_URBI_LIBPORT_COMMON],
 [AC_REQUIRE([URBI_PTHREAD])dnl
+AC_REQUIRE([URBI_FLOAT_CHECK])dnl
 # Check for Boost headers
 AX_BOOST_BASE([1.34])
 # Check for Boost.Thread

@@ -57,8 +57,6 @@ case $urbi_ufloat_tabulated in
   "not tabulated") ;;
   *)  AC_MSG_ERROR([internal error: invalid tabulation: $urbi_ufloat_tabulated]);;
 esac
-
-URBI_FLOAT_CHECK
 ])
 
 
