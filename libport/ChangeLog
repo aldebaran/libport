@@ -1,5 +1,11 @@
 2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Include `libport/config.h' instead of `config.h'.
+	* ufloat.h,
+	* ufloat.hh: Adjust includes and fix a couple of Doxygen comments.
+
+2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Use config.h to know whether HAVE_ROUND.
 	* ufloat.h,
 	* ufloat.hh: Here.

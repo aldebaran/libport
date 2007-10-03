@@ -82,14 +82,24 @@ namespace libport
 # ifdef LIBPORT_URBI_UFLOAT_TABULATED
 namespace libport
 {
-  /// return the tabulated sinus of given value in radian, using linear interpolation
+  /** @return the tabulated sinus of given @a angle in radian, using linear
+   * interpolation.  */
   ufloat tabulatedSin(ufloat angle);
-  /// return the tabulated cosinus of given value in radian, using linear interpolation
+
+  /** @return the tabulated cosinus of given @a angle in radian, using linear
+   * interpolation.  */
   ufloat tabulatedCos(ufloat angle);
-  /// return the tabulated arcsinus of given value, in radian, using linear interpolation
-  ufloat tabulatedASin(ufloat val);
-  /// return the tabulated arccosinus of given value, in radian, using linear interpolation
-  inline ufloat tabulatedACos(ufloat val) {return (PI>>1)-tabulatedASin(val);}
+
+  /** @return the tabulated arcsinus of given @a angle, in radian, using
+   * linear interpolation.  */
+  ufloat tabulatedASin(ufloat angle);
+
+  /** @return the tabulated arccosinus of given @a angle, in radian, using
+   * linear interpolation.  */
+  inline ufloat tabulatedACos(ufloat angle)
+  {
+    return (PI >> 1) - tabulatedASin(angle);
+  }
 
   inline ufloat sin(ufloat angle) {return tabulatedSin(angle);}
   inline ufloat cos(ufloat angle) {return tabulatedCos(angle);}
@@ -100,12 +110,10 @@ namespace libport
 }
 # endif
 
-// Not libport/config.h: we're really looking for the header of the package
-// using libport.
-# include "config.h"
+# include "libport/config.h"
 /* round is not C++ standard (not even POSIX) and neither gnulib nor Boost
  * provide one.  So here is my quick replacement.  */
-# ifndef HAVE_ROUND
+# ifndef LIBPORT_HAVE_ROUND
 #  include <cmath>
 namespace libport
 {
@@ -124,6 +132,6 @@ namespace libport
     return floor (d + 0.5 + LDBL_EPSILON);
   }
 }
-# endif /* !HAVE_ROUND */
+# endif /* !LIBPORT_HAVE_ROUND */
 
 #endif
