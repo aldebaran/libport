@@ -100,6 +100,9 @@ namespace libport
 }
 # endif
 
+// Not libport/config.h: we're really looking for the header of the package
+// using libport.
+# include "config.h"
 /* round is not C++ standard (not even POSIX) and neither gnulib nor Boost
  * provide one.  So here is my quick replacement.  */
 # ifndef HAVE_ROUND

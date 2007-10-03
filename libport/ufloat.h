@@ -9,6 +9,9 @@ using libport::ufloat;
 using libport::PI;
 using libport::UINFINITY;
 
+// Not libport/config.h: we're really looking for the header of the package
+// using libport.
+# include "config.h"
 # ifndef HAVE_ROUND
 using libport::round;
 # endif /* !HAVE_ROUND */

@@ -1,5 +1,11 @@
 2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Use config.h to know whether HAVE_ROUND.
+	* ufloat.h,
+	* ufloat.hh: Here.
+
+2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Add replacement implementation of `round'.
 	* ufloat.hh [!HAVE_ROUND]: Provide replacement implementations of
 	round for float, double and long double.
