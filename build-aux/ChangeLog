@@ -1,5 +1,11 @@
 2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add a check for the `round' function.
+	* urbi-float-check.m4: New.
+	* urbi-ufloat.m4 (URBI_UFLOAT): Invoke URBI_FLOAT_CHECK.
+
+2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Use an AM_CONDITIONAL to install (or not) the Doxygen doc.
 	* doxygen.mk: Use the ENABLE_DOC conditional.
 	* urbi-doc.m4 (ENABLE_DOC): Create an AM_CONDITIONAL of the same
