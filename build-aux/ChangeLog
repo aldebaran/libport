@@ -1,5 +1,12 @@
 2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Use an AM_CONDITIONAL to install (or not) the Doxygen doc.
+	* doxygen.mk: Use the ENABLE_DOC conditional.
+	* urbi-doc.m4 (ENABLE_DOC): Create an AM_CONDITIONAL of the same
+	name.
+
+2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Don't try to use Boost.Thread when OpenR is in use.
 	* urbi-libport.m4 (_URBI_LIBPORT_COMMON): Here.
 

@@ -36,22 +36,16 @@ doc-builder: $(top_srcdir)/build-aux/Doxyfile.in
 maintainer-clean-local:
 	rm -rf $(DOCDIR).tmp $(builddir)/$(DOCDIR)
 
-install-data-local: $(COND_DOC_INSTALL)
-
-doc-install: internal-doc-install
-
 # We install by hand, otherwise Automake produces "install .../srcdoc
 # .../srcdoc", which install our dir into the previous one, instead of
 # replacing it.
-internal-doc-install:
+if ENABLE_DOC
+install-data-local:
 	rm -rf $(DESTDIR)$(htmldir)/$(DOCDIR)
 	$(mkdir_p) $(DESTDIR)$(htmldir)
 	cp -r $(builddir)/$(DOCDIR) $(DESTDIR)$(htmldir)
 
-uninstall-local: $(COND_DOC_UNINSTALL)
-
-doc-uninstall: internal-doc-uninstall
-
-internal-doc-uninstall:
+uninstall-local:
 	(test -d && chmod -R 700 $(DESTDIR)$(htmldir)/$(DOCDIR)) || true
 	rm -rf $(DESTDIR)$(htmldir)/$(DOCDIR)
+endif

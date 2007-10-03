@@ -24,16 +24,8 @@ AC_DEFUN([ENABLE_DOC],
 [AC_ARG_ENABLE([doc],
    AS_HELP_STRING([--enable-doc],
                   [Turn on documentation (default is NO)]),
-     [case "${enableval}" in
-       yes|true|"") doc_output=doc; doc_install=doc-install; doc_uninstall=doc-uninstall;;
-       no|false)  doc_output=; doc_install=; doc_uninstall=;;
-       *) AC_MSG_ERROR([bad value ${enableval} for --enable-doc]) ;;
-     esac],
-  [doc_output=; doc_install=; doc_uninstall=])
-#AM_CONDITIONAL([COND_DOC_OUTPUT], [test x$doc_output = xtrue])
-AC_SUBST([COND_DOC_OUTPUT], [$doc_output])
-AC_SUBST([COND_DOC_INSTALL], [$doc_install])
-AC_SUBST([COND_DOC_UNINSTALL], [$doc_uninstall])
+     [], [enable_doc=no])
+AM_CONDITIONAL([ENABLE_DOC], [test x$enable_doc != xno])
 ])
 
 ## Local Variables:
