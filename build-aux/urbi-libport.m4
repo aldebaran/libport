@@ -6,11 +6,14 @@ AC_DEFUN([_URBI_LIBPORT_COMMON],
 # Check for Boost headers
 AX_BOOST_BASE([1.34])
 # Check for Boost.Thread
-AX_BOOST_THREAD
-if test "x$BOOST_THREAD_LIB" = "x"; then
-   echo "Sorry, we need the Boost.Thread library from Boost."
-   echo "Please install from http://www.boost.org"
-   exit 1
+if $openr; then
+  AC_MSG_NOTICE([[OpenR in use: not using Boost.Thread.]])
+else
+  AX_BOOST_THREAD
+  if test "x$BOOST_THREAD_LIB" = "x"; then
+    AC_MSG_FAILURE([[Sorry, we need the Boost.Thread library from Boost.
+	    Please install from http://www.boost.org]])
+  fi
 fi
 
 # Where we install the libport files.

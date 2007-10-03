@@ -1,5 +1,10 @@
 2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Don't try to use Boost.Thread when OpenR is in use.
+	* urbi-libport.m4 (_URBI_LIBPORT_COMMON): Here.
+
+2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Fix a greedy commit when updating externals.
 	* svn-externals.mk (externals-up-ci): Do a non-recursive commit.
 
