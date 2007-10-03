@@ -1,5 +1,13 @@
 2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Add replacement implementation of `round'.
+	* ufloat.hh [!HAVE_ROUND]: Provide replacement implementations of
+	round for float, double and long double.
+	* ufloat.h [!HAVE_ROUND]: Import in the top-level namespace the
+	libport implementation of `round'.
+
+2007-10-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Properly invoke std::abort.
 	* assert.hh (__pabort, __passert): Here.
 

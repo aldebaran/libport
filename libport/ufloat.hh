@@ -21,6 +21,8 @@
 
 # include "libport/config.h"
 
+# include <cfloat>
+
 /*-----------------.
 | Ufloat support.  |
 `-----------------*/
@@ -29,6 +31,7 @@
 namespace libport
 {
   typedef float ufloat;
+#  define UFLT_EPSILON FLT_EPSILON
 
   inline
   long long to_long_long (ufloat u)
@@ -42,6 +45,7 @@ namespace libport
 namespace libport
 {
   typedef double ufloat;
+#  define UFLT_EPSILON DBL_EPSILON
 
   inline
   long long to_long_long (ufloat u)
@@ -96,5 +100,27 @@ namespace libport
 }
 # endif
 
+/* round is not C++ standard (not even POSIX) and neither gnulib nor Boost
+ * provide one.  So here is my quick replacement.  */
+# ifndef HAVE_ROUND
+#  include <cmath>
+namespace libport
+{
+  inline float round (float d)
+  {
+    return floor (d + 0.5 + FLT_EPSILON);
+  }
+
+  inline double round (double d)
+  {
+    return floor (d + 0.5 + DBL_EPSILON);
+  }
+
+  inline long double round (long double d)
+  {
+    return floor (d + 0.5 + LDBL_EPSILON);
+  }
+}
+# endif /* !HAVE_ROUND */
 
 #endif

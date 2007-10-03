@@ -9,4 +9,8 @@ using libport::ufloat;
 using libport::PI;
 using libport::UINFINITY;
 
+# ifndef HAVE_ROUND
+using libport::round;
+# endif /* !HAVE_ROUND */
+
 #endif // !LIBPORT_UFLOAT_H
