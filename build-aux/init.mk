@@ -10,6 +10,7 @@ BUILT_SOURCES =
 CLEANFILES = vc80.pdb
 # Files created by MSC++.
 CLEANFILES += *.exe.manifest *.exe.intermediate.manifest
+DISTCLEANFILES=
 EXTRA_DIST =
 EXTRA_HEADERS =
 MAINTAINERCLEANFILES =

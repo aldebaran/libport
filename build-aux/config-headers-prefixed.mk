@@ -10,5 +10,5 @@ config.h: $(CONFIG_HEADER)
 	$(SHELL) ./config.status $(PREFIXED_CONFIG_HEADER)
 
 CLEANFILES +=					\
-_configs.sed					\
+_configs.sed $(top_builddir)/_configs.sed			\
 config.h

@@ -7,20 +7,22 @@
 
 .PHONY: doc internal-doc user-doc
 
-install: doc
-
 doc: internal-doc
 
 internal-doc:
 	rm -rf $(DOCDIR).tmp $(builddir)/$(DOCDIR)
-	$(MAKE) $(AM_MAKEFLAGS) DOC_INTERNAL=YES $(builddir)/$(DOCDIR)
+	$(MAKE) $(AM_MAKEFLAGS) DOC_INTERNAL=YES doc-builder
 
 user-doc:
 	rm -rf $(DOCDIR).tmp $(builddir)/$(DOCDIR)
-	$(MAKE) $(AM_MAKEFLAGS) DOC_INTERNAL=NO $(builddir)/$(DOCDIR)
+	$(MAKE) $(AM_MAKEFLAGS) DOC_INTERNAL=NO doc-builder
 
 EXTRA_DIST = $(builddir)/$(DOCDIR)
-$(builddir)/$(DOCDIR): $(top_srcdir)/build-aux/Doxyfile.in
+
+$(builddir)/$(DOCDIR):
+	$(mkdir_p) $(builddir)/$(DOCDIR)
+
+doc-builder: $(top_srcdir)/build-aux/Doxyfile.in
 	test -w $(builddir)
 	rm -rf $(DOCDIR).tmp $(builddir)/$(DOCDIR)
 	$(MAKE) $(AM_MAKEFLAGS) Doxyfile
@@ -34,14 +36,22 @@ $(builddir)/$(DOCDIR): $(top_srcdir)/build-aux/Doxyfile.in
 maintainer-clean-local:
 	rm -rf $(DOCDIR).tmp $(builddir)/$(DOCDIR)
 
+install-data-local: $(COND_DOC_INSTALL)
+
+doc-install: internal-doc-install
+
 # We install by hand, otherwise Automake produces "install .../srcdoc
 # .../srcdoc", which install our dir into the previous one, instead of
 # replacing it.
-install-data-local:
+internal-doc-install:
 	rm -rf $(DESTDIR)$(htmldir)/$(DOCDIR)
 	$(mkdir_p) $(DESTDIR)$(htmldir)
 	cp -r $(builddir)/$(DOCDIR) $(DESTDIR)$(htmldir)
 
-uninstall-local:
-	chmod -R 700 $(DESTDIR)$(htmldir)/$(DOCDIR)
+uninstall-local: $(COND_DOC_UNINSTALL)
+
+doc-uninstall: internal-doc-uninstall
+
+internal-doc-uninstall:
+	(test -d && chmod -R 700 $(DESTDIR)$(htmldir)/$(DOCDIR)) || true
 	rm -rf $(DESTDIR)$(htmldir)/$(DOCDIR)

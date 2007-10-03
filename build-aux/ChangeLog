@@ -8,6 +8,43 @@
 	Allow a way to disable hard errors.
 	* check.mk (ENABLE_HARD_ERRORS): New.
 
+2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add DISTCLEANFILES in variable list
+	* init.mk: Here.
+
+2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Force mkdir for docdir
+	* doxygen.mk: Here.
+
+2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Restore dummy rule for srcdoc
+	* doxygen.mk: Here.
+
+2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Fixes for documentation
+	* config-headers-prefixed.mk: _configs.sed is in top_builddir.
+	* doxygen.mk: Add rules for uninstall.
+	Don't use srcdoc as a rule, its bypasses doc desactivation.
+	* urbi-doc.m4: Add uninstall.
+
+2007-09-26  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Rename WITH_DOC in ENABLE_DOC
+	* urbi-doc.m4: Here.
+
+2007-09-26  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add option to enable doc build
+	Documentation is not built by default.
+	* doxygen.mk: Remove install rule.
+	Handle COND_DOC{OUTPUT,INSTALL}.
+	(doc-install internal-doc-install): New.
+	* urbi-doc.m4 (ENABLE_DOC): New.
+
 2007-09-26  Rémi Humbert  <humbert@gostai.com>
 
 	Add a variable EXTRA_CPPFLAGS for moc compilation in autotroll.mk
