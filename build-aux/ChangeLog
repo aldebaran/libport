@@ -1,3 +1,14 @@
+2007-10-05  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Change the search order for Boost.
+	* ax_boost_base.m4 (AX_BOOST_BASE): Change the search order
+	from `/usr /usr/local /opt /opt/local'
+	to   `/usr/local /opt/local /usr /opt'.  Rationale: There could be a
+	version of boost installed under /usr (typically by the packaging
+	system) overridden manually by the administrator (typically under
+	/usr/local).  That's why it's better to have /usr and /opt at the
+	end.
+
 2007-10-04  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Check for the `trunc' function.

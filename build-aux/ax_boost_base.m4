@@ -9,7 +9,7 @@
 #   Test for the Boost C++ libraries of a particular version (or newer)
 #
 #   If no path to the installed boost library is given the macro
-#   searchs under /usr, /usr/local, and /opt, and evaluates the
+#   searchs under /usr/local, /opt/local, /usr and /opt and evaluates the
 #   $BOOST_ROOT environment variable. Further documentation is
 #   available at <http://randspringer.de/boost/index.html>.
 #
@@ -64,13 +64,13 @@ if test "x$want_boost" = "xyes"; then
 	succeeded=no
 
 	dnl first we check the system location for boost libraries
-	dnl this location ist chosen if boost libraries are installed with the --layout=system option
+	dnl this location chosen if boost libraries are installed with the --layout=system option
 	dnl or if you install boost with RPM
-	if test "$ac_boost_path" != ""; then
+	if test x"$ac_boost_path" != x""; then
 		BOOST_LDFLAGS="-L$ac_boost_path/lib"
 		BOOST_CPPFLAGS="-I$ac_boost_path/include"
 	else
-		for ac_boost_path_tmp in /usr /usr/local /opt /opt/local ; do
+		for ac_boost_path_tmp in /usr/local /opt/local /usr /opt; do
 			if test -d "$ac_boost_path_tmp/include/boost" && test -r "$ac_boost_path_tmp/include/boost"; then
 				BOOST_LDFLAGS="-L$ac_boost_path_tmp/lib"
 				BOOST_CPPFLAGS="-I$ac_boost_path_tmp/include"
@@ -124,7 +124,7 @@ if test "x$want_boost" = "xyes"; then
 				done
 			fi
 		else
-			for ac_boost_path in /usr /usr/local /opt /opt/local ; do
+			for ac_boost_path in /usr/local /opt/local /usr /opt; do
 				if test -d "$ac_boost_path" && test -r "$ac_boost_path"; then
 					for i in `ls -d $ac_boost_path/include/boost-* 2>/dev/null`; do
 						_version_tmp=`echo $i | sed "s#$ac_boost_path##" | sed 's/\/include\/boost-//' | sed 's/_/./'`
