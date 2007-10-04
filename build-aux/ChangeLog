@@ -1,5 +1,10 @@
 2007-10-05  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Do the float-function checks in C++ mode.
+	* urbi-float-check.m4 (URBI_FLOAT_CHECK): Here.
+
+2007-10-05  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Change the search order for Boost.
 	* ax_boost_base.m4 (AX_BOOST_BASE): Change the search order
 	from `/usr /usr/local /opt /opt/local'
