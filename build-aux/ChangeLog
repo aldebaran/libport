@@ -1,3 +1,10 @@
+2007-10-06  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Fix detection of Windows for Boost.
+	* ax_boost.m4,
+	* ax_boost_thread.m4: Look for `mingw32' and not `ming32'.  Also
+	handle cygwin.
+
 2007-10-05  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Do the float-function checks in C++ mode.

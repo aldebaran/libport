@@ -276,7 +276,8 @@ AC_DEFUN([AX_BOOST],
 
 			 if test "x$build_os" = "xsolaris" ; then
   				 CXXFLAGS="-pthreads $CXXFLAGS"
-			 elif test "x$build_os" = "xming32" ; then
+			 elif test "x$build_os" = "xmingw32" \
+                           || test "x$build_os" = "xcygwin"; then
 				 CXXFLAGS="-mthreads $CXXFLAGS"
 			 else
 			 	case "$build_os" in
@@ -296,7 +297,8 @@ AC_DEFUN([AX_BOOST],
 			if test "x$ax_cv_boost_thread" = "xyes"; then
                if test "x$build_os" = "xsolaris" ; then
  				  BOOST_CPPFLAGS="-pthreads $BOOST_CPPFLAGS"
-			   elif test "x$build_os" = "xming32" ; then
+                           elif test "x$build_os" = "xmingw32" \
+                             || test "x$build_os" = "xcygwin"; then
  				  BOOST_CPPFLAGS="-mthreads $BOOST_CPPFLAGS"
 			   else
 				  BOOST_CPPFLAGS="-pthread $BOOST_CPPFLAGS"

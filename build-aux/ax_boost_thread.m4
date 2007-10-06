@@ -65,7 +65,7 @@ if test "x$with_boost_thread" = "xyes"; then
 	 CXXFLAGS_SAVE=$CXXFLAGS
 	 case $build_os in
 	   solaris)  CXXFLAGS="-pthreads $CXXFLAGS";;
-	   ming32)   CXXFLAGS="-mthreads $CXXFLAGS";;
+	   cygwin | mingw32)   CXXFLAGS="-mthreads $CXXFLAGS";;
 	   darwin*)  : ;; # Does not require a -pthread flag
 	   *)        CXXFLAGS="-pthread  $CXXFLAGS";;
 	 esac
@@ -81,7 +81,7 @@ if test "x$with_boost_thread" = "xyes"; then
     # FIXME: This should be CXXFLAGS, not CPPFLAGS.
      case $build_os in
        solaris)  BOOST_CPPFLAGS="-pthreads $BOOST_CPPFLAGS";;
-       ming32)   BOOST_CPPFLAGS="-mthreads $BOOST_CPPFLAGS";;
+       cygwin | mingw32)   BOOST_CPPFLAGS="-mthreads $BOOST_CPPFLAGS";;
        darwin*)  : ;; # Does not require a -pthread flag
        *)        BOOST_CPPFLAGS="-pthread  $BOOST_CPPFLAGS";;
      esac
