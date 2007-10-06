@@ -63,7 +63,7 @@ if test "x$with_boost_thread" = "xyes"; then
 		 [ax_cv_boost_thread],
 	[AC_LANG_PUSH([C++])
 	 CXXFLAGS_SAVE=$CXXFLAGS
-	 case $build_os in
+	 case $host_os in
 	   solaris)  CXXFLAGS="-pthreads $CXXFLAGS";;
 	   cygwin | mingw32)   CXXFLAGS="-mthreads $CXXFLAGS";;
 	   darwin*)  : ;; # Does not require a -pthread flag
@@ -79,7 +79,7 @@ if test "x$with_boost_thread" = "xyes"; then
 	])
   if test "x$ax_cv_boost_thread" = "xyes"; then
     # FIXME: This should be CXXFLAGS, not CPPFLAGS.
-     case $build_os in
+     case $host_os in
        solaris)  BOOST_CPPFLAGS="-pthreads $BOOST_CPPFLAGS";;
        cygwin | mingw32)   BOOST_CPPFLAGS="-mthreads $BOOST_CPPFLAGS";;
        darwin*)  : ;; # Does not require a -pthread flag
@@ -91,7 +91,7 @@ if test "x$with_boost_thread" = "xyes"; then
 
 
     LDFLAGS_SAVE=$LDFLAGS
-    case $build_os in
+    case $host_os in
       *bsd* ) LDFLAGS="-pthread $LDFLAGS";;
     esac
 
@@ -120,7 +120,7 @@ if test "x$with_boost_thread" = "xyes"; then
     if test "x$link_thread" = "xno"; then
        AC_MSG_ERROR([Could not link against $ax_lib!])
     else
-       case $build_os in
+       case $host_os in
 	  *bsd* ) BOOST_LDFLAGS="-pthread $BOOST_LDFLAGS" ;;
        esac
     fi

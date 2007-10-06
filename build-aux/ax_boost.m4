@@ -274,13 +274,13 @@ AC_DEFUN([AX_BOOST],
 						[AC_LANG_PUSH([C++])
 			 CXXFLAGS_SAVE=$CXXFLAGS
 
-			 if test "x$build_os" = "xsolaris" ; then
+			 if test "x$host_os" = "xsolaris" ; then
   				 CXXFLAGS="-pthreads $CXXFLAGS"
-			 elif test "x$build_os" = "xmingw32" \
-                           || test "x$build_os" = "xcygwin"; then
+			 elif test "x$host_os" = "xmingw32" \
+                           || test "x$host_os" = "xcygwin"; then
 				 CXXFLAGS="-mthreads $CXXFLAGS"
 			 else
-			 	case "$build_os" in
+			 	case "$host_os" in
 					darwin*) # OSX does not need -pthread
 						CXXFLAGS="$CXXFLAGS";;
 					*)
@@ -295,10 +295,10 @@ AC_DEFUN([AX_BOOST],
              AC_LANG_POP([C++])
 			])
 			if test "x$ax_cv_boost_thread" = "xyes"; then
-               if test "x$build_os" = "xsolaris" ; then
+               if test "x$host_os" = "xsolaris" ; then
  				  BOOST_CPPFLAGS="-pthreads $BOOST_CPPFLAGS"
-                           elif test "x$build_os" = "xmingw32" \
-                             || test "x$build_os" = "xcygwin"; then
+                           elif test "x$host_os" = "xmingw32" \
+                             || test "x$host_os" = "xcygwin"; then
  				  BOOST_CPPFLAGS="-mthreads $BOOST_CPPFLAGS"
 			   else
 				  BOOST_CPPFLAGS="-pthread $BOOST_CPPFLAGS"
@@ -308,7 +308,7 @@ AC_DEFUN([AX_BOOST],
 				AC_DEFINE(HAVE_BOOST_THREAD,,[define if the Boost::THREAD library is available])
 				BN=boost_thread
      			LDFLAGS_SAVE=$LDFLAGS
-                        case "x$build_os" in
+                        case "x$host_os" in
                           *bsd* )
                                LDFLAGS="-pthread $LDFLAGS"
                           break;
@@ -324,7 +324,7 @@ AC_DEFUN([AX_BOOST],
 				if test "x$link_thread" = "xno"; then
 					AC_MSG_NOTICE(Could not link against $ax_lib !)
                 else
-                    case "x$build_os" in
+                    case "x$host_os" in
                        *bsd* )
                        BOOST_LDFLAGS="-pthread $BOOST_LDFLAGS"
                        break;

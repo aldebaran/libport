@@ -1,5 +1,12 @@
 2007-10-06  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Fix boost cross-compilation support.
+	* ax_boost.m4,
+	* ax_boost_thread.m4: Make decisions based on $host_os, not
+	$build_os.
+
+2007-10-06  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Fix detection of Windows for Boost.
 	* ax_boost.m4,
 	* ax_boost_thread.m4: Look for `mingw32' and not `ming32'.  Also
