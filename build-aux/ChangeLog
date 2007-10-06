@@ -1,3 +1,10 @@
+2007-10-07  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Disable a warning for GCC MinGW 3.4.5.
+	* urbi-prog-cxx.m4: Use -Wno-uninitialized on Windows with GCC
+	because of the annoying false positive of GCC MinGW 3.4.5 which
+	interferes with -Werror.
+
 2007-10-06  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Fix boost cross-compilation support.

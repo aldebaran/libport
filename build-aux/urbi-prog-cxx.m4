@@ -7,7 +7,8 @@ AC_PREREQ([2.60])
 # -------------
 # Look for a C++ compiler, and pass interesting warning options.
 AC_DEFUN([URBI_PROG_CXX],
-[# Look for a C++ compiler.
+[AC_REQUIRE([AC_CANONICAL_HOST])dnl
+# Look for a C++ compiler.
 AC_LANG_PUSH([C++])
 AC_PROG_CXX
 
@@ -38,6 +39,16 @@ TC_CXX_WARNINGS([[-Wall],
 		 [-W],
 		 [-Woverloaded-virtual],
 		 [-Wformat]])
+
+# If we're building on Windows with GCC, it's likely to be gcc 3.4.5 which has
+# *many* false positive when it comes to uninitialized variable use.
+case $host_os in
+  cygwin* | mingw*)
+    if test "$GXX" = yes; then
+      TC_CXX_WARNINGS([-Wno-uninitialized])
+    fi
+    ;;
+esac
 
 # Pacify g++ on Boost Variants.
 # TC_CXX_WARNINGS([[-Wno-shadow]])
