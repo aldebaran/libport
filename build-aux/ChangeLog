@@ -1,5 +1,10 @@
 2007-10-07  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Disable one more useless warning of MSVC.
+	* urbi-prog-cxx.m4: Disable warning C4512.
+
+2007-10-07  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Disable a warning for GCC MinGW 3.4.5.
 	* urbi-prog-cxx.m4: Use -Wno-uninitialized on Windows with GCC
 	because of the annoying false positive of GCC MinGW 3.4.5 which

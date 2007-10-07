@@ -149,6 +149,8 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 # warning C4127: conditional expression is constant
 # eg in: while (true) ...
 #
+# warning C4512: 'classname' : assignment operator could not be generated
+#
 # warning C4571: Informational: catch(...) semantics changed since Visual
 #                C++ 7.1; structured exceptions (SEH) are no longer caught.
 # http://msdn2.microsoft.com/en-us/library/55s8esw4.aspx:
@@ -182,6 +184,7 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 #
 TC_CXX_WARNINGS([[/wd4121],
 		 [/wd4127],
+		 [/wd4512],
 		 [/wd4571],
 		 [/wd4625],
 		 [/wd4626],
@@ -198,7 +201,7 @@ TC_CXX_WARNINGS([[/wd4121],
 # There are too many warnings in OPEN-R (its fault).
 # Don't just look at its name, we might have ccache prefixing it.
 case $($CXX --version | sed 1q) in
-  mipsel-linux-*) ;;
+  mipsel-linux-*) :;;
   *)
     # We currently have too many unresolved warnings with this compiler.
     # (Not its fault, ours.)
