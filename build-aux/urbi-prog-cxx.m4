@@ -42,11 +42,9 @@ TC_CXX_WARNINGS([[-Wall],
 
 # If we're building on Windows with GCC, it's likely to be gcc 3.4.5 which has
 # *many* false positive when it comes to uninitialized variable use.
-case $host_os in
-  cygwin* | mingw*)
-    if test "$GXX" = yes; then
-      TC_CXX_WARNINGS([-Wno-uninitialized])
-    fi
+case $GXX:$host_os in
+  yes:cygwin* | yes:mingw*)
+    TC_CXX_WARNINGS([-Wno-uninitialized])
     ;;
 esac
 

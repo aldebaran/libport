@@ -1,5 +1,11 @@
 2007-10-08  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Code simplification.
+	* urbi-prog-cxx.m4: Minor code simplification suggested by
+	Akim Demaille.
+
+2007-10-08  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	More cleanup in the Boost macros.
 	* ax_boost.m4,
 	* ax_boost_thread.m4: More code cleanup.
