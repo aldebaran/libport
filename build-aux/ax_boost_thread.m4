@@ -63,10 +63,14 @@ if test "x$with_boost_thread" = "xyes"; then
 		 [ax_cv_boost_thread],
 	[AC_LANG_PUSH([C++])
 	 CXXFLAGS_SAVE=$CXXFLAGS
+         # That's dirty.
 	 case $host_os in
 	   solaris)  CXXFLAGS="-pthreads $CXXFLAGS";;
 	   cygwin | mingw32)   CXXFLAGS="-mthreads $CXXFLAGS";;
 	   darwin*)  : ;; # Does not require a -pthread flag
+           *bsd*)
+             BOOST_LDFLAGS="-pthread $BOOST_LDFLAGS"
+             CXXFLAGS="-pthread  $CXXFLAGS";;
 	   *)        CXXFLAGS="-pthread  $CXXFLAGS";;
 	 esac
 	 AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[@%:@include <boost/thread/thread.hpp>]],
@@ -89,11 +93,6 @@ if test "x$with_boost_thread" = "xyes"; then
     AC_DEFINE([HAVE_BOOST_THREAD],,
 	      [define if the Boost::Thread library is available])
 
-
-    LDFLAGS_SAVE=$LDFLAGS
-    case $host_os in
-      *bsd* ) LDFLAGS="-pthread $LDFLAGS";;
-    esac
 
     BN=boost_thread
     if test "x$ax_boost_user_thread_lib" = "x"; then

@@ -275,42 +275,39 @@ AC_DEFUN([AX_BOOST],
 			 case $host_os in
 			   solaris)
 			     CXXFLAGS="-pthreads $CXXFLAGS";;
-			   mingw32|cygwin)"; then
+			   mingw32 | cygwin)
 			     CXXFLAGS="-mthreads $CXXFLAGS";;
-			   darwin*) # OSX does not need -pthread
-			     CXXFLAGS=$CXXFLAGS;;
+			   darwin) :;; # OSX does not need -pthread
 			   *)
 			     CXXFLAGS="-pthread $CXXFLAGS";;
 			 esac
 			 AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[@%:@include <boost/thread/thread.hpp>]],
                                    [[boost::thread_group thrds;
                                    return 0;]]),
-                   ax_cv_boost_thread=yes, ax_cv_boost_thread=no)
-			 CXXFLAGS=$CXXFLAGS_SAVE
-             AC_LANG_POP([C++])
-			])
-			if test "x$ax_cv_boost_thread" = "xyes"; then
-               		  case $host_os in
-			    solaris)
- 				  BOOST_CPPFLAGS="-pthreads $BOOST_CPPFLAGS";;
-                            mingw32|cygwin)
- 				  BOOST_CPPFLAGS="-mthreads $BOOST_CPPFLAGS";;
-			    *)
-				  BOOST_CPPFLAGS="-pthread $BOOST_CPPFLAGS";;
-			   esac
+                                   ax_cv_boost_thread=yes, ax_cv_boost_thread=no)
+			CXXFLAGS=$CXXFLAGS_SAVE
+                        AC_LANG_POP([C++])
+	              ])dnl End AC_CACHE_CHECK
+	if test "x$ax_cv_boost_thread" = "xyes"; then
+	      LDFLAGS_SAVE=$LDFLAGS
+	      case $host_os in
+                solaris)
+		  CXXFLAGS="-pthreads $CXXFLAGS";;
+                mingw32 | cygwin)
+  		  CXXFLAGS="-mthreads $CXXFLAGS";;
+	        darwin) :;; # OSX does not need -pthread
+		*bsd*)
+		  CXXFLAGS="-pthread $CXXFLAGS"
+		  LDFLAGS="-pthread $LDFLAGS";;
+	        *)
+		  CXXFLAGS="-pthread $CXXFLAGS";;
+	      esac
 
-				AC_SUBST(BOOST_CPPFLAGS)
-				AC_DEFINE(HAVE_BOOST_THREAD,,[define if the Boost::THREAD library is available])
-				BN=boost_thread
-     			LDFLAGS_SAVE=$LDFLAGS
-                        case "x$host_os" in
-                          *bsd* )
-                               LDFLAGS="-pthread $LDFLAGS"
-                          break;
-                          ;;
-                        esac
+              AC_SUBST(BOOST_CPPFLAGS)
+              AC_DEFINE(HAVE_BOOST_THREAD,,[define if the Boost::THREAD library is available])
+	      BN=boost_thread
 
-				for ax_lib in $BN $BN-$CC $BN-$CC-mt $BN-$CC-mt-s $BN-$CC-s \
+	      for ax_lib in $BN $BN-$CC $BN-$CC-mt $BN-$CC-mt-s $BN-$CC-s \
                               lib$BN lib$BN-$CC lib$BN-$CC-mt lib$BN-$CC-mt-s lib$BN-$CC-s \
                               $BN-mgw $BN-mgw $BN-mgw-mt $BN-mgw-mt-s $BN-mgw-s ; do
 				    AC_CHECK_LIB($ax_lib, main, [BOOST_THREAD_LIB="-l$ax_lib"; AC_SUBST(BOOST_THREAD_LIB) link_thread=yes; break],

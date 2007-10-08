@@ -1,3 +1,9 @@
+2007-10-08  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	More cleanup in the Boost macros.
+	* ax_boost.m4,
+	* ax_boost_thread.m4: More code cleanup.
+
 2007-10-08  Akim Demaille  <demaille@gostai.com>
 
 	Improve autoconf style.
