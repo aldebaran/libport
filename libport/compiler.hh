@@ -54,10 +54,13 @@
 
 #  define ECHO(Msg)					\
   do {							\
-    std::cerr << __FILE__ ":" << __LINE__ << ": "	\
-	      << __PRETTY_FUNCTION__ << ": "		\
-	      << Msg << std::endl;			\
-    SLEEP(1);						\
+    if (!getenv("DISABLE_DEBUG_TRACES"))		\
+    {							\
+      std::cerr << __FILE__ ":" << __LINE__ << ": "	\
+		<< __PRETTY_FUNCTION__ << ": "		\
+		<< Msg << std::endl;			\
+      SLEEP(1);						\
+    }							\
   } while (0)
 
 # else

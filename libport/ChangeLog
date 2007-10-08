@@ -1,3 +1,8 @@
+2007-10-08  Akim Demaille  <demaille@gostai.com>
+
+	DISABLE_DEBUG_TRACES.
+	* compiler.hh (ECHO): If DISABLE_DEBUG_TRACES, do nothing.
+
 2007-10-04  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Provide replacement implementations for `trunc'.
