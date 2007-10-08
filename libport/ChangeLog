@@ -1,5 +1,11 @@
 2007-10-08  Akim Demaille  <demaille@gostai.com>
 
+	Disable invariant.
+	* contract.hh: Disable, there is a member with the same name
+	in uvar.hh.
+
+2007-10-08  Akim Demaille  <demaille@gostai.com>
+
 	DISABLE_DEBUG_TRACES.
 	* compiler.hh (ECHO): If DISABLE_DEBUG_TRACES, do nothing.
 

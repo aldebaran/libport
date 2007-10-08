@@ -28,7 +28,7 @@ void __Terminate (const char*, int, const char*) ATTRIBUTE_NORETURN;
 # ifdef NDEBUG
 
 #  define assertion(expr)         ((void) 0)
-#  define invariant(expr)         ((void) 0)
+//#  define invariant(expr)         ((void) 0)
 #  define precondition(expr)      ((void) 0)
 #  define postcondition(expr)     ((void) 0)
 
@@ -39,12 +39,12 @@ void __FailedCondition (const char* condType,
 		       const char* fileName,
 		       int fileLine) ATTRIBUTE_NORETURN;
 
-#  define __TestCondition(condType,expr) 				\
-  ((void) ((expr) ? 0 : (__FailedCondition ( #condType, #expr, 		\
+#  define __TestCondition(condType,expr)				\
+  ((void) ((expr) ? 0 : (__FailedCondition ( #condType, #expr,		\
 					   __FILE__, __LINE__ ), 0)))
 
 #  define assertion(expr)         __TestCondition (Assertion,expr)
-#  define invariant(expr)         __TestCondition (Invariant,expr)
+//#  define invariant(expr)         __TestCondition (Invariant,expr)
 #  define precondition(expr)      __TestCondition (Precondition,expr)
 #  define postcondition(expr)     __TestCondition (Postcondition,expr)
 
