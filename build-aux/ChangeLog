@@ -1,3 +1,11 @@
+2007-10-08  Akim Demaille  <demaille@gostai.com>
+
+	Improve autoconf style.
+	This macro is a big piece of shit written by people who
+	understand nothing about Autoconf.  We should clean it, and
+	contribute it under the name of Gostai.
+	* ax_boost.m4: Improve shell coding style.
+
 2007-10-07  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Disable one more useless warning of MSVC.
