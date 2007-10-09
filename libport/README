@@ -42,9 +42,10 @@ class libport::Semaphore.
 ** separator.hh.
 Output the content of containers with a separator between items.
 
-** shared-ref.hh
-libport::shared_ref<T> ref-counted pointers on top of
+** shared-ptr.hh
+libport::shared_ptr<T> ref-counted pointers on top of
 boost::shared_ptr.
+Can be disabled with NO_BOOST.
 
 ** singleton-ptr.hh
 Macros STATIC_INSTANCE(Cl, Name), EXTERN_STATIC_INSTANCE(Cl, Name).

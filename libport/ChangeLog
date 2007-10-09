@@ -1,3 +1,9 @@
+2007-10-09  Thomas Moulard  <thomas@moulard.net>
+
+	Disable shared-ptr if NO_BOOST is defined.
+	* README: Document.
+	* shared-ptr.hh: Here.
+
 2007-10-08  Akim Demaille  <demaille@gostai.com>
 
 	Disable invariant.
