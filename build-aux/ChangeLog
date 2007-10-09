@@ -1,3 +1,11 @@
+2007-10-09  Rémi Humbert  <humbert@gostai.com>
+
+	Add configure macro for lock-system 
+	* urbi-lock-system.m4: New: macros test that 'cobf' binary is
+	installed, call openssl configure macro, define some compilation
+	flags. Add option 'disable-locksystem' to configure to disable
+	module compilation.
+
 2007-10-08  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Code simplification.
