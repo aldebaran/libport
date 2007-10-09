@@ -38,20 +38,20 @@ esac
 
 
 # Basic test about OpenSSL
-AC_TRY_RUN(
+AC_LINK_IFELSE(
 [
-#include <string.h>
-#include <openssl/rand.h>
-int main(void)
-{
-	char a[2048];
-	memset(a, 0, sizeof(a));
-	return(0);
-	RAND_add(a, sizeof(a), sizeof(a));
-}
+AC_LANG_PROGRAM([[
+        #include <string.h>
+        #include <openssl/rand.h>
+]],
+[[      char a[2048];
+        memset(a, 0, sizeof(a));
+        return(0);
+        RAND_add(a, sizeof(a), sizeof(a));
+]])
 ],
 [
-	found_ssl=true
+        found_ssl=true
 ], [])
 
 LIBS="$saved_LIBS"
