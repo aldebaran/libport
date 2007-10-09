@@ -21,7 +21,9 @@ namespace libport
   public:
     template <typename T> std::ostream& operator<< (const T* t) const;
     template <typename T> std::ostream& operator<< (T* t) const;
+# ifndef LIBPORT_NO_BOOST
     template <typename T> std::ostream& operator<< (const shared_ptr<T>& t) const;
+# endif // !LIBPORT_NO_BOOST
     template <typename T> std::ostream& operator<< (const T& t) const;
     template <typename T> std::ostream& operator<< (T& t) const;
 

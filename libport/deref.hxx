@@ -32,6 +32,7 @@ namespace libport
       return ostr_ << "NULL";
   }
 
+#ifndef LIBPORT_NO_BOOST
   template <typename T>
   std::ostream&
   Deref::operator<< (const shared_ptr<T>& t) const
@@ -41,6 +42,7 @@ namespace libport
     else
       return ostr_ << "NULL";
   }
+#endif // !LIBPORT_NO_BOOST
 
   template <typename T>
   std::ostream&

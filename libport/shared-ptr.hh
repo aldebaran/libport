@@ -6,7 +6,9 @@
 #ifndef LIBPORT_SHARED_REF_HH
 # define LIBPORT_SHARED_REF_HH
 
-# ifndef NO_BOOST
+# include "libport/config.h"
+
+# ifndef LIBPORT_NO_BOOST
 #  include <boost/shared_ptr.hpp>
 
 namespace libport
@@ -97,5 +99,5 @@ namespace libport
 
 #  include "libport/shared-ptr.hxx"
 
-# endif // !NO_BOOST
+# endif // !LIBPORT_NO_BOOST
 #endif // !LIBPORT_SHARED_REF_HH

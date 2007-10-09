@@ -1,5 +1,12 @@
 2007-10-09  Thomas Moulard  <thomas@moulard.net>
 
+	Disable shared-ptr if Boost is not available.
+	* deref.hh,
+	* deref.hxx: Here.
+	* shared-ptr.hh: Include config.h, replace NO_BOOST by LIBPORT_NO_BOOST.
+
+2007-10-09  Thomas Moulard  <thomas@moulard.net>
+
 	Disable shared-ptr if NO_BOOST is defined.
 	* README: Document.
 	* shared-ptr.hh: Here.
