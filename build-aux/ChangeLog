@@ -1,10 +1,71 @@
+2007-10-10  Rémi Humbert  <humbert@gostai.com>
+
+	Automerged branches/1.0 into trunk 
+	* .automerge: New. Contains automerge infos
+
+	merge -r 1156:1238 https://svn.gostai.com/svn/common/project-template/branches/1.0/build-aux
+
+	2007-10-10  Rémi Humbert  <humbert@gostai.com>
+
+	* urbi-with-openssl.m4: In urbi-openssl macro, check we can link but don't run test prog..
+
+	2007-10-10  Rémi Humbert  <humbert@gostai.com>
+
+	Add configure macro for lock-system
+	* urbi-lock-system.m4: New: macros test that 'cobf' binary is
+	        installed, call openssl configure macro, define some compilation
+	        flags. Add option 'disable-locksystem' to configure to disable
+	        module compilation.
+
+	2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add DISTCLEANFILES in variable list
+	* init.mk: Here.
+
+	2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Force mkdir for docdir
+	* doxygen.mk: Here.
+
+	2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Restore dummy rule for srcdoc
+	* doxygen.mk: Here.
+
+	2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Fixes for documentation
+	* config-headers-prefixed.mk: _configs.sed is in top_builddir.
+	* doxygen.mk: Add rules for uninstall.
+	Don't use srcdoc as a rule, its bypasses doc desactivation.
+	* urbi-doc.m4: Add uninstall.
+
+	2007-09-26  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Rename WITH_DOC in ENABLE_DOC
+	* urbi-doc.m4: Here.
+
+	2007-09-26  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add option to enable doc build
+	Documentation is not built by default.
+	* doxygen.mk: Remove install rule.
+	Handle COND_DOC{OUTPUT,INSTALL}.
+	(doc-install internal-doc-install): New.
+	* urbi-doc.m4 (ENABLE_DOC): New.
+
+	2007-09-21  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Merge wrapper add from trunk
+	* urbi-tests.m4: Here.
+
 2007-10-09  Rémi Humbert  <humbert@gostai.com>
 
 	* urbi-with-openssl.m4: In urbi-openssl macro, check we can link but don't run test prog.
 
 2007-10-09  Rémi Humbert  <humbert@gostai.com>
 
-	Add configure macro for lock-system 
+	Add configure macro for lock-system
 	* urbi-lock-system.m4: New: macros test that 'cobf' binary is
 	installed, call openssl configure macro, define some compilation
 	flags. Add option 'disable-locksystem' to configure to disable
@@ -203,7 +264,7 @@
 
 	Build doc in builddir not in srcdir
 	* doxygen.mk: Here.
-	add all-local rule to force doc generation.	
+	add all-local rule to force doc generation.
 
 2007-08-28  Type Your Name Here  <your.mail.here@FIXME.com>
 
@@ -223,12 +284,12 @@
 
 2007-08-01  Rémi Humbert  <humbert@gostai.com>
 
-	Add search for boost in /opt/local 
+	Add search for boost in /opt/local
 	* ax_boost_base.m4: .
 
 2007-07-30  Rémi Humbert  <humbert@gostai.com>
 
-	Add libssl to openssl ld flags 
+	Add libssl to openssl ld flags
 	* urbi-with-openssl.m4: .
 
 2007-07-29  Benoit Sigoure  <tsuna@lrde.epita.fr>
@@ -352,8 +413,8 @@
 
 2007-06-19  CÃ©line_Blaszykowski  <blaszykowski@gostai.com>
 
-	Name correction. 
-	
+	Name correction.
+
 	* urbi_with_opencv.m4: Remove the underscores.
         * urbi-with-opencv.m4: Remplaced by dashes.
 
