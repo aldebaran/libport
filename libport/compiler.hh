@@ -51,10 +51,6 @@
 | ECHO & PING.  |
 `--------------*/
 
-/*--------------.
-| ECHO & PING.  |
-`--------------*/
-
 // Disable debug traces when compiling with NDEBUG.
 # ifdef NDEBUG
 #  undef ENABLE_DEBUG_TRACES
