@@ -1,3 +1,8 @@
+2007-10-10  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Add __PRETTY_FUNCTION__ support for MSVC.
+	* compiler.hh [_MSC_VER]: Define __PRETTY_FUNCTION__.
+
 2007-10-09  Thomas Moulard  <thomas@moulard.net>
 
 	Disable shared-ptr if Boost is not available.

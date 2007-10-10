@@ -34,10 +34,22 @@
   } while(0)
 
 # else
-
 #  define SLEEP(C) ((void) 0)
+# endif // !LIBPORT_URBI_ENV_AIBO
 
-# endif
+/*----------------------.
+| __PRETTY_FUNCTION__.  |
+`----------------------*/
+
+// __PRETTY_FUNCTION__ is a GNU extension.  MSVC has something somewhat
+// similar although it's less pretty.
+# ifdef _MSC_VER
+#  define __PRETTY_FUNCTION__ __FUNCTION__
+# endif // _MSC_VER
+
+/*--------------.
+| ECHO & PING.  |
+`--------------*/
 
 /*--------------.
 | ECHO & PING.  |
