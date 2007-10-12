@@ -1,3 +1,9 @@
+2007-10-12  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add missing blank line
+	* ax_boost.m4: Here.
+	This caused a syntax error in configure ("} if ...").
+
 2007-10-10  Rémi Humbert  <humbert@gostai.com>
 
 	Automerged branches/1.0 into trunk 

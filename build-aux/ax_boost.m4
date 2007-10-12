@@ -288,6 +288,7 @@ AC_DEFUN([AX_BOOST],
 			CXXFLAGS=$CXXFLAGS_SAVE
                         AC_LANG_POP([C++])
 	              ])dnl End AC_CACHE_CHECK
+
 	if test "x$ax_cv_boost_thread" = "xyes"; then
 	      LDFLAGS_SAVE=$LDFLAGS
 	      case $host_os in
