@@ -7,7 +7,7 @@ AC_REQUIRE([URBI_FLOAT_CHECK])dnl
 # Check for Boost headers
 AX_BOOST_BASE([1.34])
 # Check for Boost.Thread
-if -n "$openr" && $openr; then
+if test -n "$openr" && $openr; then
   AC_MSG_NOTICE([[OpenR in use: not using Boost.Thread.]])
 else
   AX_BOOST_THREAD
