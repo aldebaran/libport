@@ -1,5 +1,12 @@
 2007-10-12  Guillaume Deslandes  <deslandes@gostai.com>
 
+	Test if "$openr" is not empty
+	* urbi-libport.m4: Here.
+	An empty variable was considered true and prevented boost_thread
+	to be used.
+
+2007-10-12  Guillaume Deslandes  <deslandes@gostai.com>
+
 	Add missing blank line
 	* ax_boost.m4: Here.
 	This caused a syntax error in configure ("} if ...").
