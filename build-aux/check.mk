@@ -85,18 +85,24 @@ am__check_post =					\
 estatus=$$?;						\
 if test $$estatus -eq 177; then				\
   $(ENABLE_HARD_ERRORS) || estatus=1;			\
-fi;		        		        	\
+fi;							\
 $(am__tty_colors);					\
-case $$estatus:" $(XFAIL_TESTS) " in			\
-    0:*" $$(basename $<) "*) col=$$red; res=XPASS;;	\
-    0:*)                     col=$$grn; res=PASS ;;	\
-    77:*)                    col=$$blu; res=SKIP ;;	\
-    177:*)                   col=$$red; res=FAIL ;;	\
-    *:*" $$(basename $<) "*) col=$$lgn; res=XFAIL;;	\
-    *:*)                     col=$$red; res=FAIL ;;	\
+xfailed=PASS;						\
+for xfail in : $(XFAIL_TESTS); do			\
+  case $< in						\
+    $$xfail | */$$xfail) xfailed=XFAIL; break;		\
+  esac;							\
+done;							\
+case $$estatus:$$xfailed in				\
+    0:XFAIL) col=$$red; res=XPASS;;			\
+    0:*)     col=$$grn; res=PASS ;;			\
+    77:*)    col=$$blu; res=SKIP ;;			\
+    177:*)   col=$$red; res=FAIL ;;			\
+    *:XFAIL) col=$$lgn; res=XFAIL;;			\
+    *:*)     col=$$red; res=FAIL ;;			\
 esac;							\
-echo "$${col}$$res$${std}: $$(basename $<)";		\
-echo "$$res: $$(basename $<) (exit: $$estatus)" |	\
+echo "$${col}$$res$${std}: $@";				\
+echo "$$res: $@ (exit: $$estatus)" |			\
   $(am__rst_section) >$@;				\
 cat $@-t >>$@;						\
 rm $@-t

@@ -1,3 +1,13 @@
+2007-10-15  Akim Demaille  <demaille@gostai.com>
+
+	Support tests in sub dirs.
+	* check.mk (am__check_post): Change the handling of XFAIL_TESTS
+	to support subdir tests.
+	Also, unfortunately, report about the log file, which directory
+	is correct, instead of relying on the test file itself, which
+	location is unclear.
+	If you know how to fix this, be my guest.
+
 2007-10-12  Guillaume Deslandes  <deslandes@gostai.com>
 
 	Fix openr test
