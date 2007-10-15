@@ -1,5 +1,10 @@
 2007-10-15  Akim Demaille  <demaille@gostai.com>
 
+	Create the log dir if needed.
+	* check.mk (am__check_pre): Do it.
+
+2007-10-15  Akim Demaille  <demaille@gostai.com>
+
 	Support tests in sub dirs.
 	* check.mk (am__check_post): Change the handling of XFAIL_TESTS
 	to support subdir tests.

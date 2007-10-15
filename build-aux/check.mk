@@ -70,9 +70,11 @@ if test -t 1 2>/dev/null; then			\
   std='[m';					\
 fi
 
-# To be inserted before the command running the test.  Stores in $dir
-# the directory containing $<, and passes the TEST_ENVIRONMENT.
+# To be inserted before the command running the test.  Creates the
+# directory for the log if needed.  Stores in $dir the directory
+# containing $<, and passes the TEST_ENVIRONMENT.
 am__check_pre =					\
+$(mkdir_p) "$$(dirname $@)";			\
 if test -f ./$<; then dir=./;			\
 elif test -f $<; then dir=;			\
 else dir="$(srcdir)/"; fi;			\
