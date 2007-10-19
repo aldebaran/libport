@@ -35,6 +35,9 @@
 #   undef LIBPORT_DEFINED_WINSOCKAPI_
 #  endif
 
+// Based on the value I have on my G4 -- Akim.
+typedef uint32_t useconds_t;
+
 inline
 int
 usleep (useconds_t microseconds)

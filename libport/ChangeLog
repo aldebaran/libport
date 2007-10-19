@@ -1,5 +1,10 @@
 2007-10-19  Akim Demaille  <demaille@gostai.com>
 
+	Define useconds_t.
+	* windows.hh: here.
+
+2007-10-19  Akim Demaille  <demaille@gostai.com>
+
 	Avoid macros.
 	* windows.hh (sleep, usleep): Rewrite as inline functions.
 	This has not been tested on Windows...
