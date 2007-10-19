@@ -1,3 +1,9 @@
+2007-10-19  Akim Demaille  <demaille@gostai.com>
+
+	Avoid macros.
+	* windows.hh (sleep, usleep): Rewrite as inline functions.
+	This has not been tested on Windows...
+
 2007-10-10  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Remove a duplicate comment.

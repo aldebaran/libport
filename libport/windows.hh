@@ -35,8 +35,22 @@
 #   undef LIBPORT_DEFINED_WINSOCKAPI_
 #  endif
 
-#  define usleep(a) Sleep((a) < 1000 ? 1 : (a) / 1000)
-#  define sleep(a) Sleep((a) * 1000)
+inline
+int
+usleep (useconds_t microseconds)
+{
+  Sleep(microseconds < 1000 ? 1 : microseconds / 1000);
+  return 0;
+}
+
+inline
+unsigned int
+sleep(unsigned int seconds)
+{
+  Sleep(seconds * 1000);
+  return 0;
+}
+
 
 // Define POSIX types if compiling with Visual C++.
 #  ifdef _MSC_VER
