@@ -35,6 +35,19 @@
 #   undef LIBPORT_DEFINED_WINSOCKAPI_
 #  endif
 
+// Define POSIX types if compiling with Visual C++.
+#  ifdef _MSC_VER
+// XXX: Maybe this ought to be in a new file, say, stdint.h?
+typedef UINT8 uint8_t;
+typedef INT8 int8_t;
+typedef UINT16 uint16_t;
+typedef INT16 int16_t;
+typedef UINT32 uint32_t;
+typedef INT32 int32_t;
+typedef UINT64 uint64_t;
+typedef INT64 int64_t;
+#  endif
+
 // Based on the value I have on my G4 -- Akim.
 typedef uint32_t useconds_t;
 
@@ -54,19 +67,6 @@ sleep(unsigned int seconds)
   return 0;
 }
 
-
-// Define POSIX types if compiling with Visual C++.
-#  ifdef _MSC_VER
-// XXX: Maybe this ought to be in a new file, say, stdint.h?
-typedef UINT8 uint8_t;
-typedef INT8 int8_t;
-typedef UINT16 uint16_t;
-typedef INT16 int16_t;
-typedef UINT32 uint32_t;
-typedef INT32 int32_t;
-typedef UINT64 uint64_t;
-typedef INT64 int64_t;
-#  endif
 
 # endif // !WIN32
 

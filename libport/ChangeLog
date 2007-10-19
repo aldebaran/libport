@@ -1,5 +1,10 @@
 2007-10-19  Akim Demaille  <demaille@gostai.com>
 
+	Define uint32_t before using it.
+	* windows.hh: here.
+
+2007-10-19  Akim Demaille  <demaille@gostai.com>
+
 	Define useconds_t.
 	* windows.hh: here.
 
