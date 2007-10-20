@@ -116,8 +116,14 @@ rm $@-t
 	@$(am__check_pre) $${dir}$< $(am__check_post)
 
 # The exact same commands, but for programs.
-%.log: %$(EXEEXT)
-	@$(am__check_pre) $${dir}$< $(am__check_post)
+#
+# Should be active by default, because it sometimes triggers when in
+# should not.  For instance I had foo.chk tests that relied on
+# directories with the name, without extensions (foo).  Then Make
+# tried to run the directories to produce foo.log, not foo.chk.
+#
+#%.log: %$(EXEEXT)
+#	@$(am__check_pre) $${dir}$< $(am__check_post)
 
 TEST_LOGS ?= $(TESTS:.test=.log)
 TEST_SUITE_LOG = test-suite.log

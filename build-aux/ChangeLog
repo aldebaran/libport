@@ -1,5 +1,11 @@
 2007-10-20  Akim Demaille  <akim.demaille@free.fr>
 
+	Don't activate .exe => .log.
+	* check.mk: Here.
+	Sometimes it triggers when it should not.
+
+2007-10-20  Akim Demaille  <akim.demaille@free.fr>
+
 	Indentation changes.
 	* build-aux/ax_boost.m4: here.
 
