@@ -1,3 +1,9 @@
+2007-10-20  Akim Demaille  <demaille@gostai.com>
+
+	Reformat.
+	* urbi-resolve-dir.m4: Comment to please AC macro archive.
+	But this piece of junk wants dnl instead of #.
+
 2007-10-20  Akim Demaille  <akim.demaille@free.fr>
 
 	Don't activate .exe => .log.

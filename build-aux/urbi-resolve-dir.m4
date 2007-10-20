@@ -1,4 +1,37 @@
+# @synopsis URBI_RESOLVE_DIR_PREPARE([DIRECTORY-WITH-VARS])
+#           -----------------------------------------------
+# @summary Echo DIRECTORY-WITH-VARS with all the vars expanded.
+#
+# Variables such as $bindir that depend on $prefix and so on, are a
+# pain.  Autoconf uses that style because RMS wants the user to be
+# allowed to "./configure --prefix=foo" and then to "make prefix=bar",
+# so bindir and the other should still depend on $prefix.  Of course
+# this is doomed to failure to 99% of the cases, and the fact that
+# bindir depends upon prefix is a pain for most users.
+#
+# The macro AC_DEFINE_DIR offers one first solution, yet it does not
+# give the result as one would like to have it: directly usable in
+# configure to do whatever you need it to do.
+#
+# Autoconf should use functions now, it's limitating and useless not
+# to use them in 2007.  So I do use them here.
+#
+# Typical use is:
+#
+#   AC_SUBST([BINDIR],
+#            [`URBI_RESOLVE_DIR([$bindir])`])
+#
+# or
+#
+#   bindir_full=`URBI_RESOLVE_DIR([$bindir])`
+#
+# if you fear $() is not portable enough.
+#
+# @version 2007-10-20
+# @author Akim Demaille <demaille@gostai.com>
+# @license GPLWithACException
 
+m4_pattern_forbid([^URBI_])dnl
 
 # URBI_RESOLVE_DIR_PREPARE
 # ------------------------
