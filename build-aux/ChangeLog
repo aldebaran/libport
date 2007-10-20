@@ -1,3 +1,8 @@
+2007-10-20  Akim Demaille  <akim.demaille@free.fr>
+
+	Indentation changes.
+	* build-aux/ax_boost.m4: here.
+
 2007-10-15  Akim Demaille  <demaille@gostai.com>
 
 	Create the log dir if needed.
