@@ -1,3 +1,11 @@
+2007-10-21  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Don't use -pipe.
+	* build-aux/urbi-prog-cxx.m4 (URBI_PROG_CXX): Do not use -pipe when
+	GCC is detected, it doesn't speed up the compilation.  See this
+	thread and its replies:
+	  http://lists.gnu.org/archive/html/automake/2007-10/msg00086.html
+
 2007-10-20  Akim Demaille  <demaille@gostai.com>
 
 	Reformat.

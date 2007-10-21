@@ -12,11 +12,6 @@ AC_DEFUN([URBI_PROG_CXX],
 AC_LANG_PUSH([C++])
 AC_PROG_CXX
 
-# Speed GCC compilation up.
-if test "$GXX" = yes; then
-  CXXFLAGS="$CXXFLAGS -pipe"
-fi
-
 # Warn about violations of some of the style guidelines from Scott
 # Meyers' "Effective C++" and "More Effective C++" books.
 #TC_CXX_WARNINGS([-Weffc++])
