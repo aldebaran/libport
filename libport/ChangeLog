@@ -1,3 +1,10 @@
+2007-10-22  Akim Demaille  <akim.demaille@free.fr>
+
+	<< PackageInfo.
+	* package-info.hh: Declare it.
+	* package-info.cc: New.
+	* libport-sources.mk: Adjust.
+
 2007-10-22  Akim Demaille  <demaille@gostai.com>
 
 	package-info.

@@ -1,6 +1,7 @@
 #if ! defined PACKAGE_INFO_HH
 # define PACKAGE_INFO_HH
 
+# include <iosfwd>
 # include <string>
 
 namespace libport
@@ -20,5 +21,7 @@ namespace libport
       version_rev;
   };
 }
+
+std::ostream& operator<<(std::ostream& o, const libport::PackageInfo& p);
 
 #endif // ! PACKAGE_INFO_HH
