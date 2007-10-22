@@ -1,0 +1,26 @@
+// -*- C++ -*-
+
+// Yes, *.hcc: this file is to be included *once* by ye who shalst
+// define a PackageInfo variable.  It makes no sense to compile it
+// into libport.la, since then, it would require to recompile libport.la
+// at each check-in of the libport user...
+
+#include "config.h"
+#include "libport/package-info.hh"
+#include "version.hh"
+
+namespace libport
+{
+  PackageInfo::PackageInfo ()
+    :
+    bug_report   (PACKAGE_BUGREPORT),
+    date         (PACKAGE_DATE),
+    id           (PACKAGE_ID),
+    name         (PACKAGE_NAME),
+    revision     (PACKAGE_REVISION),
+    string       (PACKAGE_STRING),
+    tarname      (PACKAGE_TARNAME),
+    version      (PACKAGE_VERSION),
+    version_rev  (PACKAGE_VERSION_REV)
+  {}
+}

@@ -1,3 +1,10 @@
+2007-10-22  Akim Demaille  <demaille@gostai.com>
+
+	package-info.
+	* package-info.hcc: New.
+	* package-info.hh: New.
+	* Makefile.am: Adjust.
+
 2007-10-19  Akim Demaille  <demaille@gostai.com>
 
 	Define uint32_t before using it.

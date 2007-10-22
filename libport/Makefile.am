@@ -34,6 +34,8 @@ libport_HEADERS +=				\
 	hash.hh					\
 	lockable.hh				\
 	network.h				\
+	package-info.hh				\
+	package-info.hcc			\
 	pair.hh					\
 	pair.hxx				\
 	ref-pt.hh				\
