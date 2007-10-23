@@ -12,8 +12,11 @@
 // takes the various components are arguments, and provide a macro to
 // wrap its invocation.
 
-#include "config.h"
-#include "version.hh"
+
+// You must include config.h or whatever defines PACKAGE_*, before.
+
+// #include "config.h"
+// #include "version.hh"
 #include "libport/package-info.hh"
 
 namespace libport
