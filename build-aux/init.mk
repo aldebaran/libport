@@ -13,4 +13,5 @@ CLEANFILES += *.exe.manifest *.exe.intermediate.manifest
 DISTCLEANFILES=
 EXTRA_DIST =
 EXTRA_HEADERS =
+LIBS =
 MAINTAINERCLEANFILES =
