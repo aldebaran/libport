@@ -10,12 +10,12 @@ namespace libport
   // {
   //   struct foo;
   // }
-  // 
+  //
   // namespace impl
   // {
   //   struct foo {};
   // }
-  // 
+  //
   // namespace ns
   // {
   //   using impl::foo;
@@ -29,28 +29,28 @@ namespace libport
   //   template <typename T>
   //   struct foo;
   // }
-  // 
+  //
   // namespace ns
   // {
   //   using impl::foo;
   // }
-  // 
+  //
   // namespace impl
   // {
   //   template <typename T>
   //   struct foo {};
   // }
-  // 
+  //
   // namespace ns
   // {
   //   using impl::foo;
   // }
-  
+
   // but the problem is that this definition will depend upon the
   // architecture to find what the "impl" namespace is.  So we
   // just don't fwddecl hash, unless someone feels like filling the
   // blanks.
-  
+
   // hash.hh.
   // Warning: The VC++ implementation might have a different number of
   // parameters, in which case a #if will be needed to fwd decl both
@@ -66,6 +66,9 @@ namespace libport
 
   // lockable.hh.
   class Lockable;
+
+  // package-info.hh;
+  struct PackageInfo;
 
   // ref-pt.hh
   template <class T> class RefPt;
