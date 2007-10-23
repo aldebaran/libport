@@ -1,6 +1,16 @@
 #include <iostream>
 #include "libport/package-info.hh"
 
+namespace libport
+{
+  std::string
+  PackageInfo::name_version_revision() const
+  {
+    return name + " version " + version + " rev. " + revision;
+  }
+
+}
+
 std::ostream&
 operator<<(std::ostream& o, const libport::PackageInfo& p)
 {

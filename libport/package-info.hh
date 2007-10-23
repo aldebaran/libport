@@ -19,6 +19,9 @@ namespace libport
       tarname,
       version,
       version_rev;
+
+    // NAME version VERSION rev. REVISION.
+    std::string name_version_revision() const;
   };
 }
 

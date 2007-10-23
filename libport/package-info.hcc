@@ -1,16 +1,24 @@
 // -*- C++ -*-
 
-// Yes, *.hcc: this file is to be included *once* by ye who shalst
-// define a PackageInfo variable.  It makes no sense to compile it
-// into libport.la, since then, it would require to recompile libport.la
-// at each check-in of the libport user...
+// Yes, *.hcc: this file is to be included by ye who shalst define a
+// PackageInfo variable.  It makes no sense to compile it into
+// libport.la, since then, it would require to recompile libport.la at
+// each check-in of the libport user...
+//
+// But because we may need to use this ctor to construct several
+// different PackageInfo instances, we make it inline.  Arguably, this
+// is insane, and instead of having one ctor which implementation
+// depends on the context, it would be safer to have one ctor that
+// takes the various components are arguments, and provide a macro to
+// wrap its invocation.
 
 #include "config.h"
-#include "libport/package-info.hh"
 #include "version.hh"
+#include "libport/package-info.hh"
 
 namespace libport
 {
+  inline
   PackageInfo::PackageInfo ()
     :
     bug_report   (PACKAGE_BUGREPORT),
