@@ -273,13 +273,10 @@ AC_DEFUN([AX_BOOST],
 			 CXXFLAGS_SAVE=$CXXFLAGS
 
 			 case $host_os in
-			   solaris)
-			     CXXFLAGS="-pthreads $CXXFLAGS";;
-			   mingw32 | cygwin)
-			     CXXFLAGS="-mthreads $CXXFLAGS";;
 			   darwin) :;; # OSX does not need -pthread
-			   *)
-			     CXXFLAGS="-pthread $CXXFLAGS";;
+			   mingw32 | cygwin) CXXFLAGS="-mthreads $CXXFLAGS";;
+			   solaris)          CXXFLAGS="-pthreads $CXXFLAGS";;
+			   *)                CXXFLAGS="-pthread $CXXFLAGS";;
 			 esac
 			 AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[@%:@include <boost/thread/thread.hpp>]],
 				   [[boost::thread_group thrds;
@@ -292,16 +289,13 @@ AC_DEFUN([AX_BOOST],
 	if test "x$ax_cv_boost_thread" = "xyes"; then
 	      LDFLAGS_SAVE=$LDFLAGS
 	      case $host_os in
-		solaris)
-		  CXXFLAGS="-pthreads $CXXFLAGS";;
-		mingw32 | cygwin)
-		  CXXFLAGS="-mthreads $CXXFLAGS";;
 		darwin) :;; # OSX does not need -pthread
+		solaris)          CXXFLAGS="-pthreads $CXXFLAGS";;
+		mingw32 | cygwin) CXXFLAGS="-mthreads $CXXFLAGS";;
 		*bsd*)
 		  CXXFLAGS="-pthread $CXXFLAGS"
 		  LDFLAGS="-pthread $LDFLAGS";;
-		*)
-		  CXXFLAGS="-pthread $CXXFLAGS";;
+		*)		  CXXFLAGS="-pthread $CXXFLAGS";;
 	      esac
 
 	      AC_SUBST(BOOST_CPPFLAGS)
