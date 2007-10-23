@@ -31,6 +31,33 @@
 #   modification, are permitted in any medium without royalty provided
 #   the copyright notice and this notice are preserved.
 
+
+# AX_BOOST_THREAD_
+# ----------------
+# Set ax_cv_boost_thread to yes/no whether the Boost::Thread library is
+# available.  May prepend -pthread to BOOST_LDFLAGS.
+AC_DEFUN([AX_BOOST_THREAD_],
+[AC_LANG_PUSH([C++])
+CXXFLAGS_SAVE=$CXXFLAGS
+# That's dirty.
+case $host_os in
+  solaris)  CXXFLAGS="-pthreads $CXXFLAGS";;
+  cygwin | mingw32)   CXXFLAGS="-mthreads $CXXFLAGS";;
+  darwin*)  : ;; # Does not require a -pthread flag
+  *bsd*)
+    BOOST_LDFLAGS="-pthread $BOOST_LDFLAGS"
+    CXXFLAGS="-pthread  $CXXFLAGS";;
+  *)        CXXFLAGS="-pthread  $CXXFLAGS";;
+esac
+AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[@%:@include <boost/thread/thread.hpp>]],
+				   [[boost::thread_group thrds;
+				    return 0;]]),
+		  [ax_cv_boost_thread=yes],
+		  [ax_cv_boost_thread=no])
+CXXFLAGS=$CXXFLAGS_SAVE
+AC_LANG_POP([C++])
+])
+
 AC_DEFUN([AX_BOOST_THREAD],
 [AC_REQUIRE([AC_PROG_CC])dnl
 AC_REQUIRE([AC_CANONICAL_BUILD])dnl
@@ -60,27 +87,7 @@ if test "x$with_boost_thread" = "xyes"; then
   export LDFLAGS
 
   AC_CACHE_CHECK([whether the Boost::Thread library is available],
-		 [ax_cv_boost_thread],
-	[AC_LANG_PUSH([C++])
-	 CXXFLAGS_SAVE=$CXXFLAGS
-         # That's dirty.
-	 case $host_os in
-	   solaris)  CXXFLAGS="-pthreads $CXXFLAGS";;
-	   cygwin | mingw32)   CXXFLAGS="-mthreads $CXXFLAGS";;
-	   darwin*)  : ;; # Does not require a -pthread flag
-           *bsd*)
-             BOOST_LDFLAGS="-pthread $BOOST_LDFLAGS"
-             CXXFLAGS="-pthread  $CXXFLAGS";;
-	   *)        CXXFLAGS="-pthread  $CXXFLAGS";;
-	 esac
-	 AC_COMPILE_IFELSE(AC_LANG_PROGRAM([[@%:@include <boost/thread/thread.hpp>]],
-					   [[boost::thread_group thrds;
-					     return 0;]]),
-			   [ax_cv_boost_thread=yes],
-			   [ax_cv_boost_thread=no])
-	CXXFLAGS=$CXXFLAGS_SAVE
-	AC_LANG_POP([C++])
-	])
+		 [ax_cv_boost_thread], [AX_BOOST_THREAD_])
   if test "x$ax_cv_boost_thread" = "xyes"; then
     # FIXME: This should be CXXFLAGS, not CPPFLAGS.
      case $host_os in
@@ -116,13 +123,10 @@ if test "x$with_boost_thread" = "xyes"; then
        done
     fi
 
-    if test "x$link_thread" = "xno"; then
-       AC_MSG_ERROR([Could not link against $ax_lib!])
-    else
-       case $host_os in
-	  *bsd* ) BOOST_LDFLAGS="-pthread $BOOST_LDFLAGS" ;;
-       esac
-    fi
+    case $link_thread:$host_os in
+      no:*)     AC_MSG_ERROR([Could not link against $ax_lib!]) ;;
+      *:*bsd* ) BOOST_LDFLAGS="-pthread $BOOST_LDFLAGS" ;;
+    esac
   fi
 
   CPPFLAGS=$CPPFLAGS_SAVED
