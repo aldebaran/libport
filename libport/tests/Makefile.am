@@ -48,7 +48,7 @@ clean-local:
 	rm -rf libport
 
 # Find the libport files, but our config.h for tests first.
-AM_CPPFLAGS += -I. -I$(top_srcdir)
+AM_CPPFLAGS += -I. -I$(top_srcdir) $(BOOST_CPPFLAGS)
 
 $(TESTS):
 	for i in $(TESTS); do \
