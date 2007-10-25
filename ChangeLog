@@ -1,3 +1,9 @@
+2007-10-25  Nicolas Desprès  <despres@gostai.com>
+
+	Add ylwrap to svn:ignore.
+
+	* build-aux: Do that.
+
 2007-06-15  CÃ©line_Blaszykowski  <blaszykowski@gostai.com>
 
 	M4 file allows to find the Opencv Path
