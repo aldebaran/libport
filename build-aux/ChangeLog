@@ -1,5 +1,10 @@
 2007-10-26  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Ignore more VC++ warnings.
+	* urbi-prog-cxx.m4: Ignore warnings C3473 and C4619.
+
+2007-10-26  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Properly use -Werror when needed.
 	* urbi-prog-cxx.m4: Use -Werror only with GCC and when the $host_os
 	is not Windows or MIPS (Aibo).

@@ -134,6 +134,13 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 # warning C4127: conditional expression is constant
 # eg in: while (true) ...
 #
+# warning C4347: behavior change: 'non_template_func()' is called instead of
+# 'templat_func()'.  According to the MSDN: "In Visual Studio .NET, if you had
+# a template function and a nontemplate function with the same name as the
+# template function, the compiler incorrectly treated the nontemplate function
+# as a specialization of the template function.".  So this is basically a
+# backward compatibility warning that we can ignore.
+#
 # warning C4512: 'classname' : assignment operator could not be generated
 #
 # warning C4571: Informational: catch(...) semantics changed since Visual
@@ -144,6 +151,9 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 #  will only catch explicitly-thrown, C++ exceptions."
 # Reminder: SEH are Windows' exceptions (with __try, __catch etc..) we don't
 # care about them so we just drop that warning.
+#
+# #pragma warning : there is no warning number 'number'
+# this often occurs in Boost headers, and we really don't care.
 #
 # When a base class hides its copy constructor (private):
 # warning C4625: 'classname' : copy constructor could not be generated because
@@ -169,8 +179,10 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 #
 TC_CXX_WARNINGS([[/wd4121],
 		 [/wd4127],
+		 [/wd4347],
 		 [/wd4512],
 		 [/wd4571],
+		 [/wd4619],
 		 [/wd4625],
 		 [/wd4626],
 		 [/wd4668],
