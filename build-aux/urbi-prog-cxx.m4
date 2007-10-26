@@ -37,9 +37,11 @@ TC_CXX_WARNINGS([[-Wall],
 
 # If we're building on Windows with GCC, it's likely to be gcc 3.4.5 which has
 # *many* false positive when it comes to uninitialized variable use.
+# Generally speaking, once there will be a decent version of GCC for MinGW,
+# we'll remove this.
 case $GXX:$host_os in
   yes:cygwin* | yes:mingw*)
-    TC_CXX_WARNINGS([-Wno-uninitialized])
+    TC_CXX_WARNINGS([-Wno-error])
     ;;
 esac
 
