@@ -1,5 +1,11 @@
 2007-10-26  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Properly use -Werror when needed.
+	* urbi-prog-cxx.m4: Use -Werror only with GCC and when the $host_os
+	is not Windows or MIPS (Aibo).
+
+2007-10-26  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Use -Wno-error on Windows.
 	* urbi-prog-cxx.m4: Here.
 

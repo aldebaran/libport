@@ -35,16 +35,6 @@ TC_CXX_WARNINGS([[-Wall],
 		 [-Woverloaded-virtual],
 		 [-Wformat]])
 
-# If we're building on Windows with GCC, it's likely to be gcc 3.4.5 which has
-# *many* false positive when it comes to uninitialized variable use.
-# Generally speaking, once there will be a decent version of GCC for MinGW,
-# we'll remove this.
-case $GXX:$host_os in
-  yes:cygwin* | yes:mingw*)
-    TC_CXX_WARNINGS([-Wno-error])
-    ;;
-esac
-
 # Pacify g++ on Boost Variants.
 # TC_CXX_WARNINGS([[-Wno-shadow]])
 
@@ -194,16 +184,17 @@ TC_CXX_WARNINGS([[/wd4121],
 # --------------------- #
 
 # There are too many warnings in OPEN-R (its fault).
-# Don't just look at its name, we might have ccache prefixing it.
-case $($CXX --version | sed 1q) in
-  mipsel-linux-*) :;;
-  *)
-    # We currently have too many unresolved warnings with this compiler.
-    # (Not its fault, ours.)
-    if test $ac_cv_cxx_compiler_ms != yes; then
-      TC_CXX_WARNINGS([-Werror])
-    fi
+# If we're building on Windows with GCC, it's likely to be gcc 3.4.5 which has
+# *many* false positive when it comes to uninitialized variable use.
+# Generally speaking, once there will be a decent version of GCC for MinGW,
+# we'll remove this.
+case $GXX:$host_os in
+  yes:cygwin* | yes:mingw* | yes:mipsel-linux-*) :;;
+  yes:*) # for other occurrences of G++, it's fine to use -Werror
+    TC_CXX_WARNINGS([-Werror])
   ;;
+  # no:*) # ignore (this would enable -Werror for VC++ where we have *way* too
+          #         many warnings to deal with first).
 esac
 
 AC_LANG_POP([C++])
