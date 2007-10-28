@@ -57,6 +57,7 @@ AC_ARG_ENABLE([locksystem],
 AM_CONDITIONAL([ENABLE_LOCKSYSTEM], [test x$enable_locksystem = xyes])
 
 if test $enable_locksystem = yes; then
+   AC_DEFINE([USE_LOCKSYSTEM], [], [Defined if we want to include locksystem])
    URBI_CONFIGURE_LOCKSYSTEM
 fi
 

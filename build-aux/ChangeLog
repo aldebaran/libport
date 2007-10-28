@@ -1,3 +1,9 @@
+2007-10-28  Nicolas Desprès  <despres@gostai.com>
+
+	Define USE_LOCKSYSTEM macro.
+
+	* urbi-lock-system.m4: Do that.
+
 2007-10-26  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Ignore more VC++ warnings.
