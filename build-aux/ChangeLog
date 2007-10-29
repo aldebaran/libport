@@ -1,3 +1,10 @@
+2007-10-29  Nicolas Desprès  <despres@gostai.com>
+
+	Fix `libport' installation directory.
+
+	* urbi-libport.m4: Dissociate `sdk' and `core' package kind. `sdk'
+	package kind install `libport' in `includedir'.
+
 2007-10-28  Nicolas Desprès  <despres@gostai.com>
 
 	Define USE_LOCKSYSTEM macro.
