@@ -1,3 +1,8 @@
+2007-10-30  Akim Demaille  <demaille@gostai.com>
+
+	URBI_PACKAGE_COPYRIGHT.
+	* urbi-package-info.m4: New.
+
 2007-10-30  Rémi Humbert  <humbert@gostai.com>
 
 	Modify LD_FLAGS in urbi-locksystem.m4 to have them transmited to param.mk
