@@ -1,5 +1,10 @@
 2007-10-30  Akim Demaille  <demaille@gostai.com>
 
+	Cannot -- on bool.
+	* package-info.cc: So use ++.
+
+2007-10-30  Akim Demaille  <demaille@gostai.com>
+
 	Rewrite PackageInfo.
 	The current scheme, that tried to make several different implementation
 	of a single ctor, does not work: in the end the linked keeps only

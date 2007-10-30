@@ -27,9 +27,9 @@ namespace libport
   std::ostream&
   PackageInfo::dump(std::ostream& o) const
   {
-    bool first = true;
+    bool not_first = false;
     BOOST_FOREACH(value_type p, map_)
-      o << p.first << " = " << p.second << (first-- ? "" : ", ");
+      o << p.first << " = " << p.second << (not_first++ ? ", " : "");
     return o;
   }
 
