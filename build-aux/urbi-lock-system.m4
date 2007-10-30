@@ -28,16 +28,14 @@ URBI_CHECK_LOCKSYSTEM_DEPENDANCIES
 LOCK_SYSTEM_LDFLAGS=
 case "$host_os" in
      *mingw*|*cygwin*)
-	LOCKSYSTEM_LDFLAGS="$LOCK_SYSTEM_LDFLAGS -lIphlpapi"
+	LDFLAGS="$LDFLAGS -lIphlpapi"
 	;;
      *darwin*)
-	LOCKSYSTEM_LDFLAGS="$LOCK_SYSTEM_LDFLAGS -framework CoreFoundation -framework IOKit"
+	LDFLAGS="$LDFLAGS -framework CoreFoundation -framework IOKit"
 	;;
      *)
 	;;
 esac
-
-AC_SUBST([LOCKSYSTEM_LDFLAGS])
 
 AC_CONFIG_SUBDIRS([lock-system])
 ])

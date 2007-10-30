@@ -1,3 +1,8 @@
+2007-10-30  Rémi Humbert  <humbert@gostai.com>
+
+	Modify LD_FLAGS in urbi-locksystem.m4 to have them transmited to param.mk
+	* urbi-lock-system.m4: here.
+
 2007-10-29  Nicolas Desprès  <despres@gostai.com>
 
 	Fix `libport' installation directory.
