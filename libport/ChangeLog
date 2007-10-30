@@ -1,5 +1,15 @@
 2007-10-30  Akim Demaille  <demaille@gostai.com>
 
+	Fix package-info.
+	* package-info.hh, package-info.cc (dump): Provide a default
+	argument for sake of gdb.
+	Fix the uses of "first".
+	Fix output.
+	(signature): New.
+	Support Copyright stuff.
+
+2007-10-30  Akim Demaille  <demaille@gostai.com>
+
 	Cannot -- on bool.
 	* package-info.cc: So use ++.
 

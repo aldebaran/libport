@@ -4,12 +4,29 @@
 
 namespace libport
 {
+  PackageInfo::PackageInfo ()
+    : map_()
+  {
+  }
+
   PackageInfo::data_type
   PackageInfo::name_version_revision() const
   {
     return (get ("name")
 	    + " version " + get ("version")
 	    + " rev. "    + get ("revision"));
+  }
+
+  PackageInfo::data_type
+  PackageInfo::signature() const
+  {
+    return (
+      get ("name")
+      + " version " + get ("version")
+      + " rev. "    + get ("revision")
+      + " (C) "     + get ("copyright-years")
+      + " "         + get ("copyright-holder")
+      );
   }
 
   PackageInfo::data_type&
@@ -29,7 +46,7 @@ namespace libport
   {
     bool not_first = false;
     BOOST_FOREACH(value_type p, map_)
-      o << p.first << " = " << p.second << (not_first++ ? ", " : "");
+      o << (not_first++ ? ", " : "") << p.first << " = " << p.second;
     return o;
   }
 
