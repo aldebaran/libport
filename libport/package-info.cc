@@ -1,12 +1,36 @@
 #include <iostream>
+#include <boost/foreach.hpp>
 #include "libport/package-info.hh"
 
 namespace libport
 {
-  std::string
+  PackageInfo::data_type
   PackageInfo::name_version_revision() const
   {
-    return name + " version " + version + " rev. " + revision;
+    return (get ("name")
+	    + " version " + get ("version")
+	    + " rev. "    + get ("revision"));
+  }
+
+  PackageInfo::data_type&
+  PackageInfo::operator[](const key_type& k)
+  {
+    return map_[k];
+  }
+
+  const PackageInfo::data_type&
+  PackageInfo::get(const key_type& k) const
+  {
+    return map_.find(k)->second;
+  }
+
+  std::ostream&
+  PackageInfo::dump(std::ostream& o) const
+  {
+    bool first = true;
+    BOOST_FOREACH(value_type p, map_)
+      o << p.first << " = " << p.second << (first-- ? "" : ", ");
+    return o;
   }
 
 }
@@ -14,21 +38,5 @@ namespace libport
 std::ostream&
 operator<<(std::ostream& o, const libport::PackageInfo& p)
 {
-# define DISPLAY1(Field)				\
-  << #Field " = " << p.Field
-# define DISPLAY2(Field)				\
-  DISPLAY1(Field) << ", "
-  return o
-    DISPLAY1(bug_report)
-    DISPLAY2(date)
-    DISPLAY2(id)
-    DISPLAY2(name)
-    DISPLAY2(revision)
-    DISPLAY2(string)
-    DISPLAY2(tarname)
-    DISPLAY2(version)
-    DISPLAY2(version_rev)
-    ;
-# undef DISPLAY2
-# undef DISPLAY1
+  return p.dump(o);
 }

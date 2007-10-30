@@ -1,3 +1,13 @@
+2007-10-30  Akim Demaille  <demaille@gostai.com>
+
+	Rewrite PackageInfo.
+	The current scheme, that tried to make several different implementation
+	of a single ctor, does not work: in the end the linked keeps only
+	one implementation, and all the package infos are the same...
+	* package-info.hh, package-info.cc: Completely rewrite.
+	* package-info.hcc: Remove.
+	* Makefile.am: Adjust.
+
 2007-10-26  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Properly use boost/cstdint.h.
