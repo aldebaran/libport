@@ -1,3 +1,27 @@
+2007-11-02  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Use my Boost macros.
+	* ax_boost.m4: Remove.
+	* ax_boost_base.m4: Remove.
+	* ax_boost_date_time.m4: Remove.
+	* ax_boost_filesystem.m4: Remove.
+	* ax_boost_iostreams.m4: Remove.
+	* ax_boost_program_options.m4: Remove.
+	* ax_boost_python.m4: Remove.
+	* ax_boost_regex.m4: Remove.
+	* ax_boost_serialization.m4: Remove.
+	* ax_boost_signals.m4: Remove.
+	* ax_boost_test_exec_monitor.m4: Remove.
+	* ax_boost_thread.m4: Remove.
+	* ax_boost_unit_test_framework.m4: Remove.
+	* ax_boost_wserialization.m4: Remove.
+	* boost.m4: New.
+	* build-aux.mk (boost-m4-up): New.
+	* tc-boost.m4: Remove.
+	* urbi-libport.m4: Use the new Boost macros.
+	* urbi-pthread.m4 (URBI_PTHREAD): This macro is now officially
+	deprecated and will be removed.
+
 2007-10-30  Akim Demaille  <demaille@gostai.com>
 
 	URBI_PACKAGE_COPYRIGHT.

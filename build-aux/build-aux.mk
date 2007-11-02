@@ -44,3 +44,10 @@ baux-up baux-ci baux-pin:
 
 SVN_EXTERNALS += build-aux
 
+## -------- ##
+## boost.m4 ##
+## -------- ##
+
+FETCH_BM4 = wget -O $(build_aux_dir)/boost.m4
+boost-m4-up:
+	$(FETCH_BM4) 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD'
