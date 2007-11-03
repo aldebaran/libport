@@ -124,6 +124,11 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 # Remove MS Visual Compiler's spurious warnings.  #
 # ----------------------------------------------- #
 
+# warning C4099: 'symbol' : type name first seen using 'class' now seen using
+#                           'struct'
+# (which prints lots of useless warnings when forward declarations are
+# specified with "class" while the real definition uses "struct")
+#
 # warning C4121: 'symbol' : alignment of a member was sensitive to packing
 # "A structure member is aligned on a memory offset whose value is not a
 #  multiple of the member's size."
@@ -177,7 +182,8 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 #
 # warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
 #
-TC_CXX_WARNINGS([[/wd4121],
+TC_CXX_WARNINGS([[/wd4099],
+                 [/wd4121],
 		 [/wd4127],
 		 [/wd4347],
 		 [/wd4512],
