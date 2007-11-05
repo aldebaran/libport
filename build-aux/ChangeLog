@@ -1,3 +1,8 @@
+2007-11-05  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Add a new macro: URBI_KERNEL_VERSION.
+	* urbi-kernel-version.m4: New.
+
 2007-11-03  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Remove the warning C4099 when compiling with MSVC.
