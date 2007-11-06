@@ -1,5 +1,10 @@
 2007-11-06  Akim Demaille  <demaille@gostai.com>
 
+	Simplification.
+	* urbi-with-openssl.m4: Better use of "case".
+
+2007-11-06  Akim Demaille  <demaille@gostai.com>
+
 	Space changes.
 	* build-aux/urbi-lock-system.m4: here.
 

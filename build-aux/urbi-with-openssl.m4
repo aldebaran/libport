@@ -13,7 +13,7 @@ saved_LIBS="$LIBS"
 saved_LDFLAGS="$LDFLAGS"
 saved_CPPFLAGS="$CPPFLAGS"
 
-case "$host_os" in
+case $host_os in
      mingw*)
 	LIBS="$LIBS -leay32"
 	if test -n "$ssldir"; then
@@ -31,7 +31,7 @@ case "$host_os" in
 	if test -n "$ssldir"; then
 	   LDFLAGS="$LDFLAGS -L$ssldir"
 	else
-           LDFLAGS="$LDFLAGS -L/usr/lib"
+	   LDFLAGS="$LDFLAGS -L/usr/lib"
 	fi
 	;;
 esac
@@ -41,17 +41,17 @@ esac
 AC_LINK_IFELSE(
 [
 AC_LANG_PROGRAM([[
-        #include <string.h>
-        #include <openssl/rand.h>
+	#include <string.h>
+	#include <openssl/rand.h>
 ]],
 [[      char a[2048];
-        memset(a, 0, sizeof(a));
-        return(0);
-        RAND_add(a, sizeof(a), sizeof(a));
+	memset(a, 0, sizeof(a));
+	return(0);
+	RAND_add(a, sizeof(a), sizeof(a));
 ]])
 ],
 [
-        found_ssl=true
+	found_ssl=true
 ], [])
 
 LIBS="$saved_LIBS"
@@ -76,9 +76,9 @@ case $with_openssl in
 
   yes) openssl=true
        AC_CACHE_CHECK([for OpenSSL directory], ac_cv_openssldir, [
-        for ssldir in "" /usr/lib /lib /usr/local/openssl /usr/lib/openssl \
-                         /usr/local/ssl /usr/lib/ssl /usr/local /usr/pkg \
-                         /opt /opt/openssl; do
+	for ssldir in "" /usr/lib /lib /usr/local/openssl /usr/lib/openssl \
+			 /usr/local/ssl /usr/lib/ssl /usr/local /usr/pkg \
+			 /opt /opt/openssl; do
 		# Skip directories if they don't exist
 		if test ! -z "$ssldir" && test ! -d "$ssldir" ; then
 		   continue;
@@ -91,17 +91,17 @@ case $with_openssl in
 		fi
 	done
 
-	case "$found_ssl" in
+	case $found_ssl in
 	  '' | false )
 	   AC_MSG_ERROR(
   [Could not find working OpenSSL library, please install or check config.log])
 	   ssldir=""
 	  ;;
-          * )
+	  * )
 	   if test -z "$ssldir"; then
 	      ssldir="(system)"
 	   fi
-          ;;
+	  ;;
 	esac
 
 	ac_cv_openssldir=$ssldir;
@@ -116,13 +116,13 @@ case $with_openssl in
 
     # In this case, no test is done.
     *) openssl=true
-        # Define the path.
-        ssldir=$with_openssl
+	# Define the path.
+	ssldir=$with_openssl
 	# Check the library.
 	URBI_OPENSSL_CHECK
 	# If it succeed, exit.
 	if test "x$found_ssl" = "xtrue"; then
-          OPENSSL_PATH=$with_openssl
+	  OPENSSL_PATH=$with_openssl
 	else
 	  AC_MSG_ERROR([I didn't succeed to compile with this library. Please check the path and the config.log])
 	fi
@@ -132,31 +132,15 @@ esac
 if $openssl; then
   # More tools for OpenSSL.
   AC_SUBST([OPENSSL_CPPFLAGS],[""])
-  if test "x(system)" = "x$OPENSSL_PATH"; then
-    case "$host_os" in
-      mingw*)
-        AC_SUBST([OPENSSL_LDFLAGS],["-leay32"])
-        ;;
-     *cygwin*)
-        AC_SUBST([OPENSSL_LDFLAGS],["-leay32MT"])
-        ;;
-      *)
-        AC_SUBST([OPENSSL_LDFLAGS],["-lcrypto -lssl -ldl"])
-        ;;
-     esac
-  else
-    case "$host_os" in
-      mingw*)
-        AC_SUBST([OPENSSL_LDFLAGS],["-L$OPENSSL_PATH/lib -leay32"])
-        ;;
-     *cygwin*)
-        AC_SUBST([OPENSSL_LDFLAGS],["-L$OPENSSL_PATH/lib -leay32MT"])
-        ;;
-      *)
-        AC_SUBST([OPENSSL_LDFLAGS],["$OPENSSL_PATH/lib/libcrypto.la $OPENSSL_PATH/lib/libssl.la -ldl"])
-        ;;
-     esac
-  fi
+  case $OPENSSL_PATH:$host_os in
+    '(system)':mingw*)   OPENSSL_LDFLAGS="-leay32";;
+    '(system)':*cygwin*) OPENSSL_LDFLAGS="-leay32MT";;
+    '(system)':*)        OPENSSL_LDFLAGS="-lcrypto -lssl -ldl";;
+    *:mingw*)            OPENSSL_LDFLAGS="-L$OPENSSL_PATH/lib -leay32";;
+    *:*cygwin*)          OPENSSL_LDFLAGS="-L$OPENSSL_PATH/lib -leay32MT";;
+    *:*)                 OPENSSL_LDFLAGS="$OPENSSL_PATH/lib/libcrypto.la $OPENSSL_PATH/lib/libssl.la -ldl";;
+  esac
+  AC_SUBST([OPENSSL_LDFLAGS])
 fi
 
 AM_CONDITIONAL([OPENSSL], [$openssl])
@@ -164,10 +148,11 @@ AC_SUBST([OPENSSL_PATH])
 ])
 
 
-AC_DEFUN([URBI_WITH_OPENSSL_REQUIRED], [
+AC_DEFUN([URBI_WITH_OPENSSL_REQUIRED],
+[
    AC_REQUIRE([URBI_WITH_OPENSSL])
 
-   case "$openssl" in
+   case $openssl in
      '' | false )
       AC_MSG_ERROR(
    [Failed to find the OpenSSL library. Please install it or check config.log])
@@ -178,9 +163,3 @@ AC_DEFUN([URBI_WITH_OPENSSL_REQUIRED], [
 ## Local Variables:
 ## mode: autoconf
 ## End:
-
-
-
-
-
-
