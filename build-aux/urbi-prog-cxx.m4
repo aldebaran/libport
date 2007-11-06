@@ -20,14 +20,14 @@ AC_PROG_CXX
 # headers such as hash_map.h.  We should use ext/hash_map.
 TC_CXX_WARNINGS([-Wno-deprecated])
 
-dnl 		 [-Wcast-align],
-dnl 		 [-Wcast-qual],
-dnl 		 [-Wmissing-prototypes],   C only
-dnl 		 [-Wstrict-prototypes],    C only
-dnl 		 [-Wwrite-strings],
-dnl 		 [-Wbad-function-cast],    C only
-dnl 		 [-Wnested-externs],       C only
-dnl 		 [-Wmissing-declarations], C only
+dnl		 [-Wcast-align],
+dnl		 [-Wcast-qual],
+dnl		 [-Wmissing-prototypes],   C only
+dnl		 [-Wstrict-prototypes],    C only
+dnl		 [-Wwrite-strings],
+dnl		 [-Wbad-function-cast],    C only
+dnl		 [-Wnested-externs],       C only
+dnl		 [-Wmissing-declarations], C only
 dnl		 [-Wold-style-cast],
 # Use good warnings.
 TC_CXX_WARNINGS([[-Wall],
@@ -183,7 +183,7 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 # warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
 #
 TC_CXX_WARNINGS([[/wd4099],
-                 [/wd4121],
+		 [/wd4121],
 		 [/wd4127],
 		 [/wd4347],
 		 [/wd4512],
@@ -206,13 +206,13 @@ TC_CXX_WARNINGS([[/wd4099],
 # *many* false positive when it comes to uninitialized variable use.
 # Generally speaking, once there will be a decent version of GCC for MinGW,
 # we'll remove this.
-case $GXX:$host_os in
-  yes:cygwin* | yes:mingw* | yes:mipsel-linux-*) :;;
+case $GXX:$host in
+  yes:cygwin* | yes:mingw* | yes:mipsel-*linux-*) :;;
   yes:*) # for other occurrences of G++, it's fine to use -Werror
     TC_CXX_WARNINGS([-Werror])
   ;;
   # no:*) # ignore (this would enable -Werror for VC++ where we have *way* too
-          #         many warnings to deal with first).
+	  #         many warnings to deal with first).
 esac
 
 AC_LANG_POP([C++])

@@ -1,5 +1,12 @@
 2007-11-06  Akim Demaille  <demaille@gostai.com>
 
+	Don't rely on host_os to detect mipsel-linux.
+	* urbi-prog-cxx.m4: Use $host, not $host_os which is not
+	clear enough for Open R (and completely wrong: it thinks the
+	OS is GNU Linux).
+
+2007-11-06  Akim Demaille  <demaille@gostai.com>
+
 	Simplification.
 	* urbi-with-openssl.m4: Better use of "case".
 
