@@ -7,7 +7,7 @@ class Vcs
 
   def local_commit! ( *args )
     common_commit!("build-aux <%= rev %>: <%= title %>", *args) do |subject|
-      mail!(:to => %w[common-patches@gostai.com],
+      mail!(:to => `\\svn propget mailto #{Dir.pwd}`.chomp.split(/,\s*/),
             :subject => subject)
     end
   end
