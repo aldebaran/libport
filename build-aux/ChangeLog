@@ -1,5 +1,11 @@
 2007-11-07  Nicolas Desprès  <despres@gostai.com>
 
+	Remove useless variable initialization.
+
+	* urbi-lock-system.m4: Do that.
+
+2007-11-07  Nicolas Desprès  <despres@gostai.com>
+
 	Use recipients list in mailto property.
 
 	* vcs/local.rb: Do that.
