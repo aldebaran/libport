@@ -1,5 +1,11 @@
 2007-11-07  Nicolas Desprès  <despres@gostai.com>
 
+	Add URBI_LOCKSYSTEM_COBF.
+
+	* urbi-lock-system.m4: Do that.
+
+2007-11-07  Nicolas Desprès  <despres@gostai.com>
+
 	Rename URBI_LOCK_SYSTEM_CHECK_ADDR to URBI_LOCKSYSTEM_CHECK_ADDR.
 
 	* urbi-lock-system.m4: Do that.

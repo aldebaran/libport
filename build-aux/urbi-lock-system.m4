@@ -52,6 +52,19 @@ AC_ARG_ENABLE([check-mac-addr],
 AM_CONDITIONAL([ENABLE_CHECK_MAC_ADDR], [test x$enable_check_mac_addr = xyes])
 ])
 
+# URBI_LOCKSYSTEM_COBF
+# --------------------
+# Macro to add --disable-cobf
+# For binary distribution we don't require to obfuscate the code.
+AC_DEFUN([URBI_LOCKSYSTEM_COBF],
+[
+AC_ARG_ENABLE([cobf],
+             [AC_HELP_STRING([--disable-cobf],
+                             [disable cobf execution (enabled by default)])],
+             [], [enable_cobf=yes])
+AM_CONDITIONAL([ENABLE_COBF], [test x$enable_cobf = xyes])
+])
+
 # URBI_WITH_LOCKSYSTEM
 # --------------------
 # Macro to add to your configure when adding lock-system in
@@ -66,6 +79,7 @@ AC_ARG_ENABLE([locksystem],
 AM_CONDITIONAL([ENABLE_LOCKSYSTEM], [test x$enable_locksystem = xyes])
 
 URBI_LOCKSYSTEM_CHECK_ADDR
+URBI_LOCKSYSTEM_COBF
 
 if test $enable_locksystem = yes; then
    AC_DEFINE([USE_LOCKSYSTEM], [], [Defined if we want to include locksystem])
