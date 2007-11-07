@@ -38,12 +38,12 @@ esac
 AC_CONFIG_SUBDIRS([lock-system])
 ])
 
-# URBI_LOCK_SYSTEM_CHECK_ADDR
+# URBI_LOCKSYSTEM_CHECK_ADDR
 # ---------------------------
 # Macro to add --disable-check-mac-addr
 # This test of lock-system is expected to succeed only on the build-farm
 # machines. You want to use this option on your workstation.
-AC_DEFUN([URBI_LOCK_SYSTEM_CHECK_ADDR],
+AC_DEFUN([URBI_LOCKSYSTEM_CHECK_ADDR],
 [
 AC_ARG_ENABLE([check-mac-addr],
              [AC_HELP_STRING([--disable-check-mac-addr],
@@ -65,7 +65,7 @@ AC_ARG_ENABLE([locksystem],
 
 AM_CONDITIONAL([ENABLE_LOCKSYSTEM], [test x$enable_locksystem = xyes])
 
-URBI_LOCK_SYSTEM_CHECK_ADDR
+URBI_LOCKSYSTEM_CHECK_ADDR
 
 if test $enable_locksystem = yes; then
    AC_DEFINE([USE_LOCKSYSTEM], [], [Defined if we want to include locksystem])
