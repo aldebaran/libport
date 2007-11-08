@@ -1,3 +1,9 @@
+2007-11-08  Nicolas Desprès  <despres@gostai.com>
+
+	-l options in LIBS instead of LDFLAGS.
+
+	* urbi-lock-system.m4: Do that.
+
 2007-11-07  Nicolas Desprès  <despres@gostai.com>
 
 	Remove useless variable initialization.

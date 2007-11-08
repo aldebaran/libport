@@ -25,10 +25,10 @@ URBI_CHECK_LOCKSYSTEM_DEPENDENCIES
 
 case $host_os in
      *mingw*|*cygwin*)
-	LDFLAGS="$LDFLAGS -lIphlpapi"
+	LIBS="$LIBS -lIphlpapi"
 	;;
      *darwin*)
-	LDFLAGS="$LDFLAGS -framework CoreFoundation -framework IOKit"
+	LIBS="$LIBS -framework CoreFoundation -framework IOKit"
 	;;
      *)
 	;;
