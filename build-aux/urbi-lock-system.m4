@@ -29,6 +29,7 @@ case $host_os in
 	;;
 esac
 AC_SUBST([LOCKSYSTEM_LIBS])
+SDK_LIBS="$SDK_LIBS $LOCKSYSTEM_LIBS"
 AC_CONFIG_SUBDIRS([lock-system])
 ])
 

@@ -12,11 +12,15 @@ AC_CHECK_HEADERS([pthread.h])
 
 # FIXME: This has *nothing* to do with pthreads, move somewhere else.
 if $windows; then
-   AC_SUBST([PTHREAD_LIBS], ['-lws2_32 -lgdi32'])
+  AC_SUBST([PTHREAD_LIBS], ['-lws2_32 -lgdi32'])
 fi
 AM_CONDITIONAL([WIN32], [$windows])
 
 #if $windows || $pthreads; then :; else
 #  AC_MSG_ERROR([pthreads or WIN32 API is required])
 #fi
+
+SDK_CFLAGS="$SDK_CFLAGS $PTHREAD_CFLAGS"
+SDK_CXXFLAGS="$SDK_CXXFLAGS $PTHREAD_CFLAGS"
+SDK_LIBS="$SDK_LIBS $PTHREAD_LIBS"
 ])
