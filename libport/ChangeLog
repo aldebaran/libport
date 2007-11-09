@@ -1,3 +1,10 @@
+2007-11-09  Akim Demaille  <demaille@gostai.com>
+
+	libport/sysexits.h.
+	* assert.hh: Space changes.
+	* sysexits.hh: New.
+	* unistd.h: Use LIBPORT_HAVE_*.
+
 2007-10-30  Akim Demaille  <demaille@gostai.com>
 
 	Fix package-info.

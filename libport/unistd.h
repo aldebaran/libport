@@ -6,7 +6,7 @@
 # include "config.h"
 
 // This is traditional Unix file.
-# ifdef HAVE_UNISTD_H
+# ifdef LIBPORT_HAVE_UNISTD_H
 #  include "unistd.h"
 # endif
 

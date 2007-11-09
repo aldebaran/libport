@@ -2,7 +2,7 @@
 /// \brief Provide nice assert like macros.
 
 #ifndef LIBPORT_ASSERT_HH
-#  define LIBPORT_ASSERT_HH
+# define LIBPORT_ASSERT_HH
 
 # include <cassert>
 
