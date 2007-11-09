@@ -1,5 +1,10 @@
 2007-11-09  Akim Demaille  <demaille@gostai.com>
 
+	Check for sysexits.h.
+	* urbi-libport.m4 (_URBI_LIBPORT_COMMON): here.
+
+2007-11-09  Akim Demaille  <demaille@gostai.com>
+
 	Adjust locksystem macros.
 	* urbi-lock-system.m4 (URBI_CHECK_LOCKSYSTEM_DEPENDENCIES)
 	(URBI_CONFIGURE_LOCKSYSTEM, URBI_LOCKSYSTEM_CHECK_ADDR)

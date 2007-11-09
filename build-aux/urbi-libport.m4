@@ -12,6 +12,7 @@ if test -n "$openr" && $openr; then
 else
   BOOST_THREADS
 fi
+AC_CHECK_HEADERS([sysexits.h])
 ])
 
 
