@@ -49,6 +49,7 @@ libport_HEADERS +=				\
 	singleton-ptr.hh			\
 	symbol.hh				\
 	symbol.hxx				\
+	sysexits.hh				\
 	thread.hh				\
 	uffloat.hh				\
 	ufloat.h				\

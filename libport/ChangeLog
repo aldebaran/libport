@@ -1,5 +1,10 @@
 2007-11-09  Akim Demaille  <demaille@gostai.com>
 
+	Install sysexits.hh.
+	* Makefile.am: here.
+
+2007-11-09  Akim Demaille  <demaille@gostai.com>
+
 	libport/sysexits.h.
 	* assert.hh: Space changes.
 	* sysexits.hh: New.
