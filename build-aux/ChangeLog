@@ -1,5 +1,20 @@
 2007-11-09  Akim Demaille  <demaille@gostai.com>
 
+	Adjust locksystem macros.
+	* urbi-lock-system.m4 (URBI_CHECK_LOCKSYSTEM_DEPENDENCIES)
+	(URBI_CONFIGURE_LOCKSYSTEM, URBI_LOCKSYSTEM_CHECK_ADDR)
+	(URBI_LOCKSYSTEM_COBF):
+	Rename as...
+	(_URBI_CHECK_LOCKSYSTEM_DEPENDENCIES)
+        (_URBI_CONFIGURE_LOCKSYSTEM, _URBI_LOCKSYSTEM_CHECK_ADDR)
+        (_URBI_LOCKSYSTEM_COBF):
+	these, since they are private.
+	Remove useless message about the default value (of course it you
+	document --disable, it means it is enabled by default).
+	(_URBI_CONFIGURE_LOCKSYSTEM): Define LOCKSYETEM_LIBS, not LIBS.
+
+2007-11-09  Akim Demaille  <demaille@gostai.com>
+
 	Avoid deprecation messages from VC++.
 	* urbi-prog-cxx.m4: here.
 
