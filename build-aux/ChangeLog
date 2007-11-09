@@ -1,3 +1,8 @@
+2007-11-09  Akim Demaille  <demaille@gostai.com>
+
+	Avoid deprecation messages from VC++.
+	* urbi-prog-cxx.m4: here.
+
 2007-11-08  Nicolas Desprès  <despres@gostai.com>
 
 	-l options in LIBS instead of LDFLAGS.
