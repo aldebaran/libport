@@ -1,5 +1,5 @@
 # _URBI_CHECK_LOCKSYSTEM_DEPENDENCIES
-# ----------------------------------
+# -----------------------------------
 # Macro to check the dependencies of the locksystem module.
 AC_DEFUN([_URBI_CHECK_LOCKSYSTEM_DEPENDENCIES],
 [URBI_WITH_OPENSSL_REQUIRED
@@ -14,8 +14,8 @@ fi
 ])
 
 
-# URBI_CONFIGURE_LOCKSYSTEM
-# -------------------------
+# _URBI_CONFIGURE_LOCKSYSTEM
+# --------------------------
 # Macro to check the dependencies of the locksystem module.
 AC_DEFUN([_URBI_CONFIGURE_LOCKSYSTEM],
 [_URBI_CHECK_LOCKSYSTEM_DEPENDENCIES
@@ -33,8 +33,8 @@ AC_CONFIG_SUBDIRS([lock-system])
 ])
 
 
-# URBI_LOCKSYSTEM_CHECK_ADDR
-# ---------------------------
+# _URBI_LOCKSYSTEM_CHECK_ADDR
+# ----------------------------
 # Macro to add --disable-check-mac-addr
 # This test of lock-system is expected to succeed only on the build-farm
 # machines. You want to use this option on your workstation.
@@ -46,8 +46,8 @@ AC_DEFUN([_URBI_LOCKSYSTEM_CHECK_ADDR],
 AM_CONDITIONAL([ENABLE_CHECK_MAC_ADDR], [test x$enable_check_mac_addr = xyes])
 ])
 
-# URBI_LOCKSYSTEM_COBF
-# --------------------
+# _URBI_LOCKSYSTEM_COBF
+# ---------------------
 # Macro to add --disable-cobf
 # For binary distribution we don't require to obfuscate the code.
 AC_DEFUN([_URBI_LOCKSYSTEM_COBF],
@@ -57,6 +57,7 @@ AC_DEFUN([_URBI_LOCKSYSTEM_COBF],
              [], [enable_cobf=yes])
 AM_CONDITIONAL([ENABLE_COBF], [test x$enable_cobf = xyes])
 ])
+
 
 # URBI_WITH_LOCKSYSTEM
 # --------------------
