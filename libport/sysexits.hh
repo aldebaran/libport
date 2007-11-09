@@ -27,4 +27,4 @@
 #  define EX__MAX	   78	/* maximum listed value */
 # endif
 
-#endif LIBPORT_SYSEXIT_HH
+#endif // ! LIBPORT_SYSEXIT_HH
