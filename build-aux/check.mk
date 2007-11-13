@@ -81,33 +81,38 @@ elif test -f $<; then dir=;			\
 else dir="$(srcdir)/"; fi;			\
 $(TESTS_ENVIRONMENT)
 
+# The exit status denoting a test to skip.
+SKIP_STATUS ?= 77
+# The exit status denoting a hard error, that cannot be saved by XFAIL.
+HARD_STATUS ?= 177
+
 # To be appended to the command running the test.  Handles the stdout
 # and stderr redirection, and catch the exit status.
-am__check_post =					\
->$@-t 2>&1;						\
-estatus=$$?;						\
-if test $$estatus -eq 177; then				\
-  $(ENABLE_HARD_ERRORS) || estatus=1;			\
-fi;							\
-$(am__tty_colors);					\
-xfailed=PASS;						\
-for xfail in : $(XFAIL_TESTS); do			\
-  case $< in						\
-    $$xfail | */$$xfail) xfailed=XFAIL; break;		\
-  esac;							\
-done;							\
-case $$estatus:$$xfailed in				\
-    0:XFAIL) col=$$red; res=XPASS;;			\
-    0:*)     col=$$grn; res=PASS ;;			\
-    77:*)    col=$$blu; res=SKIP ;;			\
-    177:*)   col=$$red; res=FAIL ;;			\
-    *:XFAIL) col=$$lgn; res=XFAIL;;			\
-    *:*)     col=$$red; res=FAIL ;;			\
-esac;							\
-echo "$${col}$$res$${std}: $@";				\
-echo "$$res: $@ (exit: $$estatus)" |			\
-  $(am__rst_section) >$@;				\
-cat $@-t >>$@;						\
+am__check_post =				\
+>$@-t 2>&1;					\
+estatus=$$?;					\
+if test $$estatus -eq 177; then			\
+  $(ENABLE_HARD_ERRORS) || estatus=1;		\
+fi;						\
+$(am__tty_colors);				\
+xfailed=PASS;					\
+for xfail in : $(XFAIL_TESTS); do		\
+  case $< in					\
+    $$xfail | */$$xfail) xfailed=XFAIL; break;	\
+  esac;						\
+done;						\
+case $$estatus:$$xfailed in			\
+    0:XFAIL)          col=$$red; res=XPASS;;	\
+    0:*)              col=$$grn; res=PASS ;;	\
+    $(SKIP_STATUS):*) col=$$blu; res=SKIP ;;	\
+    $(HARD_STATUS):*) col=$$red; res=FAIL ;;	\
+    *:XFAIL)          col=$$lgn; res=XFAIL;;	\
+    *:*)              col=$$red; res=FAIL ;;	\
+esac;						\
+echo "$${col}$$res$${std}: $@";			\
+echo "$$res: $@ (exit: $$estatus)" |		\
+  $(am__rst_section) >$@;			\
+cat $@-t >>$@;					\
 rm $@-t
 
 # From a test file to a log file.

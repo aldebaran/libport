@@ -79,7 +79,7 @@ fatal ()
 ex_to_string ()
 {
   case $[1] in
-      0)  echo ' (EX_OK: successful termination)';;
+       0) echo ' (EX_OK: successful termination)';;
       64) echo ' (EX_USAGE: command line usage error)';;
       65) echo ' (EX_DATAERR: data format error)';;
       66) echo ' (EX_NOINPUT: cannot open input)';;
@@ -95,7 +95,9 @@ ex_to_string ()
       76) echo ' (EX_PROTOCOL: remote error in protocol)';;
       77) echo ' (EX_NOPERM: permission denied)';;
       78) echo ' (EX_CONFIG: configuration error)';;
-      242)echo ' (killed by Valgrind)';;
+     176) echo ' (EX_SKIP: skip this test with unmet dependencies)';;
+     177) echo ' (EX_HARD: hard error that cannot be saved)';;
+     242) echo ' (killed by Valgrind)';;
       *)  if test 127 -lt $[1]; then
             echo " (SIG$(kill -l $[1] || true))"
           fi;;
@@ -124,6 +126,10 @@ ex_to_int ()
     PROTOCOL	|EX_PROTOCOL)    echo 76;;
     NOPERM	|EX_NOPERM)      echo 77;;
     CONFIG	|EX_CONFIG)      echo 78;;
+
+    SKIP	|EX_SKIP)        echo 176;;
+    HARD	|EX_HARD)        echo 177;;
+
     *)                           echo $[1];;
   esac
 }

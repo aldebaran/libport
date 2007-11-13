@@ -1,5 +1,14 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	M4sh fixes.
+	* check.mk (SKIP_STATUS, HARD_STATUS): New.
+	Use them.
+	* init.mk (CLEANFILES): Let's add some nodist_ stuff here.
+	* rst.as: Many missing M4 quotes.
+	* urbi.as: Support EX_HARD and EX_SKIP.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	children.as.
 	* children.as: New.
 	* m4sh.mk: Adjust.

@@ -48,21 +48,21 @@ rst_pre ()
 # Set $exit to false if there is a failure.
 rst_expect ()
 {
-  rst_subsection "$me: $2"
-  if ! diff -u --label="Expected $1 ($1.exp)" $1.exp  \
-	       --label="Effective $1 ($2.eff)" $2.eff \
-	       >$2.diff; then
-    rst_pre "Expected $1 for $me"      $1.exp
-    rst_pre "Raw effective $2 for $me" $2.raw
-    rst_pre "Effective $2 for $me"     $2.eff
-    rst_pre "Diffs on $2 for $me"      $2.diff
+  rst_subsection "$me: $[2]"
+  if ! diff -u --label="Expected $[1] ($[1].exp)" $[1].exp  \
+	       --label="Effective $[1] ($[2].eff)" $[2].eff \
+	       >$[2].diff; then
+    rst_pre "Expected $[1] for $me"      $[1].exp
+    rst_pre "Raw effective $[2] for $me" $[2].raw
+    rst_pre "Effective $[2] for $me"     $[2].eff
+    rst_pre "Diffs on $[2] for $me"      $[2].diff
     if test x"$exit" = xtrue; then
       exit=false
     fi
   else
     # Dump something, it is really surprising in the logs to see
     # nothing.
-    rst_pre "Raw effective $2 for $me" $2.raw
+    rst_pre "Raw effective $[2] for $me" $[2].raw
   fi
 }
 ])

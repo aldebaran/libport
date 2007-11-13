@@ -10,6 +10,8 @@ BUILT_SOURCES =
 CLEANFILES = vc80.pdb
 # Files created by MSC++.
 CLEANFILES += *.exe.manifest *.exe.intermediate.manifest
+# Files which are not shipped should be cleaned.
+CLEANFILES += $(nodist_check_SCRIPTS) $(nodist_check_SOURCES)
 DISTCLEANFILES=
 EXTRA_DIST =
 EXTRA_HEADERS =
