@@ -1,3 +1,8 @@
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
+	Display TESTS_ENVIRONMENT.
+	* build-aux/check.mk: here.
+
 2007-11-09  Akim Demaille  <akim.demaille@free.fr>
 
 	Propagate the SDK_*FLAGS.

@@ -42,6 +42,7 @@ AUTOMAKE_OPTIONS += -Wno-portability -Wno-override
 # Restructured Text title and section.
 am__rst_title   = sed 's/.*/   &   /;h;s/./=/g;p;x;p;g;p;s/.*//'
 am__rst_section = sed 'p;s/./=/g;p;g'
+am__rst_pre     = sed 's/^/	/;${p;s/.*//;p;}'
 
 # Put stdin (possibly several lines separated by ".  ") in a box.
 am__text_box = $(AWK) '{gsub ("\\.  ", "\n"); print $$0; }' |	\
@@ -163,6 +164,9 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	    echo "$(PACKAGE_STRING): $(subdir)/$(TEST_SUITE_LOG)" |	\
 	      $(am__rst_title);						\
 	    echo "$$msg";						\
+	    echo;							\
+	    echo "TESTS_ENVIRONMENT = $(TESTS_ENVIRONMENT)" | 		\
+	      $(am__rst_pre);						\
 	    echo;							\
 	    echo ".. contents:: :depth: 2";				\
 	    echo;							\
