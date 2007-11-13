@@ -1,5 +1,10 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	Clean the m4sh script precursors.
+	* m4sh.mk: here.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	Ship the M4sh sources.
 	* m4sh.mk: here.
 

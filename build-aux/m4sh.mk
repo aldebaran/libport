@@ -37,3 +37,5 @@ $(m4sh_scripts): %: %.in Makefile
 	chmod +x $@.tmp
 	chmod a-w $@.tmp
 	mv $@.tmp $@
+
+CLEANFILES += $(m4sh_scripts:=.in)
