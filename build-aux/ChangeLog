@@ -1,5 +1,11 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	More clean files.
+	* init.mk: Clean nodist_noinst_SCRIPTS.
+	* rst.as: Comment.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	Clean the m4sh script precursors.
 	* m4sh.mk: here.
 

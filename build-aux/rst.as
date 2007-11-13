@@ -4,17 +4,25 @@
 ## Rst functions.  ##
 ## --------------- ##
 
+# These functions produce their result on stdout.
+
 m4_defun([_URBI_RST_PREPARE],
-[rst_title ()
+[# rst_title TITLE
+# ---------------
+rst_title ()
 {
    echo "$[@]" | sed 's/.*/   &   /;h;s/./=/g;p;x;p;g;p;s/.*//'
 }
 
+# rst_section TITLE
+# -----------------
 rst_section ()
 {
    echo "$[@]" | sed 'p;s/./=/g;p;g'
 }
 
+# rst_subsection TITLE
+# --------------------
 rst_subsection ()
 {
   echo "$[@]" | sed 'p;s/./-/g;p;g'
@@ -27,8 +35,8 @@ rst_tab ()
   sed -e 's/^/	/' "$[@]"
 }
 
-# pre TITLE [FILE]
-# ----------------
+# rst_pre TITLE [FILE]
+# --------------------
 # FILE may be empty to denote stdin.
 rst_pre ()
 {
