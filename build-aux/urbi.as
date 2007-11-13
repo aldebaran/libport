@@ -51,24 +51,26 @@ find_prog ()
 m4_defun([_URBI_STDERR_PREPARE],
 [stderr ()
 {
-  echo >&2 "$as_me: $@"
+  echo >&2 "$as_me: $[@]"
   echo >&2
 }
 
 
-fatal ()
-{
-  stderr "$@"
-  exit 1
-}
-
 # error EXIT MESSAGE
+# ------------------
 error ()
 {
-  local exit=$1
+  local exit=$[1]
   shift
-  stderr "$@"
+  stderr "$[@]"
   ex_exit $exit
+}
+
+# fatal MESSAGE
+# -------------
+fatal ()
+{
+  error 1 "$[@]"
 }
 
 # ex_to_string EXIT

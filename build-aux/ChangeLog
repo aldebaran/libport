@@ -1,5 +1,10 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	Fix quotes.
+	* urbi.as: Beware of M4 catching sh variables.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	M4sh: stderr functions.
 	* urbi.as (_URBI_STDERR_PREPARE): New.
 	(URBI_PREPARE): Call it.
