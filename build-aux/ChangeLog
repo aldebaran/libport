@@ -1,5 +1,12 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	instrument.as.
+	* instrument.as: New.
+	* m4sh.mk: Adjust.
+	* rst.as (rst_expect): New.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	rst functions.
 	* rst.as: New.
 	* m4sh.mk: Use it.
