@@ -1,5 +1,11 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	M4sh: stderr functions.
+	* urbi.as (_URBI_STDERR_PREPARE): New.
+	(URBI_PREPARE): Call it.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	instrument.as.
 	* instrument.as: New.
 	* m4sh.mk: Adjust.
