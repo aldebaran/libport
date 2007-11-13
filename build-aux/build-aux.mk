@@ -1,8 +1,9 @@
+# This file is meant to be included only by the top-level Makefile.am.
+
 include $(top_srcdir)/build-aux/init.mk
 include $(top_srcdir)/build-aux/svn-externals.mk
 
 EXTRA_DIST += $(top_srcdir)/build-aux/install-sh-c
-build_aux_dir = $(top_srcdir)/build-aux
 
 
 ## ------ ##

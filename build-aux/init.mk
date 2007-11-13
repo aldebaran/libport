@@ -15,3 +15,6 @@ EXTRA_DIST =
 EXTRA_HEADERS =
 LIBS =
 MAINTAINERCLEANFILES =
+
+# Useful variables.
+build_aux_dir = $(top_srcdir)/build-aux

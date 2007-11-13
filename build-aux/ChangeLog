@@ -1,5 +1,12 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	Introduce M4sh.
+	* build-aux.mk (build_aux_dir): Move to...
+	* init.mk: here.
+	* urbi.asm, m4sh.mk: New.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	Display TESTS_ENVIRONMENT.
 	* build-aux/check.mk: here.
 
