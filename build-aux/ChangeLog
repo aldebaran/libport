@@ -1,5 +1,10 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	Ship the M4sh sources.
+	* m4sh.mk: here.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	M4sh fixes.
 	* check.mk (SKIP_STATUS, HARD_STATUS): New.
 	Use them.

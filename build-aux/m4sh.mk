@@ -22,6 +22,8 @@ $(build_aux_dir)/rst.as				\
 $(build_aux_dir)/instrument.as			\
 $(build_aux_dir)/children.as
 
+EXTRA_DIST += $(m4sh_dependencies)
+
 %.in: $(srcdir)/%.as $(m4sh_dependencies)
 	autom4te --language M4sh $(m4sh_dependencies) $< -o $@
 
