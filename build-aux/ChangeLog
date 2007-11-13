@@ -1,5 +1,13 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	children.as.
+	* children.as: New.
+	* m4sh.mk: Adjust.
+	* urbi.as (URBI_PREPARE): Call them all.
+	That's too much, but we don't need to go into the details now.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	Fix quotes.
 	* urbi.as: Beware of M4 catching sh variables.
 

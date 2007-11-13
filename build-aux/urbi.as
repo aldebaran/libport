@@ -146,4 +146,8 @@ _URBI_STDERR_PREPARE])
 # Output all the M4sh possible initialization into the initialization
 # diversion.
 m4_defun([URBI_PREPARE],
-[m4_divert_text([M4SH-INIT], [_URBI_PREPARE])])
+[m4_divert_text([M4SH-INIT], [_URBI_PREPARE])dnl
+URBI_RST_PREPARE()dnl
+URBI_INSTRUMENT_PREPARE()dnl
+URBI_CHILDREN_PREPARE()dnl
+])
