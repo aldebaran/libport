@@ -16,7 +16,10 @@ edit = sed \
 	-e 's|@configure_input[@]|Generated from $@.in; do not edit by hand.|g'
 
 # Scripts written in M4sh.
-m4sh_dependencies = $(build_aux_dir)/urbi.as
+m4sh_dependencies =				\
+$(build_aux_dir)/urbi.as			\
+$(build_aux_dir)/rst.as
+
 %.in: $(srcdir)/%.as $(m4sh_dependencies)
 	autom4te --language M4sh $(m4sh_dependencies) $< -o $@
 
