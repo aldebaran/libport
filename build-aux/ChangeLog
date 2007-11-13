@@ -1,5 +1,10 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	Do not rely on debug.
+	* children.as: Don't expect the file debug or FD 3 to exist.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	More clean files.
 	* init.mk: Clean nodist_noinst_SCRIPTS.
 	* rst.as: Comment.

@@ -38,7 +38,7 @@ run ()
     rst_pre "Valgrind"  $run_prefix.val
 
     return $(cat $run_prefix.sta)
-  } >&3
+  }
 }
 
 
@@ -69,7 +69,7 @@ kill_children ()
       echo "Killing $i ($pid)"
       kill $pid 2>&1 || true
     fi
-  done >>debug
+  done
 }
 
 
