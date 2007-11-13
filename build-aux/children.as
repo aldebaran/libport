@@ -19,7 +19,7 @@ run ()
   shift
 
   {
-    ("$[@]") >$run_prefix.out 2>$run_rst_prefix.err
+    ("$[@]") >$run_prefix.out 2>$run_prefix.err
     local sta=$?
     echo $sta >$run_prefix.sta
 

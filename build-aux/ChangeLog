@@ -1,5 +1,10 @@
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
+	Fix run.
+	* children.as: Typo in var name.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
 	Do not rely on debug.
 	* children.as: Don't expect the file debug or FD 3 to exist.
 
