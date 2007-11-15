@@ -1,3 +1,10 @@
+2007-11-15  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Search Qt harder.
+	* build-aux/autotroll.m4: Look for common variations of the program
+	names (e.g.: qmake-qt4) and make some variables precious (QT_PATH,
+	QMAKE, MOC, UIC, RCC) so they are advertised in configure --help.
+
 2007-10-25  Nicolas Desprès  <despres@gostai.com>
 
 	Add ylwrap to svn:ignore.
