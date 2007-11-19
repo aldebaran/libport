@@ -1,3 +1,5 @@
+#					-*- shell-script -*-
+
 m4_defun([URBI_CHILDREN_PREPARE],
 [
 
@@ -27,15 +29,11 @@ run ()
 	0) ;;
 	*) title="$title FAIL ($sta)";;
     esac
-    rst_subsection "$me: $title"
 
-    echo
     echo "$[@]"> $run_prefix.cmd
-    rst_pre "Command"   $run_prefix.cmd
-    rst_pre "Output"    $run_prefix.out
-    rst_pre "Status"    $run_prefix.sta
-    rst_pre "Error"     $run_prefix.err
-    rst_pre "Valgrind"  $run_prefix.val
+
+    rst_subsection "$me: $title"
+    rst_run_report "$title" "$run_prefix"
 
     return $(cat $run_prefix.sta)
   }
@@ -46,6 +44,28 @@ run ()
 ## ---------- ##
 ## Children.  ##
 ## ---------- ##
+
+
+# rst_run_report $TITLE $FILE-PREFIX
+# ----------------------------------
+# Report the input and output for $FILE-PREFIX.
+rst_run_report ()
+{
+  local title=$1
+  case $title in
+    ?*) title="$title "
+	;;
+  esac
+
+  rst_pre "${title}Command"   $2.cmd
+  rst_pre "${title}Pid"       $2.pid
+  rst_pre "${title}Status"    $2.sta
+  rst_pre "${title}Input"     $2.in
+  rst_pre "${title}Output"    $2.out
+  rst_pre "${title}Error"     $2.err
+  rst_pre "${title}Valgrind"  $2.val
+}
+
 
 # register_child NAME
 # -------------------

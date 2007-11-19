@@ -1,3 +1,11 @@
+2007-11-19  Akim Demaille  <akim@lrde.epita.fr>
+
+	rst_run_report.
+	* children.as (rst_run_report): New.
+	* rst.as (rst_section, rst_subsection, rst_tab): Issue the needed
+	following empty line.
+	(rst_pre): Don't.
+
 2007-11-13  Akim Demaille  <demaille@gostai.com>
 
 	Fix run.

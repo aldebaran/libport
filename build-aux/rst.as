@@ -19,6 +19,7 @@ rst_title ()
 rst_section ()
 {
    echo "$[@]" | sed 'p;s/./=/g;p;g'
+   echo
 }
 
 # rst_subsection TITLE
@@ -26,6 +27,7 @@ rst_section ()
 rst_subsection ()
 {
   echo "$[@]" | sed 'p;s/./-/g;p;g'
+  echo
 }
 
 # rst_tab [FILES = stdin]
@@ -33,6 +35,7 @@ rst_subsection ()
 rst_tab ()
 {
   sed -e 's/^/	/' "$[@]"
+  echo
 }
 
 # rst_pre TITLE [FILE]
@@ -45,7 +48,6 @@ rst_pre ()
     echo
     shift
     rst_tab "$[@]"
-    echo
   fi
 }
 
