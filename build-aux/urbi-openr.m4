@@ -51,6 +51,22 @@ if $openr; then
   AC_SUBST([OPEN_R_LDFLAGS],
   ['-L$(OPEN_R_SDK)/OPEN_R/lib \
     -lObjectComm -lERA201D1 -lOPENR -lInternet -lantMCOOP -lm'])
+
+  # Make distcheck made simpler.
+  AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
+	   ["$DISTCHECK_CONFIGURE_FLAGS --with-openr='\$(OPEN_R_SDK)'"])
+
+  # Disable the compilation of the programs in jpeg.
+  AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
+	   ["$DISTCHECK_CONFIGURE_FLAGS --disable-programs"])
+
+  # Set up cross compilation tools.
+  AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
+	   ["$DISTCHECK_CONFIGURE_FLAGS\
+ --host='\$(host_alias)'\
+ --build='\$(build_alias)'\
+ CC='\$(CC)'\
+ CXX='\$(CXX)'"])
 fi
 
 AM_CONDITIONAL([OPENR], [$openr])

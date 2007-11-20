@@ -1,3 +1,9 @@
+2007-11-20  Akim Demaille  <akim@lrde.epita.fr>
+
+	More distcheck flags.
+	* urbi-openr.m4: Define the DISTCHECK_CONFIGURE_FLAGS in order
+	to have make distcheck work when ./configure && make did.
+
 2007-11-19  Akim Demaille  <akim@lrde.epita.fr>
 
 	rst_run_report.
