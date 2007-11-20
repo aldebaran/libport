@@ -51,19 +51,19 @@ run ()
 # Report the input and output for $FILE-PREFIX.
 rst_run_report ()
 {
-  local title=$1
+  local title=$[1]
   case $title in
     ?*) title="$title "
 	;;
   esac
 
-  rst_pre "${title}Command"   $2.cmd
-  rst_pre "${title}Pid"       $2.pid
-  rst_pre "${title}Status"    $2.sta
-  rst_pre "${title}Input"     $2.in
-  rst_pre "${title}Output"    $2.out
-  rst_pre "${title}Error"     $2.err
-  rst_pre "${title}Valgrind"  $2.val
+  rst_pre "${title}Command"   $[2].cmd
+  rst_pre "${title}Pid"       $[2].pid
+  rst_pre "${title}Status"    $[2].sta
+  rst_pre "${title}Input"     $[2].in
+  rst_pre "${title}Output"    $[2].out
+  rst_pre "${title}Error"     $[2].err
+  rst_pre "${title}Valgrind"  $[2].val
 }
 
 

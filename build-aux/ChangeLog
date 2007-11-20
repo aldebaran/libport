@@ -1,3 +1,8 @@
+2007-11-20  Matthieu Nottale  <nottale@gostai.com>
+
+	Properly quote function arguments.
+	* children.as: Here.
+
 2007-11-20  Akim Demaille  <akim@lrde.epita.fr>
 
 	More distcheck flags.
