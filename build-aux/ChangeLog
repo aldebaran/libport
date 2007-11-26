@@ -1,5 +1,10 @@
 2007-11-26  Akim Demaille  <demaille@gostai.com>
 
+	Don't require XML 2 HTML.
+	* bison++.in: Be less strict when building the html output.
+
+2007-11-26  Akim Demaille  <demaille@gostai.com>
+
 	Use bison --xml.
 	* bison++.in: Do it.
 	Forget about output-to-html.  BTW,

@@ -47,9 +47,12 @@ $BISON $options $input_base -o $output_base --xml
 status=$?
 set -e
 
-# Whatever happens, create the html output file.
-xsltproc $($BISON --print-datadir)/xslt/xml2xhtml.xsl $output_base_noext.xml \
-  >$output_base_noext.html
+# Whatever happens, create the html output file.  If we can.
+xml2html="xsltproc $($BISON --print-datadir)/xslt/xml2xhtml.xsl"
+if ! $xml2html $output_base_noext.xml >$output_base_noext.html; then
+  echo >&2 "$0: cannot convert XML report to HTML"
+  rm $output_base_noext.html
+fi
 
 # fix_bison_output FILE
 # ---------------------
