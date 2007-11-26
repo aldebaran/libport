@@ -1,5 +1,12 @@
 2007-11-26  Akim Demaille  <demaille@gostai.com>
 
+	Use bison --xml.
+	* bison++.in: Do it.
+	Forget about output-to-html.  BTW,
+	* output-to-html: Remove
+
+2007-11-26  Akim Demaille  <demaille@gostai.com>
+
 	Fix eol.
 	* m4sh.mk: here.
 

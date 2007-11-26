@@ -71,7 +71,7 @@ foreach (@gram_lines)
     # concat cases to current line
     if ($cur_line =~ /^\s+\d+\s+\|\s+(.*)/)
     {
- 	$tmp_line = "$tmp_line $1";
+	$tmp_line = "$tmp_line $1";
     }
 
     # next state

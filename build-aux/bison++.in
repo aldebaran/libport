@@ -13,13 +13,13 @@ set -e
 
 me=$(basename $0)
 move_if_change='@abs_srcdir@/move-if-change'
-out_to_html='@abs_srcdir@/output-to-html'
 
 input=$1
 input_base=$(basename "$input")
 shift
 output=$1
 output_base=$(basename "$output")
+output_base_noext=$(echo "$output_base" | sed -e 's/\.[^.]*//')
 output_dir=$(dirname "$output")
 shift
 options="$@"
@@ -34,7 +34,7 @@ options="$@"
 # paths with Bison, chdir there.
 
 # A tmp dir.
-tmp=$output_base.dir
+tmp=$output_base_noext.dir
 rm -rf $tmp
 mkdir $tmp
 
@@ -43,19 +43,13 @@ mkdir $tmp
 cp $input $tmp
 cd $tmp
 set +e
-$BISON $options $input_base -o $output_base
+$BISON $options $input_base -o $output_base --xml
 status=$?
 set -e
 
 # Whatever happens, create the html output file.
-for i in $(ls *.output 2>/dev/null)
-do
-  if test ! -x $out_to_html; then
-    echo "$me: $out_to_html is not executable"
-  elif ! $out_to_html $i; then
-    echo "$me: $out_to_html failed"
-  fi
-done
+xsltproc $($BISON --print-datadir)/xslt/xml2xhtml.xsl $output_base_noext.xml \
+  >$output_base_noext.html
 
 # fix_bison_output FILE
 # ---------------------
@@ -106,7 +100,7 @@ case $status in
     ;;
 
   *) # We really want to keep the *.output files.
-    for file in $(ls $tmp/*.output $tmp/*.html 2>/dev/null)
+    for file in $(ls $tmp/*.output $tmp/*.xml $tmp/*.html 2>/dev/null)
     do
       $move_if_change "$file" "$output_dir/$(basename $file)"
     done
