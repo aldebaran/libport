@@ -1,3 +1,8 @@
+2007-11-26  Akim Demaille  <demaille@gostai.com>
+
+	Fix eol.
+	* m4sh.mk: here.
+
 2007-11-20  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Sync boost.m4 with upstream.
