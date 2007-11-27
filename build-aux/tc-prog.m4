@@ -5,7 +5,7 @@
 # Check whether PROGRAM version matches the REQUIREMENT.
 # REQUIREMENT ::= OP VERS.
 #          OP ::= < | <= | == | >= | > | !=
-#        VERS ::= <digit>(.<digit>)*
+#        VERS ::= [\w.]*
 #
 # Define VARIABLE as an Autoconf variable for this program, along with
 # its DESCRIPTION.
@@ -17,12 +17,13 @@ AC_DEFUN([TC_PROG],
 AC_CHECK_PROGS([$3], [$1])
 # Alternation is not portable, thank you OSX...  So accept too
 # many operators, and filter afterwards.
-tc_re=['^\([<!=>=]*\) *\([0-9][0-9.]*\)$']
+tc_re=['^\([<!=>=]*\) *\([0-9a-zA-Z_+.]*\)$']
 tc_ver=`echo "$2" | sed "s/$tc_re/\2/"`
 tc_req=`echo "$2" | sed "s/$tc_re/\1/"`
-if echo "$tc_req" | grep ['^\([<>]\|[<>!=]=\)$'] >/dev/null; then :; else
-  AC_MSG_ERROR([Invalid operator: $tc_req])
-fi
+case $tc_req in
+  "==" | "!=" | "<" | ">" | "<=" | ">=" ) ;;
+  *) AC_MSG_ERROR([Invalid operator: $tc_req]);;
+esac
 if test -z "$tc_ver" || test -z "$tc_req"; then
   AC_MSG_ERROR([This macro requires an argument such as >= 2.2, != 2.3, etc.])
 fi
@@ -30,9 +31,9 @@ if test -n "$$3" ; then
   AC_CACHE_CHECK([for $1 $tc_req $tc_ver],
     [ac_cv_$3_version],
     [ac_cv_$3_actual_version=`$$3 --version | \
-	sed -n ['/^[^0-9]*\([0-9][0-9.]*[0-9]\).*$/{s//\1/;p;q;}']`
+	sed -n ['/^[^0-9]*\([0-9][0-9.]*[0-9][A-Za-z+]*\).*$/{s//\1/;p;q;}']`
     if test -z "$ac_cv_$3_actual_version"; then
-    	ac_cv_$3_version=no
+	ac_cv_$3_version=no
     else
 	ac_cv_$3_version=yes
     fi

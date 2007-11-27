@@ -1,5 +1,11 @@
 2007-11-27  Akim Demaille  <demaille@gostai.com>
 
+	Improve TC_PROG.
+	* tc-prog.m4: Accept version numbers a la Bison.
+	Of course this is not enough to recognize a CVS version.
+
+2007-11-27  Akim Demaille  <demaille@gostai.com>
+
 	Fix check_PROGRAMS etc. use.
 	* check.mk (check_programs): New.
 	Use it to make sure these programs are built before running
