@@ -22,23 +22,27 @@ svn_externals = $(top_srcdir)/build-aux/svn-externals
 # I would like to get rid of this, but Automake is too conservative
 # when parsing rules, and rejects (an error) targets like
 # $(SVN_EXTERNALS:=-up), but accepts $(SVN_EXTERNALS:=.up) (a period).
-SVN_EXTERNALS_CI    = $(SVN_EXTERNALS:=-ci)
-SVN_EXTERNALS_CI_CI = $(SVN_EXTERNALS:=-ci-ci)
-SVN_EXTERNALS_HELP  = $(SVN_EXTERNALS:=-help)
-SVN_EXTERNALS_PIN   = $(SVN_EXTERNALS:=-pin)
-SVN_EXTERNALS_UP    = $(SVN_EXTERNALS:=-up)
-SVN_EXTERNALS_UP_CI = $(SVN_EXTERNALS:=-up-ci)
+SVN_EXTERNALS_CI       = $(SVN_EXTERNALS:=-ci)
+SVN_EXTERNALS_CI_CI    = $(SVN_EXTERNALS:=-ci-ci)
+SVN_EXTERNALS_HELP     = $(SVN_EXTERNALS:=-help)
+SVN_EXTERNALS_PIN      = $(SVN_EXTERNALS:=-pin)
+SVN_EXTERNALS_UP       = $(SVN_EXTERNALS:=-up)
+SVN_EXTERNALS_UP_CI    = $(SVN_EXTERNALS:=-up-ci)
+SVN_EXTERNALS_UP_CH_CI = $(SVN_EXTERNALS:=-up-ch-ci)
 
-.PHONY: $(SVN_EXTERNALS_HELP) $(SVN_EXTERNALS_PIN)	\
-        $(SVN_EXTERNALS_CI)   $(SVN_EXTERNALS_CI_CI)   	\
-        $(SVN_EXTERNALS_UP)  $(SVN_EXTERNALS_UP_CI)
+.PHONY:									  \
+  $(SVN_EXTERNALS_HELP) $(SVN_EXTERNALS_PIN)				  \
+  $(SVN_EXTERNALS_CI)   $(SVN_EXTERNALS_CI_CI)				  \
+  $(SVN_EXTERNALS_UP)   $(SVN_EXTERNALS_UP_CI)  $(SVN_EXTERNALS_UP_CH_CI)
+
 help: $(SVN_EXTERNALS_HELP)
-$(SVN_EXTERNALS_HELP):							  \
-	@ext=$(@:-help=);						  \
-	echo "$$ext-ci:    check in $$ext and up it";			  \
-	echo "$$ext-ci-ci: check in $$ext, up it, and check in host";	  \
-	echo "$$ext-up:    update the svn:externals revision for $$ext";  \
-	echo "$$ext-up-ci: up $$ext and and check in its host directory"; \
+$(SVN_EXTERNALS_HELP):							      \
+	@ext=$(@:-help=);						      \
+	echo "$$ext-ci:    check in $$ext and up it";			      \
+	echo "$$ext-ci-ci: check in $$ext, up it, and check in host";	      \
+	echo "$$ext-up:    update the svn:externals revision for $$ext";      \
+	echo "$$ext-up-ci: up $$ext and check in its host directory";	      \
+	echo "$$ext-up-ch-ci: up $$ext, make check, check in host directory"; \
 	echo "$$ext-pin:   subscribe to the latest $$ext"
 
 # Checkin the pinned external and update it.
@@ -64,6 +68,12 @@ $(SVN_EXTERNALS_UP_CI):
 	$(MAKE) $(AM_MAKEFLAGS) $(@:-up-ci=-up)
 	svn commit -m "Update $(@:-up-ci=)." -N $(srcdir)
 
+# Update the pinned external, check everything is ok, then checkin.
+$(SVN_EXTERNALS_UP_CH_CI):
+	$(MAKE) $(AM_MAKEFLAGS) $(@:-up-ch-ci=-up)
+	$(MAKE) $(AM_MAKEFLAGS) check
+	svn commit -m "Update $(@:-up-ch-ci=)." -N $(srcdir)
+
 
 ## ------------------- ##
 ## All svn:externals.  ##
@@ -80,4 +90,7 @@ externals-help:
 externals-ci: $(SVN_EXTERNALS_CI) $(SVN_EXTERNALS_PROXY:=-ci)
 externals-up: $(SVN_EXTERNALS_UP) $(SVN_EXTERNALS_PROXY:=-up)
 externals-up-ci: $(SVN_EXTERNALS_UP)
+	svn commit -m "Update externals." -N $(srcdir)
+externals-up-ch-ci: $(SVN_EXTERNALS_UP)
+	$(MAKE) $(AM_MAKEFLAGS) check
 	svn commit -m "Update externals." -N $(srcdir)

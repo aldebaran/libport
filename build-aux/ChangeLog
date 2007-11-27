@@ -1,5 +1,10 @@
 2007-11-27  Akim Demaille  <demaille@gostai.com>
 
+	make EXTERNAL-up-ch-ci.
+	* svn-externals.mk: Support it.
+
+2007-11-27  Akim Demaille  <demaille@gostai.com>
+
 	Don't require bison --xml support.
 	* bison++.in: Be robust to bison not supporting --xml.
 	Be lazy when computing the html output too.
