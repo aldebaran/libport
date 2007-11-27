@@ -1,3 +1,9 @@
+2007-11-27  Akim Demaille  <demaille@gostai.com>
+
+	Don't require bison --xml support.
+	* bison++.in: Be robust to bison not supporting --xml.
+	Be lazy when computing the html output too.
+
 2007-11-26  Akim Demaille  <demaille@gostai.com>
 
 	Don't require XML 2 HTML.

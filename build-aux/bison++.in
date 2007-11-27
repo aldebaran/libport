@@ -22,7 +22,12 @@ output_base=$(basename "$output")
 output_base_noext=$(echo "$output_base" | sed -e 's/\.[^.]*//')
 output_dir=$(dirname "$output")
 shift
+
 options="$@"
+if $BISON --xml --version >/dev/null 2>&1; then
+  options="$options --xml"
+fi
+
 
 # Alexandre Duret-Lutz also notes that in VPATH-builds $(srcdir) can
 # be an absolute path depending on how ./configure is called ...
@@ -43,16 +48,10 @@ mkdir $tmp
 cp $input $tmp
 cd $tmp
 set +e
-$BISON $options $input_base -o $output_base --xml
+$BISON $options $input_base -o $output_base
 status=$?
 set -e
 
-# Whatever happens, create the html output file.  If we can.
-xml2html="xsltproc $($BISON --print-datadir)/xslt/xml2xhtml.xsl"
-if ! $xml2html $output_base_noext.xml >$output_base_noext.html; then
-  echo >&2 "$0: cannot convert XML report to HTML"
-  rm $output_base_noext.html
-fi
 
 # fix_bison_output FILE
 # ---------------------
@@ -77,11 +76,28 @@ case $status in
     for file in $tmp/*
     do
       base=$(basename $file)
+      base_noext=$(echo "$base" | sed -e 's/\.[^.]*//')
       out=$output_dir/$base
       case $base in
       $input_base)
 	# Leave it here.
 	;;
+
+      *.xml)
+	# Computing the HTML is slow.  Do it when the XML changed.
+	fix_bison_output "$file"
+	if ! test -r "$out" || ! cmp -s "$file" "$out"; then
+	  xml2html="xsltproc $($BISON --print-datadir)/xslt/xml2xhtml.xsl"
+	  if ! $xml2html "$file" >$tmp/$base_noext.html; then
+	    echo >&2 "$0: cannot convert XML report to HTML"
+	    rm $tmp/base_noext.html
+	  fi
+	  $move_if_change "$tmp/$base_noext.html" \
+			  "$output_dir/$base_noext.html"
+	fi
+	$move_if_change "$file" "$out"
+	;;
+
       *.hh)
 	fix_bison_output "$file"
 	# To save cycles, if the file differs only on sync lines,
@@ -94,6 +110,7 @@ case $status in
 	fi
 	$move_if_change "$file" "$out"
 	;;
+
       *)
 	fix_bison_output "$file"
 	$move_if_change "$file" "$out"
