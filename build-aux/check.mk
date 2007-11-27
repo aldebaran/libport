@@ -118,7 +118,7 @@ rm $@-t
 # From a test file to a log file.
 # Do not use a regular `.test.log:' rule here, since in that case the
 # following rule (without incoming extension) will mask this one.
-%.log: %.test
+%.log: %.test $(check_programs)
 	@$(am__check_pre) $${dir}$< $(am__check_post)
 
 # The exact same commands, but for programs.
@@ -133,6 +133,10 @@ rm $@-t
 
 TEST_LOGS ?= $(TESTS:.test=.log)
 TEST_SUITE_LOG = test-suite.log
+
+check_programs =							\
+  $(nodist_check_SCRIPTS)  $(dist_check_SCRIPTS)  $(check_SCRIPTS)	\
+  $(nodist_check_PROGRAMS) $(dist_check_PROGRAMS) $(check_PROGRAMS)
 
 $(TEST_SUITE_LOG): $(TEST_LOGS)
 	@results=$$(for f in $(TEST_LOGS); do sed 1q $$f; done);	\

@@ -1,3 +1,10 @@
+2007-11-27  Akim Demaille  <demaille@gostai.com>
+
+	Fix check_PROGRAMS etc. use.
+	* check.mk (check_programs): New.
+	Use it to make sure these programs are built before running
+	the checking rules.
+
 2007-11-27  Matthieu Nottale  <nottale@gostai.com>
 
 	.
