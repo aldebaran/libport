@@ -27,7 +27,7 @@ absolute ()
   # the use of forward slashes in the Windows path.  Windows *does* understand
   # paths with forward slashes).
   case $(uname -s) in
-    CYGWIN*) res=$(cygpath --mixed "$res")
+    CYGWIN*) res=$(cygpath "$res")
   esac
   echo "$res"
 }
