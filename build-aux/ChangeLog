@@ -1,5 +1,10 @@
 2007-12-03  Akim Demaille  <demaille@gostai.com>
 
+	Emacs mode.
+	* build-aux/urbi.as: here.
+
+2007-12-03  Akim Demaille  <demaille@gostai.com>
+
 	Be robust to undefined $exit.
 	* rst.as: here.
 	In liburbi-check the test pass instead of failing because

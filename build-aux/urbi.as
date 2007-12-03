@@ -1,4 +1,4 @@
-m4_pattern_forbid([^_?URBI_])dnl
+m4_pattern_forbid([^_?URBI_])dnl			-*- shell-script -*-
 
 
 m4_defun([_URBI_ABSOLUTE_PREPARE],
