@@ -1,5 +1,12 @@
 2007-12-03  Akim Demaille  <demaille@gostai.com>
 
+	Be robust to undefined $exit.
+	* rst.as: here.
+	In liburbi-check the test pass instead of failing because
+	exit was not initialized.
+
+2007-12-03  Akim Demaille  <demaille@gostai.com>
+
 	Try to avoid issuing colors on BuildBot.
 	* check.mk: Update, using suggestion from J. Meyering, and R.
 	Wildenhues.

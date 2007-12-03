@@ -66,9 +66,9 @@ rst_expect ()
     rst_pre "Raw effective $[2] for $me" $[2].raw
     rst_pre "Effective $[2] for $me"     $[2].eff
     rst_pre "Diffs on $[2] for $me"      $[2].diff
-    if test x"$exit" = xtrue; then
-      exit=false
-    fi
+    case $exit in
+      '' | true) exit=false;;
+    esac
   else
     # Dump something, it is really surprising in the logs to see
     # nothing.
