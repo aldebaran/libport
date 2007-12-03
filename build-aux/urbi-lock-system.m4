@@ -4,7 +4,7 @@
 AC_DEFUN([_URBI_CHECK_LOCKSYSTEM_DEPENDENCIES],
 [URBI_WITH_OPENSSL_REQUIRED
 
-AC_CHECK_PROG([COBF],[cobf],[true],[false])
+AC_CHECK_PROG([COBF], [cobf], [true], [false])
 
 if test x$COBF != xtrue; then
    AC_MSG_ERROR([
@@ -41,9 +41,9 @@ AC_CONFIG_SUBDIRS([lock-system])
 # machines. You want to use this option on your workstation.
 AC_DEFUN([_URBI_LOCKSYSTEM_CHECK_ADDR],
 [AC_ARG_ENABLE([check-mac-addr],
-             [AC_HELP_STRING([--disable-check-mac-addr],
-                             [skip the test of mac address])],
-             [], [enable_check_mac_addr=yes])
+	     [AC_HELP_STRING([--disable-check-mac-addr],
+			     [skip the test of mac address])],
+	     [], [enable_check_mac_addr=yes])
 AM_CONDITIONAL([ENABLE_CHECK_MAC_ADDR], [test x$enable_check_mac_addr = xyes])
 ])
 
@@ -53,10 +53,16 @@ AM_CONDITIONAL([ENABLE_CHECK_MAC_ADDR], [test x$enable_check_mac_addr = xyes])
 # For binary distribution we don't require to obfuscate the code.
 AC_DEFUN([_URBI_LOCKSYSTEM_COBF],
 [AC_ARG_ENABLE([cobf],
-             [AC_HELP_STRING([--disable-cobf],
-                             [disable cobf execution])],
-             [], [enable_cobf=yes])
+	       [AC_HELP_STRING([--disable-cobf],
+			       [disable cobf execution])],
+	       [], [enable_cobf=yes])
 AM_CONDITIONAL([ENABLE_COBF], [test x$enable_cobf = xyes])
+case $enable_cobf in
+  no)
+    AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
+	     ["$DISTCHECK_CONFIGURE_FLAGS '--disable-cobf'"])
+    ;;
+esac
 ])
 
 
@@ -66,19 +72,25 @@ AM_CONDITIONAL([ENABLE_COBF], [test x$enable_cobf = xyes])
 # an external.
 AC_DEFUN([URBI_WITH_LOCKSYSTEM],
 [AC_ARG_ENABLE([locksystem],
-	     [AC_HELP_STRING([--disable-locksystem],
-			     [disable softare locking system])],
-	     [], [enable_locksystem=yes])
+ 	       [AC_HELP_STRING([--disable-locksystem],
+		 	       [disable softare locking system])],
+	       [], [enable_locksystem=yes])
 
 AM_CONDITIONAL([ENABLE_LOCKSYSTEM], [test x$enable_locksystem = xyes])
 
 _URBI_LOCKSYSTEM_CHECK_ADDR
 _URBI_LOCKSYSTEM_COBF
 
-if test $enable_locksystem = yes; then
-   AC_DEFINE([USE_LOCKSYSTEM], [], [Define to use the locksystem])
-   _URBI_CONFIGURE_LOCKSYSTEM
-fi
+case $enable_locksystem in
+  yes)
+    AC_DEFINE([USE_LOCKSYSTEM], [], [Define to use the locksystem])
+    _URBI_CONFIGURE_LOCKSYSTEM
+    ;;
+  no)
+    AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
+	     ["$DISTCHECK_CONFIGURE_FLAGS '--disable-locksystem'"])
+    ;;
+esac
 ])
 
 ## Local Variables:

@@ -1,5 +1,11 @@
 2007-12-03  Akim Demaille  <demaille@gostai.com>
 
+	Fix distcheck.
+	* urbi-lock-system.m4: When the locksystem and/or the
+	obfuscation is disabled, disable it in distcheck.
+
+2007-12-03  Akim Demaille  <demaille@gostai.com>
+
 	Emacs mode.
 	* build-aux/urbi.as: here.
 
