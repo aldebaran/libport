@@ -1,3 +1,9 @@
+2007-12-03  Akim Demaille  <demaille@gostai.com>
+
+	Try to avoid issuing colors on BuildBot.
+	* check.mk: Update, using suggestion from J. Meyering, and R.
+	Wildenhues.
+
 2007-11-27  Akim Demaille  <demaille@gostai.com>
 
 	Improve TC_PROG.
