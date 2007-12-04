@@ -1,5 +1,10 @@
 2007-12-04  Rémi Humbert  <humbert@gostai.com>
 
+	Revert boost.m4 
+	* boost.m4: here.
+
+2007-12-04  Rémi Humbert  <humbert@gostai.com>
+
 	* boost.m4: Modify boost.m4 to use static version of boost libraries .
 
 2007-12-03  Akim Demaille  <demaille@gostai.com>

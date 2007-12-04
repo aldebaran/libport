@@ -260,7 +260,7 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
       *@$boost_lib@*) continue;;
     esac
     boost_save_LIBS=$LIBS
-dnl    LIBS="-l$boost_lib $LIBS"
+    LIBS="-l$boost_lib $LIBS"
     # If with_boost is empty, we'll search in /lib first, which is not quite
     # right so instead we'll try to a location based on where the headers are.
     boost_tmp_lib=$with_boost
@@ -272,10 +272,6 @@ dnl    LIBS="-l$boost_lib $LIBS"
       test -e "$boost_ldpath" || continue
       boost_save_LDFLAGS=$LDFLAGS
       test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath"
-
-dnl Use a static version of boost
-      LIBS="$boost_ldpath/lib$boost_lib.a $LIBS"
-
 dnl First argument of AC_LINK_IFELSE left empty because the test file is
 dnl generated only once above (before we start the for loops).
       _BOOST_AC_LINK_IFELSE([],
@@ -284,9 +280,7 @@ dnl generated only once above (before we start the for loops).
       LDFLAGS=$boost_save_LDFLAGS
       if test x"$Boost_lib" = xyes; then
         Boost_lib_LDFLAGS="-L$boost_ldpath -R$boost_ldpath"
-dnl Use a static version of boost
-	Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.a"
-dnl        Boost_lib_LIBS="-l$boost_lib"
+        Boost_lib_LIBS="-l$boost_lib"
         LIBS=$boost_save_LIBS
         break 6
       else
