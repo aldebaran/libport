@@ -72,8 +72,8 @@ esac
 # an external.
 AC_DEFUN([URBI_WITH_LOCKSYSTEM],
 [AC_ARG_ENABLE([locksystem],
- 	       [AC_HELP_STRING([--disable-locksystem],
-		 	       [disable softare locking system])],
+	       [AC_HELP_STRING([--disable-locksystem],
+			       [disable softare locking system])],
 	       [], [enable_locksystem=yes])
 
 AM_CONDITIONAL([ENABLE_LOCKSYSTEM], [test x$enable_locksystem = xyes])
