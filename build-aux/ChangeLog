@@ -1,3 +1,8 @@
+2007-12-10  Nicolas Desprès  <despres@gostai.com>
+
+	Add URBI_WITH_QT_EXT.
+	* urbi-qt-ext.m4: New.
+
 2007-12-04  Rémi Humbert  <humbert@gostai.com>
 
 	Revert boost.m4 
