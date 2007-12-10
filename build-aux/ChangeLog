@@ -1,5 +1,10 @@
 2007-12-10  Nicolas Desprès  <despres@gostai.com>
 
+	Do not include the path in the resource name.
+	* autotroll.mk: Here.
+
+2007-12-10  Nicolas Desprès  <despres@gostai.com>
+
 	Add URBI_WITH_QT_EXT.
 	* urbi-qt-ext.m4: New.
 
