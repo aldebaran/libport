@@ -34,7 +34,7 @@ find_srcdir ()
 # - ../..         for the common case where we're in tests/my-test.dir
 # - ..            if we're in tests/
 # - .             if we're in top-builddir.
-find_urbi_server ()
+find_top_builddir ()
 {
   if test $[#] = 0; then
     set ../.. .. .
