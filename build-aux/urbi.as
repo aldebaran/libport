@@ -12,16 +12,16 @@ find_srcdir ()
 {
   # Guess srcdir if not defined.
   if test -z "$srcdir"; then
-    # Try to compute it from $0.
-    srcdir=$(dirname "$0")
+    # Try to compute it from $[0].
+    srcdir=$(dirname "$[0]")
   fi
 
   # We may change directory.
   srcdir=$(absolute "$srcdir")
 
   # Check that srcdir is valid.
-  test -f "$srcdir/$1" ||
-    fatal "cannot find $srcdir/$1: define srcdir"
+  test -f "$srcdir/$[1]" ||
+    fatal "cannot find $srcdir/$[1]: define srcdir"
 
   echo "$srcdir"
 }
@@ -36,7 +36,7 @@ find_srcdir ()
 # - .             if we're in top-builddir.
 find_urbi_server ()
 {
-  if test $# = 0; then
+  if test $[#] = 0; then
     set ../.. .. .
   fi
 
@@ -44,18 +44,18 @@ find_urbi_server ()
     for d
     do
        if test -f "$d/libtool"; then
-         top_builddir=$d
-         break
+	 top_builddir=$d
+	 break
        fi
     done
   fi
-  
+
   test -n "$top_builddir" ||
     fatal "cannot find top build directory, define top_builddir"
-  
+
   test -d "$top_builddir" ||
     fatal "top_builddir is not a directory: $top_builddir"
-  
+
   test -f "$top_builddir/config.status" ||
     fatal "top_builddir does not contain config.status: $top_builddir"
 }
