@@ -17,10 +17,11 @@ edit = sed \
 
 # Scripts written in M4sh.
 m4sh_dependencies =				\
-$(build_aux_dir)/urbi.as			\
+$(build_aux_dir)/base.as			\
 $(build_aux_dir)/rst.as				\
 $(build_aux_dir)/instrument.as			\
-$(build_aux_dir)/children.as
+$(build_aux_dir)/children.as			\
+$(build_aux_dir)/urbi.as
 
 EXTRA_DIST += $(m4sh_dependencies)
 
