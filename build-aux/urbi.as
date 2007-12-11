@@ -4,6 +4,63 @@ m4_pattern_allow([^URBI_SERVER$])
 
 m4_divert_text([URBI-INIT],
 [
+# find_srcdir WITNESS
+# -------------------
+# Find the location of the src directory of the tests suite.
+# Make sure the value is correct by checking for the presence of WITNESS.
+find_srcdir ()
+{
+  # Guess srcdir if not defined.
+  if test -z "$srcdir"; then
+    # Try to compute it from $0.
+    srcdir=$(dirname "$0")
+  fi
+
+  # We may change directory.
+  srcdir=$(absolute "$srcdir")
+
+  # Check that srcdir is valid.
+  test -f "$srcdir/$1" ||
+    fatal "cannot find $srcdir/$1: define srcdir"
+
+  echo "$srcdir"
+}
+
+
+# find_top_builddir [POSSIBILITIES]
+# ---------------------------------
+# Set/check top_builddir.
+# - $top_builddir if the user wants to define it,
+# - ../..         for the common case where we're in tests/my-test.dir
+# - ..            if we're in tests/
+# - .             if we're in top-builddir.
+find_urbi_server ()
+{
+  if test $# = 0; then
+    set ../.. .. .
+  fi
+
+  if test x"$top_builddir" = x; then
+    for d
+    do
+       if test -f "$d/libtool"; then
+         top_builddir=$d
+         break
+       fi
+    done
+  fi
+  
+  test -n "$top_builddir" ||
+    fatal "cannot find top build directory, define top_builddir"
+  
+  test -d "$top_builddir" ||
+    fatal "top_builddir is not a directory: $top_builddir"
+  
+  test -f "$top_builddir/config.status" ||
+    fatal "top_builddir does not contain config.status: $top_builddir"
+}
+
+
 # find_urbi_server
 # ----------------
 # Set URBI_SERVER to the location of urbi-server.
