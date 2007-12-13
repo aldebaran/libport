@@ -1,3 +1,9 @@
+2007-12-13  Akim Demaille  <demaille@gostai.com>
+
+	Improve find_top_builddir.
+	* urbi.as: here.
+	Improve error messages.
+
 2007-12-13  Nicolas Desprès  <despres@gostai.com>
 
 	Fix ticket #96.

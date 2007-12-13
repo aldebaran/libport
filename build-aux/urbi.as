@@ -36,14 +36,13 @@ find_srcdir ()
 # - .             if we're in top-builddir.
 find_top_builddir ()
 {
-  if test $[#] = 0; then
-    set ../.. .. .
-  fi
-
   if test x"$top_builddir" = x; then
+    if test $[#] = 0; then
+      set ../.. .. .
+    fi
     for d
     do
-       if test -f "$d/libtool"; then
+       if test -f "$d/config.status"; then
 	 top_builddir=$d
 	 break
        fi
@@ -54,10 +53,11 @@ find_top_builddir ()
     fatal "cannot find top build directory, define top_builddir"
 
   test -d "$top_builddir" ||
-    fatal "top_builddir is not a directory: $top_builddir"
+    fatal "top_builddir is not a directory: $top_builddir" "(pwd = $(pwd)"
 
   test -f "$top_builddir/config.status" ||
-    fatal "top_builddir does not contain config.status: $top_builddir"
+    fatal "top_builddir does not contain config.status: $top_builddir" \
+	  "(pwd = $(pwd)"
 }
 
 
