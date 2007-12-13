@@ -1,3 +1,9 @@
+2007-12-13  Akim Demaille  <demaille@gostai.com>
+
+	Fix find_top_builddir.
+	* urbi.as: Use properly URBI_SERVER.
+	Be smarter about the location using $0.
+
 2007-12-13  Nicolas Desprès  <despres@gostai.com>
 
 	Use perl instead of sed.

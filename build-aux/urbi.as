@@ -30,15 +30,16 @@ find_srcdir ()
 # find_top_builddir [POSSIBILITIES]
 # ---------------------------------
 # Set/check top_builddir.
-# - $top_builddir if the user wants to define it,
-# - ../..         for the common case where we're in tests/my-test.dir
-# - ..            if we're in tests/
-# - .             if we're in top-builddir.
+# - $top_builddir   if the user wants to define it,
+# - (dirname $0)/.. since that's where we are supposed to be
+# - ../..           for the common case where we're in tests/my-test.dir
+# - ..              if we're in tests/
+# - .               if we're in top-builddir.
 find_top_builddir ()
 {
   if test x"$top_builddir" = x; then
     if test $[#] = 0; then
-      set ../.. .. .
+      set $(dirname "$0")/.. ../.. .. .
     fi
     for d
     do
@@ -80,7 +81,7 @@ find_urbi_server ()
 
     *) # A simple name, most certainly urbi-server.
        # Find it in the PATH.
-       URBI_SERVER=$(find_prog "urbi-server" "$PATH")
+       URBI_SERVER=$(find_prog "$URBI_SERVER" "$PATH")
        # If we can't find it, then ucore-pc was probably not installed.
        # Skip.
        test x"$URBI_SERVER" != x || exit 77
