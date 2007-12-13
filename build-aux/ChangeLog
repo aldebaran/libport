@@ -1,3 +1,10 @@
+2007-12-13  Nicolas Desprès  <despres@gostai.com>
+
+	Use perl instead of sed.
+	According to Akim Demaille review.
+	* autotroll.m4: Couldn't manage to get sed working. At least -i option
+	of perl is present when perl is present...
+
 2007-12-13  Akim Demaille  <demaille@gostai.com>
 
 	Improve find_top_builddir.
