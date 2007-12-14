@@ -1,3 +1,9 @@
+2007-12-14  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
+	Try an unreleased version of boost.m4.
+	* build-aux/boost.m4: Update + try the unreleased version that is
+	meant to properly handle the `s' option to require static libraries.
+
 2007-11-15  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Search Qt harder.

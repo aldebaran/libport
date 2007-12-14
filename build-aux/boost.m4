@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 1
+# serial 4
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
 # You can fetch the latest version of the script by doing:
 #   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
@@ -29,13 +29,16 @@
 # define BOOST_CPPFLAGS accordingly.  It will add an option --with-boost to
 # your configure so that users can specify non standard locations.
 # For more README and documentation, go to http://repo.or.cz/w/boost.m4.git
+# Note: THESE MACRO ASSUME THAT YOU USE LIBTOOL.  If you don't, don't worry,
+# simply read the README, it will show you what to do step by step.
 
 m4_pattern_forbid([^_?BOOST_])
 
 # BOOST_REQUIRE([VERSION])
 # ------------------------
 # Look for Boost.  If version is given, it must either be a literal of the form
-# "X.Y" where X and Y are integers or a variable "$var".
+# "X.Y.Z" where X, Y and Z are integers (the ".Z" part being optional) or a
+# variable "$var".
 # Defines the value BOOST_CPPFLAGS.  This macro only checks for headers with
 # the required version, it does not check for any of the Boost libraries.
 # FIXME: Add a 2nd optional argument so that it's not fatal if Boost isn't found
@@ -171,7 +174,7 @@ AC_LANG_POP([C++])dnl
 
 
 # BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST])
-# ------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 # Look for the Boost library LIB-NAME (e.g., LIB-NAME = `thread', for
 # libboost_thread).  Check that HEADER-NAME works and check that
 # libboost_LIB-NAME can link with the code CXX-TEST.
@@ -224,7 +227,7 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
 dnl Optimization hacks: compiling C++ is slow, especially with Boost.  What
 dnl we're trying to do here is guess the right combination of link flags
 dnl (LIBS / LDFLAGS) to use a given library.  This can take several
-dnl iteration before it succeeds and is thus *very* slow.  So what we do
+dnl iterations before it succeeds and is thus *very* slow.  So what we do
 dnl instead is that we compile the code first (and thus get an object file,
 dnl typically conftest.o).  Then we try various combinations of link flags
 dnl until we succeed to link conftest.o in an executable.  The problem is
@@ -233,16 +236,16 @@ dnl remove all the temporary files including conftest.o.  So the trick here
 dnl is to temporarily change the value of ac_objext so that conftest.o is
 dnl preserved accross tests.  This is obviously fragile and I will burn in
 dnl hell for not respecting Autoconf's documented interfaces, but in the
-dnl mean time, it optimizes the macro by several order of magnitude.
+dnl mean time, it optimizes the macro by a factor of 5 to 30.
 dnl Another small optimization: the first argument of AC_COMPILE_IFELSE left
-dnl empty because the test file is dnl generated only once above (before we
+dnl empty because the test file is generated only once above (before we
 dnl start the for loops).
   AC_COMPILE_IFELSE([],
     [ac_objext=do_not_rm_me_plz],
     [AC_MSG_ERROR([Cannot compile a test that uses Boost $1])])
   ac_objext=$boost_save_ac_objext
   boost_failed_libs=
-# Don't bother to ident the 6 nested for loops, only the 2 inside-most ones
+# Don't bother to ident the 6 nested for loops, only the 2 innermost ones
 # matter.
 for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
@@ -259,8 +262,6 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     case $boost_failed_libs in #(
       *@$boost_lib@*) continue;;
     esac
-    boost_save_LIBS=$LIBS
-    LIBS="-l$boost_lib $LIBS"
     # If with_boost is empty, we'll search in /lib first, which is not quite
     # right so instead we'll try to a location based on where the headers are.
     boost_tmp_lib=$with_boost
@@ -271,6 +272,19 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     do
       test -e "$boost_ldpath" || continue
       boost_save_LDFLAGS=$LDFLAGS
+      # Are we looking for a static library?
+      case $boost_ldpath:$boost_rtopt_ in #(
+        *?*:*s*) # Yes (Non empty boost_ldpath + s in rt opt)
+          # Look for the abs path the static archive.
+          # $libext is computed by Libtool but let's make sure it's non empty.
+          test -z "$libext" &&
+            AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
+          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext";; #(
+        *) # No: use -lboost_foo to find the shared library.
+          Boost_lib_LIBS="-l$boost_lib";;
+      esac
+      boost_save_LIBS=$LIBS
+      LIBS="$Boost_lib_LIBS $LIBS"
       test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath"
 dnl First argument of AC_LINK_IFELSE left empty because the test file is
 dnl generated only once above (before we start the for loops).
@@ -278,16 +292,14 @@ dnl generated only once above (before we start the for loops).
                             [Boost_lib=yes], [Boost_lib=no])
       ac_objext=$boost_save_ac_objext
       LDFLAGS=$boost_save_LDFLAGS
+      LIBS=$boost_save_LIBS
       if test x"$Boost_lib" = xyes; then
         Boost_lib_LDFLAGS="-L$boost_ldpath -R$boost_ldpath"
-        Boost_lib_LIBS="-l$boost_lib"
-        LIBS=$boost_save_LIBS
         break 6
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
       fi
     done
-    LIBS=$boost_save_LIBS
   done
 done
 done
@@ -295,6 +307,10 @@ done
 done
 rm -f conftest.$ac_objext
 ])
+case $Boost_lib in #(
+  no) AC_MSG_ERROR([Could not find the flags to link with Boost $1])
+    ;;
+esac
 AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])
 AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])
 CPPFLAGS=$boost_save_CPPFLAGS
@@ -315,7 +331,7 @@ AC_LANG_POP([C++])dnl
 
 
 # BOOST_BIND()
-# ------------------
+# ------------
 # Look for Boost.Bind
 AC_DEFUN([BOOST_BIND],
 [BOOST_FIND_HEADER([boost/bind.hpp])])
@@ -342,12 +358,13 @@ AC_DEFUN([BOOST_DATE_TIME],
 
 
 # BOOST_FILESYSTEM([PREFERRED-RT-OPT])
-# -----------------------------------
+# ------------------------------------
 # Look for Boost.Filesystem.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
+# Do not check for boost/filesystem.hpp because this file was introduced in 1.34.
 AC_DEFUN([BOOST_FILESYSTEM],
 [BOOST_FIND_LIB([filesystem], [$1],
-                [boost/filesystem.hpp], [boost::filesystem::path p;])
+                [boost/filesystem/path.hpp], [boost::filesystem::path p;])
 ])# BOOST_FILESYSTEM
 
 
@@ -359,7 +376,7 @@ AC_DEFUN([BOOST_FOREACH],
 
 
 # BOOST_FORMAT()
-# ------------------
+# --------------
 # Look for Boost.Format
 # Note: we can't check for boost/format/format_fwd.hpp because the header isn't
 # standalone.  It can't be compiled because it triggers the following error:
@@ -370,14 +387,14 @@ AC_DEFUN([BOOST_FORMAT],
 
 
 # BOOST_FUNCTION()
-# ------------------
+# ----------------
 # Look for Boost.Function
 AC_DEFUN([BOOST_FUNCTION],
 [BOOST_FIND_HEADER([boost/function.hpp])])
 
 
 # BOOST_GRAPH([PREFERRED-RT-OPT])
-# ------------------------------
+# -------------------------------
 # Look for Boost.Graphs.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_GRAPH],
@@ -386,8 +403,26 @@ AC_DEFUN([BOOST_GRAPH],
 ])# BOOST_GRAPH
 
 
+# BOOST_IOSTREAMS([PREFERRED-RT-OPT])
+# -------------------------------
+# Look for Boost.IOStreams.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_IOSTREAMS],
+[BOOST_FIND_LIB([iostreams], [$1],
+                [boost/iostreams/device/file_descriptor.hpp],
+                [boost::iostreams::file_descriptor fd(0); fd.close();])
+])# BOOST_IOSTREAMS
+
+
+# BOOST_HASH()
+# ------------
+# Look for Boost.Functional/Hash
+AC_DEFUN([BOOST_HASH],
+[BOOST_FIND_HEADER([boost/functional/hash.hpp])])
+
+
 # BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
-# ----------------------------------------
+# -----------------------------------------
 # Look for Boost.Program_options.  For the documentation of PREFERRED-RT-OPT, see
 # the documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_PROGRAM_OPTIONS],
@@ -398,14 +433,14 @@ AC_DEFUN([BOOST_PROGRAM_OPTIONS],
 
 
 # BOOST_REF()
-# ------------------
+# -----------
 # Look for Boost.Ref
 AC_DEFUN([BOOST_REF],
 [BOOST_FIND_HEADER([boost/ref.hpp])])
 
 
 # BOOST_REGEX([PREFERRED-RT-OPT])
-# -----------------------------------
+# -------------------------------
 # Look for Boost.Regex.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_REGEX],
@@ -416,7 +451,7 @@ AC_DEFUN([BOOST_REGEX],
 
 
 # BOOST_SIGNALS([PREFERRED-RT-OPT])
-# -----------------------------------
+# ---------------------------------
 # Look for Boost.Signals.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_SIGNALS],
@@ -444,7 +479,7 @@ AC_DEFUN([BOOST_STRING_ALGO],
 
 
 # BOOST_TEST([PREFERRED-RT-OPT])
-# -----------------------------------
+# ------------------------------
 # Look for Boost.Test.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 AC_DEFUN([BOOST_TEST],
@@ -455,7 +490,7 @@ BOOST_FIND_LIB([unit_test_framework], [$1],
 
 
 # BOOST_TRIBOOL()
-# -----------------
+# ---------------
 # Look for Boost.Tribool
 AC_DEFUN([BOOST_TRIBOOL],
 [BOOST_FIND_HEADER([boost/logic/tribool_fwd.hpp])
@@ -464,7 +499,7 @@ BOOST_FIND_HEADER([boost/logic/tribool.hpp])
 
 
 # BOOST_THREADS([PREFERRED-RT-OPT])
-# --------------------------------
+# ---------------------------------
 # Look for Boost.Thread.  For the documentation of PREFERRED-RT-OPT, see the
 # documentation of BOOST_FIND_LIB above.
 # FIXME: Provide an alias "BOOST_THREAD".
@@ -512,6 +547,16 @@ AC_DEFUN([BOOST_UTILITY],
 AC_DEFUN([BOOST_VARIANT],
 [BOOST_FIND_HEADER([boost/variant/variant_fwd.hpp])
 BOOST_FIND_HEADER([boost/variant.hpp])])
+
+
+# BOOST_WAVE([PREFERRED-RT-OPT])
+# ------------------------------
+# Look for Boost.Wave.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_WAVE],
+[BOOST_FIND_LIB([wave], [$1],
+                [boost/wave.hpp],
+                [boost::wave::token_id id; get_token_name(id);])])
 
 
 # ----------------- #
@@ -696,7 +741,8 @@ AS_IF([_AC_DO_STDERR($ac_link) && {
 	 test ! -s conftest.err
        } && test -s conftest$ac_exeext && {
 	 test "$cross_compiling" = yes ||
-	 AS_TEST_X([conftest$ac_exeext])
+	 $as_executable_p conftest$ac_exeext
+dnl FIXME: use AS_TEST_X instead when 2.61 is widespread enough.
        }],
       [$2],
       [if $boost_use_source; then
