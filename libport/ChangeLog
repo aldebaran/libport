@@ -1,5 +1,10 @@
 2007-12-14  Akim Demaille  <demaille@gostai.com>
 
+	Fix Doxumentation.
+	* sysexits.hh: here.
+
+2007-12-14  Akim Demaille  <demaille@gostai.com>
+
 	cli.
 	* cli.cc, cli.hh, cli.hxx: New.
 	* Makefile.am, libport-sources.mk: Adjust.
