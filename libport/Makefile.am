@@ -17,17 +17,16 @@ libport_HEADERS =				\
 # C++ headers.
 libport_HEADERS +=				\
 	assert.hh				\
+	cli.hh cli.hxx				\
 	compiler.hh				\
-	containers.hh				\
-	containers.hxx				\
+	containers.hh containers.hxx		\
 	contract.hh				\
 	deref.hh				\
 	deref.hxx				\
 	detect_win32.h				\
 	hash.hh					\
 	indent.hh				\
-	escape.hh				\
-	escape.hxx				\
+	escape.hh escape.hxx			\
 	exception.hxx				\
 	exception.hh				\
 	fwd.hh					\

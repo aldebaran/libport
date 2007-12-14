@@ -17,6 +17,7 @@ libportsysdir = $(libportdir)/sys
 
 # Sources to compile to use libport.
 libport_sources = 				\
+	$(libport_srcdir)/cli.cc		\
 	$(libport_srcdir)/contract.cc		\
 	$(libport_srcdir)/deref.cc		\
 	$(libport_srcdir)/escape.cc		\

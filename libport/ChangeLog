@@ -1,5 +1,11 @@
 2007-12-14  Akim Demaille  <demaille@gostai.com>
 
+	cli.
+	* cli.cc, cli.hh, cli.hxx: New.
+	* Makefile.am, libport-sources.mk: Adjust.
+
+2007-12-14  Akim Demaille  <demaille@gostai.com>
+
 	Prefer enums to #define.
 	* sysexits.hh: here.
 
