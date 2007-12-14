@@ -2,7 +2,12 @@
 # --------------------
 # Code common to the use of an installed or shipped libport.
 AC_DEFUN([_URBI_LIBPORT_COMMON],
-[AC_REQUIRE([URBI_PTHREAD])dnl
+[
+AC_ARG_WITH([boost-thread-static],
+	[AC_HELP_STRING([--with-boost-thread-static]
+			[link with the static version of boost thread library])]
+	[], [with_boost_thread_static=yes])
+AC_REQUIRE([URBI_PTHREAD])dnl
 AC_REQUIRE([URBI_FLOAT_CHECK])dnl
 # Check for Boost headers
 BOOST_REQUIRE([1.34])
@@ -10,7 +15,11 @@ BOOST_REQUIRE([1.34])
 if test -n "$openr" && $openr; then
   AC_MSG_NOTICE([[OpenR in use: not using Boost.Thread.]])
 else
-  BOOST_THREADS
+  if test x$with_boost_thread_static = xyes; then
+    BOOST_THREADS([s])
+  else
+    BOOST_THREADS
+  fi
 fi
 AC_CHECK_HEADERS([sysexits.h])
 ])
