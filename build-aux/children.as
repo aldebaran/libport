@@ -17,7 +17,7 @@ run ()
   local title=$[1]
   run_prefix=$run_counter-$(echo $[1] |
 			     sed -e 's/[[^a-zA-Z0-9][^a-zA-Z0-9]]*/-/g;s/-$//')
-  run_counter=$((run_counter + 1))
+  run_counter=$(($run_counter + 1))
   shift
 
   {

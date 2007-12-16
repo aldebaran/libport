@@ -1,5 +1,12 @@
 2007-12-16  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
+	Shell syntax portability fix in arithmetic expansions.
+	Use a `$' when accessing the value of a variable in an arithmetic
+	expansions.  Ash (the default shell on GNU/Debian) fails without it.
+	* children.as: Here.
+
+2007-12-16  Benoit Sigoure  <tsuna@lrde.epita.fr>
+
 	Sync boost.m4 from upstream.
 	* boost.m4: Here.
 
