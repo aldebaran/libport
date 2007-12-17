@@ -48,7 +48,7 @@ namespace libport
 
   std::ostream& operator<<(std::ostream& o, const exit& e)
   __attribute__ ((noreturn));
-  
+
 }
 
 #endif // ! LIBPORT_SYSEXIT_HH
