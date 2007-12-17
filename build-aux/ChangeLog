@@ -1,3 +1,8 @@
+2007-12-17  Rémi Humbert  <humbert@gostai.com>
+
+	Dont duplicate BOOST_THREADS macro in configure 
+	* urbi-libport.m4: here.
+
 2007-12-17  Akim Demaille  <akim.demaille@free.fr>
 
 	truth.

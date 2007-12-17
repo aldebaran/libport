@@ -15,11 +15,11 @@ BOOST_REQUIRE([1.34])
 if test -n "$openr" && $openr; then
   AC_MSG_NOTICE([[OpenR in use: not using Boost.Thread.]])
 else
+
   if test x$with_boost_thread_static = xyes; then
-    BOOST_THREADS([s])
-  else
-    BOOST_THREADS
+    boost_threads_flag=s
   fi
+  BOOST_THREADS([$boost_threads_flag])
 fi
 AC_CHECK_HEADERS([sysexits.h])
 ])
