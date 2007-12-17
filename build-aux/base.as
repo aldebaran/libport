@@ -170,9 +170,24 @@ get_options ()
 
 
 m4_defun([_URBI_PREPARE],
-[_URBI_ABSOLUTE_PREPARE
+[
+# truth TEST-ARGUMENTS...
+# -----------------------
+# Run "test TEST-ARGUMENTS" and echo true/false depending on the result.
+truth ()
+{
+  if test "$[@]"; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+_URBI_ABSOLUTE_PREPARE
 _URBI_FIND_PROG_PREPARE
-_URBI_STDERR_PREPARE])
+_URBI_STDERR_PREPARE
+
+])
 
 
 # URBI_PREPARE

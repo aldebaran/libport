@@ -66,6 +66,7 @@ rst_expect ()
     rst_pre "Raw effective $[2] for $me" $[2].raw
     rst_pre "Effective $[2] for $me"     $[2].eff
     rst_pre "Diffs on $[2] for $me"      $[2].diff
+    # If exit is already set, e.g. to "exit SKIP", don't alter it.
     case $exit in
       '' | true) exit=false;;
     esac

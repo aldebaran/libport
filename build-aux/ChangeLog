@@ -1,5 +1,10 @@
 2007-12-17  Akim Demaille  <akim.demaille@free.fr>
 
+	truth.
+	* base.as (truth): new function.
+
+2007-12-17  Akim Demaille  <akim.demaille@free.fr>
+
 	Fix rst_pre.
 	* rst.as: Fix m4 quotation.
 
