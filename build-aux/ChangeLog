@@ -1,5 +1,11 @@
 2007-12-17  Akim Demaille  <demaille@gostai.com>
 
+	Build the html output in all the cases, especially failures.
+	* bison++.in: Swap the case/for construct to factor the handling
+	of log files during failures.
+
+2007-12-17  Akim Demaille  <demaille@gostai.com>
+
 	No longer check for sysexits.h.
 	* urbi-libport.m4: here, as libport no longer uses it.
 

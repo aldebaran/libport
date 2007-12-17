@@ -71,22 +71,24 @@ fix_bison_output ()
 # Go back to where we were and use relative paths instead of using
 # absolute file names.  The messages look nicer.
 cd ..
-case $status in
-  0)
-    for file in $tmp/*
-    do
-      base=$(basename $file)
-      base_noext=$(echo "$base" | sed -e 's/\.[^.]*//')
-      out=$output_dir/$base
-      case $base in
-      $input_base)
+for file in $tmp/*
+do
+  base=$(basename $file)
+  base_noext=$(echo "$base" | sed -e 's/\.[^.]*//')
+  # The name under which $file is to be installed.
+  out=$output_dir/$base
+  case $status:$base in
+    *:$input_base)
 	# Leave it here.
 	;;
 
-      *.xml)
+    # Success or not, install it.
+    *:*.xml)
 	# Computing the HTML is slow.  Do it when the XML changed.
 	fix_bison_output "$file"
-	if ! test -r "$out" || ! cmp -s "$file" "$out"; then
+	if ! test -r "$out" \
+	    || ! cmp -s "$file" "$out" \
+	    || test ! -f "$output_dir/$base_noext.html"; then
 	  xml2html="xsltproc $($BISON --print-datadir)/xslt/xml2xhtml.xsl"
 	  if ! $xml2html "$file" >$tmp/$base_noext.html; then
 	    echo >&2 "$0: cannot convert XML report to HTML"
@@ -98,7 +100,7 @@ case $status in
 	$move_if_change "$file" "$out"
 	;;
 
-      *.hh)
+    0:*.hh)
 	fix_bison_output "$file"
 	# To save cycles, if the file differs only on sync lines,
 	# update it (to be right), but keep the original timestamps.
@@ -111,21 +113,16 @@ case $status in
 	$move_if_change "$file" "$out"
 	;;
 
-      *)
+    *:*.output)
+	$move_if_change "$file" "$out"
+	;;
+
+    0:*)
 	fix_bison_output "$file"
 	$move_if_change "$file" "$out"
 	;;
-      esac
-    done
-    ;;
-
-  *) # We really want to keep the *.output files.
-    for file in $(ls $tmp/*.output $tmp/*.xml $tmp/*.html 2>/dev/null)
-    do
-      $move_if_change "$file" "$output_dir/$(basename $file)"
-    done
-    ;;
-esac
+  esac
+done
 
 # Get rid of the tmp dir.
 rm -rf $tmp
