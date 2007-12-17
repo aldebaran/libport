@@ -21,7 +21,6 @@ else
   fi
   BOOST_THREADS([$boost_threads_flag])
 fi
-AC_CHECK_HEADERS([sysexits.h])
 ])
 
 
@@ -61,8 +60,8 @@ AC_SUBST([LIBPORT_CPPFLAGS], ['-I$(top_srcdir) -I$(top_builddir)'])
 # Where we install the libport files.
 URBI_PACKAGE_KIND_SWITCH(
   [kernel],     [AC_SUBST([libportdir], ['${kernelincludedir}/libport'])],
-  [sdk],  	[AC_SUBST([libportdir], ['${includedir}/libport'])],
-  [core],  	[AC_SUBST([libportdir], ['${sdkincludedir}/libport'])])
+  [sdk],	[AC_SUBST([libportdir], ['${includedir}/libport'])],
+  [core],	[AC_SUBST([libportdir], ['${sdkincludedir}/libport'])])
 
 AC_CONFIG_FILES([libport/Makefile])
 ])

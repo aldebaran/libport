@@ -1,3 +1,8 @@
+2007-12-17  Akim Demaille  <demaille@gostai.com>
+
+	No longer check for sysexits.h.
+	* urbi-libport.m4: here, as libport no longer uses it.
+
 2007-12-17  Rémi Humbert  <humbert@gostai.com>
 
 	Dont duplicate BOOST_THREADS macro in configure 
