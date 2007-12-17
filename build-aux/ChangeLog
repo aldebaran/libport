@@ -1,3 +1,8 @@
+2007-12-17  Akim Demaille  <akim.demaille@free.fr>
+
+	Fix rst_pre.
+	* rst.as: Fix m4 quotation.
+
 2007-12-16  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Shell syntax portability fix in arithmetic expansions.

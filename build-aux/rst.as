@@ -43,7 +43,7 @@ rst_tab ()
 # FILE may be empty to denote stdin.
 rst_pre ()
 {
-  if test $# = 1 || test -s "$[2]"; then
+  if test $[#] = 1 || test -s "$[2]"; then
     echo "$[1]::"
     echo
     shift
