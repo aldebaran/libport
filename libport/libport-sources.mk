@@ -23,6 +23,7 @@ libport_sources = 				\
 	$(libport_srcdir)/escape.cc		\
 	$(libport_srcdir)/indent.cc		\
 	$(libport_srcdir)/package-info.cc	\
+	$(libport_srcdir)/program-name.cc	\
 	$(libport_srcdir)/symbol.cc
 
 # These are broken and someone will have to fix them...

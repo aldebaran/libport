@@ -1,12 +1,9 @@
 /// \file libport/sysexits.hh
-/// \brief Provide sysexits.h portably.
+/// \brief Provide sysexits.h portably, and in C++ rather than in Cpp.
 
 #ifndef LIBPORT_SYSEXIT_HH
 # define LIBPORT_SYSEXIT_HH
 
-//# ifdef LIBPORT_HAVE_SYSEXIT_H
-//#  include <sysexits.h>
-//# else
 enum sysexit
 {
   EX_OK		   =  0, ///< successful termination
@@ -26,8 +23,11 @@ enum sysexit
   EX_PROTOCOL	   = 76, ///< remote error in protocol
   EX_NOPERM	   = 77, ///< permission denied
   EX_CONFIG	   = 78, ///< configuration error
-  EX__MAX	   = 78, ///< maximum listed value
+
+  EX_SKIP          = 176, ///< skip this test with unmet dependencies
+  EX_HARD          = 177, ///< hard error that cannot be saved (ICE)
+
+  EX__MAX	   = 177, ///< maximum listed value
 };
-//# endif
 
 #endif // ! LIBPORT_SYSEXIT_HH

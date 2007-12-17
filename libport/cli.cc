@@ -2,8 +2,7 @@
 
 #include "libport/cli.hh"
 #include "libport/sysexits.hh"
-
-extern const char* program_name;
+#include "libport/program-name.hh"
 
 namespace libport
 {

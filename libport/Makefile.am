@@ -27,15 +27,14 @@ libport_HEADERS +=				\
 	hash.hh					\
 	indent.hh				\
 	escape.hh escape.hxx			\
-	exception.hxx				\
-	exception.hh				\
+	exception.hh exception.hxx		\
 	fwd.hh					\
 	hash.hh					\
 	lockable.hh				\
 	network.h				\
 	package-info.hh				\
-	pair.hh					\
-	pair.hxx				\
+	pair.hh pair.hxx			\
+	program-name.hh				\
 	ref-pt.hh				\
 	select-const.hh				\
 	select-ref.hh				\

@@ -1,3 +1,11 @@
+2007-12-17  Akim Demaille  <demaille@gostai.com>
+
+	program_name.
+	* program-name.hh, program-name.cc: New.
+	* Makefile.am, cli.cc, libport-sources.mk: Adjust.
+	* sysexits.hh: No longer try to use sysexits.h.
+	Add our own EX_SKIP and EX_HARD.
+
 2007-12-14  Akim Demaille  <demaille@gostai.com>
 
 	Fix Doxumentation.
