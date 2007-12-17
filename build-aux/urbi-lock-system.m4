@@ -65,6 +65,23 @@ case $enable_cobf in
 esac
 ])
 
+# _URBI_LOCKSYSTEM_QT
+# -------------------
+# Macro to add --enable-qt-locksystem
+# We provide a Qt widget that allow the user to select its license key file.
+AC_DEFUN([_URBI_LOCKSYSTEM_QT],
+[AC_ARG_ENABLE([qt-locksystem],
+               [AC_HELP_STRING([--enable-qt-locksystem],
+		               [enable Qt widget for lock system])],
+	       [enable_qt_locksystem=yes], [])
+AM_CONDITIONAL([ENABLE_QT_LOCKSYSTEM], [test x$enable_qt_locksystem = xyes])
+# Do we need to compile the Qt widget?
+if test x$enable_qt_locksystem = xyes; then
+   AT_WITH_QT
+   AT_REQUIRE_QT_VERSION([4.3.2])
+fi
+])
+
 
 # URBI_WITH_LOCKSYSTEM
 # --------------------
@@ -80,6 +97,7 @@ AM_CONDITIONAL([ENABLE_LOCKSYSTEM], [test x$enable_locksystem = xyes])
 
 _URBI_LOCKSYSTEM_CHECK_ADDR
 _URBI_LOCKSYSTEM_COBF
+_URBI_LOCKSYSTEM_QT
 
 case $enable_locksystem in
   yes)
