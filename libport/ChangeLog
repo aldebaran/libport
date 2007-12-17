@@ -1,5 +1,12 @@
 2007-12-17  Akim Demaille  <demaille@gostai.com>
 
+	libport::exit.
+	* cli.cc: Use it.
+	* libport-sources.mk: Adjust.
+	* sysexits.hh, sysexits.cc (libport::exit): New.
+
+2007-12-17  Akim Demaille  <demaille@gostai.com>
+
 	program_name.
 	* program-name.hh, program-name.cc: New.
 	* Makefile.am, cli.cc, libport-sources.mk: Adjust.

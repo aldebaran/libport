@@ -4,6 +4,11 @@
 #ifndef LIBPORT_SYSEXIT_HH
 # define LIBPORT_SYSEXIT_HH
 
+# include <iosfwd>
+
+# include "libport/compiler.hh"
+
+// FIXME: Should be moved in libport and lowercased?
 enum sysexit
 {
   EX_OK		   =  0, ///< successful termination
@@ -29,5 +34,21 @@ enum sysexit
 
   EX__MAX	   = 177, ///< maximum listed value
 };
+
+namespace libport
+{
+  class exit
+  {
+  public:
+    explicit exit(unsigned s);
+    void operator() () const __attribute__((noreturn));
+  private:
+    unsigned status_;
+  };
+
+  std::ostream& operator<<(std::ostream& o, const exit& e)
+  __attribute__ ((noreturn));
+  
+}
 
 #endif // ! LIBPORT_SYSEXIT_HH
