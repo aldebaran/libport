@@ -1,5 +1,5 @@
 # URBI_WITH_URBI_SDK
-# ----------
+# ------------------
 # Look for urbi-sdk.  Support --with-urbi-sdk=PATH. Check for
 # urbi-sdk.
 #
@@ -41,13 +41,13 @@ if $urbi_sdk; then
   # More tools for Urbi_Sdk.
   AC_SUBST([URBI_SDK_CPPFLAGS], ['-I$(URBI_SDK_PATH)/include'])
   AC_SUBST([URBI_SDK_LDFLAGS],  ['-L$(URBI_SDK_PATH)/lib'])
-  AC_SUBST([URBI_SDK_LIBS],  ['$(URBI_SDK_PATH)/lib/liburbi.la'])
+  AC_SUBST([URBI_SDK_LIBS],     ['$(URBI_SDK_PATH)/lib/liburbi.la'])
+  AC_SUBST([URBI_SDK_PATH])
 fi
 
 AM_CONDITIONAL([WITH_URBI_SDK], [$urbi_sdk])
 AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
   ["$DISTCHECK_CONFIGURE_FLAGS --with-urbi-sdk='$URBI_SDK_PATH'"])
-AC_SUBST([URBI_SDK_PATH])
 ])
 
 AC_DEFUN([URBI_WITH_URBI_SDK_REQUIRED],
