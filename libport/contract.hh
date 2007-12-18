@@ -11,7 +11,7 @@
 
 
 
- __attribute__((noreturn)) void  __Terminate (const char*, int, const char*);
+ ATTRIBUTE_NORETURN void  __Terminate (const char*, int, const char*);
 
 # define die(reason)		  __Terminate (__FILE__, __LINE__, reason)
 # define unreached()		  die ("unreachable code reached")
@@ -25,7 +25,7 @@
 
 # else // NDEBUG
 
-__attribute__((noreturn))
+ATTRIBUTE_NORETURN
 void __FailedCondition (const char* condType,
 		       const char* condText,
 		       const char* fileName,

@@ -11,13 +11,18 @@
 `----------------*/
 
 # ifdef _MSC_VER
-#  define __attribute__(a) __declspec a
+#  define __attribute__(a) 
+#  define ATTRIBUTE_NORETURN __declspec(noreturn)
+#  define ATTRIBUTE_NOTHROW  __declspec(nothrow)
 # endif
 
 # ifndef __attribute__
 /* This feature is available in gcc versions 2.5 and later.  */
 #  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
 #   define __attribute__(Spec) /* empty */
+#  else
+#    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
+#    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
 #  endif
 # endif
 

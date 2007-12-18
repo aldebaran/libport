@@ -10,19 +10,19 @@
 
 namespace libport
 {
-  __attribute__ ((noreturn))
+  ATTRIBUTE_NORETURN
   void usage_error (const std::string& opt, const std::string& err);
 
-  __attribute__ ((noreturn))
+  ATTRIBUTE_NORETURN
   void required_argument (const std::string& opt);
 
-  __attribute__ ((noreturn))
+  ATTRIBUTE_NORETURN
   void missing_argument (const std::string& opt);
 
-  __attribute__ ((noreturn))
+  ATTRIBUTE_NORETURN
   void invalid_option (const std::string& opt);
 
-  __attribute__ ((noreturn))
+  ATTRIBUTE_NORETURN
   void invalid_option_val (const std::string& opt, const std::string& arg);
 
   template<typename T>
