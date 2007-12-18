@@ -1,3 +1,12 @@
+2007-12-18  Matthieu Nottale  <nottale@gostai.com>
+
+	#define __attribute __declspec for vc++.
+	* cli.hh: Put __attribute__ at the beginning of declaration.
+	* compiler.hh: define __attribute__ __declspec for vc++.
+	* sysexits.cc: Revert my previous patch returning value in noreturn
+	  func.
+	* sysexits.hh: Put __attribute__ at the beginning of declaration.
+
 2007-12-18  Akim Demaille  <demaille@gostai.com>
 
 	make_tokenizer.

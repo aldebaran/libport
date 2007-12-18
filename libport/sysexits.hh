@@ -41,13 +41,13 @@ namespace libport
   {
   public:
     explicit exit(unsigned s);
-    void operator() () const __attribute__((noreturn));
+    __attribute__((noreturn)) void operator() () const;
   private:
     unsigned status_;
   };
 
-  std::ostream& operator<<(std::ostream& o, const exit& e)
-  __attribute__ ((noreturn));
+  __attribute__((noreturn))
+  std::ostream& operator<<(std::ostream& o, const exit& e);
 
 }
 

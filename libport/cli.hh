@@ -10,20 +10,20 @@
 
 namespace libport
 {
-  void usage_error (const std::string& opt, const std::string& err)
-    __attribute__ ((__noreturn__));
+  __attribute__ ((__noreturn__))
+  void usage_error (const std::string& opt, const std::string& err);
 
-  void required_argument (const std::string& opt)
-    __attribute__ ((__noreturn__));
+  __attribute__ ((__noreturn__))
+  void required_argument (const std::string& opt);
 
-  void missing_argument (const std::string& opt)
-    __attribute__ ((__noreturn__));
+  __attribute__ ((__noreturn__))
+  void missing_argument (const std::string& opt);
 
-  void invalid_option (const std::string& opt)
-    __attribute__ ((__noreturn__));
+  __attribute__ ((__noreturn__))
+  void invalid_option (const std::string& opt);
 
-  void invalid_option_val (const std::string& opt, const std::string& arg)
-    __attribute__ ((__noreturn__));
+  __attribute__ ((__noreturn__))
+  void invalid_option_val (const std::string& opt, const std::string& arg);
 
   template<typename T>
   T convert_argument (const std::string& opt, const std::string& arg);

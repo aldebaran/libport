@@ -10,6 +10,10 @@
 | __attribute__.  |
 `----------------*/
 
+# ifdef _MSC_VER
+#  define __attribute__(a) __declspec a
+# endif
+
 # ifndef __attribute__
 /* This feature is available in gcc versions 2.5 and later.  */
 #  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__

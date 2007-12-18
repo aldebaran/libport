@@ -14,11 +14,9 @@ namespace libport
   }
 
   std::ostream&
-  operator<<(std::ostream& o, const exit& e)
+  operator<<(std::ostream&, const exit& e)
   {
     e();
-    //vc++ does not detect that it is not required as we have exited by now
-    return o;
   }
 
 }
