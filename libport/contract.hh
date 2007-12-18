@@ -6,21 +6,12 @@
 #ifndef LIBPORT_CONTRACT_HH
 # define LIBPORT_CONTRACT_HH
 
-
-// Use GCC magic bits to specify we cannot return from these functions
-
-#ifndef __attribute__
-# if !defined __GNUC__
-#  define __attribute__(Spec) /* empty */
-# endif
-#endif
-
-#ifndef ATTRIBUTE_NORETURN
-# define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
-#endif
+#include "libport/compiler.hh"
 
 
-void __Terminate (const char*, int, const char*) ATTRIBUTE_NORETURN;
+
+
+ __attribute__((noreturn)) void  __Terminate (const char*, int, const char*);
 
 # define die(reason)		  __Terminate (__FILE__, __LINE__, reason)
 # define unreached()		  die ("unreachable code reached")
@@ -34,10 +25,11 @@ void __Terminate (const char*, int, const char*) ATTRIBUTE_NORETURN;
 
 # else // NDEBUG
 
+__attribute__((noreturn))
 void __FailedCondition (const char* condType,
 		       const char* condText,
 		       const char* fileName,
-		       int fileLine) ATTRIBUTE_NORETURN;
+		       int fileLine);
 
 #  define __TestCondition(condType,expr)				\
   ((void) ((expr) ? 0 : (__FailedCondition ( #condType, #expr,		\
