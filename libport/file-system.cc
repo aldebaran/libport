@@ -12,6 +12,10 @@ namespace libport
   {
     struct stat st;
     stat(f.c_str(), &st);
+# ifdef _MSC_VER
+    return st.st_mode & _S_IFDIR;
+# else
     return S_ISDIR(st.st_mode);
+# endif
   }
 }

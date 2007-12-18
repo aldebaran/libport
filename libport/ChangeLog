@@ -1,5 +1,10 @@
 2007-12-18  Matthieu Nottale  <nottale@gostai.com>
 
+	vc++ headers do not know S_IS_DIR.
+	* file-system.cc: Use _S_IFDIR fag instead of IS_DIR macro for vc++.
+
+2007-12-18  Matthieu Nottale  <nottale@gostai.com>
+
 	Define and use ATTRIBUTE_NORETURN.
 	* cli.hh: Use ATTRIBUTE_NORETURN.
 	* compiler.hh: Define ATTRIBUTE_NORETURN.
