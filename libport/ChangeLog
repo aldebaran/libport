@@ -1,3 +1,9 @@
+2007-12-18  Loic Fosse  <fosse@gostai.com>
+
+	Add file-system containing is_dir.
+	* Makefile.am, libport-sources.mk: Adjust.
+	* file-system.cc, file-system.hh: New.
+
 2007-12-18  Matthieu Nottale  <nottale@gostai.com>
 
 	Replace __noreturn__ with noreturn.

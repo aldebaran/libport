@@ -28,6 +28,7 @@ libport_HEADERS +=				\
 	indent.hh				\
 	escape.hh escape.hxx			\
 	exception.hh exception.hxx		\
+	file-system.hh				\
 	fwd.hh					\
 	hash.hh					\
 	lockable.hh				\
