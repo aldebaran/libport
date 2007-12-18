@@ -14,4 +14,3 @@ namespace libport
 }
 
 #endif // !LIBPORT_TOKENIZER_HH
-
