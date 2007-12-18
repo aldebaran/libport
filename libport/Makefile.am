@@ -49,6 +49,7 @@ libport_HEADERS +=				\
 	symbol.hxx				\
 	sysexits.hh				\
 	thread.hh				\
+	tokenizer.hh				\
 	uffloat.hh				\
 	ufloat.h				\
 	ufloat.hh				\

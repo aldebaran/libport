@@ -1,3 +1,9 @@
+2007-12-18  Akim Demaille  <demaille@gostai.com>
+
+	make_tokenizer.
+	* tokenizer.hh, tokenizer.cc: New.
+	* Makefile.am, libport-sources.mk: Adjust.
+
 2007-12-18  Matthieu Nottale  <nottale@gostai.com>
 
 	Fix missing return value.
