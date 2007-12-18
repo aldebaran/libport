@@ -1,3 +1,8 @@
+2007-12-18  Matthieu Nottale  <nottale@gostai.com>
+
+	Fix missing return value.
+	* sysexits.cc: Here.
+
 2007-12-17  Akim Demaille  <demaille@gostai.com>
 
 	libport::exit.
