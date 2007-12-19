@@ -1,3 +1,10 @@
+2007-12-19  Akim Demaille  <demaille@gostai.com>
+
+	Fix test number when there are none.
+	* check.mk (all): echo $result issues a 
+ even if $result is
+	empty.  Be robust to that.
+
 2007-12-18  Akim Demaille  <akim.demaille@free.fr>
 
 	Better AC_SUBST use.

@@ -156,10 +156,10 @@ check_programs =							\
 
 $(TEST_SUITE_LOG): $(TEST_LOGS)
 	@results=$$(for f in $(TEST_LOGS); do sed 1q $$f; done);	\
-	all=$$(echo "$$results" | wc -l | sed -e 's/^[ \t]*//');	\
-	fail=$$(echo "$$results" | grep -c '^FAIL');			\
-	pass=$$(echo "$$results" | grep -c '^PASS');			\
-	skip=$$(echo "$$results" | grep -c '^SKIP');			\
+	all=$$(  echo "$$results" | grep -c '^.');			\
+	fail=$$( echo "$$results" | grep -c '^FAIL');			\
+	pass=$$( echo "$$results" | grep -c '^PASS');			\
+	skip=$$( echo "$$results" | grep -c '^SKIP');			\
 	xfail=$$(echo "$$results" | grep -c '^XFAIL');			\
 	xpass=$$(echo "$$results" | grep -c '^XPASS');			\
 	failures=$$(expr $$fail + $$xpass);				\
