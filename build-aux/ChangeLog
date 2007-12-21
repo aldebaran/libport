@@ -1,3 +1,9 @@
+2007-12-21  Matthieu Nottale  <nottale@gostai.com>
+
+	Use valgrind suppression list if present.
+	* instrument.as: Test for $srcdir/valgrind-suppressions file presence 
+	and pass it to valgrind.
+
 2007-12-20  Nicolas Desprès  <despres@gostai.com>
 
 	Improve work around for Qt-4.3.2.

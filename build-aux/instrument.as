@@ -43,9 +43,15 @@ instrument ()
 	  # Instrument using Valgrind.
 	  : ${VALGRIND=valgrind}
 	  if ($VALGRIND --version) >/dev/null 2>&1; then
+	     if test -f $srcdir/valgrind-suppressions; then
+	       suppressions="--suppressions=$srcdir/valgrind-suppressions"
+	     else
+	       suppressions=
+	     fi
 	      echo "$VALGRIND"			\
 		  "--error-exitcode=242"	\
 		  "--log-file-exactly=$log"	\
+		  "$suppressions"               \
 		  "--"
 	  else
 	      stderr "cannot find valgrind as $VALGRIND"
