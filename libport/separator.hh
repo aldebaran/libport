@@ -11,7 +11,7 @@
 namespace libport
 {
 
-  template <class C, typename S>
+  template <typename C, typename S>
   class separator
   {
   public:
@@ -23,17 +23,19 @@ namespace libport
   };
 
   /// Shorthand to create separator (c, s).
-  template <class C, typename S>
+  template <typename C, typename S>
   separator<C, S>
   separate (const C& c, const S& s);
 
+#if 0
   /// Shorthand to create separator (c, '\n').
-  template <class C>
+  template <typename C>
   separator<C, char>
   separate (const C& c);
+#endif
 
   /// Output the separator object \a s on \a ostr.
-  template <class C, typename S>
+  template <typename C, typename S>
   inline std::ostream&
   operator<< (std::ostream& ostr, const separator<C, S>& s);
 

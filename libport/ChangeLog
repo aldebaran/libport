@@ -1,3 +1,10 @@
+2007-12-24  Akim Demaille  <demaille@gostai.com>
+
+	Disable separate (C& c).
+	* separator.hh, separator.hxx: use typename, not class.
+	Disable unary separate as an attempt to work around some compiler
+	limitations.
+
 2007-12-18  Matthieu Nottale  <nottale@gostai.com>
 
 	vc++ headers do not know S_IS_DIR.
