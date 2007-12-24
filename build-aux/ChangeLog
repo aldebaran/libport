@@ -1,5 +1,11 @@
 2007-12-24  Akim Demaille  <demaille@gostai.com>
 
+	Fixes.
+	* m4sh.mk (edit): Define TARNAME too.
+	* urbi.as (check_dir): Fix a test.
+
+2007-12-24  Akim Demaille  <demaille@gostai.com>
+
 	check_dir.
 	* base.as (is_absolute): New.
 	(absolute): Use it.

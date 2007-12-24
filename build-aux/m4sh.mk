@@ -14,6 +14,7 @@ edit =									  \
   -e 's|@prefix[@]|$(prefix)|g'						  \
   -e 's|@VERSION[@]|$(VERSION)|g'					  \
   -e 's|@PACKAGE_NAME[@]|$(PACKAGE_NAME)|g'				  \
+  -e 's|@PACKAGE_TARNAME[@]|$(PACKAGE_TARNAME)|g'			  \
   -e 's|@srcdir[@]|$(abs_srcdir)|g'					  \
   -e 's|@top_srcdir[@]|$(abs_top_srcdir)|g'				  \
   -e 's|@builddir[@]|$(abs_builddir)|g'					  \

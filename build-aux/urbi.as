@@ -16,8 +16,8 @@ check_dir ()
   # Normalize the directory name, and as safety belts, run the same
   # tests on it.  But save time if possible.
   AS_IF([is_absolute "$val"],
-        [set x $val],
-        [set x $val $(absolute $val)])
+	[set x $val],
+	[set x $val $(absolute $val)])
   shift
   for res
   do
@@ -25,7 +25,7 @@ check_dir ()
       fatal "$var does not exist: $res" "(pwd = $(pwd))"
     test -d "$res" ||
       fatal "$var is not a directory: $res" "(pwd = $(pwd))"
-    if x"$[2]" != x; then
+    if test x"$[2]" != x; then
       test -f "$res/$[2]" ||
 	fatal "$var does not contain $[2]: $res" "(pwd = $(pwd))"
     fi

@@ -11,7 +11,7 @@ is_absolute ()
 {
   case $[1] in
     [[\\/]]* | ?:[[\\/]]*) return 0;;
-                        *) return 1;;
+			*) return 1;;
   esac
 }
 
