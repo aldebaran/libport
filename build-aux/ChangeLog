@@ -1,3 +1,13 @@
+2007-12-24  Akim Demaille  <demaille@gostai.com>
+
+	check_dir.
+	* base.as (is_absolute): New.
+	(absolute): Use it.
+	* m4sh.mk (edit): Substitute (top_)?(build|src)dir.
+	* urbi.as (check_dir): New.
+	(find_srcdir, find_top_builddir): Use it.
+	These functions should be obsoleted.
+
 2007-12-21  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Use a here-doc to generate the perl script.

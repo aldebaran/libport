@@ -4,6 +4,35 @@ m4_pattern_allow([^URBI_SERVER$])
 
 m4_divert_text([URBI-INIT],
 [
+# check_dir VARIABLE WITNESS
+# --------------------------
+check_dir ()
+{
+  local var=$[1]
+  local val
+  eval "val=\$$[1]"
+  test x"$val" != x ||
+    fatal "undefined variable: $var"
+  # Normalize the directory name, and as safety belts, run the same
+  # tests on it.  But save time if possible.
+  AS_IF([is_absolute "$val"],
+        [set x $val],
+        [set x $val $(absolute $val)])
+  shift
+  for res
+  do
+    test -e "$res" ||
+      fatal "$var does not exist: $res" "(pwd = $(pwd))"
+    test -d "$res" ||
+      fatal "$var is not a directory: $res" "(pwd = $(pwd))"
+    if x"$[2]" != x; then
+      test -f "$res/$[2]" ||
+	fatal "$var does not contain $[2]: $res" "(pwd = $(pwd))"
+    fi
+  done
+  eval "$var='$res'"
+}
+
 # find_srcdir WITNESS
 # -------------------
 # Find the location of the src directory of the tests suite.
@@ -16,14 +45,7 @@ find_srcdir ()
     srcdir=$(dirname "$[0]")
   fi
 
-  # We may change directory.
-  srcdir=$(absolute "$srcdir")
-
-  # Check that srcdir is valid.
-  test -f "$srcdir/$[1]" ||
-    fatal "cannot find $srcdir/$[1]: define srcdir"
-
-  echo "$srcdir"
+  check_dir srcdir "$[1]"
 }
 
 
@@ -50,15 +72,7 @@ find_top_builddir ()
     done
   fi
 
-  test -n "$top_builddir" ||
-    fatal "cannot find top build directory, define top_builddir"
-
-  test -d "$top_builddir" ||
-    fatal "top_builddir is not a directory: $top_builddir" "(pwd = $(pwd)"
-
-  test -f "$top_builddir/config.status" ||
-    fatal "top_builddir does not contain config.status: $top_builddir" \
-	  "(pwd = $(pwd)"
+  check_dir top_builddir "config.status"
 }
 
 

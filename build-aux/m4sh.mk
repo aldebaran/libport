@@ -5,15 +5,20 @@
 ## The scripts.  ##
 ## ------------- ##
 
-edit = sed \
-	-e 's|@SHELL[@]|$(SHELL)|g' \
-	-e 's|@PERL[@]|$(PERL)|g' \
-	-e 's|@bindir[@]|$(bindir)|g' \
-	-e 's|@datadir[@]|$(pkgdatadir)|g' \
-	-e 's|@prefix[@]|$(prefix)|g' \
-	-e 's|@VERSION[@]|$(VERSION)|g' \
-	-e 's|@PACKAGE_NAME[@]|$(PACKAGE_NAME)|g' \
-	-e 's|@configure_input[@]|Generated from $@.in; do not edit by hand.|g'
+edit =									  \
+ sed									  \
+  -e 's|@SHELL[@]|$(SHELL)|g'						  \
+  -e 's|@PERL[@]|$(PERL)|g'						  \
+  -e 's|@bindir[@]|$(bindir)|g'						  \
+  -e 's|@datadir[@]|$(pkgdatadir)|g'					  \
+  -e 's|@prefix[@]|$(prefix)|g'						  \
+  -e 's|@VERSION[@]|$(VERSION)|g'					  \
+  -e 's|@PACKAGE_NAME[@]|$(PACKAGE_NAME)|g'				  \
+  -e 's|@srcdir[@]|$(abs_srcdir)|g'					  \
+  -e 's|@top_srcdir[@]|$(abs_top_srcdir)|g'				  \
+  -e 's|@builddir[@]|$(abs_builddir)|g'					  \
+  -e 's|@top_builddir[@]|$(abs_top_builddir)|g'				  \
+  -e 's|@configure_input[@]|Generated from $@.in; do not edit by hand.|g'
 
 # Scripts written in M4sh.
 m4sh_dependencies =				\

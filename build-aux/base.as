@@ -4,32 +4,39 @@ m4_pattern_forbid([^_?URBI_])dnl			-*- shell-script -*-
 m4_define([_m4_divert(URBI-INIT)],    10)
 
 m4_defun([_URBI_ABSOLUTE_PREPARE],
-[# absolute NAME -> ABS-NAME
+[
+# is_absolute PATH
+# ----------------
+is_absolute ()
+{
+  case $[1] in
+    [[\\/]]* | ?:[[\\/]]*) return 0;;
+                        *) return 1;;
+  esac
+}
+
+# absolute NAME -> ABS-NAME
 # -------------------------
 # Return an absolute path to NAME.
 absolute ()
 {
   local res
-  case $[1] in
-   [[\\/]]* | ?:[[\\/]]*)
-      # Absolute paths don't need to be expanded.
-      res=$[1]
-      ;;
-   *) local dir=$(pwd)/$(dirname "$[1]")
-      if test -d "$dir"; then
-	res=$(cd "$dir" 2>/dev/null && pwd)/$(basename "$[1]")
-      else
-	fatal "not a directory: $dir"
-      fi
-      ;;
-  esac
+  AS_IF([is_absolute "$[1]"],
+  [# Absolute paths do not need to be expanded.
+   res=$[1]],
+  [local dir=$(pwd)/$(dirname "$[1]")
+   if test -d "$dir"; then
+     res=$(cd "$dir" 2>/dev/null && pwd)/$(basename "$[1]")
+   else
+     fatal "absolute: not a directory: $dir"
+   fi])
 
   # On Windows, we must make sure we have a Windows-like UNIX-friendly path (of
   # the form C:/cygwin/path/to/somewhere instead of /path/to/somewhere, notice
   # the use of forward slashes in the Windows path.  Windows *does* understand
   # paths with forward slashes).
   case $(uname -s) in
-    CYGWIN*) res=$(cygpath "$res")
+    (CYGWIN*) res=$(cygpath "$res")
   esac
   echo "$res"
 }
