@@ -48,17 +48,17 @@ namespace libport
   // Checking whether it makes it easier for some compilers:
   /*
     ast/nary.cc(107) : error C2780: 'libport::separator<C,char> libport::separate(const C &)' : expects 1 arguments - 2 provided
-    
+
     C:/cygwin/home/build/kernel2/kernel2_winxp_vcxx/build/libport/separator.hh(33) : see declaration of 'libport::separate'
-    
+
     ast/nary.cc(107) : error C2784: 'libport::separator<C,S> libport::separate(const C &,const S &)' : could not deduce template argument for 'overloaded function type' from 'overloaded function type'
-    
+
     C:/cygwin/home/build/kernel2/kernel2_winxp_vcxx/build/libport/separator.hh(28) : see declaration of 'libport::separate'
-    
+
     ast/nary.cc(107) : error C2784: 'libport::separator<C,S> libport::separate(const C &,const S &)' : could not deduce template argument for 'const C &' from 'const ast::exec_exps_type'
-    
+
     C:/cygwin/home/build/kernel2/kernel2_winxp_vcxx/build/libport/separator.hh(28) : see declaration of 'libport::separate'
-    
+
   */
 
   /*
