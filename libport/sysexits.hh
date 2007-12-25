@@ -12,6 +12,7 @@
 enum sysexit
 {
   EX_OK		   =  0, ///< successful termination
+  EX_FAIL	   =  1, ///< unspecified failure
   EX__BASE	   = 64, ///< base value for error messages
   EX_USAGE	   = 64, ///< command line usage error
   EX_DATAERR	   = 65, ///< data format error
