@@ -26,7 +26,8 @@ ufloat1_SOURCES =	ufloat1.cc
 ullfp1_SOURCES =	ullfp1.cc
 ullfptab1_SOURCES =	ullfptab1.cc
 
-# List your tests here:
+# Automake thinks the following line is not POSIX, help it.
+AUTOMAKE_OPTIONS += -Wno-portability
 TESTS = $(check_PROGRAMS:$(EXEEXT)=.test)
 
 ## ---------------- ##

@@ -1,3 +1,8 @@
+2008-01-01  Akim Demaille  <demaille@gostai.com>
+
+	Fix automake warning.
+	* libport/tests/Makefile.am: By shushing automake.
+
 2007-12-25  Akim Demaille  <demaille@gostai.com>
 
 	More sysexits.
