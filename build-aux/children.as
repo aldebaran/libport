@@ -111,9 +111,14 @@ children_kill ()
 
 # children_harvest
 # ----------------
-# Report the exit status of the children.
+# Report the exit status of the children.  Should be run only once.
+children_harvest_was_never_run=:
 children_harvest ()
 {
+  $children_harvest_was_never_run ||
+    error SOFTWARE "children_harvest: called multiple times"
+  children_harvest_was_never_run=false
+
   # Harvest exit status.
   for i in $children
   do
@@ -126,6 +131,31 @@ children_harvest ()
     fi
     echo "$sta$(ex_to_string $sta)" >$i.sta
   done
+}
+
+
+# children_status [CHILDREN]
+# --------------------------
+# Return the exit status of CHILD.  Must be run after harvesting.
+# If several CHILD are given, return the highest exit status.
+children_status ()
+{
+  if $children_harvest_was_never_run; then
+    error SOFTWARE "children_status: children_harvest was never run"
+  fi
+
+  test $[#] -ne 0 ||
+    { set x $children; shift; }
+
+  local res=0
+  for i
+  do
+    local sta=$(sed -n '1{s/^\([[0-9][0-9]]*\).*/\1/;p;q;}' <$i.sta)
+    if test $res -lt $sta; then
+      res=$sta
+    fi
+  done
+  echo $res
 }
 
 

@@ -1,5 +1,10 @@
 2008-01-01  Akim Demaille  <demaille@gostai.com>
 
+	children_status.
+	* children.as (children_status): New.
+
+2008-01-01  Akim Demaille  <demaille@gostai.com>
+
 	children_wait.
 	* children.as (children_wait): New.
 
