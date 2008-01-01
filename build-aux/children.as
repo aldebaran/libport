@@ -90,6 +90,7 @@ children_alive ()
   return 0
 }
 
+
 # children_kill
 # -------------
 # Kill all the children.  This function can be called twice: once
@@ -124,6 +125,27 @@ children_harvest ()
       sta=$?
     fi
     echo "$sta$(ex_to_string $sta)" >$i.sta
+  done
+}
+
+
+# children_wait TIMEOUT
+# ---------------------
+# Wait for the registered children, and passed TIMEOUT, kill the remaining
+# ones.  TIMEOUT is increased by 5 if instrumenting.
+children_wait ()
+{
+  local timeout=$[1]
+  if $INSTRUMENT; then
+    timeout=$(($timeout * 5))
+  fi
+  while children_alive; do
+    if test $timeout -le 0; then
+      children_kill
+      break
+    fi
+    sleep 1
+    timeout=$(($timeout - 1))
   done
 }
 

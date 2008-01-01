@@ -1,5 +1,10 @@
 2008-01-01  Akim Demaille  <demaille@gostai.com>
 
+	children_wait.
+	* children.as (children_wait): New.
+
+2008-01-01  Akim Demaille  <demaille@gostai.com>
+
 	More children operations.
 	* children.as (register_child, kill_children, harvest_children):
 	Rename as...
