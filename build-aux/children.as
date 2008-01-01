@@ -53,8 +53,7 @@ rst_run_report ()
 {
   local title=$[1]
   case $title in
-    ?*) title="$title "
-	;;
+    ?*) title="$title ";;
   esac
 
   rst_pre "${title}Command"   $[2].cmd
@@ -67,36 +66,52 @@ rst_run_report ()
 }
 
 
-# register_child NAME
-# -------------------
-register_child ()
+# children_register NAME
+# ----------------------
+children_register ()
 {
   children="$children $[1]"
   echo $! >$[1].pid
 }
 
 
-# kill_children
+# children_alive
+# --------------
+# Return whether there are still childs running.
+children_alive ()
+{
+  local cids
+  for i in $children
+  do
+    if ! ps $(cat $i.pid) 2>&1 >/dev/null; then
+      return 1
+    fi
+  done
+  return 0
+}
+
+# children_kill
 # -------------
 # Kill all the children.  This function can be called twice: once
-# before cleaning the components, and once when exiting.
-kill_children ()
+# before cleaning the components, and once when exiting, so it's
+# robust to children no longer in the process table.
+children_kill ()
 {
   for i in $children
   do
     pid=$(cat $i.pid)
-    if ps $pid 2>&1; then
+    if ps $pid 2>&1 >/dev/null; then
       echo "Killing $i ($pid)"
-      kill $pid 2>&1 || true
+      kill -ALRM $pid 2>&1 || true
     fi
   done
 }
 
 
-# harvest_children
+# children_harvest
 # ----------------
 # Report the exit status of the children.
-harvest_children ()
+children_harvest ()
 {
   # Harvest exit status.
   for i in $children

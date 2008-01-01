@@ -1,3 +1,12 @@
+2008-01-01  Akim Demaille  <demaille@gostai.com>
+
+	More children operations.
+	* children.as (register_child, kill_children, harvest_children):
+	Rename as...
+	(children_register, children_kill, children_harvest): these.
+	(children_alive): New.
+	* rst.as: Prefer -eq to = with numbers.
+
 2007-12-24  Akim Demaille  <demaille@gostai.com>
 
 	Fixes.
