@@ -1,5 +1,13 @@
 2008-01-03  Akim Demaille  <demaille@gostai.com>
 
+	Allow multiple calls to children_harvest.
+	* children.as (children_harvest): Create the *.sta file only if
+	it does not exist.
+	(children_register): Support several arguments (to justify the plural).
+	Destroy the sta files.
+
+2008-01-03  Akim Demaille  <demaille@gostai.com>
+
 	More children functions.
 	* children.as (children_clean, children_report): New.
 	(children_alive, chidren_kill, children_harvest, children_wait):

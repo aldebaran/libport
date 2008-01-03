@@ -100,12 +100,22 @@ children_clean ()
 }
 
 
-# children_register NAME
-# ----------------------
+# children_register NAMES
+# -----------------------
+# It is very important that we do not leave some random exit status
+# from some previous runs.  Standard output etc. are not a problem:
+# they *are* created during the run, while *.sta is created *only* if
+# it does not already exists (this is because you can call "wait" only
+# once per processus, so to enable calling children_harvest multiple
+# times, we create *.sta only if it does not exist).
 children_register ()
 {
-  children="$children $[1]"
-  echo $! >$[1].pid
+  for i
+  do
+    rm $i.sta
+    children="$children $i"
+    echo $! >$i.pid
+  done
 }
 
 
@@ -147,28 +157,30 @@ children_kill ()
 
 # children_harvest [CHILDREN]
 # ---------------------------
-# Report the exit status of the children.  Should be run only once.
-children_harvest_was_never_run=:
+# Report the exit status of the children.  Can be run several times.
+# You might want to call it once in the regular control flow to fetch
+# some exit status, but also in a trap, if you were interrupted.  So
+# it is meant to be callable multiple times, which might be a danger
+# wrt *.sta (cf., children_register).
 children_harvest ()
 {
-  $children_harvest_was_never_run ||
-    error SOFTWARE "children_harvest: called multiple times"
-  children_harvest_was_never_run=false
-
   # Harvest exit status.
   test $[#] -ne 0 ||
     { set x $children; shift; }
 
   for i
   do
-    pid=$(cat $i.pid)
-    # Beware of set -e.
-    if wait $pid 2>&1; then
-      sta=$?
-    else
-      sta=$?
+    # Don't look for the status of children we already waiting for.
+    if ! test -e $i.sta; then
+      pid=$(cat $i.pid)
+      # Beware of set -e.
+      if wait $pid 2>&1; then
+        sta=$?
+      else
+        sta=$?
+      fi
+      echo "$sta$(ex_to_string $sta)" >$i.sta
     fi
-    echo "$sta$(ex_to_string $sta)" >$i.sta
   done
 }
 
@@ -179,16 +191,16 @@ children_harvest ()
 # If several CHILD are given, return the highest exit status.
 children_status ()
 {
-  if $children_harvest_was_never_run; then
-    error SOFTWARE "children_status: children_harvest was never run"
-  fi
-
   test $[#] -ne 0 ||
     { set x $children; shift; }
 
   local res=0
   for i
   do
+    # We need to have waited for these children.
+    test -f $i.sta ||
+      error SOFTWARE "children_status: cannot find $i.sta." \
+	             "Was children_harvest called?"
     local sta=$(sed -n '1{s/^\([[0-9][0-9]]*\).*/\1/;p;q;}' <$i.sta)
     if test $res -lt $sta; then
       res=$sta
