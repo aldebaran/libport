@@ -66,22 +66,16 @@ rst_run_report ()
 }
 
 
-# children_register NAME
-# ----------------------
-children_register ()
-{
-  children="$children $[1]"
-  echo $! >$[1].pid
-}
-
-
-# children_alive
-# --------------
+# children_alive [CHILDREN]
+# -------------------------
 # Return whether there are still childs running.
 children_alive ()
 {
   local cids
-  for i in $children
+  test $[#] -ne 0 ||
+    { set x $children; shift; }
+
+  for i
   do
     if ! ps $(cat $i.pid) 2>&1 >/dev/null; then
       return 1
@@ -91,14 +85,56 @@ children_alive ()
 }
 
 
-# children_kill
-# -------------
+# children_clean [CHILDREN]
+# --------------------------
+# Remove the children files.
+children_clean ()
+{
+  test $[#] -ne 0 ||
+    { set x $children; shift; }
+
+  for i
+  do
+    rm -f $i.{cmd,pid,sta,in,out,err,val}
+  done
+}
+
+
+# children_register NAME
+# ----------------------
+children_register ()
+{
+  children="$children $[1]"
+  echo $! >$[1].pid
+}
+
+
+# children_report [CHILDREN]
+# --------------------------
+# Produce an RST report for the CHILDREN.
+children_report ()
+{
+  test $[#] -ne 0 ||
+    { set x $children; shift; }
+
+  for i
+  do
+    rst_run_report "$i" "$i"
+  done
+}
+
+
+# children_kill [CHILDREN]
+# ------------------------
 # Kill all the children.  This function can be called twice: once
 # before cleaning the components, and once when exiting, so it's
 # robust to children no longer in the process table.
 children_kill ()
 {
-  for i in $children
+  test $[#] -ne 0 ||
+    { set x $children; shift; }
+
+  for i
   do
     pid=$(cat $i.pid)
     if ps $pid 2>&1 >/dev/null; then
@@ -109,8 +145,8 @@ children_kill ()
 }
 
 
-# children_harvest
-# ----------------
+# children_harvest [CHILDREN]
+# ---------------------------
 # Report the exit status of the children.  Should be run only once.
 children_harvest_was_never_run=:
 children_harvest ()
@@ -120,7 +156,10 @@ children_harvest ()
   children_harvest_was_never_run=false
 
   # Harvest exit status.
-  for i in $children
+  test $[#] -ne 0 ||
+    { set x $children; shift; }
+
+  for i
   do
     pid=$(cat $i.pid)
     # Beware of set -e.
@@ -159,19 +198,22 @@ children_status ()
 }
 
 
-# children_wait TIMEOUT
-# ---------------------
+# children_wait TIMEOUT [CHILDREN]
+# --------------------------------
 # Wait for the registered children, and passed TIMEOUT, kill the remaining
 # ones.  TIMEOUT is increased by 5 if instrumenting.
 children_wait ()
 {
   local timeout=$[1]
+  shift
+
   if $INSTRUMENT; then
     timeout=$(($timeout * 5))
   fi
-  while children_alive; do
+
+  while children_alive "$[@]"; do
     if test $timeout -le 0; then
-      children_kill
+      children_kill "$[@]"
       break
     fi
     sleep 1

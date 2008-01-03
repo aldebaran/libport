@@ -1,3 +1,10 @@
+2008-01-03  Akim Demaille  <demaille@gostai.com>
+
+	More children functions.
+	* children.as (children_clean, children_report): New.
+	(children_alive, chidren_kill, children_harvest, children_wait):
+	Take an optional list of children.
+
 2008-01-01  Akim Demaille  <demaille@gostai.com>
 
 	children_status.
