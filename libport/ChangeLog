@@ -1,3 +1,12 @@
+2008-01-03  Akim Demaille  <demaille@gostai.com>,
+		  Matthieu Nottale  <nottale@gosta.com>
+
+	Solve an OSX issue: two remote components *can* overlap.
+	* semaphore.hxx (Semaphore::Semaphore): Pass O_EXCL so
+	that we never use twice the same sem.
+	Use the PID to be sure that two processes do not use the
+	same sem...
+
 2008-01-03  Akim Demaille  <demaille@gostai.com>
 
 	Better PackageInfo use.

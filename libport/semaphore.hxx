@@ -1,8 +1,8 @@
-#ifndef SEMAPHORE_HXX_
-# define SEMAPHORE_HXX_
+#ifndef LIBPORT_SEMAPHORE_HXX
+# define LIBPORT_SEMAPHORE_HXX
 
-# include "semaphore.hh"
-# include "exception.hh"
+# include "libport/semaphore.hh"
+# include "libport/exception.hh"
 # include <sstream>
 # include <string>
 
@@ -26,8 +26,10 @@ namespace libport
     {
       std::stringstream s;
       s << GetLastError();
-      std::string msg = s.str();      
-      throw libport::exception::Semaphore("sem_init","Windows system Error #"+msg+" in CreateSemaphore.");
+      std::string msg = s.str();
+      throw libport::exception::Semaphore("sem_init",
+					  "Windows system Error #" + msg
+					  + " in CreateSemaphore.");
     }
     return sem?0:-1;
   }
@@ -39,8 +41,10 @@ namespace libport
     {
       std::stringstream s;
       s << GetLastError();
-      std::string msg = s.str();      
-      throw libport::exception::Semaphore("sem_post","Windows system Error #"+msg+" in ReleaseSemaphore.");
+      std::string msg = s.str();
+      throw libport::exception::Semaphore("sem_post",
+					  "Windows system Error #" + msg
+					  + " in ReleaseSemaphore.");
     }
     return result?0:-1;
   }
@@ -52,8 +56,10 @@ namespace libport
     {
       std::stringstream s;
       s << GetLastError();
-      std::string msg = s.str();      
-      throw libport::exception::Semaphore("sem_wait","Windows system Error #"+msg+" in WaitForSingleObject.");
+      std::string msg = s.str();
+      throw libport::exception::Semaphore("sem_wait",
+					  "Windows system Error # " + msg
+					  + " in WaitForSingleObject.");
     }
     return (result == WAIT_FAILED)?-1:0;
   }
@@ -97,17 +103,18 @@ namespace libport
 # ifdef __APPLE__
     static unsigned int counter = 0;
     std::stringstream s;
-    s << "sema_" << counter++;
-    sem_ = sem_open (s.str ().c_str (), O_CREAT, 0777, cnt);
+    s << "sema/" << getpid () << "/" << counter++;
+    sem_ = sem_open (s.str ().c_str (), O_CREAT | O_EXCL, 0777, cnt);
     assert (!IS_SEM_FAILED (sem_));
 # else
     sem_ = new sem_t;
     int err = sem_init(sem_, 0, cnt);
 #  if not defined WIN32 && not defined LIBPORT_WIN32
-    if(err != 0)
+    if (err)
     {
       std::string msg = strerror(errno);
-      throw libport::exception::Semaphore("Semaphore::Semaphore (int)", msg+" in sem_init.");
+      throw libport::exception::Semaphore("Semaphore::Semaphore (int)",
+					  msg + " in sem_init.");
     }
 #  else
     assert (!err);
@@ -144,10 +151,11 @@ namespace libport
   {
     int err = sem_post(sem_);
 # if not defined WIN32 && not defined LIBPORT_WIN32
-    if(err != 0)
+    if (err)
     {
       std::string msg = strerror(errno);
-      throw libport::exception::Semaphore("Semaphore::operator++ ()", msg+" in sem_post.");
+      throw libport::exception::Semaphore("Semaphore::operator++ ()",
+					  msg + " in sem_post.");
     }
 # else
     assert (!err);
@@ -164,10 +172,11 @@ namespace libport
       }
     while (err == -1 && errno == EINTR);
 # if not defined WIN32 && not defined LIBPORT_WIN32
-    if(err != 0)
+    if (err)
     {
       std::string msg = strerror(errno);
-      throw libport::exception::Semaphore("Semaphore::operator-- ()", msg+" in sem_wait.");
+      throw libport::exception::Semaphore("Semaphore::operator-- ()",
+					  msg + " in sem_wait.");
     }
 # else
     assert (!err);
@@ -185,4 +194,4 @@ namespace libport
 
 } // namespace libport
 
-#endif /* !SEMAPHORE_HXX_ */
+#endif // !LIBPORT_SEMAPHORE_HXX
