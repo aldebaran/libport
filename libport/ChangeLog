@@ -1,3 +1,11 @@
+2008-01-03  Akim Demaille  <demaille@gostai.com>
+
+	Better PackageInfo use.
+	* package-info.hh, package-info.cc (<<): Move into the libport
+	name space.
+	Report the signature instead of the full contents.
+	* program-name.hh: Add CPP guards.
+
 2008-01-01  Akim Demaille  <demaille@gostai.com>
 
 	Fix automake warning.

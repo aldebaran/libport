@@ -35,6 +35,10 @@ namespace libport
   private:
     map_type map_;
   };
+
+  /// Report \a p on \a o.
+  std::ostream& operator<<(std::ostream& o, const PackageInfo& p);
+
 }
 
 /// Define \a Var using information from config.h and version.hh.
@@ -64,9 +68,5 @@ namespace libport
       LIBPORT_PACKAGE_INFO_INIT(Var);		\
     }						\
   } while (0)
-
-
-/// Report \a p on \a o.
-std::ostream& operator<<(std::ostream& o, const libport::PackageInfo& p);
 
 #endif // ! PACKAGE_INFO_HH

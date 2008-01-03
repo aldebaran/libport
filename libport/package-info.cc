@@ -50,10 +50,11 @@ namespace libport
     return o;
   }
 
+  std::ostream&
+  operator<<(std::ostream& o, const PackageInfo& p)
+  {
+    return o << p.signature();
+  }
+
 }
 
-std::ostream&
-operator<<(std::ostream& o, const libport::PackageInfo& p)
-{
-  return p.dump(o);
-}
