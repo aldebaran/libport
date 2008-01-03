@@ -112,7 +112,7 @@ children_register ()
 {
   for i
   do
-    rm $i.sta
+    rm -f $i.sta
     children="$children $i"
     echo $! >$i.pid
   done

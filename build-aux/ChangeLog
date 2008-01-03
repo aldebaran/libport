@@ -1,5 +1,10 @@
 2008-01-03  Akim Demaille  <demaille@gostai.com>
 
+	rm -f.
+	* children.as (children_register): The file should not exist, so use -f.
+
+2008-01-03  Akim Demaille  <demaille@gostai.com>
+
 	Allow multiple calls to children_harvest.
 	* children.as (children_harvest): Create the *.sta file only if
 	it does not exist.
