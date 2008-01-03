@@ -75,3 +75,9 @@ EXTRA_DIST += $(libport_sources)
 noinst_LTLIBRARIES = libport.la
 libport_la_SOURCES = $(libport_sources)
 AM_CPPFLAGS += -I$(top_builddir) -I$(top_srcdir) $(BOOST_CPPFLAGS)
+
+
+# Make sure noone uses config.h instead of libport/config.h.
+check-local:
+	cd $(srcdir) && ! grep -E '[<"]config.h[">]' $(nobase_libport_HEADERS) $(libport_HEADERS)
+	! grep -E '[<"]config.h[">]' $(libport_sources)

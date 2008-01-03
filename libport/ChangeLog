@@ -1,5 +1,11 @@
 2008-01-03  Akim Demaille  <demaille@gostai.com>
 
+	Fix config.h uses.
+	* Makefile.am (check-local): New.
+	* unistd.h: Use libport's config.h.
+
+2008-01-03  Akim Demaille  <demaille@gostai.com>
+
 	Don't use maud_CPPFLAGS uselessly.
 	* Makefile.am: So that Automake doesn't feel obliged to create
 	special compilation rules with libport_la- prefixed object files.

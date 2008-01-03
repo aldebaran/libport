@@ -3,7 +3,7 @@
 
 # include "detect_win32.h"
 
-# include "config.h"
+# include "libport/config.h"
 
 // This is traditional Unix file.
 # ifdef LIBPORT_HAVE_UNISTD_H
