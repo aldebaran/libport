@@ -1,3 +1,9 @@
+2008-01-03  Akim Demaille  <demaille@gostai.com>
+
+	Don't use maud_CPPFLAGS uselessly.
+	* Makefile.am: So that Automake doesn't feel obliged to create
+	special compilation rules with libport_la- prefixed object files.
+
 2008-01-03  Akim Demaille  <demaille@gostai.com>,
 		  Matthieu Nottale  <nottale@gosta.com>
 
