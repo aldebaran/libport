@@ -1,5 +1,11 @@
 2008-01-04  Akim Demaille  <demaille@gostai.com>
 
+	Use externals-up in externals-up*.
+	* svn-externals.mk: here.
+	In order to also honor SVN_EXTERNALS_PROXY.
+
+2008-01-04  Akim Demaille  <demaille@gostai.com>
+
 	Fixes and robustness.
 	* base.as (stderr): Its arguments are lines.
 	* children.as (children_kill): Missing "local".
