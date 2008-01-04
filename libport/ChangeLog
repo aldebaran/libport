@@ -1,3 +1,9 @@
+2008-01-04  Akim Demaille  <demaille@gostai.com>,
+		  Guillaume Deslandes  <deslandes@gostai.com>
+
+	GNU Make portability.
+	* Makefile.am (check-local): Force the invocation of a shell.
+
 2008-01-03  Akim Demaille  <demaille@gostai.com>
 
 	Fix config.h uses.

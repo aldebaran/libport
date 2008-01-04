@@ -80,4 +80,7 @@ AM_CPPFLAGS += -I$(top_builddir) -I$(top_srcdir) $(BOOST_CPPFLAGS)
 # Make sure noone uses config.h instead of libport/config.h.
 check-local:
 	cd $(srcdir) && ! grep -E '[<"]config.h[">]' $(nobase_libport_HEADERS) $(libport_HEADERS)
-	! grep -E '[<"]config.h[">]' $(libport_sources)
+# GNU Make 3.80 does not recognize that `!' is a shell builtin, and
+# tries to call it via exec.  So help GNU Make understand it should
+# call the shell.
+	: && ! grep -E '[<"]config.h[">]' $(libport_sources)
