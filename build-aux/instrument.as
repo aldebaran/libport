@@ -50,7 +50,7 @@ instrument ()
 	    echo "$VALGRIND"			\
 		 "--error-exitcode=242"		\
 		 "--log-file-exactly=$log"	\
-		 "$suppressions"               	\
+		 "$suppressions"		\
 		 "--"
 	  else
 	    stderr "cannot find valgrind as $VALGRIND"
