@@ -90,7 +90,7 @@ externals-help:
 externals-ci: $(SVN_EXTERNALS_CI) $(SVN_EXTERNALS_PROXY:=-ci)
 externals-up: $(SVN_EXTERNALS_UP) $(SVN_EXTERNALS_PROXY:=-up)
 externals-up-ci: externals-up
-# svn commit -m "Update externals." -N $(srcdir)
+	svn commit -m "Update externals." -N $(srcdir)
 externals-up-ch-ci: externals-up
 	$(MAKE) $(AM_MAKEFLAGS) check
 	svn commit -m "Update externals." -N $(srcdir)

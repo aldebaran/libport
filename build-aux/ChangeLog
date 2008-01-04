@@ -1,5 +1,10 @@
 2008-01-04  Akim Demaille  <demaille@gostai.com>
 
+	Uncomment.
+	* svn-externals.mk: Code that should not have been commented.
+
+2008-01-04  Akim Demaille  <demaille@gostai.com>
+
 	Use externals-up in externals-up*.
 	* svn-externals.mk: here.
 	In order to also honor SVN_EXTERNALS_PROXY.
