@@ -19,6 +19,7 @@ check_dir ()
 	[set x $val],
 	[set x $val $(absolute $val)])
   shift
+  local res
   for res
   do
     test -e "$res" ||

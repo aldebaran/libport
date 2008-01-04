@@ -58,15 +58,22 @@ find_prog ()
 
 
 m4_defun([_URBI_STDERR_PREPARE],
-[stderr ()
+[
+# stderr LINES
+# ------------
+stderr ()
 {
-  echo >&2 "$as_me: $[@]"
+  local i
+  for i
+  do
+    echo >&2 "$as_me: $i"
+  done
   echo >&2
 }
 
 
-# error EXIT MESSAGE
-# ------------------
+# error EXIT MESSAGES
+# -------------------
 error ()
 {
   local exit=$[1]
@@ -75,8 +82,8 @@ error ()
   ex_exit $exit
 }
 
-# fatal MESSAGE
-# -------------
+# fatal MESSAGES
+# --------------
 fatal ()
 {
   error 1 "$[@]"

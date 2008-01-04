@@ -150,7 +150,7 @@ children_kill ()
   local i
   for i
   do
-    pid=$(cat $i.pid)
+    local pid=$(cat $i.pid)
     if ps $pid 2>&1 >/dev/null; then
       echo "Killing $i ($pid)"
       kill -ALRM $pid 2>&1 || true
@@ -181,9 +181,9 @@ children_harvest ()
       # Beware of set -e.
       local sta
       if wait $pid 2>&1; then
-        sta=$?
+	sta=$?
       else
-        sta=$?
+	sta=$?
       fi
       echo "$sta$(ex_to_string $sta)" >$i.sta
     fi
@@ -207,7 +207,8 @@ children_status ()
     # We need to have waited for these children.
     test -f $i.sta ||
       error SOFTWARE "children_status: cannot find $i.sta." \
-	             "Was children_harvest called?"
+		     "Was children_harvest called?"         \
+	             "Maybe children_cleanup was already called..."
     local sta=$(sed -n '1{s/^\([[0-9][0-9]]*\).*/\1/;p;q;}' <$i.sta)
     if test $res -lt $sta; then
       res=$sta
