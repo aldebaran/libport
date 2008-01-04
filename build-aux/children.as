@@ -71,10 +71,10 @@ rst_run_report ()
 # Return whether there are still childs running.
 children_alive ()
 {
-  local cids
   test $[#] -ne 0 ||
     { set x $children; shift; }
 
+  local i
   for i
   do
     if ! ps $(cat $i.pid) 2>&1 >/dev/null; then
@@ -93,6 +93,7 @@ children_clean ()
   test $[#] -ne 0 ||
     { set x $children; shift; }
 
+  local i
   for i
   do
     rm -f $i.{cmd,pid,sta,in,out,err,val}
@@ -110,6 +111,7 @@ children_clean ()
 # times, we create *.sta only if it does not exist).
 children_register ()
 {
+  local i
   for i
   do
     rm -f $i.sta
@@ -127,6 +129,7 @@ children_report ()
   test $[#] -ne 0 ||
     { set x $children; shift; }
 
+  local i
   for i
   do
     rst_run_report "$i" "$i"
@@ -144,6 +147,7 @@ children_kill ()
   test $[#] -ne 0 ||
     { set x $children; shift; }
 
+  local i
   for i
   do
     pid=$(cat $i.pid)
@@ -168,12 +172,14 @@ children_harvest ()
   test $[#] -ne 0 ||
     { set x $children; shift; }
 
+  local i
   for i
   do
     # Don't look for the status of children we already waiting for.
     if ! test -e $i.sta; then
-      pid=$(cat $i.pid)
+      local pid=$(cat $i.pid)
       # Beware of set -e.
+      local sta
       if wait $pid 2>&1; then
         sta=$?
       else
@@ -195,6 +201,7 @@ children_status ()
     { set x $children; shift; }
 
   local res=0
+  local i
   for i
   do
     # We need to have waited for these children.

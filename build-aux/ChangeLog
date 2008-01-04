@@ -1,3 +1,9 @@
+2008-01-04  Akim Demaille  <demaille@gostai.com>
+
+	Use local for local variables.
+	* children.as: Here.
+	We had a for i loop calling a function using a for i loop too :(
+
 2008-01-03  Akim Demaille  <demaille@gostai.com>
 
 	rm -f.
