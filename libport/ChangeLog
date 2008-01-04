@@ -1,3 +1,8 @@
+2008-01-04  Akim Demaille  <demaille@gostai.com>
+
+	unref_traits.
+	* select-ref.hh (unref_traits): New.
+
 2008-01-04  Akim Demaille  <demaille@gostai.com>,
 		  Guillaume Deslandes  <deslandes@gostai.com>
 

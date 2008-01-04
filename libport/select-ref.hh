@@ -9,9 +9,9 @@
 namespace libport
 {
 
-  /*----------------.
-  | ref selectors.  |
-  `----------------*/
+  /*---------------.
+  | ref addition.  |
+  `---------------*/
 
   /// Return \a T&.
   template <typename T>
@@ -25,6 +25,24 @@ namespace libport
   struct ref_traits<T&>
   {
     typedef T& type;
+  };
+
+
+  /*--------------.
+  | ref removal.  |
+  `--------------*/
+
+  /// Return \a T without any reference.
+  template <typename T>
+  struct unref_traits
+  {
+    typedef T type;
+  };
+
+  template <typename T>
+  struct unref_traits<T&>
+  {
+    typedef T type;
   };
 
 } //namespace libport
