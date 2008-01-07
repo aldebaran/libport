@@ -8,6 +8,9 @@
 #if LIBPORT_HAVE_SYS_RESOURCE_H
 # include "sys/resource.h"
 #endif
+#if LIBPORT_HAVE_SYS_MMAN_H
+# include "sys/mman.h"
+#endif
 
 #include "libport/utime.hh"
 #include "libport/sched.hh"
