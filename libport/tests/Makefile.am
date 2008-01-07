@@ -7,6 +7,7 @@ singleton2			\
 test-deref			\
 test-escape			\
 test-indent			\
+test-shared-ptr			\
 test-separator			\
 udouble1			\
 ufloat1				\
@@ -21,6 +22,7 @@ test_deref_SOURCES =    test-deref.cc
 test_escape_SOURCES =   test-escape.cc
 test_indent_SOURCES =   test-indent.cc
 test_separator_SOURCES =test-separator.cc
+test_shared_ptr_SOURCES =test-shared-ptr.cc
 udouble1_SOURCES =	udouble1.cc
 ufloat1_SOURCES =	ufloat1.cc
 ullfp1_SOURCES =	ullfp1.cc
@@ -63,3 +65,11 @@ TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
 
 # List the tests that are expected to fail:
 # XFAIL_TESTS =
+
+
+## ------------------- ##
+## Check the sources.  ##
+## ------------------- ##
+
+check-local:
+	cd .. && $(MAKE) $(AM_MAKEFLAGS) maintainer-check

@@ -1,3 +1,12 @@
+2008-01-07  Akim Demaille  <demaille@gostai.com>
+
+	Clean the check targets.
+	* Makefile.am (check-local): Rename as...
+	(maintainer-check): this, so that it doesn't trigger too often
+	(in particular in the kernel).
+	* tests/test-shared-ptr.cc: New.
+	* tests/Makefile.am: Adjust.
+
 2008-01-07  Samuel Tardieu  <tardieu@gostai.com>
 
 	Include cstring to get memset().
