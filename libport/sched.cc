@@ -1,6 +1,7 @@
 #include "libport/config.h"
 
 #include <algorithm>
+#include <cstring>
 
 #if defined LIBPORT_HAVE_SCHED_H
 # include "sched.h"
@@ -41,8 +42,7 @@ namespace libport
   namespace
   {
     // write to a big buffer on stack to ensure allocation
-    static
-    void
+    static void
     lockStack()
     {
       // see man page for mlockall
