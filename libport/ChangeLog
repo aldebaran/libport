@@ -1,3 +1,10 @@
+2008-01-07  Matthieu Nottale  <nottale@gostai.com>
+
+	Typedef for utime() return type, move it into its own .cc.
+	* libport-sources.mk: Add utime.cc
+	* utime.cc: New. utime() implementation.
+	* utime.hh: typedef return type.
+
 2008-01-04  Akim Demaille  <demaille@gostai.com>
 
 	unref_traits.
