@@ -1,5 +1,10 @@
 2008-01-07  Matthieu Nottale  <nottale@gostai.com>
 
+	More headers check: sys/mman.h.
+	* urbi-libport.m4: Here.
+
+2008-01-07  Matthieu Nottale  <nottale@gostai.com>
+
 	Check for mlockall and setpriority.
 	* urbi-libport.m4: Here.
 
