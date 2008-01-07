@@ -25,6 +25,7 @@ libport_sources = 				\
 	$(libport_srcdir)/indent.cc		\
 	$(libport_srcdir)/package-info.cc	\
 	$(libport_srcdir)/program-name.cc	\
+	$(libport_srcdir)/sched.cc		\
 	$(libport_srcdir)/symbol.cc		\
 	$(libport_srcdir)/sysexits.cc		\
 	$(libport_srcdir)/tokenizer.cc          \

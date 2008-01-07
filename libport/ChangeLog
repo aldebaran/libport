@@ -1,3 +1,9 @@
+2008-01-07  Akim Demaille  <demaille@gostai.com>
+
+	sched.hh.
+	* sched.hh, sched.cc: New.
+	* Makefile.am, libport-sources.mk: Adjust.
+
 2008-01-07  Matthieu Nottale  <nottale@gostai.com>
 
 	Typedef for utime() return type, move it into its own .cc.

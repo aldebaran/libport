@@ -37,10 +37,10 @@ libport_HEADERS +=				\
 	pair.hh pair.hxx			\
 	program-name.hh				\
 	ref-pt.hh				\
+	sched.hh				\
 	select-const.hh				\
 	select-ref.hh				\
-	semaphore.hh				\
-	semaphore.hxx				\
+	semaphore.hh semaphore.hxx		\
 	separator.hh				\
 	separator.hxx				\
 	shared-ptr.hh				\
