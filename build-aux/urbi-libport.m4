@@ -11,9 +11,8 @@ AC_ARG_WITH([boost-thread-static],
 AC_REQUIRE([URBI_PTHREAD])dnl
 AC_REQUIRE([URBI_FLOAT_CHECK])dnl
 
-AC_CHECK_HEADERS([sched.h])
-AC_CHECK_FUNCS([sched_setscheduler])
-
+AC_CHECK_HEADERS([sched.h sys/resource.h])
+AC_CHECK_FUNCS([sched_setscheduler setpriority mlockall])
 # Check for Boost headers
 BOOST_REQUIRE([1.34])
 # Check for Boost.Thread
