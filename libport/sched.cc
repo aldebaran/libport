@@ -5,6 +5,9 @@
 #if LIBPORT_HAVE_SCHED_H
 # include "sched.h"
 #endif
+#if LIBPORT_HAVE_SYS_RESOURCE_H
+# include "sys/resource.h"
+#endif
 
 #include "libport/utime.hh"
 #include "libport/sched.hh"
@@ -32,7 +35,6 @@ namespace libport
     return mind;
   }
 
-#if ! defined LIBPORT_WIN32 && defined HAVE_LIBPORT_HAVE_SCHED_SETSCHULER
   namespace
   {
     // write to a big buffer on stack to ensure allocation
@@ -45,7 +47,6 @@ namespace libport
       memset(big, 0, 16384);
     }
   }
-#endif
 
   void sched_set_high_priority ()
   {
@@ -58,19 +59,24 @@ namespace libport
       std::cerr << "SetPriorityClass failed: error code "<< GetLastError()
 		<< std::endl;
 
-#elsif HAVE_LIBPORT_HAVE_SCHED_SETSCHULER
+#elsif LIBPORT_HAVE_SCHED_SETSCHULER
     // http://www.opengroup.org/susv3xsh/sched_setscheduler.html
     struct sched_param sp;
 
     sp.sched_priority = 99;
     int ret = sched_setscheduler(0, SCHED_FIFO, &sp);
-    //int ret = setpriority(PRIO_PROCESS, 0, -20);
     if (ret)
-      perror("setpriority failed");
-    ret = mlockall(MCL_CURRENT | MCL_FUTURE);
+      perror("sched_setscheduler failed");
+#elsif LIBPORT_HAVE_SETPRIORITY
+    int ret = setpriority(PRIO_PROCESS, 0, -20);
     if (ret)
-      perror("mlockall failed");
-    lockStack();
+       perror("setpriority failed");
 #endif
+#if LIBPORT_HAVE_MLOCKALL
+    int r = mlockall(MCL_CURRENT | MCL_FUTURE);
+    if (r)
+      perror("mlockall failed");
+#endif
+  lockStack();
   }
 }

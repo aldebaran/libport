@@ -1,3 +1,10 @@
+2008-01-07  Matthieu Nottale  <nottale@gostai.com>
+
+	sched: fallback to setpriority if sched_setscheduler unavailable.
+	* sched.cc: Use setpriority if !sched_setscheduler. Also
+	 call mlockall in all cases if available. Call lockstack in
+	 all cases.
+
 2008-01-07  Akim Demaille  <demaille@gostai.com>
 
 	sched.hh.
