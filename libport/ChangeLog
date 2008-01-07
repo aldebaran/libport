@@ -1,5 +1,11 @@
 2008-01-07  Akim Demaille  <demaille@gostai.com>
 
+	Remove check-local.
+	* tests/Makefile.am: here.
+	Now it's check-buildfarm that hooks it.
+
+2008-01-07  Akim Demaille  <demaille@gostai.com>
+
 	Clean the check targets.
 	* Makefile.am (check-local): Rename as...
 	(maintainer-check): this, so that it doesn't trigger too often

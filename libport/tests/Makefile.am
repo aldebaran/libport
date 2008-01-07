@@ -65,11 +65,3 @@ TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
 
 # List the tests that are expected to fail:
 # XFAIL_TESTS =
-
-
-## ------------------- ##
-## Check the sources.  ##
-## ------------------- ##
-
-check-local:
-	cd .. && $(MAKE) $(AM_MAKEFLAGS) maintainer-check
