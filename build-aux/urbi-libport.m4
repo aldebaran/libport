@@ -7,15 +7,19 @@ AC_ARG_WITH([boost-thread-static],
 	[AC_HELP_STRING([--with-boost-thread-static]
 			[link with the static version of boost thread library])]
 	[], [with_boost_thread_static=yes])
+
 AC_REQUIRE([URBI_PTHREAD])dnl
 AC_REQUIRE([URBI_FLOAT_CHECK])dnl
+
+AC_CHECK_HEADERS([sched.h])
+AC_CHECK_FUNCS([sched_setscheduler])
+
 # Check for Boost headers
 BOOST_REQUIRE([1.34])
 # Check for Boost.Thread
 if test -n "$openr" && $openr; then
   AC_MSG_NOTICE([[OpenR in use: not using Boost.Thread.]])
 else
-
   if test x$with_boost_thread_static = xyes; then
     boost_threads_flag=s
   fi
