@@ -220,4 +220,4 @@ namespace libport
 
 }
 
-#endif // ! LIBPORT_ULL_FIXED_POINT_HH
+#endif // !LIBPORT_ULL_FIXED_POINT_HH

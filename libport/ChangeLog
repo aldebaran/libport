@@ -1,5 +1,30 @@
 2008-01-07  Akim Demaille  <demaille@gostai.com>
 
+	reheader.
+	* assert.hh,
+	* cli.hh,
+	* detect_win32.h,
+	* exception.hh,
+	* file-system.hh,
+	* fwd.hh,
+	* lockable.hh,
+	* network.h,
+	* package-info.hh,
+	* program-name.hh,
+	* sched.hh,
+	* semaphore.hh,
+	* shared-ptr.hh,
+	* sysexits.hh,
+	* thread.hh,
+	* uffloat.hh,
+	* ufloat.hh,
+	* ull-fixed-point.hh,
+	* ulong-fixed-point.hh,
+	* unistd.h:
+	Fix cpp guards.
+
+2008-01-07  Akim Demaille  <demaille@gostai.com>
+
 	Remove check-local.
 	* tests/Makefile.am: here.
 	Now it's check-buildfarm that hooks it.

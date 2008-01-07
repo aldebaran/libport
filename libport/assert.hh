@@ -67,4 +67,4 @@
 # endif // !NDEBUG
 
 
-# endif // !LIBPORT_COMPILER_HH
+#endif // !LIBPORT_ASSERT_HH

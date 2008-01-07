@@ -170,4 +170,4 @@ namespace libport
     lock.unlock();				\
   } while (0)
 
-#endif
+#endif // !LIBPORT_LOCKABLE_HH

@@ -56,4 +56,4 @@ namespace libport
 
 # include "semaphore.hxx"
 
-#endif /* !LIBPORT_SEMAPHORE_HH */
+#endif // !LIBPORT_SEMAPHORE_HH

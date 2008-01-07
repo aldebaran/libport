@@ -105,4 +105,4 @@ namespace libport
 
 } // namespace libport
 
-#endif
+#endif // !LIBPORT_THREAD_HH

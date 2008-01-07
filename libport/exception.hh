@@ -9,8 +9,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef EXCEPTION_HH_
-# define EXCEPTION_HH_
+#ifndef LIBPORT_EXCEPTION_HH
+# define LIBPORT_EXCEPTION_HH
 
 # include <stdexcept>
 
@@ -40,4 +40,4 @@ namespace libport
 
 # include "exception.hxx"
 
-#endif  /* !EXCEPTION_HH_ */
+#endif // !LIBPORT_EXCEPTION_HH

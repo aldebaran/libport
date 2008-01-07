@@ -1,5 +1,5 @@
-#ifndef LIBPORT_DETECT_WIN32_H_
-# define LIBPORT_DETECT_WIN32_H_
+#ifndef LIBPORT_DETECT_WIN32_H
+# define LIBPORT_DETECT_WIN32_H
 
 # ifndef WIN32
 #  ifdef LIBPORT_WIN32
@@ -19,4 +19,4 @@
 #  endif
 # endif /* !WIN32 */
 
-#endif /* !LIBPORT_DETECT_WIN32_H_ */
+#endif // !LIBPORT_DETECT_WIN32_H

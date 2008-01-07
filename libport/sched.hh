@@ -8,4 +8,4 @@ namespace libport
   void sched_set_high_priority ();
 }
 
-#endif
+#endif // !LIBPORT_SCHED_HH

@@ -172,4 +172,4 @@ namespace libport
 
 }
 
-#endif // ! LIBPORT_ULONG_FIXED_POINT_HH
+#endif // !LIBPORT_ULONG_FIXED_POINT_HH

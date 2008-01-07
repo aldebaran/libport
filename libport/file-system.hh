@@ -13,4 +13,4 @@ namespace libport
   bool is_dir (const std::string& f);
 }
 
-#endif
+#endif // !LIBPORT_FILE_SYSTEM_HH

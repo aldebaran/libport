@@ -1,5 +1,5 @@
-#ifndef LIBPORT_NETWORK_H_
-# define LIBPORT_NETWORK_H_
+#ifndef LIBPORT_NETWORK_H
+# define LIBPORT_NETWORK_H
 
 # include "detect_win32.h"
 # include "unistd.h"
@@ -107,4 +107,4 @@ namespace std
   }
 }
 
-#endif /* !LIBPORT_NETWORK_H_ */
+#endif // !LIBPORT_NETWORK_H

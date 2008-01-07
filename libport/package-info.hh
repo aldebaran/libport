@@ -69,4 +69,4 @@ namespace libport
     }						\
   } while (0)
 
-#endif // ! PACKAGE_INFO_HH
+#endif // !LIBPORT_PACKAGE_INFO_HH

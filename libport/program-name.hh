@@ -6,4 +6,4 @@ namespace libport
   extern const char* program_name;
 }
 
-#endif
+#endif // !LIBPORT_PROGRAM_NAME_HH

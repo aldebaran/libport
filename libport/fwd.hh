@@ -87,4 +87,4 @@ namespace libport
   class Symbol;
 }
 
-#endif // ! LIBPORT_FWD_HH
+#endif // !LIBPORT_FWD_HH

@@ -1,5 +1,5 @@
-#ifndef LIBPORT_UNISTD_H_
-# define LIBPORT_UNISTD_H_
+#ifndef LIBPORT_UNISTD_H
+# define LIBPORT_UNISTD_H
 
 # include "detect_win32.h"
 
@@ -16,4 +16,4 @@
 #  include "io.h"
 # endif
 
-#endif /* !LIBPORT_UNISTD_H_ */
+#endif // !LIBPORT_UNISTD_H

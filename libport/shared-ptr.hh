@@ -3,8 +3,8 @@
  ** \brief Declaration of libport::shared_ptr.
  **/
 
-#ifndef LIBPORT_SHARED_REF_HH
-# define LIBPORT_SHARED_REF_HH
+#ifndef LIBPORT_SHARED_PTR_HH
+# define LIBPORT_SHARED_PTR_HH
 
 # include "libport/config.h"
 
@@ -100,4 +100,4 @@ namespace libport
 #  include "libport/shared-ptr.hxx"
 
 # endif // !LIBPORT_NO_BOOST
-#endif // !LIBPORT_SHARED_REF_HH
+#endif // !LIBPORT_SHARED_PTR_HH

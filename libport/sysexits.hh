@@ -1,8 +1,8 @@
 /// \file libport/sysexits.hh
 /// \brief Provide sysexits.h portably, and in C++ rather than in Cpp.
 
-#ifndef LIBPORT_SYSEXIT_HH
-# define LIBPORT_SYSEXIT_HH
+#ifndef LIBPORT_SYSEXITS_HH
+# define LIBPORT_SYSEXITS_HH
 
 # include <iosfwd>
 
@@ -52,4 +52,4 @@ namespace libport
 
 }
 
-#endif // ! LIBPORT_SYSEXIT_HH
+#endif // !LIBPORT_SYSEXITS_HH

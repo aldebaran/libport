@@ -289,4 +289,4 @@ namespace libport
 
 }
 
-#endif // ! LIBPORT_UFFLOAT_HH
+#endif // !LIBPORT_UFFLOAT_HH

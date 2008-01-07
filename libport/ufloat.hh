@@ -152,4 +152,4 @@ namespace libport
 # endif /* !LIBPORT_HAVE_TRUNC */
 
 
-#endif
+#endif // !LIBPORT_UFLOAT_HH

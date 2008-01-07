@@ -31,4 +31,4 @@ namespace libport
 
 # include "libport/cli.hxx"
 
-#endif // ! LIBPORT_CLI_HH
+#endif // !LIBPORT_CLI_HH
