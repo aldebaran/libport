@@ -1,3 +1,11 @@
+2008-01-07  Akim Demaille  <demaille@gostai.com>
+
+	Use if defined with config.h.
+	This is not just a matter of style.  We already have been bitten
+	by not using the "defined" part.
+	* sched.cc: here.
+	Also, use #elif, not #elsif.
+
 2008-01-07  Matthieu Nottale  <nottale@gostai.com>
 
 	Conditionaly include sys/mman.h.

@@ -2,13 +2,13 @@
 
 #include <algorithm>
 
-#if LIBPORT_HAVE_SCHED_H
+#if defined LIBPORT_HAVE_SCHED_H
 # include "sched.h"
 #endif
-#if LIBPORT_HAVE_SYS_RESOURCE_H
+#if defined LIBPORT_HAVE_SYS_RESOURCE_H
 # include "sys/resource.h"
 #endif
-#if LIBPORT_HAVE_SYS_MMAN_H
+#if defined LIBPORT_HAVE_SYS_MMAN_H
 # include "sys/mman.h"
 #endif
 
@@ -18,7 +18,7 @@
 
 namespace libport
 {
-  int 
+  int
   sched_estimate_granularity()
   {
     //evaluate scheduler granularity
@@ -53,7 +53,7 @@ namespace libport
 
   void sched_set_high_priority ()
   {
-#ifdef WIN32
+#if defined WIN32
     HANDLE hProcess;
     int stat;
     hProcess = GetCurrentProcess();
@@ -62,7 +62,7 @@ namespace libport
       std::cerr << "SetPriorityClass failed: error code "<< GetLastError()
 		<< std::endl;
 
-#elsif LIBPORT_HAVE_SCHED_SETSCHULER
+#elif defined LIBPORT_HAVE_SCHED_SETSCHULER
     // http://www.opengroup.org/susv3xsh/sched_setscheduler.html
     struct sched_param sp;
 
@@ -70,12 +70,13 @@ namespace libport
     int ret = sched_setscheduler(0, SCHED_FIFO, &sp);
     if (ret)
       perror("sched_setscheduler failed");
-#elsif LIBPORT_HAVE_SETPRIORITY
+#elif defined LIBPORT_HAVE_SETPRIORITY
     int ret = setpriority(PRIO_PROCESS, 0, -20);
     if (ret)
        perror("setpriority failed");
 #endif
-#if LIBPORT_HAVE_MLOCKALL
+
+#if defined LIBPORT_HAVE_MLOCKALL
     int r = mlockall(MCL_CURRENT | MCL_FUTURE);
     if (r)
       perror("mlockall failed");
