@@ -1,5 +1,10 @@
 2008-01-08  Akim Demaille  <demaille@gostai.com>
 
+	utime_t.
+	* utime.cc: Here again.
+
+2008-01-08  Akim Demaille  <demaille@gostai.com>
+
 	Use utime_t.
 	* utime.cc: here.
 

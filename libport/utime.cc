@@ -21,7 +21,7 @@ namespace libport
     }
     __int64 val;
     QueryPerformanceCounter((LARGE_INTEGER*) &val);
-    return (long long) ((val - base) * 1000000LL) / pfreq;
+    return (utime_t) ((val - base) * 1000000LL) / pfreq;
   }
 }
 
