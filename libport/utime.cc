@@ -35,8 +35,8 @@ namespace libport
   utime_t
   utime()
   {
-    static long long start = 0;
-    static const long long BIGDELTA = 30LL * 365LL * 24LL * 3600LL;
+    static utime_t start = 0;
+    static const utime_t BIGDELTA = 30LL * 365LL * 24LL * 3600LL;
     struct timeval tv;
     gettimeofday(&tv, 0);
     if (start == 0)
