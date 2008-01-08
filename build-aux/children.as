@@ -208,7 +208,7 @@ children_status ()
     test -f $i.sta ||
       error SOFTWARE "children_status: cannot find $i.sta." \
 		     "Was children_harvest called?"         \
-	             "Maybe children_cleanup was already called..."
+		     "Maybe children_cleanup was already called..."
     local sta=$(sed -n '1{s/^\([[0-9][0-9]]*\).*/\1/;p;q;}' <$i.sta)
     if test $res -lt $sta; then
       res=$sta
