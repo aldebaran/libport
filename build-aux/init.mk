@@ -3,7 +3,7 @@ AM_CFLAGS =
 AM_CPPFLAGS =
 AM_CXXFLAGS =
 AM_LDFLAGS =
-AUTOMAKE_OPTIONS =
+AUTOMAKE_OPTIONS = -Wno-portability
 BUILT_SOURCES =
 # Visual Studio Debugger PDB Files (C++).
 # http://msdn2.microsoft.com/en-us/library/yd4f8bd1.aspx.

@@ -1,3 +1,8 @@
+2008-01-08  Akim Demaille  <demaille@gostai.com>
+
+	-Wno-portability.
+	* init.mk: We don't care about non GNU Makes.
+
 2008-01-07  Matthieu Nottale  <nottale@gostai.com>
 
 	More headers check: sys/mman.h.
