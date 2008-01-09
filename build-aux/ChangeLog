@@ -1,3 +1,11 @@
+2008-01-09  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Fix ps call.
+        * children.as: Here.
+        ps always return 0 on windows and macos. 1 is only for
+        command line errors (or so it seems).
+        The one header line seems to be always there.
+
 2008-01-08  Akim Demaille  <demaille@gostai.com>
 
 	-Wno-portability.

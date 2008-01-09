@@ -77,7 +77,7 @@ children_alive ()
   local i
   for i
   do
-    if ! ps $(cat $i.pid) 2>&1 >/dev/null; then
+    if ! test $(ps -p $(cat $i.pid) 2>/dev/null | wc -l) -gt 1; then
       return 1
     fi
   done
