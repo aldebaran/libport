@@ -1,3 +1,8 @@
+2008-01-10  Samuel Tardieu  <tardieu@gostai.com>
+
+	OPENR is equivalent to URBI_ENV_AIBO.
+	* urbi-openr.m4: OPENR is not needed.
+
 2008-01-10  Akim Demaille  <demaille@gostai.com>
 
 	Fix chidren_alive.
