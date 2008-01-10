@@ -1,5 +1,10 @@
 2008-01-10  Samuel Tardieu  <tardieu@gostai.com>
 
+	Do not usleep() on OPEN-R.
+	* sched.cc: sched_estimate_granularity() is not used on OPEN-R.
+
+2008-01-10  Samuel Tardieu  <tardieu@gostai.com>
+
 	Tentative mipsel fix.
 	* sched.cc: Include unistd.h if available for usleep().
 
