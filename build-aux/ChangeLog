@@ -1,5 +1,12 @@
 2008-01-10  Akim Demaille  <demaille@gostai.com>
 
+	Fix chidren_alive.
+	* children.as (children_alive): Fix the logic: 0 is *some* child
+	is alive.
+	Fix portability: the grep is too picky, use something simpler.
+
+2008-01-10  Akim Demaille  <demaille@gostai.com>
+
 	M4sh improvements.
 	* base.as (URBI_GET_OPTIONS): Fix a quotation bug.
 	* rst.as (rst_section_, rst_subsubsection): New.
