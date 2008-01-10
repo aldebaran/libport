@@ -1,3 +1,10 @@
+2008-01-10  Akim Demaille  <demaille@gostai.com>
+
+	Strengthen the uses of ps.
+	* children.as (chidren_alive): Use grep to double check ps.
+	(children_kill): Use children_alive instead of duplicating the
+	code.
+
 2008-01-09  Guillaume Deslandes  <deslandes@gostai.com>
 
 	Fix ps call.

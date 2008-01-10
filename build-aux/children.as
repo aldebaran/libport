@@ -77,7 +77,15 @@ children_alive ()
   local i
   for i
   do
-    if ! test $(ps -p $(cat $i.pid) 2>/dev/null | wc -l) -gt 1; then
+    local pid=$(cat $i.pid)
+    # Using "ps PID" to test whether a processus is alive is,
+    # unfortunately, non portable.  OS X Tiger always return 0, and
+    # outputs the ps-banner and the line of the processus (if there is
+    # none, it outputs just the banner).  On Cygwin, "ps PID" outputs
+    # everything, and "ps -p PID" outputs the banner, and the process
+    # line if alive.  In both cases it exits with success.  So to be
+    # on the very safe side, use both "-p" and grep.
+    if ! ps -p $pid | grep "^[ \t]*$pid" >/dev/null 2>&1; then
       return 1
     fi
   done
@@ -150,9 +158,9 @@ children_kill ()
   local i
   for i
   do
-    local pid=$(cat $i.pid)
-    if ps $pid 2>&1 >/dev/null; then
-      echo "Killing $i ($pid)"
+    if children_alive $i; then
+      local pid=$(cat $i.pid)
+      echo "Killing $i (kill -ALRM $pid)"
       kill -ALRM $pid 2>&1 || true
     fi
   done
