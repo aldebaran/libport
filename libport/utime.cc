@@ -1,8 +1,10 @@
+#include "libport/config.h"
 #include "libport/utime.hh"
-# if defined WIN32 || defined LIBPORT_WIN32
 
-#  include <iostream>
-#  include "libport/windows.hh"
+#if defined WIN32 || defined LIBPORT_WIN32
+
+# include <iostream>
+# include "libport/windows.hh"
 
 namespace libport
 {
@@ -13,7 +15,7 @@ namespace libport
     static __int64 pfreq = 0;
     static __int64 base = 0;
 
-    if (pfreq == 0)
+    if (!pfreq)
     {
       QueryPerformanceFrequency((LARGE_INTEGER*) &pfreq);
       QueryPerformanceCounter ((LARGE_INTEGER*) &base);
@@ -25,10 +27,10 @@ namespace libport
   }
 }
 
-# else /* !WIN32 */
+#else /* !WIN32 */
 
-#  include <sys/time.h>
-#  include <time.h>
+# include <sys/time.h>
+# include <time.h>
 
 namespace libport
 {
@@ -45,4 +47,4 @@ namespace libport
   }
 }
 
-# endif
+#endif // !WIN32
