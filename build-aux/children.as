@@ -85,7 +85,7 @@ children_alive ()
     # everything, and "ps -p PID" outputs the banner, and the process
     # line if alive.  In both cases it exits with success.  So to be
     # on the very safe side, use both "-p" and grep.
-    if ! ps -p $pid | grep "^[ \t]*$pid" >/dev/null 2>&1; then
+    if ! ps -p $pid | grep ["^[ 	]*$pid[^0-9]"] >/dev/null 2>&1; then
       return 1
     fi
   done

@@ -1,5 +1,12 @@
 2008-01-10  Akim Demaille  <demaille@gostai.com>
 
+	Fix the previous checkin.
+	* children.as (children_alive): Beware of m4 wrt [].
+		 is not understood by grep.
+	Be sure to check the pid is completely read, not just its beginning.
+
+2008-01-10  Akim Demaille  <demaille@gostai.com>
+
 	Strengthen the uses of ps.
 	* children.as (chidren_alive): Use grep to double check ps.
 	(children_kill): Use children_alive instead of duplicating the
