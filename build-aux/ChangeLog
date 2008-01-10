@@ -1,3 +1,10 @@
+2008-01-10  Akim Demaille  <demaille@gostai.com>
+
+	M4sh improvements.
+	* base.as (URBI_GET_OPTIONS): Fix a quotation bug.
+	* rst.as (rst_section_, rst_subsubsection): New.
+	Use them.
+
 2008-01-10  Samuel Tardieu  <tardieu@gostai.com>
 
 	Define OPENR on OPEN-R.

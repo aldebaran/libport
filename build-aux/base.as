@@ -167,7 +167,7 @@ get_options ()
     case $[1] in
 	--*=*)
 	    opt=$(echo "$[1]" | sed -e 's/=.*//')
-	    val=$(echo "$[1]" | sed -e 's/[^=]*=//')
+	    val=$(echo "$[1]" | sed -e ['s/[^=]*=//'])
 	    shift
 	    set dummy "$opt" "$val" ${1+"$[@]"};
 	    shift

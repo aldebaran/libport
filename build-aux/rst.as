@@ -14,20 +14,35 @@ rst_title ()
    echo "$[@]" | sed 's/.*/   &   /;h;s/./=/g;p;x;p;g;p;s/.*//'
 }
 
+# rst_section_ LINER TITLE
+# ------------------------
+rst_section_ ()
+{
+   local liner=$[1]
+   shift
+   echo "$[@]" | sed "p;s/./$liner/g;p;g"
+   echo
+}
+
 # rst_section TITLE
 # -----------------
 rst_section ()
 {
-   echo "$[@]" | sed 'p;s/./=/g;p;g'
-   echo
+  rst_section_ "=" "$[@]"
 }
 
 # rst_subsection TITLE
 # --------------------
 rst_subsection ()
 {
-  echo "$[@]" | sed 'p;s/./-/g;p;g'
-  echo
+  rst_section_ "-" "$[@]"
+}
+
+# rst_subsubsection TITLE
+# -----------------------
+rst_subsubsection ()
+{
+  rst_section_ "." "$[@]"
 }
 
 # rst_tab [FILES = stdin]
@@ -58,7 +73,7 @@ rst_pre ()
 # Set $exit to false if there is a failure.
 rst_expect ()
 {
-  rst_subsection "$me: $[2]"
+  rst_subsubsection "$me: $[2]"
   if ! diff -u --label="Expected $[1] ($[1].exp)" $[1].exp  \
 	       --label="Effective $[1] ($[2].eff)" $[2].eff \
 	       >$[2].diff; then
