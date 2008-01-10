@@ -27,6 +27,7 @@ AC_MSG_CHECKING([for OpenR SDK])
 if $openr; then
   if test -f $OPEN_R_SDK/bin/mipsel-linux-c++; then
     AC_MSG_RESULT([$OPEN_R_SDK])
+    AC_DEFINE([OPENR], [], [Whether we're using OPEN-R])
   else
     AC_MSG_RESULT([no, mipsel c++ compiler not found in $OPEN_R_SDK/bin])
     openr=false

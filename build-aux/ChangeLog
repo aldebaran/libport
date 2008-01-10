@@ -1,3 +1,8 @@
+2008-01-10  Samuel Tardieu  <tardieu@gostai.com>
+
+	Define OPENR on OPEN-R.
+	* urbi-openr.m4: Define OPENR when using the OPEN-R platform.
+
 2008-01-10  Akim Demaille  <demaille@gostai.com>
 
 	Fix the previous checkin.
