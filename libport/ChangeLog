@@ -1,5 +1,10 @@
 2008-01-10  Samuel Tardieu  <tardieu@gostai.com>
 
+	Try to fix build on Windows.
+	* sched.cc: iostream is needed for cerr and endl.
+
+2008-01-10  Samuel Tardieu  <tardieu@gostai.com>
+
 	Use URBI_ENV_AIBO instead of OPENR.
 	* sched.cc: OPENR, now removed, was equivalent to URBI_ENV_AIBO.
 

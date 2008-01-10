@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <iostream>
 
 #if defined LIBPORT_HAVE_SCHED_H
 # include "sched.h"
