@@ -1,3 +1,8 @@
+2008-01-10  Samuel Tardieu  <tardieu@gostai.com>
+
+	Tentative mipsel fix.
+	* sched.cc: Include unistd.h if available for usleep().
+
 2008-01-08  Akim Demaille  <demaille@gostai.com>
 
 	utime_t.

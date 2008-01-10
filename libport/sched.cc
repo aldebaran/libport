@@ -6,6 +6,9 @@
 #if defined LIBPORT_HAVE_SCHED_H
 # include "sched.h"
 #endif
+#if defined LIBPORT_HAVE_UNISTD_H
+# include "unistd.h"
+#endif
 #if defined LIBPORT_HAVE_SYS_RESOURCE_H
 # include "sys/resource.h"
 #endif
