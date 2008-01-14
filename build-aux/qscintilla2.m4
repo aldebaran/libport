@@ -1,5 +1,5 @@
 #
-# Copyright (C) Gostai S.A.S., 2006.
+# Copyright (C) Gostai S.A.S., 2006-2008.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the

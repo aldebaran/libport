@@ -1,3 +1,15 @@
+##
+## init.mk: This file is part of build-aux.
+## Copyright (C) Gostai S.A.S., 2006-2008.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
 # Initialize some common variables so that we can always use +=.
 AM_CFLAGS =
 AM_CPPFLAGS =
@@ -12,7 +24,7 @@ CLEANFILES = vc80.pdb
 CLEANFILES += *.exe.manifest *.exe.intermediate.manifest
 # Files which are not shipped should be cleaned.
 CLEANFILES += $(nodist_check_SCRIPTS) $(nodist_noinst_SCRIPTS)
-DISTCLEANFILES = 
+DISTCLEANFILES =
 EXTRA_DIST =
 EXTRA_HEADERS =
 LIBS =

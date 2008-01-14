@@ -1,4 +1,16 @@
 #					-*- shell-script -*-
+##
+## children.as: This file is part of build-aux.
+## Copyright (C) Gostai S.A.S., 2006-2008.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
 
 m4_defun([URBI_CHILDREN_PREPARE],
 [
@@ -85,7 +97,7 @@ children_alive ()
     # none, it outputs just the banner).  On Cygwin, "ps PID" outputs
     # everything, and "ps -p PID" outputs the banner, and the process
     # line if alive.  In both cases it exits with success.
-    # 
+    #
     # We once used grep to check the result:
     #
     # ps -p $pid | grep ["^[	]*$pid[^0-9]"]

@@ -1,6 +1,6 @@
 ##
 ## qtestlib.mk: This file is part of build-aux.
-## Copyright (C) Gostai S.A.S., 2007.
+## Copyright (C) Gostai S.A.S., 2007-2008.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the

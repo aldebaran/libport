@@ -1,3 +1,15 @@
+##
+## swig.m4: This file is part of build-aux.
+## Copyright (C) Gostai S.A.S., 2006-2008.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
 dnl @synopsis AC_PROG_SWIG([major.minor.micro])
 dnl
 dnl This macro searches for a SWIG installation on your system. If found you

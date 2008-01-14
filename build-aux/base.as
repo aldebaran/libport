@@ -1,4 +1,16 @@
-m4_pattern_forbid([^_?URBI_])dnl			-*- shell-script -*-
+##                                                         -*- shell-script -*-
+## base.as: This file is part of build-aux.
+## Copyright (C) Gostai S.A.S., 2006-2008.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
+m4_pattern_forbid([^_?URBI_])dnl
 
 # m4_define([_m4_divert(M4SH-INIT)],   5)
 m4_define([_m4_divert(URBI-INIT)],    10)

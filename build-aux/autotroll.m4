@@ -1,7 +1,7 @@
 # Build Qt apps with the autotools (Autoconf/Automake).
 # M4 macros.
 # This file is part of AutoTroll.
-# Copyright (C) 2006  Benoit Sigoure <benoit.sigoure@lrde.epita.fr>
+# Copyright (C) 2006-2008  Benoit Sigoure <benoit.sigoure@lrde.epita.fr>
 #
 # AutoTroll is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
