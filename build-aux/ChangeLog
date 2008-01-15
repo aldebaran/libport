@@ -1,5 +1,10 @@
 2008-01-15  Akim Demaille  <demaille@gostai.com>
 
+	UCA.
+	* children.as: Remove a useless cat.
+
+2008-01-15  Akim Demaille  <demaille@gostai.com>
+
 	One less subshell.
 	* children.as (children_alive): Add a missing space.
 	(run): Avoid a subshell call.

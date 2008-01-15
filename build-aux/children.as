@@ -47,7 +47,7 @@ run ()
   rst_subsection "$me: $title"
   rst_run_report "$title" "$run_prefix"
 
-  return $(cat $run_prefix.sta)
+  return $sta
 }
 
 
