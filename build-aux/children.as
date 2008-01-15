@@ -32,23 +32,22 @@ run ()
   run_counter=$(($run_counter + 1))
   shift
 
-  {
-    ("$[@]") >$run_prefix.out 2>$run_prefix.err
-    local sta=$?
-    echo $sta >$run_prefix.sta
+  echo "$[@]"> $run_prefix.cmd
 
-    case $sta in
-	0) ;;
-	*) title="$title FAIL ($sta)";;
-    esac
+  # Beware of set -e.
+  local sta
+  if "$[@]" >$run_prefix.out 2>$run_prefix.err; then
+    sta=0
+  else
+    sta=$?
+    title="$title FAIL ($sta)"
+  fi
+  echo $sta >$run_prefix.sta
 
-    echo "$[@]"> $run_prefix.cmd
+  rst_subsection "$me: $title"
+  rst_run_report "$title" "$run_prefix"
 
-    rst_subsection "$me: $title"
-    rst_run_report "$title" "$run_prefix"
-
-    return $(cat $run_prefix.sta)
-  }
+  return $(cat $run_prefix.sta)
 }
 
 
@@ -105,9 +104,9 @@ children_alive ()
     # Unfortunately sometimes there are flags displayed before the
     # process number.  Since we never saw a "ps -p PID" that does not
     # display the title line, we expect two lines.
-    case $(ps -p $pid | wc -l | sed -e '[s/^[ 	]*//]') in
+    case $(ps -p $pid | wc -l | sed -e '[s/^[	 ]*//]') in
       1) # process is dead.
-         ;;
+	 ;;
       2) # Process is live.
 	 return 0;;
       *) error SOFTWARE "unexpected ps output:" "$(ps -p $pid)" ;;

@@ -1,3 +1,10 @@
+2008-01-15  Akim Demaille  <demaille@gostai.com>
+
+	One less subshell.
+	* children.as (children_alive): Add a missing space.
+	(run): Avoid a subshell call.
+	Remove useless braces.
+
 2008-01-14  Nicolas Despres  <despres@gostai.com>
 
 	Update copyright.
