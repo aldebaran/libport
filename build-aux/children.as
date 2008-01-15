@@ -52,6 +52,89 @@ run ()
 
 
 
+## ------------------------------------------------- ##
+## PID sets -- Lower layer for children management.  ##
+## ------------------------------------------------- ##
+
+
+# pids_alive PIDS
+# ---------------
+# Return whether some of the PIDs point to alive processes,
+# i.e., return 1 iff there are no children alive.
+pids_alive ()
+{
+  local pid
+  for pid
+  do
+    # Using "ps PID" to test whether a processus is alive is,
+    # unfortunately, non portable.  OS X Tiger always return 0, and
+    # outputs the ps-banner and the line of the processus (if there is
+    # none, it outputs just the banner).  On Cygwin, "ps PID" outputs
+    # everything, and "ps -p PID" outputs the banner, and the process
+    # line if alive.  In both cases it exits with success.
+    #
+    # We once used grep to check the result:
+    #
+    # ps -p $pid | grep ["^[	]*$pid[^0-9]"]
+    #
+    # Unfortunately sometimes there are flags displayed before the
+    # process number.  Since we never saw a "ps -p PID" that does not
+    # display the title line, we expect two lines.
+    case $(ps -p $pid | wc -l | sed -e '[s/^[	 ]*//]') in
+      1) # process is dead.
+	 ;;
+      2) # Process is live.
+	 return 0;;
+      *) error SOFTWARE "unexpected ps output:" "$(ps -p $pid)" ;;
+    esac
+  done
+  return 1
+}
+
+
+# pids_kill PIDS
+# --------------
+# Kill all the PIDS.  This function can be called twice: once
+# before cleaning the components, and once when exiting, so it's
+# robust to children no longer in the process table.
+pids_kill ()
+{
+  local pid
+  for pid
+  do
+    if pids_alive $pid; then
+      local name=$(cat $pid.name)
+      echo "Killing $name (kill -ALRM $pid)"
+      kill -ALRM $pid 2>&1 || true
+    fi
+  done
+}
+
+
+# pids_wait TIMEOUT PIDS
+# ----------------------
+pids_wait ()
+{
+  local timeout=$[1]
+  shift
+
+  if $INSTRUMENT; then
+    timeout=$(($timeout * 5))
+  fi
+
+  while pids_alive "$[@]"; do
+    if test $timeout -le 0; then
+      pids_kill "$[@]"
+      break
+    fi
+    sleep 1
+    timeout=$(($timeout - 1))
+  done
+}
+
+
+
+
 ## ---------- ##
 ## Children.  ##
 ## ---------- ##
@@ -132,23 +215,40 @@ children_clean ()
 }
 
 
-# children_register NAMES
+# children_pid [CHILDREN]
 # -----------------------
+# Return the PIDs of the CHILDREN (whether alive or not).
+children_pid ()
+{
+  test $[#] -ne 0 ||
+    { set x $children; shift; }
+
+  local i
+  for i
+  do
+    cat $i.pid
+  done
+}
+
+
+# children_register NAME
+# ----------------------
 # It is very important that we do not leave some random exit status
 # from some previous runs.  Standard output etc. are not a problem:
 # they *are* created during the run, while *.sta is created *only* if
 # it does not already exists (this is because you can call "wait" only
 # once per processus, so to enable calling children_harvest multiple
 # times, we create *.sta only if it does not exist).
+#
+# Creates NAME.pid which contains the PID, and PID.name which contains
+# the name.
 children_register ()
 {
-  local i
-  for i
-  do
-    rm -f $i.sta
-    children="$children $i"
-    echo $! >$i.pid
-  done
+  test $[#] -eq 1
+  rm -f $[1].sta
+  children="$children $[1]"
+  echo $! >$[1].pid
+  echo $[1] >$!.name
 }
 
 
@@ -175,18 +275,7 @@ children_report ()
 # robust to children no longer in the process table.
 children_kill ()
 {
-  test $[#] -ne 0 ||
-    { set x $children; shift; }
-
-  local i
-  for i
-  do
-    if children_alive $i; then
-      local pid=$(cat $i.pid)
-      echo "Killing $i (kill -ALRM $pid)"
-      kill -ALRM $pid 2>&1 || true
-    fi
-  done
+  pids_kill $(children_pid "$[@]")
 }
 
 
@@ -257,19 +346,7 @@ children_wait ()
 {
   local timeout=$[1]
   shift
-
-  if $INSTRUMENT; then
-    timeout=$(($timeout * 5))
-  fi
-
-  while children_alive "$[@]"; do
-    if test $timeout -le 0; then
-      children_kill "$[@]"
-      break
-    fi
-    sleep 1
-    timeout=$(($timeout - 1))
-  done
+  pids_wait $timeout $(children_pid "$[@]")
 }
 
 ])

@@ -1,5 +1,14 @@
 2008-01-15  Akim Demaille  <demaille@gostai.com>
 
+	pids_* functions.
+	* children.as (pids_alive, pids_kill, pids_wait, children_pid): New.
+	(children_register): Create $pid.name.
+	Of course works only for one child.
+	(children_kill): Use pids_kill.
+	(children_wait): Use pids_wait.
+
+2008-01-15  Akim Demaille  <demaille@gostai.com>
+
 	UCA.
 	* children.as: Remove a useless cat.
 
