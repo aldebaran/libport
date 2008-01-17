@@ -1,4 +1,4 @@
-include $(top_srcdir)/build-aux/init.mk
+include $(top_srcdir)/libport/build-aux/init.mk
 
 # Program to check:
 check_PROGRAMS =		\
@@ -40,7 +40,7 @@ TESTS = $(check_PROGRAMS:$(EXEEXT)=.test)
 # does not specify the sort of ufloats to use.
 BUILT_SOURCES += libport/config.h
 # Do not define the variety of ufloats to use.
-libport/config.h: $(top_builddir)/libport/config.h
+libport/config.h: $(top_builddir)/libport/include/libport/config.h
 	test -d libport || mkdir libport
 	{							\
 	  echo "#define LIBPORT_TEST 1";			\
@@ -55,7 +55,7 @@ AM_CPPFLAGS += -I. -I$(top_srcdir) $(BOOST_CPPFLAGS)
 
 $(TESTS):
 	for i in $(TESTS); do \
-          $(LN_S) -f $(top_builddir)/build-aux/test.sh $$i || exit 1; \
+          $(LN_S) -f $(top_builddir)/libport/build-aux/test.sh $$i || exit 1; \
         done
 
 EXTRA_DIST += $(TESTS:.test=.stdout) common_ufloat1.cc

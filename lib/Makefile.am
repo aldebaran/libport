@@ -1,6 +1,6 @@
-include $(top_srcdir)/build-aux/init.mk
+include $(top_srcdir)/libport/build-aux/init.mk
 
-include $(top_srcdir)/build-aux/config-headers-prefixed.mk
+include $(top_srcdir)/libport/build-aux/config-headers-prefixed.mk
 
 ## --------- ##
 ## libport.  ##

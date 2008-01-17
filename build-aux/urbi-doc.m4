@@ -27,7 +27,7 @@ URBI_ARG_PROGS([doxygen], [the Doxygen documentation generation program])
 AC_SUBST([DOCDIR], [srcdoc])
 
 AC_CONFIG_FILES([doc/Makefile
-		 doc/Doxyfile:build-aux/Doxyfile.in])
+		 doc/Doxyfile:libport/build-aux/Doxyfile.in])
 
 ENABLE_DOC
 ])

@@ -36,7 +36,7 @@ EXTRA_DIST = $(builddir)/$(DOCDIR)
 $(builddir)/$(DOCDIR):
 	$(mkdir_p) $(builddir)/$(DOCDIR)
 
-doc-builder: $(top_srcdir)/build-aux/Doxyfile.in
+doc-builder: $(top_srcdir)/libport/build-aux/Doxyfile.in
 	test -w $(builddir)
 	rm -rf $(DOCDIR).tmp $(builddir)/$(DOCDIR)
 	$(MAKE) $(AM_MAKEFLAGS) Doxyfile

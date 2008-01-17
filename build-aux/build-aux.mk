@@ -12,10 +12,10 @@
 
 # This file is meant to be included only by the top-level Makefile.am.
 
-include $(top_srcdir)/build-aux/init.mk
-include $(top_srcdir)/build-aux/svn-externals.mk
+include $(top_srcdir)/libport/build-aux/init.mk
+include $(top_srcdir)/libport/build-aux/svn-externals.mk
 
-EXTRA_DIST += $(top_srcdir)/build-aux/install-sh-c
+EXTRA_DIST += $(top_srcdir)/libport/build-aux/install-sh-c
 
 
 ## ------ ##

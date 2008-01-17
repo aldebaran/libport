@@ -70,7 +70,7 @@ AC_REQUIRE([URBI_UFLOAT])dnl
 URBI_PREFIX_CONFIG_H([libport/config.h], [LIBPORT])
 
 # $(top_srcdir) to find sources, $(top_builddir) to find libport/config.h.
-AC_SUBST([LIBPORT_CPPFLAGS], ['-I$(top_srcdir) -I$(top_builddir)'])
+AC_SUBST([LIBPORT_CPPFLAGS], ['-I$(top_srcdir)/libport/include -I$(top_builddir)/libport/include'])
 
 # Where we install the libport files.
 URBI_PACKAGE_KIND_SWITCH(
