@@ -31,4 +31,4 @@ LIBS =
 MAINTAINERCLEANFILES =
 
 # Useful variables.
-build_aux_dir = $(top_srcdir)/build-aux
+build_aux_dir = $(top_srcdir)/libport/build-aux
