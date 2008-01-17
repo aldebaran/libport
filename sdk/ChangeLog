@@ -1,0 +1,667 @@
+2008-01-15  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Don't replace OPEN paths, workaround for kernel path.
+	* uinstall.in: Here.
+
+2008-01-03  Akim Demaille  <demaille@gostai.com>
+
+	libkernel-remote no longer exists.
+	* umake.in: Use liburbi instead.
+
+2008-01-02  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add boost threads ld flags to param.mk.
+	* param.mk.in: Here.
+
+2007-12-26  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Use whole-archive on every static lib.
+	* umake-link.in: Here.
+	It was used only around liburbicore.a.
+
+2007-12-15  Akim Demaille  <demaille@gostai.com>
+
+	Stray ".
+	* umake.in: Kill it.
+
+2007-11-28  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add case for Webots in lib choice.
+	* umake.in: Here.
+
+2007-11-28  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Use more portable options for cp.
+	* uinstall.in: Here.
+
+2007-11-28  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Handle difference between prefix on buildfarm and untar dir on client machine.
+	* uinstall.in: Here.
+
+2007-11-28  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Use @prefix@ in uinstall.
+	* uinstall.in: Here.
+
+2007-11-16  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Fix uinstall path substitution.
+	* uinstall.in: Here.
+
+2007-11-14  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add missing $(LIBS) in making binaries.
+	* param.mk.in: Here.
+
+2007-11-13  Akim Demaille  <demaille@gostai.com>
+
+	Dump param.mk when verbose.
+	* umake.in: here.
+
+2007-11-12  Akim Demaille  <demaille@gostai.com>
+
+	Override URBI_KERNEL_PATH.
+	* umake.in: Define it.
+	* param.mk.in: Use it to override the previous value instead
+	of taking the risk of having UMAKE_URBI_KERNEL_PATH be wrong,
+	and URBI_KERNEL_PATH being used unexpectedly.
+
+2007-11-09  Akim Demaille  <akim.demaille@free.fr>
+
+	Be robust to the order of macros in configure.ac.
+	* urbi-sdk.m4: Don't expect PTHREAD macros etc. to
+	be run beforehand.
+
+2007-11-09  Akim Demaille  <demaille@gostai.com>
+
+	Pass the libs to param.mk.
+	* param.mk.in (SDK_CFLAGS, SDK_CXXFLAGS, SDK_LIBS, SDK_LDFLAGS): New.
+	Use them.
+	(LIBS): New, the former LIBS is now named...
+	(ARGUMENT_LIBS): this.
+	* umake.in: Adjust to define ARGUMENT_LIBS.
+	* urbi-sdk.m4: Substitute these SDK_* variables.
+
+2007-10-29  Akim Demaille  <demaille@gostai.com>
+
+	Fix envvar handling.
+	* wrapper.sh.in: by removal.
+	It is the tests/ wrappers that should play these tricks.
+	Here, I introduce an infinite recursion of umake-engine
+	calling itself.
+
+2007-10-29  Akim Demaille  <demaille@gostai.com>
+
+	Honor UMAKE_* envvars.
+	* wrapper.sh.in: Let the wrappee check its own UMAKE_*.
+
+2007-10-29  Akim Demaille  <demaille@gostai.com>
+
+	Improve debugging.
+	* Makefile.am: Treat umake-link like the other configured scripts.
+	Fix their dependencies.
+	* umake-common (report): Simplify.
+	(run): Don't depend on the interpretation of " $@ ".
+	Activate debug mode on VERBOSE=x.
+
+2007-10-29  Akim Demaille  <demaille@gostai.com>
+
+	Fix dependencies.
+	* param.mk.in: Do not mix old-style and %-style pattern rules.
+
+2007-10-22  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Missing backslashes in sdk wrapper generator.
+	* wrapper.sh.in: Here.
+
+2007-10-20  Akim Demaille  <akim.demaille@free.fr>
+
+	More shell changes.
+	* sdk/param.mk.in (UMAKE_DIR): Don't use it.
+	(UMAKE_LINK): Use this one.
+	(LINK): New.
+	* sdk/uinstall.in: Stylistic changes.
+	* sdk/umake-common: Ditto.
+	* sdk/umake-link.in: Ditto.
+	(version): Fix.
+	* sdk/umake.in  (umake_dir): Remove.
+	Compute UMAKE_LINK.
+	Pass it to param.mk..
+
+2007-10-20  Akim Demaille  <akim.demaille@free.fr>
+
+	Fix prefix definition.
+	* sdk/umake.in: Restore the one true definition of prefix.
+	(line): New, use it.
+
+2007-10-20  Akim Demaille  <akim.demaille@free.fr>
+
+	Use AC_SUBST_FILE.
+	* urbi-sdk.m4: AC_SUBST_FILE umake-common to simplify dependencies.
+	* umake-link: Rename as...
+	* umake-link.in: this.
+	* Makefile.am: Don't install umake-common.
+	* uinstall.in: Inline umake-common.
+	* umake.in: Ditto.
+	* umake-common (medir): New.
+
+2007-10-20  Akim Demaille  <akim.demaille@free.fr>
+
+	More cleanup.
+	* umake.in: Prefer test to [].
+	Simplify redirections, prefer here-docs.
+
+2007-10-20  Akim Demaille  <akim.demaille@free.fr>
+
+	Protect space from tab.
+	* umake-common: Beware that a space followed by a tab can
+	be changed by some editors into just a tab.  In that case ${1+"$@"}
+	does not behave as expected, and basically everything is broken.
+	Which was the case since [1280].
+
+2007-10-20  Akim Demaille  <akim.demaille@free.fr>
+
+	Coding style.
+	* umake-link: Prefer test to [].
+	* wrapper.sh.in: Remove trailing "fi".
+
+2007-10-20  Akim Demaille  <demaille@gostai.com>
+
+	builddir = .
+	* Makefile.am: Simplify.
+
+2007-10-20  Akim Demaille  <demaille@gostai.com>
+
+	Improve wrappers.
+	* Makefile.am: Don't distribute what is generated.
+	And clean it.
+	* urbi-sdk.m4: Use URBI_RESOLVE_DIR to subst BINDIR.
+	* wrapper.sh.in: Honor the UMAKE envvar if defined, otherwise
+	trust bindir.
+
+2007-10-20  Akim Demaille  <demaille@gostai.com>
+
+	Fix previous fix.
+	* wrapper.sh.in: Beware that $args is to be expanded in the
+	result.
+
+2007-10-20  Akim Demaille  <demaille@gostai.com>
+
+	First pass at cleaning sdk.
+	* umake-common (verbose): Use report.
+	* urbi-sdk.m4: Don't forbid what we don't use.
+	* wrapper.sh.in: Use $(), not ``.
+	Fix coding style.
+	Use here-docs.
+	Fix quotation.
+
+2007-10-02  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Fix prefix computation for uinstall
+	* uinstall.in: Here.
+
+2007-10-02  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Use prefix in uinstall instead of local dir
+	* Makefile.am: Add uinstall to CLEANFILES.
+	* uinstall.in: New.
+	Former uinstall, using @prefix@
+	* uinstall: Remove.
+	* urbi-sdk.m4: add uinstall to config files.
+
+2007-10-01  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Update uinstall script for libtool libraries relocalisation
+	* param.mk.in: Remove previous LDFLAGS change.
+	* uinstall: Library changes.
+
+2007-10-01  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add extra directory for libs to LDFLAGS
+	* param.mk.in: Here.
+
+2007-09-28  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Use target list instead of gnu make extension for umake wrappers
+	* Makefile.am: Here.
+
+2007-09-28  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Simplfy workaround for find -wholename
+	* umake.in: Here.
+
+2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Workaround for missing wholename on Mac OSX
+	* umake.in: Here.
+
+2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Fix missing include dir, cleaning
+	* Makefile.am: Remove wrappers at clean.
+	* param.mk.in: Use both urbi and umake kernel_dir.
+	* umake.in: Restore quotes in object listing.
+
+2007-09-27  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add umake wrappers to DISTCLEANFILES
+	* Makefile.am: Here.
+
+2007-09-26  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Build objects in _ubuild directories
+	* Makefile.am: Remove clean wrapper, add deepclean.
+	* param.mk.in: Build files in _build-"target".
+	* umake.in (clean): Only delete files in _ubuild-"target"
+	directory. It is now only an option (no more wrapper).
+	(deep-clean): New. Remove all _ubuild directories.
+	* wrapper.sh.in: Handle deep-clean.
+	Add missing quotes in substitution.
+
+2007-09-21  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add generator for umake wrappers, use $(dirname)
+	* Makefile.am: Rule for wrapper generation.
+	* umake-aibo: Remove.
+	* umake-clean: Remove.
+	* umake-engine: Remove.
+	* umake-lib: Remove.
+	* umake-link: Use dirname.
+	* umake-remote: Remove.
+	* umake.in: Use dirname.
+	* urbi-sdk.m4: Add wrapper.sh.in to AC_CONFIG_FILES.
+	* wrapper.sh.in: New.
+
+2007-09-20  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add new wrappers, improve previous commit
+	* Makefile.am: New wrappers.
+	* param.mk.in: Reorder CXXCOMPILE and COMPILE flags (user's last).
+	Give path to umake-link.
+	Rename EXTRALDFLAGS in EXTRA_LDFLAGS (doc compliant).
+	* umake-aibo: Clean.
+	* umake-clean: New.
+	* umake-engine: Clean.
+	* umake-lib: Clean.
+	* umake-link: Add umake-common check.
+	* umake-remote: New.
+	* umake.in: Clean a bit.
+	Remove extra file existency tests preventing make check	to complete.
+	(umake_dir): New.
+
+2007-09-14  Guillaume Deslandes  <deslandes@gostai.com>
+
+	Add verbose and error handling in umake
+	* Makefile.am: add umake-aibo.
+	* param.mk.in: use given variable instead of generated values.
+	* umake-aibo: New.
+	* umake-common (dirlist_error): New.
+        (exist_error): New.
+	* umake-engine: use umake in same dir.
+	* umake-lib: idem.
+	* umake-link: idem.
+	* umake.in: error handling, easier relocalisation, verbose.
+
+2007-05-23  Rémi Humbert  <humbert@gostai.com>
+
+	Use -all_load on Darwin in umake-link
+	-all_load is the equivalent of -whole-archive
+	* umake-link: .
+
+2007-05-22  Rémi Humbert  <humbert@gostai.com>
+
+	Add webots support in umake-link 
+	* umake-link: .
+
+2007-05-03  Akim Demaille  <demaille@gostai.com>
+
+	umake-link
+	* umake-link: New.
+	Handles the --whole-archive mess for libtool.
+	* Makefile.am: Ship it.
+	* param.mk.in: Use it.
+	* umake-common (report): Use $me.
+
+2007-05-03  Akim Demaille  <demaille@gostai.com>
+
+	umake-common
+	* umake-common: New.
+	* umake.in: Extracted from here.
+	Load it.
+	* Makefile.am: Ship and install it.
+
+2007-04-24  Akim Demaille  <demaille@gostai.com>
+
+	Improve the umake output
+	* umake.in ($me): New.
+	(verbose, usage): Use it.
+	(run): Send all the output on stderr to ease the reading of make's
+	output.
+	Prefer case to if's.
+
+2007-04-24  Akim Demaille  <demaille@gostai.com>
+
+	Tidy the linking command
+	* param.mk.in (CXXLINK_BIN): New.
+	Use it to also display the actual commands run.
+
+2007-04-11  Rémi Humbert  <humbert@gostai.com>
+
+	Add flags -whole-archive about liburbicore.la when compiling binary 
+	* param.mk.in: .
+
+2007-04-11  POTHIER Benoit  <pothier@gostai.com>
+
+	Remove urbi from inclide dir.
+	* param.mk.in: .
+
+2007-04-03  POTHIER Benoit  <pothier@gostai.com>
+
+	Fix invalid regexp.
+	* param.mk.in: .
+
+2007-03-29  Akim Demaille  <demaille@gostai.com>
+
+	Use warning flags
+	Several errors remained hidden because the warning flags were
+	not used (e.g., functions that forget to return a value).
+	* param.mk.in: Sort variables.
+	Use WARNING_FLAGS.
+	Put user variables after hard wired ones.
+
+2007-03-29  Akim Demaille  <demaille@gostai.com>
+
+	Fix the definition of URBI_ENV_XXX
+	* param.mk.in (URBI_ENV_CPPFLAGS): New.
+	Convert from lower case to upper case.
+
+2007-03-26  POTHIER Benoit  <pothier@gostai.com>
+
+	Add prefixed dirs in CPPFLAGS for all sdks.
+	* param.mk.in: Here.
+
+2007-03-22  Akim Demaille  <akim.demaille@free.fr>
+
+	Use Automake like macros
+	* param.mk.in (COMPILE, CXXCOMPILE, LTCOMPILE, LTCXXCOMPILE)
+	(CXXLINK): New.
+	Use them.
+	(.SUFFIXES): Be faithful to what we do.
+
+2007-03-13  Akim Demaille  <akim.demaille@free.fr>
+
+	* umake.in (defaulthost): Remove, just assign a default value
+	to host.
+	(version): New function.
+	Look for sources at arbitrary depths.
+	According to JCB's samples in tests/, that's what he had in mind.
+	Do not pass SOURCES to param.mk, since it doesn't care about it.
+
+2007-03-13  Akim Demaille  <akim.demaille@free.fr>
+
+	umake: output objects in cwd
+	Addresses ticket:26 in common.
+	* umake.in (objects): Strip the dirname part from the sources.
+	(vpath): New.
+	Pass it to make as VPATH so that source and build files live
+	in their worlds.
+
+2007-03-13  Akim Demaille  <akim.demaille@free.fr>
+
+	Simplification
+	* sdk/urbi-engine.ac: Use m4_ifndef.
+	* sdk/urbi-with-libdir.m4: Use m4_defn to trigger errors earlier.
+
+2007-03-08  Akim Demaille  <demaille@gostai.com>
+
+	Start avoiding using unspecified lib names
+	* param.mk.in: Define and use LIBNAME.
+
+2007-03-06  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Add documentation.
+	* urbi-engine.ac: Here.
+
+2007-03-05  Akim Demaille  <akim.demaille@free.fr>
+
+	Factor URBI_WITH_* macros
+	Factor code duplication.  *NEVER* do that again.
+	This is on the way to address #14.
+	* urbi-with-core.m4: Remove.
+	* urbi-with-kernel.m4: Remove.
+	* urbi-with-libdir.m4: New.
+
+2007-03-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Remove fixed problem from TODO.
+	* TODO: Remove fixed problem.
+
+2007-03-03  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Remove duplicated code.
+	* urbi-engine-nocore.ac: Remove.
+	* urbi-engine.ac: Add two variables which defines whether
+	you want to link againt a core/kernel and whether you want
+	to support shared library or not.
+
+2007-03-01  Akim Demaille  <demaille@gostai.com>
+
+	Various fixes
+	* param.mk.in: Use KERNEL_INCLUDE_PATH properly.
+	(SDK_CPPFLAGS, sdkincludedir, kernelincludedir): Remove now useless
+	variables.
+	* urbi-with-core.m4, urbi-with-kernel.m4: Fix a typo: . instead of ,.
+	These two files are almost equal and need refactoring.
+
+2007-03-01  Akim Demaille  <demaille@gostai.com>
+
+	Better umake errors
+	* umake.in: Diagnose missing param.mk instead of letting make do it.
+
+2007-03-01  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Use URBI_PACKAGE_KIND in urbi-with-core.
+	* urbi-engine-nocore.ac: Fix macro call order.
+	* urbi-engine.ac: Idem.
+	* urbi-with-core.m4: Use URBI_PACKAGE_KIND.
+
+2007-02-20  Akim Demaille  <demaille@gostai.com>
+
+	More AC_SUBSTs
+	* param.mk.in (sdkincludedir, kernelincludedir): New stubs.
+	* Makefile.am: Add a comment giving a hint about what can be done
+	in the future.
+	* eval_makefile.pl: Comment changes.
+	* urbi-sdk.m4: White space changes.
+
+2007-02-20  Akim Demaille  <demaille@gostai.com>
+
+	More flags into param.mk
+	We really need to move libport into its own kernel space, and
+	actually I think we should do that too for libjpeg.
+	* param.mk.in (PRE_CPPFLAGS, ALL_CPPFLAGS): New.
+	Use them.
+	Use them before the C/CXXFLAGS.
+	(SDK_CPPFLAGS, URBI_KERNEL_PATH): New.
+	Use them.
+
+2007-02-17  Akim Demaille  <akim.demaille@free.fr>
+
+	umake -P, -p
+	* umake.in: Support --prefix/--param-mk.
+	($usage): Transform into...
+	(&usage): this.
+	(&param_mk): New.
+
+2007-02-17  Akim Demaille  <akim.demaille@free.fr>
+
+	Fix executable bits
+	For umake-*.
+
+2007-01-30  Akim Demaille  <demaille@gostai.com>
+
+	umake simplification
+	* umake.in: Handle the absence of arguments at one single place.
+	Use "case" to handle the directory case.
+
+2007-01-30  Akim Demaille  <demaille@gostai.com>
+
+	Fix criminal indentation
+	* umake.in: here.
+
+2007-01-30  Akim Demaille  <demaille@gostai.com>
+
+	Use exec
+	* umake-engine, umake-lib: here.
+	And use "$@", not $*.
+
+2007-01-24  Akim Demaille  <akim@lrde.epita.fr>
+
+	Add a missing comma
+	* urbi-dirs.m4 (_URBI_DIRS): here.
+
+2007-01-24  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
+	Fix hostdir.
+	* urbi-dirs.m4 (_URBI_DIRS): Fix the conditionnal definition of
+	  hostdir.
+
+2007-01-21  Akim Demaille  <akim@lrde.epita.fr>
+
+	Use URBI_LIBPORT_INSTALLED
+	* TODO: New.
+	* urbi-engine-nocore.ac, urbi-engine.ac: We do need to find
+	the pthreads, so don't just remove URBI_LIBPORT, use a less
+	eager one.
+	Reported by JCB.
+
+2007-01-20  SIGOURE Benoit  <tsuna@lrde.epita.fr>
+
+	Never use a `sdk' folder.
+	Related ticket: https://core.gostai.com/projects/buildfarm/ticket/4
+	I have *no* idea why this ticket is on this trac. It should belong to
+	common (because that's where the sdk folder comes from).
+	* urbi-dirs.m4: Never use a `sdk' folder under $branddir. It's either
+	  `core' or `kernel'.
+
+2007-01-20  Akim Demaille  <demaille@gostai.com>
+
+	Embedded Libport is not used by default by core
+	* urbi-engine-nocore.ac, urbi-engine.ac: Don't invoke URBI_LIBPORT,
+	as we use installed libport, not a local svn:external copy.
+
+2007-01-15  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Fix urbi-with-core macro.
+	* urbi-engine-nocore.ac: URBI_DIRS needs URBI_KERNEL_PATH, define it.
+	* urbi-with-core.m4: Add URBI_SDK. We need it after all.
+
+2007-01-15  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Add an autoconf file for engine that uses a generic core.
+	* urbi-engine-nocore.ac: Add file. New.
+
+2007-01-15  Thomas Moulard  <thomas.moulard@lrde.epita.fr>
+
+	Add urbi-with-core macro.
+	* urbi-with-core.m4: Add the file. New.
+
+2006-12-19  Akim Demaille  <demaille@gostai.com>
+
+	Beware of spaces in file names
+	* umake.in: here.
+
+2006-12-19  Akim Demaille  <demaille@gostai.com>
+
+	Spellos
+	* param.mk.in: Here.
+
+2006-12-10  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Add EXTRA_DIST.
+	* Makefile.am (EXTRA_DIST): New. Add eval_makefile.pl.
+
+2006-12-05  Akim Demaille  <demaille@gostai.com>
+
+	Make it even more complex
+	These changes are needed to avoid uses of URBI_KERNEL_PATH when
+	it is not defined.
+	* urbi-dirs.m4 (URBI_SDK_DIRS, URBI_CORE_DIRS): New.
+	(URBI_DIRS): Remove.
+	(_URBI_DIRS): Accept "sdk" as another possible $1, for instance
+	for liburbi-c++.
+	* urbi-engine.ac: Adjust.
+	* urbi-sdk.m4: Adjust.
+	* urbi-with-kernel.m4: Adjust.
+
+2006-12-05  Akim Demaille  <akim.demaille@free.fr>
+
+	Fix typo
+	* urbi-dirs.m4 (brandir): Rename as...
+	(branddir): this.
+
+2006-12-05  Akim Demaille  <akim.demaille@free.fr>
+
+	URBI_DIRS: Be usable by the kernel
+	* urbi-dirs.m4: Restore the proper behavior of URBI_KERNEL_DIRS.
+
+2006-12-05  Akim Demaille  <akim.demaille@free.fr>
+
+	Fix file name
+	* with-urbi-kernel.m4: Rename as...
+	* urbi-with-kernel.m4: this.
+
+2006-12-04  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Fix the use of the svn:keyword Id.
+	* umake.in: Here.
+
+2006-12-04  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Portability fixes.
+	* umake.in: The `==' operator isn't portable: Don't use it (in fact it
+	  doesn't work on dash). Add the svn:keyword Id.
+
+2006-11-29  Matthieu Nottale  <nottale@gostai.com>
+
+	Add clean mechanism to umake, use different .o per host
+	* umake.in: Add -c option which calls the clean target.
+	* param.mk.in: Add clean target. Use .$(URBI_ENV).o object files. Fix aibo link regexp as a consequence.
+
+2006-11-28  Matthieu Nottale  <nottale@gostai.com>
+
+	Partial revert: ${URBI_KERNEL_PATH} ok for all sdks except liburbi: remove (handle in each sdk instead)
+	* Makefile.am: .
+
+2006-11-28  Matthieu Nottale  <nottale@gostai.com>
+
+	Fix path, install uobject.hh, add a cpp directive to umake
+	* Makefile.am: Install uobject.hh.
+	* param.mk.in: Add -DURBI_ENV_$(URBI_ENV) to cppflags. usefull for some modules.
+	* urbi-dirs.m4: Add {URBI_KERNEL_PATH}/include to cppflags (it contains uobject.hh).
+
+2006-11-23  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Add DISTCHECK_CONFIGURE_FLAGS.
+	This is necessary since --with-urbi-kernel is mandatory.
+	* with-urbi-kernel.m4: Here.
+
+2006-11-22  SIGOURE Benoit  <sigoure.benoit@lrde.epita.fr>
+
+	Add a new SDK folder.
+	This folder in common will be a place where common things for
+	different SDKs and engines will be stored.
+	* sdk: New.
+	* sdk/ChangeLog: New.
+	* sdk/Makefile.am: New.
+	* sdk/eval_makefile.pl: New.
+	* sdk/param.mk.in: New.
+	* sdk/uinstall: New.
+	* sdk/umake-engine: New.
+	* sdk/umake-lib: New.
+	* sdk/umake.in: New.
+	* sdk/urbi-dirs.m4: New.
+	* sdk/urbi-engine.ac: New.
+	* sdk/urbi-sdk.m4: New.
+	* sdk/with-urbi-kernel.m4: New.

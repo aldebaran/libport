@@ -1,0 +1,47 @@
+@UMAKE_COMMON@
+
+dir=$medir
+
+# origin install dir
+prefix='@prefix@'
+prefixdir="${prefix}"
+
+# absolute current dir
+currentdir="$dir/"
+currentdir=$(cd $currentdir && pwd)
+currentdir="${currentdir%/bin*}"
+
+# Test install directory existency
+installdir=$1
+if test ! -d "$installdir"; then
+  mkdir -p "$installdir"
+fi
+installdir=$(cd $installdir && pwd)
+
+# Test for write permissions
+install_test_file=$installdir/.urbi_install_test_file
+touch -f $install_test_file 2>/dev/null || true
+if test ! -f $install_test_file; then
+  error 2 "unable to create file in $installdir, you may need special permissions"
+fi
+rm -f $install_test_file 2>/dev/null
+
+cp -pPR $currentdir/* $installdir/
+
+# Set paths to install directory
+find $installdir							\
+    -name \*.la -o -name umake\*					\
+    -o -name uinstall -o -name \*.mk |					\
+    xargs sed -i -e "/OPEN_R_SDK/! s#${prefixdir}#${installdir}#g"
+
+# Special case for kernel includes.
+find $installdir							\
+    -name param.mk |							\
+    xargs sed -i -e "s#^\(URBI_KERNEL_PATH = \).*#\1${installdir}#g"
+
+
+exit 0
+
+# Local variables:
+# mode: shell-script
+# End:

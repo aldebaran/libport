@@ -1,0 +1,88 @@
+#! @SHELL@
+# @configure_input@
+# Wrapper generator for umake.
+
+me=$(basename "$0")
+target=$1
+
+stderr ()
+{
+    echo >&2 "$me: $@"
+}
+
+fatal ()
+{
+    stderr "$@"
+    exit 1
+}
+
+builddir='@builddir@'
+srcdir='@srcdir@'
+
+test -d "$builddir" ||
+  fatal "cannot find build directory: $builddir"
+
+test $# -lt 1 &&
+  fatal "missing target, need wrapper name"
+
+gen_wrapper ()
+{
+    target=$(echo "$1" | sed -e 's/^umake-//')
+    case $target in
+	aibo)
+	    args="--core=aibo --host=mipsel-linux";;
+	deepclean)
+	    args="--deep-clean";;
+	engine)
+	    args="--core=engine";;
+	lib)
+	    args="--library";;
+	remote)
+	    args="--core=remote";;
+	link | common)
+	    #ignore
+	    return;;
+	*)
+	    stderr "unknown target: $target"
+	    return
+	    ;;
+    esac
+
+    wrapper=$builddir/umake-$target
+
+    cat >$wrapper <<EOF
+#! @SHELL@
+# umake-$target.  Generated wrapper for umake.
+
+me=\$(basename "\$0")
+
+# Always honor UMAKE if defined.
+# Then try to find umake where it was installed, otherwise in the
+# same dir as this tool, or finally, trust the \$PATH.
+if test -z "\$UMAKE"; then
+  for dir in '@BINDIR@' \$(dirname "\$0")
+  do
+    if test -f \$dir/umake; then
+      UMAKE=\$dir/umake
+      break;
+    fi
+  done
+fi
+
+: \${UMAKE=umake}
+
+(\$UMAKE --version) >/dev/null 2>&1 ||
+  {
+    echo >&2 "\$me: cannot run umake: $UMAKE"
+    exit 1
+  }
+
+exec \$UMAKE $args "\$@"
+EOF
+    chmod +x $wrapper
+}
+
+for arg
+do
+    gen_wrapper "$arg"
+done
