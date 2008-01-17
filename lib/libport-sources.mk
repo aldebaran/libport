@@ -6,11 +6,11 @@
 ## --------- ##
 
 # Where we find libport sources in this package.
-libport_srcdir = $(top_srcdir)/libport
-libport_builddir = $(top_builddir)/libport
+libport_srcdir = $(top_srcdir)/libport/lib
+libport_builddir = $(top_builddir)/libport/lib
 # The library itself is compiled by the host directory.
 # We might stop that some day and have libport be an autonomous dir.
-libport_la = $(top_builddir)/libport/libport.la
+libport_la = $(top_builddir)/libport/lib/libport.la
 
 # URBI_LIBPORT defines where we install libport.
 libportsysdir = $(libportdir)/sys

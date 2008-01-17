@@ -26,8 +26,8 @@ use vars qw($mk_file $rv $n);
 # Input files. #
 # ------------ #
 
-my $config_h = 'sdk/config.h';
-$mk_file = 'sdk/param.mk';
+my $config_h = 'libport/sdk/config.h';
+$mk_file = 'libport/sdk/param.mk';
 
 
 $n = 0;  # Line number.
