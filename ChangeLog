@@ -1,5 +1,13 @@
 2008-01-18  Akim Demaille  <demaille@gostai.com>
 
+	Fix libport.la.
+	* lib/libport/Makefile.am: We don't need to create config.h here.
+	(lib_libport): Fix.
+	Simplify includes.
+	Use dist_ instead of EXTRA_DIST.
+
+2008-01-18  Akim Demaille  <demaille@gostai.com>
+
 	Fix symlinks.
 	* build-aux/bootstrap: We were linking one level too high.
 
