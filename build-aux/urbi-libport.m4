@@ -67,10 +67,11 @@ AC_DEFUN([URBI_LIBPORT],
 AC_REQUIRE([URBI_UFLOAT])dnl
 
 # Create libport/config.h.
-URBI_PREFIX_CONFIG_H([libport/include/libport/config.h], [LIBPORT])
+URBI_PREFIX_CONFIG_H([include/libport/config.h], [LIBPORT])
 
 # $(top_srcdir) to find sources, $(top_builddir) to find libport/config.h.
-AC_SUBST([LIBPORT_CPPFLAGS], ['-I$(top_srcdir)/libport/include -I$(top_builddir)/libport/include'])
+AC_SUBST([LIBPORT_CPPFLAGS],
+	 ['-I$(top_srcdir)/include -I$(top_builddir)/include'])
 
 # Where we install the libport files.
 URBI_PACKAGE_KIND_SWITCH(
@@ -78,7 +79,7 @@ URBI_PACKAGE_KIND_SWITCH(
   [sdk],	[AC_SUBST([libportdir], ['${includedir}/libport'])],
   [core],	[AC_SUBST([libportdir], ['${sdkincludedir}/libport'])])
 
-AC_CONFIG_FILES([libport/lib/Makefile])
+AC_CONFIG_FILES([lib/libport/Makefile])
 ])
 
 ## Local Variables:

@@ -1,3 +1,5 @@
+#! /bin/sh
+
 ##
 ## bootstrap: This file is part of build-aux.
 ## Copyright (C) Gostai S.A.S., 2006-2008.
@@ -10,9 +12,35 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
-#! /bin/sh
+stderr ()
+{
+  local i
+  for i
+  do
+    echo >&2 "$0: $i"
+  done
+}
 
 set -e
+
+# If there are symlinks to install bits of libport, do it here.
+for pair
+do
+  save_IFS=$IFS
+  IFS=:
+  set $pair
+  IFS=$save_IFS
+  from=libport/$1
+  to=$2
+  if ! test -e $to; then
+    stderr "Installing $from as $to"
+    mkdir -p $(dirname "$to")
+    ot=$(dirname "$to" | sed 's,[^\\/]*,..,g')
+    ln -sf $ot/$from $to ||
+    ln $from $to ||
+    cp -pr $from $to
+  fi
+done
 
 if test -f bootstrap.cfg; then
   source bootstrap.cfg
@@ -49,3 +77,7 @@ if test -f _build/config.status; then
   ./config.status
   make
 fi
+
+# Local Variables:
+# mode: shell-script
+# End:

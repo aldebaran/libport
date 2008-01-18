@@ -1,3 +1,34 @@
+2008-01-18  Akim Demaille  <demaille@gostai.com>
+
+	Make libport autonomous.
+	* Makefile.am: Adjust.
+	* build-aux/bootstrap: Extend to install symlinks.
+	* build-aux/build-aux.mk, build-aux/doxygen.mk, build-aux/init.mk,
+	* build-aux/revision.mk, build-aux/urbi-doc.m4: Remove libport/
+	prefix.
+	* build-aux/urbi-libport.m4: Adjust.
+	* build-aux/vcs/local.rb: Remove.
+	* configure.ac: Adjust.
+	* include/Makefile.am: Adjust.
+	* lib/libport/Makefile.am: Rename from lib/Makefile.am.
+	* lib/libport/cli.cc: Rename from lib/cli.cc.
+	* lib/libport/contract.cc: Rename from lib/contract.cc.
+	* lib/libport/deref.cc: Rename from lib/deref.cc.
+	* lib/libport/escape.cc: Rename from lib/escape.cc.
+	* lib/libport/file-system.cc: Rename from lib/file-system.cc.
+	* lib/libport/indent.cc: Rename from lib/indent.cc.
+	* lib/libport/libport-sources.mk: Rename from lib/libport-sources.mk.
+	* lib/libport/package-info.cc: Rename from lib/package-info.cc.
+	* lib/libport/program-name.cc: Rename from lib/program-name.cc.
+	* lib/libport/sched.cc: Rename from lib/sched.cc.
+	* lib/libport/symbol.cc: Rename from lib/symbol.cc.
+	* lib/libport/sysexits.cc: Rename from lib/sysexits.cc.
+	* lib/libport/tokenizer.cc: Rename from lib/tokenizer.cc.
+	* lib/libport/uffloat.cc: Rename from lib/uffloat.cc.
+	* lib/libport/ufloat.cc: Rename from lib/ufloat.cc.
+	* lib/libport/ull-fixed-point.cc: Rename from lib/ull-fixed-point.cc.
+	* lib/libport/utime.cc: Rename from lib/utime.cc.
+
 2007-12-14  Benoit Sigoure  <tsuna@lrde.epita.fr>
 
 	Try an unreleased version of boost.m4.

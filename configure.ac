@@ -13,7 +13,7 @@
 ## Package setup ##
 ## ------------- ##
 
-AC_INIT([Program Name], [0.0.1], [some_mail@gostai.com], [tarball-name])
+AC_INIT([Libport], [1.0], [common-bugs@lists.gostai.com])
 
 AC_CONFIG_AUX_DIR([build-aux])
 
@@ -26,20 +26,22 @@ AM_INIT_AUTOMAKE([foreign -Wall])
 # Look for a C++ compiler.
 URBI_PROG_CXX
 
+AC_CONFIG_HEADERS([include/config.h])
+
 # If you need to create a library, USE libtool:
 AC_PROG_LIBTOOL
 
-# If you happen to have some C code:
-#AC_LANG([C])
-#AC_PROG_CC
-
 # AutoTroll with Qt.
-AT_WITH_QT
+# AT_WITH_QT
+# AC_CONFIG_FILES([gui/Makefile])
+
+# Basically, the following lines states we install in prefix.
+URBI_PACKAGE_KIND([sdk])
+URBI_LIBPORT
 
 AC_CONFIG_FILES([
   Makefile
-    src/Makefile
-    gui/Makefile
+    include/Makefile
     doc/Makefile
     tests/Makefile
 ])

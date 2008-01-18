@@ -15,7 +15,7 @@ AM_CFLAGS =
 AM_CPPFLAGS =
 AM_CXXFLAGS =
 AM_LDFLAGS =
-AUTOMAKE_OPTIONS = -Wno-portability
+AUTOMAKE_OPTIONS = -Wall -Wno-portability 1.10 nostdinc
 BUILT_SOURCES =
 # Visual Studio Debugger PDB Files (C++).
 # http://msdn2.microsoft.com/en-us/library/yd4f8bd1.aspx.
@@ -31,4 +31,4 @@ LIBS =
 MAINTAINERCLEANFILES =
 
 # Useful variables.
-build_aux_dir = $(top_srcdir)/libport/build-aux
+build_aux_dir = $(top_srcdir)/build-aux

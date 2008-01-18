@@ -1,3 +1,5 @@
+include $(top_srcdir)/build-aux/init.mk
+
 # C headers.
 nobase_libport_HEADERS =				\
 	libport/cstdio					\
@@ -62,3 +64,4 @@ nodist_libport_HEADERS = 			\
 	$(builddir)/libport/config.h
 
 
+CLEANFILES += libport/config.h

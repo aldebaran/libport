@@ -10,5 +10,5 @@ namespace libport
     boost::char_separator<char> s (sep);
     return tokenizer (str, s);
   }
-  
+
 }

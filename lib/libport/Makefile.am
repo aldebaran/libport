@@ -1,19 +1,19 @@
-include $(top_srcdir)/libport/build-aux/init.mk
-
-include $(top_srcdir)/libport/build-aux/config-headers-prefixed.mk
+include $(top_srcdir)/build-aux/init.mk
+include $(top_srcdir)/build-aux/config-headers-prefixed.mk
 
 ## --------- ##
 ## libport.  ##
 ## --------- ##
 
-include $(top_srcdir)/libport/lib/libport-sources.mk
+libport_reldir = lib/libport
+include $(top_srcdir)/lib/libport/libport-sources.mk
 
 EXTRA_DIST += $(libport_sources)
 
-# Can be useful for some.  Other will use libport_sources directly.
+# Can be useful for some.  Others will use libport_sources directly.
 noinst_LTLIBRARIES = libport.la
 libport_la_SOURCES = $(libport_sources)
-AM_CPPFLAGS += -I$(top_builddir)/libport/include -I$(top_srcdir)/libport/include $(BOOST_CPPFLAGS)
+AM_CPPFLAGS += $(LIBPORT_CPPFLAGS) $(BOOST_CPPFLAGS)
 
 
 # Make sure noone uses config.h instead of libport/config.h.

@@ -7,7 +7,7 @@ namespace libport
     : status_(s)
   {}
 
-  void 
+  void
   exit::operator() () const
   {
     std::exit (status_);
@@ -20,4 +20,3 @@ namespace libport
   }
 
 }
-

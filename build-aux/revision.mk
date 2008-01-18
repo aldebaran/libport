@@ -20,15 +20,15 @@
 ## way, we avoid useless compilation.
 
 BUILT_SOURCES += $(REVISION_FILE)
-REVISION_FILE_IN = $(top_srcdir)/libport/build-aux/version.hh.in
+REVISION_FILE_IN = $(top_srcdir)/build-aux/version.hh.in
 REVISION_FILE_STAMP = $(REVISION_FILE).stamp
 
-move_if_change = $(top_srcdir)/libport/build-aux/move-if-change
+move_if_change = $(top_srcdir)/build-aux/move-if-change
 
 EXTRA_DIST += $(REVISION_FILE_IN) $(move_if_change)
 CLEANFILES +=  $(REVISION_FILE) $(REVISION_FILE_STAMP)
 
-$(REVISION_FILE_STAMP): $(top_srcdir)/ChangeLog $(REVISION_FILE_IN) $(top_srcdir)/libport/build-aux/revision.mk
+$(REVISION_FILE_STAMP): $(top_srcdir)/ChangeLog $(REVISION_FILE_IN) $(top_srcdir)/build-aux/revision.mk
 	@rm -f $(REVISION_FILE_STAMP).tmp
 	@touch $(REVISION_FILE_STAMP).tmp
 # Be sure not to have `/' in Id.  The embedded date may be
