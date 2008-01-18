@@ -1,5 +1,12 @@
 2008-01-18  Akim Demaille  <demaille@gostai.com>
 
+	Simplify.
+	* lib/libport/libport-sources.mk: Use srcdir, not top_srcdir.
+	Likewise with builddir.
+	Fix lib/libport use.
+
+2008-01-18  Akim Demaille  <demaille@gostai.com>
+
 	Make inclusion of *.mk files easier.
 	* Makefile.am, configure.ac: Adjust.
 	* include/libport.mk: Move to...
