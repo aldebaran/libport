@@ -1,3 +1,10 @@
+2008-01-18  Matthieu Nottale  <nottale@gostai.com>
+
+        Add a method to read from stdin non-blocking.
+        * include/libport/read-stdin.hh: New.
+        * lib/libport-sources.mk: List the new .cc.
+        * lib/read-stdin.cc: New.
+
 2008-01-18  Akim Demaille  <demaille@gostai.com>
 
 	Simplify.
