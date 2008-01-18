@@ -1,5 +1,14 @@
 2008-01-18  Akim Demaille  <demaille@gostai.com>
 
+	include/libport.mk.
+	* build-aux/urbi-libport.m4 (URBI_LIBPORT): Define
+	libport_include_basedir, not libportdir.
+	* include/Makefile.am: Rename as...
+	* include/libport.mk: New.
+	* include/Makefile.am: New.
+
+2008-01-18  Akim Demaille  <demaille@gostai.com>
+
 	Make libport autonomous.
 	* Makefile.am: Adjust.
 	* build-aux/bootstrap: Extend to install symlinks.

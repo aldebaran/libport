@@ -73,11 +73,11 @@ URBI_PREFIX_CONFIG_H([include/libport/config.h], [LIBPORT])
 AC_SUBST([LIBPORT_CPPFLAGS],
 	 ['-I$(top_srcdir)/include -I$(top_builddir)/include'])
 
-# Where we install the libport files.
+# Where we install the libport files (not including the /libport suffix).
 URBI_PACKAGE_KIND_SWITCH(
-  [kernel],     [AC_SUBST([libportdir], ['${kernelincludedir}/libport'])],
-  [sdk],	[AC_SUBST([libportdir], ['${includedir}/libport'])],
-  [core],	[AC_SUBST([libportdir], ['${sdkincludedir}/libport'])])
+  [kernel],     [AC_SUBST([libport_include_basedir], ['${kernelincludedir}'])],
+  [sdk],	[AC_SUBST([libport_include_basedir], ['${includedir}'])],
+  [core],	[AC_SUBST([libport_include_basedir], ['${sdkincludedir}'])])
 
 AC_CONFIG_FILES([lib/libport/Makefile])
 ])
