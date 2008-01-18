@@ -1,6 +1,6 @@
 #! /usr/bin/perl -w
 #
-# Copyright (C) 2006, 2007  Benoit Sigoure.
+# Copyright (C) 2006, 2007, 2008  Benoit Sigoure.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -26,8 +26,8 @@ use vars qw($mk_file $rv $n);
 # Input files. #
 # ------------ #
 
-my $config_h = 'libport/sdk/config.h';
-$mk_file = 'libport/sdk/param.mk';
+my $config_h = 'sdk/config.h';
+$mk_file = 'sdk/param.mk';
 
 
 $n = 0;  # Line number.

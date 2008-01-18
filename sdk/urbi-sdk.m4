@@ -14,15 +14,15 @@ AC_DEFUN([URBI_SDK],
 [AC_SUBST([BINDIR],
 	  [$(URBI_RESOLVE_DIR([$bindir]))])
 AC_SUBST_FILE([UMAKE_COMMON])
-UMAKE_COMMON=$srcdir/libport/sdk/umake-common
-AC_CONFIG_FILES([libport/sdk/umake],      [chmod +x libport/sdk/umake])
-AC_CONFIG_FILES([libport/sdk/uinstall],   [chmod +x libport/sdk/uinstall])
-AC_CONFIG_FILES([libport/sdk/umake-link], [chmod +x libport/sdk/umake-link])
-AC_CONFIG_FILES([libport/sdk/wrapper.sh], [chmod +x libport/sdk/wrapper.sh])
-AC_CONFIG_FILES([libport/sdk/Makefile])
-AC_CONFIG_HEADERS([libport/sdk/config.h])
-AC_CONFIG_FILES([libport/sdk/param.mk],
-		[perl -w ${srcdir}/libport/sdk/eval_makefile.pl])
+UMAKE_COMMON=$srcdir/sdk/umake-common
+AC_CONFIG_FILES([sdk/umake],      [chmod +x sdk/umake])
+AC_CONFIG_FILES([sdk/uinstall],   [chmod +x sdk/uinstall])
+AC_CONFIG_FILES([sdk/umake-link], [chmod +x sdk/umake-link])
+AC_CONFIG_FILES([sdk/wrapper.sh], [chmod +x sdk/wrapper.sh])
+AC_CONFIG_FILES([sdk/Makefile])
+AC_CONFIG_HEADERS([sdk/config.h])
+AC_CONFIG_FILES([sdk/param.mk],
+		[perl -w ${srcdir}/sdk/eval_makefile.pl])
 AC_SUBST([SDK_CFLAGS])
 AC_SUBST([SDK_CXXFLAGS])
 AC_SUBST([SDK_LDFLAGS])

@@ -78,8 +78,6 @@ URBI_PACKAGE_KIND_SWITCH(
   [kernel],     [AC_SUBST([libport_include_basedir], ['${kernelincludedir}'])],
   [sdk],	[AC_SUBST([libport_include_basedir], ['${includedir}'])],
   [core],	[AC_SUBST([libport_include_basedir], ['${sdkincludedir}'])])
-
-AC_CONFIG_FILES([lib/libport/Makefile])
 ])
 
 ## Local Variables:

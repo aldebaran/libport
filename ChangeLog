@@ -1,3 +1,12 @@
+2008-01-18  Akim Demaille  <demaille@gostai.com>
+
+	Fix paths.
+	* build-aux/urbi-libport.m4: Don't require lib/libport/Makefile
+	to be used.
+	* sdk/eval_makefile.pl: Remove libport/ prefix.
+	This file does exit with failure when `./config.status` failed :(
+	* sdk/urbi-sdk.m4: Remove libport/ prefixes.
+
 2008-01-18  Matthieu Nottale  <nottale@gostai.com>
 
         Add a method to read from stdin non-blocking.
