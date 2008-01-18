@@ -1,5 +1,17 @@
 2008-01-18  Akim Demaille  <demaille@gostai.com>
 
+	Make inclusion of *.mk files easier.
+	* Makefile.am, configure.ac: Adjust.
+	* include/libport.mk: Move to...
+	* include/libport/libport.mk: here, so that the includer can 
+	find it without requiring to also include its parent.
+	Adjust.
+	* include/Makefile.am: Remove.
+	* lib/libport/Makefile.am: Adjust.
+	* lib/libport/libport-sources.mk: Adjut.
+
+2008-01-18  Akim Demaille  <demaille@gostai.com>
+
 	include/libport.mk.
 	* build-aux/urbi-libport.m4 (URBI_LIBPORT): Define
 	libport_include_basedir, not libportdir.

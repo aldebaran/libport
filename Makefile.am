@@ -13,9 +13,12 @@ include build-aux/build-aux.mk
 
 ACLOCAL_AMFLAGS = -I build-aux
 
-SUBDIRS = include lib/libport doc tests
+SUBDIRS = lib/libport doc tests
 # SUBDIRS += gui
 EXTRA_DIST += bootstrap
+
+include_libport = include/libport
+include include/libport/libport.mk
 
 .PHONY: doc html
 doc html:

@@ -1,13 +1,14 @@
 # This file can be included from anywhere, not just the top-level
-# Makefile.am.  Define libport_reldir relative to top_srcdir.
+# Makefile.am.  Define lib_libport as the path from the includer to
+# here.
 
 ## --------- ##
 ## libport.  ##
 ## --------- ##
 
 # Where we find libport sources in this package.
-libport_srcdir   = $(top_srcdir)/$(libport_reldir)
-libport_builddir = $(top_builddir)/$(libport_reldir)
+libport_srcdir   = $(top_srcdir)/$(lib_libport)
+libport_builddir = $(top_builddir)/$(lib_libport)
 # The library itself is compiled by the host directory.
 # We might stop that some day and have libport be an autonomous dir.
 libport_la = $(top_builddir)/libport/lib/libport.la

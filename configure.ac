@@ -41,7 +41,6 @@ URBI_LIBPORT
 
 AC_CONFIG_FILES([
   Makefile
-    include/Makefile
     doc/Makefile
     tests/Makefile
 ])

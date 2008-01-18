@@ -5,7 +5,7 @@ include $(top_srcdir)/build-aux/config-headers-prefixed.mk
 ## libport.  ##
 ## --------- ##
 
-libport_reldir = lib/libport
+lib_libport = lib/libport
 include $(top_srcdir)/lib/libport/libport-sources.mk
 
 EXTRA_DIST += $(libport_sources)
