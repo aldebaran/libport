@@ -49,6 +49,7 @@ do
     stderr "Installing $from as $to"
     mkdir -p $(dirname "$to")
     ot=$(dirname "$to" | sed 's,[^\\/]*,..,g')
+    ot=$(dirname "$ot")
     ln -sf $ot/$from $to ||
     ln $from $to ||
     cp -pr $from $to

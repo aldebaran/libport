@@ -1,5 +1,10 @@
 2008-01-18  Akim Demaille  <demaille@gostai.com>
 
+	Fix symlinks.
+	* build-aux/bootstrap: We were linking one level too high.
+
+2008-01-18  Akim Demaille  <demaille@gostai.com>
+
 	Fix paths.
 	* build-aux/urbi-libport.m4: Don't require lib/libport/Makefile
 	to be used.
