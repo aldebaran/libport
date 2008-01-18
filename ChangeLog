@@ -1,3 +1,9 @@
+2008-01-19  Matthieu Nottale  <nottale@gostai.com>
+
+	read_stdin throws an exception on error.
+	* include/libport/read-stdin.hh: Document it.
+	* lib/libport/read-stdin.cc: Do it. Better gards, safer inculdes.
+
 2008-01-18  Akim Demaille  <demaille@gostai.com>
 
 	Fix libport.la.
