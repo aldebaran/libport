@@ -12,6 +12,20 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
+usage ()
+{
+  cat <<EOF
+Usage: $0 [PAIR...]
+
+Bootstrap the GNU Build system using autoreconf.
+
+A PAIR maybe FROM:TO or PATH as a shortcut for PATH:PATH.  Install
+libport/FROM as TO before autoreconf.  Typical use:
+
+   $0 build-aux include/libport
+EOF
+}
+
 stderr ()
 {
   local i
@@ -26,12 +40,11 @@ set -e
 # If there are symlinks to install bits of libport, do it here.
 for pair
 do
-  save_IFS=$IFS
-  IFS=:
-  set $pair
-  IFS=$save_IFS
-  from=libport/$1
-  to=$2
+  # pair can be from:to, or from standing for from:from.
+  from=$(echo "$pair" | sed -e 's/:.*//')
+  to=$(echo "$pair" | sed -e 's/.*://')
+  from=libport/$from
+
   if ! test -e $to; then
     stderr "Installing $from as $to"
     mkdir -p $(dirname "$to")

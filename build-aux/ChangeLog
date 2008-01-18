@@ -1,3 +1,8 @@
+2008-01-18  Akim Demaille  <demaille@gostai.com>
+
+	Accept shortcuts for bootstrap.
+	* build-aux/bootstrap: Here.
+
 2008-01-15  Akim Demaille  <demaille@gostai.com>
 
 	pids_* functions.
