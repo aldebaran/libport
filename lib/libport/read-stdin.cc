@@ -2,6 +2,8 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <cstring>
+
 #include "libport/detect_win32.h"
 
 #if defined LIBPORT_WIN32 || defined WIN32
