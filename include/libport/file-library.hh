@@ -1,10 +1,10 @@
 /**
- ** \file misc/file-library.hh
+ ** \file libport/file-library.hh
  ** \brief Manage sets of inclusion paths.
  */
 
-#ifndef MISC_FILE_LIBRARY_HH
-# define MISC_FILE_LIBRARY_HH
+#ifndef LIBPORT_FILE_LIBRARY_HH
+# define LIBPORT_FILE_LIBRARY_HH
 
 # include <string>
 # include <list>
@@ -93,4 +93,4 @@ namespace libport
 
 # include "libport/file-library.hxx"
 
-#endif // !MISC_FILE_LIBRARY_HH
+#endif // !LIBPORT_FILE_LIBRARY_HH

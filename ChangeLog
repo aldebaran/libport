@@ -1,3 +1,16 @@
+2008-01-21  mefyl  <hocquet@gostai.com>
+
+	Fix previous commit.
+	* .gitignore: Remove wrongly added files.
+	* include/libport/file-library.hh,
+	* include/libport/file-library.hxx,
+	* include/libport/path.hh,
+	* include/libport/path.hxx,
+	* lib/libport/file-library.cc,
+	* lib/libport/path.cc,
+	* lib/tests/test-indent.cc: s/misc/libport/.
+	* include/libport/libport.mk: Register files.
+
 2008-01-21  mefyl  <mefyl@lrde.epita.fr>
 
 	Add file-library and path facility.

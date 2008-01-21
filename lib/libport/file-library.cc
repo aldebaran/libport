@@ -1,6 +1,6 @@
 /**
- ** \file misc/file-library.cc
- ** \brief Implements misc::file_library.
+ ** \file libport/file-library.cc
+ ** \brief Implements libport::file_library.
  */
 
 #include <stdlib.h>

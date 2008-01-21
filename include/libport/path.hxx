@@ -1,10 +1,10 @@
 /**
- ** \file misc/path.hxx
- ** \brief Path: implements inline function of misc/path.hh
+ ** \file libport/path.hxx
+ ** \brief Path: implements inline function of libport/path.hh
  */
 
-#ifndef MISC_PATH_HXX
-# define MISC_PATH_HXX
+#ifndef LIBPORT_PATH_HXX
+# define LIBPORT_PATH_HXX
 
 # include "libport/path.hh"
 
@@ -23,4 +23,4 @@ namespace libport
   }
 }
 
-#endif // !MISC_PATH_HXX
+#endif // !LIBPORT_PATH_HXX

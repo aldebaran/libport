@@ -1,6 +1,6 @@
 /**
- ** \file misc/path.cc
- ** \brief path: implements file misc/path.hh
+ ** \file libport/path.cc
+ ** \brief path: implements file libport/path.hh
  */
 
 #include <iostream>

@@ -29,6 +29,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/escape.hxx		\
 	$(include_libport)/exception.hh		\
 	$(include_libport)/exception.hxx	\
+	$(include_libport)/file-library.hh	\
+	$(include_libport)/file-library.hxx	\
 	$(include_libport)/file-system.hh	\
 	$(include_libport)/fwd.hh		\
 	$(include_libport)/hash.hh		\
@@ -38,8 +40,11 @@ libport_include_HEADERS +=			\
 	$(include_libport)/package-info.hh	\
 	$(include_libport)/pair.hh		\
 	$(include_libport)/pair.hxx		\
+	$(include_libport)/path.hh		\
+	$(include_libport)/path.hxx		\
 	$(include_libport)/program-name.hh	\
 	$(include_libport)/ref-pt.hh		\
+	$(include_libport)/read-stdin.hh	\
 	$(include_libport)/sched.hh		\
 	$(include_libport)/select-const.hh	\
 	$(include_libport)/select-ref.hh	\

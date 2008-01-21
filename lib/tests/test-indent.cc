@@ -1,5 +1,5 @@
 /**
- ** Test code for misc/indent.hh features.
+ ** Test code for libport/indent.hh features.
  */
 
 #include <iostream>

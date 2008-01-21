@@ -1,10 +1,10 @@
 /**
- ** \file misc/file-library.hxx
- ** \brief implements inline function of misc/file-library.hh
+ ** \file libport/file-library.hxx
+ ** \brief implements inline function of libport/file-library.hh
  */
 
-#ifndef MISC_FILE_LIBRARY_HXX
-# define MISC_FILE_LIBRARY_HXX
+#ifndef LIBPORT_FILE_LIBRARY_HXX
+# define LIBPORT_FILE_LIBRARY_HXX
 
 # include "libport/file-library.hh"
 
@@ -17,4 +17,4 @@ namespace libport
   }
 }
 
-#endif // !MISC_FILE_LIBRARY_HXX
+#endif // !LIBPORT_FILE_LIBRARY_HXX

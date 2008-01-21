@@ -1,10 +1,10 @@
 /**
- ** \file misc/path.hh
+ ** \file libport/path.hh
  ** \brief path: represents an absolute path in the filesystem
  */
 
-#ifndef MISC_PATH_HH
-# define MISC_PATH_HH
+#ifndef LIBPORT_PATH_HH
+# define LIBPORT_PATH_HH
 
 # include <string>
 # include <list>
@@ -83,4 +83,4 @@ namespace libport
 
 # include "libport/path.hxx"
 
-#endif // !MISC_PATH_HH
+#endif // !LIBPORT_PATH_HH
