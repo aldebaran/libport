@@ -70,6 +70,9 @@ namespace libport
   // package-info.hh;
   struct PackageInfo;
 
+  // path.hh;
+  struct Path;
+
   // ref-pt.hh
   template <class T> class RefPt;
 

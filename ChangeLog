@@ -1,3 +1,18 @@
+2008-01-21  mefyl  <mefyl@lrde.epita.fr>
+
+	Add file-library and path facility.
+	* .gitignore: Add generated files.
+	* lib/libport/libport-sources.mk: Register new files.
+	* include/libport/path.hxx,
+	* include/libport/path.hh,
+	* lib/libport/path.cc: New. Class to handle operations on
+        paths.
+	* include/libport/file-library.hh,
+	* include/libport/file-library.hxx,
+	* lib/libport/file-library.cc: New. Class to search files
+        through a search directories list.
+	* include/libport/fwd.hh: Predeclare path.
+
 2008-01-19  Matthieu Nottale  <nottale@gostai.com>
 
 	read_stdin throws an exception on error.

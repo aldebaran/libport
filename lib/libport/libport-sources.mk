@@ -19,6 +19,8 @@ libport_sources = 				\
 	$(libport_srcdir)/contract.cc		\
 	$(libport_srcdir)/deref.cc		\
 	$(libport_srcdir)/escape.cc		\
+	$(libport_srcdir)/path.cc		\
+	$(libport_srcdir)/file-library.cc	\
 	$(libport_srcdir)/file-system.cc	\
 	$(libport_srcdir)/indent.cc		\
 	$(libport_srcdir)/package-info.cc	\
