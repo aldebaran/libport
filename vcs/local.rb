@@ -6,7 +6,7 @@ class Vcs
   protocol_version '0.1'
 
   def local_commit! ( *args )
-    common_commit!("prj-tplt <%= rev %>: <%= title %>", *args) do |subject|
+    common_commit!("libport <%= rev %>: <%= title %>", *args) do |subject|
       mail!(:to => `\\svn propget mailto #{Dir.pwd}`.chomp.split(/,\s*/),
             :subject => subject)
     end
