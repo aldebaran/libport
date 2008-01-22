@@ -22,14 +22,14 @@ namespace libport
     struct Exception: public std::logic_error
     {
       /** Ctor.
-       *  @param  thrower  Name of function/method throwing the exception. 
+       *  @param  thrower  Name of function/method throwing the exception.
        *  @param  msg      Reason for throwing the exception.
        */
       Exception (const std::string& thrower, const std::string& msg);
-      virtual ~Exception () throw ();  
+      virtual ~Exception () throw ();
       std::string thrower;
     };
-    
+
     /// Exception.
     struct  Semaphore : public Exception
     {
@@ -38,6 +38,6 @@ namespace libport
   }
 }
 
-# include "exception.hxx"
+# include "libport/exception.hxx"
 
 #endif // !LIBPORT_EXCEPTION_HH

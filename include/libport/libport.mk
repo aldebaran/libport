@@ -43,6 +43,7 @@ libport_include_HEADERS +=			\
 	$(include_libport)/path.hh		\
 	$(include_libport)/path.hxx		\
 	$(include_libport)/program-name.hh	\
+	$(include_libport)/read-stdin.hh	\
 	$(include_libport)/ref-pt.hh		\
 	$(include_libport)/read-stdin.hh	\
 	$(include_libport)/sched.hh		\

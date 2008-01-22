@@ -7,7 +7,6 @@
 # define LIBPORT_READ_STDIN_HH
 
 # include <string>
-# include "libport/exception.hh"
 
 namespace libport
 {

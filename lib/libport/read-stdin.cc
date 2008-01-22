@@ -14,6 +14,7 @@
 
 #include "libport/compiler.hh"
 #include "libport/read-stdin.hh"
+#include "libport/exception.hh"
 
 
 namespace libport
@@ -21,8 +22,8 @@ namespace libport
   std::string
   read_stdin()
   {
-    char buf[1024];
 #if not defined LIBPORT_WIN32 &&  not defined WIN32
+    char buf[1024];
     //select
     fd_set fd;
     FD_ZERO(&fd);
