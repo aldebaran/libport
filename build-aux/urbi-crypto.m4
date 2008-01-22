@@ -1,0 +1,4 @@
+						-*- autoconf -*-
+
+AC_DEFUN([URBI_CRYPTO],
+[URBI_WITH_OPENSSL_REQUIRED])

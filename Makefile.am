@@ -13,7 +13,7 @@ include build-aux/build-aux.mk
 
 ACLOCAL_AMFLAGS = -I build-aux
 
-SUBDIRS = lib/libport doc tests
+SUBDIRS = lib/libport lib/urbi-crypto doc tests tests/urbi-crypto
 # SUBDIRS += gui
 EXTRA_DIST += bootstrap
 
