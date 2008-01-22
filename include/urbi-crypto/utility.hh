@@ -10,8 +10,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef UTILITY_HH_
-# define UTILITY_HH_
+#ifndef URBI_CRYPTO_UTILITY_HH
+# define URBI_CRYPTO_UTILITY_HH
 
 # include <sstream>
 
@@ -63,4 +63,4 @@ namespace crypto
   };
 }
 
-#endif
+#endif // !URBI_CRYPTO_UTILITY_HH

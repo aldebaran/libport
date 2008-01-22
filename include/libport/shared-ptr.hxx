@@ -3,8 +3,8 @@
  ** \brief Implementation of libport::shared_ptr.
  **/
 
-#ifndef LIBPORT_SHARED_REF_HXX
-# define LIBPORT_SHARED_REF_HXX
+#ifndef LIBPORT_SHARED_PTR_HXX
+# define LIBPORT_SHARED_PTR_HXX
 
 # include "libport/shared-ptr.hh"
 
@@ -103,4 +103,4 @@ namespace libport
   }
 }
 
-#endif // !LIBPORT_SHARED_REF_HXX
+#endif // !LIBPORT_SHARED_PTR_HXX

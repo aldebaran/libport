@@ -10,8 +10,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef SIGNSHA1_HH_
-# define SIGNSHA1_HH_
+#ifndef URBI_CRYPTO_SIGNSHA1_HH
+# define URBI_CRYPTO_SIGNSHA1_HH
 
 # include <cassert>
 # include "urbi-crypto/openssl.hh"
@@ -49,4 +49,4 @@ namespace crypto
   };
 }
 
-#endif /* !SIGNSHA1_HH_ */
+#endif // !URBI_CRYPTO_SIGNSHA1_HH

@@ -9,8 +9,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef DEBUG_LOG_HH_
-# define DEBUG_LOG_HH_
+#ifndef URBI_CRYPTO_DEBUG_LOG_HH
+# define URBI_CRYPTO_DEBUG_LOG_HH
 
 # include "urbi-crypto/exception.hh"
 
@@ -53,4 +53,4 @@ namespace crypto
   void createDebugLog ();
 }
 
-#endif
+#endif // !URBI_CRYPTO_DEBUG_LOG_HH

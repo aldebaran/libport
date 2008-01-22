@@ -9,8 +9,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef XUTILITY_HH_
-# define XUTILITY_HH_
+#ifndef URBI_CRYPTO_XUTILITY_HH
+# define URBI_CRYPTO_XUTILITY_HH
 
 # include <cstdio>
 # include "urbi-crypto/exception.hh"
@@ -252,4 +252,4 @@ namespace crypto
 
 }
 
-#endif
+#endif // !URBI_CRYPTO_XUTILITY_HH

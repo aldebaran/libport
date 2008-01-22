@@ -10,8 +10,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef CRYPT_RSA_HH_
-# define CRYPT_RSA_HH_
+#ifndef URBI_CRYPTO_CRYPTRSA_HH
+# define URBI_CRYPTO_CRYPTRSA_HH
 
 # include "urbi-crypto/crypt.hh"
 
@@ -37,4 +37,4 @@ namespace crypto
 
 }
 
-#endif
+#endif // !URBI_CRYPTO_CRYPTRSA_HH

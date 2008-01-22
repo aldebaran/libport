@@ -10,8 +10,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef MANGLE_DEFINES_HH_
-# define MANGLE_DEFINES_HH_
+#ifndef URBI_CRYPTO_MANGLE_DEFINES_HH
+# define URBI_CRYPTO_MANGLE_DEFINES_HH
 
 /// When we release a product, using the key system,
 /// we don't want anyone to be able to read the symbols in our
@@ -27,4 +27,4 @@
 # define Crypto		l903
 # define check		l904
 
-#endif
+#endif // !URBI_CRYPTO_MANGLE_DEFINES_HH

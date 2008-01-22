@@ -12,8 +12,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef CRYPT_HH_
-# define CRYPT_HH_
+#ifndef URBI_CRYPTO_CRYPT_HH
+# define URBI_CRYPTO_CRYPT_HH
 
 # include "urbi-crypto/crypto.hh"
 
@@ -44,4 +44,4 @@ namespace crypto
 
 }
 
-#endif
+#endif // !URBI_CRYPTO_CRYPT_HH

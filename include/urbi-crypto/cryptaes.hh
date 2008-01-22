@@ -10,8 +10,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef CRYPT_AES_HH_
-# define CRYPT_AES_HH_
+#ifndef URBI_CRYPTO_CRYPTAES_HH
+# define URBI_CRYPTO_CRYPTAES_HH
 
 # include "urbi-crypto/crypt.hh"
 
@@ -54,4 +54,4 @@ namespace crypto
 
 }
 
-#endif
+#endif // !URBI_CRYPTO_CRYPTAES_HH

@@ -10,8 +10,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef EXCEPTION_HXX_
-# define EXCEPTION_HXX_
+#ifndef LIBPORT_EXCEPTION_HXX
+# define LIBPORT_EXCEPTION_HXX
 
 namespace libport
 {
@@ -29,4 +29,4 @@ namespace libport
   }
 }
 
-#endif  /* !EXCEPTION_HXX_ */
+#endif // !LIBPORT_EXCEPTION_HXX

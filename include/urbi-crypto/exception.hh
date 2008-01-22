@@ -12,8 +12,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef LIBCRYPTO_EXCEPTION_HH
-# define LIBCRYPTO_EXCEPTION_HH
+#ifndef URBI_CRYPTO_EXCEPTION_HH
+# define URBI_CRYPTO_EXCEPTION_HH
 # include <exception>
 # include <string>
 # include <sstream>
@@ -75,4 +75,4 @@ namespace crypto
   };
 }
 
-#endif /* !LIBCRYPTO_EXCEPTION_HH */
+#endif // !URBI_CRYPTO_EXCEPTION_HH

@@ -12,8 +12,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef LIBCRYPTO_SIGN_HH
-# define LIBCRYPTO_SIGN_HH
+#ifndef URBI_CRYPTO_SIGN_HH
+# define URBI_CRYPTO_SIGN_HH
 
 # include <openssl/evp.h>
 # include "urbi-crypto/crypto.hh"
@@ -42,4 +42,4 @@ namespace crypto
   };
 }
 
-#endif /* !LIBCRYPTO_SIGN_HH */
+#endif // !URBI_CRYPTO_SIGN_HH

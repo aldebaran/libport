@@ -10,8 +10,8 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#ifndef CRYPTO_HH_
-# define CRYPTO_HH_
+#ifndef URBI_CRYPTO_CRYPTO_HH
+# define URBI_CRYPTO_CRYPTO_HH
 
 # include <openssl/evp.h>
 # include <string>
@@ -90,4 +90,4 @@ namespace crypto
 
 }
 
-#endif
+#endif // !URBI_CRYPTO_CRYPTO_HH

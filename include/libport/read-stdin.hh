@@ -15,4 +15,4 @@ namespace libport
    */
   std::string read_stdin();
 }
-#endif
+#endif // !LIBPORT_READ_STDIN_HH
