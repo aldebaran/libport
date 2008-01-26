@@ -32,9 +32,11 @@ libport_include_HEADERS +=			\
 	$(include_libport)/file-library.hh	\
 	$(include_libport)/file-library.hxx	\
 	$(include_libport)/file-system.hh	\
+	$(include_libport)/foreach.hh		\
 	$(include_libport)/fwd.hh		\
 	$(include_libport)/hash.hh		\
 	$(include_libport)/indent.hh		\
+	$(include_libport)/lexical-cast.hh	\
 	$(include_libport)/lockable.hh		\
 	$(include_libport)/network.h		\
 	$(include_libport)/package-info.hh	\
@@ -81,4 +83,3 @@ nodist_libport_include_HEADERS =		\
 
 
 CLEANFILES += $(include_libport)/config.h
-
