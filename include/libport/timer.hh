@@ -24,7 +24,7 @@ namespace libport
 
     /// Start a sub timer for a named task.
     /// \param name a constant string which is the task's name
-    void push (const std::string name);
+    void push (const std::string& name);
 
     /// Start a sub timer with an integer which refers to a string.
     /// \see push ()
@@ -33,10 +33,10 @@ namespace libport
 
     /// Stop the named task. Take a const string as parameter
     /// that make sure that what is popped is indeed what is on top.
-    void pop (const std::string task_name);
+    void pop (const std::string& task_name);
 
     /// \see pop ()
-    /// \see pop (const std::string name)
+    /// \see pop (const std::string& name)
     void pop (const int i);
 
     /// Stop the current task's timer (the last task pushed).

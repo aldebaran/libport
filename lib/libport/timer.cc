@@ -194,7 +194,7 @@ namespace libport
   }
 
   void
-  timer::push (const std::string task_name)
+  timer::push (const std::string& task_name)
   {
     time_var* current;
 

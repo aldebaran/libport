@@ -22,7 +22,7 @@ namespace libport
 
   inline
   void
-  timer::pop (const std::string task_name)
+  timer::pop (const std::string& task_name)
   {
     precondition (this->tasksmap[task_name] == this->tasks.top ());
     this->pop ();
