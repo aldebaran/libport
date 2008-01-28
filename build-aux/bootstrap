@@ -61,21 +61,25 @@ do
   esac
 done
 
-# If there are symlinks to install bits of libport, do it here.
+# Also gather from .externals if there is one.
+if test -f .externals; then
+  pairs="$pairs "$(sed -n '/^link: */{s///;s/[	 ]*->[	 ]*/:/p;}' .externals)
+fi
+
+# If there are symlinks to install, do it here.
 for pair in $pairs
 do
-  # pair can be from:to, or from standing for from:from.
+  # pairs are from:to in the sense of symlinks: ./$from points to ./$to.
   from=$(echo "$pair" | sed -e 's/:.*//')
   to=$(echo "$pair" | sed -e 's/.*://')
-  from=libport/$from
 
-  if ! test -e $to; then
-    stderr "Installing $from as $to"
-    mkdir -p $(dirname "$to")
-    ot=$(dirname $(echo "$to" | sed 's,[^\\/]*,..,g'))
-    run ln -sf $ot/$from $to ||
-    run ln $from $to ||
-    run cp -pr $from $to
+  if ! test -e $from; then
+    stderr "Installing $from -> $to"
+    mkdir -p $(dirname "$from")
+    morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
+    run ln -sf $morf/$to $from ||
+    run ln $to $from ||
+    run cp -pr $to $from
   fi
 done
 

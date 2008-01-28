@@ -9,4 +9,4 @@
 # See the LICENSE file for more information.
 # For comments, bug reports and feedback: http://www.urbiforge.com
 
-exec build-aux/bootstrap
+exec build-aux/bootstrap "$@"
