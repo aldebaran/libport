@@ -83,8 +83,8 @@ esac
 # We provide a Qt widget that allow the user to select its license key file.
 AC_DEFUN([_URBI_LOCKSYSTEM_QT],
 [AC_ARG_ENABLE([qt-locksystem],
-               [AC_HELP_STRING([--enable-qt-locksystem],
-		               [enable Qt widget for lock system])],
+	       [AC_HELP_STRING([--enable-qt-locksystem],
+			       [enable Qt widget for lock system])],
 	       [enable_qt_locksystem=yes], [])
 AM_CONDITIONAL([ENABLE_QT_LOCKSYSTEM], [test x$enable_qt_locksystem = xyes])
 # Do we need to compile the Qt widget?
