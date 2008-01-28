@@ -5,6 +5,8 @@
 # |_|   |___/_/\_\_|  |_|_____|
 #                              
 
+SUBDIRS = libport urbi-crypto
+
 # Program to check:
 check_PROGRAMS = testme
 testme_SOURCES = testme.cc

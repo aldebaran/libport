@@ -1,4 +1,4 @@
-include $(top_srcdir)/libport/build-aux/init.mk
+include $(top_srcdir)/flags.mk
 
 # Program to check:
 check_PROGRAMS =		\
@@ -15,7 +15,7 @@ ufloat1				\
 ullfp1				\
 ullfptab1
 
-LDADD = $(top_builddir)/libport/libport.la
+LDADD = $(top_builddir)/lib/libport/libport.la
 
 singleton1_SOURCES	= singleton1.cc
 singleton2_SOURCES	= singleton2.cc
@@ -34,33 +34,12 @@ ullfptab1_SOURCES	= ullfptab1.cc
 AUTOMAKE_OPTIONS += -Wno-portability
 TESTS = $(check_PROGRAMS:$(EXEEXT)=.test)
 
-## ---------------- ##
-## libport/config.h ##
-## ---------------- ##
-
-# Create a false libport/config.h just for tests, which
-# does not specify the sort of ufloats to use.
-BUILT_SOURCES += libport/config.h
-# Do not define the variety of ufloats to use.
-libport/config.h: $(top_builddir)/libport/include/libport/config.h
-	test -d libport || mkdir libport
-	{							\
-	  echo "#define LIBPORT_TEST 1";			\
-	  sed -e '/# *define.*URBI_UFLOAT.*/s,,/* & */,' $<;	\
-	} > $@.t
-	mv $@.t $@
-clean-local:
-	rm -rf libport
-
-# Find the libport files, but our config.h for tests first.
-AM_CPPFLAGS += -I. -I$(top_srcdir) $(BOOST_CPPFLAGS)
-
 $(TESTS):
 	for i in $(TESTS); do \
-          $(LN_S) -f $(top_builddir)/libport/build-aux/test.sh $$i || exit 1; \
+          $(LN_S) -f $(top_builddir)/build-aux/test.sh $$i || exit 1; \
         done
 
-EXTRA_DIST += $(TESTS:.test=.stdout) common_ufloat1.cc
+EXTRA_DIST += $(TESTS:.test=.stdout) common-ufloat1.cc ufloat-config.h
 CLEANFILES += $(TESTS:.test=.{my_stdout,my_stderr,valgrind.log})
 
 TESTS_ENVIRONMENT = SRCDIR=$(srcdir)

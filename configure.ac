@@ -1,6 +1,5 @@
 #
-# $Id$
-# Copyright (c) Gostai S.A.S., 2006.
+# Copyright (c) Gostai S.A.S., 2008.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -50,11 +49,12 @@ AC_CONFIG_FILES([
       lib/libport/Makefile
       lib/urbi-crypto/Makefile
     tests/Makefile
+      tests/libport/Makefile
       tests/urbi-crypto/Makefile
     doc/Makefile
 ])
 
-AC_CONFIG_FILES([doc/doxygen.sh], [chmod a=rx doc/doxygen.sh])
+AC_CONFIG_FILES([doc/doxygen.sh],    [chmod a=rx doc/doxygen.sh])
 AC_CONFIG_FILES([build-aux/test.sh], [chmod a=rx build-aux/test.sh])
 
 AC_OUTPUT
