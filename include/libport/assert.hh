@@ -5,6 +5,7 @@
 # define LIBPORT_ASSERT_HH
 
 # include <cassert>
+# include <cstdlib>
 
 # if ! defined NDEBUG
 #  include <iostream> // std::cerr
