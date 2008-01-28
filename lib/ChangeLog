@@ -460,7 +460,7 @@
 
 	Add reference trait.
 	* select-ref.hh: New. Make a type a reference, without forming
-        reference to reference.
+	reference to reference.
 	* Makefile.am: Add file.
 
 2007-08-30  Matthieu Nottale  <nottale@gostai.com>

@@ -14,7 +14,7 @@ libport_builddir = $(builddir)/$(lib_libport)
 libport_la = $(top_builddir)/lib/libport/libport.la
 
 # Sources to compile to use libport.
-libport_sources = 				\
+libport_sources =				\
 	$(libport_srcdir)/cli.cc		\
 	$(libport_srcdir)/contract.cc		\
 	$(libport_srcdir)/deref.cc		\
@@ -25,11 +25,12 @@ libport_sources = 				\
 	$(libport_srcdir)/indent.cc		\
 	$(libport_srcdir)/package-info.cc	\
 	$(libport_srcdir)/program-name.cc	\
-	$(libport_srcdir)/read-stdin.cc         \
+	$(libport_srcdir)/read-stdin.cc		\
 	$(libport_srcdir)/sched.cc		\
 	$(libport_srcdir)/symbol.cc		\
 	$(libport_srcdir)/sysexits.cc		\
-	$(libport_srcdir)/tokenizer.cc          \
+	$(libport_srcdir)/timer.cc		\
+	$(libport_srcdir)/tokenizer.cc		\
 	$(libport_srcdir)/utime.cc
 
 # These are broken and someone will have to fix them...

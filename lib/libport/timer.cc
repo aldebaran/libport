@@ -1,0 +1,248 @@
+/**
+ ** \file libport/timer.cc
+ ** \brief Implementation for libport/timer.hh.
+ */
+
+#include <iostream>
+#include <iomanip>
+
+#include <sys/times.h>
+#include <unistd.h>
+
+#include "libport/timer.hh"
+#include "libport/contract.hh"
+
+namespace libport
+{
+
+  /*-----------------.
+  | timer::time_var.  |
+  `-----------------*/
+
+  timer::time_var::time_var ()
+    : initial (true)
+  { }
+
+  void
+  timer::time_var::start ()
+  {
+    struct tms tms;
+
+    begin.wall = times (&tms);
+    begin.user = tms.tms_utime;
+    begin.sys  = tms.tms_stime;
+
+    if (initial)
+      {
+	initial = false;
+	first = begin;
+      }
+  }
+
+  void
+  timer::time_var::stop ()
+  {
+    struct tms tms;
+
+    last.wall = times (&tms);
+    last.user = tms.tms_utime;
+    last.sys = tms.tms_stime;
+    elapsed.wall += last.wall - begin.wall;
+    elapsed.user += last.user - begin.user;
+    elapsed.sys += last.sys - begin.sys;
+  }
+
+  bool
+  timer::time_var::is_zero ()
+  {
+    return true
+	    && elapsed.wall == 0
+	    && elapsed.user == 0
+	    && elapsed.sys  == 0;
+  }
+
+
+  /*--------.
+  | timer.  |
+  `--------*/
+
+  timer::timer () :
+    dump_stream (0)
+  { }
+
+  // Duplicate a timer. No tasks should be running.
+  timer::timer (const timer& rhs) :
+    intmap (rhs.intmap),
+    total (rhs.total),
+    dump_stream (rhs.dump_stream)
+  {
+    precondition (rhs.tasks.empty ());
+
+    for (task_map_type::const_iterator i = rhs.tasksmap.begin ();
+	 i != rhs.tasksmap.end (); ++i)
+      if (tasksmap.find (i->first) == tasksmap.end ())
+	tasksmap[i->first] = new time_var (*i->second);
+  }
+
+
+  timer::~timer ()
+  {
+    // If magic is asked on destruction, let it happen completely.
+    if (dump_stream)
+      {
+	// Consider that if the tasks were not properly closed, then
+	// stop was not invoked either.
+	if (!tasks.empty ())
+	  {
+	    do
+	      pop ();
+	    while (!tasks.empty ())
+	      ;
+	    stop ();
+	  }
+	dump (*dump_stream);
+      }
+
+    // Deallocate all our time_var.
+    for (task_map_type::iterator i = tasksmap.begin ();
+	 i != tasksmap.end (); ++i)
+      delete i->second;
+  }
+
+
+  void
+  timer::name (int i, std::string task_name)
+  {
+    intmap[i] = task_name;
+  }
+
+  void
+  timer::timeinfo (long time, long total_time, std::ostream& out)
+  {
+    out << setiosflags (std::ios::left);
+    out << std::setw (6) << std::setprecision (6)
+	<< (float) (time) / clocks_per_sec;
+    out << resetiosflags (std::ios::left);
+    out << " (";
+    out << std::setw (5) << std::setprecision (3)
+	<< (total_time ?
+	    (float) time * 100 / total_time :
+	    (float) time);
+    out << "%) ";
+  }
+
+
+  void
+  timer::dump (std::ostream& out = std::cerr)
+  {
+    out << "Execution times (seconds)" << std::endl;
+    for (task_map_type::const_iterator i = tasksmap.begin ();
+	 i != tasksmap.end (); ++i)
+      {
+	if (!(i->second->is_zero ()))
+	  {
+	    out << " " << i->first << std::setw (26 - i->first.length ());
+	    out << ": ";
+	    timeinfo (i->second->elapsed.user, total.elapsed.user, out);
+	    out << "  ";
+	    timeinfo (i->second->elapsed.sys, total.elapsed.sys, out);
+	    out << "  ";
+	    timeinfo (i->second->elapsed.wall, total.elapsed.wall, out);
+	    out << std::endl;
+	  }
+      }
+    out << std::endl;
+
+    out << "Cumulated times (seconds)" << std::endl;
+    for (task_map_type::const_iterator i = tasksmap.begin ();
+	 i != tasksmap.end (); ++i)
+      {
+	if (0 != (i->second->last.wall - i->second->first.wall))
+	  {
+	    out << " " << i->first << std::setw (26 - i->first.length ());
+	    out << ": ";
+	    timeinfo (i->second->last.user - i->second->first.user,
+		      total.elapsed.user, out);
+	    out << "  ";
+	    timeinfo (i->second->last.sys - i->second->first.sys,
+		      total.elapsed.sys, out);
+	    out << "  ";
+	    timeinfo (i->second->last.wall - i->second->first.wall,
+		      total.elapsed.wall, out);
+	    out << std::endl;
+	  }
+      }
+    out << std::endl;
+
+    out << " TOTAL (seconds)"  << std::setw (11) << ": "
+
+	<< setiosflags (std::ios::left) << std::setw (7)
+	<< (float) total.elapsed.user / clocks_per_sec
+	<< std::setw (11)
+	<< "user,"
+
+	<< std::setw (7)
+	<< (float) total.elapsed.sys / clocks_per_sec
+	<< std::setw (11)
+	<< "system,"
+
+	<< std::setw (7)
+	<< (float) total.elapsed.wall / clocks_per_sec
+	<< "wall"
+
+	<< resetiosflags (std::ios::left) << std::endl;
+  }
+
+  void
+  timer::push (const std::string task_name)
+  {
+    time_var* current;
+
+    // if stack isn't empty, we set elapsed time for the current task
+    if (!tasks.empty ())
+      tasks.top ()->stop ();
+
+    if (tasksmap.find (task_name) == tasksmap.end ())
+      tasksmap[task_name] = new time_var;
+
+    current = tasksmap[task_name];
+    tasks.push (current);
+    current->start ();
+  }
+
+  void
+  timer::pop ()
+  {
+    precondition (!tasks.empty ());
+
+    // Set the Elapsed time for the task we are closing
+    tasks.top ()->stop ();
+
+    // Current task is removed of the stack
+    tasks.pop ();
+
+    // We set the start time of the previous task at current time
+    if (!tasks.empty ())
+      tasks.top ()->start ();
+  }
+
+  timer&
+  timer::operator<< (const timer& rhs)
+  {
+    // No task should be running when merging timers.
+    precondition (rhs.tasks.empty ());
+
+    for (task_map_type::const_iterator i = rhs.tasksmap.begin ();
+	 i != rhs.tasksmap.end (); ++i)
+      {
+	if (tasksmap.find (i->first) == tasksmap.end ())
+	  tasksmap[i->first] = new time_var (*i->second);
+      }
+
+    intmap.insert (rhs.intmap.begin (), rhs.intmap.end ());
+    return *this;
+  }
+
+  const long timer::clocks_per_sec = sysconf (_SC_CLK_TCK);
+
+} // namespace libport

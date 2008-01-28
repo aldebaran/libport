@@ -1,0 +1,21 @@
+#! /bin/sh
+
+# Convert some files from tc/misc to urbi/libport.
+
+stderr ()
+{
+  local me=$(basename "$0")
+  local i
+  for i
+  do
+    echo "$me: $i"
+  done
+}
+
+misc_to_libport ()
+{
+  stderr "working on $*"
+  perl -pi -e 's/\bMISC(\b|_)/LIBPORT$1/g;s/\bmisc\b/libport/g' "$@"
+}
+
+misc_to_libport "$@"

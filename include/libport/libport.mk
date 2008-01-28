@@ -62,6 +62,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/symbol.hxx		\
 	$(include_libport)/sysexits.hh		\
 	$(include_libport)/thread.hh		\
+	$(include_libport)/timer.hh		\
+	$(include_libport)/timer.hxx		\
 	$(include_libport)/tokenizer.hh		\
 	$(include_libport)/uffloat.hh		\
 	$(include_libport)/ufloat.h		\
