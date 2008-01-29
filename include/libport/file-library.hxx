@@ -10,6 +10,18 @@
 
 namespace libport
 {
+  inline void
+  file_library::append_dir (path p)
+  {
+    push_back(p);
+  }
+
+  inline void
+  file_library::prepend_dir (path p)
+  {
+    push_front(p);
+  }
+
   inline std::ostream&
   operator<< (std::ostream& ostr, const file_library& l)
   {

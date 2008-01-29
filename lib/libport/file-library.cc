@@ -8,8 +8,10 @@
 #include <sys/param.h>
 #include <stdexcept>
 #include <iostream>
+
 #include "libport/contract.hh"
 #include "libport/file-library.hh"
+#include "libport/foreach.hh"
 
 namespace libport
 {
@@ -63,13 +65,13 @@ namespace libport
   }
 
   void
-  file_library::append_dir (path p)
+  file_library::push_back (path p)
   {
     search_path_.push_back (ensure_absolute_path (p));
   }
 
   void
-  file_library::prepend_dir (path p)
+  file_library::push_front (path p)
   {
     search_path_.push_front (ensure_absolute_path (p));
   }
@@ -106,25 +108,23 @@ namespace libport
   {
     // Split file in two components, basename and basedir.
     path directory = file.dirname();
-    std::string filename = file.basename();
-
 
     if (directory.absolute_get ())
       {
 	// If file is absolute, just check that it exists.
 	if (!file.exists())
 	  return path ();
+	else
+	  return directory;
       }
     else
       {
 	// Does the file can be found in current directory?
 	if (find_in_directory (current_directory_get (), file))
 	  return (current_directory_get () / file).dirname();
-
-	directory = find_in_search_path (directory, filename);
+	else
+	  return find_in_search_path (directory, file.basename());
       }
-
-    return directory;
   }
 
   bool
@@ -141,14 +141,12 @@ namespace libport
     path checked_dir;
 
     // Otherwise start scanning the search path.
-    for (path_list_type::const_iterator it = search_path_.begin ();
-	 it != search_path_.end ();
-	 ++it)
+    foreach (const path& p, search_path_)
       {
-	if (it->absolute_get ())
-	  checked_dir = *it;
+	if (p.absolute_get ())
+	  checked_dir = p;
 	else
-	  checked_dir = current_directory_get () / *it;
+	  checked_dir = current_directory_get () / p;
 
 	checked_dir /= relative_path;
 

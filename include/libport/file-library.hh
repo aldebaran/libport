@@ -30,7 +30,9 @@ namespace libport
     /// \name Managing inclusion paths.
     /// \{
     void append_dir (path p);
+    void push_back (path p);
     void prepend_dir (path p);
+    void push_front (path p);
     /// \}
 
     /// \name current directory.
