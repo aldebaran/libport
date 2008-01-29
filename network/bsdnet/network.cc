@@ -308,7 +308,7 @@ namespace Network
   }
 
   bool
-  selectAndProcess(int usDelay)
+  selectAndProcess(libport::utime_t usDelay)
   {
     fd_set rd;
     fd_set wr;

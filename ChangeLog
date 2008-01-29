@@ -1,3 +1,9 @@
+2008-01-29  Matthieu Nottale  <nottale@gostai.com>
+
+	SelectAndProcess takes a libport::utime_t.
+	* network/bsdnet/network.cc,
+	* network/bsdnet/network.hh: Fix declaration and definition.
+
 2008-01-21  mefyl  <hocquet@gostai.com>
 
 	Fix previous commit.

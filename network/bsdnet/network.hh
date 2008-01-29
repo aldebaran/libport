@@ -6,6 +6,7 @@
 # endif
 
 # include "libport/network.h"
+# include "libport/utime.hh"
 
 namespace Network
 {
@@ -44,7 +45,7 @@ namespace Network
 
   /// Perform the select with a delay of usedDelay microseconds.
   /// \returns  whether at least one action was performed
-  bool selectAndProcess(int usDelay);
+  bool selectAndProcess(libport::utime_t usDelay);
 
   /// Create a thread that will loop forever on selectAndProcess.
   void startNetworkProcessingThread();
