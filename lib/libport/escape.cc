@@ -41,6 +41,7 @@ namespace libport
 
 	case '\\': o << "\\\\"; break;
 	case '\"': o << "\\\""; break;
+	case '\'': o << "\\\'"; break;
 	default:
 	  if (std::isprint (*p))
 	    o << *p;
