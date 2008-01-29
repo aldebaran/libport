@@ -44,6 +44,9 @@ namespace libport
     const std::string& name_get () const;
     operator const std::string& () const;
 
+    /// Print the referenced string escaped and between single quotes.
+    std::ostream& print_escaped (std::ostream&) const;
+
     /// Return the number of referenced strings.
     static string_size_type string_map_size ();
     /** \} */

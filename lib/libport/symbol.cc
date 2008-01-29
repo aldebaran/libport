@@ -9,6 +9,7 @@
 #include <ostream>
 #include <sstream>
 #include "libport/symbol.hh"
+#include "libport/escape.hh"
 
 namespace libport
 {
@@ -59,6 +60,25 @@ namespace libport
     osstr << s << "_" << counter_;
     ++counter_;
     return osstr.str ();
+  }
+
+  std::ostream&
+  Symbol::print_escaped (std::ostream& ostr) const
+  {
+    assert (str_);
+
+    unsigned i = 0;
+    if ((*str_)[0] == '_' || isalpha((*str_)[0]))
+    {
+      i++;
+      while (i < (*str_).length() && ((*str_)[i] == '_' || isalnum((*str_)[i])))
+	i++;
+    }
+
+    if (i < (*str_).length())
+      return ostr << '\'' << escape(*str_) << '\'';
+    else
+      return ostr << *str_;
   }
 
 } // namespace libport
