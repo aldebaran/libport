@@ -15,19 +15,33 @@
 usage ()
 {
   cat <<EOF
-Usage: $0 [PAIR...]
+Usage: $0 [OPTIONS]
 
 Bootstrap the GNU Build system using autoreconf.
 
-A PAIR maybe FROM:TO or PATH as a shortcut for PATH:PATH.  Install
-libport/FROM as TO before autoreconf.  Typical use:
+This file and git-my-update use a common file, \`.externals', to
+describe what's to be done.  Its syntax is dummy and made to be
+easily sed-parsable.  It supports the following directives (which
+must be in column 0, anything else is silently ignored):
 
-   $0 build-aux include/libport
+external: [DIR-NAME ->] REPO-NAME
+  Install REPO-NAME as submodule, and update it when needed.
+  E.g. \`external: libport'.
+       \`external: tests -> urbivalid'.
+
+link: FROM -> TO
+  Install a symlink named FROM that points to TO.
+  E.g. \`link include/libport -> libport/include/libport'.
+
+subpackage: DIR-NAME
+  Declare a subpackage (i.e., AC_CONFIG_SUBDIRS) that needs to be
+  bootstrapped too.
+  E.g., \`subpackage: lock-system'.
 
 Options:
-  -h, --help      display this message and exit
-  -n, --dry-run   do nothing
-
+  -h, --help          display this message and exit
+  -n, --dry-run       do nothing
+      --no-recursive  do not bootstrap subpackages
 EOF
 }
 
@@ -43,35 +57,43 @@ stderr ()
 
 run ()
 {
-  stderr "run: $*"
+  stderr "running: $*"
   if $run; then
     "$@"
   fi
 }
 
+# Return the set of attributes corresponding to TAG in .externals.
+attributes ()
+{
+  if test -f .externals; then
+    perl -ne "s/^$1:\\s*// && print" .externals
+  fi
+}
+
 set -e
 
+recurse=true
 run=true
+
 for arg
 do
   case $arg in
     -n|--dry-run) run=false;;
     -h|--help) usage;;
-    *) pairs="$pairs $arg";;
+    --no-recursive)  recurse=false;;
+    *) stderr "invalid argument: $arg"
+       exit 64;;
   esac
 done
 
-# Also gather from .externals if there is one.
-if test -f .externals; then
-  pairs="$pairs "$(sed -n '/^link: */{s///;s/[	 ]*->[	 ]*/:/p;}' .externals)
-fi
-
 # If there are symlinks to install, do it here.
-for pair in $pairs
+attributes link |
+while read link
 do
-  # pairs are from:to in the sense of symlinks: ./$from points to ./$to.
-  from=$(echo "$pair" | sed -e 's/:.*//')
-  to=$(echo "$pair" | sed -e 's/.*://')
+  # "from -> to" in the sense of symlinks: ./$from points to ./$to.
+  from=$(echo "$link" | perl -pe 's/\s*->.*$//')
+  to=$(echo "$link"   | perl -pe 's/^.*->\s*//')
 
   if ! test -e $from; then
     stderr "Installing $from -> $to"
@@ -103,7 +125,22 @@ do
   fi
 done
 
-run autoreconf -f -v -i
+if $recurse; then
+  # Recursive bootstrapping.
+  for i in $(attributes "subpackage")
+  do
+    (
+      # The format for this message is not free: taken from Emacs, itself
+      # using GNU Make's format.
+      stderr "Entering directory \`$i'";
+      cd $i
+      ./bootstrap
+      stderr "Leaving directory \`$i'";
+    )
+  done
+fi
+
+run autoreconf --no-recursive --force --verbose --install
 
 for i in $keep
 do
