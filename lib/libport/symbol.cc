@@ -67,15 +67,19 @@ namespace libport
   {
     assert (str_);
 
+    // Check if the symbol is not a standard one, i.e. if it does not match
+    // [A-Za-z_][A-Za-z0-9_]*
     unsigned i = 0;
-    if ((*str_)[0] == '_' || isalpha((*str_)[0]))
+    if (str_->length() && ((*str_)[0] == '_' || isalpha((*str_)[0])))
     {
       i++;
-      while (i < (*str_).length() && ((*str_)[i] == '_' || isalnum((*str_)[i])))
+      while (i < str_->length() && ((*str_)[i] == '_' || isalnum((*str_)[i])))
 	i++;
     }
 
-    if (i < (*str_).length())
+    // If the symbol contains special characters, escape them, and print the
+    // symbol between single quotes.
+    if (!str_->length() || i < str_->length())
       return ostr << '\'' << escape(*str_) << '\'';
     else
       return ostr << *str_;
