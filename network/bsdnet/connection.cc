@@ -86,7 +86,8 @@ Connection::closeConnection()
   }
 }
 
-void Connection::doRead()
+void
+Connection::doRead()
 {
   int n = ::recv(fd, (char*)read_buff, PACKETSIZE, MSG_NOSIGNAL);
   if (n <= 0)
@@ -114,12 +115,14 @@ int Connection::effectiveSend (const ubyte* buffer, int length)
   return res;
 }
 
-void Connection::doWrite()
+void
+Connection::doWrite()
 {
   continueSend();
 }
 
-UConnection& Connection::send(const ubyte* buffer, int length)
+UConnection&
+Connection::send(const ubyte* buffer, int length)
 {
   if (sendQueueRemain() == 0)
     trigger();
@@ -127,7 +130,8 @@ UConnection& Connection::send(const ubyte* buffer, int length)
 }
 
 //! Send a "\n" through the connection
-UConnection& Connection::endline ()
+UConnection&
+Connection::endline ()
 {
   //FIXME: test send error
   (*this) << UConnection::send((const ubyte*)"\n", 1);
