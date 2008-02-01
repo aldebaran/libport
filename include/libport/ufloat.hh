@@ -131,6 +131,7 @@ namespace libport
   {
     return floor (d + 0.5 + LDBL_EPSILON);
   }
+
 }
 # endif /* !LIBPORT_HAVE_ROUND */
 
@@ -151,5 +152,12 @@ namespace libport
 }
 # endif /* !LIBPORT_HAVE_TRUNC */
 
+/* Float to int converter.  */
+namespace libport
+{
+  // This function will raise boost::numeric::bad_numeric_cast if the
+  // provided argument cannot be converted to an integer.
+  int ufloat_to_int (ufloat);
+} // namespace libport
 
 #endif // !LIBPORT_UFLOAT_HH

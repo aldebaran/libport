@@ -31,10 +31,10 @@ libport_sources =				\
 	$(libport_srcdir)/sysexits.cc		\
 	$(libport_srcdir)/timer.cc		\
 	$(libport_srcdir)/tokenizer.cc		\
+ 	$(libport_srcdir)/ufloat.cc		\
 	$(libport_srcdir)/utime.cc
 
 # These are broken and someone will have to fix them...
 # libport_sources += 				\
-# 	$(libport_srcdir)/ufloat.cc		\
 # 	$(libport_srcdir)/uffloat.cc		\
 # 	$(libport_srcdir)/ull-fixed-point.cc
