@@ -67,7 +67,7 @@ namespace libport
       std::cerr << "SetPriorityClass failed: error code "<< GetLastError()
 		<< std::endl;
 
-#elif defined LIBPORT_HAVE_SCHED_SETSCHULER
+#elif defined LIBPORT_HAVE_SCHED_SETSCHEDULER
     // http://www.opengroup.org/susv3xsh/sched_setscheduler.html
     struct sched_param sp;
 
