@@ -50,16 +50,16 @@ namespace libport
   Symbol
   Symbol::fresh ()
   {
-    return fresh ("a");
+    return fresh (Symbol("a"));
   }
 
   Symbol
   Symbol::fresh (const Symbol& s)
   {
-    std::ostringstream osstr;
-    osstr << s << "_" << counter_;
+    std::ostringstream o;
+    o << s << "_" << counter_;
     ++counter_;
-    return osstr.str ();
+    return Symbol(o.str ());
   }
 
   std::ostream&

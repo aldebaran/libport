@@ -31,10 +31,10 @@ namespace libport
   public:
     /** \brief Construct a Symbol.
      ** \param s referenced string */
-    Symbol (const std::string& s);
+    explicit Symbol (const std::string& s);
     /** \brief Construct a Symbol.
      ** \param s referenced string */
-    Symbol (const char* s);
+    explicit Symbol (const char* s);
     /** \} */
 
     /** \name Accessors.
