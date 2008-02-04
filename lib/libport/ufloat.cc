@@ -2,7 +2,6 @@
 #include <cmath>
 
 #include <boost/mpl/integral_c.hpp>
-#include <boost/numeric/conversion/converter.hpp>
 
 #include "libport/ufloat.hh"
 

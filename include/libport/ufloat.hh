@@ -19,6 +19,8 @@
 #ifndef LIBPORT_UFLOAT_HH
 # define LIBPORT_UFLOAT_HH
 
+# include <boost/numeric/conversion/converter.hpp>
+
 # include "libport/config.h"
 
 # include <cfloat>
