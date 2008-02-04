@@ -35,13 +35,17 @@ help-first:
 
 # It is often helpful to rerun configure (well, config.status).
 # This is a convenient shorthand.
-.PHONY: recheck recheck-help
+.PHONY: recheck reconf recheck-help
 help: recheck-help
 recheck-help:
 	@echo "recheck:  rerun config.status"
 
 recheck:
 	cd $(top_builddir) && ./config.status --recheck
+	cd $(top_builddir) && ./config.status
+	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS)
+
+reconf:
 	cd $(top_builddir) && ./config.status
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS)
 
