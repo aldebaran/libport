@@ -160,6 +160,9 @@ namespace libport
   // This function will raise boost::numeric::bad_numeric_cast if the
   // provided argument cannot be converted to an integer.
   int ufloat_to_int (ufloat);
+
+  // Idem, but only accept booleans (0 or 1).
+  int ufloat_to_boolean (ufloat);
 } // namespace libport
 
 #endif // !LIBPORT_UFLOAT_HH
