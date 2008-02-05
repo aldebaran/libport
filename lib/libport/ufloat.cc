@@ -158,9 +158,10 @@ namespace libport
   int
   ufloat_to_boolean (ufloat val)
   {
-    int b = ufloat_to_int_converter (val);
-    if (b < 0 || b > 1)
+    int res = ufloat_to_int_converter (val);
+    if (res != 0 && res != 1)
       throw new boost::numeric::bad_numeric_cast;
+    return res;
   }
 
 }
