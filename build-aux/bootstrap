@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 ##
 ## bootstrap: This file is part of build-aux.
