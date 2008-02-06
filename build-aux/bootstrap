@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 ##
 ## bootstrap: This file is part of build-aux.
@@ -32,6 +32,10 @@ external: [DIR-NAME ->] REPO-NAME
 link: FROM -> TO
   Install a symlink named FROM that points to TO.
   E.g. \`link include/libport -> libport/include/libport'.
+
+hardlink: FROM -> TO
+  Install an hardlink named FROM that points to TO.
+  E.g. \`hardlink sdk -> libport/sdk'.
 
 subpackage: DIR-NAME
   Declare a subpackage (i.e., AC_CONFIG_SUBDIRS) that needs to be
@@ -198,6 +202,23 @@ do
     mkdir -p $(dirname "$from")
     morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
     run ln -sf $morf/$to $from ||
+    run ln $to $from ||
+    run cp -pr $to $from
+  fi
+done
+
+# If there are hardlinks to install, do it here.
+attributes hardlink |
+while read link
+do
+  # "from -> to" in the sense of symlinks: ./$from points to ./$to.
+  from=$(echo "$link" | perl -pe 's/\s*->.*$//')
+  to=$(echo "$link"   | perl -pe 's/^.*->\s*//')
+
+  if ! test -e $from; then
+    stderr "Installing $from -> $to"
+    mkdir -p $(dirname "$from")
+    morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
     run ln $to $from ||
     run cp -pr $to $from
   fi
