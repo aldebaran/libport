@@ -38,8 +38,6 @@ AC_PROG_LIBTOOL
 ## Sub packages.  ##
 ## -------------- ##
 
-URBI_CRYPTO
-
 # Basically, the following lines states we install in prefix.
 URBI_PACKAGE_KIND([sdk])
 URBI_LIBPORT
@@ -47,10 +45,8 @@ URBI_LIBPORT
 AC_CONFIG_FILES([
   Makefile
       lib/libport/Makefile
-      lib/urbi-crypto/Makefile
     tests/Makefile
       tests/libport/Makefile
-      tests/urbi-crypto/Makefile
     doc/Makefile
 ])
 
