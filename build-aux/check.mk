@@ -184,15 +184,15 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	    msg="The test suite failed.  ";				\
 	    exit=false;;						\
 	esac;								\
-	msg="$$msg   $$pass/$$all pass.  ";				\
+	msg="$$msg   $$pass/$$all tests passed.  ";			\
 	test $$fail -eq 0 ||						\
 	  msg="$$msg   $$fail failures.  ";				\
 	test $$xpass -eq 0 ||						\
-	  msg="$$msg   $$xpass unexpected failures.  ";			\
+	  msg="$$msg   $$xpass unexpected pass.  ";			\
 	test $$xfail -eq 0 ||						\
 	  msg="$$msg   $$xfail expected failures.  ";			\
 	test $$tfail -eq 0 ||						\
-	  msg="$$msg   $$tfail temporary failures.  ";			\
+	  msg="$$msg   $$tfail expected temporary failures.  ";		\
 	test $$skip -eq 0 ||						\
 	  msg="$$msg   $$skip skipped tests.  ";			\
 	if test "$$exit" = false; then					\
