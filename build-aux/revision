@@ -1,0 +1,77 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+my %package_info;
+my $top_srcdir = $ENV{"top_srcdir"} || ".";
+
+# FIXME: The following code was preserved and translated from an
+# earlier implementation: it is most probably badly broken.  But it's
+# a good starting point.
+sub revision_svn ()
+{
+  my $changelog = "$top_srcdir/ChangeLog";
+
+  # Be sure not to have `/' in Id.  The embedded date may be
+  # separated by `/' instead of `-', which sed dislikes.
+  for my $key ("Date", "Id", "Rev")
+    {
+      $package_info{$key} = `sed -n 's/^\$$key: \(.*\) \$/\1/p' $changelog`;
+    }
+}
+
+sub git_rev_list ($)
+{
+  my ($format) = @_;
+  my $res = `env "GIT_DIR=$top_srcdir/.git" \\
+    git rev-list --max-count=1 --pretty="format:$format" HEAD | sed 1d`;
+  chomp $res;
+  $res;
+}
+
+sub revision_git ()
+{
+  $package_info{'Date'} = git_rev_list('%ai');
+  $package_info{'Id'} = git_rev_list('%h (%ai %ae: %s)');
+  $package_info{'Rev'} = git_rev_list('%h');
+}
+
+revision_git ();
+
+for my $k (sort keys %package_info)
+{
+  print STDERR "$k -> $package_info{$k}\n";
+}
+
+print <<EOF;
+// The SCM revision string.
+#define PACKAGE_REVISION "$package_info{Rev}"
+
+// The SCM identification string.
+#define PACKAGE_ID \\
+  "$package_info{Id}"
+
+// The SCM date string.
+#define PACKAGE_DATE "$package_info{Date}"
+
+// Version and revision together.
+#define PACKAGE_VERSION_REV \\
+  "version " PACKAGE_VERSION " rev. " PACKAGE_REVISION
+EOF
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:

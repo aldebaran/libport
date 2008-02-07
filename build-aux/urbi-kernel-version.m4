@@ -25,13 +25,13 @@ m4_define([KERNEL_VERSION_MINOR_NUMBER],
 [m4_bregexp(m4_defn([AC_PACKAGE_VERSION]), [^[0-9]+\.\([0-9]+\)], [\1])])dnl
 m4_define([KERNEL_VERSION_SUBMINOR_NUMBER],
 [m4_default(m4_bregexp(m4_defn([AC_PACKAGE_VERSION]),
-                       [^[0-9]+\.[0-9]+\.\([0-9]+\)], [\1]),
-            [0])])dnl
+		       [^[0-9]+\.[0-9]+\.\([0-9]+\)], [\1]),
+	    [0])])dnl
 dnl The version number of the form XYZ
 m4_define([KERNEL_VERSION_NUMBER],
 [m4_eval(KERNEL_VERSION_MAJOR_NUMBER * 100000
-         + KERNEL_VERSION_MINOR_NUMBER * 100
-         + KERNEL_VERSION_SUBMINOR_NUMBER)])dnl
+	 + KERNEL_VERSION_MINOR_NUMBER * 100
+	 + KERNEL_VERSION_SUBMINOR_NUMBER)])dnl
 AC_SUBST([KERNEL_VERSION], [KERNEL_VERSION_NUMBER])
 AC_SUBST([KERNEL_VERSION_MAJOR], [KERNEL_VERSION_MAJOR_NUMBER])
 AC_SUBST([KERNEL_VERSION_MINOR], [KERNEL_VERSION_MINOR_NUMBER])
