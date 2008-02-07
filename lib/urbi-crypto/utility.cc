@@ -10,7 +10,7 @@
  * For comments, bug reports and feedback: http://www.urbiforge.com
  */
 
-#include "libport/config.h"
+#include "config.h"
 #include "urbi-crypto/exception.hh"
 #include "urbi-crypto/xutility.hh"
 #include "urbi-crypto/utility.hh"

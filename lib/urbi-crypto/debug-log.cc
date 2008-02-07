@@ -13,7 +13,7 @@
 #include <string>
 #include "urbi-crypto/utility.hh"
 #include "urbi-crypto/debug-log.hh"
-#include "libport/config.h"
+#include "config.h"
 
 #ifdef WIN32
 # include <Windows.h>
