@@ -22,8 +22,8 @@ namespace libport
   std::string
   read_stdin()
   {
-#if not defined LIBPORT_WIN32 &&  not defined WIN32
     char buf[1024];
+#if not defined LIBPORT_WIN32 &&  not defined WIN32
     //select
     fd_set fd;
     FD_ZERO(&fd);
