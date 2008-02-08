@@ -201,9 +201,13 @@ do
     stderr "Installing $from -> $to"
     mkdir -p $(dirname "$from")
     morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
-    run ln -sf $morf/$to $from ||
-    run ln $to $from ||
-    run cp -pr $to $from
+    if test -n `uname -s | grep -i CYGWIN`; then
+      run cp -pr $to $from
+    else
+      run ln -sf $morf/$to $from ||
+      run ln $to $from ||
+      run cp -pr $to $from
+    fi
   fi
 done
 
