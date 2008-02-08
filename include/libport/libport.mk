@@ -73,7 +73,7 @@ libport_include_HEADERS +=			\
 	$(include_libport)/windows.hh
 
 # sys/ headers
-sys_libport_includedir = $(libport_include_basedir)/sys
+sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
         $(include_libport)/sys/stat.h
 

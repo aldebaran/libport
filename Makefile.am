@@ -14,7 +14,7 @@ include build-aux/config-headers-prefixed.mk
 
 ACLOCAL_AMFLAGS = -I build-aux
 
-SUBDIRS = lib/libport lib/urbi-crypto doc tests
+SUBDIRS = lib/libport doc tests
 # SUBDIRS += gui
 EXTRA_DIST += bootstrap
 

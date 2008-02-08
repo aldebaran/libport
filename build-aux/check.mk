@@ -1,5 +1,5 @@
 ## Vaucanson, a generic library for finite state machines.
-## Copyright (C) 2006, 2007 The Vaucanson Group.
+## Copyright (C) 2006, 2007, 2008 The Vaucanson Group.
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -44,30 +44,36 @@ am__rst_title   = sed 's/.*/   &   /;h;s/./=/g;p;x;p;g;p;s/.*//'
 am__rst_section = sed 'p;s/./=/g;p;g'
 am__rst_pre     = sed 's/^/	/;${p;s/.*//;p;}'
 
-# Put stdin (possibly several lines separated by ".  ") in a box.
-am__text_box = $(AWK) '{gsub ("\\.  ", "\n"); print $$0; }' |	\
-$(AWK) '							\
-max < length($$0) {						\
-  final= final (final ? "\n" : "") " " $$0;			\
-  max = length($$0);						\
-}								\
-END { 								\
-  for (i = 0; i < max + 2 ; ++i)				\
-    line = line "=";						\
-  print line;							\
-  print final;							\
-  print line;							\
+# Put stdin (possibly several lines separated by ".  ") in a 123-box.
+am__text_box =					\
+$(AWK) '					\
+{						\
+  n = split($$0, lines, "\\.  ");		\
+  max = 0;					\
+  for (i = 1; i <= n; ++i)			\
+    if (max < length(lines[i]))			\
+      max = length(lines[i]);			\
+  for (i = 0; i < max + 6 ; ++i)		\
+    line = line "-";				\
+  format="|   %-" max "s   |\n";		\
+  print "." line ".";				\
+  for (i = 1; i <= n; ++i)			\
+    if (lines[i])				\
+      printf format, lines[i];			\
+  print "`" line "'"'"'";			\
 }'
 
 # If stdout is a non-dumb tty, use colors.  If test -t is not supported,
 # then this fails; a conservative approach.  Of course do not redirect
-# stdout here, just stderr.
+# stdout here, just stderr.  Finish by sgr0 to help "set -x" debugging
+# return to standard display.
 am__tty_colors =				\
-red=;						\
+blu=;						\
 grn=;						\
 lgn=;						\
-blu=;						\
+red=;						\
 std=;						\
+ylw=;						\
 test "X$(AM_COLOR_TESTS)" != Xno &&		\
 test "X$$TERM" != Xdumb &&			\
 {						\
@@ -80,10 +86,11 @@ test "X$$TERM" != Xdumb &&			\
   }						\
 } &&						\
 {						\
-  red=$$(tput setaf 1);				\
+  blu=$$(tput setaf 4);				\
   grn=$$(tput setaf 2);				\
   lgn=$$(tput bold)$$(tput setaf 2);		\
-  blu=$$(tput setaf 4);				\
+  red=$$(tput setaf 1);				\
+  ylw=$$(tput setaf 3);				\
   std=$$(tput sgr0);				\
 }
 
@@ -117,11 +124,17 @@ for xfail in : $(XFAIL_TESTS); do		\
     $$xfail | */$$xfail) xfailed=XFAIL; break;	\
   esac;						\
 done;						\
+for tfail in : $(TFAIL_TESTS); do		\
+  case $< in					\
+    $$tfail | */$$tfail) xfailed=TFAIL; break;	\
+  esac;						\
+done;						\
 case $$estatus:$$xfailed in			\
-    0:XFAIL)          col=$$red; res=XPASS;;	\
+    0:?FAIL)          col=$$red; res=XPASS;;	\
     0:*)              col=$$grn; res=PASS ;;	\
     $(SKIP_STATUS):*) col=$$blu; res=SKIP ;;	\
     $(HARD_STATUS):*) col=$$red; res=FAIL ;;	\
+    *:TFAIL)          col=$$ylw; res=TFAIL;;	\
     *:XFAIL)          col=$$lgn; res=XFAIL;;	\
     *:*)              col=$$red; res=FAIL ;;	\
 esac;						\
@@ -160,31 +173,29 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	fail=$$( echo "$$results" | grep -c '^FAIL');			\
 	pass=$$( echo "$$results" | grep -c '^PASS');			\
 	skip=$$( echo "$$results" | grep -c '^SKIP');			\
+	tfail=$$(echo "$$results" | grep -c '^TFAIL');			\
 	xfail=$$(echo "$$results" | grep -c '^XFAIL');			\
 	xpass=$$(echo "$$results" | grep -c '^XPASS');			\
-	failures=$$(expr $$fail + $$xpass);				\
-	case fail=$$fail:xpass=$$xpass:xfail=$$xfail in			\
-	  fail=0:xpass=0:xfail=0)					\
-	    msg="All $$all tests passed.  ";				\
+	case fail=$$fail:xpass=$$xpass in				\
+	  fail=0:xpass=0)						\
+	    msg="The test suite passed.  ";				\
 	    exit=true;;							\
-	  fail=0:xpass=0:xfail=*)					\
-	    msg="All $$all tests behaved as expected";			\
-	    msg="$$msg ($$xfail expected failures).  ";			\
-	    exit=true;;							\
-	  fail=*:xpass=0:xfail=*)					\
-	    msg="$$fail of $$all tests failed.  ";			\
-	    exit=false;;						\
-	  fail=*:xpass=*:xfail=*)					\
-	    msg="$$failures of $$all tests did not behave as expected";	\
-	    msg="$$msg ($$xpass unexpected passes).  ";			\
-	    exit=false;;						\
 	  *)								\
-            echo >&2 "incorrect case"; exit 4;;				\
+	    msg="The test suite failed.  ";				\
+	    exit=false;;						\
 	esac;								\
-	if test "$$skip" -ne 0; then					\
-	  msg="$$msg($$skip tests were not run).  ";			\
-	fi;								\
-	if test "$$failures" -ne 0; then				\
+	msg="$$msg   $$pass/$$all tests passed.  ";			\
+	test $$fail -eq 0 ||						\
+	  msg="$$msg   $$fail failures.  ";				\
+	test $$xpass -eq 0 ||						\
+	  msg="$$msg   $$xpass unexpected pass.  ";			\
+	test $$xfail -eq 0 ||						\
+	  msg="$$msg   $$xfail expected failures.  ";			\
+	test $$tfail -eq 0 ||						\
+	  msg="$$msg   $$tfail expected temporary failures.  ";		\
+	test $$skip -eq 0 ||						\
+	  msg="$$msg   $$skip skipped tests.  ";			\
+	if test "$$exit" = false; then					\
 	  {								\
 	    echo "$(PACKAGE_STRING): $(subdir)/$(TEST_SUITE_LOG)" |	\
 	      $(am__rst_title);						\
