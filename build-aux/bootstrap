@@ -19,10 +19,10 @@ Usage: $0 [OPTIONS]
 
 Bootstrap the GNU Build system using autoreconf.
 
-This file and git-my-update use a common file, \`.externals', to
-describe what's to be done.  Its syntax is dummy and made to be
-easily sed-parsable.  It supports the following directives (which
-must be in column 0, anything else is silently ignored):
+This file and git-my-update use \`~/.libport/bootstrap.cfg' and
+\`.externals' to describe what's to be done.  The syntax is dummy and
+made to be easily sed-parsable.  It supports the following directives
+(which must be in column 0, anything else is silently ignored):
 
 external: [DIR-NAME ->] REPO-NAME
   Install REPO-NAME as submodule, and update it when needed.
@@ -30,12 +30,17 @@ external: [DIR-NAME ->] REPO-NAME
        \`external: tests -> urbivalid'.
 
 link: FROM -> TO
-  Install a symlink named FROM that points to TO.
-  E.g. \`link include/libport -> libport/include/libport'.
+  Install a link named FROM that points to TO.
+  E.g. \`link: include/libport -> libport/include/libport'.
 
-hardlink: FROM -> TO
-  Install an hardlink named FROM that points to TO.
-  E.g. \`hardlink sdk -> libport/sdk'.
+links: (copy|hard|symbolic)+                         [hard copy]
+  Specify how \`link:' primitives should be handled.
+  Because some people such as the build farm using "src = build",
+  everyone is punished, and the default is to first try hard
+  links, then copy.  To restore the previous behavior, uses
+  \`links: 'symbolic hard copy', in that order.
+  "symbolic" and "hard" links are ignored on Cygwin.  To make sure to
+  get what you want, use \`links: symbolic'.
 
 subpackage: DIR-NAME
   Declare a subpackage (i.e., AC_CONFIG_SUBDIRS) that needs to be
@@ -168,9 +173,72 @@ require ()
 # Return the set of attributes corresponding to TAG in .externals.
 attributes ()
 {
-  if test -f .externals; then
-    perl -ne "s/^$1:\\s*// && print" .externals
-  fi
+  local f
+  for f in $HOME/.libport/bootstrap.cfg .externals
+  do
+    if test -f "$f"; then
+      perl -ne "s/^$1:\\s*// && print" "$f"
+    fi
+  done
+}
+
+
+# link_symbolic FROM TO
+# ---------------------
+# Install a link FROM that goes to TO.
+link_symbolic ()
+{
+  case $(uname) in
+      *CYGWIN*)
+	  return 1;;
+  esac
+  local from=$1
+  local to=$2
+  local morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
+
+  run ln -sf $morf/$to $from
+}
+
+
+# link_hard FROM TO
+# -----------------
+link_hard ()
+{
+  case $(uname) in
+      *CYGWIN*)
+	  return 1;;
+  esac
+  run ln "$2" "$1"
+}
+
+
+# link_copy FROM TO
+# -----------------
+link_copy ()
+{
+  run cp -pr "$2" "$1"
+}
+
+
+# link FROM TO
+# ------------
+# Install a link FROM that provides the contents of TO.
+link ()
+{
+  local from=$1
+  local to=$2
+
+  stderr "Installing $from -> $to"
+  mkdir -p $(dirname "$from")
+  local kind
+  for kind in $link_types
+  do
+      if link_$kind "$from" "$to"; then
+	  return 0
+      fi
+  done
+  stderr "failed to install link $1 -> $2"
+  exit 1
 }
 
 set -e
@@ -189,8 +257,32 @@ do
   esac
 done
 
-# If there are symlinks to install, do it here.
-attributes link |
+# If there are links to install, do it here.
+#
+# We used to always create symbolic links, which work fine with "src
+# != build" builds, but some people (such as the build farm) insist on
+# compiling in place.  As a result, "sdk" for instance is a symlink,
+# and when "make" enters into "sdk", every occurrence of ".."
+# (top_srcdir) points to a random place (well, it points to the parent
+# of the pointee (libport/sdk/..), instead of the parent of the
+# pointee (../sdk)).
+#
+# Of course we don't want to just copy, since then a check-in in
+# "build-aux" for instance would no longer work.
+#
+# Note that not using symlinks, we can no longer "cd build-aux && git
+# commit", since precisely what made this work is that git could find
+# the build-aux's repository by walking the hierarchy up:
+# build-aux/.. is actually libport, where git can find its files.
+#
+# Since there is no universally good solution, we read
+# "~/.libport/bootstrap.cfg" to know what kind of link must be
+# installed here.
+#
+# IMHO people *and* the buildfarm should be using src != build.
+link_types=$(attributes links|tee /tmp/log | tr -cs '[^a-z]' ' ')
+test -n "$link_types" || link_types="hard copy"
+attributes '(hard)?link' |
 while read link
 do
   # "from -> to" in the sense of symlinks: ./$from points to ./$to.
@@ -198,33 +290,7 @@ do
   to=$(echo "$link"   | perl -pe 's/^.*->\s*//')
 
   if ! test -e $from; then
-    stderr "Installing $from -> $to"
-    mkdir -p $(dirname "$from")
-    morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
-    if test -n `uname -s | grep -i CYGWIN`; then
-      run cp -pr $to $from
-    else
-      run ln -sf $morf/$to $from ||
-      run ln $to $from ||
-      run cp -pr $to $from
-    fi
-  fi
-done
-
-# If there are hardlinks to install, do it here.
-attributes hardlink |
-while read link
-do
-  # "from -> to" in the sense of symlinks: ./$from points to ./$to.
-  from=$(echo "$link" | perl -pe 's/\s*->.*$//')
-  to=$(echo "$link"   | perl -pe 's/^.*->\s*//')
-
-  if ! test -e $from; then
-    stderr "Installing $from -> $to"
-    mkdir -p $(dirname "$from")
-    morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
-    run ln $to $from ||
-    run cp -pr $to $from
+    link "$from" "$to"
   fi
 done
 
