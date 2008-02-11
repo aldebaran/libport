@@ -25,6 +25,7 @@ namespace libport
   ATTRIBUTE_NORETURN
   void invalid_option_val (const std::string& opt, const std::string& arg);
 
+  // Can be used on a const char* to simply test for argument presence.
   template<typename T>
   T convert_argument (const std::string& opt, const std::string& arg);
 }

@@ -22,4 +22,12 @@ namespace libport
     }
   }
 
+  template<> inline
+  const char *
+  convert_argument<>(const std::string& opt, const char* arg)
+  {
+    if (!arg)
+      required_argument (opt);
+    return arg;
+  }
 }
