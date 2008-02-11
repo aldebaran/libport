@@ -80,6 +80,52 @@ fix_bison_output ()
        "$1"
 }
 
+# compile_xml_file XML XSL OUT-EXT
+# --------------------------------
+# By transforming XML = FILE.xml with XSL.xsl, create FILE.OUT-EXT if needed.
+# "Needed" means FILE.OUT-EXT does not exist, or XML was updated.
+compile_xml_file ()
+{
+  local xml=$1
+  local xsl=$2.xsl
+  local out=$(basename "$xml" ".xml").$3
+
+  # "cmp NON-EXISTENT FILE" does what we want: fail.
+  if ! cmp -s "$xml" "$(out "$xml")" \
+      || test ! -f "$(out "$out")"; then
+    local compile="xsltproc $($BISON --print-datadir)/xslt/$xsl"
+    if ! $compile "$xml" >"$(tmp "$out")"; then
+      echo >&2 "$0: cannot convert $xml report to $out"
+      rm -f "$(tmp "$out")"
+    fi
+    install "$out"
+  fi
+}
+
+# out FILE
+# --------
+# Return path name of FILE once installed in its destination directory.
+out ()
+{
+  echo "$output_dir/$(basename "$1")"
+}
+
+# out FILE
+# --------
+# Return path name of FILE in the tmp directory.
+tmp ()
+{
+  echo "$tmp/$(basename "$1")"
+}
+
+# install FILE
+# ------------
+# Install FILE in its destination directory.
+install ()
+{
+  $move_if_change "$(tmp "$1")" "$(out "$1")"
+}
+
 # Go back to where we were and use relative paths instead of using
 # absolute file names.  The messages look nicer.
 cd ..
@@ -87,8 +133,6 @@ for file in $tmp/*
 do
   base=$(basename $file)
   base_noext=$(echo "$base" | sed -e 's/\.[^.]*//')
-  # The name under which $file is to be installed.
-  out=$output_dir/$base
   case $status:$base in
     *:$input_base)
 	# Leave it here.
@@ -98,40 +142,33 @@ do
     *:*.xml)
 	# Computing the HTML is slow.  Do it when the XML changed.
 	fix_bison_output "$file"
-	if ! test -r "$out" \
-	    || ! cmp -s "$file" "$out" \
-	    || test ! -f "$output_dir/$base_noext.html"; then
-	  xml2html="xsltproc $($BISON --print-datadir)/xslt/xml2xhtml.xsl"
-	  if ! $xml2html "$file" >$tmp/$base_noext.html; then
-	    echo >&2 "$0: cannot convert XML report to HTML"
-	    rm $tmp/base_noext.html
-	  fi
-	  $move_if_change "$tmp/$base_noext.html" \
-			  "$output_dir/$base_noext.html"
-	fi
-	$move_if_change "$file" "$out"
+	compile_xml_file "$file" "xml2xhtml" "html"
+	# Compiling the dot output is quite long, it would be better
+	# to do that from the Makefile, so that -j applies.
+	# compile_xml_file "$file" "xml2dot" "dot"
+	install "$file"
 	;;
 
     0:*.hh)
 	fix_bison_output "$file"
 	# To save cycles, if the file differs only on sync lines,
 	# update it (to be right), but keep the original timestamps.
-	if test -r "$out" &&
-	   diff -I '^#line' -I '/\* Line .* of .*  \*/' -q "$file" "$out"; then
-	    touch -r "$out" "$file"
-	    cp "$out" "$out.bak"
+	if test -r "$(out "$file")" &&
+	   diff -I '^#line' -I '/\* Line .* of .*  \*/' -q "$file" "$(out "$file")"; then
+	    touch -r "$(out "$file")" "$file"
+	    cp "$(out "$file")" "$(out "$file").bak"
 	    echo >&2 "$0: kept the stamps of $file"
 	fi
-	$move_if_change "$file" "$out"
+	install "$file"
 	;;
 
     *:*.output)
-	$move_if_change "$file" "$out"
+	install "$file"
 	;;
 
     0:*)
 	fix_bison_output "$file"
-	$move_if_change "$file" "$out"
+	install "$file"
 	;;
   esac
 done
