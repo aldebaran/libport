@@ -320,18 +320,19 @@ done
 export LIBTOOLIZE=$libtoolize
 require $libtoolize 1.5.22
 
+# Recursive bootstrapping.
 if $recurse; then
-  # Recursive bootstrapping.
+  # Avoid sub shells, as they hide set -e sub failures.
+  pwd=$(pwd)
   for i in $(attributes "subpackage")
   do
-    (
-      # The format for this message is not free: taken from Emacs, itself
-      # using GNU Make's format.
-      stderr "Entering directory \`$i'";
-      cd $i
-      ./bootstrap
-      stderr "Leaving directory \`$i'";
-    )
+    # The format for this message is not free: taken from Emacs, itself
+    # using GNU Make's format.
+    stderr "Entering directory \`$i'";
+    cd "$i"
+    ./bootstrap
+    stderr "Leaving directory \`$i'";
+    cd "$pwd"
   done
 fi
 
