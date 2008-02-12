@@ -4,15 +4,24 @@
  */
 
 #include <cstdlib>
-#include <sys/param.h>
 #include <stdexcept>
 #include <iostream>
+
+#include "libport/config.h"
+
+#ifdef LIBPORT_HAVE_SYS_PARAM_H
+# include <sys/param.h>
+#endif
 
 #include "libport/unistd.h"
 #include "libport/contract.hh"
 #include "libport/file-library.hh"
 #include "libport/foreach.hh"
 #include "libport/unistd.h"
+
+#ifndef MAXPATHLEN
+# define MAXPATHLEN 4096
+#endif
 
 namespace libport
 {
