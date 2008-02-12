@@ -3,7 +3,7 @@
  ** \brief Implements libport::file_library.
  */
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <sys/param.h>
 #include <stdexcept>
 #include <iostream>
@@ -12,6 +12,7 @@
 #include "libport/contract.hh"
 #include "libport/file-library.hh"
 #include "libport/foreach.hh"
+#include "libport/unistd.h"
 
 namespace libport
 {
