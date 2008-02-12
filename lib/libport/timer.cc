@@ -3,10 +3,43 @@
  ** \brief Implementation for libport/timer.hh.
  */
 
+#include <libport/config.h>
 #include <iostream>
 #include <iomanip>
 
-#include <sys/times.h>
+#ifdef LIBPORT_HAVE_SYS_TIMES_H
+# include <sys/times.h>
+#else
+
+# include "libport/utime.hh"
+
+struct tms
+{
+  libport::utime_t tms_utime;  /* user time */
+  libport::utime_t tms_stime;  /* system time */
+  libport::utime_t tms_cutime; /* user time of dead children */
+  libport::utime_t tms_cstime; /* system time of dead children */
+};
+
+# ifdef LIBPORT_WIN32
+# include "libport/windows.hh"
+static libport::utime_t times(struct tms& t)
+{
+ //unit: 100 nanoseconds
+ FILETIME ctime, etime, kerneltime, usertime;
+ GetProcessTimes(GetCurrentProcess(), &ctime, &etime, &kerneltime, &usertime);
+ t.tms_cutime = t.tms_cstime = 0;
+ t.tms_utime = usertime.dwLowDateTime + static_cast<libport::utime_t>(usertime.dwHighDateTime) << 32;
+ t.tms_stime = kerneltime.dwLowDateTime + static_cast<libport::utime_t>(kernelTime.dwHighDateTime) << 32;
+ return utime()*10LL;
+}
+
+/// FILETIME unit is 100 nanoseconds.
+# define sysconf(i) 10000000LL
+# endif
+
+#endif
+
 #include <unistd.h>
 
 #include "libport/timer.hh"
@@ -26,11 +59,11 @@ namespace libport
   void
   timer::time_var::start ()
   {
-    struct tms tms;
+    struct tms t;
 
-    begin.wall = times (&tms);
-    begin.user = tms.tms_utime;
-    begin.sys  = tms.tms_stime;
+    begin.wall = times (&t);
+    begin.user = t.tms_utime;
+    begin.sys  = t.tms_stime;
 
     if (initial)
       {
@@ -42,11 +75,11 @@ namespace libport
   void
   timer::time_var::stop ()
   {
-    struct tms tms;
+    struct tms t;
 
-    last.wall = times (&tms);
-    last.user = tms.tms_utime;
-    last.sys = tms.tms_stime;
+    last.wall = times (&t);
+    last.user = t.tms_utime;
+    last.sys = t.tms_stime;
     elapsed.wall += last.wall - begin.wall;
     elapsed.user += last.user - begin.user;
     elapsed.sys += last.sys - begin.sys;
