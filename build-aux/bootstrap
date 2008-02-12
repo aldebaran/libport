@@ -22,9 +22,12 @@ Bootstrap the GNU Build system using autoreconf.
 See also <URL:https://core.gostai.com/projects/common/wiki/LibPort>.
 
 This file and git-my-update use \`~/.libport/bootstrap.cfg' and
-\`.externals' to describe what's to be done.  The syntax is dummy and
-made to be easily sed-parsable.  It supports the following directives
-(which must be in column 0, anything else is silently ignored):
+\`externals/bootstrap.cfg' to describe what's to be done.  For
+backward compatibility, \`.externals' is also supported.
+
+The syntax is dummy and made to be easily sed-parsable.  It supports
+the following directives (which must be in column 0, anything else is
+silently ignored):
 
 external: [DIR-NAME ->] REPO-NAME
   Install REPO-NAME as submodule, and update it when needed.
@@ -180,7 +183,7 @@ require ()
 attributes ()
 {
   local f
-  for f in $HOME/.libport/bootstrap.cfg .externals
+  for f in $HOME/.libport/bootstrap.cfg externals/bootstrap.cfg .externals
   do
     if test -f "$f"; then
       perl -ne "s/^$1:\\s*// && print" "$f"
