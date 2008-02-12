@@ -61,6 +61,7 @@ Options:
   -n, --dry-run       do nothing
       --no-recursive  do not bootstrap subpackages
 EOF
+  exit 0
 }
 
 stderr ()
