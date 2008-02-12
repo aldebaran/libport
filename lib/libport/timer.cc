@@ -23,15 +23,15 @@ struct tms
 
 # ifdef WIN32
 # include "libport/windows.hh"
-static libport::utime_t times(struct tms& t)
+static libport::utime_t times(struct tms* t)
 {
  //unit: 100 nanoseconds
  FILETIME ctime, etime, kerneltime, usertime;
  GetProcessTimes(GetCurrentProcess(), &ctime, &etime, &kerneltime, &usertime);
- t.tms_cutime = t.tms_cstime = 0;
- t.tms_utime = usertime.dwLowDateTime + static_cast<libport::utime_t>(usertime.dwHighDateTime) << 32;
- t.tms_stime = kerneltime.dwLowDateTime + static_cast<libport::utime_t>(kernelTime.dwHighDateTime) << 32;
- return utime()*10LL;
+ t->tms_cutime = t->tms_cstime = 0;
+ t->tms_utime = usertime.dwLowDateTime + static_cast<libport::utime_t>(usertime.dwHighDateTime) << 32;
+ t->tms_stime = kerneltime.dwLowDateTime + static_cast<libport::utime_t>(kerneltime.dwHighDateTime) << 32;
+ return libport::utime()*10LL;
 }
 
 /// FILETIME unit is 100 nanoseconds.
