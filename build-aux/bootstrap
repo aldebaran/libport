@@ -29,6 +29,10 @@ external: [DIR-NAME ->] REPO-NAME
   E.g. \`external: libport'.
        \`external: tests -> urbivalid'.
 
+keep: FILE
+  Files that should be kept accross Autotools installation.
+  E.g., \`keep: INSTALL' if we don't want Autoconf's.
+
 link: FROM -> TO
   Install a link named FROM that points to TO.
   E.g. \`link: include/libport -> libport/include/libport'.
@@ -295,12 +299,13 @@ do
 done
 
 if test -f bootstrap.cfg; then
-  source bootstrap.cfg
+  fatal "Remove bootstrap.cfg, use .externals instead."
 fi
 
+keep=$(attributes keep)
 for i in $keep
 do
-  run cp $i $i.bak
+  run cp -f $i $i.bak
 done
 
 # Requirements over bootstrap tools.
@@ -343,7 +348,7 @@ run touch $(find . -name 'config.h.in')
 
 for i in $keep
 do
-  run mv $i.bak $i
+  run mv -f $i.bak $i
 done
 
 # If the pseudo-standard name "_build" is used, then how about trying
