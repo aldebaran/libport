@@ -12,7 +12,7 @@
 #else
 
 # include "libport/utime.hh"
-
+# include "libport/detect_win32.h"
 struct tms
 {
   libport::utime_t tms_utime;  /* user time */
@@ -21,7 +21,7 @@ struct tms
   libport::utime_t tms_cstime; /* system time of dead children */
 };
 
-# ifdef LIBPORT_WIN32
+# ifdef WIN32
 # include "libport/windows.hh"
 static libport::utime_t times(struct tms& t)
 {
