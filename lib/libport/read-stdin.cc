@@ -8,7 +8,9 @@
 #if defined LIBPORT_WIN32 || defined WIN32
 # include "libport/windows.hh"
 #else
-# include <sys/select.h>
+# if not defined LIBPORT_URBI_ENV_AIBO
+#  include <sys/select.h>
+# endif
 # include <errno.h>
 #endif
 
@@ -22,8 +24,9 @@ namespace libport
   std::string
   read_stdin()
   {
+#if not defined LIBPORT_URBI_ENV_AIBO
     char buf[1024];
-#if not defined LIBPORT_WIN32 &&  not defined WIN32
+# if not defined LIBPORT_WIN32 &&  not defined WIN32
     //select
     fd_set fd;
     FD_ZERO(&fd);
@@ -43,7 +46,7 @@ namespace libport
       else
 	return std::string(buf, r);
     }
-#else
+# else
     HANDLE hstdin = GetStdHandle(STD_INPUT_HANDLE);
     DWORD r = WaitForSingleObject(hstdin, 0);
     if (r != WAIT_TIMEOUT)
@@ -56,6 +59,7 @@ namespace libport
 	    std::string("read error on stdin: ")
 	      + boost::lexical_cast<std::string>(GetLastError()));
     }
+# endif
 #endif
     return std::string();
   }
