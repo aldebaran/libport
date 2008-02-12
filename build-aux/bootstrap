@@ -19,6 +19,8 @@ Usage: $0 [OPTIONS]
 
 Bootstrap the GNU Build system using autoreconf.
 
+See also <URL:https://core.gostai.com/projects/common/wiki/LibPort>.
+
 This file and git-my-update use \`~/.libport/bootstrap.cfg' and
 \`.externals' to describe what's to be done.  The syntax is dummy and
 made to be easily sed-parsable.  It supports the following directives
@@ -37,13 +39,13 @@ link: FROM -> TO
   Install a link named FROM that points to TO.
   E.g. \`link: include/libport -> libport/include/libport'.
 
-links: (copy|hard|symbolic)+                         [hard copy]
+links: (copy|symbolic)+                                 [copy]
   Specify how \`link:' primitives should be handled.
   Because some people such as the build farm using "src = build",
   everyone is punished, and the default is to first try hard
   links, then copy.  To restore the previous behavior, uses
-  \`links: 'symbolic hard copy', in that order.
-  "symbolic" and "hard" links are ignored on Cygwin.  To make sure to
+  \`links: 'symbolic copy', in that order.
+  "symbolic" links are ignored on Cygwin.  To make sure to
   get what you want, use \`links: symbolic'.
 
 subpackage: DIR-NAME
@@ -237,9 +239,16 @@ link ()
   local kind
   for kind in $link_types
   do
-      if link_$kind "$from" "$to"; then
-	  return 0
-      fi
+      case $kind in
+	  symbolic|copy)
+	      if link_$kind "$from" "$to"; then
+		  return 0
+	      fi
+	      ;;
+	  *)
+	      fatal "invalid link type: $kind"
+	      ;;
+      esac
   done
   stderr "failed to install link $1 -> $2"
   exit 1
@@ -285,7 +294,7 @@ done
 #
 # IMHO people *and* the buildfarm should be using src != build.
 link_types=$(attributes links|tee /tmp/log | tr -cs '[^a-z]' ' ')
-test -n "$link_types" || link_types="hard copy"
+test -n "$link_types" || link_types="copy"
 attributes '(hard)?link' |
 while read link
 do
