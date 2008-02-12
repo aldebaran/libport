@@ -4,11 +4,11 @@
  */
 
 #include <stdlib.h>
-#include <unistd.h>
 #include <sys/param.h>
 #include <stdexcept>
 #include <iostream>
 
+#include "libport/unistd.h"
 #include "libport/contract.hh"
 #include "libport/file-library.hh"
 #include "libport/foreach.hh"

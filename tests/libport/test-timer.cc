@@ -3,7 +3,7 @@
  */
 
 #include <iostream>
-#include <unistd.h>
+#include "libport/unistd.h"
 #include "libport/timer.hh"
 
 int main ()

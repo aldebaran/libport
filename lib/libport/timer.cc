@@ -40,8 +40,7 @@ static libport::utime_t times(struct tms* t)
 
 #endif
 
-#include <unistd.h>
-
+#include "libport/unistd.h"
 #include "libport/timer.hh"
 #include "libport/contract.hh"
 
