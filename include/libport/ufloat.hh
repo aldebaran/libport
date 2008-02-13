@@ -162,7 +162,7 @@ namespace libport
   int ufloat_to_int (ufloat);
 
   // Idem, but only accept booleans (0 or 1).
-  int ufloat_to_boolean (ufloat);
+  bool ufloat_to_boolean (ufloat);
 } // namespace libport
 
 #endif // !LIBPORT_UFLOAT_HH
