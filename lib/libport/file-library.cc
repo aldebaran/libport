@@ -9,7 +9,7 @@
 
 #include "libport/config.h"
 
-#if defined LIBPORT_WIN32 || defined WIN32
+#ifdef LIBPORT_HAVE_DIRECT_H
 # include <direct.h>
 #endif
 
@@ -26,6 +26,14 @@
 # define MAXPATHLEN 4096
 #endif
 
+#if defined (LIBPORT_HAVE_GETCWD)
+# define GETCWD getcwd
+#elif defined (LIBPORT_HAVE__GETCWD)
+# define GETCWD _getcwd
+#else
+# error "I need either getcwd() or _getcwd()"
+#endif
+
 namespace libport
 {
 
@@ -35,13 +43,7 @@ namespace libport
     // Store the working directory
     char cwd[MAXPATHLEN + 1];
 
-    if (0 ==
-#if defined LIBPORT_WIN32 || defined WIN32
-	_getcwd
-#else
-	getcwd
-#endif
-	(cwd, MAXPATHLEN + 1))
+    if (!GETCWD (cwd, MAXPATHLEN + 1))
       throw std::runtime_error ("working directory name too long");
 
     push_current_directory (cwd);
