@@ -31,7 +31,13 @@ namespace libport
     // Store the working directory
     char cwd[MAXPATHLEN + 1];
 
-    if (0 == getcwd (cwd, MAXPATHLEN + 1))
+    if (0 ==
+#if defined LIBPORT_WIN32 || defined WIN32
+	_getcwd
+#else
+	getcwd
+#endif
+	(cwd, MAXPATHLEN + 1))
       throw std::runtime_error ("working directory name too long");
 
     push_current_directory (cwd);
