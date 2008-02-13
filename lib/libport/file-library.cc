@@ -13,7 +13,6 @@
 # include <sys/param.h>
 #endif
 
-#include "libport/unistd.h"
 #include "libport/contract.hh"
 #include "libport/file-library.hh"
 #include "libport/foreach.hh"

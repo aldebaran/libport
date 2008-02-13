@@ -6,8 +6,6 @@
 #ifndef LIBPORT_FILE_LIBRARY_HXX
 # define LIBPORT_FILE_LIBRARY_HXX
 
-# include "libport/file-library.hh"
-
 namespace libport
 {
   inline void
