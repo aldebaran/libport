@@ -9,6 +9,10 @@
 
 #include "libport/config.h"
 
+#if defined LIBPORT_WIN32 || defined WIN32
+# include <direct.h>
+#endif
+
 #ifdef LIBPORT_HAVE_SYS_PARAM_H
 # include <sys/param.h>
 #endif
