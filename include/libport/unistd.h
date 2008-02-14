@@ -16,4 +16,10 @@
 #  include "io.h"
 # endif
 
+#if defined LIBPORT_HAVE__GETCWD
+# define getcwd _getcwd
+#elif !defined LIBPORT_HAVE_GETCWD
+# error I need either getcwd() or _getcwd()
+#endif
+
 #endif // !LIBPORT_UNISTD_H

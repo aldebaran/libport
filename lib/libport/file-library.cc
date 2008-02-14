@@ -26,14 +26,6 @@
 # define MAXPATHLEN 4096
 #endif
 
-#if defined (LIBPORT_HAVE_GETCWD)
-# define GETCWD getcwd
-#elif defined (LIBPORT_HAVE__GETCWD)
-# define GETCWD _getcwd
-#else
-# error "I need either getcwd() or _getcwd()"
-#endif
-
 namespace libport
 {
 
@@ -43,7 +35,7 @@ namespace libport
     // Store the working directory
     char cwd[MAXPATHLEN + 1];
 
-    if (!GETCWD (cwd, MAXPATHLEN))
+    if (!getcwd (cwd, MAXPATHLEN))
       throw std::runtime_error ("working directory name too long");
 
     push_current_directory (cwd);
