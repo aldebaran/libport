@@ -16,20 +16,10 @@
 #  include "io.h"
 # endif
 
-#if defined LIBPORT_URBI_ENV_AIBO
-static char *getcwd(char *buf, size_t size)
-{
-  if (buf == 0 || size <= 3)
-    return 0;
-  strncpy (buf, "/MS", size);
-  return buf;
-}
-#else
-# if defined LIBPORT_HAVE__GETCWD
-#  define getcwd _getcwd
-# elif !defined LIBPORT_HAVE_GETCWD
-#  error I need either getcwd() or _getcwd()
-# endif
+#if defined LIBPORT_HAVE__GETCWD
+# define getcwd _getcwd
+#elif !defined LIBPORT_HAVE_GETCWD && not defined LIBPORT_URBI_ENV_AIBO
+# error I need either getcwd() or _getcwd()
 #endif
 
 #endif // !LIBPORT_UNISTD_H
