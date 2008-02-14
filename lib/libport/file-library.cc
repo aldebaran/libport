@@ -35,6 +35,9 @@ namespace libport
     // Store the working directory
     char cwd[MAXPATHLEN + 1];
 
+    // The various getcwd() documentations are not clear on whether the
+    // NUL string terminator is accounted for in the length or not. To err
+    // on the safe side, we assume it is not.
     if (!getcwd (cwd, MAXPATHLEN))
       throw std::runtime_error ("working directory name too long");
 
