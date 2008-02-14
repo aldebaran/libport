@@ -51,7 +51,10 @@ since it extends (using +=), BUILT_SOURCES, EXTRA_DIST and CLEANFILES,
 they should be defined before the include.
 
 ** config-headers-prefixed.mk.
-See URBI_CONFIG_HEADERS_PREFIXED.
+See URBI_CONFIG_HEADERS_PREFIXED.  It is obsoleted, it is too painful
+to use correctly.  It is simpler and safer to do it from the Makefile
+than from both config.status and the Makefile.  See how
+include/libport/libport.mk does.
 
 ** qtestlib.mk
 Test environment to run Qt unit test.

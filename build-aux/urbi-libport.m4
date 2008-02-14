@@ -66,9 +66,6 @@ AC_DEFUN([URBI_LIBPORT],
 [AC_REQUIRE([_URBI_LIBPORT_COMMON])dnl
 AC_REQUIRE([URBI_UFLOAT])dnl
 
-# Create libport/config.h.
-URBI_PREFIX_CONFIG_H([include/libport/config.h], [LIBPORT])
-
 # $(top_srcdir) to find sources, $(top_builddir) to find libport/config.h.
 AC_SUBST([LIBPORT_CPPFLAGS],
 	 ['-I$(top_srcdir)/include -I$(top_builddir)/include'])

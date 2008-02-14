@@ -78,9 +78,20 @@ sys_libport_include_HEADERS =			\
         $(include_libport)/sys/stat.h
 
 
-# Generated headers.
+## ---------- ##
+## config.h.  ##
+## ---------- ##
 nodist_libport_include_HEADERS =		\
 	$(include_libport)/config.h
 
+EXTRA_DIST += $(include_libport)/libport-config-h.sed
+# There is no point in maintaining a stamp file, Automake already does
+# this for config.h.  Arguably, we could use _configs.sed, but it is
+# not documented.
+$(include_libport)/config.h: $(CONFIG_HEADER)
+	rm -f $@ $@.tmp
+	sed -f $(srcdir)/$(include_libport)/libport-config-h.sed $< >$@.tmp
+	mv $@.tmp $@
 
-CLEANFILES += $(include_libport)/config.h
+CLEANFILES += $(nodist_libport_include_HEADERS)
+BUILT_SOURCES += $(nodist_libport_include_HEADERS)
