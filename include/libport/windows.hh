@@ -43,7 +43,7 @@ inline
 int
 usleep (useconds_t microseconds)
 {
-  Sleep(microseconds < 1000 ? 1 : microseconds / 1000);
+  Sleep((microseconds + 999) / 1000);
   return 0;
 }
 
