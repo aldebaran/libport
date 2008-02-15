@@ -39,6 +39,9 @@
 // Based on the value I have on my G4 -- Akim.
 typedef boost::uint32_t useconds_t;
 
+// Some libraries define usleep as a macro. In this case, do not redefine
+// it.
+# ifndef usleep
 inline
 int
 usleep (useconds_t microseconds)
@@ -46,6 +49,7 @@ usleep (useconds_t microseconds)
   Sleep((microseconds + 999) / 1000);
   return 0;
 }
+# endif
 
 inline
 unsigned int
