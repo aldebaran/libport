@@ -90,6 +90,7 @@ EXTRA_DIST += $(include_libport)/libport-config-h.sed
 # not documented.
 $(include_libport)/config.h: $(CONFIG_HEADER)
 	rm -f $@ $@.tmp
+	test -d $(include_libport) || $(mkdir_p) $(include_libport)
 	sed -f $(srcdir)/$(include_libport)/libport-config-h.sed $< >$@.tmp
 	mv $@.tmp $@
 
