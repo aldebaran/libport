@@ -29,6 +29,33 @@ EXTRA_DIST =
 EXTRA_HEADERS =
 LIBS =
 MAINTAINERCLEANFILES =
+SUFFIXES =
 
 # Useful variables.
 build_aux_dir = $(top_srcdir)/build-aux
+
+# Sometimes it is really convenient to see the output of the
+# preprocessor.  But it's a pain to run the command by hand.
+SUFFIXES += .i .ii
+.c.i:
+	$(COMPILE) -E -o $@ $<
+
+.cc.ii:
+	$(CXXCOMPILE) -E -o $@ $<
+
+CLEANFILES += *.i *.ii
+
+# Sometimes, the remaining # lines are a nuisance: the error is not
+# reported against the preprocessed file.  And then we also want to
+# compile these files, that's why I used extensions that can be
+# directly compiled (*.c and *.cc).
+SUFFIXES += .i.c .ii.cc
+.i.i.c:
+	grep -v '#' $< | tr -s '\n' '\n' >$@.tmp
+	mv $@.tmp $@
+
+.ii.ii.cc:
+	grep -v '#' $< | tr -s '\n' '\n' >$@.tmp
+	mv $@.tmp $@
+
+CLEANFILES += *.i.c *.ii.cc
