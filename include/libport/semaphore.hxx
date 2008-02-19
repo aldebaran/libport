@@ -1,8 +1,9 @@
 #ifndef LIBPORT_SEMAPHORE_HXX
 # define LIBPORT_SEMAPHORE_HXX
 
-# include "libport/semaphore.hh"
+# include "libport/cstring"
 # include "libport/exception.hh"
+# include "libport/semaphore.hh"
 # include <sstream>
 # include <string>
 
