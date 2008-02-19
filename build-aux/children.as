@@ -103,7 +103,8 @@ pids_kill ()
   for pid
   do
     if pids_alive $pid; then
-      local name=$(cat $pid.name)
+      local name
+      name=$(cat $pid.name)
       echo "Killing $name (kill -ALRM $pid)"
       kill -ALRM $pid 2>&1 || true
     fi
@@ -166,13 +167,11 @@ rst_run_report ()
 # i.e., return 1 iff there are no children alive.
 children_alive ()
 {
-  test $[#] -ne 0 ||
-    { set x $children; shift; }
-
-  local i
-  for i
+  local pid
+  local pids
+  pids=$(children_pid "$@")
+  for pid in $pids
   do
-    local pid=$(cat $i.pid)
     # Using "ps PID" to test whether a processus is alive is,
     # unfortunately, non portable.  OS X Tiger always return 0, and
     # outputs the ps-banner and the line of the processus (if there is
@@ -226,6 +225,8 @@ children_pid ()
   local i
   for i
   do
+    test -f $i.pid ||
+      error SOFTWARE "children_pid: cannot find $i.pid."
     cat $i.pid
   done
 }
@@ -275,7 +276,9 @@ children_report ()
 # robust to children no longer in the process table.
 children_kill ()
 {
-  pids_kill $(children_pid "$[@]")
+  local pids
+  pids=$(children_pid "$[@]")
+  pids_kill "$pids"
 }
 
 
@@ -295,9 +298,10 @@ children_harvest ()
   local i
   for i
   do
-    # Don't look for the status of children we already waiting for.
+    # Don't wait for children we already waited for.
     if ! test -e $i.sta; then
-      local pid=$(cat $i.pid)
+      local pid
+      pid=$(children_pid $i)
       # Beware of set -e.
       local sta
       if wait $pid 2>&1; then
@@ -346,7 +350,9 @@ children_wait ()
 {
   local timeout=$[1]
   shift
-  pids_wait $timeout $(children_pid "$[@]")
+  local pids
+  pids=$(children_pid "$[@]")
+  pids_wait $timeout $pids
 }
 
 ])

@@ -11,7 +11,7 @@
 `----------------*/
 
 # ifdef _MSC_VER
-#  define __attribute__(a) 
+#  define __attribute__(a)
 #  define ATTRIBUTE_NORETURN __declspec(noreturn)
 #  define ATTRIBUTE_NOTHROW  __declspec(nothrow)
 # endif
