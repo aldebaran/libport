@@ -25,6 +25,8 @@ include include/libport/libport.mk
 doc html:
 	cd doc && $(MAKE) $(AM_MAKEFLAGS) $@
 
+check-buildfarm: check
+
 # Manually list the files you're using from build-aux here.
 # Note: Automake already takes care of the .mk and .m4 files you use.
 EXTRA_DIST += \
