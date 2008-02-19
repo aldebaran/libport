@@ -158,7 +158,7 @@ namespace libport
     }
     catch (boost::numeric::bad_numeric_cast&)
     {
-      throw bad_numeric_cast();
+      throw bad_numeric_cast ();
     }
   }
 
@@ -167,7 +167,7 @@ namespace libport
   {
     int res = ufloat_to_int_converter (val);
     if (res != 0 && res != 1)
-      throw new bad_numeric_cast;
+      throw bad_numeric_cast ();
     return static_cast<bool> (res);
   }
 
