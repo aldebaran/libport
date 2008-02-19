@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <sys/stat.h>
+#include <cctype>
 #include "libport/contract.hh"
 #include "libport/path.hh"
 
@@ -30,7 +31,16 @@ namespace libport
   {
     std::string::size_type pos;
 
-    absolute_ = p[0] == '/';
+#if defined WIN32
+    // Under Win32, absolute paths start with a letter followed by
+    // ':\'
+    absolute_ = isalpha(p[0]);
+    absolute_ = absolute_ && (p[1] == ':');
+    absolute_ = absolute_ && (p[2] == '\\');
+#else
+    // Under unix, absolute paths start with a slash
+    absolute_ = (p[0] == '/');
+#endif
 
     while ((pos = p.find ("/")) != std::string::npos)
     {
