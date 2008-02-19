@@ -19,8 +19,6 @@
 #ifndef LIBPORT_UFLOAT_HH
 # define LIBPORT_UFLOAT_HH
 
-# include <boost/numeric/conversion/converter.hpp>
-
 # include "libport/config.h"
 
 # include <cfloat>
@@ -157,7 +155,9 @@ namespace libport
 /* Float to int converter.  */
 namespace libport
 {
-  // This function will raise boost::numeric::bad_numeric_cast if the
+  struct bad_numeric_cast : public std::exception {};
+
+  // This function will raise libport::bad_numeric_cast if the
   // provided argument cannot be converted to an integer.
   int ufloat_to_int (ufloat);
 

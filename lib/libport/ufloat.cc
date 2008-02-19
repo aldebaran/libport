@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include <boost/mpl/integral_c.hpp>
+#include <boost/numeric/conversion/converter.hpp>
 
 #include "libport/ufloat.hh"
 
@@ -152,7 +153,13 @@ namespace libport
   int
   ufloat_to_int (ufloat val)
   {
-    return ufloat_to_int_converter (val);
+    try {
+      return ufloat_to_int_converter (val);
+    }
+    catch (boost::numeric::bad_numeric_cast&)
+    {
+      throw bad_numeric_cast();
+    }
   }
 
   bool
@@ -160,7 +167,7 @@ namespace libport
   {
     int res = ufloat_to_int_converter (val);
     if (res != 0 && res != 1)
-      throw new boost::numeric::bad_numeric_cast;
+      throw new bad_numeric_cast;
     return static_cast<bool> (res);
   }
 
