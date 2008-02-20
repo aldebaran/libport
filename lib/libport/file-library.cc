@@ -139,7 +139,7 @@ namespace libport
       {
 	// If file is absolute, just check that it exists.
 	if (!file.exists())
-	  return path ();
+	  boost::throw_exception(Not_found());
 	else
 	  return directory;
       }
@@ -181,7 +181,7 @@ namespace libport
       }
 
     // File not found in search path.
-    return path ();
+    boost::throw_exception(Not_found());
   }
 
   std::ostream&
