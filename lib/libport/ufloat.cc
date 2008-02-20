@@ -162,13 +162,4 @@ namespace libport
     }
   }
 
-  bool
-  ufloat_to_boolean (ufloat val)
-  {
-    int res = ufloat_to_int_converter (val);
-    if (res != 0 && res != 1)
-      throw bad_numeric_cast ();
-    return static_cast<bool> (res);
-  }
-
-}
+} // namespace libport
