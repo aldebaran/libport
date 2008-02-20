@@ -75,6 +75,17 @@ namespace libport
 
     /// "absolute" flag.
     bool absolute_;
+
+#ifdef WIN32
+    /// Path separator
+    static const char separator_ = '\\';
+
+    /// Name of the volume (C:) for absolute paths under windows.
+    std::string volume_;
+#else
+    /// Path separator
+    static const char separator_ = '/';
+#endif
   };
 
   std::ostream&

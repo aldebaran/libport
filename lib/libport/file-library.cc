@@ -64,7 +64,7 @@ namespace libport
   {
     push_cwd ();
     // Then only process given path.
-    search_path_.push_back (p);
+    push_back (p);
   }
 
   void
