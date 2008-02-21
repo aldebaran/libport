@@ -6,6 +6,8 @@
 #ifndef NETWORK_BOOST_NETWORK_HXX
 # define NETWORK_BOOST_NETWORK_HXX
 
+# include <exception>
+
 namespace Network
 {
   template <typename Server>

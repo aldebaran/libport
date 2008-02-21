@@ -22,6 +22,7 @@
 # include "libport/config.h"
 
 # include <cfloat>
+# include <exception>
 
 /*-----------------.
 | Ufloat support.  |
