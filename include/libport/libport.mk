@@ -39,6 +39,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/lexical-cast.hh	\
 	$(include_libport)/lockable.hh		\
 	$(include_libport)/network.h		\
+	$(include_libport)/map.hh		\
+	$(include_libport)/map.hxx		\
 	$(include_libport)/package-info.hh	\
 	$(include_libport)/pair.hh		\
 	$(include_libport)/pair.hxx		\
