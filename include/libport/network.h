@@ -81,9 +81,14 @@ namespace std
   {
     o << "fd_set {";
     bool not_first = false;
+# ifndef WIN32
     for (int i = 0; i < FD_SETSIZE; ++i)
       if (LIBPORT_FD_ISSET(i, &s))
-	o << (not_first++ ? ", " : "") << i;
+        o << (not_first++ ? ", " : "") << i;
+# else
+    for (int i = 0; i < s.fd_count; ++i)
+      o << (not_first++ ? ", " : "") << s.fd_array[i];
+# endif
     return o << " }";
   }
 }
@@ -105,6 +110,27 @@ namespace std
       << ", tv_usec = " << t.tv_usec
       << " }";
   }
+}
+
+
+/*--------------.
+| closeSocket.  |
+`--------------*/
+
+namespace libport
+{
+
+  inline
+  int
+  closeSocket(int socket)
+  {
+# ifdef WIN32
+    return closesocket(socket);
+# else
+    return close(socket);
+# endif
+  }
+
 }
 
 #endif // !LIBPORT_NETWORK_H
