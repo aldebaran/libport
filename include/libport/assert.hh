@@ -22,7 +22,7 @@
 ///  passert (p << " " << q, p == q);
 
 # ifdef NDEBUG
-#  define passert(Subject, Assertion)       ((void)0)
+#  define passert(Subject, Assertion)       ((void)Subject)
 # else
 
 #  define passert(Subject, Assertion)			\

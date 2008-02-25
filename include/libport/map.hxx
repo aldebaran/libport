@@ -11,8 +11,9 @@
 
 # include <boost/lexical_cast.hpp>
 
-# include <libport/indent.hh>
 # include <libport/contract.hh>
+# include <libport/deref.hh>
+# include <libport/indent.hh>
 # include <libport/map.hh>
 
 namespace libport
@@ -104,7 +105,8 @@ namespace libport
   map<T, N>::print (std::ostream& ostr) const
   {
     for (const_iterator i = begin (); i != end (); ++i)
-      ostr << i->first << " -> " << i->second << libport::iendl;
+      ostr << i->first << " -> "
+	   << libport::deref << i->second << libport::iendl;
     return ostr;
   }
 

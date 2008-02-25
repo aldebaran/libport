@@ -7,7 +7,7 @@
 # define LIBPORT_DEREF_HH
 
 # include <iosfwd>
-# include "libport/shared-ptr.hh"
+# include <libport/shared-ptr.hh>
 
 namespace libport
 {
