@@ -55,11 +55,12 @@ namespace libport
     }
 
     // Cut directories on / and \.
-    std::string::size_type pos_s;
-    std::string::size_type pos_b;
+    std::string::size_type pos_s = p.find('/');
+    std::string::size_type pos_b = p.find('\\');
 
-    while ((pos_s = p.find ('/')) != std::string::npos ||
-	   (pos_b = p.find ('\\')) != std::string::npos)
+    for (;
+         pos_s != std::string::npos || pos_b != std::string::npos;
+         pos_s = p.find('/'), pos_b = p.find('\\'))
     {
       std::string::size_type pos =
 	pos_s == std::string::npos ? pos_b :
