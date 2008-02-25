@@ -29,7 +29,7 @@ Connection::Connection(int connfd)
 {
   // Test the error from UConnection constructor.
   if (uerror_ != USUCCESS)
-    closeConnection();
+    close();
   else
     initialize();
 }
@@ -38,7 +38,7 @@ Connection::Connection(int connfd)
 Connection::~Connection()
 {
   if (fd != -1)
-    closeConnection();
+    close();
 }
 
 std::ostream&
@@ -56,11 +56,11 @@ Connection::print (std::ostream& o) const
 /*!
  */
 UConnection&
-Connection::closeConnection()
+Connection::close()
 {
   // Setting 'closing' to true tell the kernel not to use the
   // connection any longer.
-  closing = true;
+  closing_ = true;
 
   // FIXME: Akim added those two lines, but he's not too sure
   // about them: should they be before "closing = true"?
@@ -95,13 +95,13 @@ Connection::doRead()
     // No error message for clean connection termination.
     if (n)
       perror ("cannot recv");
-    closeConnection();
+    close();
   }
   else
-    *this << UConnection::received(read_buff, n);
+    this->received(read_buff, n);
 }
 
-int Connection::effectiveSend (const ubyte* buffer, int length)
+int Connection::effective_send (const ubyte* buffer, int length)
 {
   int res = ::send(fd,
 		   reinterpret_cast<const char *>(buffer), length,
@@ -109,7 +109,7 @@ int Connection::effectiveSend (const ubyte* buffer, int length)
   if (res == -1)
   {
     perror ("cannot send");
-    closeConnection();
+    close();
   }
 
   return res;
@@ -118,15 +118,15 @@ int Connection::effectiveSend (const ubyte* buffer, int length)
 void
 Connection::doWrite()
 {
-  continueSend();
+  continue_send();
 }
 
 UConnection&
 Connection::send(const ubyte* buffer, int length)
 {
-  if (sendQueueRemain() == 0)
+  if (send_queue_remain() == 0)
     trigger();
-  return (*this) << UConnection::send(buffer, length);
+  return send_queue(buffer, length);
 }
 
 //! Send a "\n" through the connection
@@ -134,6 +134,6 @@ UConnection&
 Connection::endline ()
 {
   //FIXME: test send error
-  (*this) << UConnection::send((const ubyte*)"\n", 1);
+  UConnection::send("\n");
   CONN_ERR_RET(USUCCESS);
 }

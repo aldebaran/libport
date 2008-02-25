@@ -35,7 +35,7 @@ public:
    * is thus responsible for its deletion, and the declaration of its allocation*/
   Connection(int connfd);
   virtual ~Connection();
-  virtual UConnection& closeConnection ();
+  virtual UConnection& close ();
 
   virtual std::ostream& print (std::ostream& o) const;
 
@@ -70,7 +70,7 @@ public:
 
   virtual int writeFD()
   {
-    if (sendQueueRemain()>0)
+    if (send_queue_remain()>0)
       return fd;
     else
       return -1;
@@ -78,7 +78,7 @@ public:
 
 protected:
   //! Overloading this function is requiered by UConnection
-  virtual int effectiveSend (const ubyte *buffer, int length);
+  virtual int effective_send (const ubyte *buffer, int length);
   //! The file descriptor of the connection
   int fd;
   //! The reception buffer
