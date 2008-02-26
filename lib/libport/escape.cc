@@ -13,7 +13,7 @@ namespace libport
   std::ostream&
   Escape::print (std::ostream& ostr) const
   {
-    return escape_ (ostr, pobj_str_);
+    return escape_ (ostr, str_);
   }
 
   std::ostream&

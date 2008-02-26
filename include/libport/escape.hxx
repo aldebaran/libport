@@ -13,6 +13,15 @@ namespace libport
 {
 
   template <class T>
+  Escape::Escape (const T& obj)
+  {
+    std::ostringstream os;
+    os << obj;
+    str_ = os.str ();
+  }
+
+
+  template <class T>
   Escape
   escape(const T& obj)
   {
@@ -25,17 +34,6 @@ namespace libport
   {
     return rhs.print (o);
   }
-
-
-  template <class T>
-  Escape::Escape (const T& obj)
-  {
-    std::ostringstream os;
-    os << obj;
-    pobj_str_ = os.str ();
-  }
-
-
 
 }
 

@@ -25,7 +25,7 @@ namespace libport
     friend Escape escape (const T&);
 
   protected:
-    std::string  pobj_str_;
+    std::string  str_;
 
   private:
     std::ostream&
