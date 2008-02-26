@@ -9,7 +9,7 @@
 # include <string>
 # include <list>
 # include "libport/path.hh"
-# include <boost/exception.hpp>
+# include <exception>
 
 namespace libport
 {
@@ -22,7 +22,7 @@ namespace libport
   public:
 
     /// Exception thrown when a file is not localisable
-    class Not_found : public boost::exception
+    class Not_found : public std::exception
     {};
 
     /// \name Constructor.
