@@ -68,7 +68,7 @@ namespace libport
   class Lockable;
 
   // package-info.hh;
-  struct PackageInfo;
+  class PackageInfo;
 
   // path.hh;
   struct Path;
