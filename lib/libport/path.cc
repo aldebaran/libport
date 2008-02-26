@@ -16,7 +16,7 @@ namespace libport
   {
   }
 
-  path::path (std::string p)
+  path::path (const std::string& p)
   {
     init (p);
   }
@@ -27,14 +27,15 @@ namespace libport
   }
 
   void
-  path::init (std::string p)
+  path::test_absolute (std::string& p)
   {
     absolute_ = false;
 
 #if defined WIN32
     // Under Win32, absolute paths start with a letter followed by
     // ':\'
-    absolute_ = isalpha(p[0]);
+    absolute_ = p.length() >= 3;
+    absolute_ = absolute_ && isalpha(p[0]);
     absolute_ = absolute_ && (p[1] == ':');
     absolute_ = absolute_ && (p[2] == '\\');
 
@@ -48,11 +49,17 @@ namespace libport
     // Under unix, absolute paths start with a slash
     if (!absolute_)
     {
-      absolute_ = (p[0] == '/');
+      absolute_ = (p.length() > 0) && (p[0] == '/');
 
       if (absolute_)
 	p = p.erase(0, 0);
     }
+  }
+
+  void
+  path::init (std::string p)
+  {
+    test_absolute(p);
 
     // Cut directories on / and \.
     std::string::size_type pos_s = p.find('/');
@@ -167,7 +174,7 @@ namespace libport
   }
 
   void
-  path::append_dir (std::string dir)
+  path::append_dir (const std::string& dir)
   {
     precondition(dir.find (separator_) == std::string::npos);
 

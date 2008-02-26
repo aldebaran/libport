@@ -22,7 +22,7 @@ namespace libport
     path ();
 
     /// Init object with \a path.
-    path (std::string p);
+    path (const std::string& p);
 
     // FIXME: Why does constructor with std::string is not enough?
     /// Init object with \a p.
@@ -65,10 +65,14 @@ namespace libport
     typedef std::list<std::string> path_type;
 
     /// Append a single directory \a dir.
-    void append_dir (std::string dir);
+    void append_dir (const std::string& dir);
 
     /// Init object with path \a p.
     void init (std::string p);
+
+    /// Test whether the given path is absolute and set attributes adequately.
+    void
+    test_absolute (std::string& p);
 
     /// Represented path.
     path_type path_;
