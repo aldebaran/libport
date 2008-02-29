@@ -1,10 +1,10 @@
 /**
- ** \file libport/_errlist.h
+ ** \file libport/bits/errlist.hh
  ** \brief Provide a list of Windows error.
  **/
 
-#ifndef LIBPORT__ERRLIST_HH
-# define LIBPORT__ERRLIST_HH
+#ifndef LIBPORT_BITS_ERRLIST_HH
+# define LIBPORT_BITS_ERRLIST_HH
 
 namespace libport
 {
@@ -22,4 +22,4 @@ namespace libport
 
 }
 
-#endif // !LIBPORT__ERRLIST_HH
+#endif // !LIBPORT_BITS_ERRLIST_HH

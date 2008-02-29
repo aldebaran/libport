@@ -3,7 +3,7 @@
  ** \brief errlist: implements file libport/_errlist.hh
  */
 
-#include "libport/_errlist.hh"
+#include "libport/bits/errlist.hh"
 
 namespace libport
 {
@@ -12,7 +12,8 @@ namespace libport
 
 # define E(code, s) { code, (s " [" #code "]") }
 
-  struct _sys_errlist_t _sys_errlist[] = {
+  struct _sys_errlist_t _sys_errlist[] =
+  {
     E(WSAEINTR, "Interrupted function call"),
     E(WSAEACCES, "Permission denied"),
     E(WSAEFAULT, "Bad address"),

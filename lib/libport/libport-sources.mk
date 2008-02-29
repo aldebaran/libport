@@ -15,7 +15,7 @@ libport_la = $(top_builddir)/lib/libport/libport.la
 
 # Sources to compile to use libport.
 libport_sources =				\
-	$(libport_srcdir)/_errlist.cc		\
+	$(libport_srcdir)/errlist.cc		\
 	$(libport_srcdir)/cli.cc		\
 	$(libport_srcdir)/contract.cc		\
 	$(libport_srcdir)/deref.cc		\

@@ -5,9 +5,9 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "libport/string.hh"
+#include "libport/cstring"
 
-#include "libport/_errlist.hh"
+#include "libport/bits/errlist.hh"
 
 namespace libport
 {
