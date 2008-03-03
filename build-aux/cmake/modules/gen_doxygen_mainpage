@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+##
+## gen_doxygen_mainpage: This file is part of cmake-aux.
+## Copyright (C) Gostai S.A.S., 2006-2008.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
+require 'pathname'
+
+MEDIR, ME = Pathname.new($0).split
+
+def usage()
+  STDERR.puts "usage: #{ME} output top_srcdir"
+  exit 1
+end
+
+def perr(*a)
+  STDERR.puts "#{ME}: error: #{a}"
+end
+
+def pinfo(*a)
+  STDERR.puts  "#{ME}: info: #{a}"
+end
+
+if ARGV.size != 2
+  usage
+end
+
+OUT = Pathname.new(ARGV.shift)
+TOPSRCDIR = Pathname.new(ARGV.shift)
+unless TOPSRCDIR.directory?
+  perr("not a directory `#{TOPSRCDIR}'")
+  exit 2
+end
+
+pinfo "Output file: `#{OUT}'"
+pinfo "Top source directory: `#{TOPSRCDIR}'"
+
+[
+ 'README',
+ 'NEWS',
+ 'COPYRIGHT'
+].each do |x|
+  path = TOPSRCDIR + Pathname.new(x)
+  next unless path.readable?
+  OUT.open('w') do |io|
+    pinfo "Adding header..."
+    io.print <<EOF
+/**
+ * \\mainpage
+EOF
+    pinfo "Adding '#{path}'"
+    io.puts(" * \\section #{path.basename}")
+    path.each_line do |l|
+      l = " * " + l
+      io.print(l)
+    end
+    pinfo "Adding footer..."
+    io.puts " */"
+  end
+end
