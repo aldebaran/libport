@@ -3,6 +3,7 @@
  ** \brief errlist: implements file libport/_errlist.hh
  */
 
+#include "libport/windows.hh"
 #include "libport/bits/errlist.hh"
 
 namespace libport
