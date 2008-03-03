@@ -1,0 +1,38 @@
+/*
+ * project-info.h: This file is part of cmake-aux.
+ * Copyright (C) Gostai S.A.S., 2006-2008.
+ *
+ * This software is provided "as is" without warranty of any kind,
+ * either expressed or implied, including but not limited to the
+ * implied warranties of fitness for a particular purpose.
+ *
+ * See the LICENSE file for more information.
+ * For comments, bug reports and feedback: http://www.urbiforge.com
+ */
+
+/*
+ * GENERATED FILE - DO NOT EDIT
+ * Edit project-info.h.in instead.
+ */
+
+#ifndef CMAKE_AUX_MODULES_PROJECT_INFO_H
+# define CMAKE_AUX_MODULES_PROJECT_INFO_H
+
+/* Name of the project */
+# define PROJECT_NAME "@PROJECT_NAME@"
+/* Long name of the project */
+# define PROJECT_LONGNAME "@PROJECT_LONGNAME@"
+/* Version of the project */
+# define PROJECT_VERSION "@PROJECT_VERSION@"
+/* Version major number of the project */
+# define PROJECT_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+/* Version minor number of the project */
+# define PROJECT_VERSION_MINOR @PROJECT_VERSION_MINOR@
+/* Support address of the project */
+# define PROJECT_SUPPORT "@PROJECT_SUPPORT@"
+
+#endif /* !CMAKE_AUX_MODULES_PROJECT_INFO_H */
+
+/* Local Variables: */
+/* mode: c */
+/* End: */
