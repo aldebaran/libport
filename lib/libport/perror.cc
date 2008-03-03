@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <iostream>
 
+#include "libport/windows.hh"
 #include "libport/cstring"
 
 namespace libport
