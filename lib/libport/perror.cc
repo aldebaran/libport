@@ -3,7 +3,8 @@
  ** \brief perror: implements file libport/perror.hh
  */
 
-#include <stdio.h>
+#include <cstdio>
+#include <iostream>
 
 #include "libport/cstring"
 
