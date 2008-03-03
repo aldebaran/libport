@@ -15,7 +15,6 @@ libport_include_HEADERS =			\
 
 # C++ headers.
 libport_include_HEADERS +=			\
-	$(include_libport)/_errlist.hh		\
 	$(include_libport)/assert.hh		\
 	$(include_libport)/cli.hh		\
 	$(include_libport)/cli.hxx		\
