@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 
-#include "libport/string.hh"
+#include "libport/cstring"
 
 namespace libport
 {

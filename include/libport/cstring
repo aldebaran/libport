@@ -8,4 +8,13 @@
 /// Whether the C string \a Lhs and \a Rhs are equal.
 # define STREQ(Lhs, Rhs) (!strcmp (Lhs, Rhs))
 
+namespace libport
+{
+
+  const char*
+  strerror(int errnum);
+
+}
+
+
 #endif // !LIBPORT_CSTRING

@@ -120,7 +120,7 @@ namespace libport
 {
   inline float round (float d)
   {
-    return floor (d + 0.5 + FLT_EPSILON);
+    return floor (d + 0.5f + FLT_EPSILON);
   }
 
   inline double round (double d)

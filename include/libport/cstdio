@@ -11,4 +11,12 @@
 # define vsnprintf _vsnprintf
 #endif
 
+namespace libport
+{
+
+  void
+  perror(const char* s);
+
+}
+
 #endif // !LIBPORT_CSTDIO

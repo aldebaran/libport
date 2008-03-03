@@ -60,8 +60,6 @@ libport_include_HEADERS +=			\
 	$(include_libport)/shared-ptr.hh	\
 	$(include_libport)/shared-ptr.hxx	\
 	$(include_libport)/singleton-ptr.hh	\
-	$(include_libport)/stdio.hh		\
-	$(include_libport)/string.hh		\
 	$(include_libport)/symbol.hh		\
 	$(include_libport)/symbol.hxx		\
 	$(include_libport)/sysexits.hh		\
@@ -83,6 +81,10 @@ sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
         $(include_libport)/sys/stat.h
 
+# bits/ headers
+bits_libport_includedir = $(libport_includedir)/bits
+bits_libport_include_HEADERS =			\
+        $(include_libport)/bits/errlist.hh
 
 ## ---------- ##
 ## config.h.  ##
