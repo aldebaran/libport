@@ -86,7 +86,7 @@ namespace std
       if (LIBPORT_FD_ISSET(i, &s))
         o << (not_first++ ? ", " : "") << i;
 # else
-    for (int i = 0; i < s.fd_count; ++i)
+    for (unsigned int i = 0; i < s.fd_count; ++i)
       o << (not_first++ ? ", " : "") << s.fd_array[i];
 # endif
     return o << " }";
