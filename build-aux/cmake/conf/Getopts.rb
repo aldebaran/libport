@@ -53,7 +53,6 @@ class Getopts
       op.separator 'Installation directories:'
 
       op.on('--prefix DIR', 'Installation prefix.') do |dir|
-        check_directory(dir)
         @opts[:prefix] = dir
       end
 
