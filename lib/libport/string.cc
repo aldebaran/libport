@@ -20,9 +20,8 @@ namespace libport
   {
     static char msg_buf[LIBPORT_BUFFER_SIZE];
 
-    FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM
-                   | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), 0,
-                   (LPTSTR)msg_buf, LIBPORT_BUFFER_SIZE, NULL);
+    FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                   0, GetLastError(), 0, (LPTSTR)msg_buf, LIBPORT_BUFFER_SIZE, 0);
 
     return msg_buf;
   }
