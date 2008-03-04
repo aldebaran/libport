@@ -124,7 +124,7 @@ Connection::doWrite()
 UConnection&
 Connection::send(const ubyte* buffer, int length)
 {
-  if (send_queue_remain() == 0)
+  if (send_queue_empty())
     trigger();
   return send_queue(buffer, length);
 }

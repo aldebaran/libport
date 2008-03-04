@@ -70,10 +70,7 @@ public:
 
   virtual int writeFD()
   {
-    if (send_queue_remain()>0)
-      return fd;
-    else
-      return -1;
+    return send_queue_empty() ? -1 : fd;
   }
 
 protected:
