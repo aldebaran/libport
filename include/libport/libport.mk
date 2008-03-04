@@ -80,10 +80,6 @@ sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
         $(include_libport)/sys/stat.h
 
-# bits/ headers
-bits_libport_includedir = $(libport_includedir)/bits
-bits_libport_include_HEADERS =			\
-        $(include_libport)/bits/errlist.hh
 
 ## ---------- ##
 ## config.h.  ##

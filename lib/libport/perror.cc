@@ -18,19 +18,24 @@ namespace libport
 #ifndef WIN32
     ::perror(s);
 #else
-    int errnum;
-    const char* errstring;
-    const char* colon;
-
-    errnum = WSAGetLastError();
-    errstring = strerror(errnum);
-
-    if (s == NULL || *s == '\0')
-      s = colon = "";
+    if (errno != 0)
+      ::perror(s);
     else
-      colon = ": ";
+    {
+      const int errnum;
+      const char* errstring;
+      const char* colon;
 
-    std::cerr << s << colon << errstring << std::endl;
+      errnum = GetLastError();
+      errstring = getWinErrorMessage();
+
+      if (s == NULL || *s == '\0')
+        s = colon = "";
+      else
+        colon = ": ";
+
+      std::cerr << s << colon << errstring << std::endl;
+    }
 #endif
   }
 
