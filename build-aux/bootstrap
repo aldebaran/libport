@@ -42,14 +42,17 @@ link: FROM -> TO
   Install a link named FROM that points to TO.
   E.g. \`link: include/libport -> libport/include/libport'.
 
-links: (copy|symbolic)+                                 [copy]
-  Specify how \`link:' primitives should be handled.
-  Because some people such as the build farm using "src = build",
-  everyone is punished, and the default is to first try hard
-  links, then copy.  To restore the previous behavior, uses
-  \`links: 'symbolic copy', in that order.
-  "symbolic" links are ignored on Cygwin.  To make sure to
-  get what you want, use \`links: symbolic'.
+links: (copy|symbolic)+
+  Specify how \`link:' primitives should be handled.  People using
+  src = build should use copies.  People who need to edit the submodules
+  must not use copies.  So
+
+     ## ------------------------------------------------ ##
+     ## Developpers should never work with src = build.  ##
+     ## ------------------------------------------------ ##
+
+  If the envvar BUILDFARM is set, then we use copies, otherwise
+  we use symlinks.
 
 subpackage: DIR-NAME
   Declare a subpackage (i.e., AC_CONFIG_SUBDIRS) that needs to be
@@ -212,6 +215,8 @@ link_symbolic ()
 
 # link_hard FROM TO
 # -----------------
+# We no longer use hard links, since this is invalid for directories.
+# This is dead code.
 link_hard ()
 {
   case $(uname) in
@@ -226,6 +231,12 @@ link_hard ()
 # -----------------
 link_copy ()
 {
+  stderr \
+  "## ------------------------------------------------------------- ##" \
+  "## Warning: Using cp instead of links is troublesome for         ##" \
+  "## developpers.  This mode should be used by the buildfarm only, ##" \
+  "## or on Windows.  See boostrap --help.                          ##" \
+  "## ------------------------------------------------------------- ##"
   run cp -pr "$2" "$1"
 }
 
@@ -297,8 +308,14 @@ done
 # installed here.
 #
 # IMHO people *and* the buildfarm should be using src != build.
-link_types=$(attributes links|tee /tmp/log | tr -cs '[^a-z]' ' ')
-test -n "$link_types" || link_types="copy"
+link_types=$(attributes links | tr -cs 'a-z' ' ')
+if test -z "$link_types"; then
+  if test -n "${BUILDFARM+set}"; then
+    link_types="copy"
+  else
+    link_types="symbolic"
+  fi
+fi
 attributes '(hard)?link' |
 while read link
 do
