@@ -22,19 +22,9 @@ namespace libport
       ::perror(s);
     else
     {
-      int errnum;
-      const char* errstring;
-      const char* colon;
-
-      errnum = GetLastError();
-      errstring = getWinErrorMessage();
-
-      if (s == NULL || *s == '\0')
-        s = colon = "";
-      else
-        colon = ": ";
-
-      std::cerr << s << colon << errstring << std::endl;
+      if (s && *s)
+        std::cerr << s << ": ";
+      std::cerr << getWinErrorMessage() << std::endl;
     }
 #endif
   }
