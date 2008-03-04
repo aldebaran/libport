@@ -34,6 +34,12 @@ sub revision_git ()
   $package_info{'Date'} = git_rev_list('%ai');
   $package_info{'Id'} = git_rev_list('%h (%ai %ae: %s)');
   $package_info{'Rev'} = git_rev_list('%h');
+
+  foreach my $info ( keys %package_info )
+    {
+      $package_info{$info} =~ s/\\/\\\\/g;
+      $package_info{$info} =~ s/\"/\\\"/g;
+    }
 }
 
 revision_git ();
