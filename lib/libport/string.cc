@@ -7,7 +7,7 @@
 
 #include "libport/cstring"
 
-#include "libport/detect_win32.h"
+#include "libport/windows.hh"
 
 namespace libport
 {
