@@ -45,7 +45,9 @@ pinfo "Top source directory: `#{TOPSRCDIR}'"
 [
  'README',
  'NEWS',
- 'COPYRIGHT'
+ 'COPYRIGHT',
+ 'AUTHORS',
+ 'INSTALL',
 ].each do |x|
   path = TOPSRCDIR + Pathname.new(x)
   next unless path.readable?
