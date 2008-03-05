@@ -86,10 +86,13 @@ class Getopts
 
   def cmakeflags
     o = ' ' + MEDIR
-    o += " -DCMAKE_VERBOSE_MAKEFILE=#{opts[:verbose] ? 'ON' : 'OFF'}"
-    o += " -DCMAKE_INSTALL_PREFIX=\"#{opts[:prefix]}\""
+    o += " \\\n"
+    # Miscellaneous
+    o += cmake_def("CMAKE_VERBOSE_MAKEFILE", opts[:verbose] ? 'ON' : 'OFF')
+    o += cmake_def("CMAKE_INSTALL_PREFIX", opts[:prefix])
+    # Configure dependent library paths
     @deplibs.each do |x|
-      o += " -D#{x}_PATH=\"#{@opts[x]}\"" if @opts[x]
+      o += cmake_def("#{x}_PATH", @opts[x]) if @opts[x]
     end
     o
   end
@@ -100,6 +103,10 @@ class Getopts
     unless File.directory?(dir)
       raise(ArgumentError, "not a directory - '#{dir}'")
     end
+  end
+
+  def cmake_def(varname, value, alinea="    ")
+    "#{alinea}-D#{varname}='#{value}' \\\n"
   end
 
 end # class Getopts
