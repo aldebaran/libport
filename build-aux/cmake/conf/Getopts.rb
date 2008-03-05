@@ -88,9 +88,6 @@ class Getopts
     o = ' ' + MEDIR
     o += " \\\n"
     # Miscellaneous
-    aux_dir = MEDIR + "libport/build-aux/cmake"
-    o += cmake_def("CMAKE_AUX_DIR", aux_dir)
-    o += cmake_def("CMAKE_MODULE_PATH", aux_dir + "modules")
     o += cmake_def("CMAKE_VERBOSE_MAKEFILE", opts[:verbose] ? 'ON' : 'OFF')
     o += cmake_def("CMAKE_INSTALL_PREFIX", opts[:prefix])
     # Configure dependent library paths
