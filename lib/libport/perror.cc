@@ -22,7 +22,7 @@ namespace libport
       ::perror(s);
     else
     {
-      const int errnum;
+      int errnum;
       const char* errstring;
       const char* colon;
 
