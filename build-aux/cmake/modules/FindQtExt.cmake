@@ -21,6 +21,8 @@
 #
 # These variables are set to <var-name>-NOTFOUND if an error occurs.
 
+include(QtExt)
+
 # Search for the library urbi.
 if(NOT QT_EXT_LIBRARY)
   find_library(QT_EXT_LIBRARY
@@ -47,3 +49,19 @@ if(NOT QT_EXT_INCLUDE_DIR)
       "(setting -DQT_EXT_PATH=/path/to/qt-ext may solve this problem).")
   endif(QT_EXT_INCLUDE_DIR)
 endif(NOT QT_EXT_INCLUDE_DIR)
+
+# Use this variables iff you use all those libraries otherwise you will add
+# unused dependencies.
+set(QT_EXT_LIBRARIES
+  ${QT_EXT_LIBRARY}
+  ${SDK_REMOTE_LIBRARY}
+  ${QSCINTILLA2_LIBRARY}
+  ${QT_LIBRARIES}
+  )
+
+set(QT_EXT_INCLUDES
+  ${QT_EXT_INCLUDE_DIR}
+  ${SDK_REMOTE_INCLUDE_DIR}
+  ${QSCINTILLA2_INCLUDE_DIR}
+  ${QT_INCLUDES}
+  )
