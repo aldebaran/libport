@@ -42,28 +42,28 @@ end
 pinfo "Output file: `#{OUT}'"
 pinfo "Top source directory: `#{TOPSRCDIR}'"
 
-[
- 'README',
- 'NEWS',
- 'COPYRIGHT',
- 'AUTHORS',
- 'INSTALL',
-].each do |x|
-  path = TOPSRCDIR + Pathname.new(x)
-  next unless path.readable?
-  OUT.open('w') do |io|
-    pinfo "Adding header..."
-    io.print <<EOF
+OUT.open('w') do |io|
+  pinfo "Adding header..."
+  io.print <<EOF
 /**
  * \\mainpage
 EOF
+  [
+   'README',
+   'NEWS',
+   'COPYRIGHT',
+   'AUTHORS',
+   'INSTALL',
+  ].each do |x|
+    path = TOPSRCDIR + Pathname.new(x)
+    next unless path.readable?
     pinfo "Adding '#{path}'"
     io.puts(" * \\section #{path.basename}")
     path.each_line do |l|
       l = " * " + l
       io.print(l)
     end
-    pinfo "Adding footer..."
-    io.puts " */"
   end
+  pinfo "Adding footer..."
+  io.puts " */"
 end
