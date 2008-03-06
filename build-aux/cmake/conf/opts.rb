@@ -102,7 +102,7 @@ class Opts
     @deplibs.each do |x|
       o += cmake_def("#{x}_PATH", @opts[x]) if @opts[x]
     end
-    o += ' ' + @opts[:extraflags] + " \\\n"
+    o += ' ' + @opts[:extraflags] + " \\\n" if @opts[:extraflags]
     o
   end
 
