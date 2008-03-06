@@ -47,6 +47,10 @@ class Opts
         end
       end
 
+      op.on('--with-qt DIR', "Path to your Qt install directory.") do |dir|
+        @opts[:qtdir] = dir
+      end
+
       ### Directories options
 
       op.separator ''

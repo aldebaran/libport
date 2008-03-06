@@ -18,7 +18,9 @@ def configure_cmake(*deplibs)
   o.parse!(ARGV)
   puts "** Configuration:"
   cmakeflags = o.cmakeflags
-  cmd = "  cmake " + cmakeflags
+  cmd = ''
+  cmd = "  export PATH=\"#{o.opts[:qtdir]}/bin:$PATH\";\\\n" if o.opts[:qtdir]
+  cmd += "  cmake " + cmakeflags
   puts cmd
   puts '** Running cmake...'
   system cmd
