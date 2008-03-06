@@ -12,7 +12,7 @@
 
 # Find qt-ext library.
 #
-# You can set QT_EXT_PATH to a custom path to search in.
+# You can set QT_EXT_ROOT_DIR to a custom path to search in.
 #
 # This module set two variables:
 #
@@ -27,12 +27,12 @@ include(QtExt)
 if(NOT QT_EXT_LIBRARY)
   find_library(QT_EXT_LIBRARY
     NAMES qt_ext
-    PATHS ${QT_EXT_PATH} ${QT_EXT_PATH}/lib)
+    PATHS ${QT_EXT_ROOT_DIR} ${QT_EXT_ROOT_DIR}/lib)
   if(QT_EXT_LIBRARY)
     message(STATUS "Found qt-ext library: ${QT_EXT_LIBRARY}")
   else(QT_EXT_LIBRARY)
     message(FATAL_ERROR "no qt-ext library found "
-      "(setting -DQT_EXT_PATH=/path/to/qt-ext may solve this problem).")
+      "(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
   endif(QT_EXT_LIBRARY)
 endif(NOT QT_EXT_LIBRARY)
 
@@ -40,13 +40,13 @@ endif(NOT QT_EXT_LIBRARY)
 if(NOT QT_EXT_INCLUDE_DIR)
   find_path(QT_EXT_INCLUDE_DIR
     NAMES qt-ext/qt-info.h
-    PATHS ${QT_EXT_PATH} ${QT_EXT_PATH}/include)
+    PATHS ${QT_EXT_ROOT_DIR} ${QT_EXT_ROOT_DIR}/include)
   if(QT_EXT_INCLUDE_DIR)
     message(STATUS "Found qt-ext include directory: "
       "${QT_EXT_INCLUDE_DIR}")
   else(QT_EXT_INCLUDE_DIR)
     message(FATAL_ERROR "no qt-ext headers found "
-      "(setting -DQT_EXT_PATH=/path/to/qt-ext may solve this problem).")
+      "(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
   endif(QT_EXT_INCLUDE_DIR)
 endif(NOT QT_EXT_INCLUDE_DIR)
 

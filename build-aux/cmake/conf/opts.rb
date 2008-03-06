@@ -100,7 +100,7 @@ class Opts
     o += cmake_def("CMAKE_INSTALL_PREFIX", opts[:prefix])
     # Configure dependent library paths
     @deplibs.each do |x|
-      o += cmake_def("#{x}_PATH", @opts[x]) if @opts[x]
+      o += cmake_def("#{x}_ROOT_DIR", @opts[x]) if @opts[x]
     end
     o += ' ' + @opts[:extraflags] + " \\\n" if @opts[:extraflags]
     o

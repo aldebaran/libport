@@ -12,7 +12,7 @@
 
 # Find sdk-remote library.
 #
-# You can set SDK_REMOTE_PATH to a custom path to search in.
+# You can set SDK_REMOTE_ROOT_DIR to a custom path to search in.
 #
 # This module set two variables:
 #
@@ -25,12 +25,13 @@
 if(NOT SDK_REMOTE_LIBRARY)
   find_library(SDK_REMOTE_LIBRARY
     NAMES urbi
-    PATHS ${SDK_REMOTE_PATH} ${SDK_REMOTE_PATH}/lib)
+    PATHS ${SDK_REMOTE_ROOT_DIR} ${SDK_REMOTE_ROOT_DIR}/lib)
   if(SDK_REMOTE_LIBRARY)
     message(STATUS "Found sdk-remote library: ${SDK_REMOTE_LIBRARY}")
   else(SDK_REMOTE_LIBRARY)
     message(FATAL_ERROR "no sdk-remote library found "
-      "(setting -DSDK_REMOTE_PATH=/path/to/sdk-remote may solve this problem).")
+      "(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
+      "problem).")
   endif(SDK_REMOTE_LIBRARY)
 endif(NOT SDK_REMOTE_LIBRARY)
 
@@ -38,12 +39,13 @@ endif(NOT SDK_REMOTE_LIBRARY)
 if(NOT SDK_REMOTE_INCLUDE_DIR)
   find_path(SDK_REMOTE_INCLUDE_DIR
     NAMES uobject.h
-    PATHS ${SDK_REMOTE_PATH} ${SDK_REMOTE_PATH}/include)
+    PATHS ${SDK_REMOTE_ROOT_DIR} ${SDK_REMOTE_ROOT_DIR}/include)
   if(SDK_REMOTE_INCLUDE_DIR)
     message(STATUS "Found sdk-remote include directory: "
       "${SDK_REMOTE_INCLUDE_DIR}")
   else(SDK_REMOTE_INCLUDE_DIR)
     message(FATAL_ERROR "no sdk-remote headers found "
-      "(setting -DSDK_REMOTE_PATH=/path/to/sdk-remote may solve this problem).")
+      "(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
+      "problem).")
   endif(SDK_REMOTE_INCLUDE_DIR)
 endif(NOT SDK_REMOTE_INCLUDE_DIR)

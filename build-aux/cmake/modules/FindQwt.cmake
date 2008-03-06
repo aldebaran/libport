@@ -12,7 +12,7 @@
 
 # Find qwt library.
 #
-# You can set QWT_PATH to a custom path to search in.
+# You can set QWT_ROOT_DIR to a custom path to search in.
 #
 # This module set two variables:
 #
@@ -25,12 +25,12 @@
 if(NOT QWT_LIBRARY)
   find_library(QWT_LIBRARY
     NAMES qwt
-    PATHS ${QWT_PATH} ${QWT_PATH}/lib)
+    PATHS ${QWT_ROOT_DIR} ${QWT_ROOT_DIR}/lib)
   if(QWT_LIBRARY)
     message(STATUS "Found qwt library: ${QWT_LIBRARY}")
   else(QWT_LIBRARY)
     message(FATAL_ERROR "no qwt library found "
-      "(setting -DQWT_PATH=/path/to/qwt may solve this problem).")
+      "(setting -DQWT_ROOT_DIR=/path/to/qwt may solve this problem).")
   endif(QWT_LIBRARY)
 endif(NOT QWT_LIBRARY)
 
@@ -38,12 +38,12 @@ endif(NOT QWT_LIBRARY)
 if(NOT QWT_INCLUDE_DIR)
   find_path(QWT_INCLUDE_DIR
     NAMES qwt.h
-    PATHS ${QWT_PATH} ${QWT_PATH}/include)
+    PATHS ${QWT_ROOT_DIR} ${QWT_ROOT_DIR}/include)
   if(QWT_INCLUDE_DIR)
     message(STATUS "Found qwt include directory: "
       "${QWT_INCLUDE_DIR}")
   else(QWT_INCLUDE_DIR)
     message(FATAL_ERROR "no qwt headers found "
-      "(setting -DQWT_PATH=/path/to/qwt may solve this problem).")
+      "(setting -DQWT_ROOT_DIR=/path/to/qwt may solve this problem).")
   endif(QWT_INCLUDE_DIR)
 endif(NOT QWT_INCLUDE_DIR)
