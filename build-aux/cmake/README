@@ -1,0 +1,26 @@
+
+		      # ====================== #
+		      # cmake tools repository #
+		      # ====================== #
+
+* Introduction
+
+This directory contains a set of tools to use with the cmake build system.
+
+* Directories
+
+** conf
+
+This directory contains a set of ruby functions used to run cmake cmake. They
+are provided as a convenience in order to avoid to the user to set many
+cmake variables by hand.
+
+** modules
+
+Holds cmake modules. See modules/README for further information about how to
+write/use the provided modules.
+
+Local Variables:
+mode: outline
+End:
+
