@@ -11,13 +11,13 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
-require 'Getopts'
+require 'opts'
 
 def configure_cmake(*deplibs)
-  go = Getopts.new(*deplibs)
-  go.parse!(ARGV)
+  o = Opts.new(*deplibs)
+  o.parse!(ARGV)
   puts "** Configuration:"
-  cmakeflags = go.cmakeflags
+  cmakeflags = o.cmakeflags
   cmd = "  cmake " + cmakeflags
   puts cmd
   puts '** Running cmake...'

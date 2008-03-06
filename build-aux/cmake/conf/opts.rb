@@ -16,7 +16,7 @@ require 'optparse'
 
 MEDIR, ME = Pathname.new($0).split
 
-class Getopts
+class Opts
 
   def initialize(*deplibs)
     @deplibs = deplibs
@@ -109,13 +109,13 @@ class Getopts
     "#{alinea}-D#{varname}='#{value}' \\\n"
   end
 
-end # class Getopts
+end # class Opts
 
 if $0 == __FILE__
 
   require 'pp'
 
-  go = Getopts.new('SDK_REMOTE', 'QSCINTILLA2')
+  go = Opts.new('SDK_REMOTE', 'QSCINTILLA2')
   pp go.parse(ARGV)
   puts go.cmakeflags
 
