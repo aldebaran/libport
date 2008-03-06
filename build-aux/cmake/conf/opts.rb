@@ -129,13 +129,3 @@ if $0 == __FILE__
   puts go.cmakeflags
 
 end
-
-# --verbose=on/off -> -DCMAKE_VERBOSE_MAKEFILE=ON
-# --prefix=DIR -> -DCMAKE_INSTALL_PREFIX=$HOME/install/qt-ext/master
-# --sdk-remote=DIR -> -DSDK_REMOTE_PATH=$HOME/install/sdk-remote/1.5
-# --qscintilla2=DIR -> -DQSCINTILLA2_PATH=.....
-# --help
-
-# echo "   --bindir=<dir>     : -DBIN_INSTALL_DIR:PATH=<dir>"
-# echo "   --includedir=<dir> : -DINCLUDE_INSTALL_DIR:PATH=<dir>"
-# echo "   --libdir=<dir>     : -DLIB_INSTALL_DIR:PATH=<dir>"
