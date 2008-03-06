@@ -21,6 +21,9 @@
 #
 # These variables are set to <var-name>-NOTFOUND if an error occurs.
 
+
+set(SDK_REMOTE_FOUND FALSE)
+
 # Search for the library urbi.
 if(NOT SDK_REMOTE_LIBRARY)
   find_library(SDK_REMOTE_LIBRARY
@@ -28,6 +31,7 @@ if(NOT SDK_REMOTE_LIBRARY)
     PATHS ${SDK_REMOTE_ROOT_DIR} ${SDK_REMOTE_ROOT_DIR}/lib)
   if(SDK_REMOTE_LIBRARY)
     message(STATUS "Found sdk-remote library: ${SDK_REMOTE_LIBRARY}")
+    set(SDK_REMOTE_FOUND TRUE)
   else(SDK_REMOTE_LIBRARY)
     message(FATAL_ERROR "no sdk-remote library found "
       "(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
@@ -35,17 +39,21 @@ if(NOT SDK_REMOTE_LIBRARY)
   endif(SDK_REMOTE_LIBRARY)
 endif(NOT SDK_REMOTE_LIBRARY)
 
-# Search for the include directory.
-if(NOT SDK_REMOTE_INCLUDE_DIR)
-  find_path(SDK_REMOTE_INCLUDE_DIR
-    NAMES uobject.h
-    PATHS ${SDK_REMOTE_ROOT_DIR} ${SDK_REMOTE_ROOT_DIR}/include)
-  if(SDK_REMOTE_INCLUDE_DIR)
-    message(STATUS "Found sdk-remote include directory: "
-      "${SDK_REMOTE_INCLUDE_DIR}")
-  else(SDK_REMOTE_INCLUDE_DIR)
-    message(FATAL_ERROR "no sdk-remote headers found "
-      "(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
-      "problem).")
-  endif(SDK_REMOTE_INCLUDE_DIR)
-endif(NOT SDK_REMOTE_INCLUDE_DIR)
+if(SDK_REMOTE_FOUND)
+  # Search for the include directory.
+  if(NOT SDK_REMOTE_INCLUDE_DIR)
+    find_path(SDK_REMOTE_INCLUDE_DIR
+      NAMES uobject.h
+      PATHS ${SDK_REMOTE_ROOT_DIR} ${SDK_REMOTE_ROOT_DIR}/include)
+    if(SDK_REMOTE_INCLUDE_DIR)
+      message(STATUS "Found sdk-remote include directory: "
+	"${SDK_REMOTE_INCLUDE_DIR}")
+    else(SDK_REMOTE_INCLUDE_DIR)
+      message(FATAL_ERROR "no sdk-remote headers found "
+	"(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
+	"problem).")
+      set(SDK_REMOTE_FOUND FALSE)
+    endif(SDK_REMOTE_INCLUDE_DIR)
+  endif(NOT SDK_REMOTE_INCLUDE_DIR)
+endif(SDK_REMOTE_FOUND)
+

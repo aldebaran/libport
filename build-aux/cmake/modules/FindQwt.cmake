@@ -21,6 +21,8 @@
 #
 # These variables are set to <var-name>-NOTFOUND if an error occurs.
 
+set(QWT_FOUND FALSE)
+
 # Search for the library urbi.
 if(NOT QWT_LIBRARY)
   find_library(QWT_LIBRARY
@@ -28,22 +30,26 @@ if(NOT QWT_LIBRARY)
     PATHS ${QWT_ROOT_DIR} ${QWT_ROOT_DIR}/lib)
   if(QWT_LIBRARY)
     message(STATUS "Found qwt library: ${QWT_LIBRARY}")
+    set(QWT_FOUND TRUE)
   else(QWT_LIBRARY)
     message(FATAL_ERROR "no qwt library found "
       "(setting -DQWT_ROOT_DIR=/path/to/qwt may solve this problem).")
   endif(QWT_LIBRARY)
 endif(NOT QWT_LIBRARY)
 
-# Search for the include directory.
-if(NOT QWT_INCLUDE_DIR)
-  find_path(QWT_INCLUDE_DIR
-    NAMES qwt.h
-    PATHS ${QWT_ROOT_DIR} ${QWT_ROOT_DIR}/include)
-  if(QWT_INCLUDE_DIR)
-    message(STATUS "Found qwt include directory: "
-      "${QWT_INCLUDE_DIR}")
-  else(QWT_INCLUDE_DIR)
-    message(FATAL_ERROR "no qwt headers found "
-      "(setting -DQWT_ROOT_DIR=/path/to/qwt may solve this problem).")
-  endif(QWT_INCLUDE_DIR)
-endif(NOT QWT_INCLUDE_DIR)
+if(QWT_FOUND)
+  # Search for the include directory.
+  if(NOT QWT_INCLUDE_DIR)
+    find_path(QWT_INCLUDE_DIR
+      NAMES qwt.h
+      PATHS ${QWT_ROOT_DIR} ${QWT_ROOT_DIR}/include)
+    if(QWT_INCLUDE_DIR)
+      message(STATUS "Found qwt include directory: "
+	"${QWT_INCLUDE_DIR}")
+    else(QWT_INCLUDE_DIR)
+      message(FATAL_ERROR "no qwt headers found "
+	"(setting -DQWT_ROOT_DIR=/path/to/qwt may solve this problem).")
+      set(QWT_FOUND FALSE)
+    endif(QWT_INCLUDE_DIR)
+  endif(NOT QWT_INCLUDE_DIR)
+endif(QWT_FOUND)

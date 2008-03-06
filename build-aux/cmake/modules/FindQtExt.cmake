@@ -23,6 +23,8 @@
 
 include(QtExt)
 
+set(QT_EXT_FOUND FALSE)
+
 # Search for the library urbi.
 if(NOT QT_EXT_LIBRARY)
   find_library(QT_EXT_LIBRARY
@@ -30,38 +32,45 @@ if(NOT QT_EXT_LIBRARY)
     PATHS ${QT_EXT_ROOT_DIR} ${QT_EXT_ROOT_DIR}/lib)
   if(QT_EXT_LIBRARY)
     message(STATUS "Found qt-ext library: ${QT_EXT_LIBRARY}")
+    set(QT_EXT_FOUND TRUE)
   else(QT_EXT_LIBRARY)
     message(FATAL_ERROR "no qt-ext library found "
       "(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
   endif(QT_EXT_LIBRARY)
 endif(NOT QT_EXT_LIBRARY)
 
-# Search for the include directory.
-if(NOT QT_EXT_INCLUDE_DIR)
-  find_path(QT_EXT_INCLUDE_DIR
-    NAMES qt-ext/qt-info.h
-    PATHS ${QT_EXT_ROOT_DIR} ${QT_EXT_ROOT_DIR}/include)
-  if(QT_EXT_INCLUDE_DIR)
-    message(STATUS "Found qt-ext include directory: "
-      "${QT_EXT_INCLUDE_DIR}")
-  else(QT_EXT_INCLUDE_DIR)
-    message(FATAL_ERROR "no qt-ext headers found "
-      "(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
-  endif(QT_EXT_INCLUDE_DIR)
-endif(NOT QT_EXT_INCLUDE_DIR)
+if(QT_EXT_FOUND)
+  # Search for the include directory.
+  if(NOT QT_EXT_INCLUDE_DIR)
+    find_path(QT_EXT_INCLUDE_DIR
+      NAMES qt-ext/qt-info.h
+      PATHS ${QT_EXT_ROOT_DIR} ${QT_EXT_ROOT_DIR}/include)
+    if(QT_EXT_INCLUDE_DIR)
+      message(STATUS "Found qt-ext include directory: "
+	"${QT_EXT_INCLUDE_DIR}")
+    else(QT_EXT_INCLUDE_DIR)
+      message(FATAL_ERROR "no qt-ext headers found "
+	"(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
+      set(QT_EXT_FOUND FALSE)
+    endif(QT_EXT_INCLUDE_DIR)
+  endif(NOT QT_EXT_INCLUDE_DIR)
+endif(QT_EXT_FOUND)
 
-# Use this variables iff you use all those libraries otherwise you will add
-# unused dependencies.
-set(QT_EXT_LIBRARIES
-  ${QT_EXT_LIBRARY}
-  ${SDK_REMOTE_LIBRARY}
-  ${QSCINTILLA2_LIBRARY}
-  ${QT_LIBRARIES}
-  )
+if(QT_EXT_FOUND)
+  # Use this variables iff you use all those libraries otherwise you will add
+  # unused dependencies.
+  set(QT_EXT_LIBRARIES
+    ${QT_EXT_LIBRARY}
+    ${SDK_REMOTE_LIBRARY}
+    ${QSCINTILLA2_LIBRARY}
+    ${QT_LIBRARIES}
+    )
 
-set(QT_EXT_INCLUDES
-  ${QT_EXT_INCLUDE_DIR}
-  ${SDK_REMOTE_INCLUDE_DIR}
-  ${QSCINTILLA2_INCLUDE_DIR}
-  ${QT_INCLUDES}
-  )
+  set(QT_EXT_INCLUDES
+    ${QT_EXT_INCLUDE_DIR}
+    ${SDK_REMOTE_INCLUDE_DIR}
+    ${QSCINTILLA2_INCLUDE_DIR}
+    ${QT_INCLUDES}
+    )
+endif(QT_EXT_FOUND)
+
