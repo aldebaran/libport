@@ -69,6 +69,10 @@ class Opts
         @opts[:verbose] = true
       end
 
+      op.on('-e', '--extra FLAGS', 'Add extra cmake flags') do |flags|
+        @opts[:extraflags] = flags
+      end
+
       op.on_tail('-h', '--help', 'Show this message.') do
         puts op
         exit 0
@@ -98,6 +102,7 @@ class Opts
     @deplibs.each do |x|
       o += cmake_def("#{x}_PATH", @opts[x]) if @opts[x]
     end
+    o += ' ' + @opts[:extraflags] + " \\\n"
     o
   end
 
