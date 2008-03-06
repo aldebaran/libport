@@ -56,3 +56,18 @@ if(QSCINTILLA2_FOUND)
   endif(NOT QSCINTILLA2_INCLUDE_DIR)
 endif(QSCINTILLA2_FOUND)
 
+if(QSCINTILLA2_FOUND AND QSCINTILLA2_INCLUDE_DIR)
+  # Check whether scintilla header are installed (needed because we write our
+  # own lexer).
+  find_path(QSCINTILLA2_SCINTILLA_INCLUDE_DIR
+    NAMES Qsci/scintilla/include/Scintilla.h
+    PATHS ${QSCINTILLA2_INCLUDE_DIR})
+  if(QSCINTILLA2_SCINTILLA_INCLUDE_DIR)
+    message(STATUS "Found scintilla header directory: "
+      "${QSCINTILLA2_SCINTILLA_INCLUDE_DIR}")
+  else()
+    message(FATAL_ERROR "no scintilla headers found "
+      "(check that your apply our patch before to install QScintilla).")
+    set(QSCINTILLA2_FOUND FALSE)
+  endif()
+endif()
