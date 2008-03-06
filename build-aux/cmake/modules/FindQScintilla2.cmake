@@ -42,10 +42,10 @@ if(QSCINTILLA2_FOUND)
   # Search for the include directory.
   if(NOT QSCINTILLA2_INCLUDE_DIR)
     find_path(QSCINTILLA2_INCLUDE_DIR
-      NAMES Qsci
+      NAMES Qsci/qsciapis.h
       PATHS ${QT_INCLUDE_DIR} ${QSCINTILLA2_ROOT_DIR}/include)
     if(QSCINTILLA2_INCLUDE_DIR)
-      message(STATUS "Found qscintilla2 include directory: "
+      message(STATUS "Found qscintilla2 headers directory: "
 	"${QSCINTILLA2_INCLUDE_DIR}")
     else(QSCINTILLA2_INCLUDE_DIR)
       message(FATAL_ERROR "no qscintilla2 headers found "
