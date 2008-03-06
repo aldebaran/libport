@@ -30,7 +30,7 @@ if(NOT QSCINTILLA2_LIBRARY)
     PATHS ${QT_LIBRARY_DIR} ${QSCINTILLA2_ROOT_DIR}/lib)
   if(QSCINTILLA2_LIBRARY)
     message(STATUS "Found qscintilla2 library: ${QSCINTILLA2_LIBRARY}")
-    set(QSINTILLA2_FOUND TRUE)
+    set(QSCINTILLA2_FOUND TRUE)
   else(QSCINTILLA2_LIBRARY)
     message(FATAL_ERROR "no qscintilla2 library found "
       "(setting -DQSCINTILLA2_ROOT_DIR=/path/to/qscintilla2 may solve this "
@@ -51,7 +51,7 @@ if(QSCINTILLA2_FOUND)
       message(FATAL_ERROR "no qscintilla2 headers found "
 	"(setting -DQSCINTILLA2_ROOT_DIR=/path/to/qscintilla2 may solve this "
 	"problem).")
-      set(QSINTILLA2_FOUND FALSE)
+      set(QSCINTILLA2_FOUND FALSE)
     endif(QSCINTILLA2_INCLUDE_DIR)
   endif(NOT QSCINTILLA2_INCLUDE_DIR)
 endif(QSCINTILLA2_FOUND)
