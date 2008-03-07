@@ -24,3 +24,7 @@ find_package(SdkRemote REQUIRED)
 
 # QScintilla2
 find_package(QScintilla2 REQUIRED)
+
+# Boost
+find_package(MyBoost REQUIRED)
+print_var(BOOST_INCLUDE_DIRS)
