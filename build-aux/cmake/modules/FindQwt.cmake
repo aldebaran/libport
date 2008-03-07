@@ -25,9 +25,7 @@ set(QWT_FOUND FALSE)
 
 # Search for the library urbi.
 if(NOT QWT_LIBRARY)
-  find_library(QWT_LIBRARY
-    NAMES qwt
-    PATHS ${QWT_ROOT_DIR} ${QWT_ROOT_DIR}/lib)
+  find_library(QWT_LIBRARY qwt)
   if(QWT_LIBRARY)
     message(STATUS "Found qwt library: ${QWT_LIBRARY}")
     set(QWT_FOUND TRUE)
@@ -40,9 +38,7 @@ endif(NOT QWT_LIBRARY)
 if(QWT_FOUND)
   # Search for the include directory.
   if(NOT QWT_INCLUDE_DIR)
-    find_path(QWT_INCLUDE_DIR
-      NAMES qwt.h
-      PATHS ${QWT_ROOT_DIR} ${QWT_ROOT_DIR}/include)
+    find_path(QWT_INCLUDE_DIR qwt.h)
     if(QWT_INCLUDE_DIR)
       message(STATUS "Found qwt include directory: "
 	"${QWT_INCLUDE_DIR}")

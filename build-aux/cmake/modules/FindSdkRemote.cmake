@@ -26,9 +26,7 @@ set(SDK_REMOTE_FOUND FALSE)
 
 # Search for the library urbi.
 if(NOT SDK_REMOTE_LIBRARY)
-  find_library(SDK_REMOTE_LIBRARY
-    NAMES urbi
-    PATHS ${SDK_REMOTE_ROOT_DIR} ${SDK_REMOTE_ROOT_DIR}/lib)
+  find_library(SDK_REMOTE_LIBRARY urbi)
   if(SDK_REMOTE_LIBRARY)
     message(STATUS "Found sdk-remote library: ${SDK_REMOTE_LIBRARY}")
     set(SDK_REMOTE_FOUND TRUE)
@@ -42,9 +40,7 @@ endif(NOT SDK_REMOTE_LIBRARY)
 if(SDK_REMOTE_FOUND)
   # Search for the include directory.
   if(NOT SDK_REMOTE_INCLUDE_DIR)
-    find_path(SDK_REMOTE_INCLUDE_DIR
-      NAMES uobject.h
-      PATHS ${SDK_REMOTE_ROOT_DIR} ${SDK_REMOTE_ROOT_DIR}/include)
+    find_path(SDK_REMOTE_INCLUDE_DIR uobject.h)
     if(SDK_REMOTE_INCLUDE_DIR)
       message(STATUS "Found sdk-remote include directory: "
 	"${SDK_REMOTE_INCLUDE_DIR}")

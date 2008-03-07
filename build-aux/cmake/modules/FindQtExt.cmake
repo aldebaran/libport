@@ -27,9 +27,7 @@ set(QT_EXT_FOUND FALSE)
 
 # Search for the library urbi.
 if(NOT QT_EXT_LIBRARY)
-  find_library(QT_EXT_LIBRARY
-    NAMES qt_ext
-    PATHS ${QT_EXT_ROOT_DIR} ${QT_EXT_ROOT_DIR}/lib)
+  find_library(QT_EXT_LIBRARY qt_ext)
   if(QT_EXT_LIBRARY)
     message(STATUS "Found qt-ext library: ${QT_EXT_LIBRARY}")
     set(QT_EXT_FOUND TRUE)
@@ -42,9 +40,7 @@ endif(NOT QT_EXT_LIBRARY)
 if(QT_EXT_FOUND)
   # Search for the include directory.
   if(NOT QT_EXT_INCLUDE_DIR)
-    find_path(QT_EXT_INCLUDE_DIR
-      NAMES qt-ext/qt-info.h
-      PATHS ${QT_EXT_ROOT_DIR} ${QT_EXT_ROOT_DIR}/include)
+    find_path(QT_EXT_INCLUDE_DIR qt-ext/qt-info.h)
     if(QT_EXT_INCLUDE_DIR)
       message(STATUS "Found qt-ext include directory: "
 	"${QT_EXT_INCLUDE_DIR}")
