@@ -1,5 +1,5 @@
 ##
-## Init.cmake: This file is part of libport.
+## PrintVar.cmake: This file is part of libport.
 ## Copyright (C) Gostai S.A.S., 2006-2008.
 ##
 ## This software is provided "as is" without warranty of any kind,
@@ -10,10 +10,9 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
-# Set common variables used in all Gostai project using cmake.
-
-set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
-enable_testing()
-include(Hostname)
-hostname(BUILDER_HOSTNAME)
-include(PrintVar)
+# Display the value of the variables given as argument.
+macro(PRINT_VAR)
+  foreach(i ${ARGV})
+    message(STATUS "${i}='${${i}}'")
+  endforeach(i)
+endmacro(PRINT_VAR)
