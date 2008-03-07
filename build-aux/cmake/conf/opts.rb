@@ -23,6 +23,7 @@ class Opts
     @opts = {
       # Miscellaneous options.
       :verbose => false,
+      :color => true,
       # Directories options.
       :prefix => '/usr/local',
       :bindir => 'bin',
@@ -73,6 +74,10 @@ class Opts
         @opts[:extraflags] = flags
       end
 
+      op.on('--no-color', 'Do not create Makefile with colored output') do
+        @opts[:color] = false
+      end
+
       op.on_tail('-h', '--help', 'Show this message.') do
         puts op
         exit 0
@@ -98,6 +103,7 @@ class Opts
     # Miscellaneous
     o += cmake_def("CMAKE_VERBOSE_MAKEFILE", opts[:verbose] ? 'ON' : 'OFF')
     o += cmake_def("CMAKE_INSTALL_PREFIX", opts[:prefix])
+    o += cmake_def("CMAKE_COLOR_MAKEFILE", opts[:color] ? 'ON' : 'OFF')
     # Configure dependent library paths
     @deplibs.each do |x|
       o += cmake_def("#{x}_ROOT_DIR", @opts[x]) if @opts[x]
