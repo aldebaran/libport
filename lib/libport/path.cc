@@ -9,13 +9,12 @@
 #include "libport/contract.hh"
 #include "libport/path.hh"
 
+// Implementation detail: if path_ is empty and absolute_ is false,
+// then the path is '.'
+
+
 namespace libport
 {
-  path::path () :
-    absolute_ (false)
-  {
-  }
-
   path::path (const std::string& p)
   {
     init (p);
@@ -59,6 +58,9 @@ namespace libport
   void
   path::init (std::string p)
   {
+    if (p.empty())
+      throw invalid_path("Path can't be empty.");
+
     test_absolute(p);
 
     // Cut directories on / and \.
@@ -81,7 +83,6 @@ namespace libport
 
       this->append_dir (dir);
     }
-
     this->append_dir (p);
   }
 
@@ -99,7 +100,9 @@ namespace libport
   path&
   path::operator/= (const path& rhs)
   {
-    precondition(!rhs.absolute_);
+    if (rhs.absolute_get())
+      throw invalid_path(
+        "Rhs of concatenation is absolute: " + rhs.to_string());
     for (path_type::const_iterator dir = rhs.path_.begin ();
 	 dir != rhs.path_.end ();
 	 ++dir)
@@ -144,6 +147,8 @@ namespace libport
 	separator = '/';
       }
     }
+    else if (path_.empty())
+      return ".";
 
     bool first = true;
     for (path_type::const_iterator dir = path_.begin ();
@@ -178,6 +183,7 @@ namespace libport
   {
     precondition(dir.find (separator_) == std::string::npos);
 
+
     if (dir != "" && dir != ".")
     {
       if (dir == "..")
@@ -198,24 +204,27 @@ namespace libport
   std::string
   path::basename () const
   {
+    // basename of / is /, basename of . is .
+    if (path_.empty())
+      return *this;
+
     return path_.back();
   }
 
   path
   path::dirname () const
   {
-    if (!path_.empty())
-    {
-      std::string last = path_.back();
-      // The const cast here is justified since the modification is
-      // reverted two lines below.
-      const_cast<path*>(this)->path_.pop_back();
-      path res = *this;
-      const_cast<path*>(this)->path_.push_back(last);
-      return res;
-    }
-    else
+    // dirname of / is /, dirname of . is .
+    if (path_.empty())
       return *this;
+
+    std::string last = path_.back();
+    // The const cast here is justified since the modification is
+    // reverted two lines below.
+    const_cast<path*>(this)->path_.pop_back();
+    path res = path_.empty() ? "." : *this;
+    const_cast<path*>(this)->path_.push_back(last);
+    return res;
   }
 
   bool path::exists () const

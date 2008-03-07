@@ -16,16 +16,33 @@ namespace libport
   class path
   {
   public:
+    /// Exception thrown on invalid path
+    class invalid_path
+    {
+    public:
+      invalid_path(const std::string& msg)
+        : _msg(msg)
+      {}
+      std::string what()
+      {
+        return _msg;
+      }
+    private:
+      std::string _msg;
+    };
+
     /// \name Constructors.
     /// \{
 
-    path ();
-
     /// Init object with \a path.
+    /** @throw invalid_path if the givent string isn't a valid path
+     */
     path (const std::string& p);
 
     // FIXME: Why does constructor with std::string is not enough?
     /// Init object with \a p.
+    /** @throw invalid_path if the givent string isn't a valid path
+     */
     path (const char* p);
 
     /// \}
@@ -36,7 +53,11 @@ namespace libport
     %rename (assign) operator= (const path& rhs);
 #endif
     path& operator= (const path& rhs);
+    /** @throw invalid_path if \a rhs is absolute.
+     */
     path& operator/= (const path& rhs);
+    /** @throw invalid_path if \a rhs is absolute.
+     */
     path operator/ (const std::string& rhs) const;
     bool operator== (const path& rhs) const;
 

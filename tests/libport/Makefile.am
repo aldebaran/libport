@@ -2,35 +2,39 @@ include $(top_srcdir)/flags.mk
 
 # Program to check:
 check_PROGRAMS =		\
-singleton1			\
-singleton2			\
-test-deref			\
-test-escape			\
-test-unescape			\
-test-indent			\
-test-separator			\
-test-shared-ptr			\
-test-timer			\
+path				\
+singleton1                      \
+singleton2                      \
+test-deref                      \
+test-escape                     \
+test-unescape                   \
+test-indent                     \
+test-separator                  \
+test-shared-ptr                 \
+test-timer                      \
 udouble1			\
 ufloat1				\
 ullfp1				\
 ullfptab1
 
-LDADD = $(top_builddir)/lib/libport/libport.la
+AM_CPPFLAGS += $(BOOST_CPPFLAGS)
+AM_LDFLAGS += $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
+LDADD = $(top_builddir)/lib/libport/libport.la $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
-singleton1_SOURCES	= singleton1.cc
-singleton2_SOURCES	= singleton2.cc
-test_deref_SOURCES	= test-deref.cc
-test_escape_SOURCES	= test-escape.cc
+path_SOURCES		= path.cc
+singleton1_SOURCES      = singleton1.cc
+singleton2_SOURCES      = singleton2.cc
+test_deref_SOURCES      = test-deref.cc
+test_escape_SOURCES     = test-escape.cc
 test_unescape_SOURCES   = test-unescape.cc
-test_indent_SOURCES	= test-indent.cc
-test_separator_SOURCES	= test-separator.cc
+test_indent_SOURCES     = test-indent.cc
+test_separator_SOURCES  = test-separator.cc
 test_shared_ptr_SOURCES = test-shared-ptr.cc
-test_timer_SOURCES	= test-timer.cc
-udouble1_SOURCES	= udouble1.cc
-ufloat1_SOURCES		= ufloat1.cc
-ullfp1_SOURCES		= ullfp1.cc
-ullfptab1_SOURCES	= ullfptab1.cc
+test_timer_SOURCES      = test-timer.cc
+udouble1_SOURCES        = udouble1.cc
+ufloat1_SOURCES         = ufloat1.cc
+ullfp1_SOURCES          = ullfp1.cc
+ullfptab1_SOURCES       = ullfptab1.cc
 
 # Automake thinks the following line is not POSIX, help it.
 AUTOMAKE_OPTIONS += -Wno-portability

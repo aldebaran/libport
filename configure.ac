@@ -33,6 +33,7 @@ AC_PROG_LIBTOOL
 # AutoTroll with Qt.
 # AT_WITH_QT
 # AC_CONFIG_FILES([gui/Makefile])
+BOOST_TEST
 
 ## -------------- ##
 ## Sub packages.  ##

@@ -164,15 +164,11 @@ namespace libport
   file_library::find_in_search_path (const path& relative_path,
 				     const std::string& filename) const
   {
-    path checked_dir;
-
     // Otherwise start scanning the search path.
     foreach (const path& p, search_path_)
       {
-	if (p.absolute_get ())
-	  checked_dir = p;
-	else
-	  checked_dir = current_directory_get () / p;
+        path checked_dir = p.absolute_get () ?
+          p : current_directory_get () / p;
 
 	checked_dir /= relative_path;
 
