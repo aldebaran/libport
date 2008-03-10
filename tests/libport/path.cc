@@ -1,20 +1,21 @@
-#include <boost/test/unit_test.hpp>
+#include <libport/unit-test.hh>
 #include <boost/bind.hpp>
 #include <libport/path.hh>
 
-using boost::unit_test::test_suite;
+
 using boost::bind;
 using libport::path;
+using libport::test_suite;
 
 void path_ctor(const std::string& path, bool valid)
 {
   if (valid)
   {
-    BOOST_CHECK_NO_THROW(libport::path(path));
+    BOOST_CHECK_NO_THROW(libport::path p(path));
   }
   else
   {
-    BOOST_CHECK_THROW(libport::path(path),
+    BOOST_CHECK_THROW(libport::path p(path),
                       path::invalid_path);
   }
 }
@@ -56,8 +57,8 @@ void equal(const path& lhs, const path& rhs)
   BOOST_CHECK_EQUAL(lhs, rhs);
 }
 
-boost::unit_test::test_suite*
-init_unit_test_suite(int argc, char* argv[])
+test_suite*
+init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::path test suite");
 
