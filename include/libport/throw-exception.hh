@@ -14,8 +14,9 @@
 namespace libport
 {
   template<class E>
+  inline
   ATTRIBUTE_NORETURN
-  inline void throw_exception(E const & e)
+  void throw_exception(E const & e)
   {
     boost::throw_exception(e);
     abort();
