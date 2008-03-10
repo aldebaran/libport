@@ -113,14 +113,14 @@ installdir=$(cd $installdir && pwd)
 matchdir=$(echo "$installdir" | sed -ne "s#${currentdir}##p")
 
 if test -n "$matchdir"; then
-  error 2 "Cannont install in a subdirectory of current directory."
+  error 2 "Cannot install in a subdirectory of current directory."
 fi
 
 # Test for write permissions
 install_test_file=$installdir/.urbi_install_test_file
 touch -f $install_test_file 2>/dev/null || true
 if test ! -f $install_test_file; then
-  error 2 "unable to create file in $installdir, you may need special permissions"
+  error 2 "Unable to create file in $installdir, you may need special permissions"
 fi
 rm -f $install_test_file 2>/dev/null
 
