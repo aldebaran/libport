@@ -106,30 +106,22 @@ do
     fatal "$i is not defined"
   fi
 done
+
 set -x
+command=$($libtool -n --tag=CXX --mode=link "$@")
 case $urbi_env:$urbi_host in
   aibo:*)
-    command=$($libtool -n --tag=CXX --mode=link "$@" |
+    command=$(echo "$command" |
        sed -e 's/-lc / /' \
 	   -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ --whole-archive \1 --no-whole-archive /g')
     ;;
-  engine:*darwin*)
-    command=$($libtool -n --tag=CXX --mode=link "$@")
+  *:*darwin*)
+    command=$(echo "$command" |
+       sed -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ -Wl,-all_load \1 /g')
     ;;
-  engine:*)
-    command=$($libtool -n --tag=CXX --mode=link "$@" |
+  *:*)
+    command=$(echo "$command" |
        sed -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ -Wl,-whole-archive \1 -Wl,-no-whole-archive /')
-    ;;
-  webots:*darwin*)
-    command=$($libtool -n --tag=CXX --mode=link "$@" |
-       sed -e 's/ \([^ ]*liburbicore\.a\)/ -Wl,-all_load \1  /')
-    ;;
-  webots:*)
-    command=$($libtool -n --tag=CXX --mode=link "$@" |
-       sed -e 's/ \([^ ]*liburbicore\.a\)/ -Wl,-whole-archive \1 -Wl,-no-whole-archive /')
-    ;;
-  *)
-    command=$($libtool -n --tag=CXX --mode=link "$@")
     ;;
 esac
 
