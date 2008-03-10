@@ -109,6 +109,13 @@ if test ! -d "$installdir"; then
 fi
 installdir=$(cd $installdir && pwd)
 
+# Test if install in sub directory of ourself to prevent cp loops
+matchdir=$(echo "$installdir" | sed -ne "s#${currentdir}##p")
+
+if test -n "$matchdir"; then
+  error 2 "Cannont install in a subdirectory of current directory."
+fi
+
 # Test for write permissions
 install_test_file=$installdir/.urbi_install_test_file
 touch -f $install_test_file 2>/dev/null || true
@@ -117,7 +124,10 @@ if test ! -f $install_test_file; then
 fi
 rm -f $install_test_file 2>/dev/null
 
-cp -pPR $currentdir/* $installdir/
+# Don't copy on ourself.
+if test "$currentdir" != "$installdir"; then
+  cp -pPR $currentdir/* $installdir/
+fi
 
 # Set paths to install directory
 find $installdir							\
