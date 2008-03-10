@@ -69,15 +69,18 @@
 
 #  include <iostream>
 
-#  define ECHO(Msg)					\
-  do {							\
-    if (!getenv("DISABLE_DEBUG_TRACES"))		\
-    {							\
-      std::cerr << __FILE__ ":" << __LINE__ << ": "	\
-		<< __PRETTY_FUNCTION__ << ": "		\
-		<< Msg << std::endl;			\
-      SLEEP(1);						\
-    }							\
+#  define ECHO(Msg)						\
+  do {								\
+    if (!getenv("DISABLE_DEBUG_TRACES"))			\
+    {								\
+      bool colored = !getenv("BUILDFARM");			\
+      std::cerr << (colored ? "\x1b\x5b\x33\x33\x6d" : "")	\
+		<< __FILE__ ":" << __LINE__ << ": "		\
+		<< __PRETTY_FUNCTION__ << ": "			\
+		<< (colored ? "\x1b\x5b\x6d" : 0)		\
+		<< Msg << std::endl;				\
+      SLEEP(1);							\
+    }								\
   } while (0)
 
 # else
