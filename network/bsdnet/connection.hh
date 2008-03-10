@@ -54,7 +54,7 @@ public:
   {
     doWrite();
   }
-  virtual UConnection& send (const ubyte *buffer, int length);
+  virtual UConnection& send (const char* buffer, int length);
 
 public:
   //! Accessor for the underlying file descriptor
@@ -75,11 +75,11 @@ public:
 
 protected:
   //! Overloading this function is requiered by UConnection
-  virtual int effective_send (const ubyte *buffer, int length);
+  virtual int effective_send (const char* buffer, int length);
   //! The file descriptor of the connection
   int fd;
   //! The reception buffer
-  unsigned char read_buff[PACKETSIZE];
+  char read_buff[PACKETSIZE];
 
 public:
   virtual UConnection& endline ();

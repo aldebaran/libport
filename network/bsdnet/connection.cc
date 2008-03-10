@@ -19,12 +19,7 @@
  to the LinuxConnection constructor.
  */
 Connection::Connection(int connfd)
-  : UConnection	(::urbiserver,
-		 Connection::MINSENDBUFFERSIZE,
-		 Connection::MAXSENDBUFFERSIZE,
-		 Connection::PACKETSIZE,
-		 Connection::MINRECVBUFFERSIZE,
-		 Connection::MAXRECVBUFFERSIZE),
+  : UConnection	(::urbiserver, Connection::PACKETSIZE),
     fd(connfd)
 {
   // Test the error from UConnection constructor.
@@ -89,7 +84,7 @@ Connection::close()
 void
 Connection::doRead()
 {
-  int n = ::recv(fd, (char*)read_buff, PACKETSIZE, MSG_NOSIGNAL);
+  int n = ::recv(fd, read_buff, PACKETSIZE, MSG_NOSIGNAL);
   if (n <= 0)
   {
     // No error message for clean connection termination.
@@ -101,11 +96,11 @@ Connection::doRead()
     this->received(read_buff, n);
 }
 
-int Connection::effective_send (const ubyte* buffer, int length)
+int
+Connection::effective_send (const char* buffer, int length)
 {
-  int res = ::send(fd,
-		   reinterpret_cast<const char *>(buffer), length,
-		   MSG_NOSIGNAL);
+  std::cerr << "Sending: " << std::string(buffer, length) << std::endl;
+  int res = ::send(fd, buffer, length, MSG_NOSIGNAL);
   if (res == -1)
   {
     perror ("cannot send");
@@ -122,7 +117,7 @@ Connection::doWrite()
 }
 
 UConnection&
-Connection::send(const ubyte* buffer, int length)
+Connection::send(const char* buffer, int length)
 {
   if (send_queue_empty())
     trigger();
