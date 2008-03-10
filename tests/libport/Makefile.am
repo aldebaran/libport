@@ -6,6 +6,7 @@ singleton1			\
 singleton2			\
 test-deref			\
 test-escape			\
+test-unescape			\
 test-indent			\
 test-separator			\
 test-shared-ptr			\
@@ -21,6 +22,7 @@ singleton1_SOURCES	= singleton1.cc
 singleton2_SOURCES	= singleton2.cc
 test_deref_SOURCES	= test-deref.cc
 test_escape_SOURCES	= test-escape.cc
+test_unescape_SOURCES   = test-unescape.cc
 test_indent_SOURCES	= test-indent.cc
 test_separator_SOURCES	= test-separator.cc
 test_shared_ptr_SOURCES = test-shared-ptr.cc

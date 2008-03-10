@@ -6,6 +6,7 @@
 #include <ios>
 #include <iomanip>
 #include <cctype>
+#include <stdexcept>
 #include "libport/escape.hh"
 
 namespace libport
@@ -52,5 +53,41 @@ namespace libport
     o.fill (fill);
     o.flags (flags);
     return o;
+  }
+
+  std::string unescape(const std::string& s)
+  {
+    std::string ret;
+    for (int i=0; i<s.length(); i++)
+    {
+      if (s[i] == '\\')
+      {
+	if (i == s.length() - 1)
+	  throw std::runtime_error("invalid escape: '\\' at end of string");
+	switch(s[++i])
+	{
+	  case 'b': ret += '\b'; break;
+	  case 'f': ret += '\f'; break;
+	  case 'n': ret += '\n'; break;
+	  case 'r': ret += '\r'; break;
+	  case 't': ret += '\t'; break;
+	  case 'v': ret += '\v'; break;
+	  case '\\': ret += '\\'; break;
+	  case '\"': ret += '"'; break;
+	  case '\'': ret += '\''; break;
+	  case 'x':
+	    if (i >= s.length() - 2 || !isdigit(s[i+1]) || !isdigit(s[i+2]))
+	      throw std::runtime_error("invalid esacpe: '\\x' not followed by two digits");
+	    ret += static_cast<char>( (s[i+1]-'0')*10 + s[i+2] - '0');
+	    i += 2;
+	    break;
+	  default:
+	    throw std::runtime_error(std::string("invalid escape: '\\") + s[i] + "\'");
+	}
+      }
+      else
+	ret += s[i];
+    }
+    return ret;
   }
 }

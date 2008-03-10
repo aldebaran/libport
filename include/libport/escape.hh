@@ -37,6 +37,7 @@ namespace libport
 
   std::ostream& operator<< (std::ostream& o, const Escape&);
 
+  std::string unescape(const std::string& s);
 }
 
 # include "libport/escape.hxx"
