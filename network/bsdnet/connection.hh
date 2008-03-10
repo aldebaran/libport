@@ -75,7 +75,7 @@ public:
 
 protected:
   //! Overloading this function is requiered by UConnection
-  virtual int effective_send (const char* buffer, int length);
+  virtual int effective_send (const char* buffer, size_t length);
   //! The file descriptor of the connection
   int fd;
   //! The reception buffer

@@ -97,7 +97,7 @@ Connection::doRead()
 }
 
 int
-Connection::effective_send (const char* buffer, int length)
+Connection::effective_send (const char* buffer, size_t length)
 {
   std::cerr << "Sending: " << std::string(buffer, length) << std::endl;
   int res = ::send(fd, buffer, length, MSG_NOSIGNAL);
