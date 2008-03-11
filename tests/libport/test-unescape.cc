@@ -16,6 +16,8 @@ int main ()
   passert(u, u == "\a\b\f\n\r\t\v\\\"");
   u = unescape("\\x07");
   passert(u,u == "\a");
+  u = unescape("\\x20");
+  passert(u, u == " ");
   std::string except;
   try {
     unescape("aaa\\");
@@ -40,6 +42,6 @@ int main ()
   {
     except = e.what();
   }
-  passert(except, except == "invalid esacpe: '\\x' not followed by two digits");
+  passert(except, except == "invalid escape: '\\x' not followed by two digits");
 		    
 }

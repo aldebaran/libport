@@ -76,9 +76,9 @@ namespace libport
 	  case '\"': ret += '"'; break;
 	  case '\'': ret += '\''; break;
 	  case 'x':
-	    if (i >= s.length() - 2 || !isdigit(s[i+1]) || !isdigit(s[i+2]))
-	      throw std::runtime_error("invalid esacpe: '\\x' not followed by two digits");
-	    ret += static_cast<char>( (s[i+1]-'0')*10 + s[i+2] - '0');
+	    if (s.length() < i + 3 || !isxdigit(s[i+1]) || !isxdigit(s[i+2]))
+	      throw std::runtime_error("invalid escape: '\\x' not followed by two digits");
+	    ret += static_cast<char>(strtol(s.substr(i+1, 2).c_str(), 0, 16));
 	    i += 2;
 	    break;
 	  default:
