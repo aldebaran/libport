@@ -56,6 +56,9 @@ unsigned int
 sleep(unsigned int seconds)
 {
   Sleep(seconds * 1000);
+  // Under Unix systems, sleep returns the number of second left to
+  // sleep if interrupted by a signal. The WIN32 Sleep always sleeps
+  // the requested time, thus 0 is the right answer.
   return 0;
 }
 
