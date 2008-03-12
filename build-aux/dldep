@@ -28,10 +28,11 @@ directory is given as second argument it copies the libraries in it.
 EOF
 end
 
-# List of dynamic libraries that we never want to ship.
+# List of dynamic libraries that we never want to ship. The test used is case
+# insensitive.
 # NOTE for windows:
 #   If a dll is present on a Windows XP Pro/Vista fresh installation, I add it
-#   to the list. Use case insensitive name.
+#   to the list.
 EXCLUDE = [
            # Win32
            'iphlpapi.dll',
@@ -54,6 +55,10 @@ EXCLUDE = [
            'winmm.dll',
            'ntdll.dll',
           ]
+# Returns whether _filename_ is included in the EXCLUDE list.
+def EXCLUDE.has?(filename)
+  find { |x| x.casecmp(filename).zero? }
+end
 
 # We patch basename on windows because the default implementation
 # return '\foo\file.txt' for 'c:\foo\file.txt' instead of 'file.txt'.
@@ -119,7 +124,7 @@ def ldd(bin)
     if file
       if path
         # Check for excluded libraries.
-        if EXCLUDE.include?(File.basename(line))
+        if EXCLUDE.has?(File.basename(line))
           info("exclude '#{path}'")
         else
           r << path
@@ -146,7 +151,7 @@ def cygcheck(bin)
       # Exclude the binary name.
       next if File.basename(line) == binBasename
       # Check for excluded libraries.
-      if EXCLUDE.include?(File.basename(line).downcase)
+      if EXCLUDE.has?(File.basename(line))
         info("exclude '#{line}'")
       else
         r << line
@@ -173,7 +178,7 @@ def otool_L(bin)
     if line =~ /^(\S+)\s\(compatibility version ([\d.]+), current version ([\d.]+)\)$/
       path = $1
       # Check for excluded libraries.
-      if EXCLUDE.include?(File.basename(path))
+      if EXCLUDE.has?(File.basename(path))
         info("exclude '#{path}'")
       else
     	r << path
