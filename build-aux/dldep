@@ -123,12 +123,7 @@ def ldd(bin)
     file, path, addr = ldd_parse(line)
     if file
       if path
-        # Check for excluded libraries.
-        if EXCLUDE.has?(File.basename(line))
-          info("exclude '#{path}'")
-        else
-          r << path
-        end
+        r << path
       else
         error "cannot find '#{file}'"
       end
@@ -150,12 +145,7 @@ def cygcheck(bin)
     when /^([a-zA-Z]:[\/\\])?.*?([\/\\].*?)+$/
       # Exclude the binary name.
       next if File.basename(line) == binBasename
-      # Check for excluded libraries.
-      if EXCLUDE.has?(File.basename(line))
-        info("exclude '#{line}'")
-      else
-        r << line
-      end
+      r << line
     when /^Error: could not find (.*)$/
       error "cannot find '#$1'"
     else
@@ -176,13 +166,7 @@ def otool_L(bin)
     # $2: compatibility version
     # $3: current version
     if line =~ /^(\S+)\s\(compatibility version ([\d.]+), current version ([\d.]+)\)$/
-      path = $1
-      # Check for excluded libraries.
-      if EXCLUDE.has?(File.basename(path))
-        info("exclude '#{path}'")
-      else
-    	r << path
-      end
+      r << $1
     else
       warn "cannot parse `#{line}'"
     end
@@ -207,7 +191,15 @@ def dldep(bin)
   unless $?.exitstatus.zero?
     fatal "The underneath otool exited with non-zero status."
   end
-  l
+  # Check for excluded libraries.
+  l.reject do |x|
+    if EXCLUDE.has?(File.basename(x))
+      info("exclude '#{x}'")
+      true
+    else
+      false
+    end
+  end
 end
 
 # Copy the array of file _files_ to directory _dest_
