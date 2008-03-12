@@ -189,16 +189,20 @@ end
 # Use the appropriate function for the OS running this command.
 def dldep(bin)
   os = Config::CONFIG['host_os']
-  case os
-  when /linux/
-    ldd(bin)
-  when /cygwin/
-    cygcheck(bin)
-  when /darwin/
-    otool_L(bin)
-  else
-    fatal "unsupported OS '#{os}'"
+  l = (case os
+       when /linux/
+         ldd(bin)
+       when /cygwin/
+         cygcheck(bin)
+       when /darwin/
+         otool_L(bin)
+       else
+         fatal "unsupported OS '#{os}'"
+       end)
+  unless $?.exitstatus.zero?
+    fatal "The underneath otool exited with non-zero status."
   end
+  l
 end
 
 # Copy the array of file _files_ to directory _dest_
