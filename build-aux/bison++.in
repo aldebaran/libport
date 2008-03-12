@@ -18,7 +18,7 @@ status=0
 # Any tool failure is a failure of the script.
 set -e
 
-: ${BISON=@BISON@}
+: ${BISON='@BISON@'}
 
 # bison++ INPUT OUTPUT OPTIONS
 # ----------------------------
