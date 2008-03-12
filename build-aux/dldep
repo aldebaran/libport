@@ -18,16 +18,6 @@ ME = File.basename($0)
 
 $status = 0
 
-def usage
-  STDERR.puts <<EOF
-usage: #{ME} binary [destdir]
-
-This script print on the standard output the list of dependency
-dynamic libraries of the binary file given as primary argument. If a
-directory is given as second argument it copies the libraries in it.
-EOF
-end
-
 # List of dynamic libraries that we never want to ship. The test used is case
 # insensitive.
 # NOTE for windows:
@@ -58,6 +48,11 @@ EXCLUDE = [
 # Returns whether _filename_ is included in the EXCLUDE list.
 def EXCLUDE.has?(filename)
   find { |x| x.casecmp(filename).zero? }
+end
+
+# Print the excluded file list to _io_.
+def EXCLUDE.print(io = STDOUT)
+  each { |x| io.puts x }
 end
 
 # We patch basename on windows because the default implementation
@@ -224,8 +219,44 @@ end
 # ==== #
 if $0 == __FILE__
 
+  require 'optparse'
+
+  optparser = OptionParser.new do |op|
+
+    op.banner = <<EOF
+usage: #{ME} [options] binary [destdir]
+
+This script print on the standard output the list of dependency
+dynamic libraries of the binary file given as primary argument. If a
+directory is given as second argument it copies the libraries in it.
+EOF
+    op.summary_indent = '  '
+    op.summary_width = 25
+
+    op.separator ''
+    op.separator 'Options:'
+
+    op.on('-e', '--exclude [FILE]',
+          'Add FILE to the excluded file list. Maybe used several times. ' +
+          'No argument for the list.') do |path|
+      if path.nil?
+        EXCLUDE.print
+        exit 0
+      else
+        EXCLUDE << path
+      end
+    end
+
+    op.on_tail('-h', '--help', 'Show this message.') do
+      puts op
+      exit 0
+    end
+  end
+
+  optparser.parse!(ARGV)
+
   if ARGV.empty? or ARGV.size > 2
-    usage()
+    puts optparser
     exit 1
   end
 
