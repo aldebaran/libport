@@ -10,9 +10,13 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
+if(NOT COMMAND PRINT_VAR)
+
 # Display the value of the variables given as argument.
 macro(PRINT_VAR)
   foreach(i ${ARGV})
     message(STATUS "${i}='${${i}}'")
   endforeach(i)
 endmacro(PRINT_VAR)
+
+endif(NOT COMMAND PRINT_VAR)
