@@ -1,0 +1,64 @@
+##
+## PrintCMakeInternalInfo.cmake: This file is part of libport.
+## Copyright (C) Gostai S.A.S., 2006-2008.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
+include(PrintVar)
+
+print_var(
+  CMAKE_BINARY_DIR
+  CMAKE_CURRENT_BINARY_DIR
+  CMAKE_SOURCE_DIR
+  CMAKE_CURRENT_SOURCE_DIR
+  PROJECT_BINARY_DIR
+  PROJECT_SOURCE_DIR
+  EXECUTABLE_OUTPUT_PATH
+  LIBRARY_OUTPUT_PATH
+  CMAKE_MODULE_PATH
+  CMAKE_COMMAND
+  CMAKE_ROOT
+  CMAKE_CURRENT_LIST_FILE
+  CMAKE_CURRENT_LIST_LINE
+  CMAKE_INCLUDE_PATH
+  CMAKE_LIBRARY_PATH
+  CMAKE_SYSTEM
+  CMAKE_SYSTEM_NAME
+  CMAKE_SYSTEM_VERSION
+  CMAKE_SYSTEM_PROCESSOR
+  UNIX
+  WIN32
+  APPLE
+  MINGW
+  CYGWIN
+  BORLAND
+  MSVC
+  MSVC_IDE
+  MSVC60
+  MSVC70
+  MSVC71
+  MSVC80
+  CMAKE_COMPILER_2005
+  CMAKE_SKIP_RULE_DEPENDENCY
+  CMAKE_SKIP_INSTALL_ALL_DEPENDENCY
+  CMAKE_SKIP_RPATH
+  CMAKE_VERBOSE_MAKEFILE
+  CMAKE_SUPPRESS_REGENERATION
+  CMAKE_C_FLAGS
+  CMAKE_CXX_FLAGS
+  CMAKE_BUILD_TYPE
+  BUILD_SHARED_LIBS
+  CMAKE_C_COMPILER
+  CMAKE_CXX_COMPILER
+  CMAKE_COMPILER_IS_GNUCC
+  CMAKE_COMPILER_IS_GNUCXX
+  CMAKE_AR
+  CMAKE_RANLIB
+  )
+
