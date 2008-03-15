@@ -3,9 +3,10 @@
  ** \brief Implementation for libport/escape.hh.
  **/
 
-#include <ios>
-#include <iomanip>
 #include <cctype>
+#include <cstdlib>
+#include <iomanip>
+#include <ios>
 #include <stdexcept>
 #include "libport/escape.hh"
 
