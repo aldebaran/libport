@@ -32,7 +32,7 @@ if(NOT QSCINTILLA2_LIBRARY)
     message(STATUS "Found qscintilla2 library: ${QSCINTILLA2_LIBRARY}")
     set(QSCINTILLA2_FOUND TRUE)
   else(QSCINTILLA2_LIBRARY)
-    message(FATAL_ERROR "no qscintilla2 library found "
+    message(SEND_ERROR "no qscintilla2 library found "
       "(setting -DQSCINTILLA2_ROOT_DIR=/path/to/qscintilla2 may solve this "
       "problem).")
   endif(QSCINTILLA2_LIBRARY)
@@ -48,7 +48,7 @@ if(QSCINTILLA2_FOUND)
       message(STATUS "Found qscintilla2 headers directory: "
 	"${QSCINTILLA2_INCLUDE_DIR}")
     else(QSCINTILLA2_INCLUDE_DIR)
-      message(FATAL_ERROR "no qscintilla2 headers found "
+      message(SEND_ERROR "no qscintilla2 headers found "
 	"(setting -DQSCINTILLA2_ROOT_DIR=/path/to/qscintilla2 may solve this "
 	"problem).")
       set(QSCINTILLA2_FOUND FALSE)
@@ -66,7 +66,7 @@ if(QSCINTILLA2_FOUND AND QSCINTILLA2_INCLUDE_DIR)
     message(STATUS "Found scintilla header directory: "
       "${QSCINTILLA2_SCINTILLA_INCLUDE_DIR}")
   else()
-    message(FATAL_ERROR "no scintilla headers found "
+    message(SEND_ERROR "no scintilla headers found "
       "(check that your apply our patch before to install QScintilla).")
     set(QSCINTILLA2_FOUND FALSE)
   endif()

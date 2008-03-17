@@ -32,7 +32,7 @@ if(NOT QT_EXT_LIBRARY)
     message(STATUS "Found qt-ext library: ${QT_EXT_LIBRARY}")
     set(QT_EXT_FOUND TRUE)
   else(QT_EXT_LIBRARY)
-    message(FATAL_ERROR "no qt-ext library found "
+    message(SEND_ERROR "no qt-ext library found "
       "(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
   endif(QT_EXT_LIBRARY)
 endif(NOT QT_EXT_LIBRARY)
@@ -45,7 +45,7 @@ if(QT_EXT_FOUND)
       message(STATUS "Found qt-ext include directory: "
 	"${QT_EXT_INCLUDE_DIR}")
     else(QT_EXT_INCLUDE_DIR)
-      message(FATAL_ERROR "no qt-ext headers found "
+      message(SEND_ERROR "no qt-ext headers found "
 	"(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
       set(QT_EXT_FOUND FALSE)
     endif(QT_EXT_INCLUDE_DIR)

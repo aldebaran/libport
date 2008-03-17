@@ -30,7 +30,7 @@ if(NOT QWT_LIBRARY)
     message(STATUS "Found qwt library: ${QWT_LIBRARY}")
     set(QWT_FOUND TRUE)
   else(QWT_LIBRARY)
-    message(FATAL_ERROR "no qwt library found "
+    message(SEND_ERROR "no qwt library found "
       "(setting -DQWT_ROOT_DIR=/path/to/qwt may solve this problem).")
   endif(QWT_LIBRARY)
 endif(NOT QWT_LIBRARY)
@@ -43,7 +43,7 @@ if(QWT_FOUND)
       message(STATUS "Found qwt include directory: "
 	"${QWT_INCLUDE_DIR}")
     else(QWT_INCLUDE_DIR)
-      message(FATAL_ERROR "no qwt headers found "
+      message(SEND_ERROR "no qwt headers found "
 	"(setting -DQWT_ROOT_DIR=/path/to/qwt may solve this problem).")
       set(QWT_FOUND FALSE)
     endif(QWT_INCLUDE_DIR)

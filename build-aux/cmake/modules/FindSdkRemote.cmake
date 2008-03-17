@@ -31,7 +31,7 @@ if(NOT SDK_REMOTE_LIBRARY)
     message(STATUS "Found sdk-remote library: ${SDK_REMOTE_LIBRARY}")
     set(SDK_REMOTE_FOUND TRUE)
   else(SDK_REMOTE_LIBRARY)
-    message(FATAL_ERROR "no sdk-remote library found "
+    message(SEND_ERROR "no sdk-remote library found "
       "(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
       "problem).")
   endif(SDK_REMOTE_LIBRARY)
@@ -45,7 +45,7 @@ if(SDK_REMOTE_FOUND)
       message(STATUS "Found sdk-remote include directory: "
 	"${SDK_REMOTE_INCLUDE_DIR}")
     else(SDK_REMOTE_INCLUDE_DIR)
-      message(FATAL_ERROR "no sdk-remote headers found "
+      message(SEND_ERROR "no sdk-remote headers found "
 	"(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
 	"problem).")
       set(SDK_REMOTE_FOUND FALSE)
