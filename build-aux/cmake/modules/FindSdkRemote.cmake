@@ -55,9 +55,9 @@ if(SDK_REMOTE_FOUND)
   endif(NOT SDK_REMOTE_INCLUDE_DIR)
 
   set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARY})
-  # Add jpeg library
+  # Add dependent libraries.
   if(WIN32)
-    set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARIES} libjpeg)
+    set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARIES} libjpeg ws2_32)
   else()
     set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARIES} jpeg)
   endif()
