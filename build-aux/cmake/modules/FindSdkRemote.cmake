@@ -17,6 +17,8 @@
 # This module set two variables:
 #
 #   SDK_REMOTE_LIBRARY: the path to the libraries found.
+#   SDK_REMOTE_LIBRARIES: the set of libraries of the remote sdk. Add this
+#                         variables to target_link_libraries.
 #   SDK_REMOTE_INCLUDE_DIR: the include path.
 #
 # These variables are set to <var-name>-NOTFOUND if an error occurs.
@@ -51,5 +53,13 @@ if(SDK_REMOTE_FOUND)
       set(SDK_REMOTE_FOUND FALSE)
     endif(SDK_REMOTE_INCLUDE_DIR)
   endif(NOT SDK_REMOTE_INCLUDE_DIR)
+
+  set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARY})
+  # Add jpeg library
+  if(WIN32)
+    set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARIES} libjpeg)
+  else()
+    set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARIES} jpeg)
+  endif()
 endif(SDK_REMOTE_FOUND)
 
