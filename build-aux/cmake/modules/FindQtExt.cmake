@@ -54,19 +54,18 @@ endif(QT_EXT_FOUND)
 
 if(QT_EXT_FOUND)
   # Use this variables iff you use all those libraries otherwise you will add
-  # unused dependencies.
+  # unused dependencies. Unfortunately cmake is unable to track dependent
+  # library that are not built by itself (e.g. sdk-remote and qscintilla2).
   set(QT_EXT_LIBRARIES
     ${QT_EXT_LIBRARY}
     ${SDK_REMOTE_LIBRARY}
     ${QSCINTILLA2_LIBRARY}
-    ${QT_LIBRARIES}
     )
 
   set(QT_EXT_INCLUDES
     ${QT_EXT_INCLUDE_DIR}
     ${SDK_REMOTE_INCLUDE_DIR}
     ${QSCINTILLA2_INCLUDE_DIR}
-    ${QT_INCLUDES}
     )
 endif(QT_EXT_FOUND)
 
