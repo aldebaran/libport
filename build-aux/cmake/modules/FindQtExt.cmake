@@ -33,20 +33,20 @@ if(NOT QT_EXT_LIBRARY)
     set(QT_EXT_FOUND TRUE)
   else(QT_EXT_LIBRARY)
     message(SEND_ERROR "no qt-ext library found "
-      "(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
+      "(setting -DCMAKE_INCLUDE_PATH may solve this problem).")
   endif(QT_EXT_LIBRARY)
 endif(NOT QT_EXT_LIBRARY)
 
 if(QT_EXT_FOUND)
   # Search for the include directory.
   if(NOT QT_EXT_INCLUDE_DIR)
-    find_path(QT_EXT_INCLUDE_DIR qt-ext/qt-info.h)
+    find_path(QT_EXT_INCLUDE_DIR qt-ext/_qt-ext.hh)
     if(QT_EXT_INCLUDE_DIR)
       message(STATUS "Found qt-ext include directory: "
 	"${QT_EXT_INCLUDE_DIR}")
     else(QT_EXT_INCLUDE_DIR)
       message(SEND_ERROR "no qt-ext headers found "
-	"(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
+	"(setting -DCMAKE_INCLUDE_PATH may solve this problem).")
       set(QT_EXT_FOUND FALSE)
     endif(QT_EXT_INCLUDE_DIR)
   endif(NOT QT_EXT_INCLUDE_DIR)
