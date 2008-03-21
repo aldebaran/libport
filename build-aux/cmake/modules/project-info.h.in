@@ -18,18 +18,27 @@
 #ifndef CMAKE_AUX_MODULES_PROJECT_INFO_H
 # define CMAKE_AUX_MODULES_PROJECT_INFO_H
 
-/* Name of the project */
-# define PROJECT_NAME "@PROJECT_NAME@"
-/* Long name of the project */
-# define PROJECT_LONGNAME "@PROJECT_LONGNAME@"
-/* Version of the project */
-# define PROJECT_VERSION "@PROJECT_VERSION@"
-/* Version major number of the project */
-# define PROJECT_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
-/* Version minor number of the project */
-# define PROJECT_VERSION_MINOR @PROJECT_VERSION_MINOR@
-/* Support address of the project */
-# define PROJECT_SUPPORT "@PROJECT_SUPPORT@"
+/* Name of the package */
+# define PACKAGE_NAME "@PROJECT_NAME@"
+/* Long name of the package */
+# define PACKAGE_LONGNAME "@PROJECT_LONGNAME@"
+/* Version of the package */
+# define PACKAGE_VERSION "@PROJECT_VERSION@"
+/* Version major number of the package */
+# define PACKAGE_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+/* Version minor number of the package */
+# define PACKAGE_VERSION_MINOR @PROJECT_VERSION_MINOR@
+/* Support address of the package */
+# define PACKAGE_SUPPORT "@PROJECT_BUGREPORT@"
+# define PACKAGE_BUGREPORT PACKAGE_SUPPORT
+/* Copyright holder of the package */
+# define PACKAGE_COPYRIGHT_HOLDER "@PROJECT_COPYRIGHT_HOLDER@"
+/* Copyright years of the package */
+# define PACKAGE_COPYRIGHT_YEARS "@PROJECT_COPYRIGHT_YEARS@"
+/* Full description string of the package */
+# define PACKAGE_STRING "@PROJECT_STRING@"
+/* Name of the package file (tar/exe/deb/rpm) */
+# define PACKAGE_TARNAME "@PROJECT_TARNAME@"
 
 #endif /* !CMAKE_AUX_MODULES_PROJECT_INFO_H */
 
