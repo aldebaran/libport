@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 ##
-## bootstrap: This file is part of qt-ext.
+## conf-cmake.rb: This file is part of qt-ext.
 ## Copyright (C) Gostai S.A.S., 2006-2008.
 ##
 ## This software is provided "as is" without warranty of any kind,
@@ -15,7 +15,7 @@ require 'pathname'
 
 MEDIR, ME = Pathname.new($0).split if MEDIR.nil? and ME.nil?
 
-class Opts
+class ConfCmake
 
   def initialize
     @opts = {
@@ -143,13 +143,13 @@ end
     end
   end
 
-end # class Opts
+end # class ConfCmake
 
 if $0 == __FILE__
 
   require 'pp'
 
-  go = Opts.new('SDK_REMOTE', 'QSCINTILLA2')
+  go = ConfCmake.new('SDK_REMOTE', 'QSCINTILLA2')
   pp go.parse(ARGV)
   puts go.cmakeflags
 
