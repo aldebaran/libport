@@ -152,7 +152,7 @@ end
   def pp_cmd(cmd, alinea='  ')
     a = Shellwords.shellwords(cmd)
     puts a[0..1].join(' ') + ' \\'
-    a[2..-1].each { |x| puts alinea + x + ' \\' }
+    a[2..-1].each { |x| puts alinea + x + (x != a.last ? ' \\' : '') }
   end
 
 end # class ConfCmake
