@@ -12,116 +12,135 @@
 ##
 
 require 'pathname'
-require 'optparse'
 
-MEDIR, ME = Pathname.new($0).split
+MEDIR, ME = Pathname.new($0).split if MEDIR.nil? and ME.nil?
 
 class Opts
 
-  def initialize(*deplibs)
-    @deplibs = deplibs
+  def initialize
     @opts = {
       # Miscellaneous options.
       :verbose => false,
       :color => true,
+      :extraflags => [],
+      :dry_run => false,
+      :cmake => 'cmake',
       # Directories options.
-      :prefix => '/usr/local',
-      :bindir => 'bin',
-      :includedir => 'include',
-      :libdir => 'lib',
+      :prefix => nil,
+      # Packages
+      :pkg => {},
     }
-    @optparser = OptionParser.new do |op|
+  end
 
-      op.banner = "usage: #{ME} [options]"
-      op.summary_indent = '  '
-      op.summary_width = 30
+  attr_reader :opts
 
-      ### Dependencies libraries
+  def usage
+    STDERR.puts "usage: #{ME} [options]"
+  end
 
-      op.separator ''
-      op.separator 'Dependencies libraries:'
+  def help
+    usage
+    STDERR.puts <<EOF
 
-      @deplibs.each do |x|
-        op.on("--with-#{x} DIR", "Use the library `#{x}'.") do |dir|
-          check_directory(dir)
-          @opts[x] = dir
-        end
-      end
+    --with-XXX=PATH     Add package XXX.
+-v, --verbose           Set cmake verbose mode.
+-e, --extra=FLAGS       Add extra cmake flags.
+    --no-color          Do not create Makefile with colored output.
+-n, --dry-run           Do not execute cmake, just print the command.
+-h, --help              Show this message.
+EOF
+end
 
-      op.on('--with-qt DIR', "Path to your Qt install directory.") do |dir|
-        @opts[:qtdir] = dir
-      end
-
-      ### Directories options
-
-      op.separator ''
-      op.separator 'Installation directories:'
-
-      op.on('--prefix DIR', 'Installation prefix.') do |dir|
-        @opts[:prefix] = dir
-      end
-
-      ### Miscellaneous options
-
-      op.separator ''
-      op.separator 'Miscellaneous options:'
-
-      op.on('-v', '--verbose', 'Set cmake verbose mode.') do
+  def parse(argv)
+    if argv.empty?
+      usage
+      exit 1
+    end
+    argv.reject do |o|
+      case o
+      when /^-v$/, /^--verbose$/
         @opts[:verbose] = true
-      end
-
-      op.on('-e', '--extra FLAGS', 'Add extra cmake flags') do |flags|
-        @opts[:extraflags] = flags
-      end
-
-      op.on('--no-color', 'Do not create Makefile with colored output') do
+      when /^--no-color$/
         @opts[:color] = false
-      end
-
-      op.on_tail('-h', '--help', 'Show this message.') do
-        puts op
-        exit 0
+      when /^-h$/, /^--help$/
+        help
+        exit 1
+      when /^--extra=(.*)$/
+        @opts[:extraflags] << $1
+      when /^--with-([^=]+)=(.*)$/
+        @opts[:pkg][$1] = $2
+      when /^-n$/, /^--dry-run$/
+        @opts[:dry_run] = true
+      when /^-/, /^([^=]+)=/
+        STDERR.puts "unknown option '#{o}'"
+        true
+      else
+        false
       end
     end
   end
 
-  attr_reader :opts, :deplibs
-
-  def parse(argv)
-    @optparser.parse!(argv)
-    @opts
-  end
-
-  def parse!(argv)
-    @optparser.parse!(argv)
-    self
-  end
-
   def cmakeflags
-    o = ' ' + MEDIR
-    o += " \\\n"
+    o = ' ' + MEDIR + ' '
     # Miscellaneous
     o += cmake_def("CMAKE_VERBOSE_MAKEFILE", opts[:verbose] ? 'ON' : 'OFF')
     o += cmake_def("CMAKE_INSTALL_PREFIX", opts[:prefix])
     o += cmake_def("CMAKE_COLOR_MAKEFILE", opts[:color] ? 'ON' : 'OFF')
     # Configure dependent library paths
-    @deplibs.each do |x|
-      o += cmake_def("#{x}_ROOT_DIR", @opts[x]) if @opts[x]
+    cmake_search_paths.each do |k, v|
+      o += cmake_def(v[:var], v[:list].join(';'))
     end
-    o += ' ' + @opts[:extraflags] + " \\\n" if @opts[:extraflags]
+    o += ' ' + @opts[:extraflags].join(" ")
     o
+  end
+
+  def [](key)
+    @opts[key]
+  end
+
+  def run
+    cmd = opts[:cmake] + cmakeflags
+    puts cmd
+    if opts[:dry_run]
+      0
+    else
+      system cmd
+      $?.exitstatus != 0
+    end
   end
 
   private
 
-  def check_directory(dir)
-    unless File.directory?(dir)
-      raise(ArgumentError, "not a directory - '#{dir}'")
+  def cmake_search_paths
+    search_path = {
+      'lib' => {
+        :var => 'CMAKE_LIBRARY_PATH',
+        :list => []
+      },
+      'include' => {
+        :var => 'CMAKE_INCLUDE_PATH',
+        :list => []
+      },
+      'bin' => {
+        :var => 'CMAKE_PROGRAM_PATH',
+        :list => []
+      }
+    }
+    @opts[:pkg].values.each do |v|
+      search_path.keys.each do |x|
+        path = Pathname.new(v) + x
+        search_path[x][:list] << path if path.directory?
+      end
     end
+    search_path
   end
 
-  def cmake_def(varname, value, alinea="    ")
-    "#{alinea}-D#{varname}='#{value}' \\\n"
+  def cmake_def(varname, value)
+    if value
+      "-D#{varname}='#{value}' "
+    else
+      ''
+    end
   end
 
 end # class Opts
