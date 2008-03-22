@@ -13,6 +13,7 @@
 
 require 'pathname'
 require 'shellwords'
+require 'fileutils'
 
 MEDIR, ME = Pathname.new($0).split if MEDIR.nil? and ME.nil?
 
@@ -111,7 +112,12 @@ end
       0
     else
       system cmd
-      $?.exitstatus
+      status = $?.exitstatus
+      if ENV['BUILDFARM']
+        FileUtils.ln_s('CMakeCache.txt', 'config.log',
+                       :verbose => true, :force => true)
+      end
+      status
     end
   end
 
