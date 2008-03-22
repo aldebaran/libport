@@ -14,6 +14,7 @@
 require 'pathname'
 require 'shellwords'
 require 'fileutils'
+require 'rbconfig'
 
 MEDIR, ME = Pathname.new($0).split if MEDIR.nil? and ME.nil?
 
@@ -113,11 +114,30 @@ end
     else
       system cmd
       status = $?.exitstatus
-      if ENV['BUILDFARM']
-        FileUtils.ln_s('CMakeCache.txt', 'config.log',
-                       :verbose => true, :force => true)
-      end
+      bf_post_conf if ENV['BUILDFARM']
       status
+    end
+  end
+
+  def bf_post_conf
+    FileUtils.ln_s('CMakeCache.txt', 'config.log',
+                   :verbose => true, :force => true)
+    if Config::CONFIG['host_os'] =~ /cygwin/
+      FileUtils.cp('Makefile', 'Makefile.nmake')
+      File.open('Makefile', 'w') do
+        puts <<EOF
+NMAKE = "C:\\vcxx8\\VC\\bin\\nmake.exe"
+all:
+        $(NMAKE.exe) /f Makefile.nmake /K all
+
+check-buildfarm:
+        $(NMAKE) /f Makefile.nmake /K check-buildfarm
+
+install:
+        $(NMAKE) /f Makefile.nmake install
+
+EOF
+      end
     end
   end
 
