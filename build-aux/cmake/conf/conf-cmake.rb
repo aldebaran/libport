@@ -61,17 +61,22 @@ end
       case o
       when /^-v$/, /^--verbose$/
         @opts[:verbose] = true
+        true
       when /^--no-color$/
         @opts[:color] = false
+        true
       when /^-h$/, /^--help$/
         help
         exit 1
       when /^--extra=(.*)$/
         @opts[:extraflags] << $1
+        true
       when /^--with-([^=]+)=(.*)$/
         @opts[:pkg][$1] = $2
+        true
       when /^-n$/, /^--dry-run$/
         @opts[:dry_run] = true
+        true
       when /^-/, /^([^=]+)=/
         STDERR.puts "unknown option '#{o}'"
         true
