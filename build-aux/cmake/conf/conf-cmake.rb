@@ -111,7 +111,7 @@ end
       0
     else
       system cmd
-      $?.exitstatus != 0
+      $?.exitstatus
     end
   end
 
