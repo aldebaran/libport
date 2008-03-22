@@ -21,7 +21,7 @@ class ConfCmake
   def initialize
     @opts = {
       # Miscellaneous options.
-      :verbose => false,
+      :verbose => true,
       :color => true,
       :extraflags => [],
       :dry_run => false,
@@ -44,7 +44,7 @@ class ConfCmake
     STDERR.puts <<EOF
 
     --with-XXX=PATH     Add package XXX.
--v, --verbose           Set cmake verbose mode.
+    --no-verbose        Set cmake verbose mode off.
 -e, --extra=FLAGS       Add extra cmake flags.
     --no-color          Do not create Makefile with colored output.
 -n, --dry-run           Do not execute cmake, just print the command.
@@ -59,8 +59,8 @@ end
     end
     argv.reject do |o|
       case o
-      when /^-v$/, /^--verbose$/
-        @opts[:verbose] = true
+      when /^--no-verbose$/
+        @opts[:verbose] = false
         true
       when /^--no-color$/
         @opts[:color] = false
