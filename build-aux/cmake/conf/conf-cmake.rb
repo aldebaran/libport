@@ -106,6 +106,10 @@ end
     @opts[key]
   end
 
+  def []=(key, val)
+    @opts[key] = val
+  end
+
   def run
     cmd = opts[:cmake] + cmakeflags
     pp_cmd cmd
