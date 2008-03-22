@@ -12,6 +12,7 @@
 ##
 
 require 'pathname'
+require 'shellwords'
 
 MEDIR, ME = Pathname.new($0).split if MEDIR.nil? and ME.nil?
 
@@ -100,7 +101,7 @@ end
 
   def run
     cmd = opts[:cmake] + cmakeflags
-    puts cmd
+    pp_cmd cmd
     if opts[:dry_run]
       0
     else
@@ -141,6 +142,12 @@ end
     else
       ''
     end
+  end
+
+  def pp_cmd(cmd, alinea='  ')
+    a = Shellwords.shellwords(cmd)
+    puts a[0..1].join(' ') + ' \\'
+    a[2..-1].each { |x| puts alinea + x + ' \\' }
   end
 
 end # class ConfCmake
