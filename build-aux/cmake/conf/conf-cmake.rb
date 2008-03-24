@@ -47,7 +47,7 @@ class ConfCmake
 
     --with-XXX=PATH     Add package XXX.
     --no-verbose        Set cmake verbose mode off.
--e, --extra=FLAGS       Add extra cmake flags.
+    --extra=FLAGS       Add extra cmake flags.
     --color             Do not create Makefile with colored output.
 -n, --dry-run           Do not execute cmake, just print the command.
 -h, --help              Show this message.
