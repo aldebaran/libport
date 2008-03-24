@@ -10,7 +10,7 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
-if(NOT COMMAND CHECK_CMAKE_VARS_EXISTS)
+if(NOT COMMAND CHECK_CMAKE_VARS_EXISTS_CMAKE)
 
   # Check whether the given variables exists. Send an error message if it
   # doesn't.
