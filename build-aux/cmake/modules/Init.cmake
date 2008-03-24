@@ -19,6 +19,6 @@ enable_testing()
 include(Hostname)
 hostname(BUILDER_HOSTNAME)
 include(PrintVar)
-set(BUIDLFARM $ENV{BUILDFARM})
+set(BUILDFARM $ENV{BUILDFARM})
 
 endif(NOT DEFINED INIT_CMAKE)
