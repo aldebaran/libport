@@ -10,6 +10,8 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
+if(NOT COMMAND HOSTNAME)
+
 # Find the hostname of machine running cmake.
 # outvar: the name of the variable where to store the result.
 macro(HOSTNAME outvar)
@@ -19,3 +21,5 @@ macro(HOSTNAME outvar)
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 endmacro(HOSTNAME)
+
+endif(NOT COMMAND HOSTNAME)

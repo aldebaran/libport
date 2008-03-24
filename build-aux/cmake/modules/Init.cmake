@@ -12,8 +12,13 @@
 
 # Set common variables used in all Gostai project using cmake.
 
+if(NOT DEFINED INIT_CMAKE)
+
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
 enable_testing()
 include(Hostname)
 hostname(BUILDER_HOSTNAME)
 include(PrintVar)
+set(BUIDLFARM $ENV{BUILDFARM})
+
+endif(NOT DEFINED INIT_CMAKE)
