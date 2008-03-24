@@ -10,7 +10,7 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
-if(NOT COMMAND CHECK_CMAKE_VARS_EXISTS_CMAKE)
+if(NOT COMMAND CHECK_CMAKE_VARS_EXISTS)
 
   # Check whether the given variables exists. Send an error message if it
   # doesn't.
@@ -22,4 +22,4 @@ if(NOT COMMAND CHECK_CMAKE_VARS_EXISTS_CMAKE)
     endforeach(i)
   endmacro(CHECK_CMAKE_VARS_EXISTS)
 
-endif(NOT COMMAND CHECK_CMAKE_VARS_EXISTS_CMAKE)
+endif(NOT COMMAND CHECK_CMAKE_VARS_EXISTS)
