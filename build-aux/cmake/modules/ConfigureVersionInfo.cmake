@@ -22,7 +22,7 @@ macro(CONFIGURE_VERSION_INFO output deps)
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
     "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
-    "Generating version information time stamp" VERBATIM)
+    "Generating version information time stamp '${output}.tmp'" VERBATIM)
   add_custom_command(
     OUTPUT ${output}
     COMMAND ${CMAKE_AUX_DIR}/move-if-change
@@ -31,7 +31,7 @@ macro(CONFIGURE_VERSION_INFO output deps)
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
     "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
-    "Generating version information" VERBATIM)
+    "Generating version information '${output}'" VERBATIM)
   set_source_files_properties(${deps}
     PROPERTIES OBJECT_DEPENDS ${output})
   set_directory_properties(PROPERTIES
