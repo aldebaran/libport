@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+##
+## gen-lib-loader-script: This file is part of libport.
+## Copyright (C) Gostai S.A.S., 2006-2008.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
+require 'pathname'
+require 'rbconfig'
+
+MEDIR, ME = Pathname.new($0).split
+
+def fatal(msg)
+  STDERR.puts("#{ME}: error : #{msg}")
+  exit 2
+end
+
+def usage()
+  STDERR.puts <<EOF
+usage: #{ME} output progname directories...
+
+output - the name of the generated script
+progname - the name of the wrapped program.
+directories - a list of directories to add in the library loader environment.
+EOF
+end
+
+# Return a shell script template expanded with:
+# progname: the name of the program to wrapped
+# varname: the name of the environment variable to use (ex: LD_LIBRARY_PATH)
+# dirs: the list of directories to add to varname
+def shell(progname, varname, *dirs)
+  <<EOF
+#!/bin/sh
+
+dir="${0%/*}"
+#{varname}="$dir:$dir/../lib:#{dirs.join(':')}"
+export #{varname}
+run="$dir/#{progname}"
+exec "$run"
+echo "cannot run '$run'"
+exit 1
+EOF
+end
+
+if ARGV.size < 2
+  usage
+  exit 1
+end
+
+if __FILE__ == $0
+
+  output = ARGV.shift
+  progname = ARGV.shift
+
+  os = Config::CONFIG['host_os']
+  str = (case os
+         when /linux/
+           shell(progname, "LD_LIBRARY_PATH", *ARGV)
+         when /darwin/
+           shell(progname, "DYLD_LIBRARY_PATH", *ARGV)
+         else
+           fatal "unsupported OS '#{os}'"
+         end)
+  File.open(output, 'w') { |io| io.puts str }
+
+end
+
+exit 0

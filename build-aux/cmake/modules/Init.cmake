@@ -21,5 +21,7 @@ include(Hostname)
 hostname(BUILDER_HOSTNAME)
 include(PrintVar)
 set(BUILDFARM $ENV{BUILDFARM})
+include(CopyDependentLibraries)
+include(GenLibLoader)
 
 endif(NOT DEFINED INIT_CMAKE)
