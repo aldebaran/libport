@@ -14,29 +14,32 @@ if(NOT COMMAND CONFIGURE_VERSION_INFO)
 
 # Generate version information in 'output' file and add it to the 'sources'
 # list variable.
-macro(CONFIGURE_VERSION_INFO output deps)
+function(CONFIGURE_VERSION_INFO output deps)
+  set(tmpout "${output}.tmp")
   add_custom_command(
-    OUTPUT ${output}.tmp
+    OUTPUT ${tmpout}
     COMMAND ${CMAKE_AUX_DIR}/revision
-    ARGS ${output}.tmp
+    ARGS ${tmpout}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
     "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
-    "Generating version information time stamp '${output}.tmp'" VERBATIM)
+    "Generating version information time stamp '${tmpout}'"
+    VERBATIM)
   add_custom_command(
     OUTPUT ${output}
     COMMAND ${CMAKE_AUX_DIR}/move-if-change
-    ARGS ${output}.tmp ${output}
-    DEPENDS ${output}.tmp
+    ARGS ${tmpout} ${output}
+    DEPENDS ${tmpout}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
     "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
-    "Generating version information '${output}'" VERBATIM)
+    "Generating version information '${output}'"
+    VERBATIM)
   set_source_files_properties(${deps}
     PROPERTIES OBJECT_DEPENDS ${output})
   set_directory_properties(PROPERTIES
     ADDITIONAL_MAKE_CLEAN_FILES ${output}
-    ADDITIONAL_MAKE_CLEAN_FILES ${output}.tmp)
-endmacro(CONFIGURE_VERSION_INFO)
+    ADDITIONAL_MAKE_CLEAN_FILES ${tmpout})
+endfunction(CONFIGURE_VERSION_INFO)
 
 endif(NOT COMMAND CONFIGURE_VERSION_INFO)
