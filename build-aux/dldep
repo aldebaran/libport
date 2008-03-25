@@ -11,6 +11,7 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
+require 'pathname'
 require 'fileutils'
 require 'rbconfig'
 
@@ -199,9 +200,10 @@ end
 
 # Copy the array of file _files_ to directory _dest_
 def copy(files, dest)
-  fatal "not a directory `#{dest}'" unless File.directory?(dest)
-  r = FileUtils.cp(files, dest)
-  r.each { |x| puts "#{x} -> #{dest}" }
+  path = Pathname.new(dest)
+  path.mkpath
+  r = FileUtils.cp(files, path.to_s)
+  r.each { |x| puts "#{x} -> #{path}" }
   error("some file may not have been copied") if r.size != files.size
 rescue Errno::ENOENT => ex
   error(ex.to_s)
