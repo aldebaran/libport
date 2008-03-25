@@ -221,6 +221,7 @@ if $0 == __FILE__
 
   require 'optparse'
 
+  $output = '-'
   optparser = OptionParser.new do |op|
 
     op.banner = <<EOF
@@ -247,6 +248,11 @@ EOF
       end
     end
 
+    op.on('-o', '--output FILE',
+          'Output list to FILE instead of standard output.') do |path|
+      $output = path
+    end
+
     op.on_tail('-h', '--help', 'Show this message.') do
       puts op
       exit 0
@@ -264,7 +270,13 @@ EOF
 
   deps = dldep(binFile)
   files_exists? deps
-  deps.each { |x| puts "#{x}" }
+  if $output == '-'
+    io = STDOUT
+  else
+    io = File.open($output, 'w')
+  end
+  deps.each { |x| io.puts x }
+  io.close
 
   if ARGV.size > 1
     dest = ARGV[1]
