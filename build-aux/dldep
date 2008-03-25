@@ -202,8 +202,7 @@ end
 def copy(files, dest)
   path = Pathname.new(dest)
   path.mkpath
-  r = FileUtils.cp(files, path.to_s)
-  r.each { |x| puts "#{x} -> #{path}" }
+  r = FileUtils.cp(files, path.to_s, :verbose => true)
   error("some file may not have been copied") if r.size != files.size
 rescue Errno::ENOENT => ex
   error(ex.to_s)
