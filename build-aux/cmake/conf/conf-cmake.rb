@@ -44,7 +44,10 @@ class ConfCmake
         :rules => {
           'all' => nil,
           'check-buildfarm' => nil,
-          'install' => nil
+          'install' => nil,
+          'package' => nil,
+          # Used by package rule.
+          'preinstall' => nil,
         }
       },
       # Directories options.
