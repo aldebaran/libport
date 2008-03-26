@@ -64,6 +64,7 @@ class ConfCmake
     usage
     STDERR.puts <<EOF
 
+    --prefix=PATH       Installation prefix.
     --with-XXX=PATH     Add package XXX.
     --no-verbose        Set cmake verbose mode off.
     --extra=FLAGS       Add extra cmake flags.
@@ -98,6 +99,8 @@ end
       when /^-n$/, /^--dry-run$/
         @opts[:dry_run] = true
         true
+      when /^--prefix=(.*)$/
+        @opts[:prefix] = $1
       when /^-/, /^([^=]+)=/
         STDERR.puts "unknown option '#{o}'"
         true
@@ -111,7 +114,7 @@ end
     o = ' ' + MEDIR + ' '
     # Miscellaneous
     o += cmake_def("CMAKE_VERBOSE_MAKEFILE", opts[:verbose] ? 'ON' : 'OFF')
-    o += cmake_def("CMAKE_INSTALL_PREFIX", opts[:prefix])
+    o += cmake_def("CMAKE_INSTALL_PREFIX", opts[:prefix]) if opts[:prefix]
     o += cmake_def("CMAKE_COLOR_MAKEFILE", opts[:color] ? 'ON' : 'OFF')
     # Configure dependent library paths
     cmake_search_paths.each do |k, v|
