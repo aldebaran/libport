@@ -28,6 +28,25 @@ class ConfCmake
       :extraflags => [],
       :dry_run => false,
       :cmake => 'cmake',
+      :bf_makefile => {
+        # make tool to use. By default it is make but it may be nmake.exe.
+        :make => 'make',
+        # Rules to wrap. If nil is associated then it is a straight forward
+        # wrapping: $(MAKE) <rule>
+        # Otherwise associated a hash like this:
+        #  {
+        #    :depends => [ dep, list ],
+        #    :actions => "code"
+        #  }
+        # or simply a string of "code" if there is no dependencies.
+        # The buildfarm uses the following rules: all, check-buildfarm, install
+        # dist and distcheck.
+        :rules => {
+          'all' => nil,
+          'check-buildfarm' => nil,
+          'install' => nil
+        }
+      },
       # Directories options.
       :prefix => nil,
       # Packages
@@ -123,28 +142,6 @@ end
     end
   end
 
-  def bf_post_conf
-    FileUtils.ln_s('CMakeCache.txt', 'config.log',
-                   :verbose => true, :force => true)
-    if Config::CONFIG['host_os'] =~ /cygwin/
-      FileUtils.cp('Makefile', 'Makefile.nmake')
-      File.open('Makefile', 'w') do
-        puts <<EOF
-NMAKE = "C:\\vcxx8\\VC\\bin\\nmake.exe"
-all:
-        $(NMAKE.exe) /f Makefile.nmake /K all
-
-check-buildfarm:
-        $(NMAKE) /f Makefile.nmake /K check-buildfarm
-
-install:
-        $(NMAKE) /f Makefile.nmake install
-
-EOF
-      end
-    end
-  end
-
   private
 
   def cmake_search_paths
@@ -183,6 +180,45 @@ EOF
     a = Shellwords.shellwords(cmd)
     puts a[0..1].join(' ') + ' \\'
     a[2..-1].each { |x| puts alinea + x + (x != a.last ? ' \\' : '') }
+  end
+
+  def bf_post_conf
+    puts "Buildfarm post configuration..."
+    FileUtils.ln_s('CMakeCache.txt', 'config.log',
+                   :verbose => true, :force => true)
+    cmakefile = 'Makefile.cmake'
+    FileUtils.cp('Makefile', cmakefile)
+    File.open('Makefile', 'w') { |io| io.puts(gen_bf_makefile(cmakefile)) }
+  end
+
+  def gen_bf_makefile(makefilename)
+    opt = @opts[:bf_makefile]
+    if File.basename(opt[:make]) == "make"
+      od = '-'
+    else
+      od = '/'
+    end
+    out = <<EOF
+MAKE = "#{opt[:make]} #{od}f #{makefilename} #{od}k"
+
+EOF
+    opt[:rules].each do |r, v|
+      out += (if v.class == NilClass
+                gen_mf_rule(r, "$(MAKE) #{r}")
+              elsif v.class == String
+                gen_mf_rule(r, v)
+              elsif v.class == Hash
+                gen_mf_rule(r, v[:depends], v[:actions])
+              else
+                raise(ArgumentError,
+                      "bad value type '#{v.class}' for key '#{r}'")
+              end)
+    end
+    out
+  end
+
+  def gen_mf_rule(rule, code="", deps=[])
+    "#{rule}: #{deps.join(' ')}\n#{code.gsub(/^/, "\t")}\n\n"
   end
 
 end # class ConfCmake
