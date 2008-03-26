@@ -45,6 +45,7 @@ class ConfCmake
           'all' => nil,
           'check-buildfarm' => nil,
           'install' => nil,
+          'clean' => nil,
           'package' => nil,
           # Used by package rule.
           'preinstall' => nil,
