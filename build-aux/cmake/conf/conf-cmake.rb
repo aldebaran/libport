@@ -194,7 +194,11 @@ end
                    :verbose => true, :force => true)
     cmakefile = 'Makefile.cmake'
     FileUtils.cp('Makefile', cmakefile)
-    File.open('Makefile', 'w') { |io| io.puts(gen_bf_makefile(cmakefile)) }
+    makefile_contents = gen_bf_makefile(cmakefile)
+    puts "==== Generated Makefile contents (begin) ===="
+    puts makefile_contents
+    puts "==== Generated Makefile contents (end) ===="
+    File.open('Makefile', 'w') { |io| io.puts(makefile_contents) }
   end
 
   def gen_bf_makefile(makefilename)
