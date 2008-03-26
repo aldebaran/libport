@@ -202,12 +202,13 @@ end
       od = '/'
     end
     out = <<EOF
-MAKE = "#{opt[:make]} #{od}f #{makefilename} #{od}k"
+MAKE = #{opt[:make]}
+MAKE_OPT = #{od}f #{makefilename} #{od}k
 
 EOF
     opt[:rules].each do |r, v|
       out += (if v.class == NilClass
-                gen_mf_rule(r, "$(MAKE) #{r}")
+                gen_mf_rule(r, "$(MAKE) $(MAKE_OPT) #{r}")
               elsif v.class == String
                 gen_mf_rule(r, v)
               elsif v.class == Hash
