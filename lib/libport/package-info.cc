@@ -42,7 +42,7 @@ namespace libport
   }
 
   std::ostream&
-  PackageInfo::dump(std::ostream& o) const
+  PackageInfo::dump(std::ostream& o = std::cerr) const
   {
     bool not_first = false;
     BOOST_FOREACH(value_type p, map_)

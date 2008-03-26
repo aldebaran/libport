@@ -30,7 +30,7 @@ namespace libport
     data_type signature() const;
 
     /// Report this on \a o.
-    std::ostream& dump(std::ostream& o = std::cerr) const;
+    std::ostream& dump(std::ostream& o) const;
 
   private:
     map_type map_;
