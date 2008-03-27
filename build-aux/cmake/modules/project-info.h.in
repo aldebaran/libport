@@ -28,6 +28,8 @@
 # define PACKAGE_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
 /* Version minor number of the package */
 # define PACKAGE_VERSION_MINOR @PROJECT_VERSION_MINOR@
+/* Patch number of the package */
+# define PACKAGE_VERSION_PATCH @PROJECT_VERSION_PATCH@
 /* Support address of the package */
 # define PACKAGE_SUPPORT "@PROJECT_BUGREPORT@"
 # define PACKAGE_BUGREPORT PACKAGE_SUPPORT
