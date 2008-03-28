@@ -25,10 +25,12 @@ find_package(Makeinfo REQUIRED)
 
 # Set MAKEINFO_OUTEXT
 if(UNIX AND NOT CYGWIN AND NOT APPLE)
-  set(MAKEINFO_OUTEXT "")
+  set(ext "")
 else()
-  set(MAKEINFO_OUTEXT ".html")
+  set(ext ".html")
 endif()
+set(MAKEINFO_OUTEXT ${ext} CACHE INTERNAL "Extension of texinfo output file.")
+set(ext)
 
 # Compile a texinfo file. Typically, readme, news, knownbugs, etc...
 # Expect input file as first arguement and output as second. Finally, a list
