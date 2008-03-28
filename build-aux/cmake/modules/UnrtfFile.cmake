@@ -3,9 +3,9 @@
 
 if(NOT COMMAND UNRTF_FILE)
 
-find_package(Unrtf REQUIRED)
 
 function(UNRTF_FILE input output options)
+  find_package(Unrtf REQUIRED)
   set(tmpout ${output}.tmp)
   # FIXME: We do not use add_custom_command because CPack.cmake needs the
   # output file at configuration time.
