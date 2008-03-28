@@ -37,8 +37,8 @@ set(ext)
 # of path to add to the include path list.
 function(MAKEINFO_FILE input output includepaths)
   # Set options depending on the system.
-  set(html_opts "--html --no-split --no-headers")
-  set(txt_opts "--plaintext")
+  set(html_opts --html --no-split --no-headers)
+  set(txt_opts --plaintext)
   if(UNIX)
     if(CYGWIN)
       set(opts ${html_opts})
