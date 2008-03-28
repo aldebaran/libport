@@ -19,6 +19,11 @@ function(UNRTF_FILE input output options)
     OUTPUT_FILE ${tmpout}
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+  if(ret)
+    message(SEND_ERROR
+      "'${UNRTF_EXECUTABLE}' failed to build '${input}' to '${output}'")
+    message(STATUS "Unrtf error begins:\n${err}\nUnrtf error ends.")
+  endif(ret)
   # Remove the header.
   file(READ ${tmpout} inbuf)
   string(REGEX REPLACE "^.*-----------------\n" "" outbuf ${inbuf})
