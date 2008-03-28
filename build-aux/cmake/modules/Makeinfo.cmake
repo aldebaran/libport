@@ -57,16 +57,26 @@ function(MAKEINFO_FILE input output includepaths)
     set(opts ${opts} -I ${i} )
   endforeach(i)
   # Add command
-  add_custom_command(
-    OUTPUT ${output}
-    COMMAND ${MAKEINFO_EXECUTABLE}
-    ARGS ${opts} ${input} -o ${output}
+  # FIXME: We do not use add_custom_command because CPack.cmake needs the
+  # output file at configuration time.
+  # (see http://public.kitware.com/Bug/view.php?id=6674)
+#   add_custom_command(
+#     OUTPUT ${output}
+#     COMMAND ${MAKEINFO_EXECUTABLE}
+#     ARGS ${opts} ${input} -o ${output}
+#     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+#     DEPENDS ${input} ${MAKEINFO_EXECUTABLE}
+#     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
+#     "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
+#     "Building '${output}'"
+#     VERBATIM
+#     )
+  execute_process(
+    COMMAND ${MAKEINFO_EXECUTABLE} ${opts} ${input} -o ${output}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS ${input} ${MAKEINFO_EXECUTABLE}
-    COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
-    "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
-    "Building '${output}'"
-    VERBATIM
+    TIMEOUT 30
+    RESULT_VARIABLE ret
+    ERROR_VARIABLE err
     )
   if(ret)
     message(SEND_ERROR
