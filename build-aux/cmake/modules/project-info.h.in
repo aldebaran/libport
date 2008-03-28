@@ -41,6 +41,12 @@
 # define PACKAGE_STRING "@PROJECT_STRING@"
 /* Name of the package file (tar/exe/deb/rpm) */
 # define PACKAGE_TARNAME "@PROJECT_TARNAME@"
+/* Home page of the vendor. */
+# define GOSTAI_HOMEPAGE "@GOSTAI_HOMEPAGE@"
+/* Home page of the package. */
+# define PACKAGE_HOMEPAGE "@PROJECT_HOMEPAGE"
+/* Package help url */
+# define PACAKGE_HELP_LINK "@PROJECT_HELP_LINK@")
 
 #endif /* !CMAKE_AUX_MODULES_PROJECT_INFO_H */
 

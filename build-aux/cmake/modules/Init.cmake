@@ -23,5 +23,6 @@ include(PrintVar)
 set(BUILDFARM $ENV{BUILDFARM})
 include(CopyDependentLibraries)
 include(GenLibLoader)
+include(GostaiInfo)
 
 endif(NOT DEFINED INIT_CMAKE)
