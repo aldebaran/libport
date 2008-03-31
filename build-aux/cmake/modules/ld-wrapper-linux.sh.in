@@ -4,9 +4,11 @@
 
 appname=$(basename $0 | sed s,\.sh$,,)
 dirname=$(dirname $0)
-if [ "${dirname:0:1}" != "/" ]; then
-    dirname="$PWD/$dirname"
-fi
+case "$dirname" in
+    /*)
+	dirname="$PWD/$dirname"
+	;;
+esac
 paths="$dirname/../lib"
 LD_LIBRARY_PATH="$paths"
 export LD_LIBRARY_PATH
