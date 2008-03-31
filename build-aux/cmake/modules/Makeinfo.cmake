@@ -82,6 +82,8 @@ function(MAKEINFO_FILE input output includepaths)
     message(SEND_ERROR
       "'${MAKEINFO_EXECUTABLE}' failed to build '${input}' to '${output}'")
     message(STATUS "Makeinfo error begins:\n${err}\nMakeinfo error ends.")
+  else(ret)
+    message(STATUS "Makeinfo '${opts}' '${input}' to '${output}'")
   endif(ret)
 endfunction(MAKEINFO_FILE)
 
