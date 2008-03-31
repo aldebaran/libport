@@ -28,15 +28,23 @@ set(SDK_REMOTE_FOUND FALSE)
 
 # Search for the library urbi.
 if(NOT SDK_REMOTE_LIBRARY)
+  # Search for sdk-remote library.
   find_library(SDK_REMOTE_LIBRARY urbi)
   if(SDK_REMOTE_LIBRARY)
     message(STATUS "Found sdk-remote library: ${SDK_REMOTE_LIBRARY}")
     set(SDK_REMOTE_FOUND TRUE)
   else(SDK_REMOTE_LIBRARY)
-    message(SEND_ERROR "no sdk-remote library found "
-      "(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
-      "problem).")
+    message(SEND_ERROR "no sdk-remote library found.")
   endif(SDK_REMOTE_LIBRARY)
+  # Search for the associated jpeg library.
+  find_library(SDK_REMOTE_JPEG_LIBRARY jpeg)
+  if(SDK_REMOTE_JPEG_LIBRARY)
+    message(STATUS
+      "Found sdk-remote's jpeg library: ${SDK_REMOTE_JPEG_LIBRARY}")
+    set(SDK_REMOTE_JPEG_FOUND TRUE)
+  else(SDK_REMOTE_LIBRARY)
+    message(SEND_ERROR "no sdk-remote's jpeg library found.")
+  endif(SDK_REMOTE_JPEG_LIBRARY)
 endif(NOT SDK_REMOTE_LIBRARY)
 
 if(SDK_REMOTE_FOUND)
@@ -57,9 +65,9 @@ if(SDK_REMOTE_FOUND)
   # Add dependent libraries.
   set(SDK_REMOTE_DEPLIBS ${SDK_REMOTE_LIBRARY})
   if(WIN32)
-    list(APPEND SDK_REMOTE_DEPLIBS libjpeg ws2_32)
+    list(APPEND SDK_REMOTE_DEPLIBS ${SDK_REMOTE_JPEG_LIBRARY} ws2_32)
   else()
-    list(APPEND SDK_REMOTE_DEPLIBS jpeg)
+    list(APPEND SDK_REMOTE_DEPLIBS ${SDK_REMOTE_JPEG_LIBRARY})
   endif()
   set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_DEPLIBS}
     CACHE INTERNAL "SdkRemote's dependent libraries")
