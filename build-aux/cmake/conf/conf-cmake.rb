@@ -54,7 +54,7 @@ class ConfCmake
       # Directories options.
       :prefix => nil,
       # Packages
-      :pkg => {},
+      :pkg => [],
     }
   end
 
@@ -98,7 +98,7 @@ end
         @opts[:extraflags] << $1
         true
       when /^--with-([^=]+)=(.*)$/
-        @opts[:pkg][$1] = $2
+        @opts[:pkg] << $2
         true
       when /^-n$/, /^--dry-run$/
         @opts[:dry_run] = true
@@ -166,7 +166,7 @@ end
         :list => []
       }
     }
-    @opts[:pkg].values.each do |v|
+    @opts[:pkg].each do |v|
       search_path.keys.each do |x|
         path = Pathname.new(v) + x
         search_path[x][:list] << path if path.directory?
