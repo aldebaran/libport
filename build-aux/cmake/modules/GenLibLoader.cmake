@@ -24,28 +24,21 @@ function(GEN_LIB_LOADER target)
 
   # Extension of the script.
   if(UNIX)
+    set(input "${CMAKE_MODULE_PATH}/ld-wrapper-linux.sh.in")
     set(ext ".sh")
   else(UNIX)
     set(ext ".bat")
   endif(UNIX)
   # Output script file name.
   string(REGEX REPLACE "^(.*)\\.[^.]+$" "\\1" output ${target})
-  set(output "${output}${ext}")
+  set(output "${CMAKE_CURRENT_BINARY_DIR}/${output}${ext}")
   # Add target
-  set(generator ${CMAKE_AUX_DIR}/gen-lib-loader-script)
-  add_custom_target(
-    ${output} ALL
-    COMMAND ${generator} ${output} ${target} ${ARGV}
-    DEPENDS ${target} ${generator}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
-    "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
-    "Generating libraries loader script '${output}'"
-    VERBATIM)
+  configure_file(${input} ${output} ESCAPE_QUOTES @ONLY)
+  message(STATUS "Configure '${input}' to '${output}'")
   # Let clean target remove it.
   set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${output})
   # Install the script
-  INSTALL(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${output} DESTINATION bin)
+  INSTALL(PROGRAMS ${output} DESTINATION bin)
 endfunction(GEN_LIB_LOADER target)
 
 endif(NOT COMMAND GEN_LIB_LOADER)

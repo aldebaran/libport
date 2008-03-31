@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# This script overload the dynamic library path.
+
+appname=$(basename $0 | sed s,\.sh$,,)
+dirname=$(dirname $0)
+if [ "${dirname:0:1}" != "/" ]; then
+    dirname="$PWD/$dirname"
+fi
+paths="$dirname/../lib"
+LD_LIBRARY_PATH="$paths"
+export LD_LIBRARY_PATH
+DYLD_LIBRARY_PATH="$paths"
+export DYLD_LIBRARY_PATH
+"$dirname/$appname" $*
