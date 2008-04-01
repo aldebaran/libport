@@ -1,0 +1,28 @@
+/*
+ * gostai-info.h.in: This file is part of libport.
+ * Copyright (C) Gostai S.A.S., 2006-2008.
+ *
+ * This software is provided "as is" without warranty of any kind,
+ * either expressed or implied, including but not limited to the
+ * implied warranties of fitness for a particular purpose.
+ *
+ * See the LICENSE file for more information.
+ * For comments, bug reports and feedback: http://www.urbiforge.com
+ */
+
+/*
+ * GENERATED FILE - DO NOT EDIT
+ * Edit gostai-info.h.in instead.
+ */
+
+#ifndef CMAKE_AUX_MODULES_GOSTAI_INFO_H
+# define CMAKE_AUX_MODULES_GOSTAI_INFO_H
+
+# define GOSTAI "@GOSTAI@"
+# define URBI_NAME "@URBI@"
+# define GOSTAI_HOMEPAGE "@GOSTAI_HOMEPAGE@"
+# define GOSTAI_COMMUNITY_URL "@GOSTAI_COMMUNITY_URL@"
+# define GOSTAI_FORUM_URL "@GOSTAI_FORUM_URL@"
+
+#endif /* !CMAKE_AUX_MODULES_GOSTAI_INFO_H */
+
