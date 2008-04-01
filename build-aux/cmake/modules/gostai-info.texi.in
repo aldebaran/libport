@@ -1,6 +1,6 @@
 @c This file holds information about gostai.
 
-@set urbi ${URBI}
+@set urbiName ${URBI_NAME}
 @set gostai ${GOSTAI}
 @set urbiScript urbiScript
 @set gostaiHomepage ${GOSTAI_HOMEPAGE}
