@@ -125,10 +125,13 @@ namespace libport
 
   inline Semaphore::~Semaphore ()
   {
+# ifndef NDEBUG
+    int err =
+# endif
 # ifdef __APPLE__
-    int err = sem_close(sem_);
+      sem_close(sem_);
 # else
-    int err = sem_destroy(sem_);
+      sem_destroy(sem_);
     delete sem_;
 # endif
     assert (!err);
@@ -188,7 +191,10 @@ namespace libport
   Semaphore::operator int ()
   {
     int t;
-    int err = sem_getvalue(sem_, &t);
+# ifndef NDEBUG
+    int err =
+# endif
+      sem_getvalue(sem_, &t);
     assert (!err);
     return t;
   }
