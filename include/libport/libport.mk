@@ -73,6 +73,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/ull-fixed-point.hh	\
 	$(include_libport)/ulong-fixed-point.hh	\
 	$(include_libport)/utime.hh		\
+	$(include_libport)/weak-ptr.hh		\
+	$(include_libport)/weak-ptr.hxx		\
 	$(include_libport)/windows.hh
 
 # sys/ headers
