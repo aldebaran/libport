@@ -60,16 +60,7 @@
 | ECHO & PING.  |
 `--------------*/
 
-// Disable debug traces when compiling with NDEBUG.
-# ifdef NDEBUG
-#  undef ENABLE_DEBUG_TRACES
-# endif
-
-# ifdef ENABLE_DEBUG_TRACES
-
-#  include <iostream>
-
-#  define ECHO(Msg)						\
+#  define LIBPORT_ECHO(Msg)					\
   do {								\
     if (!getenv("DISABLE_DEBUG_TRACES"))			\
     {								\
@@ -82,6 +73,18 @@
       SLEEP(1);							\
     }								\
   } while (0)
+
+
+// Disable debug traces when compiling with NDEBUG.
+# ifdef NDEBUG
+#  undef ENABLE_DEBUG_TRACES
+# endif
+
+# ifdef ENABLE_DEBUG_TRACES
+
+#  include <iostream>
+
+#  define ECHO(Msg) LIBPORT_ECHO(Msg)
 
 # else
 #  define ECHO(Msg) (void) 0
