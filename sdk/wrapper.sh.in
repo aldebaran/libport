@@ -76,9 +76,23 @@ fi
     echo >&2 "\$me: cannot run umake: $UMAKE"
     exit 1
   }
+EOF
+
+    if test "$target" = "aibo"; then
+	cat >>$wrapper <<EOF
+
+# Remove remaining files from
+rm -f *.BIN.*
+echo >&2 "$(basename $0): Removed Aibo build files."
+
+EOF
+    fi
+
+    cat >>$wrapper <<EOF
 
 exec \$UMAKE $args "\$@"
 EOF
+
     chmod +x $wrapper
 }
 
