@@ -12,14 +12,16 @@
 
 if(NOT COMMAND CONFIGURE_VERSION_INFO)
 
+find_package(Ruby)
+
 # Generate version information in 'output' file and add it to the 'sources'
 # list variable.
 function(CONFIGURE_VERSION_INFO output deps)
   set(tmpout "${output}.tmp")
   add_custom_command(
     OUTPUT ${tmpout}
-    COMMAND ${CMAKE_AUX_DIR}/revision
-    ARGS ${tmpout}
+    COMMAND ${RUBY_EXECUTABLE}
+    ARGS ${CMAKE_MODULE_PATH}/revision ${tmpout}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
     "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
@@ -27,8 +29,8 @@ function(CONFIGURE_VERSION_INFO output deps)
     VERBATIM)
   add_custom_command(
     OUTPUT ${output}
-    COMMAND ${CMAKE_AUX_DIR}/move-if-change
-    ARGS ${tmpout} ${output}
+    COMMAND ${RUBY_EXECUTABLE}
+    ARGS ${CMAKE_MODULE_PATH}/move-if-change ${tmpout} ${output}
     DEPENDS ${tmpout}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "

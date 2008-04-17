@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+def git_rev_list(format)
+  `git rev-list --max-count=1 --pretty="format:#{format}" HEAD`.split("\n")[1]
+end
+
+$package_info = {}
+$package_info[:rev] = git_rev_list('%ai')
+$package_info[:id] = git_rev_list('%h (%ai %ae: %s)')
+$package_info[:rev] = git_rev_list('%h')
+
+def write(io)
+  io.puts <<EOF
+// The SCM revision string.
+#define PACKAGE_REVISION "#{$package_info[:rev]}"
+
+// The SCM identification string.
+#define PACKAGE_ID \\
+  "#{$package_info[:id]}"
+
+// The SCM date string.
+#define PACKAGE_DATE "#{$package_info[:date]}"
+
+// Version and revision together.
+#define PACKAGE_VERSION_REV \\
+  "version " PACKAGE_VERSION " rev. " PACKAGE_REVISION
+EOF
+end
+
+if ARGV.empty?
+  write(STDOUT)
+else
+  File.open(ARGV[0], 'w') { |io| write(io) }
+end
