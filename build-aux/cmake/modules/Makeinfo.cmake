@@ -54,7 +54,15 @@ function(MAKEINFO_FILE input output includepaths)
   endif(UNIX)
   # Compute include paths
   foreach(i ${includepaths})
-    set(opts ${opts} -I ${i} )
+    #HACK: On cygwin/win32 with mingw make, makeinfo.exe 4.8 do understand
+    #      input/output file c:/like/that but not path to include
+    #      directories. So, we convert c: to /cygdrive/c
+    if(WIN32)
+      string(REGEX REPLACE "^[cC]:" "/cygdrive/c" dir ${i})
+    else(WIN32)
+      set(dir ${i})
+    endif(WIN32)
+    set(opts ${opts} -I ${dir})
   endforeach(i)
   # Add command
   # FIXME: We do not use add_custom_command because CPack.cmake needs the
@@ -80,7 +88,8 @@ function(MAKEINFO_FILE input output includepaths)
     )
   if(ret)
     message(SEND_ERROR
-      "'${MAKEINFO_EXECUTABLE}' failed to build '${input}' to '${output}'")
+      "'${MAKEINFO_EXECUTABLE}' failed to build '${input}' to '${output}' "
+      "(with options '${opts}' from '${CMAKE_CURRENT_SOURCE_DIR}')")
     message(STATUS "Makeinfo error begins:\n${err}\nMakeinfo error ends.")
   else(ret)
     message(STATUS "Makeinfo '${opts}' '${input}' to '${output}'")
