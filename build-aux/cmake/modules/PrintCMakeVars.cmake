@@ -18,7 +18,7 @@ include(PrintVar)
 function(PRINT_CMAKE_VARS)
   get_cmake_property(vars VARIABLES)
   foreach(var in ${vars})
-    print_var(var)
+    print_var(${var})
   endforeach(var)
 endfunction(PRINT_CMAKE_VARS)
 
