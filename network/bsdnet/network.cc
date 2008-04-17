@@ -281,6 +281,8 @@ namespace Network
     // unregisterNetworkPipe which changes pList, resulting in an
     // invalidated iterator.  So we do need two iterators to walk the
     // list.
+    // Also, our pipes can delete themselves in notifyRead(), in which case they
+    // must throw an exception.
     for (pipes_type::iterator i = pList->begin(); i != pList->end(); )
     {
       // Next iterator.

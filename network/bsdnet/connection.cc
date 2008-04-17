@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "libport/network.h"
 
 #include "network/bsdnet/connection.hh"
@@ -70,8 +71,10 @@ Connection::close()
   if (ret)
     perror ("cannot close connection fd");
 #endif
+  if (!ret)
+    fd = -1;
   Network::unregisterNetworkPipe(this);
-
+  ::urbiserver->removeConnection(*this);
   if (ret)
     CONN_ERR_RET(UFAIL);
   else
@@ -91,6 +94,8 @@ Connection::doRead()
     if (n)
       perror ("cannot recv");
     close();
+    // Caught by Network::selectAndProcess inner loop.
+    throw std::runtime_error("connection closed");
   }
   else
     this->received(read_buff, n);
