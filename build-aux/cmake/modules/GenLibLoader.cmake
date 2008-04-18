@@ -27,14 +27,15 @@ function(GEN_LIB_LOADER target)
     set(input "${CMAKE_MODULE_PATH}/ld-wrapper-linux.sh.in")
     set(ext ".sh")
   else(UNIX)
+    set(input "${CMAKE_MODULE_PATH}/ld-wrapper-win32.bat.in")
     set(ext ".bat")
   endif(UNIX)
   # Output script file name.
   string(REGEX REPLACE "^(.*)\\.[^.]+$" "\\1" output ${target})
   set(output "${CMAKE_CURRENT_BINARY_DIR}/${output}${ext}")
   # Add target
-  configure_file(${input} ${output} ESCAPE_QUOTES @ONLY)
   message(STATUS "Configure '${input}' to '${output}'")
+  configure_file(${input} ${output} ESCAPE_QUOTES @ONLY)
   # Let clean target remove it.
   set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${output})
   # Install the script
