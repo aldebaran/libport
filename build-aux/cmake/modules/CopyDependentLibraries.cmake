@@ -19,15 +19,16 @@ include(CheckCMakeVarsExists)
 function(COPY_DEPENDENT_LIBRARIES target)
   check_cmake_vars_exists(CMAKE_AUX_DIR)
   set(out "${target}-dldep")
+  set(binary ${target}${CMAKE_EXECUTABLE_SUFFIX})
   set(generator ${CMAKE_AUX_DIR}/dldep)
   add_custom_target(
     ${out} ALL
-    COMMAND ${generator} ${target} ${out}
-    DEPENDS ${target} ${generator}
+    COMMAND ${generator} ${binary} ${out}
+    DEPENDS ${binary} ${generator}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
     "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
-    "Copying dependent libraries of '${target}'."
+    "Copying dependent libraries of '${binary}'."
     VERBATIM
     )
   set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${out})
