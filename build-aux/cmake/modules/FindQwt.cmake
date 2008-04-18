@@ -28,6 +28,7 @@ if(NOT QWT_LIBRARY)
   find_library(QWT_LIBRARY qwt)
   if(QWT_LIBRARY)
     message(STATUS "Found qwt library: ${QWT_LIBRARY}")
+    add_definitions(-DQWT_DLL)
     set(QWT_FOUND TRUE)
   else(QWT_LIBRARY)
     message(SEND_ERROR "no qwt library found "
