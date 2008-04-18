@@ -25,7 +25,8 @@ set(QWT_FOUND FALSE)
 
 # Search for the library urbi.
 if(NOT QWT_LIBRARY)
-  find_library(QWT_LIBRARY qwt)
+  # We need qwt5 on cygwin/mingw.
+  find_library(QWT_LIBRARY NAMES qwt qwt5)
   if(QWT_LIBRARY)
     message(STATUS "Found qwt library: ${QWT_LIBRARY}")
     add_definitions(-DQWT_DLL)
