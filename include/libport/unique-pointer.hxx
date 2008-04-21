@@ -11,7 +11,6 @@ namespace libport
   bool
   UniquePointer::operator() (T* t)
   {
-    std::cerr << "Register: " << t << std::endl;
     if (libport::mhas(set_, t))
       return false;
     else
