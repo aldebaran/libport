@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include "libport/network.h"
+#include "libport/compiler.hh"
 
 #include "network/bsdnet/connection.hh"
 
@@ -104,7 +105,7 @@ Connection::doRead()
 int
 Connection::effective_send (const char* buffer, size_t length)
 {
-  std::cerr << "Sending: " << std::string(buffer, length) << std::endl;
+  ECHO("Sending: " << std::string(buffer, length));
   int res = ::send(fd, buffer, length, MSG_NOSIGNAL);
   if (res == -1)
   {
