@@ -107,7 +107,7 @@ namespace libport
     // See ``Efficient STL''.
     typename Map::iterator i = map.lower_bound (key);
 
-    if (i != map.end () && !(map.key_comp () (key, i->first)))
+    if (i != map.end () && !map.key_comp () (key, i->first))
       {
 	// Update.
 	i->second = value;
