@@ -21,8 +21,8 @@
 #  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
 #   define __attribute__(Spec) /* empty */
 #  else
-#    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
 #    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
+#    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
 #  endif
 # endif
 
