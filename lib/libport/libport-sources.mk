@@ -34,6 +34,7 @@ libport_sources =				\
 	$(libport_srcdir)/timer.cc		\
 	$(libport_srcdir)/tokenizer.cc		\
 	$(libport_srcdir)/ufloat.cc		\
+	$(libport_srcdir)/unique-pointer.cc	\
 	$(libport_srcdir)/utime.cc
 
 # These are broken and someone will have to fix them...
