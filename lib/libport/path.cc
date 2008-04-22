@@ -6,7 +6,9 @@
 #include <iostream>
 #include <sys/stat.h>
 #include <cctype>
+
 #include "libport/contract.hh"
+#include "libport/finally.hh"
 #include "libport/path.hh"
 
 // Implementation detail: if path_ is empty and absolute_ is false,
@@ -220,10 +222,12 @@ namespace libport
 
     std::string last = path_.back();
     // The const cast here is justified since the modification is
-    // reverted two lines below.
+    // systematically reverted
     const_cast<path*>(this)->path_.pop_back();
+    libport::Finally finally(
+      boost::bind(&path_type::push_back,
+		  boost::ref(const_cast<path*>(this)->path_), last));
     path res = path_.empty() ? "." : *this;
-    const_cast<path*>(this)->path_.push_back(last);
     return res;
   }
 
