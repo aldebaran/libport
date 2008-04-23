@@ -36,7 +36,8 @@ void __FailedCondition (const char* condType,
 					   __FILE__, __LINE__ ), 0)))
 
 template<typename T>
-inline T __iassert (T expr, const char* expr_str, const char* file, int line)
+inline T&
+__iassert (T& expr, const char* expr_str, const char* file, int line)
 {
   if (expr)
     return expr;
