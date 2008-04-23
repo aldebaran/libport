@@ -19,7 +19,7 @@
 # ifdef NDEBUG
 
 #  define assertion(expr)         ((void) 0)
-//#  define invariant(expr)         ((void) 0)
+#  define iassertion(expr)	  (expr)
 #  define precondition(expr)      ((void) 0)
 #  define postcondition(expr)     ((void) 0)
 
@@ -35,8 +35,11 @@ void __FailedCondition (const char* condType,
   ((void) ((expr) ? 0 : (__FailedCondition ( #condType, #expr,		\
 					   __FILE__, __LINE__ ), 0)))
 
+#  define iassertion(expr)						\
+  ((expr) ? (expr) :							\
+   (__FailedCondition ( "Assertion", #expr, __FILE__, __LINE__ ), (expr)))
+
 #  define assertion(expr)         __TestCondition (Assertion,expr)
-//#  define invariant(expr)         __TestCondition (Invariant,expr)
 #  define precondition(expr)      __TestCondition (Precondition,expr)
 #  define postcondition(expr)     __TestCondition (Postcondition,expr)
 
