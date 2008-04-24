@@ -240,7 +240,7 @@ namespace Network
     int controlPipe[2] = { -1, -1 };
 #endif
     typedef std::list<Pipe*> pipes_type;
-    libport::SingletonPtr<pipes_type> pList;
+    STATIC_INSTANCE_DECL(pipes_type, pList);
   }
 
 
