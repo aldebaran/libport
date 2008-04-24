@@ -20,9 +20,9 @@
  The global variable ::linuxserver saves the need to pass a UServer parameter
  to the LinuxConnection constructor.
  */
-Connection::Connection(int connfd)
-  : UConnection	(::urbiserver, Connection::PACKETSIZE),
-    fd(connfd)
+Connection::Connection(int fd)
+  : UConnection (*::urbiserver, Connection::PACKETSIZE),
+    fd(fd)
 {
   // Test the error from UConnection constructor.
   if (uerror_ != USUCCESS)
@@ -39,7 +39,7 @@ Connection::~Connection()
 }
 
 std::ostream&
-Connection::print (std::ostream& o) const
+Connection::dump (std::ostream& o) const
 {
   return o
     << "Connection "
@@ -75,7 +75,7 @@ Connection::close()
   if (!ret)
     fd = -1;
   Network::unregisterNetworkPipe(this);
-  ::urbiserver->removeConnection(*this);
+  server_.connection_remove(this);
   if (ret)
     CONN_ERR_RET(UFAIL);
   else
@@ -102,7 +102,7 @@ Connection::doRead()
     this->received(read_buff, n);
 }
 
-int
+size_t
 Connection::effective_send (const char* buffer, size_t length)
 {
   ECHO("Sending: " << std::string(buffer, length));

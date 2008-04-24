@@ -27,7 +27,7 @@ namespace Network
     bool init(int port, const std::string & address);
     ~TCPServerPipe();
 
-    virtual std::ostream& print (std::ostream& o) const;
+    virtual std::ostream& dump (std::ostream& o) const;
 
     virtual int readFD();
     virtual int writeFD();
@@ -47,7 +47,7 @@ namespace Network
   }
 
   std::ostream&
-  TCPServerPipe::print(std::ostream& o) const
+  TCPServerPipe::dump(std::ostream& o) const
   {
     return o
       << "TCPServerPipe "
@@ -189,7 +189,7 @@ namespace Network
       return;
     }
     Connection* c = new Connection(cfd);
-    ::urbiserver->addConnection(c);
+    ::urbiserver->connection_add(c);
     registerNetworkPipe(c);
   }
 
@@ -215,7 +215,7 @@ namespace Network
   std::ostream&
   operator<< (std::ostream& o, const Pipe& p)
   {
-    return p.print (o);
+    return p.dump (o);
   }
 
   int

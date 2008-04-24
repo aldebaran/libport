@@ -23,7 +23,7 @@ namespace Network
     virtual void notifyWrite() = 0;
     void trigger(); ///< trigger demuxer fd set reload
 
-    virtual std::ostream& print (std::ostream& o) const = 0;
+    virtual std::ostream& dump (std::ostream& o) const = 0;
 
   public:
     int controlFd;
