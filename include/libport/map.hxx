@@ -13,6 +13,7 @@
 
 # include <libport/contract.hh>
 # include <libport/deref.hh>
+# include <libport/foreach.hh>
 # include <libport/indent.hh>
 # include <libport/map.hh>
 
@@ -94,19 +95,18 @@ namespace libport
   map<T, N>::operator() (const std::list<T>& ts) const throw (std::range_error)
   {
     std::list<N> res;
-    for (typename std::list<T>::const_iterator i = ts.begin ();
-	 i != ts.end (); ++i)
-      res.push_back (operator() (*i));
+    foreach (const T& t, ts)
+      res.push_back (operator() (t));
     return res;
   }
 
   template <class T, class N>
   std::ostream&
-  map<T, N>::print (std::ostream& ostr) const
+  map<T, N>::dump (std::ostream& ostr) const
   {
-    for (const_iterator i = begin (); i != end (); ++i)
-      ostr << i->first << " -> "
-	   << libport::deref << i->second << libport::iendl;
+    foreach (const value_type& p, map_)
+      ostr << p.first << " -> "
+	   << libport::deref << p.second << libport::iendl;
     return ostr;
   }
 
@@ -217,7 +217,7 @@ namespace libport
   std::ostream&
   operator<< (std::ostream& ostr, const map<T, N>& m)
   {
-    return m.print (ostr);
+    return m.dump (ostr);
   }
 
 }

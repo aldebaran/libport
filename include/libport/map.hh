@@ -122,7 +122,7 @@ namespace libport
     virtual void clear();
 
     /// Description of known mappings.
-    virtual std::ostream& print (std::ostream& ostr) const;
+    virtual std::ostream& dump (std::ostream& ostr) const;
 
   protected:
     /// Mapping from T to N.
