@@ -51,7 +51,6 @@ libport_include_HEADERS +=			\
 	$(include_libport)/ref-pt.hh		\
 	$(include_libport)/sched.hh		\
 	$(include_libport)/select-const.hh	\
-	$(include_libport)/select-ref.hh	\
 	$(include_libport)/semaphore.hh		\
 	$(include_libport)/semaphore.hxx	\
 	$(include_libport)/separator.hh		\
