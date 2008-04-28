@@ -110,7 +110,7 @@ fi
 installdir=$(cd $installdir && pwd)
 
 # Test if install in sub directory of ourself to prevent cp loops
-matchdir=$(echo "$installdir" | sed -ne "s#${currentdir}##p")
+matchdir=$(echo "$installdir" | sed -ne "s#${currentdir}/##p")
 
 if test -n "$matchdir"; then
   error 2 "Cannot install in a subdirectory of current directory."
