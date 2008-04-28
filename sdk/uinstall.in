@@ -127,6 +127,7 @@ rm -f $install_test_file 2>/dev/null
 # Don't copy on ourself.
 if test "$currentdir" != "$installdir"; then
   cp -pPR $currentdir/* $installdir/
+  rm -f $installdir/bin/uinstall
 fi
 
 # Set paths to install directory
