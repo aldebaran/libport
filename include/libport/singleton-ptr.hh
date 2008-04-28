@@ -17,7 +17,7 @@
     : public Cl								\
   {};									\
   extern libport::SingletonPtr<Cl ## Name> Name;			\
-  template <> extern Cl ## Name* libport::SingletonPtr<Cl ## Name>::ptr
+  template <> Cl ## Name* libport::SingletonPtr<Cl ## Name>::ptr
 
 
 namespace libport
