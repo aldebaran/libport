@@ -1,7 +1,14 @@
 #!/usr/bin/env ruby
 
+class String
+  def escape
+    gsub(/(["\\])/, '\\\\\1')
+  end
+end # class String
+
 def git_rev_list(format)
-  `git rev-list --max-count=1 --pretty="format:#{format}" HEAD`.split("\n")[1]
+  output = `git rev-list --max-count=1 --pretty="format:#{format}" HEAD`
+  output.split("\n")[1].escape
 end
 
 $package_info = {}
