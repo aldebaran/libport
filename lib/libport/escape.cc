@@ -59,7 +59,7 @@ namespace libport
   std::string unescape(const std::string& s)
   {
     std::string ret;
-    for (int i=0; i<s.length(); i++)
+    for (unsigned int i=0; i<s.length(); i++)
     {
       if (s[i] == '\\')
       {

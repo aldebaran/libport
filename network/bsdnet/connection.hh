@@ -37,7 +37,7 @@ public:
   virtual ~Connection();
   virtual UConnection& close ();
 
-  virtual std::ostream& print (std::ostream& o) const;
+  virtual std::ostream& dump (std::ostream& o) const;
 
   /*ENABLE_URBI_MEM*/
 
@@ -74,8 +74,8 @@ public:
   }
 
 protected:
-  //! Overloading this function is requiered by UConnection
-  virtual int effective_send (const char* buffer, size_t length);
+  //! Overloading this function is required by UConnection
+  virtual size_t effective_send (const char* buffer, size_t length);
   //! The file descriptor of the connection
   int fd;
   //! The reception buffer

@@ -21,8 +21,8 @@
 #  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
 #   define __attribute__(Spec) /* empty */
 #  else
-#    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
 #    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
+#    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
 #  endif
 # endif
 
@@ -60,16 +60,7 @@
 | ECHO & PING.  |
 `--------------*/
 
-// Disable debug traces when compiling with NDEBUG.
-# ifdef NDEBUG
-#  undef ENABLE_DEBUG_TRACES
-# endif
-
-# ifdef ENABLE_DEBUG_TRACES
-
-#  include <iostream>
-
-#  define ECHO(Msg)						\
+#  define LIBPORT_ECHO(Msg)					\
   do {								\
     if (!getenv("DISABLE_DEBUG_TRACES"))			\
     {								\
@@ -82,6 +73,18 @@
       SLEEP(1);							\
     }								\
   } while (0)
+
+
+// Disable debug traces when compiling with NDEBUG.
+# ifdef NDEBUG
+#  undef ENABLE_DEBUG_TRACES
+# endif
+
+# ifdef ENABLE_DEBUG_TRACES
+
+#  include <iostream>
+
+#  define ECHO(Msg) LIBPORT_ECHO(Msg)
 
 # else
 #  define ECHO(Msg) (void) 0

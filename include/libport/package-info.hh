@@ -1,7 +1,7 @@
 #if ! defined PACKAGE_INFO_HH
 # define PACKAGE_INFO_HH
 
-# include <iosfwd>
+# include <iostream>
 # include <string>
 
 # include "libport/hash.hh"

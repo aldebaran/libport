@@ -3,10 +3,10 @@
  ** \brief perror: implements file libport/perror.hh
  */
 
-#include <cstdio>
 #include <iostream>
 
 #include "libport/windows.hh"
+#include "libport/cstdio"
 #include "libport/cstring"
 
 namespace libport
