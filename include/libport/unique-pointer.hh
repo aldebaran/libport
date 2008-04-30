@@ -13,6 +13,7 @@ namespace libport
     virtual ~UniquePointer();
 
     /// Register the pointer, pointer to the referenced entity.
+    /// The null pointer is always considered unique.
     /// \return true iff it is the first time it is registered.
     template <typename T>
     bool operator() (T* t);

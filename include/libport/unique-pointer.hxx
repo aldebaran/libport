@@ -11,7 +11,10 @@ namespace libport
   bool
   UniquePointer::operator() (T* t)
   {
-    if (libport::mhas(set_, t))
+    // We don't care about multiple registrations of 0.
+    if (!t)
+      return true;
+    else if (libport::mhas(set_, t))
       return false;
     else
     {
