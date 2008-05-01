@@ -7,8 +7,10 @@
 # define LIBPORT_SEPARATOR_HXX
 
 # include <ostream>
-# include "libport/deref.hh"
-# include "libport/separator.hh"
+
+# include <libport/deref.hh>
+# include <libport/foreach.hh>
+# include <libport/separator.hh>
 
 namespace libport
 {
@@ -25,15 +27,13 @@ namespace libport
   inline std::ostream&
   separator<C, S>::operator() (std::ostream& o) const
   {
-    typedef typename C::const_iterator iter_type;
-    const iter_type begin = container_.begin ();
-    const iter_type end   = container_.end ();
-    for (iter_type i = begin; i != end; ++i)
-      {
-	if (i != begin)
-	  o << separator_;
-	o << deref << *i;
-      }
+    bool tail = false;
+    foreach (typename C::const_reference e, container_)
+    {
+      if (tail++)
+        o << separator_;
+      o << deref << e;
+    }
     return o;
   }
 
@@ -77,7 +77,7 @@ namespace libport
   inline std::ostream&
   operator<< (std::ostream& o, const separator<C, S>& s)
   {
-    return s (o);
+    return s(o);
   }
 
 }
