@@ -8,12 +8,20 @@
 //->>
 #include <ostream>
 #include <sstream>
-#include "libport/symbol.hh"
-#include "libport/escape.hh"
+
+#include <boost/static_assert.hpp>
+
+#include <libport/symbol.hh>
+#include <libport/escape.hh>
 
 namespace libport
 {
   unsigned Symbol::counter_ = 0;
+
+  // That symbols are as large as pointers/ints is part of the
+  // interface: they should be handled by copy, not by reference.
+  BOOST_STATIC_ASSERT(sizeof(Symbol) == sizeof(int));
+
 
   /* We chose to put these methods here because otherwise libsymbol.a
      would be empty.  That would require changing the Makefiles we
@@ -53,6 +61,8 @@ namespace libport
     return fresh (Symbol("a"));
   }
 
+  // FIXME: Of course this is not enough, we really need to detect
+  // whether the symbol already exists.
   Symbol
   Symbol::fresh (const Symbol& s)
   {
