@@ -46,6 +46,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/pair.hxx		\
 	$(include_libport)/path.hh		\
 	$(include_libport)/path.hxx		\
+	$(include_libport)/pod-cast.hh		\
+	$(include_libport)/pod-cast.hxx		\
 	$(include_libport)/program-name.hh	\
 	$(include_libport)/read-stdin.hh	\
 	$(include_libport)/ref-pt.hh		\
