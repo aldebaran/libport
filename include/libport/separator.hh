@@ -11,33 +11,29 @@
 namespace libport
 {
 
-  template <typename C, typename S>
+  /// Output elements of a range with a separator.
+  template <typename Container, typename Separator>
   class separator
   {
   public:
-    separator (const C& c, const S& s);
+    separator (const Container& r, const Separator& s);
+    /// Output the separated elements on \a o.
     std::ostream& operator() (std::ostream& o) const;
   private:
-    const C& container_;
-    const S& separator_;
+    const Container& container_;
+    const Separator& separator_;
   };
 
-  /// Shorthand to create separator (c, s).
-  template <typename C, typename S>
-  separator<C, S>
-  separate (const C& c, const S& s);
-
-#if 0
-  /// Shorthand to create separator (c, '\n').
-  template <typename C>
-  separator<C, char>
-  separate (const C& c);
-#endif
+  /// Shorthand to create \a separator(c, s).
+  template <typename Container, typename Separator>
+  separator<Container, Separator>
+  separate (const Container& c, const Separator& s);
 
   /// Output the separator object \a s on \a ostr.
-  template <typename C, typename S>
-  inline std::ostream&
-  operator<< (std::ostream& ostr, const separator<C, S>& s);
+  template <typename Container, typename Separator>
+  inline
+  std::ostream&
+  operator<< (std::ostream& o, const separator<Container, Separator>& s);
 
 }
 
