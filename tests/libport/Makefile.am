@@ -11,11 +11,12 @@ test-unescape                   \
 test-indent                     \
 test-separator                  \
 test-shared-ptr                 \
-test-timer                      \
-udouble1			\
-ufloat1				\
-ullfp1				\
-ullfptab1
+test-timer
+
+#udouble1
+#ufloat1
+#ullfp1
+#ullfptab1
 
 AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 AM_LDFLAGS += $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
@@ -31,10 +32,10 @@ test_indent_SOURCES     = test-indent.cc
 test_separator_SOURCES  = test-separator.cc
 test_shared_ptr_SOURCES = test-shared-ptr.cc
 test_timer_SOURCES      = test-timer.cc
-udouble1_SOURCES        = udouble1.cc
-ufloat1_SOURCES         = ufloat1.cc
-ullfp1_SOURCES          = ullfp1.cc
-ullfptab1_SOURCES       = ullfptab1.cc
+#udouble1_SOURCES        = udouble1.cc
+#ufloat1_SOURCES         = ufloat1.cc
+#ullfp1_SOURCES          = ullfp1.cc
+#ullfptab1_SOURCES       = ullfptab1.cc
 
 # Automake thinks the following line is not POSIX, help it.
 AUTOMAKE_OPTIONS += -Wno-portability
