@@ -18,9 +18,9 @@ namespace libport
 {
   unsigned Symbol::counter_ = 0;
 
-  // That symbols are as large as pointers/ints is part of the
+  // That symbols are as large as pointers is part of the
   // interface: they should be handled by copy, not by reference.
-  BOOST_STATIC_ASSERT(sizeof(Symbol) == sizeof(int));
+  BOOST_STATIC_ASSERT(sizeof(Symbol) == sizeof(void*));
 
 
   /* We chose to put these methods here because otherwise libsymbol.a

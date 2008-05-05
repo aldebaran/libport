@@ -15,7 +15,7 @@ namespace libport
   /// for instance in order to embed them into a union.
   ///
   /// Of course, no ctor/dtor: the whole point is to get a POD.
-  template <typename T, typename U = unsigned>
+  template <typename T, typename U = long long>
   class pod_caster
   {
   public:
