@@ -39,7 +39,7 @@ namespace libport
 	  std::string("select error on stdin: ") + strerror(errno));
     else if (r>0)
     {
-      r = read(0, buf, sizeof buf -1); //-1 for the 0 we will insert
+      r = read(0, buf, sizeof buf);
       if (r <= 0) // EOF counts as an 'error'.
       throw exception::Exception(__PRETTY_FUNCTION__,
 	  std::string("read error on stdin: ") + ((r==0)?"EOF":strerror(errno)));
@@ -52,7 +52,7 @@ namespace libport
     if (r != WAIT_TIMEOUT)
     {
       DWORD bytesRead;
-      if (ReadFile(hstdin, buf, sizeof buf -1, &bytesRead, 0))
+      if (ReadFile(hstdin, buf, sizeof buf, &bytesRead, 0))
 	return std::string(buf, bytesRead);
       else
 	throw exception::Exception(__PRETTY_FUNCTION__,
