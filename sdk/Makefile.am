@@ -2,7 +2,7 @@
 host_SCRIPTS = $(top_builddir)/libtool
 
 # This file tells umake how to build things.
-nodist_host_DATA = param.mk
+nodist_env_DATA = param.mk
 
 UMAKE_WRAPPERS = umake-engine umake-lib umake-aibo umake-remote umake-deepclean
 UMAKE_CONFIGURED = umake uinstall umake-link

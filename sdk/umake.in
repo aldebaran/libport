@@ -54,7 +54,7 @@ param_mk ()
   if test -n "$param_mk"; then
     echo "$param_mk"
   else
-    echo "$prefix/gostai/core/$host/param.mk"
+    echo "$prefix/gostai/core/$host/$core/param.mk"
   fi
 }
 
