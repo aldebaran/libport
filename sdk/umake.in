@@ -84,6 +84,8 @@ prefix='@prefix@'
 #prefix="${prefix%/bin*}"
 target=         # target name
 
+urbilibdir=${prefix}/lib
+
 libs=
 sources=
 headers=
@@ -267,6 +269,9 @@ if test -z "$LIBNAME"; then
   case $core in
     remote)         UMAKE_LIBNAME="liburbi";;
     engine|webots)  UMAKE_LIBNAME="liburbicore";;
+    fullengine)     UMAKE_LIBNAME="liburbicore";
+                    UMAKE_EXTRALIB="${urbilibdir}/liburbi.la ${urbilibdir}/libjpeg.la";
+		    core=engine;;
     aibo)           UMAKE_LIBNAME="libaibo";;
     *);;
   esac
@@ -358,6 +363,7 @@ run eval make -j $njobs -f "$(param_mk)"	\
     UMAKE_URBI_ENV="$core"			\
     URBI_KERNEL_PATH="$(kernel)"		\
     UMAKE_LIBNAME="$UMAKE_LIBNAME"		\
+    UMAKE_EXTRALIB="\"$UMAKE_EXTRALIB\""	\
     UMAKE_LINK="$UMAKE_LINK"			\
     HEADERS="'$headers'"			\
     ARGUMENT_LIBS="'$libs'"			\

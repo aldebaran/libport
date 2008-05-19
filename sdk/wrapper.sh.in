@@ -35,6 +35,8 @@ gen_wrapper ()
 	    args="--deep-clean";;
 	engine)
 	    args="--core=engine";;
+	fullengine)
+	    args="--core=fullengine";;
 	lib)
 	    args="--library";;
 	remote)
