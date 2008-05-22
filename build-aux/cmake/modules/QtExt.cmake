@@ -23,7 +23,9 @@ check_qtversion(${DESIRED_QT_VERSION})
 find_package(SdkRemote REQUIRED)
 
 # QScintilla2
-find_package(QScintilla2 REQUIRED)
+if(WITH_QURBI_EDITOR)
+  find_package(QScintilla2 REQUIRED)
+endif(WITH_QURBI_EDITOR)
 
 # Boost
 find_package(MyBoost REQUIRED)
