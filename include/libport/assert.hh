@@ -72,6 +72,9 @@
 | assert_exp -- Require a non-null value, and return it.  |
 `--------------------------------------------------------*/
 
+# ifdef NDEBUG
+#  define assert_exp(Obj)		(Obj)
+# else
 // Basically, an assert that can be used in an expression.  I meant to
 // use "nonnull", but this name is unused by libstdc++, so the #define
 // breaks everything.
@@ -92,9 +95,6 @@ namespace libport
   }
 }
 
-# ifdef NDEBUG
-#  define assert_exp(Obj)		(Obj)
-# else
 #  define assert_exp(Obj)		\
   libport::assert_exp_(Obj, __FILE__, __LINE__ , #Obj)
 # endif // !NDEBUG
