@@ -54,15 +54,29 @@ $(AWK) '					\
   for (i = 1; i <= n; ++i)			\
     if (max < length(lines[i]))			\
       max = length(lines[i]);			\
+  ++max;					\
   for (i = 0; i < max + 6 ; ++i)		\
     line = line "-";				\
   format="|   %-" max "s   |\n";		\
   print "." line ".";				\
   for (i = 1; i <= n; ++i)			\
     if (lines[i])				\
-      printf format, lines[i];			\
+      printf format, lines[i] ".";		\
   print "`" line "'"'"'";			\
 }'
+
+# Put stdin (possibly several lines separated by ".  ") as a list of
+# bullets.
+am__rst_bullet = 				\
+$(AWK) '					\
+{						\
+  n = split($$0, lines, "\\.  ");		\
+  for (i = 0; i <= n ; ++i)			\
+    if (lines[i])				\
+      print lines[i] ".";			\
+  print "";					\
+}'
+
 
 # If stdout is a non-dumb tty, use colors.  If test -t is not supported,
 # then this fails; a conservative approach.  Of course do not redirect
@@ -185,23 +199,22 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	    msg="The test suite failed.  ";				\
 	    exit=false;;						\
 	esac;								\
-	msg="$$msg   $$pass/$$all tests passed.  ";			\
+	msg="$$msg   - $$pass/$$all tests passed.  ";			\
 	test $$fail -eq 0 ||						\
-	  msg="$$msg   $$fail failures.  ";				\
+	  msg="$$msg   - $$fail failures.  ";				\
 	test $$xpass -eq 0 ||						\
-	  msg="$$msg   $$xpass unexpected pass.  ";			\
+	  msg="$$msg   - $$xpass unexpected pass.  ";			\
 	test $$xfail -eq 0 ||						\
-	  msg="$$msg   $$xfail expected failures.  ";			\
+	  msg="$$msg   - $$xfail expected failures.  ";			\
 	test $$tfail -eq 0 ||						\
-	  msg="$$msg   $$tfail expected temporary failures.  ";		\
+	  msg="$$msg   - $$tfail expected temporary failures.  ";	\
 	test $$skip -eq 0 ||						\
-	  msg="$$msg   $$skip skipped tests.  ";			\
+	  msg="$$msg   - $$skip skipped tests.  ";			\
 	if test "$$exit" = false; then					\
 	  {								\
 	    echo "$(PACKAGE_STRING): $(subdir)/$(TEST_SUITE_LOG)" |	\
 	      $(am__rst_title);						\
-	    echo "$$msg";						\
-	    echo;							\
+	    echo "$$msg" | $(am__rst_bullet);				\
 	    echo "TESTS_ENVIRONMENT" | $(am__rst_block);		\
 	    echo "$(TESTS_ENVIRONMENT)" | 				\
 	       tr ' ' '\n' | 						\
