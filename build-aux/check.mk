@@ -65,8 +65,7 @@ $(AWK) '					\
   print "`" line "'"'"'";			\
 }'
 
-# Put stdin (possibly several lines separated by ".  ") as a list of
-# bullets.
+# Output stdin converting ".  " as ".\n".
 am__rst_bullet = 				\
 $(AWK) '					\
 {						\
