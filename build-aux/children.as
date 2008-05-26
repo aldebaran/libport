@@ -169,7 +169,7 @@ children_alive ()
 {
   local pid
   local pids
-  pids=$(children_pid "$@")
+  pids=$(children_pid "$[@]")
   for pid in $pids
   do
     # Using "ps PID" to test whether a processus is alive is,
