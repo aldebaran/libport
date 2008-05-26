@@ -278,7 +278,7 @@ children_kill ()
 {
   local pids
   pids=$(children_pid "$[@]")
-  pids_kill "$pids"
+  pids_kill $pids
 }
 
 
