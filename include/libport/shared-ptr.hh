@@ -6,9 +6,9 @@
 #ifndef LIBPORT_SHARED_PTR_HH
 # define LIBPORT_SHARED_PTR_HH
 
-# include "libport/config.h"
-# include "libport/meta.hh"
-# include "libport/ref-counted.hh"
+# include <libport/config.h>
+# include <libport/meta.hh>
+# include <libport/ref-counted.hh>
 # ifndef LIBPORT_NO_BOOST
 #  include <boost/shared_ptr.hpp>
 
@@ -27,8 +27,7 @@ namespace libport
     * This implementation provides cast operators, and implicit constructors.
     * Its API is similar to boost::shared_ptr.
     */
-  template <typename T, bool Intrusive
-    =meta::Inherits<T, libport::RefCounted>::res>
+  template <typename T, bool Intrusive = true>
   class shared_ptr : public boost::shared_ptr<T>
   {
     // This is the default (extrusive) implementation, wrapping
@@ -159,7 +158,7 @@ namespace libport
 
     bool operator== (const shared_ptr<T,true>& p) const;
     bool operator!= (const shared_ptr<T,true>& p) const;
-    
+
     /** \brief Reference comparison.
      ** Returns false if this points to \a p. */
     bool operator!= (const T* p) const;
