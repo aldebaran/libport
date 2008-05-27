@@ -5,33 +5,62 @@
 # define LIBPORT_POD_CAST_HXX
 
 #include <libport/pod-cast.hh>
+#include <libport/shared-ptr.hh>
 
 namespace libport
 {
+
+  template <typename T>
+  struct SpecialActions
+  {
+      static inline void onWrite(const T&)
+      {}
+      static inline void onRead(const T&)
+      {}
+  };
+
+  template <typename T>
+  struct SpecialActions<libport::shared_ptr<T> >
+  {
+      static inline void onWrite(const libport::shared_ptr<T>& p)
+      {
+        if (p)
+          p->counter_inc();
+      }
+      static inline void onRead(const libport::shared_ptr<T>& /*p*/)
+      {
+        // FIXME: This imposes very strict and carefull use of the
+        // pod. One and only one read must be performed
+//         if (p)
+//           p->counter_dec();
+      }
+  };
 
   template <typename T, typename U>
   pod_caster<T, U>&
   pod_caster<T, U>::operator=(const T& s)
   {
     value_ = reinterpret_cast<U&>(const_cast<T&>(s));
+    SpecialActions<T>::onWrite(reinterpret_cast<T&>(value_));
     return *this;
   }
-  
+
   template <typename T, typename U>
   T
   pod_caster<T, U>::value () const
   {
+    SpecialActions<T>::onRead(const_cast<T&>(reinterpret_cast<const T&>(value_)));
     return const_cast<T&>(reinterpret_cast<const T&>(value_));
   }
-  
+
   template <typename T, typename U>
   pod_caster<T, U>::operator T () const
   {
     return value();
   }
-  
+
   template <typename T, typename U>
-  std::ostream& 
+  std::ostream&
   pod_caster<T, U>::dump(std::ostream& o) const
   {
     return o << value();

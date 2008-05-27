@@ -9,7 +9,7 @@
 
 namespace libport
 {
-  /// Cast an entity of type T one of type U.
+  /// Cast an entity of type T into one of type U.
   ///
   /// This can be used to store C++ non POD types into PODs,
   /// for instance in order to embed them into a union.
