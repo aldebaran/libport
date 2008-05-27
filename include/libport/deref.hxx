@@ -7,8 +7,9 @@
 # define LIBPORT_DEREF_HXX
 
 # include <iostream>
-# include "libport/deref.hh"
-# include "libport/contract.hh"
+
+# include <libport/deref.hh>
+# include <libport/contract.hh>
 
 namespace libport
 {
@@ -32,15 +33,19 @@ namespace libport
       return ostr_ << "NULL";
   }
 
+  template <typename T>
+  std::ostream&
+  Deref::operator<< (const std::auto_ptr<T>& t) const
+  {
+    return operator <<(t.get());
+  }
+
 #ifndef LIBPORT_NO_BOOST
   template <typename T>
   std::ostream&
   Deref::operator<< (const shared_ptr<T>& t) const
   {
-    if (t)
-      return ostr_ << *t;
-    else
-      return ostr_ << "NULL";
+    return operator <<(t.get());
   }
 #endif // !LIBPORT_NO_BOOST
 

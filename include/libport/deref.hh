@@ -7,7 +7,11 @@
 # define LIBPORT_DEREF_HH
 
 # include <iosfwd>
-# include <libport/shared-ptr.hh>
+# include <memory>
+
+# ifndef LIBPORT_NO_BOOST
+#  include <libport/shared-ptr.hh>
+# endif
 
 namespace libport
 {
@@ -21,9 +25,13 @@ namespace libport
   public:
     template <typename T> std::ostream& operator<< (const T* t) const;
     template <typename T> std::ostream& operator<< (T* t) const;
+
+    template <typename T> std::ostream& operator<< (const std::auto_ptr<T>& t) const;
+
 # ifndef LIBPORT_NO_BOOST
     template <typename T> std::ostream& operator<< (const shared_ptr<T>& t) const;
 # endif // !LIBPORT_NO_BOOST
+
     template <typename T> std::ostream& operator<< (const T& t) const;
     template <typename T> std::ostream& operator<< (T& t) const;
 
