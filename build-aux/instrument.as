@@ -59,10 +59,16 @@ instrument ()
 	    if test -f $srcdir/valgrind-suppressions; then
 	      suppressions="--suppressions=$srcdir/valgrind-suppressions"
 	    fi
-	    echo "$VALGRIND"			\
-		 "--error-exitcode=242"		\
-		 "--log-file-exactly=$log"	\
-		 "$suppressions"		\
+
+	    case $($VALGRIND --help) in
+	    *--log-file-exactly*) valgrind_log_option_name=--log-file-exactly ;;
+	    *) valgrind_log_option_name=--log-file ;;
+	    esac
+
+	    echo "$VALGRIND"				\
+	      "--error-exitcode=242"			\
+		 "$valgrind_log_option_name=$log"	\
+		 "$suppressions"			\
 		 "--"
 	  else
 	    stderr "cannot find valgrind as $VALGRIND"
