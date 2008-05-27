@@ -5,12 +5,12 @@ namespace libport
 {
   class RefCounted
   {
-    public:
+  public:
     RefCounted():count_(0) {}
-    void counter_inc() {++count_;}
-    bool counter_dec() {return !--count_;}
-    private:
-    int count_;
+    void counter_inc() const {++count_;}
+    bool counter_dec() const {return !--count_;}
+  private:
+    mutable int count_;
   };
 }
 #endif
