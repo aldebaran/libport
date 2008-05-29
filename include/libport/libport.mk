@@ -84,6 +84,7 @@ libport_include_HEADERS +=			\
 # sys/ headers
 sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
+        $(include_libport)/sys/param.h		\
         $(include_libport)/sys/stat.h
 
 

@@ -13,29 +13,12 @@
 # include <direct.h>
 #endif
 
-#ifdef LIBPORT_HAVE_SYS_PARAM_H
-# include <sys/param.h>
-#endif
-
 #include <libport/contract.hh>
 #include <libport/file-library.hh>
 #include <libport/foreach.hh>
 #include <libport/tokenizer.hh>
+#include <libport/sys/param.h>
 #include <libport/unistd.h>
-
-#ifndef MAXPATHLEN
-# define MAXPATHLEN 4096
-#endif
-
-#if defined LIBPORT_URBI_ENV_AIBO
-char *getcwd(char *buf, size_t size)
-{
-  if (buf == 0 || size <= 3)
-    return 0;
-  strncpy (buf, "/MS", size);
-  return buf;
-}
-#endif
 
 namespace libport
 {
