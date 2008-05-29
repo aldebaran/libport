@@ -187,6 +187,7 @@ namespace libport
       throw std::bad_cast ();
     return ptr;
   }
+
   template <typename T>
   template <typename U>
   shared_ptr<U>
@@ -237,6 +238,9 @@ namespace libport
   {
     return pointee_;
   }
+
+
+
   /*--------------------------.
   | Free standing functions.  |
   `--------------------------*/
@@ -247,6 +251,15 @@ namespace libport
   {
     return shared_ptr<T> (t);
   }
+
+
+  template <typename U, typename T>
+  shared_ptr<U>
+  unsafe_cast(const shared_ptr<T>& p)
+  {
+    return p.unsafe_cast<U>();
+  }
+
 }
 
 #endif // !LIBPORT_BOOST_SHARED_PTR_HXX

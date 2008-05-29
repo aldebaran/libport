@@ -9,6 +9,7 @@
 # include <libport/config.h>
 # include <libport/meta.hh>
 # include <libport/ref-counted.hh>
+
 # ifndef LIBPORT_NO_BOOST
 #  include <boost/shared_ptr.hpp>
 
@@ -203,10 +204,22 @@ namespace libport
     private:
     T* pointee_;
   };
+
+
   /// Simple wrapper to spare the explicit instantiation parameters.
   template <typename T>
   shared_ptr<T>
   make_shared_ptr(T* t);
+
+  /// A more traditional syntax.
+  ///
+  /// Besides, it is easier to parse: GCC 4.0 (at least on OSX) cannot
+  /// grok "children_->back().unsafe_cast<T>()" (it requires a tmp
+  /// variable in between), but accepts
+  /// "libport::unsafe_cast<T>(children_->back())".
+  template <typename U, typename T>
+  shared_ptr<U>
+  unsafe_cast(const shared_ptr<T>& p);
 
 }
 
