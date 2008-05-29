@@ -7,9 +7,9 @@
 #include <sys/stat.h>
 #include <cctype>
 
-#include "libport/contract.hh"
-#include "libport/finally.hh"
-#include "libport/path.hh"
+#include <libport/contract.hh>
+#include <libport/finally.hh>
+#include <libport/path.hh>
 
 // Implementation detail: if path_ is empty and absolute_ is false,
 // then the path is '.'
@@ -145,7 +145,7 @@ namespace libport
       else
 #endif
       {
- 	path_str = "/" + path_str;
+	path_str = "/" + path_str;
 	separator = '/';
       }
     }

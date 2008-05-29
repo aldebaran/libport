@@ -35,16 +35,13 @@ namespace libport
     /// \{
 
     /// Init object with \a path.
-    /** @throw invalid_path if the givent string isn't a valid path
+    /** @throw invalid_path if \a p isn't a valid path
      */
     path (const std::string& p);
 
-    // FIXME: Why does constructor with std::string is not enough?
-    /// Init object with \a p.
-    /** @throw invalid_path if the givent string isn't a valid path
+    /** @throw invalid_path if \a p isn't a valid path
      */
     path (const char* p);
-
     /// \}
 
     /// \name Operations on path.
@@ -78,8 +75,8 @@ namespace libport
 
     /// \}
 
-    bool
-    absolute_get () const;
+    /// Whether is absolute.
+    bool absolute_get () const;
 
   private:
     /// path is represented with a list of directories.
@@ -92,8 +89,7 @@ namespace libport
     void init (std::string p);
 
     /// Test whether the given path is absolute and set attributes adequately.
-    void
-    test_absolute (std::string& p);
+    void test_absolute (std::string& p);
 
     /// Represented path.
     path_type path_;
@@ -113,8 +109,8 @@ namespace libport
 #endif
   };
 
-  std::ostream&
-  operator<< (std::ostream& ostr, const path& p);
+  /// Dump \a p on \a o.
+  std::ostream& operator<< (std::ostream& o, const path& p);
 }
 
 # include "libport/path.hxx"
