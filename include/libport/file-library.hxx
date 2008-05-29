@@ -9,13 +9,13 @@
 namespace libport
 {
   inline void
-  file_library::append_dir (path p)
+  file_library::append (path p)
   {
     push_back(p);
   }
 
   inline void
-  file_library::prepend_dir (path p)
+  file_library::prepend (path p)
   {
     push_front(p);
   }

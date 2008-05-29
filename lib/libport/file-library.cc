@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <iostream>
 
-#include "libport/config.h"
+#include <libport/config.h>
 
 #ifdef LIBPORT_HAVE_DIRECT_H
 # include <direct.h>
@@ -17,10 +17,11 @@
 # include <sys/param.h>
 #endif
 
-#include "libport/contract.hh"
-#include "libport/file-library.hh"
-#include "libport/foreach.hh"
-#include "libport/unistd.h"
+#include <libport/contract.hh>
+#include <libport/file-library.hh>
+#include <libport/foreach.hh>
+#include <libport/tokenizer.hh>
+#include <libport/unistd.h>
 
 #ifndef MAXPATHLEN
 # define MAXPATHLEN 4096
@@ -67,19 +68,12 @@ namespace libport
     push_back (p);
   }
 
-  void
-  file_library::append_dir_list (std::string path_list)
+
+  file_library::file_library(const std::string& lib, const char* sep)
   {
-    std::string::size_type pos;
-
-    while ((pos = path_list.find (':')) != std::string::npos)
-      {
-	append_dir (path_list.substr (0, pos));
-	path_list.erase (0, pos + 1);
-      }
-    append_dir (path_list);
+    push_cwd ();
+    push_back(lib, sep);
   }
-
 
   path
   file_library::ensure_absolute_path (path p) const
@@ -90,16 +84,53 @@ namespace libport
       return current_directory_get () / p;
   }
 
-  void
-  file_library::push_back (path p)
+  namespace
   {
-    search_path_.push_back (ensure_absolute_path (p));
+    typedef std::list<std::string> strings_type;
+    strings_type
+    split(const std::string& lib, const char* sep)
+    {
+      bool split_on_colon = strchr(sep, ':');
+      strings_type res;
+      foreach (const std::string& s, make_tokenizer(lib, sep))
+      {
+        // In case we split "c:\foo" into "c" and "\foo", glue them
+        // together again.
+	if (split_on_colon
+            && s[0] == '\\'
+            && res.back().length() == 1)
+	  res.back() += ':' + s;
+	else
+	  res.push_back(s);
+      }
+      return res;
+    }
   }
 
   void
-  file_library::push_front (path p)
+  file_library::push_back(path p)
   {
-    search_path_.push_front (ensure_absolute_path (p));
+    search_path_.push_back(ensure_absolute_path(p));
+  }
+
+  void
+  file_library::push_back(const std::string& lib, const char* sep)
+  {
+    foreach (const std::string& s, split(lib, sep))
+      push_back(s);
+  }
+
+  void
+  file_library::push_front(path p)
+  {
+    search_path_.push_front(ensure_absolute_path(p));
+  }
+
+  void
+  file_library::push_front(const std::string& lib, const char* sep)
+  {
+    foreach (const std::string& s, split(lib, sep))
+      push_front(s);
   }
 
   void
@@ -166,15 +197,12 @@ namespace libport
   {
     // Otherwise start scanning the search path.
     foreach (const path& p, search_path_)
-      {
-        path checked_dir = p.absolute_get () ?
-          p : current_directory_get () / p;
-
-	checked_dir /= relative_path;
-
-	if (find_in_directory (checked_dir, filename))
-	  return checked_dir;
-      }
+    {
+      path checked_dir = p.absolute_get() ? p : current_directory_get() / p;
+      checked_dir /= relative_path;
+      if (find_in_directory (checked_dir, filename))
+        return checked_dir;
+    }
 
     // File not found in search path.
     throw Not_found();

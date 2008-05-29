@@ -8,7 +8,7 @@
 
 # include <string>
 # include <list>
-# include "libport/path.hh"
+# include <libport/path.hh>
 # include <exception>
 
 namespace libport
@@ -31,14 +31,23 @@ namespace libport
     file_library ();
     /// Init the library with one path.
     file_library (path p);
+    /// Init the library with a string to split at \a separator.
+    file_library (const std::string& library, const char* separator);
     /// \}
 
     /// \name Managing inclusion paths.
     /// \{
-    void append_dir (path p);
     void push_back (path p);
-    void prepend_dir (path p);
+    /// Split \a library on \a separator and put at the end of path list.
+    void push_back (const std::string& library, const char* separator);
+    void append (path p);
+
     void push_front (path p);
+    /// Split \a library on \a separator and put at the beginning of path list.
+    /// \warning "a:b:c" will end with "c" first, then "b", then "a",
+    /// then what was already here.
+    void push_front (const std::string& library, const char* separator);
+    void prepend (path p);
     /// \}
 
     /// \name current directory.
@@ -77,10 +86,6 @@ namespace libport
     path find_in_search_path (const path& relative_path,
 			      const std::string& filename) const;
 
-    /** \brief Split the string with character ':', and insert each
-	resultant string as a new search path. */
-    void append_dir_list (std::string path_list);
-
     /** \brief Ensure that path is absolute by prepending current
 	directory if necessary */
     path ensure_absolute_path (path p) const;
@@ -94,11 +99,11 @@ namespace libport
     path_list_type current_directory_;
   };
 
-  std::ostream&
-  operator<< (std::ostream& ostr, const file_library& l);
+  /// Print \a l on \a o.
+  std::ostream& operator<< (std::ostream& o, const file_library& l);
 
 }
 
-# include "libport/file-library.hxx"
+# include <libport/file-library.hxx>
 
 #endif // !LIBPORT_FILE_LIBRARY_HH
