@@ -3,15 +3,20 @@
 
 namespace libport
 {
+  // Implementation note: since an allocation is needed to store multiple
+  // allocations, we reserve some room so that up to four actions may be
+  // stored before any reallocation takes place.
+
   inline
   Finally::Finally()
-    : actions_()
-  {}
+  {
+    actions_.reserve(4);
+  }
 
   inline
   Finally::Finally(const Action& a)
-    : actions_()
   {
+    actions_.reserve(4);
     *this << a;
   }
 

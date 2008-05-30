@@ -5,7 +5,7 @@
 // This one is not directly required by finally.hh, but is required
 // by 90% of its users.
 # include <boost/bind.hpp>
-# include <list>
+# include <vector>
 
 # include "foreach.hh"
 
@@ -29,7 +29,10 @@ namespace libport
       Finally& operator <<(const Action& a);
 
     private:
-      std::list<Action> actions_;
+      // Implementation note: using a vector here is as efficient as a
+      // list if a single action is stored. When multiple actions are
+      // stored, the vector implementation is more efficient.
+      std::vector<Action> actions_;
 
   };
 }
