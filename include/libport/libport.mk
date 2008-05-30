@@ -50,6 +50,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/pod-cast.hxx		\
 	$(include_libport)/program-name.hh	\
 	$(include_libport)/read-stdin.hh	\
+	$(include_libport)/ref-counted.hh	\
+	$(include_libport)/ref-counted.hxx	\
 	$(include_libport)/ref-pt.hh		\
 	$(include_libport)/sched.hh		\
 	$(include_libport)/select-const.hh	\
@@ -84,7 +86,6 @@ libport_include_HEADERS +=			\
 # sys/ headers
 sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
-        $(include_libport)/sys/param.h		\
         $(include_libport)/sys/stat.h
 
 
