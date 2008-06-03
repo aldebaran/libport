@@ -18,7 +18,6 @@ libport_sources =				\
 	$(libport_srcdir)/cli.cc		\
 	$(libport_srcdir)/contract.cc		\
 	$(libport_srcdir)/cstdio.cc		\
-	$(libport_srcdir)/cstring.cc		\
 	$(libport_srcdir)/deref.cc		\
 	$(libport_srcdir)/escape.cc		\
 	$(libport_srcdir)/path.cc		\

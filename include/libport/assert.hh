@@ -7,10 +7,9 @@
 # include <cassert>
 # include <cstdlib>
 
-# include <libport/cstring> // libport::strerror.
-
 # if ! defined NDEBUG
 #  include <iostream> // std::cerr
+#  include <libport/cstdio> // libport::strerror.
 # endif
 
 /*---------------------------.

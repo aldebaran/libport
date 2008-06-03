@@ -16,6 +16,8 @@ namespace libport
 
   void perror(const char* s);
 
+  const char* strerror(int errnum);
+
 }
 
 #endif // !LIBPORT_CSTDIO
