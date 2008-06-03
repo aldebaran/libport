@@ -19,15 +19,8 @@ namespace libport
   sem_init(sem_t* sem, int, int cnt)
   {
     *sem = CreateSemaphore(0, cnt, 100000, 0);
-    if (sem == 0)
-    {
-      std::stringstream s;
-      s << GetLastError();
-      std::string msg = s.str();
-      throw libport::exception::Semaphore("sem_init",
-					  "Windows system Error #" + msg
-					  + " in CreateSemaphore.");
-    }
+    if (!sem)
+      errabort("CreateSemaphore");
     return sem ? 0 : -1;
   }
 
@@ -35,15 +28,8 @@ namespace libport
   sem_post(sem_t* sem)
   {
     unsigned int result = ReleaseSemaphore(*sem, 1, 0);
-    if (result==0)
-    {
-      std::stringstream s;
-      s << GetLastError();
-      std::string msg = s.str();
-      throw libport::exception::Semaphore("sem_post",
-					  "Windows system Error #" + msg
-					  + " in ReleaseSemaphore.");
-    }
+    if (!result)
+      errabort("ReleaseSemaphore");
     return result ? 0 : -1;
   }
 
@@ -52,14 +38,7 @@ namespace libport
   {
     unsigned int result = WaitForSingleObject(*sem, INFINITE);
     if (result == WAIT_FAILED)
-    {
-      std::stringstream s;
-      s << GetLastError();
-      std::string msg = s.str();
-      throw libport::exception::Semaphore("sem_wait",
-					  "Windows system Error # " + msg
-					  + " in WaitForSingleObject.");
-    }
+      errabort("WaitForSingleObject");
     return (result == WAIT_FAILED) ? -1 : 0;
   }
 
@@ -110,18 +89,8 @@ namespace libport
       errabort("sem_open(" << s.str() << ')');
 # else
     sem_ = new sem_t;
-    int err = sem_init(sem_, 0, cnt);
-#  if not defined WIN32 && not defined LIBPORT_WIN32
-    if (err)
-    {
-      std::string msg = strerror(errno);
-      throw libport::exception::Semaphore("Semaphore::Semaphore (int)",
-					  msg + " in sem_init.");
-    }
-#  else
-    if (err)
+    if (sem_init(sem_, 0, cnt))
       errabort("sem_init(" << s.str() << ')');
-#  endif
 # endif
   }
 
@@ -141,18 +110,8 @@ namespace libport
   void
   Semaphore::operator++ ()
   {
-    int err = sem_post(sem_);
-# if not defined WIN32 && not defined LIBPORT_WIN32
-    if (err)
-    {
-      std::string msg = strerror(errno);
-      throw libport::exception::Semaphore("Semaphore::operator++ ()",
-					  msg + " in sem_post.");
-    }
-# else
-    if (err)
+    if (sem_post(sem_))
       errabort("sem_post");
-# endif
   }
 
   void
@@ -164,17 +123,8 @@ namespace libport
 	err = sem_wait(sem_);
       }
     while (err == -1 && errno == EINTR);
-# if not defined WIN32 && not defined LIBPORT_WIN32
-    if (err)
-    {
-      std::string msg = strerror(errno);
-      throw libport::exception::Semaphore("Semaphore::operator-- ()",
-					  msg + " in sem_wait.");
-    }
-# else
     if (err)
       errabort("sem_wait");
-# endif
   }
 
   Semaphore::operator int ()
