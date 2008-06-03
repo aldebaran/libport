@@ -1,8 +1,8 @@
 #ifndef LIBPORT_SEMAPHORE_HH
 # define LIBPORT_SEMAPHORE_HH
 
-# include "libport/windows.hh"
 # include <cassert>
+# include <libport/windows.hh>
 
 # if defined WIN32
 namespace libport
@@ -54,6 +54,6 @@ namespace libport
 
 } // namespace libport
 
-# include "semaphore.hxx"
+# include <libport/semaphore.hxx>
 
 #endif // !LIBPORT_SEMAPHORE_HH

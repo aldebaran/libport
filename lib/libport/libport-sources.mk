@@ -29,6 +29,7 @@ libport_sources =				\
 	$(libport_srcdir)/program-name.cc	\
 	$(libport_srcdir)/read-stdin.cc		\
 	$(libport_srcdir)/sched.cc		\
+	$(libport_srcdir)/semaphore.cc		\
 	$(libport_srcdir)/symbol.cc		\
 	$(libport_srcdir)/sysexits.cc		\
 	$(libport_srcdir)/timer.cc		\
