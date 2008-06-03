@@ -23,7 +23,7 @@ namespace libport
   inline int sem_init(sem_t* sem, int, int cnt)
   {
     *sem = CreateSemaphore(0, cnt, 100000, 0);
-    if(sem == 0)
+    if (sem == 0)
     {
       std::stringstream s;
       s << GetLastError();
@@ -32,7 +32,7 @@ namespace libport
 					  "Windows system Error #" + msg
 					  + " in CreateSemaphore.");
     }
-    return sem?0:-1;
+    return sem ? 0 : -1;
   }
 
   inline int sem_post(sem_t* sem)
@@ -47,7 +47,7 @@ namespace libport
 					  "Windows system Error #" + msg
 					  + " in ReleaseSemaphore.");
     }
-    return result?0:-1;
+    return result ? 0 : -1;
   }
 
   inline int sem_wait(sem_t* sem)
@@ -62,12 +62,12 @@ namespace libport
 					  "Windows system Error # " + msg
 					  + " in WaitForSingleObject.");
     }
-    return (result == WAIT_FAILED)?-1:0;
+    return (result == WAIT_FAILED) ? -1 : 0;
   }
 
   inline int sem_destroy(sem_t* sem)
   {
-    return CloseHandle(*sem)?0:-1;
+    return CloseHandle(*sem) ? 0 : -1;
   }
 
   inline int sem_getvalue(sem_t* sem, int* v)
@@ -106,7 +106,11 @@ namespace libport
     std::stringstream s;
     s << "sema/" << getpid () << "/" << counter++;
     sem_ = sem_open (s.str ().c_str (), O_CREAT | O_EXCL, 0777, cnt);
-    assert (!IS_SEM_FAILED (sem_));
+    if (IS_SEM_FAILED(sem_))
+    {
+      perror((std::string("sem_open(") + s.str() + ')').c_str());
+      abort();
+    }
 # else
     sem_ = new sem_t;
     int err = sem_init(sem_, 0, cnt);
@@ -118,23 +122,32 @@ namespace libport
 					  msg + " in sem_init.");
     }
 #  else
-    assert (!err);
+    if (err)
+    {
+      perror((std::string("sem_init(") + s.str() + ')').c_str());
+      abort();
+    }
+
 #  endif
 # endif
   }
 
   inline Semaphore::~Semaphore ()
   {
-# ifndef NDEBUG
-    int err =
-# endif
 # ifdef __APPLE__
-      sem_close(sem_);
+    if (sem_close(sem_))
+    {
+      perror("sem_close");
+      abort();
+    }
 # else
-      sem_destroy(sem_);
+    if (sem_destroy(sem_))
+    {
+      perror("sem_destroy");
+      abort();
+    }
     delete sem_;
 # endif
-    assert (!err);
   }
 
 
@@ -162,7 +175,11 @@ namespace libport
 					  msg + " in sem_post.");
     }
 # else
-    assert (!err);
+    if (err)
+    {
+      perror("sem_post");
+      abort();
+    }
 # endif
   }
 
@@ -183,7 +200,11 @@ namespace libport
 					  msg + " in sem_wait.");
     }
 # else
-    assert (!err);
+    if (err)
+    {
+      perror("sem_wait");
+      abort();
+    }
 # endif
   }
 
@@ -191,11 +212,11 @@ namespace libport
   Semaphore::operator int ()
   {
     int t;
-# ifndef NDEBUG
-    int err =
-# endif
-      sem_getvalue(sem_, &t);
-    assert (!err);
+    if (sem_getvalue(sem_, &t))
+    {
+      perror("sem_getvalue");
+      abort();
+    }
     return t;
   }
 
