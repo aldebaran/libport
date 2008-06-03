@@ -18,8 +18,12 @@
 /// \def passert(Subject, Assertion)
 /// Same as assert, but on failure, dump \a Subject of std::cerr.
 ///
-/// If there are several subjects, one may use '<<':
+/// It is tempting to use << when there are several subjects:
+///
 ///  passert (p << " " << q, p == q);
+///
+/// but don't: when NDEBUG, the Subject is cast to void to avoid
+/// "unused variable" warnings.
 
 # ifdef NDEBUG
 #  define passert(Subject, Assertion)       ((void)Subject)
