@@ -24,7 +24,7 @@ libport_include_HEADERS +=			\
 	$(include_libport)/contract.hh		\
 	$(include_libport)/deref.hh		\
 	$(include_libport)/deref.hxx		\
-	$(include_libport)/detect_win32.h	\
+	$(include_libport)/detect-win32.h	\
 	$(include_libport)/escape.hh		\
 	$(include_libport)/escape.hxx		\
 	$(include_libport)/exception.hh		\

@@ -2,7 +2,7 @@
 # define LIBPORT_WINDOWS_HH
 
 # include <boost/cstdint.hpp>
-# include "detect_win32.h"
+# include <libport/detect-win32.h>
 
 # if defined WIN32 || defined LIBPORT_WIN32
 

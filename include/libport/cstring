@@ -5,7 +5,7 @@
 
 # include <cstring>
 
-# include "libport/detect_win32.h"
+# include <libport/detect-win32.h>
 
 /// Whether the C string \a Lhs and \a Rhs are equal.
 # define STREQ(Lhs, Rhs) (!strcmp (Lhs, Rhs))

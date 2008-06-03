@@ -1,12 +1,12 @@
-#include "libport/config.h"
+#include <libport/config.h>
 
 #include <boost/lexical_cast.hpp>
 
-#include "libport/cstring"
-#include "libport/detect_win32.h"
+#include <libport/cstring>
+#include <libport/detect-win32.h>
 
 #if defined LIBPORT_WIN32 || defined WIN32
-# include "libport/windows.hh"
+# include <libport/windows.hh>
 #else
 # if not defined LIBPORT_URBI_ENV_AIBO
 #  include <sys/select.h>
@@ -14,9 +14,9 @@
 # include <errno.h>
 #endif
 
-#include "libport/compiler.hh"
-#include "libport/read-stdin.hh"
-#include "libport/exception.hh"
+#include <libport/compiler.hh>
+#include <libport/read-stdin.hh>
+#include <libport/exception.hh>
 
 
 namespace libport

@@ -1,7 +1,7 @@
 #ifndef LIBPORT_UNISTD_H
 # define LIBPORT_UNISTD_H
 
-# include <libport/detect_win32.h>
+# include <libport/detect-win32.h>
 # include <libport/windows.hh> // Get sleep wrapper
 
 # include <libport/config.h>

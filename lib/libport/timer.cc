@@ -11,8 +11,8 @@
 # include <sys/times.h>
 #else
 
-# include "libport/utime.hh"
-# include "libport/detect_win32.h"
+# include <libport/utime.hh>
+# include <libport/detect-win32.h>
 struct tms
 {
   libport::utime_t tms_utime;  /* user time */
@@ -22,7 +22,7 @@ struct tms
 };
 
 # ifdef WIN32
-# include "libport/windows.hh"
+# include <libport/windows.hh>
 static libport::utime_t times(struct tms* t)
 {
  //unit: 100 nanoseconds
@@ -40,9 +40,9 @@ static libport::utime_t times(struct tms* t)
 
 #endif
 
-#include "libport/unistd.h"
-#include "libport/timer.hh"
-#include "libport/contract.hh"
+#include <libport/unistd.h>
+#include <libport/timer.hh>
+#include <libport/contract.hh>
 
 namespace libport
 {

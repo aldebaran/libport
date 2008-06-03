@@ -17,6 +17,7 @@ libport_la = $(top_builddir)/lib/libport/libport.la
 libport_sources =				\
 	$(libport_srcdir)/cli.cc		\
 	$(libport_srcdir)/contract.cc		\
+	$(libport_srcdir)/cstdio.cc		\
 	$(libport_srcdir)/cstring.cc		\
 	$(libport_srcdir)/deref.cc		\
 	$(libport_srcdir)/escape.cc		\
@@ -25,7 +26,6 @@ libport_sources =				\
 	$(libport_srcdir)/file-system.cc	\
 	$(libport_srcdir)/indent.cc		\
 	$(libport_srcdir)/package-info.cc	\
-	$(libport_srcdir)/perror.cc		\
 	$(libport_srcdir)/program-name.cc	\
 	$(libport_srcdir)/read-stdin.cc		\
 	$(libport_srcdir)/sched.cc		\
