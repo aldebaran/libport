@@ -25,14 +25,6 @@ namespace libport
 #  include <semaphore.h>
 # endif
 
-# if defined __linux || defined WIN32
-/* Linux defines SEM_FAILED as  (sem_t *) 0 */
-#  define IS_SEM_FAILED(sem)   ((sem) == SEM_FAILED)
-# else
-/* MacOSX (and thus BSD?) defines it as -1 */
-#  define IS_SEM_FAILED(sem)   ((long) (sem) == (long) SEM_FAILED)
-# endif
-
 namespace libport
 {
   class Semaphore
