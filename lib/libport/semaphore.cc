@@ -91,10 +91,11 @@ namespace libport
 # ifdef __APPLE__
     static unsigned int counter = 0;
     std::stringstream s;
-    s << "sema/" << getpid () << "/" << counter++;
-    sem_ = sem_open (s.str ().c_str (), O_CREAT | O_EXCL, 0777, cnt);
+    s << "sema/" << getpid() << "/" << counter++;
+    name_ = s.str();
+    sem_ = sem_open(name_.c_str (), O_CREAT | O_EXCL, 0777, cnt);
     if (IS_SEM_FAILED(sem_))
-      errabort("sem_open(" << s.str() << ')');
+      errabort("sem_open(" << name_ << ')');
 # else
     sem_ = new sem_t;
     if (sem_init(sem_, 0, cnt))
@@ -107,6 +108,8 @@ namespace libport
 # ifdef __APPLE__
     if (sem_close(sem_))
       errabort("sem_close");
+    if (sem_unlink(name_.c_str()))
+      errabort("sem_unlink");
 # else
     if (sem_destroy(sem_))
       errabort("sem_destroy");

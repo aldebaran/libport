@@ -2,6 +2,11 @@
 # define LIBPORT_SEMAPHORE_HH
 
 # include <cassert>
+
+# ifdef __APPLE__
+#  include <string>
+# endif
+
 # include <libport/windows.hh>
 
 # if defined WIN32
@@ -29,19 +34,20 @@ namespace libport
 {
   class Semaphore
   {
-    public:
-      Semaphore (int cnt = 0);
+  public:
+    Semaphore (int cnt = 0);
+    ~Semaphore ();
+    void operator++ (int);
+    void operator-- (int);
+    void operator++ ();
+    void operator-- ();
+    operator int ();
 
-      ~Semaphore ();
-
-      void operator++ (int);
-      void operator-- (int);
-      void operator++ ();
-      void operator-- ();
-      operator int ();
-
-    private:
-      sem_t* sem_;
+  private:
+    sem_t* sem_;
+# ifdef __APPLE__
+    std::string name_;
+# endif
   };
 
 } // namespace libport
