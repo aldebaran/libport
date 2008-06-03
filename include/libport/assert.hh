@@ -7,6 +7,8 @@
 # include <cassert>
 # include <cstdlib>
 
+# include <libport/cstring> // libport::strerror.
+
 # if ! defined NDEBUG
 #  include <iostream> // std::cerr
 # endif
@@ -70,6 +72,16 @@
    std::abort())
 
 # endif // !NDEBUG
+
+
+/*----------------------------------------------.
+| errabort -- perror (well, strerror) + abort.  |
+`----------------------------------------------*/
+
+/// \def errabort(Msg)
+# define errabort(Msg)    \
+  pabort(libport::strerror(errno) << ": " << Msg)
+
 
 
 /*--------------------------------------------------------.
