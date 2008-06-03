@@ -6,7 +6,7 @@
 #ifndef LIBPORT_BOOST_SHARED_PTR_HXX
 # define LIBPORT_BOOST_SHARED_PTR_HXX
 
-# include "libport/shared-ptr.hh"
+# include <libport/shared-ptr.hh>
 
 namespace libport
 {

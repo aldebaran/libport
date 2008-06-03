@@ -1,6 +1,6 @@
 #include <iostream>
 #include <boost/foreach.hpp>
-#include "libport/package-info.hh"
+#include <libport/package-info.hh>
 
 namespace libport
 {

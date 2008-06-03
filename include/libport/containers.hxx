@@ -10,7 +10,7 @@
 # include <algorithm>
 # include <functional>
 
-# include "libport/containers.hh"
+# include <libport/containers.hh>
 
 namespace libport
 {

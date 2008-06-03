@@ -6,8 +6,8 @@
 #ifndef LIBPORT_TIMER_HXX
 # define LIBPORT_TIMER_HXX
 
-# include "libport/timer.hh"
-# include "libport/contract.hh"
+# include <libport/timer.hh>
+# include <libport/contract.hh>
 
 namespace libport
 {

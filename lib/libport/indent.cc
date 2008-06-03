@@ -7,7 +7,7 @@
 #include <ostream>
 #include <cassert>
 
-#include "libport/indent.hh"
+#include <libport/indent.hh>
 
 namespace libport
 {

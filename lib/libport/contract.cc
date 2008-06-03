@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "libport/contract.hh"
+#include <libport/contract.hh>
 
 #ifndef NDEBUG
 

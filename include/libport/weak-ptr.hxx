@@ -6,7 +6,7 @@
 #ifndef LIBPORT_WEAK_PTR_HXX
 # define LIBPORT_WEAK_PTR_HXX
 
-# include "libport/weak-ptr.hh"
+# include <libport/weak-ptr.hh>
 
 namespace libport
 {

@@ -1,5 +1,5 @@
 #include <cstdlib>
-#include "libport/sysexits.hh"
+#include <libport/sysexits.hh>
 
 namespace libport
 {

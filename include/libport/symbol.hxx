@@ -6,8 +6,8 @@
 #ifndef LIBPORT_SYMBOL_HXX
 # define LIBPORT_SYMBOL_HXX
 
-# include "libport/symbol.hh"
-# include "libport/assert.hh"
+# include <libport/symbol.hh>
+# include <libport/assert.hh>
 
 namespace libport
 {

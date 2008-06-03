@@ -8,7 +8,7 @@
 #include <iomanip>
 #include <ios>
 #include <stdexcept>
-#include "libport/escape.hh"
+#include <libport/escape.hh>
 
 namespace libport
 {

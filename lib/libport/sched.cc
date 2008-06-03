@@ -1,22 +1,22 @@
-#include "libport/config.h"
+#include <libport/config.h>
 
 #include <algorithm>
 #include <cstring>
 #include <iostream>
 
 #if defined LIBPORT_HAVE_SCHED_H
-# include "sched.h"
+# include <sched.h>
 #endif
 #if defined LIBPORT_HAVE_SYS_RESOURCE_H
-# include "sys/resource.h"
+# include <sys/resource.h>
 #endif
 #if defined LIBPORT_HAVE_SYS_MMAN_H
-# include "sys/mman.h"
+# include <sys/mman.h>
 #endif
 
-#include "libport/utime.hh"
-#include "libport/sched.hh"
-#include "libport/windows.hh"
+#include <libport/utime.hh>
+#include <libport/sched.hh>
+#include <libport/windows.hh>
 
 namespace libport
 {

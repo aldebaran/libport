@@ -6,7 +6,7 @@
 #ifndef LIBPORT_PATH_HXX
 # define LIBPORT_PATH_HXX
 
-# include "libport/path.hh"
+# include <libport/path.hh>
 
 namespace libport
 {

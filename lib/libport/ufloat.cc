@@ -4,14 +4,14 @@
 #include <boost/mpl/integral_c.hpp>
 #include <boost/numeric/conversion/converter.hpp>
 
-#include "libport/ufloat.hh"
+#include <libport/ufloat.hh>
 
 #ifdef LIBPORT_URBI_UFLOAT_LONG_LONG
-# include "libport/ull-fixed-point.cc"
+# include <libport/ull-fixed-point.cc>
 #endif
 
 #ifdef LIBPORT_URBI_UFLOAT_FLOATING
-# include "libport/uffloat.cc"
+# include <libport/uffloat.cc>
 #endif
 
 namespace libport

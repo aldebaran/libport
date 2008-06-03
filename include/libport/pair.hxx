@@ -7,8 +7,8 @@
 # define LIBPORT_PAIR_HXX
 
 # include <ostream>
-# include "libport/deref.hh"
-# include "libport/pair.hh"
+# include <libport/deref.hh>
+# include <libport/pair.hh>
 
 namespace libport
 {

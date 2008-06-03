@@ -1,10 +1,10 @@
-#include "libport/config.h"
-#include "libport/utime.hh"
+#include <libport/config.h>
+#include <libport/utime.hh>
 
 #if defined WIN32 || defined LIBPORT_WIN32
 
 # include <iostream>
-# include "libport/windows.hh"
+# include <libport/windows.hh>
 
 namespace libport
 {

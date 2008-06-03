@@ -6,7 +6,7 @@
 #ifndef LIBPORT_ESCAPE_HXX
 # define LIBPORT_ESCAPE_HXX
 
-# include "libport/escape.hh"
+# include <libport/escape.hh>
 # include <sstream>
 
 namespace libport
