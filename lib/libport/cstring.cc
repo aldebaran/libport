@@ -1,13 +1,13 @@
 /**
- ** \file libport/string.cc
- ** \brief string: implements file libport/string.hh
+ ** \file libport/cstring.cc
+ ** \brief string: implements file libport/cstring
  */
 
 #include <boost/lexical_cast.hpp>
 
-#include "libport/cstring"
+#include <libport/cstring>
 
-#include "libport/windows.hh"
+#include <libport/windows.hh>
 
 namespace libport
 {
