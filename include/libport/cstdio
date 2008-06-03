@@ -14,8 +14,7 @@
 namespace libport
 {
 
-  void
-  perror(const char* s);
+  void perror(const char* s);
 
 }
 

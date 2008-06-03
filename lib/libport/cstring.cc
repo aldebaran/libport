@@ -14,18 +14,18 @@ namespace libport
 
 #ifdef WIN32
 
-# define LIBPORT_BUFFER_SIZE  1024
   const char*
   getWinErrorMessage()
   {
-    static char msg_buf[LIBPORT_BUFFER_SIZE];
+    static char buf[1024];
 
-    FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                   0, GetLastError(), 0, (LPTSTR)msg_buf, LIBPORT_BUFFER_SIZE, 0);
+    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                  0, GetLastError(), 0,
+                  (LPTSTR)buf, sizeof buf,
+                  0);
 
-    return msg_buf;
+    return buf;
   }
-# undef LIBPORT_BUFFER_SIZE
 
 #endif
 
@@ -35,14 +35,7 @@ namespace libport
 #ifndef WIN32
     return ::strerror(errnum);
 #else
-    const char* str;
-
-    if (errnum != 0)
-      str = ::strerror(errnum);
-    else
-      str = getWinErrorMessage();
-
-    return str;
+    return errnum ? ::strerror(errnum) : getWinErrorMessage();
 #endif
   }
 
