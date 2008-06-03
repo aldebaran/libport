@@ -99,16 +99,31 @@ namespace libport
 # else
     sem_ = new sem_t;
     if (sem_init(sem_, 0, cnt))
+    {
+      ~Semaphore();
       errabort("sem_init(" << cnt << ')');
+    }
 # endif
   }
 
   Semaphore::~Semaphore ()
   {
 # ifdef __APPLE__
-    if (sem_close(sem_))
+    // We *really* need to unlink the semaphores when we are done,
+    // otherwise they leak, and at some point, ENOSPCE is the only
+    // answer from the system.  I could not find a means to remove
+    // them from the shell (ipcs shows nothing), so I had to reboot my
+    // machine.
+    //
+    // So really, try to call the dtor in all the cases, including
+    // aborts here.
+    //
+    // http://lists.apple.com/archives/darwin-dev/2005/Jun/msg00078.html
+    int c = sem_close(sem_);
+    int u = sem_unlink(name_.c_str());
+    if (c)
       errabort("sem_close");
-    if (sem_unlink(name_.c_str()))
+    if (u)
       errabort("sem_unlink");
 # else
     if (sem_destroy(sem_))
@@ -122,7 +137,10 @@ namespace libport
   Semaphore::operator++ ()
   {
     if (sem_post(sem_))
+    {
+      ~Semaphore();
       errabort("sem_post");
+    }
   }
 
   void
@@ -135,15 +153,21 @@ namespace libport
       }
     while (err == -1 && errno == EINTR);
     if (err)
+    {
+      ~Semaphore();
       errabort("sem_wait");
+    }
   }
 
   Semaphore::operator int ()
   {
-    int t;
-    if (sem_getvalue(sem_, &t))
+    int res;
+    if (sem_getvalue(sem_, &res))
+    {
+      ~Semaphore();
       errabort("sem_getvalue");
-    return t;
+    }
+    return res;
   }
 
 } // namespace libport
