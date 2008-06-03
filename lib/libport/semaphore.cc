@@ -90,7 +90,7 @@ namespace libport
 # else
     sem_ = new sem_t;
     if (sem_init(sem_, 0, cnt))
-      errabort("sem_init(" << s.str() << ')');
+      errabort("sem_init(" << cnt << ')');
 # endif
   }
 
