@@ -3,7 +3,7 @@
 
 # include <string>
 
-# include "libport/compiler.hh"
+# include <libport/compiler.hh>
 
 // Hopefully some day we will use Boost.ProgramOptions and get rid of
 // this junk.  Yet, better share the junk than duplicate it.
@@ -30,6 +30,6 @@ namespace libport
   T convert_argument (const std::string& opt, const std::string& arg);
 }
 
-# include "libport/cli.hxx"
+# include <libport/cli.hxx>
 
 #endif // !LIBPORT_CLI_HH

@@ -1,7 +1,7 @@
 #ifndef LIBPORT_META_HH
 # define LIBPORT_META_HH
 
-# include "errors.hh"
+# include <libport/errors.hh>
 
 #define TYPE(T)                                 \
   public:                                       \

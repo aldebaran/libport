@@ -6,7 +6,7 @@
 
 # include <iosfwd>
 
-# include "libport/compiler.hh"
+# include <libport/compiler.hh>
 
 // FIXME: Should be moved in libport and lowercased?
 enum sysexit

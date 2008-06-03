@@ -95,6 +95,6 @@ namespace libport
   std::ostream& operator<< (std::ostream& ostr, const Symbol& the);
 }
 
-# include "libport/symbol.hxx"
+# include <libport/symbol.hxx>
 
 #endif // !LIBPORT_SYMBOL_HH

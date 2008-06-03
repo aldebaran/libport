@@ -19,7 +19,7 @@
 #ifndef LIBPORT_UFLOAT_HH
 # define LIBPORT_UFLOAT_HH
 
-# include "libport/config.h"
+# include <libport/config.h>
 
 # include <cfloat>
 # include <exception>
@@ -57,15 +57,15 @@ namespace libport
 # endif
 
 # ifdef LIBPORT_URBI_UFLOAT_LONG
-#  include "libport/ulong-fixed-point.hh"
+#  include <libport/ulong-fixed-point.hh>
 # endif
 
 # ifdef LIBPORT_URBI_UFLOAT_LONG_LONG
-#  include "libport/ull-fixed-point.hh"
+#  include <libport/ull-fixed-point.hh>
 # endif
 
 # ifdef LIBPORT_URBI_UFLOAT_FLOATING
-#  include "libport/uffloat.hh"
+#  include <libport/uffloat.hh>
 # endif
 
 
@@ -111,7 +111,7 @@ namespace libport
 }
 # endif
 
-# include "libport/config.h"
+# include <libport/config.h>
 /* round is not C++ standard (not even POSIX) and neither gnulib nor Boost
  * provide one.  So here is my quick replacement.  */
 # ifndef LIBPORT_HAVE_ROUND

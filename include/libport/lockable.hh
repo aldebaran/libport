@@ -1,11 +1,11 @@
 #ifndef LIBPORT_LOCKABLE_HH
 # define LIBPORT_LOCKABLE_HH
 
-# include "libport/config.h"
+# include <libport/config.h>
 
 # if defined WIN32 || defined LIBPORT_WIN32
 
-#  include "libport/windows.hh"
+#  include <libport/windows.hh>
 
 namespace libport
 {

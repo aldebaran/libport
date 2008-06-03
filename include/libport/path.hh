@@ -113,6 +113,6 @@ namespace libport
   std::ostream& operator<< (std::ostream& o, const path& p);
 }
 
-# include "libport/path.hxx"
+# include <libport/path.hxx>
 
 #endif // !LIBPORT_PATH_HH

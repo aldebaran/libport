@@ -133,6 +133,6 @@ namespace libport
 
 } // namespace libport
 
-# include "libport/timer.hxx"
+# include <libport/timer.hxx>
 
 #endif // !LIBPORT_TIMER_HH

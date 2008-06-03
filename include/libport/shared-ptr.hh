@@ -223,7 +223,7 @@ namespace libport
 
 }
 
-#  include "libport/shared-ptr.hxx"
+#  include <libport/shared-ptr.hxx>
 
 # endif // !LIBPORT_NO_BOOST
 #endif // !LIBPORT_SHARED_PTR_HH

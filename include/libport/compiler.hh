@@ -4,7 +4,7 @@
 #ifndef LIBPORT_COMPILER_HH
 # define LIBPORT_COMPILER_HH
 
-# include "libport/config.h"
+# include <libport/config.h>
 
 /*----------------.
 | __attribute__.  |

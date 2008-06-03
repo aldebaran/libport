@@ -40,6 +40,6 @@ namespace libport
   std::string unescape(const std::string& s);
 }
 
-# include "libport/escape.hxx"
+# include <libport/escape.hxx>
 
 #endif // !LIBPORT_ESCAPE_HH

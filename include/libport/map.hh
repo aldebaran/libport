@@ -135,6 +135,6 @@ namespace libport
   std::ostream& operator<< (std::ostream& ostr, const map<T, N>& m);
 }
 
-# include "libport/map.hxx"
+# include <libport/map.hxx>
 
 #endif // !LIBPORT_MAP_HH

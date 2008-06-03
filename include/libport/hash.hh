@@ -7,9 +7,9 @@
 // hash_map, and include the right header.
 
 # include <string>
-# include "libport/cstring"
+# include <libport/cstring>
 
-# include "libport/symbol.hh"
+# include <libport/symbol.hh>
 
 /*-----------.
 | GCC part.  |

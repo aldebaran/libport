@@ -38,6 +38,6 @@ namespace libport
   }
 }
 
-# include "libport/exception.hxx"
+# include <libport/exception.hxx>
 
 #endif // !LIBPORT_EXCEPTION_HH

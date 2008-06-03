@@ -1,7 +1,7 @@
 #ifndef LIBPORT_WEAK_PTR_HH
 # define LIBPORT_WEAK_PTR_HH
 
-# include "libport/config.h"
+# include <libport/config.h>
 
 # ifndef LIBPORT_NO_BOOST
 #  include <boost/weak_ptr.hpp>
@@ -95,7 +95,7 @@ namespace libport
 
 }
 
-#  include "libport/weak-ptr.hxx"
+#  include <libport/weak-ptr.hxx>
 
 # endif
 #endif

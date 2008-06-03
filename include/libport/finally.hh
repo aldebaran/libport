@@ -7,36 +7,37 @@
 # include <boost/bind.hpp>
 # include <vector>
 
-# include "foreach.hh"
+# include <libport/foreach.hh>
 
 namespace libport
 {
   /// RAII helper that can register actions to execute at its destruction.
   class Finally
   {
-    public:
+  public:
 
-      typedef boost::function0<void> Action;
+    typedef boost::function0<void> Action;
 
-      /// Build a Finally object
-      Finally();
-      /// Build a Finally object, and register \a a to be executed add destruction.
-      Finally(const Action& a);
-      /// Execute all registered actions and destroy the Finally object.
-      ~Finally();
+    /// Build a Finally object
+    Finally();
+    /// Build a Finally object, and register \a a to be executed add
+    /// destruction.
+    Finally(const Action& a);
+    /// Execute all registered actions and destroy the Finally object.
+    ~Finally();
 
-      /// Register \a a to be executed add destruction.
-      Finally& operator <<(const Action& a);
+    /// Register \a a to be executed add destruction.
+    Finally& operator <<(const Action& a);
 
-    private:
-      // Implementation note: using a vector here is as efficient as a
-      // list if a single action is stored. When multiple actions are
-      // stored, the vector implementation is more efficient.
-      std::vector<Action> actions_;
+  private:
+    // Implementation note: using a vector here is as efficient as a
+    // list if a single action is stored. When multiple actions are
+    // stored, the vector implementation is more efficient.
+    std::vector<Action> actions_;
 
   };
 }
 
-# include "finally.hxx"
+# include <libport/finally.hxx>
 
 #endif

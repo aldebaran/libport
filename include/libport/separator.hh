@@ -37,6 +37,6 @@ namespace libport
 
 }
 
-# include "libport/separator.hxx"
+# include <libport/separator.hxx>
 
 #endif // !LIBPORT_SEPARATOR_HH
