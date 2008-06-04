@@ -21,6 +21,8 @@ namespace libport
     template <typename T>
     bool operator() (T& t);
 
+    void clear();
+
   private:
     typedef std::set<const void*> set_type;
     // The set of known pointers.

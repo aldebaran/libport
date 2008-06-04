@@ -31,6 +31,12 @@ namespace libport
     return operator()(&t);
   }
 
+  inline void
+  UniquePointer::clear()
+  {
+    set_.clear();
+  }
+
 }
 
 #endif // !LIBPORT_UNIQUE_POINTER_HXX
