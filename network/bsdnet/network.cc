@@ -1,17 +1,17 @@
 #include <boost/thread.hpp>
 #include <boost/foreach.hpp>
-#include "libport/compiler.hh"
-#include "libport/cstdio"
+#include <libport/compiler.hh>
+#include <libport/cstdio>
 
-#include "libport/unistd.h"
-#include "libport/singleton-ptr.hh"
+#include <libport/unistd.h>
+#include <libport/singleton-ptr.hh>
 #include <list>
 #include <algorithm>
 
-#include "network/bsdnet/network.hh"
-#include "network/bsdnet/connection.hh"
+#include <network/bsdnet/network.hh>
+#include <network/bsdnet/connection.hh>
 
-#include "kernel/userver.hh"
+#include <kernel/userver.hh>
 
 namespace Network
 {

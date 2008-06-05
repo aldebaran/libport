@@ -5,8 +5,8 @@
 #   error network/bsdnet/network.hh must be loaded before kernel/userver.hh.
 # endif
 
-# include "libport/network.h"
-# include "libport/utime.hh"
+# include <libport/network.h>
+# include <libport/utime.hh>
 
 namespace Network
 {

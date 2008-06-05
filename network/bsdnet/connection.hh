@@ -7,10 +7,10 @@
 
 # include <sys/types.h>
 
-# include "kernel/utypes.hh"
-# include "kernel/uconnection.hh"
+# include <kernel/utypes.hh>
+# include <kernel/uconnection.hh>
 
-# include "network/bsdnet/network.hh"
+# include <network/bsdnet/network.hh>
 
 //! LinuxConnection implements an TCP/IP client connection.
 class Connection : public UConnection, public Network::Pipe

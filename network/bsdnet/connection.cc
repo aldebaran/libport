@@ -1,10 +1,10 @@
 #include <stdexcept>
-#include "libport/network.h"
-#include "libport/compiler.hh"
+#include <libport/network.h>
+#include <libport/compiler.hh>
 
-#include "network/bsdnet/connection.hh"
+#include <network/bsdnet/connection.hh>
 
-#include "kernel/userver.hh"
+#include <kernel/userver.hh>
 
 // Mac OSX does not have MSG_NOSIGNAL, used by send and recv to ask
 // for events to become errno rather than signals.  But it supports
