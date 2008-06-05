@@ -5,7 +5,7 @@
 #ifndef NETWORK_BOOST_CONNECTION_HXX
 # define NETWORK_BOOST_CONNECTION_HXX
 # include <boost/bind.hpp>
-# include "kernel/userver.hh"
+# include <kernel/userver.hh>
 
 namespace urbi
 {

@@ -3,7 +3,7 @@
  ** \brief Boost.ASIO URBI server (SSL).
  */
 
-#include "network/boost/server_ssl.hh"
+#include <network/boost/server_ssl.hh>
 
 namespace urbi
 {

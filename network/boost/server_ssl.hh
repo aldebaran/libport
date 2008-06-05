@@ -6,8 +6,8 @@
 #ifndef NETWORK_BOOST_SERVER_SSL_HH
 # define NETWORK_BOOST_SERVER_SSL_HH
 # include <boost/asio/ssl.hpp>
-# include "network/boost/server.hh"
-# include "network/boost/connection_ssl.hh"
+# include <network/boost/server.hh>
+# include <network/boost/connection_ssl.hh>
 
 namespace urbi
 {

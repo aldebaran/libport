@@ -8,7 +8,7 @@
 # include <boost/asio/ssl.hpp>
 # include <boost/enable_shared_from_this.hpp>
 
-# include "network/boost/connection.hh"
+# include <network/boost/connection.hh>
 
 namespace urbi
 {

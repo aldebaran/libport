@@ -9,7 +9,7 @@
 # include <boost/noncopyable.hpp>
 # include <boost/shared_ptr.hpp>
 
-# include "network/boost/fwd.hh"
+# include <network/boost/fwd.hh>
 
 namespace urbi
 {
@@ -75,5 +75,5 @@ namespace urbi
   }; // end of namespace network.
 }; // end of namespace urbi.
 
-# include "network/boost/server.hxx"
+# include <network/boost/server.hxx>
 #endif // !NETWORK_BOOST_SERVER_HH

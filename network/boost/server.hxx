@@ -10,11 +10,11 @@
 
 # include <boost/lexical_cast.hpp>
 
-# include "network/boost/fwd.hh"
-# include "network/boost/connection.hh"
+# include <network/boost/fwd.hh>
+# include <network/boost/connection.hh>
 
 //FIXME: remove me.
-# include "network/boost/connection_ssl.hh"
+# include <network/boost/connection_ssl.hh>
 
 namespace urbi
 {

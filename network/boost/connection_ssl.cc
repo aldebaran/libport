@@ -5,7 +5,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "network/boost/connection_ssl.hh"
+#include <network/boost/connection_ssl.hh>
 
 namespace urbi
 {

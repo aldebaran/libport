@@ -25,7 +25,7 @@ on packaging now.
 
 The only modification to uengine-linux is:
 ** including boost.mk instead of bsdnet.mk in src/Makefile.am
-** changing includes (#include "network/bsdnet/..." to "network/boost/...")
+** changing includes (#include <network/bsdnet/..." to "network/boost/...>)
 
 A patch is also provided (uengine-linux.patch). It introduces the option -S / --ssl
 which actives the SSL connection.

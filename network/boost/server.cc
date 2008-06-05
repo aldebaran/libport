@@ -3,7 +3,7 @@
  ** \brief Boost.ASIO URBI server.
  */
 
-# include "network/boost/server.hh"
+# include <network/boost/server.hh>
 
 namespace urbi
 {

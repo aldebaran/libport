@@ -6,11 +6,11 @@
 #ifndef NETWORK_BOOST_NETWORK_HH
 # define NETWORK_BOOST_NETWORK_HH
 # include <string>
-# include "network/boost/fwd.hh"
-# include "network/boost/server.hh"
+# include <network/boost/fwd.hh>
+# include <network/boost/server.hh>
 
 # ifdef HAVE_OPENSSL
-# include "network/boost/server_ssl.hh"
+# include <network/boost/server_ssl.hh>
 # endif //HAVE_OPENSSL
 
 namespace Network
@@ -42,5 +42,5 @@ namespace Network
   void  startNetworkProcessingThread ();
 };
 
-# include "network/boost/network.hxx"
+# include <network/boost/network.hxx>
 #endif // !NETWORK_BOOST_NETWORK_HH

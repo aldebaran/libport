@@ -5,8 +5,8 @@
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 
-#include "kernel/userver.hh"
-#include "network/boost/network.hh"
+#include <kernel/userver.hh>
+#include <network/boost/network.hh>
 
 namespace Network
 {

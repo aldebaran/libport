@@ -14,10 +14,10 @@
 # include <boost/enable_shared_from_this.hpp>
 # include <boost/thread.hpp>
 
-# include "kernel/utypes.hh"
-# include "kernel/uconnection.hh"
+# include <kernel/utypes.hh>
+# include <kernel/uconnection.hh>
 
-# include "network/boost/fwd.hh"
+# include <network/boost/fwd.hh>
 
 namespace urbi
 {
@@ -113,5 +113,5 @@ namespace urbi
   }; // end of namespace network.
 }; // end of namespace urbi.
 
-# include "network/boost/connection.hxx"
+# include <network/boost/connection.hxx>
 #endif // !NETWORK_BOOST_CONNECTION_HH
