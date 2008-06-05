@@ -1,5 +1,5 @@
 #include <iostream>
-#include "libport/singleton-ptr.hh"
+#include <libport/singleton-ptr.hh>
 
 struct foo
 {
@@ -9,9 +9,10 @@ struct foo
   }
 };
 
+STATIC_INSTANCE_DECL(foo, test);
+
 int main()
 {
-  libport::SingletonPtr<foo> test;
   test->bar();
   (*test).bar();
   return 0;

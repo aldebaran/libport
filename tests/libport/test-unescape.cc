@@ -2,8 +2,8 @@
  ** Test code for libport/escape.hh.
  */
 
-#include "libport/escape.hh"
-#include "libport/assert.hh"
+#include <libport/escape.hh>
+#include <libport/assert.hh>
 #include <sstream>
 #include <iostream>
 #include <stdexcept>

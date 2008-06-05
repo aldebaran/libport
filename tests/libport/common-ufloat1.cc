@@ -1,7 +1,7 @@
-#include "libport/config.h"
+#include <libport/config.h>
 
 #include <iostream>
-#include "libport/ufloat.h"
+#include <libport/ufloat.h>
 
 # define TESTME(x)					\
 	std::cout << #x << ": "				\

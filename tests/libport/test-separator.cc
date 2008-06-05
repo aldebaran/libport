@@ -6,9 +6,9 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
-#include "libport/contract.hh"
-#include "libport/separator.hh"
-#include "libport/pair.hh"
+#include <libport/contract.hh>
+#include <libport/separator.hh>
+#include <libport/pair.hh>
 
 int main ()
 {

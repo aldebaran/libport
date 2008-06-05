@@ -1,5 +1,5 @@
 #include <iostream>
-#include "libport/singleton-ptr.hh"
+#include <libport/singleton-ptr.hh>
 
 using namespace libport;
 
@@ -11,18 +11,17 @@ struct foo
   }
 };
 
-int main()
-{
-  SingletonPtr<foo> test1 = SingletonPtr<foo>();
-  SingletonPtr<foo> test2 = SingletonPtr<foo>();
+STATIC_INSTANCE_DECL(foo, test1);
+STATIC_INSTANCE_DECL(foo, test2);
 
+int
+main()
+{
   test1->bar();
   (*test1).bar();
 
   test2->bar();
   (*test2).bar();
 
-  if (&test1 == &test2)
-    return 1;
   return 0;
 }
