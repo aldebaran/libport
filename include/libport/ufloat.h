@@ -2,14 +2,14 @@
 # define LIBPORT_UFLOAT_H
 
 // Floating point definition (emulated or real)
-# include "libport/ufloat.hh"
+# include <libport/ufloat.hh>
 
 // Currently we don't prefix all the uses in the kernel.
 using libport::ufloat;
 using libport::PI;
 using libport::UINFINITY;
 
-# include "libport/config.h"
+# include <libport/config.h>
 # ifndef LIBPORT_HAVE_ROUND
 using libport::round;
 # endif /* !LIBPORT_HAVE_ROUND */
