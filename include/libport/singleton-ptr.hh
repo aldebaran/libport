@@ -1,24 +1,30 @@
 #ifndef LIBPORT_SINGLETON_PTR_HH
 # define LIBPORT_SINGLETON_PTR_HH
 
-# define STATIC_INSTANCE(Cl, Name)					\
-  class Cl ## Name;							\
-  libport::SingletonPtr<Cl ## Name> Name;				\
-  template<> Cl ## Name* libport::SingletonPtr<Cl ## Name>::ptr = 0
+# define LIBPORT_SINGLETON(Class, Name)         \
+  Class ## _ ## Name
 
-# define STATIC_INSTANCE_DECL(Cl, Name)		\
-  class Cl ## Name				\
-    : public Cl					\
-  {};						\
-  STATIC_INSTANCE(Cl, Name)
+# define STATIC_INSTANCE(Class, Name)					\
+  class LIBPORT_SINGLETON(Class, Name);                                 \
+  libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)> Name;           \
+  template<>                                                            \
+  LIBPORT_SINGLETON(Class, Name)*                                       \
+    libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)>::ptr = 0
 
-# define EXTERN_STATIC_INSTANCE(Cl, Name)				\
-  class Cl ## Name							\
-    : public Cl								\
+# define STATIC_INSTANCE_DECL(Class, Name)       \
+  class LIBPORT_SINGLETON(Class, Name)           \
+    : public Class                               \
+  {};                                            \
+  STATIC_INSTANCE(Class, Name)
+
+# define EXTERN_STATIC_INSTANCE(Class, Name)				\
+  class LIBPORT_SINGLETON(Class, Name)                                  \
+    : public Class                                                      \
   {};									\
-  extern libport::SingletonPtr<Cl ## Name> Name;			\
-  template <> Cl ## Name* libport::SingletonPtr<Cl ## Name>::ptr
-
+  extern libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)> Name;    \
+  template<>                                                            \
+  LIBPORT_SINGLETON(Class, Name)*                                       \
+    libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)>::ptr
 
 namespace libport
 {
