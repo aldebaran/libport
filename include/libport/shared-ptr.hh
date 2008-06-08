@@ -206,6 +206,11 @@ namespace libport
   };
 
 
+  /// For boost::mem_fn (and boost::bind) use.
+  template<typename T>
+  T*
+  get_pointer(const shared_ptr<T>&);
+
   /// Simple wrapper to spare the explicit instantiation parameters.
   template <typename T>
   shared_ptr<T>

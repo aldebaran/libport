@@ -246,6 +246,13 @@ namespace libport
   `--------------------------*/
 
   template <typename T>
+  T*
+  get_pointer(const shared_ptr<T>& p)
+  {
+    return p.get();
+  }
+
+  template <typename T>
   shared_ptr<T>
   make_shared_ptr(T* t)
   {
