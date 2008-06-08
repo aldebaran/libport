@@ -6,9 +6,9 @@
 #ifndef LIBPORT_CONTAINERS_HXX
 # define LIBPORT_CONTAINERS_HXX
 
-# include <ostream>
 # include <algorithm>
 # include <functional>
+# include <ostream>
 
 # include <libport/containers.hh>
 
@@ -119,6 +119,14 @@ namespace libport
 	typedef typename Map::value_type mvt;
 	return map.insert (mvt (key, value)).first;
       }
+  }
+
+  template<typename Container, typename Functor>
+  inline bool
+  any (const Container &c, const Functor& f)
+  {
+    typename Container::const_iterator end = c.end ();
+    return std::find_if (c.begin(), end, f) != end;
   }
 
 } // namespace libport

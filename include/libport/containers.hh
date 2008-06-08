@@ -55,6 +55,12 @@ namespace libport
        const typename Map::key_type& key,
        const typename Map::mapped_type& value);
 
+
+  // Does at least one member of \a c satisfy predicate \a f ?
+
+  template<typename Container, typename Functor>
+  bool
+  any (const Container &c, const Functor& f);
 }
 
 # include <libport/containers.hxx>
