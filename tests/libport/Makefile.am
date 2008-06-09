@@ -9,7 +9,8 @@ test-escape                     \
 test-unescape                   \
 test-indent                     \
 test-separator                  \
-test-shared-ptr                 \
+test-shared-ptr-intrusive       \
+test-shared-ptr-non-intrusive   \
 test-timer			\
 visitor
 
@@ -31,7 +32,8 @@ test_escape_SOURCES     = test-escape.cc
 test_unescape_SOURCES   = test-unescape.cc
 test_indent_SOURCES     = test-indent.cc
 test_separator_SOURCES  = test-separator.cc
-test_shared_ptr_SOURCES = test-shared-ptr.cc
+test_shared_ptr_intrusive_SOURCES = test-shared-ptr-intrusive.cc
+test_shared_ptr_non_intrusive_SOURCES = test-shared-ptr-non-intrusive.cc
 test_timer_SOURCES      = test-timer.cc
 #udouble1_SOURCES        = udouble1.cc
 #ufloat1_SOURCES         = ufloat1.cc

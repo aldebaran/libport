@@ -2,20 +2,17 @@
  ** Test code for libport/shared-ptr.hh features.
  */
 
-// FIXME: ungoing, unfinished work.
-
-#include <iostream>
+#include <libport/ref-counted.hh>
 #include <libport/shared-ptr.hh>
 
-#define ECHO(S) std::cerr << __LINE__ << ": " #S " = " << S << std::endl
-#define INSTANCES() ECHO(Counted::instances)
+#define INSTANCES(N) assert(Counted::instances == N)
 
 using libport::shared_ptr;
 
-struct Counted
+struct Counted : libport::RefCounted
 {
-  Counted () { ++instances; INSTANCES(); }
-  virtual ~Counted () { assert (0 < instances); --instances; INSTANCES();}
+  Counted () : libport::RefCounted() { ++instances; }
+  virtual ~Counted () { assert (0 < instances); --instances; }
   static unsigned instances;
 };
 
@@ -35,15 +32,19 @@ main ()
     SubCounted* subcounted = new SubCounted;
     rSubCounted r1 (subcounted);
     {
-      INSTANCES();
+      INSTANCES(1);
       rCounted r2;
-      INSTANCES();
+      INSTANCES(1);
       r2 = r1;
-      INSTANCES();
+      INSTANCES(1);
       rSubCounted r3 = r2.cast<SubCounted>();
-      INSTANCES();
+      INSTANCES(1);
+      rCounted r4 = new Counted;
+      INSTANCES(2);
+      r4 = r3;
+      INSTANCES(1);
     }
-    INSTANCES();
+    INSTANCES(1);
   }
-  INSTANCES();
+  INSTANCES(0);
 }
