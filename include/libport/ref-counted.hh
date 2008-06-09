@@ -1,9 +1,11 @@
 #ifndef LIBPORT_REF_COUNTED_HH
 # define LIBPORT_REF_COUNTED_HH
 
+# include <boost/noncopyable.hpp>
+
 namespace libport
 {
-  class RefCounted
+  class RefCounted : boost::noncopyable
   {
     public:
       RefCounted ();
