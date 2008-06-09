@@ -19,6 +19,9 @@ namespace libport
   /// Reset the indentation.
   std::ostream& resetindent (std::ostream& o);
 
+  /// Set the indentation.
+  std::ostream& indent (std::ostream& o);
+
   /// Print an end of line, then set the indentation.
   std::ostream& iendl (std::ostream& o);
 
