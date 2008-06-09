@@ -110,7 +110,7 @@ fi
 installdir=$(cd $installdir && pwd)
 
 # Test if install in sub directory of ourself to prevent cp loops
-matchdir=$(echo "$installdir" | sed -ne "s#${currentdir}##p")
+matchdir=$(echo "$installdir" | sed -ne "s#${currentdir}/##p")
 
 if test -n "$matchdir"; then
   error 2 "Cannot install in a subdirectory of current directory."
@@ -127,6 +127,7 @@ rm -f $install_test_file 2>/dev/null
 # Don't copy on ourself.
 if test "$currentdir" != "$installdir"; then
   cp -pPR $currentdir/* $installdir/
+  rm -f $installdir/bin/uinstall
 fi
 
 # Set paths to install directory
