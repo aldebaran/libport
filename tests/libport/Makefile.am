@@ -2,6 +2,7 @@ include $(top_srcdir)/flags.mk
 
 # Program to check:
 check_PROGRAMS =		\
+any				\
 path				\
 test-deref                      \
 test-escape                     \
@@ -21,6 +22,7 @@ AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 AM_LDFLAGS += $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
 LDADD = $(top_builddir)/lib/libport/libport.la $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
+any_SOURCES		= any.cc
 path_SOURCES		= path.cc
 #singleton1_SOURCES      = singleton1.cc
 #singleton2_SOURCES      = singleton2.cc
