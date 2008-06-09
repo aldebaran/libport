@@ -245,9 +245,9 @@ namespace libport
   | Free standing functions.  |
   `--------------------------*/
 
-  template <typename T>
+  template <typename T, bool Intrusive>
   T*
-  get_pointer(const shared_ptr<T>& p)
+  get_pointer(const shared_ptr<T, Intrusive>& p)
   {
     return p.get();
   }

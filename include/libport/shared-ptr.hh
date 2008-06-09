@@ -207,9 +207,9 @@ namespace libport
 
 
   /// For boost::mem_fn (and boost::bind) use.
-  template<typename T>
+  template<typename T, bool Intrusive>
   T*
-  get_pointer(const shared_ptr<T>&);
+  get_pointer(const shared_ptr<T, Intrusive>&);
 
   /// Simple wrapper to spare the explicit instantiation parameters.
   template <typename T>
