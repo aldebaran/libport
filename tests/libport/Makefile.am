@@ -2,10 +2,10 @@ include $(top_srcdir)/flags.mk
 
 # Program to check:
 check_PROGRAMS =		\
-any				\
 path				\
 test-deref                      \
 test-escape                     \
+test-has_if			\
 test-unescape                   \
 test-indent                     \
 test-separator                  \
@@ -23,12 +23,12 @@ AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 AM_LDFLAGS += $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
 LDADD = $(top_builddir)/lib/libport/libport.la $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
-any_SOURCES		= any.cc
 path_SOURCES		= path.cc
 #singleton1_SOURCES      = singleton1.cc
 #singleton2_SOURCES      = singleton2.cc
 test_deref_SOURCES      = test-deref.cc
 test_escape_SOURCES     = test-escape.cc
+test_has_if_SOURCES	= test-has_if.cc
 test_unescape_SOURCES   = test-unescape.cc
 test_indent_SOURCES     = test-indent.cc
 test_separator_SOURCES  = test-separator.cc

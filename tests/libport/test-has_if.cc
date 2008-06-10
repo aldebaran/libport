@@ -8,7 +8,7 @@ static std::vector<int> v;
 static void
 check(int i, bool b)
 {
-  assert(b == libport::any(v, boost::lambda::_1 == i));
+  assert(b == libport::has_if(v, boost::lambda::_1 == i));
 }
 
 int main()

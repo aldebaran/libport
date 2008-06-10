@@ -10,10 +10,14 @@
 # include <functional>
 # include <ostream>
 
+# include <boost/range.hpp>
+
 # include <libport/containers.hh>
 
 namespace libport
 {
+  using boost::begin;
+  using boost::end;
 
   // Object function to free members of a container.
   template<typename T>
@@ -30,7 +34,7 @@ namespace libport
   void
   deep_clear (Container& c)
   {
-    std::for_each (c.begin (), c.end (),
+    std::for_each (begin (c), end (c),
 		   Delete<typename Container::value_type> ());
     c.clear ();
   }
@@ -41,7 +45,7 @@ namespace libport
   inline typename Container::const_iterator
   find (const Container& c, const typename Container::value_type& v)
   {
-    return std::find (c.begin (), c.end (), v);
+    return std::find (begin (c), end (c), v);
   }
 
   // Find \a v in the whole \a c.
@@ -49,7 +53,7 @@ namespace libport
   inline typename Container::iterator
   find (Container& c, const typename Container::value_type& v)
   {
-    return std::find (c.begin (), c.end (), v);
+    return std::find (begin (c), end (c), v);
   }
 
 
@@ -70,7 +74,7 @@ namespace libport
   inline Functor&
   for_each (Container& c, Functor& f)
   {
-    for (typename Container::const_iterator i = c.begin (), end = c.end();
+    for (typename Container::const_iterator i = begin (c), end = end(c);
 	 i != end; ++i)
       f (*i);
     return f;
@@ -123,10 +127,10 @@ namespace libport
 
   template<typename Container, typename Functor>
   inline bool
-  any (const Container &c, const Functor& f)
+  has_if (const Container &c, const Functor& f)
   {
-    typename Container::const_iterator end = c.end ();
-    return std::find_if (c.begin(), end, f) != end;
+    typename Container::const_iterator _end = end (c);
+    return std::find_if (begin(c), _end, f) != _end;
   }
 
 } // namespace libport

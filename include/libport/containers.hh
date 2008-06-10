@@ -60,7 +60,7 @@ namespace libport
 
   template<typename Container, typename Functor>
   bool
-  any (const Container &c, const Functor& f);
+  has_if (const Container &c, const Functor& f);
 }
 
 # include <libport/containers.hxx>
