@@ -16,33 +16,46 @@ m4_divert_text([URBI-INIT],
 [
 # check_dir VARIABLE WITNESS
 # --------------------------
+# Check that VARIABLE contains a directory name that contains WITNESS.
 check_dir ()
 {
   local var=$[1]
-  local val
-  eval "val=\$$[1]"
-  test x"$val" != x ||
+  local witness=$[2]
+  local dir
+  eval "dir=\$$[1]"
+  test x"$dir" != x ||
     fatal "undefined variable: $var"
-  # Normalize the directory name, and as safety belts, run the same
-  # tests on it.  But save time if possible.
-  AS_IF([is_absolute "$val"],
-	[set x $val],
-	[set x $val $(absolute $val)])
   shift
-  local res
-  for res
-  do
-    test -e "$res" ||
-      fatal "$var does not exist: $res" "(pwd = $(pwd))"
-    test -d "$res" ||
-      fatal "$var is not a directory: $res" "(pwd = $(pwd))"
-    if test x"$[2]" != x; then
-      test -f "$res/$[2]" ||
-	fatal "$var does not contain $[2]: $res" "(pwd = $(pwd))"
-    fi
-  done
-  eval "$var='$res'"
+  test -e "$dir" ||
+    fatal "$var does not exist: $dir" "(pwd = $(pwd))"
+  test -d "$dir" ||
+    fatal "$var is not a directory: $dir" "(pwd = $(pwd))"
+  if test x"$witness" != x; then
+    test -f "$dir/$witness" ||
+      fatal "$var does not contain $witness: $dir" "(pwd = $(pwd))"
+  fi
 }
+
+# check_and_abs_dir VAR WITNESS
+# -----------------------------
+# Check that $VAR/WITNESS exists, and set VAR to $(absolute $VAR).
+check_and_abs_dir ()
+{
+  local var=$[1]
+  local witness=$[2]
+  check_dir "$[@]"
+  # Normalize the directory name, and as safety belts, run the same
+  # tests on it.  But save time if possible.  So put in "$@" the dirs
+  # to check, the last one being the actual result.
+  AS_IF([! is_absolute "$val"],
+	[local dir
+         eval "dir=\$$[1]"
+         dir=$(absolute "$val")
+         check_dir "$dir" "$witness"
+         eval "$var='$dir'"
+         ])
+}
+
 
 # find_srcdir WITNESS
 # -------------------
