@@ -62,7 +62,7 @@ namespace libport
   find0 (Container& c, const typename Container::key_type& k)
   {
     typename Container::const_iterator i = c.find(k);
-    if (i != c.end())
+    if (i != end(c))
       return i->second;
     else
       return 0;
@@ -89,7 +89,7 @@ namespace libport
     // We specify the instance to solve a conflict between the
     // two finds above, that compete against each other because
     // the parameter Container can embed a "const".
-    return find<Container> (c, v) != c.end ();
+    return find<Container> (c, v) != end (c);
   }
 
 
@@ -98,7 +98,7 @@ namespace libport
   inline bool
   mhas (const Container& c, const typename Container::key_type& v)
   {
-    return c.find(v) != c.end ();
+    return c.find(v) != end (c);
   }
 
 
@@ -111,7 +111,7 @@ namespace libport
     // See ``Efficient STL''.
     typename Map::iterator i = map.lower_bound (key);
 
-    if (i != map.end () && !map.key_comp () (key, i->first))
+    if (i != end (map) && !map.key_comp () (key, i->first))
       {
 	// Update.
 	i->second = value;
@@ -127,10 +127,18 @@ namespace libport
 
   template<typename Container, typename Functor>
   inline bool
-  has_if (const Container &c, const Functor& f)
+  has_if (const Container& c, const Functor& f)
   {
-    typename Container::const_iterator _end = end (c);
-    return std::find_if (begin(c), _end, f) != _end;
+    typename Container::const_iterator end_c = end (c);
+    return std::find_if (begin(c), end_c, f) != end_c;
+  }
+
+  template<typename Container, typename Functor>
+  inline void
+  erase_if(Container& c, const Functor& f)
+  {
+    typename Container::iterator end_c = end(c);
+    c.erase(std::remove_if(begin(c), end_c, f), end_c);
   }
 
 } // namespace libport

@@ -57,10 +57,15 @@ namespace libport
 
 
   // Does at least one member of \a c satisfy predicate \a f ?
-
   template<typename Container, typename Functor>
   bool
   has_if (const Container &c, const Functor& f);
+
+  // Erase members of \a c satisfying predicate \f. This does not
+  // preserve the order of the members in the container.
+  template<typename Container, typename Functor>
+  void
+  erase_if(Container &c, const Functor& f);
 }
 
 # include <libport/containers.hxx>
