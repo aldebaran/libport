@@ -63,6 +63,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/shared-ptr.hh	\
 	$(include_libport)/shared-ptr.hxx	\
 	$(include_libport)/singleton-ptr.hh	\
+	$(include_libport)/statistics.hh	\
+	$(include_libport)/statistics.hxx	\
 	$(include_libport)/symbol.hh		\
 	$(include_libport)/symbol.hxx		\
 	$(include_libport)/sysexits.hh		\
