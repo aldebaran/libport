@@ -32,7 +32,7 @@ namespace libport
   class shared_ptr : public boost::shared_ptr<T>
   {
     // This is the default (extrusive) implementation, wrapping
-    // boost::shared_ptr
+    // boost::shared_ptr.
   public:
     /// The parent class.
     typedef boost::shared_ptr<T> super_type;
@@ -110,7 +110,7 @@ namespace libport
   template <typename T>
   class shared_ptr<T, true>
   {
-    public:
+  public:
     typedef T element_type;
     /// \name Constructors & Destructor.
     /// \{
@@ -201,7 +201,7 @@ namespace libport
       T& operator *() const;
     /// \}
 
-    private:
+  private:
     T* pointee_;
   };
 
