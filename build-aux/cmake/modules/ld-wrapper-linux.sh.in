@@ -2,6 +2,11 @@
 
 # This script overload the dynamic library path.
 
+# Resolve links referring to me.
+if test -L "$0"; then
+    exec $(readlink -f "$0")
+fi
+
 appname=$(basename $0 | sed s,\.sh$,,)
 dirname=$(dirname $0)
 case "$dirname" in
