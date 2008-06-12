@@ -34,7 +34,8 @@ function(COPY_DEPENDENT_LIBRARIES target)
   set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${out})
   # The trailing backslash is need to avoid to have the last component of the
   # path installed too.
-  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${out}/ DESTINATION lib)
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${out}/
+    DESTINATION lib/${target})
 endfunction(COPY_DEPENDENT_LIBRARIES)
 
 endif(NOT COMMAND COPY_DEPENDENT_LIBRARIES)
