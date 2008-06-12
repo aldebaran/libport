@@ -11,6 +11,9 @@ appname=$(basename $0 | sed s,\.sh$,,)
 dirname=$(dirname $0)
 case "$dirname" in
     /*)
+	# nothing to do
+	;;
+    *)
 	dirname="$PWD/$dirname"
 	;;
 esac
