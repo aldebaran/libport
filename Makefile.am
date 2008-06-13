@@ -10,7 +10,6 @@
 # For comments, bug reports and feedback: http://www.urbiforge.com
 
 include build-aux/build-aux.mk
-include build-aux/config-headers-prefixed.mk
 
 ACLOCAL_AMFLAGS = -I build-aux
 
