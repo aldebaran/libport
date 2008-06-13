@@ -1,7 +1,0 @@
-f < g: true
-g > f: true
-f == f: true
-f != g: true
-f == g: true
-f <= g: true
-f >= g: true
