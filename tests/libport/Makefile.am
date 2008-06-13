@@ -6,7 +6,7 @@ LAZY_TEST_SUITE = 1
 TESTS =				\
 path				\
 singleton-ptr			\
-test-deref                      \
+deref                      \
 test-erase_if			\
 test-escape                     \
 test-has_if			\
@@ -35,7 +35,7 @@ LDADD = $(top_builddir)/lib/libport/libport.la $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
 path_SOURCES		= path.cc
 singleton_ptr_SOURCES	= singleton-ptr.cc
-test_deref_SOURCES      = test-deref.cc
+deref_SOURCES      = deref.cc
 test_erase_if_SOURCES	= test-erase_if.cc
 test_escape_SOURCES     = test-escape.cc
 test_has_if_SOURCES	= test-has_if.cc

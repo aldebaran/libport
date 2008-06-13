@@ -29,7 +29,8 @@ namespace libport
     template <typename T> std::ostream& operator<< (const std::auto_ptr<T>& t) const;
 
 # ifndef LIBPORT_NO_BOOST
-    template <typename T> std::ostream& operator<< (const shared_ptr<T>& t) const;
+    template <typename T, bool Intrusive>
+    std::ostream& operator<< (const shared_ptr<T, Intrusive>& t) const;
 # endif // !LIBPORT_NO_BOOST
 
     template <typename T> std::ostream& operator<< (const T& t) const;
