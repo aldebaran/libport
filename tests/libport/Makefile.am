@@ -3,6 +3,7 @@ include $(top_srcdir)/flags.mk
 # Program to check:
 check_PROGRAMS =		\
 path				\
+singleton-ptr			\
 test-deref                      \
 test-erase_if			\
 test-escape                     \
@@ -25,6 +26,7 @@ AM_LDFLAGS += $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
 LDADD = $(top_builddir)/lib/libport/libport.la $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
 path_SOURCES		= path.cc
+singleton_ptr_SOURCES	= singleton-ptr.cc
 #singleton1_SOURCES      = singleton1.cc
 #singleton2_SOURCES      = singleton2.cc
 test_deref_SOURCES      = test-deref.cc

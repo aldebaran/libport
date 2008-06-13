@@ -1,5 +1,5 @@
-#include <libport/unit-test.hh>
 #include <boost/bind.hpp>
+#include <libport/unit-test.hh>
 #include <libport/path.hh>
 
 
@@ -9,14 +9,15 @@ using libport::test_suite;
 
 void path_ctor(const std::string& path, bool valid)
 {
+  // For some reason, the BOOST_CHECK_* macros are not blocks :(
+  // So we need the braces.
   if (valid)
   {
     BOOST_CHECK_NO_THROW(libport::path p(path));
   }
   else
   {
-    BOOST_CHECK_THROW(libport::path p(path),
-                      path::invalid_path);
+    BOOST_CHECK_THROW(libport::path p(path), path::invalid_path);
   }
 }
 
