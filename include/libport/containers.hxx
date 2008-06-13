@@ -13,53 +13,43 @@
 # include <boost/range.hpp>
 
 # include <libport/containers.hh>
+# include <libport/foreach.hh>
 
 namespace libport
 {
   using boost::begin;
   using boost::end;
 
-  // Object function to free members of a container.
-  template<typename T>
-  struct Delete : public std::unary_function<T, void>
-  {
-    void operator () (T t)
-    {
-      delete t;
-    }
-  };
-
-
   template<typename Container>
   void
-  deep_clear (Container& c)
+  deep_clear(Container& c)
   {
-    std::for_each (begin (c), end (c),
-		   Delete<typename Container::value_type> ());
-    c.clear ();
+    foreach(const typename Container::value_type& v, c)
+      delete v;
+    c.clear();
   }
 
 
   // Find \a v in the whole \a c.
   template<typename Container>
   inline typename Container::const_iterator
-  find (const Container& c, const typename Container::value_type& v)
+  find(const Container& c, const typename Container::value_type& v)
   {
-    return std::find (begin (c), end (c), v);
+    return std::find(begin(c), end(c), v);
   }
 
   // Find \a v in the whole \a c.
   template<typename Container>
   inline typename Container::iterator
-  find (Container& c, const typename Container::value_type& v)
+  find(Container& c, const typename Container::value_type& v)
   {
-    return std::find (begin (c), end (c), v);
+    return std::find(begin(c), end(c), v);
   }
 
 
   template<typename Container>
   inline typename Container::mapped_type
-  find0 (Container& c, const typename Container::key_type& k)
+  find0(Container& c, const typename Container::key_type& k)
   {
     typename Container::const_iterator i = c.find(k);
     if (i != end(c))
@@ -72,11 +62,10 @@ namespace libport
   // Apply \a f to all the members of \a c, and return it.
   template<typename Container, typename Functor>
   inline Functor&
-  for_each (Container& c, Functor& f)
+  for_each(Container& c, Functor& f)
   {
-    for (typename Container::const_iterator i = begin (c), end = end(c);
-	 i != end; ++i)
-      f (*i);
+    foreach(const typename Container::value_type& i, c)
+      f(c);
     return f;
   }
 
@@ -84,34 +73,34 @@ namespace libport
   // Is \a v member of \a c?
   template<typename Container>
   inline bool
-  has (const Container& c, const typename Container::value_type& v)
+  has(const Container& c, const typename Container::value_type& v)
   {
     // We specify the instance to solve a conflict between the
     // two finds above, that compete against each other because
     // the parameter Container can embed a "const".
-    return find<Container> (c, v) != end (c);
+    return find<Container>(c, v) != end(c);
   }
 
 
   // Is \a v member of \a c?
   template<typename Container>
   inline bool
-  mhas (const Container& c, const typename Container::key_type& v)
+  mhas(const Container& c, const typename Container::key_type& v)
   {
-    return c.find(v) != end (c);
+    return c.find(v) != end(c);
   }
 
 
   template<typename Map>
   typename Map::iterator
-  put (Map& map,
-       const typename Map::key_type& key,
-       const typename Map::mapped_type& value)
+  put(Map& map,
+      const typename Map::key_type& key,
+      const typename Map::mapped_type& value)
   {
     // See ``Efficient STL''.
-    typename Map::iterator i = map.lower_bound (key);
+    typename Map::iterator i = map.lower_bound(key);
 
-    if (i != end (map) && !map.key_comp () (key, i->first))
+    if (i != end(map) && !map.key_comp()(key, i->first))
       {
 	// Update.
 	i->second = value;
@@ -121,16 +110,16 @@ namespace libport
       {
 	// First insertion.
 	typedef typename Map::value_type mvt;
-	return map.insert (mvt (key, value)).first;
+	return map.insert(mvt(key, value)).first;
       }
   }
 
   template<typename Container, typename Functor>
   inline bool
-  has_if (const Container& c, const Functor& f)
+  has_if(const Container& c, const Functor& f)
   {
-    typename Container::const_iterator end_c = end (c);
-    return std::find_if (begin(c), end_c, f) != end_c;
+    typename Container::const_iterator end_c = end(c);
+    return std::find_if(begin(c), end_c, f) != end_c;
   }
 
   template<typename Container, typename Functor>
