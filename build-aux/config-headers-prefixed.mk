@@ -18,6 +18,11 @@ BUILT_SOURCES += config.h
 # not documented.
 
 config.h: $(CONFIG_HEADER)
+	echo >&2 "*** This piece of Makefile should not be used."
+	echo >&2 "*** If you want to, explain this to Akim."
+	false
+# Make sure we don't work with undefined vars.
+	test -n "$(PREFIXED_CONFIG_HEADER)"
 	cd $(top_builddir) &&					\
 	$(SHELL) ./config.status $(PREFIXED_CONFIG_HEADER)
 
