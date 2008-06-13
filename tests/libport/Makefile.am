@@ -1,7 +1,9 @@
 include $(top_srcdir)/flags.mk
+include $(top_srcdir)/build-aux/check.mk
 
+LAZY_TEST_SUITE = 1
 # Program to check:
-check_PROGRAMS =		\
+TESTS =				\
 path				\
 singleton-ptr			\
 test-deref                      \
@@ -16,6 +18,12 @@ test-shared-ptr-non-intrusive   \
 test-timer			\
 visitor
 
+%.log: %$(EXEEXT)
+	@$(am__check_pre) $${dir}$< $(am__check_post)
+TEST_LOGS = $(TESTS:=.log)
+
+EXTRA_PROGRAMS = $(TESTS)
+
 #udouble1
 #ufloat1
 #ullfp1
@@ -27,8 +35,6 @@ LDADD = $(top_builddir)/lib/libport/libport.la $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
 path_SOURCES		= path.cc
 singleton_ptr_SOURCES	= singleton-ptr.cc
-#singleton1_SOURCES      = singleton1.cc
-#singleton2_SOURCES      = singleton2.cc
 test_deref_SOURCES      = test-deref.cc
 test_erase_if_SOURCES	= test-erase_if.cc
 test_escape_SOURCES     = test-escape.cc
@@ -47,17 +53,7 @@ visitor_SOURCES		= visitor.cc
 
 # Automake thinks the following line is not POSIX, help it.
 AUTOMAKE_OPTIONS += -Wno-portability
-TESTS = $(check_PROGRAMS:$(EXEEXT)=.test)
 
-$(TESTS):
-	for i in $(TESTS); do \
-          $(LN_S) -f $(top_builddir)/build-aux/test.sh $$i || exit 1; \
-        done
-
-EXTRA_DIST += $(TESTS:.test=.stdout) common-ufloat1.cc ufloat-config.h
-CLEANFILES += $(TESTS:.test=.{my_stdout,my_stderr,valgrind.log})
-
+EXTRA_DIST += common-ufloat1.cc ufloat-config.h
 TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
 
-# List the tests that are expected to fail:
-# XFAIL_TESTS =
