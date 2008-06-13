@@ -6,10 +6,7 @@
 
 # define STATIC_INSTANCE(Class, Name)					\
   class LIBPORT_SINGLETON(Class, Name);                                 \
-  libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)> Name;           \
-  template<>                                                            \
-  LIBPORT_SINGLETON(Class, Name)*                                       \
-    libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)>::ptr = 0
+  libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)> Name
 
 # define STATIC_INSTANCE_DECL(Class, Name)       \
   class LIBPORT_SINGLETON(Class, Name)           \
@@ -21,10 +18,7 @@
   class LIBPORT_SINGLETON(Class, Name)                                  \
     : public Class                                                      \
   {};									\
-  extern libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)> Name;    \
-  template<>                                                            \
-  LIBPORT_SINGLETON(Class, Name)*                                       \
-    libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)>::ptr
+  extern libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)> Name
 
 namespace libport
 {
@@ -35,27 +29,24 @@ namespace libport
   public:
     operator T* ()
     {
-      return instance();
+      return &instance();
     }
     operator T& ()
     {
-      return *instance();
+      return instance();
     }
 
     T* operator ->()
     {
-      return instance();
+      return &instance();
     }
 
   private:
-    static T* instance()
+    static T& instance()
     {
-      if (!ptr)
-	ptr = new T();
-      return ptr;
+      static T t;
+      return t;
     }
-
-    static T* ptr;
   };
 
 }  // namespace libport
