@@ -23,6 +23,7 @@ visitor
 TEST_LOGS = $(TESTS:=.log)
 
 EXTRA_PROGRAMS = $(TESTS)
+CLEANFILES += $(EXTRA_PROGRAMS)
 
 #udouble1
 #ufloat1

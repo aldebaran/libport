@@ -25,6 +25,7 @@ libport_include_HEADERS +=			\
 	$(include_libport)/deref.hh		\
 	$(include_libport)/deref.hxx		\
 	$(include_libport)/detect-win32.h	\
+	$(include_libport)/errors.hh		\
 	$(include_libport)/escape.hh		\
 	$(include_libport)/escape.hxx		\
 	$(include_libport)/exception.hh		\
@@ -32,6 +33,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/file-library.hh	\
 	$(include_libport)/file-library.hxx	\
 	$(include_libport)/file-system.hh	\
+	$(include_libport)/finally.hh		\
+	$(include_libport)/finally.hxx		\
 	$(include_libport)/foreach.hh		\
 	$(include_libport)/fwd.hh		\
 	$(include_libport)/hash.hh		\
@@ -41,6 +44,7 @@ libport_include_HEADERS +=			\
 	$(include_libport)/network.h		\
 	$(include_libport)/map.hh		\
 	$(include_libport)/map.hxx		\
+	$(include_libport)/meta.hh		\
 	$(include_libport)/package-info.hh	\
 	$(include_libport)/pair.hh		\
 	$(include_libport)/pair.hxx		\
@@ -73,14 +77,18 @@ libport_include_HEADERS +=			\
 	$(include_libport)/timer.hh		\
 	$(include_libport)/timer.hxx		\
 	$(include_libport)/tokenizer.hh		\
+	$(include_libport)/traits.hh		\
+	$(include_libport)/typelist.hh		\
 	$(include_libport)/uffloat.hh		\
 	$(include_libport)/ufloat.h		\
 	$(include_libport)/ufloat.hh		\
 	$(include_libport)/ull-fixed-point.hh	\
 	$(include_libport)/unique-pointer.hh	\
 	$(include_libport)/unique-pointer.hxx	\
+	$(include_libport)/unit-test.hh		\
 	$(include_libport)/ulong-fixed-point.hh	\
 	$(include_libport)/utime.hh		\
+	$(include_libport)/visitor.hh		\
 	$(include_libport)/weak-ptr.hh		\
 	$(include_libport)/weak-ptr.hxx		\
 	$(include_libport)/windows.hh
@@ -88,6 +96,7 @@ libport_include_HEADERS +=			\
 # sys/ headers
 sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
+        $(include_libport)/sys/param.h		\
         $(include_libport)/sys/stat.h
 
 
