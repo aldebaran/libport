@@ -182,6 +182,7 @@ get_options ()
       *=*)                   makeargs="$makeargs '$1'" ;;
       *.h |*.hh|*.hxx|*.hpp) headers="$headers '$1'";   havearg=true ;;
       *.cc|*.cpp|*.c|*.C)    sources="$sources '$1'";   havearg=true ;;
+      *.o)                   libs="$libs '$1'";         havearg=true ;;
       *.a)                   libs="$libs '$1'";         havearg=true ;;
       */)
 	# Is it a directory
@@ -194,6 +195,7 @@ get_options ()
 	    -or -iname '*.C'				\
 	    -or -iname '*.cc'				\
 	    -or -iname '*.cpp'				\
+	    -or -iname '*.o'				\
 	    -or -iname '*.a' | grep -Fv "$builddir_pref" ) || true
 	havearg=true;
 	shift
