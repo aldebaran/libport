@@ -192,7 +192,6 @@ get_options ()
 	    -or -iname '*.hxx'				\
 	    -or -iname '*.hpp'				\
 	    -or -iname '*.c'				\
-	    -or -iname '*.C'				\
 	    -or -iname '*.cc'				\
 	    -or -iname '*.cpp'				\
 	    -or -iname '*.o'				\
