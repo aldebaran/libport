@@ -11,5 +11,10 @@ int main()
     assert(var == 2);
   }
   assert(var == 1);
+  {
+    libport::Finally finally(libport::scoped_set(var, 2));
+    assert(var == 2);
+  }
+  assert(var == 1);
   return 0;
 }

@@ -42,6 +42,14 @@ namespace libport
   {
     return boost::lambda::var(v) = v;
   }
+
+  template<typename T>
+  Finally::Action scoped_set(T& v, T n)
+  {
+    Finally::Action res = restore(v);
+    v = n;
+    return res;
+  }
 }
 
 

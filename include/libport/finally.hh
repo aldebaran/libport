@@ -39,7 +39,12 @@ namespace libport
 
   /// Save a variable and restore it at the end of the scope.
   template<typename T>
-  Finally::Action restore(T& v);
+  Finally::Action restore(T&);
+
+  /// Set a variable and restore it to its previous value at the
+  /// end of the scope.
+  template<typename T>
+  Finally::Action scoped_set(T&, T);
 }
 
 # include <libport/finally.hxx>
