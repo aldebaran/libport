@@ -16,14 +16,13 @@ include(CheckCMakeVarsExists)
 
 # Copy dependent libraries of _target_ in target-dldep and schedule them for
 # installation. It uses dldep.
-function(COPY_DEPENDENT_LIBRARIES target)
+function(COPY_DEPENDENT_LIBRARIES target destination)
   check_cmake_vars_exists(CMAKE_AUX_DIR)
-  set(out "${target}-dldep")
   set(binary ${target}${CMAKE_EXECUTABLE_SUFFIX})
   set(generator ${CMAKE_AUX_DIR}/dldep)
   add_custom_target(
-    ${out} ALL
-    COMMAND ${generator} ${binary} ${out}
+    ${target}-dldep ALL
+    COMMAND ${generator} ${binary} ${destination}
     DEPENDS ${binary} ${generator}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
@@ -31,11 +30,8 @@ function(COPY_DEPENDENT_LIBRARIES target)
     "Copying dependent libraries of '${binary}'."
     VERBATIM
     )
-  set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${out})
-  # The trailing backslash is need to avoid to have the last component of the
-  # path installed too.
-  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${out}/
-    DESTINATION lib/${target})
+  set_directory_properties(PROPERTIES
+    ADDITIONAL_MAKE_CLEAN_FILES ${destination})
 endfunction(COPY_DEPENDENT_LIBRARIES)
 
 endif(NOT COMMAND COPY_DEPENDENT_LIBRARIES)
