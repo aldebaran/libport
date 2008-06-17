@@ -75,7 +75,6 @@ Connection::close()
   if (!ret)
     fd = -1;
   Network::unregisterNetworkPipe(this);
-  server_.connection_remove(this);
   if (ret)
     CONN_ERR_RET(UFAIL);
   else
@@ -83,6 +82,8 @@ Connection::close()
     fd = -1;
     CONN_ERR_RET(USUCCESS);
   }
+  // This will call the dtor of this.
+  server_.connection_remove(this);
 }
 
 void
