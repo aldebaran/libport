@@ -1,6 +1,8 @@
 #ifndef LIBPORT_FINALLY_HXX
 # define LIBPORT_FINALLY_HXX
 
+#include <boost/lambda/lambda.hpp>
+
 namespace libport
 {
   // Implementation note: since an allocation is needed to store multiple
@@ -32,6 +34,13 @@ namespace libport
   {
     actions_.push_back(a);
     return *this;
+  }
+
+  template<typename T>
+  inline
+  Finally::Action restore(T& v)
+  {
+    return boost::lambda::var(v) = v;
   }
 }
 

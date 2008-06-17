@@ -14,6 +14,7 @@ path.cc						\
 singleton-ptr.cc				\
 test-erase_if.cc				\
 test-escape.cc					\
+test-finally.cc					\
 test-has_if.cc					\
 test-indent.cc					\
 test-separator.cc				\
@@ -46,6 +47,7 @@ path_SOURCES		= path.cc
 singleton_ptr_SOURCES	= singleton-ptr.cc
 test_erase_if_SOURCES	= test-erase_if.cc
 test_escape_SOURCES     = test-escape.cc
+test_finally_SOURCES	= test-finally.cc
 test_has_if_SOURCES	= test-has_if.cc
 test_indent_SOURCES     = test-indent.cc
 test_separator_SOURCES  = test-separator.cc

@@ -36,6 +36,10 @@ namespace libport
     std::vector<Action> actions_;
 
   };
+
+  /// Save a variable and restore it at the end of the scope.
+  template<typename T>
+  Finally::Action restore(T& v);
 }
 
 # include <libport/finally.hxx>
