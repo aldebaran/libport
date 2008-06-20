@@ -256,7 +256,7 @@ namespace libport
   template <typename T>
   template <typename Archive>
   void
-  shared_ptr<T, true>::serialize(Archive& ar, const unsigned int version)
+  shared_ptr<T, true>::serialize(Archive& ar, const unsigned int /* version */)
   {
     ar & pointee_;
     typedef BOOST_DEDUCED_TYPENAME boost::mpl::if_<
