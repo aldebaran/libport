@@ -450,6 +450,17 @@ AC_DEFUN([BOOST_REGEX],
 ])# BOOST_REGEX
 
 
+# BOOST_SERIALIZATION([PREFERRED-RT-OPT])
+# ------------------------------
+# Look for Boost.Wave.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+AC_DEFUN([BOOST_SERIALIZATION],
+[BOOST_FIND_LIB([serialization], [$1],
+                [boost/serialization/serialization.hpp],
+                [])
+])
+
+
 # BOOST_SIGNALS([PREFERRED-RT-OPT])
 # ---------------------------------
 # Look for Boost.Signals.  For the documentation of PREFERRED-RT-OPT, see the
