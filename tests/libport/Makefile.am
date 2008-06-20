@@ -20,6 +20,7 @@ test-indent.cc					\
 test-separator.cc				\
 test-shared-ptr-intrusive.cc			\
 test-shared-ptr-non-intrusive.cc		\
+test-shared-ptr-serialize.cc			\
 test-timer.cc					\
 test-unescape.cc				\
 visitor.cc
@@ -35,8 +36,9 @@ EXTRA_PROGRAMS = $(TESTS:.cc=)
 CLEANFILES += $(EXTRA_PROGRAMS)
 
 AM_CPPFLAGS += $(BOOST_CPPFLAGS)
-AM_LDFLAGS += $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
-LDADD = $(top_builddir)/lib/libport/libport.la $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
+AM_LDFLAGS += $(BOOST_SERIALIZATION_LDFLAGS) $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
+LDADD = $(top_builddir)/lib/libport/libport.la \
+	$(BOOST_UNIT_TEST_FRAMEWORK_LIBS) $(BOOST_SERIALIZATION_LIBS)
 
 #udouble1_SOURCES        = udouble1.cc
 #ufloat1_SOURCES         = ufloat1.cc
@@ -53,6 +55,7 @@ test_indent_SOURCES     = test-indent.cc
 test_separator_SOURCES  = test-separator.cc
 test_shared_ptr_intrusive_SOURCES = test-shared-ptr-intrusive.cc
 test_shared_ptr_non_intrusive_SOURCES = test-shared-ptr-non-intrusive.cc
+test_shared_ptr_serialize_SOURCES = test-shared-ptr-serialize.cc
 test_timer_SOURCES      = test-timer.cc
 test_unescape_SOURCES   = test-unescape.cc
 visitor_SOURCES		= visitor.cc

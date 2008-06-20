@@ -11,6 +11,7 @@
 # include <libport/ref-counted.hh>
 
 # ifndef LIBPORT_NO_BOOST
+#  include <boost/serialization/serialization.hpp>
 #  include <boost/shared_ptr.hpp>
 
 namespace libport
@@ -203,6 +204,12 @@ namespace libport
 
   private:
     T* pointee_;
+
+  private:
+    friend class boost::serialization::access;
+    template <typename Archive>
+    void serialize(Archive& ar, const unsigned int version);
+    static void counter_inc(shared_ptr<T, true>&);
   };
 
 

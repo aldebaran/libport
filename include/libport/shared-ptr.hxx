@@ -11,6 +11,12 @@
 namespace libport
 {
 
+  template <typename T>
+  class dummy_ptr {
+  public:
+    static void counter_inc(shared_ptr<T, true>&) {}
+  };
+
   /*-----------------.
   | Ctors and dtor.  |
   `-----------------*/
@@ -117,7 +123,7 @@ namespace libport
   template <typename T>
   shared_ptr<T, true>::~shared_ptr()
   {
-    // This cast is required, or the compiler usses the shared_ptr ctor,
+    // This cast is required, or the compiler uses the shared_ptr ctor,
     // leading to an infinite loop.
     (*this) = (T*)0;
   }
@@ -239,7 +245,26 @@ namespace libport
     return pointee_;
   }
 
+  template <typename T>
+  inline void
+  shared_ptr<T, true>::counter_inc(shared_ptr<T, true>& self)
+  {
+    if (self.pointee_)
+      self.pointee_->counter_inc();
+  }
 
+  template <typename T>
+  template <typename Archive>
+  void
+  shared_ptr<T, true>::serialize(Archive& ar, const unsigned int version)
+  {
+    ar & pointee_;
+    typedef BOOST_DEDUCED_TYPENAME boost::mpl::if_<
+      BOOST_DEDUCED_TYPENAME Archive::is_saving,
+	dummy_ptr<T>,
+	shared_ptr<T, true> >::type typex;
+    typex::counter_inc(*this);
+  }
 
   /*--------------------------.
   | Free standing functions.  |
