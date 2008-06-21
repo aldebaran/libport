@@ -6,6 +6,8 @@
 #ifndef LIBPORT_SYMBOL_HXX
 # define LIBPORT_SYMBOL_HXX
 
+# include <boost/serialization/string.hpp>
+
 # include <libport/symbol.hh>
 # include <libport/assert.hh>
 
@@ -67,6 +69,21 @@ namespace libport
     return ostr << the.name_get ();
   }
   //>>
+
+  template <typename Archive>
+  void Symbol::save(Archive& ar, const unsigned int /* version */) const
+  {
+    ar & *const_cast<std::string*>(str_);
+  }
+
+  template <typename Archive>
+  void Symbol::load(Archive& ar, const unsigned int /* version */)
+  {
+    std::string s;
+    ar & s;
+    str_ = &*string_set_instance ().insert (s).first;
+  }
+
 }
 
 #endif // !LIBPORT_SYMBOL_HXX

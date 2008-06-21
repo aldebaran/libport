@@ -10,6 +10,9 @@
 # include <string>
 # include <iosfwd>
 
+# include <boost/serialization/serialization.hpp>
+# include <boost/serialization/tracking.hpp>
+
 namespace libport
 {
 
@@ -86,6 +89,14 @@ namespace libport
 
     /// Counter of unique symbols.
     static unsigned counter_;
+
+    /// Serializer.
+    friend class boost::serialization::access;
+    template <typename Archive>
+    void save(Archive& ar, const unsigned int version) const;
+    template <typename Archive>
+    void load(Archive& ar, const unsigned int version);
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
   };
 
   /** \brief Intercept output stream redirection.
@@ -94,6 +105,8 @@ namespace libport
    */
   std::ostream& operator<< (std::ostream& ostr, const Symbol& the);
 }
+
+BOOST_CLASS_TRACKING(libport::Symbol, boost::serialization::track_never)
 
 # include <libport/symbol.hxx>
 
