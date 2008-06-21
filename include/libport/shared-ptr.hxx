@@ -11,12 +11,6 @@
 namespace libport
 {
 
-  template <typename T>
-  class dummy_ptr {
-  public:
-    static void counter_inc(shared_ptr<T, true>&) {}
-  };
-
   /*-----------------.
   | Ctors and dtor.  |
   `-----------------*/
@@ -246,24 +240,31 @@ namespace libport
   }
 
   template <typename T>
-  inline void
-  shared_ptr<T, true>::counter_inc(shared_ptr<T, true>& self)
+  template <typename Archive>
+  void
+  shared_ptr<T, true>::save(Archive& ar, const unsigned int /* version */) const
   {
-    if (self.pointee_)
-      self.pointee_->counter_inc();
+    ar & pointee_;
   }
 
   template <typename T>
   template <typename Archive>
   void
-  shared_ptr<T, true>::serialize(Archive& ar, const unsigned int /* version */)
+  shared_ptr<T, true>::load(Archive& ar, const unsigned int /* version */)
   {
+    if (pointee_)
+      pointee_->counter_dec();
     ar & pointee_;
-    typedef BOOST_DEDUCED_TYPENAME boost::mpl::if_<
-      BOOST_DEDUCED_TYPENAME Archive::is_saving,
-	dummy_ptr<T>,
-	shared_ptr<T, true> >::type typex;
-    typex::counter_inc(*this);
+    if (pointee_)
+      pointee_->counter_inc();
+  }
+
+  template <typename T>
+  template <typename Archive>
+  void
+  shared_ptr<T, true>::serialize(Archive& ar, const unsigned int version)
+  {
+    boost::serialization::split_member(ar, *this, version);
   }
 
   /*--------------------------.

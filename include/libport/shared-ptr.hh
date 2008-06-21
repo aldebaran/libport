@@ -206,10 +206,14 @@ namespace libport
     T* pointee_;
 
   private:
+    /// Serialization.
     friend class boost::serialization::access;
     template <typename Archive>
+    void load(Archive& ar, const unsigned int version);
+    template <typename Archive>
+    void save(Archive& ar, const unsigned int version) const;
+    template <typename Archive>
     void serialize(Archive& ar, const unsigned int version);
-    static void counter_inc(shared_ptr<T, true>&);
   };
 
 
