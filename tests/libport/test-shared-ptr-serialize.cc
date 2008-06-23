@@ -63,4 +63,6 @@ main()
 
   b2 = 0;
   assert(ninstances == 0);
+
+  return 0;
 }

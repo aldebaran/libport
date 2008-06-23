@@ -28,4 +28,6 @@ main()
   assert(s1 != s3);
   assert(s1.name_get() == "foo");
   assert(s3.name_get() == "bar");
+
+  return 0;
 }
