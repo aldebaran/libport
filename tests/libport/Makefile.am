@@ -10,6 +10,7 @@ include $(top_srcdir)/build-aux/check.mk
 # Program to check:
 TESTS =						\
 deref.cc					\
+foreach.cc					\
 path.cc						\
 singleton-ptr.cc				\
 test-erase_if.cc				\
@@ -45,7 +46,8 @@ LDADD = $(top_builddir)/lib/libport/libport.la \
 #ufloat1_SOURCES         = ufloat1.cc
 #ullfp1_SOURCES          = ullfp1.cc
 #ullfptab1_SOURCES       = ullfptab1.cc
-deref_SOURCES      = deref.cc
+deref_SOURCES      	= deref.cc
+foreach_SOURCES      	= foreach.cc
 path_SOURCES		= path.cc
 singleton_ptr_SOURCES	= singleton-ptr.cc
 test_erase_if_SOURCES	= test-erase_if.cc

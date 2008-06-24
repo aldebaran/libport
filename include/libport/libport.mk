@@ -53,6 +53,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/pod-cast.hh		\
 	$(include_libport)/pod-cast.hxx		\
 	$(include_libport)/program-name.hh	\
+	$(include_libport)/range.hh		\
+	$(include_libport)/range.hxx		\
 	$(include_libport)/read-stdin.hh	\
 	$(include_libport)/ref-counted.hh	\
 	$(include_libport)/ref-counted.hxx	\

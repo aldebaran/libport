@@ -6,6 +6,8 @@
 #ifndef LIBPORT_FOREACH_HH
 # define LIBPORT_FOREACH_HH
 
+# include <libport/range.hh>
+
 # include <boost/foreach.hpp>
 
 /// \def foreach
@@ -13,5 +15,10 @@
 ///
 /// Not to be confused with libport::for_each.
 # define foreach BOOST_FOREACH
+
+/// \def rforeach(VarDec, Sequence)
+/// \brief Same as foreach, but in reversed order.
+# define rforeach(Variable, Container)                                  \
+  BOOST_FOREACH(Variable, libport::make_reverse_iterator_range(Container))
 
 #endif // !LIBPORT_FOREACH_HH
