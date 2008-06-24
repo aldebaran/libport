@@ -33,15 +33,22 @@ function(ADD_FLEX_FILES _sources)
     get_filename_component(_in ${_current_FILE} ABSOLUTE)
     get_filename_component(_basename ${_current_FILE} NAME_WE)
 
+    set(intermediate lex.yy.c)
     set(_out ${CMAKE_CURRENT_BINARY_DIR}/flex_${_basename}.cpp)
     # Invoke flex.
     add_custom_command(
-      OUTPUT ${_out}
+      OUTPUT ${intermediate}
       COMMAND ${FLEX_EXECUTABLE}
       ARGS
-      -o${_out}
       ${_in}
       DEPENDS ${_in}
+      )
+    # Copy intermediate file to output file.
+    add_custom_command(
+      OUTPUT ${_out}
+      COMMAND ${CMAKE_COMMAND}
+      ARGS -E copy ${intermediate} ${_out}
+      DEPENDS ${intermediate}
       )
     # Add the generated source file to the source list.
     set(${_sources} ${${_sources}} ${_out} PARENT_SCOPE)
