@@ -17,17 +17,17 @@
 
 # Find flex on the system.
 # Set FLEX_EXECUTABLE to the executable name.
-macro(FIND_FLEX)
+function(FIND_FLEX)
   if(NOT FLEX_EXECUTABLE)
     find_program(FLEX_EXECUTABLE flex)
     if (NOT FLEX_EXECUTABLE)
       message(FATAL_ERROR "flex not found - aborting")
     endif (NOT FLEX_EXECUTABLE)
   endif(NOT FLEX_EXECUTABLE)
-endmacro(FIND_FLEX)
+endfunction(FIND_FLEX)
 
 # Add flex files to the source list.
-macro(ADD_FLEX_FILES _sources)
+function(ADD_FLEX_FILES _sources)
   find_flex()
   foreach(_current_FILE ${ARGN})
     get_filename_component(_in ${_current_FILE} ABSOLUTE)
@@ -44,6 +44,6 @@ macro(ADD_FLEX_FILES _sources)
       DEPENDS ${_in}
       )
     # Add the generated source file to the source list.
-    set(${_sources} ${${_sources}} ${_out})
+    set(${_sources} ${${_sources}} ${_out} PARENT_SCOPE)
   endforeach(_current_FILE)
-endmacro(ADD_FLEX_FILES)
+endfunction(ADD_FLEX_FILES)
