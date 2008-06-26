@@ -70,6 +70,7 @@ namespace libport
  * Semaphores created with sem_init must be closed with sem_destroy.
  */
 # ifdef __APPLE__
+#  include <fstream>
 #  include <sstream>
 # endif
 
@@ -93,6 +94,12 @@ namespace libport
     std::stringstream s;
     s << "sema/" << getpid() << "/" << counter++;
     name_ = s.str();
+
+    // Save the semaphore name if we can, in order to provide the user
+    // with a means to reclaim them.  Don't check for success, this is
+    // best effort.
+    std::ofstream o("/tmp/urbi-semaphores.log", std::ios_base::app);
+    o << name_ << std::endl;
     sem_ = sem_open(name_.c_str (), O_CREAT | O_EXCL, 0777, cnt);
     if (IS_SEM_FAILED(sem_))
       errabort("sem_open(" << name_ << ')');
