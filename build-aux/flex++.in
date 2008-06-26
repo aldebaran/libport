@@ -1,0 +1,71 @@
+#! /bin/sh
+##
+## flex++.in: This file is part of build-aux.
+## Copyright (C) Gostai S.A.S., 2008.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
+
+# Exit status.
+status=0
+
+# Any tool failure is a failure of the script.
+set -e
+
+: ${FLEX='@FLEX@'}
+
+# flex++ INPUT OUTPUT OPTIONS
+# ---------------------------
+
+me=$(basename $0)
+move_if_change='@abs_srcdir@/move-if-change'
+
+input=$1
+input_base=$(basename "$input")
+shift
+output=$1
+output_base=$(basename "$output")
+output_base_noext=$(echo "$output_base" | sed -e 's/\.[^.]*//')
+output_dir=$(dirname "$output")
+output_log=$output_dir/$output_base_noext.log
+shift
+
+options="$@"
+
+# Flex 2.5.4's C++ output does not use std:: properly.  This is a Perl
+# regexp of entities to prefix with std::.
+flex_nonstd='cin|cout|cerr|[io]stream'
+
+set +e
+# -s to disable the default rule (ECHO).
+$FLEX -s -+ -o"$output" "$input" 2>$output_log
+status=$?
+set -e
+
+# Flex issues stupid quotes:
+# "../../../src/parser/utoken.l", line 605: warning, rule cannot be matched
+# Warnings are errors.
+perl >&2 -p                                     \
+    -e 's/^"(.*)", line (\d+):/$1:$2:/;'        \
+    -e 's/warning, //;'				\
+     $output_log
+
+test ! -s $output_log ||
+  exit 1
+
+perl -pi						\
+     -e 's,<FlexLexer.h>,"parser/flex-lexer.hh",;'	\
+     -e 's/class istream;/#include <iostream>/;'	\
+     -e 's/([	 &])('$flex_nonstd')/$1std::$2/g;'	\
+     -e 's,# *include *<unistd.h>,#include <sdk/config.h>\n#ifndef WIN32\n$&\n#endif,;'	\
+     "$output"
+## For some reason, on Windows perl does not remove the back up file.
+rm -f "$output.bak"
+
+exit $status
