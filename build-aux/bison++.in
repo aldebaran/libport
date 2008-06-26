@@ -28,12 +28,17 @@ move_if_change='@abs_srcdir@/move-if-change'
 
 input=$1
 input_base=$(basename "$input")
+input_dir=$(dirname "$input")
 shift
 output=$1
 output_base=$(basename "$output")
 output_base_noext=$(echo "$output_base" | sed -e 's/\.[^.]*//')
 output_dir=$(dirname "$output")
 shift
+
+# The namespace we are in.
+# FIXME: We need $srcdir to be able to compute it.
+namespace=parser
 
 options="$@"
 if $BISON --xml --version >/dev/null 2>&1; then
@@ -70,14 +75,21 @@ set -e
 # Fixes in place.
 fix_bison_output ()
 {
-  # Fix doxygen tags.
-  perl -pi -e "s|\Q\\file $base\E\b|\\\\file parse/$base|g;" "$1"
+  local file=$1
+  local base=$(basename $file)
+  perl -pi -e "
+# Fix doxygen tags.
+s|\Q\\file $base\E\b|\\\\file $namespace/$base|g;
 
-  # Bison should really offer a means to include headers in
-  # position.hh.
-  perl -pi \
-       -e 'print("# include \"libport/symbol.hh\"\n# include \"libport/windows.hh\"\n") if /namespace yy/'\
-       "$1"
+# Fix sync lines for composite paths.
+s|$base|$input_dir/$base|g;
+
+# Bison should really offer a means to include headers in position.hh.
+print <<EOF if /namespace yy/;
+# include <libport/symbol.hh>
+# include <libport/windows.hh>
+EOF
+"  "$1"
 }
 
 # compile_xml_file XML XSL OUT-EXT
