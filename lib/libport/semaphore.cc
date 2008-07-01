@@ -95,12 +95,20 @@ namespace libport
     s << "sema/" << getpid() << "/" << counter++;
     name_ = s.str();
 
-    // Save the semaphore name if we can, in order to provide the user
-    // with a means to reclaim them.  Don't check for success, this is
-    // best effort.
-    std::ofstream o("/tmp/urbi-semaphores.log", std::ios_base::app);
-    o << name_ << std::endl;
-    sem_ = sem_open(name_.c_str (), O_CREAT | O_EXCL, 0777, cnt);
+    errno = 0;
+    sem_ = sem_open(name_.c_str(), O_CREAT | O_EXCL, 0777, cnt);
+
+    {
+      // Save the semaphore name if we can, in order to provide the user
+      // with a means to reclaim them.  Don't check for success, this is
+      // best effort.
+      std::ofstream o("/tmp/urbi-semaphores.log", std::ios_base::app);
+      o << name_;
+      if (errno)
+        o << ": " << strerror(errno);
+      o << std::endl;
+    }
+
     if (IS_SEM_FAILED(sem_))
       errabort("sem_open(" << name_ << ')');
 # else
