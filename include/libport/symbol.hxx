@@ -62,6 +62,14 @@ namespace libport
     //>>
   }
 
+  inline
+  bool
+  Symbol::empty () const
+  {
+    assert (str_);
+    return str_->empty();
+  }
+
   //<<
   inline std::ostream&
   operator<< (std::ostream& ostr, const Symbol& the)

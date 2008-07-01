@@ -72,6 +72,9 @@ namespace libport
     bool operator< (const Symbol& rhs) const;
     /** \} */
 
+    /// Whether the name is empty.
+    bool empty() const;
+
     /** \name Factory methods.
      ** \{ */
     /** \brief Create a new unique symbol. */
