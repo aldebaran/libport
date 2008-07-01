@@ -20,9 +20,10 @@ namespace libport
     struct Assert<true, E>
     {};
 
-      ////////////////////
-     // Usefull errors //
-    ////////////////////
+
+    /*----------------.
+    | Useful errors.  |
+    `----------------*/
 
     template <int I>
     struct Must_be_positive {};
