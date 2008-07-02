@@ -37,6 +37,8 @@
 # define PACKAGE_COPYRIGHT_HOLDER "@PROJECT_COPYRIGHT_HOLDER@"
 /* Copyright years of the package */
 # define PACKAGE_COPYRIGHT_YEARS "@PROJECT_COPYRIGHT_YEARS@"
+/* Full copyright description */
+# define PACKAGE_COPYRIGHT_STRING "@PROJECT_COPYRIGHT_STRING@"
 /* Full description string of the package */
 # define PACKAGE_STRING "@PROJECT_STRING@"
 /* Name of the package file (tar/exe/deb/rpm) */
