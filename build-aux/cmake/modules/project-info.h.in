@@ -42,9 +42,18 @@
 /* Name of the package file (tar/exe/deb/rpm) */
 # define PACKAGE_TARNAME "@PROJECT_TARNAME@"
 /* Home page of the package. */
-# define PACKAGE_HOMEPAGE "@PROJECT_HOMEPAGE"
+# define PACKAGE_HOMEPAGE "@PROJECT_HOMEPAGE@"
 /* Package help url */
 # define PACAKGE_HELP_LINK "@PROJECT_HELP_LINK@"
+/* The SCM revision string. */
+# define PACKAGE_REVISION "@PROJECT_REVISION@"
+/* The SCM identification string. */
+# define PACKAGE_ID "@PROJECT_ID@"
+/* The SCM date string. */
+# define PACKAGE_DATE "@PROJECT_DATE@"
+/* Version and revision together. */
+# define PACKAGE_VERSION_REV \\
+  "version " PACKAGE_VERSION " rev. " PACKAGE_REVISION
 
 #endif /* !CMAKE_AUX_MODULES_PROJECT_INFO_H */
 
