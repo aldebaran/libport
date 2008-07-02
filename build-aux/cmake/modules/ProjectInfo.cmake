@@ -18,6 +18,16 @@ if(NOT PROJECT_INFO_CMAKE)
   set(PROJECT_COPYRIGHT_HOLDER "Gostai S.A.S")
   set(PROJECT_COPYRIGHT_YEARS "2006-2008")
 
+  include(Revision)
+  revision(PROJECT_DATE PROJECT_ID PROJECT_REVISION)
+  set(PROJECT_VERSION_REV "version ${PROJECT_VERSION} rev. ${PROJECT_REVISION}")
+
+  message(STATUS "Project repository date: ${PROJECT_DATE}")
+  message(STATUS "Project repository ID: ${PROJECT_ID}")
+  message(STATUS "Project repository revision: ${PROJECT_REVISION}")
+
+  set(PROJECT_VERSION_PATCH ${PROJECT_REVISION})
+
   check_cmake_vars_exists(
     PROJECT_VERSION_MAJOR
     PROJECT_VERSION_MINOR
@@ -30,14 +40,6 @@ if(NOT PROJECT_INFO_CMAKE)
   set(PROJECT_STRING "${PROJECT_LONGNAME} ${PROJECT_VERSION}")
 
   set(PROJECT_TARNAME "${PROJECT_NAME}-${PROJECT_VERSION}")
-
-  include(Revision)
-  revision(PROJECT_DATE PROJECT_ID PROJECT_REVISION)
-  set(PROJECT_VERSION_REV "version ${PROJECT_VERSION} rev. ${PROJECT_REVISION}")
-
-  message(STATUS "Project repository date: ${PROJECT_DATE}")
-  message(STATUS "Project repository ID: ${PROJECT_ID}")
-  message(STATUS "Project repository revision: ${PROJECT_REVISION}")
 
   function(CONFIGURE_PROJECT_INFO outfile)
     configure_file(
