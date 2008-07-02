@@ -43,12 +43,4 @@ if(NOT PROJECT_INFO_CMAKE)
 
   set(PROJECT_TARNAME "${PROJECT_NAME}-${PROJECT_VERSION}")
 
-  function(CONFIGURE_PROJECT_INFO outfile)
-    configure_file(
-      ${CMAKE_MODULE_PATH}/project-info.h.in
-      ${outfile}
-      ESCAPE_QUOTES
-      )
-  endfunction(CONFIGURE_PROJECT_INFO)
-
 endif(NOT PROJECT_INFO_CMAKE)
