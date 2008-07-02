@@ -44,7 +44,7 @@
 /* Home page of the package. */
 # define PACKAGE_HOMEPAGE "@PROJECT_HOMEPAGE"
 /* Package help url */
-# define PACAKGE_HELP_LINK "@PROJECT_HELP_LINK@")
+# define PACAKGE_HELP_LINK "@PROJECT_HELP_LINK@"
 
 #endif /* !CMAKE_AUX_MODULES_PROJECT_INFO_H */
 
