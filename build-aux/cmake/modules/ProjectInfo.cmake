@@ -18,6 +18,7 @@ if(NOT PROJECT_INFO_CMAKE)
   check_cmake_vars_exists(
     PROJECT_VERSION_MAJOR
     PROJECT_VERSION_MINOR
+    PROJECT_VERSION_PATCH
     PROJECT_LONGNAME
     )
 
@@ -32,8 +33,6 @@ if(NOT PROJECT_INFO_CMAKE)
   message(STATUS "Project repository date: ${PROJECT_DATE}")
   message(STATUS "Project repository ID: ${PROJECT_ID}")
   message(STATUS "Project repository revision: ${PROJECT_REVISION}")
-
-  set(PROJECT_VERSION_PATCH ${PROJECT_REVISION})
 
   set(PROJECT_VERSION
     "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
