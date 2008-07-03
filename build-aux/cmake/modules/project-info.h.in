@@ -54,7 +54,7 @@
 /* The SCM date string. */
 # define PACKAGE_DATE "@PROJECT_DATE@"
 /* Version and revision together. */
-# define PACKAGE_VERSION_REV "@PROJECT_VERSION_REV@")
+# define PACKAGE_VERSION_REV "@PROJECT_VERSION_REV@"
 
 #endif /* !CMAKE_AUX_MODULES_PROJECT_INFO_H */
 
