@@ -79,14 +79,6 @@ namespace libport
 namespace libport
 {
 
-# if defined __linux || defined WIN32
-/* Linux defines SEM_FAILED as  (sem_t *) 0 */
-#  define IS_SEM_FAILED(sem)   ((sem) == SEM_FAILED)
-# else
-/* MacOSX (and thus BSD?) defines it as -1 */
-#  define IS_SEM_FAILED(sem)   ((long) (sem) == (long) SEM_FAILED)
-# endif
-
   Semaphore::Semaphore (int cnt)
   {
 # ifdef __APPLE__
@@ -109,7 +101,7 @@ namespace libport
       o << std::endl;
     }
 
-    if (IS_SEM_FAILED(sem_))
+    if (sem_ == SEM_FAILED)
       errabort("sem_open(" << name_ << ')');
 # else
     sem_ = new sem_t;
