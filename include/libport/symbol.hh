@@ -90,9 +90,6 @@ namespace libport
     /// Pointer to the unique referenced string.
     const std::string* str_;
 
-    /// Counter of unique symbols.
-    static unsigned counter_;
-
     /// Serializer.
     friend class boost::serialization::access;
     template <typename Archive>

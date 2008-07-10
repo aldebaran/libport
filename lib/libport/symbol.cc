@@ -16,19 +16,10 @@
 
 namespace libport
 {
-  unsigned Symbol::counter_ = 0;
-
   // That symbols are as large as pointers is part of the
   // interface: they should be handled by copy, not by reference.
   BOOST_STATIC_ASSERT(sizeof(Symbol) == sizeof(void*));
 
-
-  /* We chose to put these methods here because otherwise libsymbol.a
-     would be empty.  That would require changing the Makefiles we
-     already gave to the students.
-
-     Anyway, `instance' is used only during the creation, which is
-     fairly infrequent.  */
 
   //<<
   Symbol::Symbol (const std::string& s)
@@ -66,9 +57,11 @@ namespace libport
   Symbol
   Symbol::fresh (const Symbol& s)
   {
+    // Counter for unique symbols.
+    static unsigned c = 0;
     std::ostringstream o;
-    o << s << "_" << counter_;
-    ++counter_;
+    o << s << "_" << c;
+    ++c;
     return Symbol(o.str ());
   }
 
