@@ -328,8 +328,8 @@ do
   fi
 done
 
-if test -f bootstrap.cfg; then
-  fatal "Remove bootstrap.cfg, use .externals instead."
+if test -f .externals; then
+  fatal "Remove \`.externals', use \`bootstrap.cfg' instead."
 fi
 
 keep=$(attributes keep)
