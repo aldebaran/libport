@@ -35,9 +35,6 @@ namespace libport
     /** \brief Construct a Symbol.
      ** \param s referenced string */
     explicit Symbol (const std::string& s = "");
-    /** \brief Construct a Symbol.
-     ** \param s referenced string */
-    explicit Symbol (const char* s);
     /** \} */
 
     /** \name Accessors.

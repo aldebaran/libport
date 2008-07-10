@@ -28,11 +28,6 @@ namespace libport
   {
   }
 
-  Symbol::Symbol (const char* s)
-    : str_ (&*string_set_instance ().insert (std::string (s)).first)
-  {
-  }
-
   Symbol::string_set_type&
   Symbol::string_set_instance ()
   {
