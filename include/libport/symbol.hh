@@ -80,6 +80,8 @@ namespace libport
     /** \brief Create a new unique symbol. */
     static Symbol fresh ();
     /** \brief Create a new unique symbol, forged from \a s. */
+    static Symbol fresh (const std::string& s);
+    /** \brief Create a new unique symbol, forged from \a s. */
     static Symbol fresh (const Symbol& s);
     /** \} */
 

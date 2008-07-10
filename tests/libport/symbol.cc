@@ -45,7 +45,7 @@ check_fresh()
   const Symbol a0 = Symbol::fresh(Symbol("a"));
   BOOST_CHECK_EQUAL(a0, Symbol("a_0"));
   const Symbol a1("a_1");
-  const Symbol a2 = Symbol::fresh(Symbol("a"));
+  const Symbol a2 = Symbol::fresh("a");
   BOOST_CHECK_EQUAL(a2, Symbol("a_2"));
 }
 
