@@ -11,8 +11,9 @@
 
 #include <boost/static_assert.hpp>
 
-#include <libport/symbol.hh>
+#include <libport/containers.hh>
 #include <libport/escape.hh>
+#include <libport/symbol.hh>
 
 namespace libport
 {
@@ -52,16 +53,17 @@ namespace libport
     return fresh (Symbol("a"));
   }
 
-  // FIXME: Of course this is not enough, we really need to detect
-  // whether the symbol already exists.
   Symbol
   Symbol::fresh (const Symbol& s)
   {
     // Counter for unique symbols.
     static unsigned c = 0;
     std::ostringstream o;
-    o << s << "_" << c;
-    ++c;
+    do {
+      o.str ("");
+      o << s << "_" << c;
+      ++c;
+    } while (mhas(string_set_instance (), o.str ()));
     return Symbol(o.str ());
   }
 
