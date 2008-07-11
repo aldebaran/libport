@@ -143,17 +143,20 @@ namespace libport
   shared_ptr<T, true>::operator = (U* other)
   {
     // This is the only place where the counter is used.
+    if (pointee_ != other)
+    {
+      // Decrement current pointee count and delete the object if it reaches 0.
+      if (pointee_ && pointee_->counter_dec())
+        delete pointee_;
 
-    // Decrement current pointee count and delete the object if it reaches 0.
-    if (pointee_ && pointee_->counter_dec())
-      delete pointee_;
-
-    // Take the pointer, increment counter.
-    pointee_ = other;
-    if (pointee_)
-      pointee_->counter_inc();
+      // Take the pointer, increment counter.
+      pointee_ = other;
+      if (pointee_)
+        pointee_->counter_inc();
+    }
     return *this;
   }
+
   template <typename T> bool
   shared_ptr<T, true>::operator == (const T* p) const
   {
