@@ -47,4 +47,11 @@ main ()
     INSTANCES(1);
   }
   INSTANCES(0);
+
+  {
+    rSubCounted p = new SubCounted();
+    p = p;
+    INSTANCES(1);
+  }
+  INSTANCES(0);
 }
