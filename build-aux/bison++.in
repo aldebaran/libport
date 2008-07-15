@@ -85,11 +85,14 @@ s|\Q\\file $base\E\b|\\\\file $namespace/$base|g;
 # Fix sync lines for composite paths.
 s|(^#line.*)$base_noext|\$1$input_dir/$base_noext|g;
 
-# Bison should really offer a means to include headers in position.hh.
-print <<EOF if /namespace yy/;
+# Bison lacks a means to include headers in position.hh.
+print <<EOF if \$ARGV =~ /position.hh/ && /namespace yy/;
 # include <libport/symbol.hh>
 # include <libport/windows.hh>
 EOF
+
+# Kill all the trailing blanks.
+s/[ \t]+\$//;
 "  "$1"
 }
 
