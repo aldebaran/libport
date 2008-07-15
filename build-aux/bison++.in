@@ -76,13 +76,14 @@ set -e
 fix_bison_output ()
 {
   local file=$1
-  local base=$(basename $file)
+  local base=$(basename "$file")
+  local base_noext=$(echo "$file" | sed -e 's/\..*//')
   perl -pi -e "
 # Fix doxygen tags.
 s|\Q\\file $base\E\b|\\\\file $namespace/$base|g;
 
 # Fix sync lines for composite paths.
-s|$base|$input_dir/$base|g;
+s|(^#line.*)$base_noext|\$1$input_dir/$base_noext|g;
 
 # Bison should really offer a means to include headers in position.hh.
 print <<EOF if /namespace yy/;
