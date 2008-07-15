@@ -1,0 +1,148 @@
+#! /usr/bin/perl -w
+
+# This script *tries* to fuse consecutive "switches" that have the
+# same body.
+#
+# Usage: $0 FILES
+#
+# Leaves a copy of the input files as FILE.bak.
+
+
+use strict;
+
+my $case_re = '^\s*(case\b.*|default)\s*:';
+
+# Return the block of code with all the ignored parts removed.
+sub code ($)
+{
+  local ($_) = @_;
+#  print STDERR "CODE IN: $_";
+  s,//.*,,gm;
+  s,/\*.*?.*\*/,,gm;
+  s/#line .*//gm;
+#  print STDERR "CODE OUT: $_";
+  return $_;
+}
+
+# Compare two case blocks against equality, ignoring the case label.
+sub case_eq($$)
+{
+  my ($b1, $b2) = @_;
+  return case_body(code($b1)) eq case_body(code($b2));
+}
+
+# Return the line which contains the "case" this block of code.
+sub case_label($)
+{
+  my ($case) = @_;
+  my $res = '';
+  for my $line (split "\n", $case)
+    {
+      $res .= ($line !~ /$case_re/ && '//- ') . $line . "\n"
+    }
+  return $res;
+}
+
+# Return the case-block without its case line.
+sub case_body($)
+{
+  local ($_) = @_;
+# print STDERR "BODY IN: $_";
+  s/^.*$case_re.*\n//mg;
+#  print STDERR "BODY OUT: $_";
+  return $_;
+}
+
+
+sub fuse($$)
+{
+  my ($input, $output) = @_;
+  use IO::File;
+
+  my $in = new IO::File($input) or die;
+  my $out = new IO::File(">$output") or die;
+
+  my $case = '';
+  my $previous_case = '';
+  my $in_switch = 0;
+
+  while ($_ = $in->getline)
+    {
+#      print STDERR "\$_ = $_";
+      if (!$in_switch)
+        {
+          if (/^\s*switch\b/)
+            {
+              $in_switch = 1;
+              $previous_case = '';
+            }
+        }
+      else
+        {
+          # in switch.
+          # The "default: break" is output by bison.
+          if (m/$case_re/ .. m/^\s*(?:default:\s*)?break/)
+            {
+              # Register the current case.
+              $case .= $_;
+              if (/break/)
+                {
+                  if (case_eq($previous_case, $case))
+                    {
+#                      print STDERR "== {{$previous_case}} {{$case}}\n";
+                      $_ = case_label ($previous_case);
+                    }
+                  else
+                    {
+                      # The previous case is needed.
+#                      print STDERR "!= {{$previous_case}} {{$case}}\n";
+                      $_ = $previous_case;
+                    }
+                  $previous_case = $case;
+                  $case = "";
+                }
+              else
+                {
+                  # Print nothing.
+                  $_ = "";
+                }
+            }
+          elsif (m/}/)
+            {
+              # The closing brace of the switch.
+              $_ = $previous_case . $_;
+              $in_switch = 0;
+            }
+          else
+            {
+              # Something in a switch, but not in a case.
+              #              $_ = '';
+            }
+        }
+      print $out $_;
+    }
+}
+
+use File::Copy;
+for my $file (@ARGV)
+{
+  copy ($file, "$file.bak") or die;
+  fuse("$file.bak", "$file");
+}
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:

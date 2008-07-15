@@ -25,6 +25,7 @@ set -e
 
 me=$(basename $0)
 move_if_change='@abs_srcdir@/move-if-change'
+fuse_switch='@abs_srcdir@/fuse-switch'
 
 input=$1
 input_base=$(basename "$input")
@@ -94,6 +95,11 @@ EOF
 # Kill all the trailing blanks.
 s/[ \t]+\$//;
 "  "$1"
+
+  # Fuse the switches of the parser.
+  case $file in
+    *.cc) $fuse_switch $file;;
+  esac
 }
 
 # compile_xml_file XML XSL OUT-EXT
