@@ -108,23 +108,30 @@ do
 done
 
 set -x
-command=$($libtool -n --tag=CXX --mode=link "$@")
-case $urbi_env:$urbi_host in
-  aibo:*)
-    command=$(echo "$command" |
-       sed -e 's/-lc / /' \
-	   -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ --whole-archive \1 --no-whole-archive /g')
-    ;;
-  *:*darwin*)
-    command=$(echo "$command" |
-       sed -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ -Wl,-all_load \1 /g')
-    ;;
-  *:*)
-    command=$(echo "$command" |
-       sed -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ -Wl,-whole-archive \1 -Wl,-no-whole-archive /')
-    ;;
-esac
 
+isstatic=$($libtool --config |grep build_old_libs | sed -e 's/.*=//')
+if test $isstatic = no; then
+  # shared library mode, nothing special required
+  command="$libtool  --tag=CXX --mode=link $@"
+else
+  # Static mode: we need to insert a --whole-archive or similar.
+  command=$($libtool -n --tag=CXX --mode=link "$@" | head -n 1 )
+  case $urbi_env:$urbi_host in
+    aibo:*)
+      command=$(echo "$command" |
+        sed -e 's/-lc / /' \
+	   -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ --whole-archive \1 --no-whole-archive /g')
+      ;;
+    *:*darwin*)
+      command=$(echo "$command" |
+        sed -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ -Wl,-all_load \1 /g')
+      ;;
+    *:*)
+      command=$(echo "$command" |
+        sed -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ -Wl,-whole-archive \1 -Wl,-no-whole-archive /')
+      ;;
+  esac
+fi
 report "$command"
 eval "$command"
 exit $?
