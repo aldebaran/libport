@@ -12,9 +12,6 @@
 # if defined WIN32
 namespace libport
 {
-#  ifndef SEM_FAILED
-#   define SEM_FAILED 0
-#  endif
   typedef HANDLE sem_t;
   sem_t* sem_open (const char* name,
 		   int oflag,

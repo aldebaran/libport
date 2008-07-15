@@ -12,7 +12,7 @@ namespace libport
 	    unsigned int /*mode_t*/ mode,
 	    unsigned int value)
   {
-    return SEM_FAILED; // Use sem_init instead.
+    return 0; // Use sem_init instead.
   }
 
   int
@@ -101,7 +101,7 @@ namespace libport
       o << std::endl;
     }
 
-    if (sem_ == SEM_FAILED)
+    if (sem_ == static_cast<sem_t*>(0))
       errabort("sem_open(" << name_ << ')');
 # else
     sem_ = new sem_t;
