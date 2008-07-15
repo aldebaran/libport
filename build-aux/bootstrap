@@ -51,9 +51,6 @@ links: (copy|symbolic)+
      ## Developpers should never work with src = build.  ##
      ## ------------------------------------------------ ##
 
-  If the envvar BUILDFARM is set, then we use copies, otherwise
-  we use symlinks.
-
 subpackage: DIR-NAME
   Declare a subpackage (i.e., AC_CONFIG_SUBDIRS) that needs to be
   bootstrapped too.
@@ -310,11 +307,7 @@ done
 # IMHO people *and* the buildfarm should be using src != build.
 link_types=$(attributes links | tr -cs 'a-z' ' ')
 if test -z "$link_types"; then
-  if test -n "${BUILDFARM+set}"; then
-    link_types="copy"
-  else
-    link_types="symbolic"
-  fi
+  link_types="symbolic"
 fi
 attributes '(hard)?link' |
 while read link
