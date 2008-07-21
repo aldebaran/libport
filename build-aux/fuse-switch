@@ -62,6 +62,8 @@ sub fuse($$)
   my $in = new IO::File($input) or die;
   my $out = new IO::File(">$output") or die;
 
+  # Something before the next $case.
+  my $pre_case = '';
   my $case = '';
   my $previous_case = '';
   my $in_switch = 0;
@@ -75,12 +77,15 @@ sub fuse($$)
             {
               $in_switch = 1;
               $previous_case = '';
+              $pre_case = '';
             }
         }
       else
         {
           # in switch.
-          # The "default: break" is output by bison.
+          #
+          # The "default: break" one a single line is output by
+          # bison's lalr1.cc..
           if (m/$case_re/ .. m/^\s*(?:default:\s*)?break/)
             {
               # Register the current case.
@@ -100,6 +105,8 @@ sub fuse($$)
                     }
                   $previous_case = $case;
                   $case = "";
+                  $_ .= $pre_case;
+                  $pre_case = '';
                 }
               else
                 {
@@ -115,12 +122,18 @@ sub fuse($$)
             }
           else
             {
-              # Something in a switch, but not in a case.
-              #              $_ = '';
+              # Something in a switch, but not in a case.  Keep it,
+              # and output it before the forth coming output.  Don't
+              # put it in $case though, as it would be commented out,
+              # which might be wrong (e.g., pragmas, or cpp
+              # directives).
+              $pre_case .= $_;
+              $_ = '';
             }
         }
       print $out $_;
     }
+  die if $pre_case;
 }
 
 use File::Copy;
