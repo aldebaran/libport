@@ -22,6 +22,14 @@ m4_popdef([AC_feature])dnl
 ])
 
 
+# URBI_ARGLIST_ENABLE(OPTION, HELP-STRING, RANGE, DEFAULT)
+# --------------------------------------------------------
+# Same as URBI_ARG_ENABLE, but accept a coma-seperated list of args.
+AC_DEFUN([URBI_ARGLIST_ENABLE],
+[URBI_ARG_ENABLE([$1], [$2], [($3)(,($3))*], [$4])
+])
+
+
 ## Local Variables:
 ## mode: autoconf
 ## End:
