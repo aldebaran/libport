@@ -38,7 +38,9 @@ sub case_label($)
   my $res = '';
   for my $line (split "\n", $case)
     {
-      $res .= ($line !~ /$case_re/ && '//- ') . $line . "\n"
+      # We put no space at the end of '//-' not to introduce trailing
+      # spaces.
+      $res .= ($line !~ /$case_re/ && '//-') . $line . "\n"
     }
   return $res;
 }
