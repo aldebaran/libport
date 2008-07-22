@@ -1,7 +1,5 @@
 # - Generate a cmake file containing repository information
 
-include(Escape)
-
 if(NOT COMMAND REVISION)
 
   # Compute project-date, project-id and project-revision using the underlying
@@ -38,7 +36,6 @@ if(NOT COMMAND REVISION)
 	ERROR_VARIABLE err
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
       string(REGEX REPLACE "commit [0-9a-fA-F]*\n" "" out ${out})
-      escape_double_quote(out ${out})
       set(${outvar} ${out} PARENT_SCOPE)
       if(NOT is-git-repo EQUAL 0)
 	message(FATAL_ERROR "git_rev_list: failed with format '${format}'
