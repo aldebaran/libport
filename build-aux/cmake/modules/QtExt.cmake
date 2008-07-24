@@ -26,7 +26,3 @@ find_package(SdkRemote REQUIRED)
 if(WITH_QURBI_EDITOR)
   find_package(QScintilla2 REQUIRED)
 endif(WITH_QURBI_EDITOR)
-
-# Boost
-find_package(MyBoost REQUIRED)
-print_var(BOOST_INCLUDE_DIRS)
