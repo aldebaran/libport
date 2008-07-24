@@ -12,6 +12,7 @@
 
 # include <boost/serialization/serialization.hpp>
 # include <boost/serialization/tracking.hpp>
+# include <boost/functional/hash.hpp>
 
 namespace libport
 {
@@ -103,6 +104,10 @@ namespace libport
    ** \param the a reference to the symbol to redirect
    */
   std::ostream& operator<< (std::ostream& ostr, const Symbol& the);
+
+  /// Make boost recognize symbols as hashable values
+  std::size_t
+  hash_value(libport::Symbol s);
 }
 
 BOOST_CLASS_TRACKING(libport::Symbol, boost::serialization::track_never)
