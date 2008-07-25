@@ -66,8 +66,12 @@ sub fuse($$)
 
   # Something before the next $case.
   my $pre_case = '';
+  # The body of the case: from case/default to the next break;
+  # There must be no break inside.
   my $case = '';
   my $previous_case = '';
+
+  # Whether we are in the switch {}.
   my $in_switch = 0;
 
   while ($_ = $in->getline)
