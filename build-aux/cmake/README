@@ -81,12 +81,6 @@ Option to tweak the build of a given project are set using the
 
 * Directories
 
-** conf
-
-This directory contains a set of ruby functions used to run cmake cmake. They
-are provided as a convenience in order to avoid to the user to set many
-cmake variables by hand.
-
 ** modules
 
 Holds cmake modules. See modules/README for further information about how to
