@@ -30,29 +30,29 @@ namespace libport
     /// An empty library.
     file_library ();
     /// Init the library with one path.
-    file_library (path p);
+    file_library (const path& p);
     /// Init the library with a string to split at \a separator.
     file_library (const std::string& library, const char* separator);
     /// \}
 
     /// \name Managing inclusion paths.
     /// \{
-    void push_back (path p);
+    void push_back (const path& p);
     /// Split \a library on \a separator and put at the end of path list.
     void push_back (const std::string& library, const char* separator);
-    void append (path p);
+    void append (const path& p);
 
-    void push_front (path p);
+    void push_front (const path& p);
     /// Split \a library on \a separator and put at the beginning of path list.
     /// \warning "a:b:c" will end with "c" first, then "b", then "a",
     /// then what was already here.
     void push_front (const std::string& library, const char* separator);
-    void prepend (path p);
+    void prepend (const path& p);
     /// \}
 
     /// \name current directory.
     /// \{
-    void push_current_directory (path p);
+    void push_current_directory (const path& p);
     void pop_current_directory ();
     path current_directory_get () const;
     /// \}
@@ -88,7 +88,7 @@ namespace libport
 
     /** \brief Ensure that path is absolute by prepending current
 	directory if necessary */
-    path ensure_absolute_path (path p) const;
+    path ensure_absolute_path (const path& p) const;
 
     typedef std::list<path> path_list_type;
 

@@ -9,13 +9,13 @@
 namespace libport
 {
   inline void
-  file_library::append (path p)
+  file_library::append (const path& p)
   {
     push_back(p);
   }
 
   inline void
-  file_library::prepend (path p)
+  file_library::prepend (const path& p)
   {
     push_front(p);
   }

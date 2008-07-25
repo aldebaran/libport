@@ -44,7 +44,7 @@ namespace libport
     push_cwd ();
   }
 
-  file_library::file_library (path p)
+  file_library::file_library (const path& p)
   {
     push_cwd ();
     // Then only process given path.
@@ -59,7 +59,7 @@ namespace libport
   }
 
   path
-  file_library::ensure_absolute_path (path p) const
+  file_library::ensure_absolute_path (const path& p) const
   {
     if (p.absolute_get ())
       return p;
@@ -91,7 +91,7 @@ namespace libport
   }
 
   void
-  file_library::push_back(path p)
+  file_library::push_back(const path& p)
   {
     search_path_.push_back(ensure_absolute_path(p));
   }
@@ -104,7 +104,7 @@ namespace libport
   }
 
   void
-  file_library::push_front(path p)
+  file_library::push_front(const path& p)
   {
     search_path_.push_front(ensure_absolute_path(p));
   }
@@ -117,13 +117,12 @@ namespace libport
   }
 
   void
-  file_library::push_current_directory (path p)
+  file_library::push_current_directory (const path& p)
   {
     // Ensure that path is absolute.
-    if (!p.absolute_get ())
-      p = this->current_directory_get () / p;
-
-    current_directory_.push_front (p);
+    current_directory_.push_front (p.absolute_get()
+				   ? p
+				   : current_directory_get() / p);
   }
 
   void
@@ -196,10 +195,8 @@ namespace libport
   {
     ostr << ".";
 
-    for (path_list_type::const_iterator it = search_path_.begin ();
-	 it != search_path_.end ();
-	 ++it)
-      ostr << ":" << *it;
+    foreach (const path& p,  search_path_)
+      ostr << ":" << p;
 
     return ostr;
   }
