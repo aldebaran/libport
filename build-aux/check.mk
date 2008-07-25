@@ -243,8 +243,6 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	test x"$$VERBOSE" = x || $$exit || cat $(TEST_SUITE_LOG);	\
 	$$exit
 
-# if test x"$$VERBOSE" != x && ! $exit; then
-
 # Run all the tests.
 check-TESTS:
 	@if test -z '$(LAZY_TEST_SUITE)'; then	\
