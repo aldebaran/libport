@@ -5,7 +5,79 @@
 
 * Introduction
 
-This directory contains a set of tools to use with the cmake build system.
+This file describe how to use cmake to compile a project and the
+organization of this directory. For further information about how to
+write new modules for cmake see the README file in the modules directory.
+
+* How to install cmake
+
+You can either download a binary package or a source package from:
+
+    http://www.cmake.org/HTML/Download.html
+
+For the source package, follow the instruction in Readme.txt
+
+* How to customize compilation flags
+
+You can customize compilation flags either using the command line
+arguments or tweaking the option using the GUI (cmake-gui). Note, that
+at any time if you want to restart from the scratch you have to remove
+the CMakeCache.txt file in your build directory.
+
+** Source/Binary directory
+
+The binary directory is the current path from where you start cmake. The source
+directory is the first argument. Typically:
+
+  $ mkdir _build
+  $ cd _build
+  $ cmake ..
+
+** Generator
+
+On Unix the best generator (and default one) is 'Unix Makefiles'. Use
+-G to specify it. See cmake -h for the list of available generators.
+
+Once cmake as finished run 'make' and 'make install'.
+
+** Specify non standard library path
+
+On Unix the most common way is to use CMAKE_PREFIX_PATH as it behaves more or
+less like configure --with-PACKAGE. Add this option to cmake:
+
+  -DCMAKE_PREFIX_PATH="prefix/to/lib1;prefix/to/lib2;prefix/to/lib3"
+
+** Install prefix
+
+The install prefix (equivalent to configure --prefix) is set using:
+
+  -DCMAKE_INSTALL_PREFIX="path/where/to/install/urbiLive"
+
+** Verbose mode
+
+The verbose mode helps debugging your CMakeLists.txt files since cmake print
+the whole command line it generates to build each target. Pass this option:
+
+  -DCMAKE_VERBOSE_MAKEFILE=ON
+
+** Exta CXX flags
+
+Extra CXX flags are specified this way:
+
+  -DCMAKE_CXX_FLAGS="-W -Wall -ggdb3 -fno-inline"
+
+** Build type
+
+You can choose your build type, debug or release, this way:
+
+  -DCMAKE_BUILD_TYPE=Debug
+
+** Options
+
+Option to tweak the build of a given project are set using the
+-DMYOPT=VAL arguments. Example
+
+  -DENABLE_LOCKSYSTEM=OFF
 
 * Directories
 
@@ -20,7 +92,12 @@ cmake variables by hand.
 Holds cmake modules. See modules/README for further information about how to
 write/use the provided modules.
 
+* End of this document.
+
 Local Variables:
 mode: outline
+mode: flyspell
+mode: auto-fill
 End:
 
+ LocalWords:  cmake README CMakeCache
