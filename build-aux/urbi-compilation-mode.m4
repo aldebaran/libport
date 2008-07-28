@@ -68,7 +68,7 @@ urbi_compilation_mode_set ()
   done
 }
 
-URBI_ARGLIST_ENABLE([compilation-mode=MODE],
+URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
                     [Compilaton mode],
                     [build|debug|ndebug|final|space|speed|symbols|threads],
                     [debug],

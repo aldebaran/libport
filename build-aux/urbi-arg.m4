@@ -1,5 +1,12 @@
 # Wrappers around AC_ARG_ENABLE and AC_ARG_WITH.
 
+# _URBI_ARG_OPTION_BRE
+# --------------------
+# A BRE that match valid OPTION for _URB_ARG.
+m4_define([_URBI_ARG_OPTION_BRE],
+          [^\(disable\|enable\|with\|without\)-\([^=]*\).*$])
+
+
 # _URBI_ARG(KIND, OPTION, HELP-STRING, RANGE, DEFAULT, [MORE-HELP])
 # -----------------------------------------------------------------
 # KIND is either enable (AC_ARG_ENABLE) or with (AC_ARG_DISABLE).
@@ -17,10 +24,12 @@
 # formatted via AC_HELP_STRING.
 AC_DEFUN([_URBI_ARG],
 [AC_REQUIRE([AC_PROG_EGREP])dnl
+m4_if([m4_bregexp([$2], m4_defn([_URBI_ARG_OPTION_BRE]))],
+      [-1], [m4_fatal([$0: invalid OPTION: --$2])])dnl
 m4_pushdef([AC_feature],
-            [m4_bpatsubst([$2],
-                          [^\(disable\|enable\|with\|without\)-\([^=]*\).*],
-                          [\2])])dnl
+           [m4_bpatsubst([$2],
+                         m4_defn([_URBI_ARG_OPTION_BRE]),
+                         [\2])])dnl
 m4_indir(m4_case([$1],
                  [enable], [[AC_ARG_ENABLE]],
                  [with], [[AC_ARG_WITH]],
