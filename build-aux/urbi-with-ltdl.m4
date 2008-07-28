@@ -30,8 +30,9 @@ esac
 
 
 if $ltdl; then
-  AC_SUBST([LTDL_LDADD], ['-lltdl'])
+  AC_SUBST([LTDL_LIBS], ['-lltdl'])
   AC_DEFINE([WITH_LTDL], [1], [Define if you have ltdl])
+  SDK_LIBS="$SDK_LIBS $LTDL_LIBS"
 fi
 
 ])
