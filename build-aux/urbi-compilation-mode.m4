@@ -13,6 +13,10 @@ urbi_compilation_mode_set ()
   for mode
   do
     case $mode in
+      (build)
+        compiler_flags -O0
+        ;;
+
       (debug)
         compiler_flags -O2 -ggdb
         # Not all the code includes config.h.
@@ -29,8 +33,8 @@ urbi_compilation_mode_set ()
                                    [Define if <valgrind/valgrind.h> exists.])])
         ;;
 
-      (fast)
-        compiler_flags -O0
+      (final)
+        urbi_compilation_mode_set ndebug symbols
         ;;
 
       (ndebug)
@@ -41,11 +45,12 @@ urbi_compilation_mode_set ()
         compiler_flags -Os -fomit-frame-pointer \
                        -fdata-sections -ffunction-sections
         LDFLAGS="$LDFLAGS --gc-sections"
+        urbi_compilation_mode_set final
         ;;
 
       (speed)
         compiler_flags -O3
-        urbi_compilation_mode_set ndebug symbols
+        urbi_compilation_mode_set final
         ;;
 
       (symbols)
@@ -63,21 +68,24 @@ urbi_compilation_mode_set ()
   done
 }
 
-#
-# Levels:
-#  - space: Optimize for smaller space (implies ndebug).
-#  - speed: Optimize for speed (implies ndebug).
-#  - debug: Enable debug information.
-#  - fast: Enable fast compilation.
-#
-# Indididual components:
-#  - ndebug: Define NDEBUG.
-#  - symbols: Activate precompiled-symbols.
-#  - threads: Implement coroutines with threads.
-URBI_ARGLIST_ENABLE([compilation-mode],
+URBI_ARGLIST_ENABLE([compilation-mode=MODE],
                     [Compilaton mode],
-                    [debug|fast|ndebug|space|speed|symbols|threads],
-                    [debug])
+                    [build|debug|ndebug|final|space|speed|symbols|threads],
+                    [debug],
+                    [
+     MODE: comma-separated list of:
+        Overall Levels:
+          - build: Disable optimization for faster compilation.
+          - debug: Enable debug information.
+          - space: Optimize for smaller space (implies final).
+          - speed: Optimize for speed (implies final).
+
+        Finer grain components:
+          - ndebug: Define NDEBUG.
+          - final: Implies ndebug and symbols
+          - symbols: Activate precompiled-symbols.
+          - threads: Implement coroutines with threads.])
+
 AC_MSG_CHECKING([for compilation mode])
 urbi_compilation_mode=$(echo $enable_compilation_mode | tr ',' ' ')
 AC_MSG_RESULT([$urbi_compilation_mode])
