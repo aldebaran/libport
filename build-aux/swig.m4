@@ -10,26 +10,26 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
-dnl @synopsis AC_PROG_SWIG([major.minor.micro])
+# @synopsis AC_PROG_SWIG([major.minor.micro])
 dnl
-dnl This macro searches for a SWIG installation on your system. If found you
-dnl should call SWIG via $(SWIG).  You can use the optional first argument to
-dnl check if the version of the available SWIG is greater than or equal to the
-dnl value of the argument.  It should have the format: N[.N[.N]] (N is a
-dnl number between 0 and 999.  Only the first N is mandatory.)
+# This macro searches for a SWIG installation on your system. If found you
+# should call SWIG via $(SWIG).  You can use the optional first argument to
+# check if the version of the available SWIG is greater than or equal to the
+# value of the argument.  It should have the format: N[.N[.N]] (N is a
+# number between 0 and 999.  Only the first N is mandatory.)
 dnl
-dnl If the version argument is given (e.g. 1.3.17), AC_PROG_SWIG checks that the
-dnl swig package is this version number or higher.
+# If the version argument is given (e.g. 1.3.17), AC_PROG_SWIG checks that the
+# swig package is this version number or higher.
 dnl
-dnl In configure.in, use as:
+# In configure.in, use as:
 dnl
-dnl             AC_PROG_SWIG(1.3.17)
-dnl             SWIG_ENABLE_CXX
-dnl             SWIG_MULTI_MODULE_SUPPORT
-dnl             SWIG_PYTHON
+#             AC_PROG_SWIG(1.3.17)
+#             SWIG_ENABLE_CXX
+#             SWIG_MULTI_MODULE_SUPPORT
+#             SWIG_PYTHON
 dnl
-dnl @author Sebastian Huber <sebastian-huber@web.de>, Alan W. Irwin <irwin@beluga.phys.uvic.ca>, Rafael Laboissiere <rafael@laboissiere.net>, and Andrew Collier <abcollier@yahoo.com>.
-dnl @version $Id: ac_pkg_swig.m4,v 1.2 2004/12/24 01:20:01 guidod Exp $
+# @author Sebastian Huber <sebastian-huber@web.de>, Alan W. Irwin <irwin@beluga.phys.uvic.ca>, Rafael Laboissiere <rafael@laboissiere.net>, and Andrew Collier <abcollier@yahoo.com>.
+# @version $Id: ac_pkg_swig.m4,v 1.2 2004/12/24 01:20:01 guidod Exp $
 dnl
 AC_DEFUN([AC_PROG_SWIG],[
         AC_PATH_PROG([SWIG],[swig])
@@ -134,9 +134,9 @@ AC_DEFUN([SWIG_PYTHON],[
 ])
 
 
-dnl @synopsis AC_LIB_WAD
+# @synopsis AC_LIB_WAD
 dnl
-dnl This macro searches for installed WAD library.
+# This macro searches for installed WAD library.
 dnl
 AC_DEFUN([AC_LIB_WAD],
 [

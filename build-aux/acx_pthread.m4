@@ -1,62 +1,62 @@
-dnl			                            -*- Autoconf -*-
+#			                            -*- Autoconf -*-
 dnl
-dnl acx_pthread.m4: This file is part of build-aux.
-dnl Copyright (C) Gostai S.A.S., 2006-2008.
+# acx_pthread.m4: This file is part of build-aux.
+# Copyright (C) Gostai S.A.S., 2006-2008.
 dnl
-dnl This software is provided "as is" without warranty of any kind,
-dnl either expressed or implied, including but not limited to the
-dnl implied warranties of fitness for a particular purpose.
+# This software is provided "as is" without warranty of any kind,
+# either expressed or implied, including but not limited to the
+# implied warranties of fitness for a particular purpose.
 dnl
-dnl See the LICENSE file for more information.
-dnl For comments, bug reports and feedback: http://www.urbiforge.com
+# See the LICENSE file for more information.
+# For comments, bug reports and feedback: http://www.urbiforge.com
 dnl
-dnl @synopsis ACX_PTHREAD([ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
+# @synopsis ACX_PTHREAD([ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
 dnl
-dnl @summary figure out how to build C programs using POSIX threads
+# @summary figure out how to build C programs using POSIX threads
 dnl
-dnl This macro figures out how to build C programs using POSIX threads.
-dnl It sets the PTHREAD_LIBS output variable to the threads library and
-dnl linker flags, and the PTHREAD_CFLAGS output variable to any special
-dnl C compiler flags that are needed. (The user can also force certain
-dnl compiler flags/libs to be tested by setting these environment
-dnl variables.)
+# This macro figures out how to build C programs using POSIX threads.
+# It sets the PTHREAD_LIBS output variable to the threads library and
+# linker flags, and the PTHREAD_CFLAGS output variable to any special
+# C compiler flags that are needed. (The user can also force certain
+# compiler flags/libs to be tested by setting these environment
+# variables.)
 dnl
-dnl Also sets PTHREAD_CC to any special C compiler that is needed for
-dnl multi-threaded programs (defaults to the value of CC otherwise).
-dnl (This is necessary on AIX to use the special cc_r compiler alias.)
+# Also sets PTHREAD_CC to any special C compiler that is needed for
+# multi-threaded programs (defaults to the value of CC otherwise).
+# (This is necessary on AIX to use the special cc_r compiler alias.)
 dnl
-dnl NOTE: You are assumed to not only compile your program with these
-dnl flags, but also link it with them as well. e.g. you should link
-dnl with $PTHREAD_CC $CFLAGS $PTHREAD_CFLAGS $LDFLAGS ... $PTHREAD_LIBS
-dnl $LIBS
+# NOTE: You are assumed to not only compile your program with these
+# flags, but also link it with them as well. e.g. you should link
+# with $PTHREAD_CC $CFLAGS $PTHREAD_CFLAGS $LDFLAGS ... $PTHREAD_LIBS
+# $LIBS
 dnl
-dnl If you are only building threads programs, you may wish to use
-dnl these variables in your default LIBS, CFLAGS, and CC:
+# If you are only building threads programs, you may wish to use
+# these variables in your default LIBS, CFLAGS, and CC:
 dnl
-dnl        LIBS="$PTHREAD_LIBS $LIBS"
-dnl        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-dnl        CC="$PTHREAD_CC"
+#        LIBS="$PTHREAD_LIBS $LIBS"
+#        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+#        CC="$PTHREAD_CC"
 dnl
-dnl In addition, if the PTHREAD_CREATE_JOINABLE thread-attribute
-dnl constant has a nonstandard name, defines PTHREAD_CREATE_JOINABLE to
-dnl that name (e.g. PTHREAD_CREATE_UNDETACHED on AIX).
+# In addition, if the PTHREAD_CREATE_JOINABLE thread-attribute
+# constant has a nonstandard name, defines PTHREAD_CREATE_JOINABLE to
+# that name (e.g. PTHREAD_CREATE_UNDETACHED on AIX).
 dnl
-dnl ACTION-IF-FOUND is a list of shell commands to run if a threads
-dnl library is found, and ACTION-IF-NOT-FOUND is a list of commands to
-dnl run it if it is not found. If ACTION-IF-FOUND is not specified, the
-dnl default action will define HAVE_PTHREAD.
+# ACTION-IF-FOUND is a list of shell commands to run if a threads
+# library is found, and ACTION-IF-NOT-FOUND is a list of commands to
+# run it if it is not found. If ACTION-IF-FOUND is not specified, the
+# default action will define HAVE_PTHREAD.
 dnl
-dnl Please let the authors know if this macro fails on any platform, or
-dnl if you have any other suggestions or comments. This macro was based
-dnl on work by SGJ on autoconf scripts for FFTW (www.fftw.org) (with
-dnl help from M. Frigo), as well as ac_pthread and hb_pthread macros
-dnl posted by Alejandro Forero Cuervo to the autoconf macro repository.
-dnl We are also grateful for the helpful feedback of numerous users.
+# Please let the authors know if this macro fails on any platform, or
+# if you have any other suggestions or comments. This macro was based
+# on work by SGJ on autoconf scripts for FFTW (www.fftw.org) (with
+# help from M. Frigo), as well as ac_pthread and hb_pthread macros
+# posted by Alejandro Forero Cuervo to the autoconf macro repository.
+# We are also grateful for the helpful feedback of numerous users.
 dnl
-dnl @category InstalledPackages
-dnl @author Steven G. Johnson <stevenj@alum.mit.edu>
-dnl @version 2006-05-29
-dnl @license GPLWithACException
+# @category InstalledPackages
+# @author Steven G. Johnson <stevenj@alum.mit.edu>
+# @version 2006-05-29
+# @license GPLWithACException
 
 AC_DEFUN([ACX_PTHREAD], [
 AC_REQUIRE([AC_CANONICAL_HOST])

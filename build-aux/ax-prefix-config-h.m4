@@ -1,13 +1,13 @@
 dnl
-dnl ax-prefix-config-h.m4: This file is part of build-aux.
-dnl Copyright (C) Gostai S.A.S., 2006-2008.
+# ax-prefix-config-h.m4: This file is part of build-aux.
+# Copyright (C) Gostai S.A.S., 2006-2008.
 dnl
-dnl This software is provided "as is" without warranty of any kind,
-dnl either expressed or implied, including but not limited to the
-dnl implied warranties of fitness for a particular purpose.
+# This software is provided "as is" without warranty of any kind,
+# either expressed or implied, including but not limited to the
+# implied warranties of fitness for a particular purpose.
 dnl
-dnl See the LICENSE file for more information.
-dnl For comments, bug reports and feedback: http://www.urbiforge.com
+# See the LICENSE file for more information.
+# For comments, bug reports and feedback: http://www.urbiforge.com
 dnl
 
 ##### http://autoconf-archive.cryp.to/ax_prefix_config_h.html
@@ -224,14 +224,14 @@ AS_VAR_POPDEF([_DEF])dnl
 AS_VAR_POPDEF([_OUT])dnl
 ],[PACKAGE="$PACKAGE"])])
 
-dnl implementation note: a bug report (31.5.2005) from Marten Svantesson points
-dnl out a problem where `echo "\1"` results in a Control-A. The unix standard
-dnl    http://www.opengroup.org/onlinepubs/000095399/utilities/echo.html
-dnl defines all backslash-sequences to be inherently non-portable asking
-dnl for replacement mit printf. Some old systems had problems with that
-dnl one either. However, the latest libtool (!) release does export an $ECHO
-dnl (and $echo) that does the right thing - just one question is left: what
-dnl was the first version to have it? Is it greater 2.58 ?
+# implementation note: a bug report (31.5.2005) from Marten Svantesson points
+# out a problem where `echo "\1"` results in a Control-A. The unix standard
+#    http://www.opengroup.org/onlinepubs/000095399/utilities/echo.html
+# defines all backslash-sequences to be inherently non-portable asking
+# for replacement mit printf. Some old systems had problems with that
+# one either. However, the latest libtool (!) release does export an $ECHO
+# (and $echo) that does the right thing - just one question is left: what
+# was the first version to have it? Is it greater 2.58 ?
 
 # Local Variables:
 # mode: autoconf

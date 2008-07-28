@@ -45,10 +45,10 @@ m4_pattern_forbid([^_?BOOST_])
 # and add an AC_DEFINE to tell whether HAVE_BOOST.
 AC_DEFUN([BOOST_REQUIRE],
 [dnl First find out what kind of argument we have.
-dnl If we have an empty argument, there is no constraint on the version of
-dnl Boost to use.  If it's a literal version number, we can split it in M4 (so
-dnl the resulting configure script will be smaller/faster).  Otherwise we do
-dnl the splitting at runtime.
+# If we have an empty argument, there is no constraint on the version of
+# Boost to use.  If it's a literal version number, we can split it in M4 (so
+# the resulting configure script will be smaller/faster).  Otherwise we do
+# the splitting at runtime.
 m4_bmatch([$1],
   [^ *$], [m4_pushdef([BOOST_VERSION_REQ], [])dnl
            boost_version_major=0
@@ -224,22 +224,22 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
   boost_save_ac_objext=$ac_objext
   # Generate the test file.
   AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$3>], [$4])])
-dnl Optimization hacks: compiling C++ is slow, especially with Boost.  What
-dnl we're trying to do here is guess the right combination of link flags
-dnl (LIBS / LDFLAGS) to use a given library.  This can take several
-dnl iterations before it succeeds and is thus *very* slow.  So what we do
-dnl instead is that we compile the code first (and thus get an object file,
-dnl typically conftest.o).  Then we try various combinations of link flags
-dnl until we succeed to link conftest.o in an executable.  The problem is
-dnl that the various TRY_LINK / COMPILE_IFELSE macros of Autoconf always
-dnl remove all the temporary files including conftest.o.  So the trick here
-dnl is to temporarily change the value of ac_objext so that conftest.o is
-dnl preserved accross tests.  This is obviously fragile and I will burn in
-dnl hell for not respecting Autoconf's documented interfaces, but in the
-dnl mean time, it optimizes the macro by a factor of 5 to 30.
-dnl Another small optimization: the first argument of AC_COMPILE_IFELSE left
-dnl empty because the test file is generated only once above (before we
-dnl start the for loops).
+# Optimization hacks: compiling C++ is slow, especially with Boost.  What
+# we're trying to do here is guess the right combination of link flags
+# (LIBS / LDFLAGS) to use a given library.  This can take several
+# iterations before it succeeds and is thus *very* slow.  So what we do
+# instead is that we compile the code first (and thus get an object file,
+# typically conftest.o).  Then we try various combinations of link flags
+# until we succeed to link conftest.o in an executable.  The problem is
+# that the various TRY_LINK / COMPILE_IFELSE macros of Autoconf always
+# remove all the temporary files including conftest.o.  So the trick here
+# is to temporarily change the value of ac_objext so that conftest.o is
+# preserved accross tests.  This is obviously fragile and I will burn in
+# hell for not respecting Autoconf's documented interfaces, but in the
+# mean time, it optimizes the macro by a factor of 5 to 30.
+# Another small optimization: the first argument of AC_COMPILE_IFELSE left
+# empty because the test file is generated only once above (before we
+# start the for loops).
   AC_COMPILE_IFELSE([],
     [ac_objext=do_not_rm_me_plz],
     [AC_MSG_ERROR([Cannot compile a test that uses Boost $1])])
@@ -286,8 +286,8 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
       boost_save_LIBS=$LIBS
       LIBS="$Boost_lib_LIBS $LIBS"
       test x"$boost_ldpath" != x && LDFLAGS="$LDFLAGS -L$boost_ldpath"
-dnl First argument of AC_LINK_IFELSE left empty because the test file is
-dnl generated only once above (before we start the for loops).
+# First argument of AC_LINK_IFELSE left empty because the test file is
+# generated only once above (before we start the for loops).
       _BOOST_AC_LINK_IFELSE([],
                             [Boost_lib=yes], [Boost_lib=no])
       ac_objext=$boost_save_ac_objext
@@ -507,8 +507,8 @@ BOOST_FIND_LIB([unit_test_framework], [$1],
 # FIXME: Provide an alias "BOOST_THREAD".
 AC_DEFUN([BOOST_THREADS],
 [dnl Having the pthread flag is required at least on GCC3 where
-dnl boost/thread.hpp would complain if we try to compile without
-dnl -pthread on GNU/Linux.
+# boost/thread.hpp would complain if we try to compile without
+# -pthread on GNU/Linux.
 AC_REQUIRE([_BOOST_PTHREAD_FLAG])dnl
 boost_threads_save_LIBS=$LIBS
 boost_threads_save_CPPFLAGS=$CPPFLAGS
@@ -630,7 +630,7 @@ AC_CACHE_CHECK([for the flags needed to use pthreads], [boost_cv_pthread_flag],
     pthread_create(0,0,0,0); pthread_cleanup_pop(0);])])
   for boost_pthread_flag in '' $boost_pthread_flags; do
     boost_pthread_ok=false
-dnl Re-use the test file already generated.
+# Re-use the test file already generated.
     boost_pthreads__save_LIBS=$LIBS
     LIBS="$LIBS $boost_pthread_flag"
     AC_LINK_IFELSE([],
@@ -760,16 +760,16 @@ AS_IF([_AC_DO_STDERR($ac_link) && {
        } && test -s conftest$ac_exeext && {
 	 test "$cross_compiling" = yes ||
 	 $as_executable_p conftest$ac_exeext
-dnl FIXME: use AS_TEST_X instead when 2.61 is widespread enough.
+# FIXME: use AS_TEST_X instead when 2.61 is widespread enough.
        }],
       [$2],
       [if $boost_use_source; then
          _AC_MSG_LOG_CONFTEST
        fi
        $3])
-dnl Delete also the IPA/IPO (Inter Procedural Analysis/Optimization)
-dnl information created by the PGI compiler (conftest_ipa8_conftest.oo),
-dnl as it would interfere with the next link command.
+# Delete also the IPA/IPO (Inter Procedural Analysis/Optimization)
+# information created by the PGI compiler (conftest_ipa8_conftest.oo),
+# as it would interfere with the next link command.
 rm -f core conftest.err conftest_ipa8_conftest.oo \
       conftest$ac_exeext m4_ifval([$1], [conftest.$ac_ext])[]dnl
 ])# _BOOST_AC_LINK_IFELSE
