@@ -27,6 +27,7 @@ urbi_compilation_mode_set ()
                   [Define to enable STL debug mode.])
         AC_DEFINE([YYDEBUG], [1],
                   [Define to enable parser runtime debug traces.])
+        AC_SUBST([BISON_FLAGS], ["$BISON_FLAGS -Dassert"])
         # Pass USE_VALGRIND only if valgrind/valgrind.h exists.
         AC_CHECK_HEADER([valgrind/valgrind.h],
                         [AC_DEFINE([USE_VALGRIND], [1],
