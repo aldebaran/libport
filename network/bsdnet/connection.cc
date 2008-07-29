@@ -62,8 +62,11 @@ Connection::close()
   // FIXME: Akim added those two lines, but he's not too sure
   // about them: should they be before "closing = true"?
   if (fd == -1)
+  {
     // We are already closed.
-    CONN_ERR_RET(USUCCESS);
+    error_ = USUCCESS;
+    return *this;
+  }
 #if defined WIN32 && !defined __MINGW32__
   closesocket(fd);
   int ret = 0;//WSACleanup(); //wsastartup called only once!
@@ -76,11 +79,11 @@ Connection::close()
     fd = -1;
   Network::unregisterNetworkPipe(this);
   if (ret)
-    ERR_SET(UFAIL);
+    error_ = UFAIL;
   else
   {
     fd = -1;
-    ERR_SET(USUCCESS);
+    error_ = USUCCESS;
   }
   // This will call the dtor of this.
   server_.connection_remove(this);
@@ -138,5 +141,6 @@ Connection::endline ()
 {
   //FIXME: test send error
   UConnection::send("\n");
-  CONN_ERR_RET(USUCCESS);
+  error_ = USUCCESS;
+  return *this;
 }

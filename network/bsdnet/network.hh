@@ -14,14 +14,16 @@ namespace Network
   {
   public:
     Pipe();
-    virtual ~Pipe() {}
+    virtual ~Pipe();
     //returns read fd or -1 if none
     virtual int readFD() = 0;
     virtual int writeFD() = 0;
 
     virtual void notifyRead() = 0;
     virtual void notifyWrite() = 0;
-    void trigger(); ///< trigger demuxer fd set reload
+
+    /// trigger demuxer fd set reload
+    void trigger();
 
     virtual std::ostream& dump (std::ostream& o) const = 0;
 

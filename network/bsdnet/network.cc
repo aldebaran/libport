@@ -16,6 +16,10 @@
 namespace Network
 {
 
+  Pipe::~Pipe()
+  {
+  }
+
   /*----------------.
   | TCPServerPipe.  |
   `----------------*/
