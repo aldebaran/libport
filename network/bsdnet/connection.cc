@@ -21,8 +21,8 @@
  to the LinuxConnection constructor.
  */
 Connection::Connection(int fd)
-  : UConnection (*::urbiserver, Connection::PACKETSIZE),
-    fd(fd)
+  : UConnection(*::urbiserver, Connection::PACKETSIZE)
+  , fd(fd)
 {
   // Test the error from UConnection constructor.
   if (uerror_ != USUCCESS)
@@ -39,7 +39,7 @@ Connection::~Connection()
 }
 
 std::ostream&
-Connection::dump (std::ostream& o) const
+Connection::dump(std::ostream& o) const
 {
   return o
     << "Connection "
@@ -73,7 +73,7 @@ Connection::close()
 #else
   int ret = ::close(fd);
   if (ret)
-    perror ("cannot close connection fd");
+    perror("cannot close connection fd");
 #endif
   if (!ret)
     fd = -1;
@@ -98,7 +98,7 @@ Connection::doRead()
   {
     // No error message for clean connection termination.
     if (n)
-      perror ("cannot recv");
+      perror("cannot recv");
     close();
     // Caught by Network::selectAndProcess inner loop.
     throw std::runtime_error("connection closed");
@@ -108,13 +108,13 @@ Connection::doRead()
 }
 
 size_t
-Connection::effective_send (const char* buffer, size_t length)
+Connection::effective_send(const char* buffer, size_t length)
 {
   ECHO("Sending: " << std::string(buffer, length));
   int res = ::send(fd, buffer, length, MSG_NOSIGNAL);
   if (res == -1)
   {
-    perror ("cannot send");
+    perror("cannot send");
     close();
   }
 
@@ -137,7 +137,7 @@ Connection::send(const char* buffer, int length)
 
 //! Send a "\n" through the connection
 UConnection&
-Connection::endline ()
+Connection::endline()
 {
   //FIXME: test send error
   UConnection::send("\n");
