@@ -31,7 +31,7 @@ version ()
 {
     cat <<\EOF
 URBI Make Link
-$Id$
+@PACKAGE_STRING@
 EOF
     exit 0
 }
@@ -109,7 +109,7 @@ done
 
 set -x
 
-case $($libtool --config)
+case $($libtool --config) in
   (*build_old_libs=no*)
   # shared library mode, nothing special required
   command="$libtool --tag=CXX --mode=link $@"
@@ -119,16 +119,16 @@ case $($libtool --config)
   # Static mode: we need to insert a --whole-archive or similar.
   command=$($libtool -n --tag=CXX --mode=link "$@")
   case $urbi_env:$urbi_host in
-    aibo:*)
+    (aibo:*)
       command=$(echo "$command" |
         sed -e 's/-lc / /' \
 	   -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ --whole-archive \1 --no-whole-archive /g')
       ;;
-    *:*darwin*)
+    (*:*darwin*)
       command=$(echo "$command" |
         sed -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ -Wl,-all_load \1 /g')
       ;;
-    *:*)
+    (*:*)
       command=$(echo "$command" |
         sed -e 's/ \([a-zA-Z0-9.\/_-]*\.a\( \|$\)\)/ -Wl,-whole-archive \1 -Wl,-no-whole-archive /')
       ;;
