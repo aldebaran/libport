@@ -19,7 +19,6 @@ AC_CONFIG_FILES([sdk/umake],      [chmod +x sdk/umake])
 AC_CONFIG_FILES([sdk/uinstall],   [chmod +x sdk/uinstall])
 AC_CONFIG_FILES([sdk/umake-link], [chmod +x sdk/umake-link])
 AC_CONFIG_FILES([sdk/wrapper.sh], [chmod +x sdk/wrapper.sh])
-AC_CONFIG_FILES([sdk/Makefile])
 AC_CONFIG_HEADERS([sdk/config.h])
 AC_CONFIG_FILES([sdk/param.mk],
 		[perl -w ${srcdir}/sdk/eval_makefile.pl])
