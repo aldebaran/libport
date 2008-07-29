@@ -17,7 +17,6 @@ fatal ()
 }
 
 builddir='@builddir@'
-srcdir='@srcdir@'
 
 test -d "$builddir" ||
   fatal "cannot find build directory: $builddir"
@@ -27,28 +26,20 @@ test $# -lt 1 &&
 
 gen_wrapper ()
 {
-    target=$(echo "$1" | sed -e 's/^umake-//')
+    target=$(basename "$1" | sed -e 's/^umake-//')
+    dir=$(dirname "$1")
     case $target in
-	aibo)
-	    args="--core=aibo --host=mipsel-linux";;
-	deepclean)
-	    args="--deep-clean";;
-	engine)
-	    args="--core=engine";;
-	lib)
-	    args="--library";;
-	remote)
-	    args="--core=remote";;
-	link | common)
-	    #ignore
-	    return;;
-	*)
-	    stderr "unknown target: $target"
-	    return
-	    ;;
+	(aibo)	    args="--core=aibo --host=mipsel-linux";;
+	(deepclean) args="--deep-clean";;
+	(engine)    args="--core=engine";;
+	(lib)	    args="--library";;
+	(remote)    args="--core=remote";;
+
+	(link | common) return;; # ignore
+	(*) fatal "unknown target: $target";;
     esac
 
-    wrapper=$builddir/umake-$target
+    wrapper=$builddir/$dir/umake-$target
 
     cat >$wrapper <<EOF
 #! @SHELL@
@@ -78,7 +69,8 @@ fi
   }
 EOF
 
-    if test "$target" = "aibo"; then
+    case $target in
+        (aibo)
 	cat >>$wrapper <<EOF
 
 # Remove remaining files from
@@ -86,7 +78,8 @@ rm -f *.BIN.*
 echo >&2 "$(basename $0): Removed Aibo build files."
 
 EOF
-    fi
+        ;;
+    esac
 
     cat >>$wrapper <<EOF
 
