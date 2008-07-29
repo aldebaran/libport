@@ -58,7 +58,8 @@ urbi_compilation_mode_set ()
         ;;
 
       (threads)
-        CPPFLAGS="$CPPFLAGS -DSCHEDULER_CORO_OSTHREAD"
+        AC_DEFINE([SCHEDULER_CORO_OSTHREAD], [1],
+                  [Define to use the OS-thread implementation of coroutines])
         ;;
 
       (*)
