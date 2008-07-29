@@ -52,7 +52,7 @@ Connection::dump(std::ostream& o) const
 //! Close the connection
 /*!
  */
-UConnection&
+void
 Connection::close()
 {
   // Setting 'closing' to true tell the kernel not to use the
@@ -65,7 +65,7 @@ Connection::close()
   {
     // We are already closed.
     error_ = USUCCESS;
-    return *this;
+    return;
   }
 #if defined WIN32 && !defined __MINGW32__
   closesocket(fd);
@@ -87,7 +87,6 @@ Connection::close()
   }
   // This will call the dtor of this.
   server_.connection_remove(this);
-  return *this;
 }
 
 void
@@ -127,20 +126,19 @@ Connection::doWrite()
   continue_send();
 }
 
-UConnection&
+void
 Connection::send(const char* buffer, int length)
 {
   if (send_queue_empty())
     trigger();
-  return send_queue(buffer, length);
+  send_queue(buffer, length);
 }
 
 //! Send a "\n" through the connection
-UConnection&
+void
 Connection::endline()
 {
   //FIXME: test send error
   UConnection::send("\n");
   error_ = USUCCESS;
-  return *this;
 }

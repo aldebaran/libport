@@ -35,9 +35,9 @@ public:
    * is thus responsible for its deletion, and the declaration of its allocation*/
   Connection(int connfd);
   virtual ~Connection();
-  virtual UConnection& close ();
+  virtual void close();
 
-  virtual std::ostream& dump (std::ostream& o) const;
+  virtual std::ostream& dump(std::ostream& o) const;
 
   /*ENABLE_URBI_MEM*/
 
@@ -54,7 +54,7 @@ public:
   {
     doWrite();
   }
-  virtual UConnection& send (const char* buffer, int length);
+  virtual void send(const char* buffer, int length);
 
 public:
   //! Accessor for the underlying file descriptor
@@ -75,14 +75,14 @@ public:
 
 protected:
   //! Overloading this function is required by UConnection
-  virtual size_t effective_send (const char* buffer, size_t length);
+  virtual size_t effective_send(const char* buffer, size_t length);
   //! The file descriptor of the connection
   int fd;
   //! The reception buffer
   char read_buff[PACKETSIZE];
 
 public:
-  virtual UConnection& endline ();
+  virtual void endline();
 };
 
 #endif // !NETWORK_BSDNET_CONNECTION_HH
