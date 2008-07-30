@@ -18,6 +18,7 @@ libport_include_HEADERS +=			\
 	$(include_libport)/assert.hh		\
 	$(include_libport)/cli.hh		\
 	$(include_libport)/cli.hxx		\
+	$(include_libport)/compilation.hh	\
 	$(include_libport)/compiler.hh		\
 	$(include_libport)/containers.hh	\
 	$(include_libport)/containers.hxx	\
