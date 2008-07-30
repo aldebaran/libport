@@ -6,7 +6,7 @@
 ##
 ## See the LICENSE file for more information.
 ## For comments, bug reports and feedback: http://www.urbiforge.com
-## --------------------------------------------------------------- 
+## ---------------------------------------------------------------
 ## CMake - UObject project
 ## User-friendly macros for UObject project.
 ## ------------------------------- -------------------------------
@@ -15,27 +15,29 @@
 include (Macro-toolbox)
 # parse_arguments macro
 
-#-----------------------------------------------------------------------------------------
-#                                     Add Remote UObject
-#-----------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+#                                Add Remote UObject
+#------------------------------------------------------------------------------
 # Create a remote UObject
-# e.g. add_remote (name_of_binary SOURCES cpp1 cpp2.. [DEPENDS target1 target2..] [NO_DEFAULT_MAIN])
+# e.g. add_remote (name_of_binary SOURCES cpp1 cpp2..
+#                  [DEPENDS target1 target2..] [NO_DEFAULT_MAIN])
 
 MACRO (add_remote)
 
     parse_arguments (REMOTE_UOBJECT "SOURCES;DEPENDS" "NO_DEFAULT_MAIN" ${ARGN})
     set (REMOTE_UOBJECT_NAME ${REMOTE_UOBJECT_DEFAULT_ARGS})
     add_executable (${REMOTE_UOBJECT_NAME} ${REMOTE_UOBJECT_SOURCES})
-    link_uobject_libraries (${REMOTE_UOBJECT_NAME})    
+    link_uobject_libraries (${REMOTE_UOBJECT_NAME})
     target_link_libraries (${REMOTE_UOBJECT_NAME} ${REMOTE_UOBJECT_DEPENDS})
 
 ENDMACRO (add_remote)
 
-#-----------------------------------------------------------------------------------------
-#                                      Add Engine library
-#-----------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+#                              Add Engine library
+#------------------------------------------------------------------------------
 # Creates a library ready to be linked to an engine kernel.
-# e.g. add_engine_library (name_of_binary SOURCES cpp1 cpp2.. [DEPENDS target1 target2..] [NO_DEFAULT_MAIN])
+# e.g. add_engine_library (name_of_binary SOURCES cpp1 cpp2..
+#                         [DEPENDS target1 target2..] [NO_DEFAULT_MAIN])
 
 MACRO (add_engine_library)
 
@@ -46,17 +48,19 @@ MACRO (add_engine_library)
 
 ENDMACRO (add_engine_library)
 
-#-----------------------------------------------------------------------------------------
-#                                      Add UObject
-#-----------------------------------------------------------------------------------------
-# This macro groups the creation of build rules for both remote and engine UObject
-# It MUST be called in a project loaded by 'add_project' command to work properly.
-# You can specify options into add_uobject brackets that will be applied to both uobject.
+#------------------------------------------------------------------------------
+#                                 Add UObject
+#------------------------------------------------------------------------------
+# This macro groups the creation of build rules for both remote and engine
+# UObject. It MUST be called in a project loaded by 'add_project' command to
+# work properly.
+# You can specify options into add_uobject brackets that will be applied to
+# both uobject.
 
 MACRO (add_uobject)
 
     add_remote(
-        ${PROJECT_NAME}${UOBJECT_REMOTE_SUFFIX} 
+        ${PROJECT_NAME}${UOBJECT_REMOTE_SUFFIX}
         SOURCES ${${PROJECT_NAME}_UOBJECT_SOURCES}
         DEPENDS ${PROJECT_LINKS}
         ${ARGN}
@@ -72,18 +76,18 @@ MACRO (add_uobject)
 ENDMACRO (add_uobject)
 
 
-#-----------------------------------------------------------------------------------------
-#                                        Add engine
-#-----------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+#                                  Add engine
+#------------------------------------------------------------------------------
 # FIXME: Implement me :)
 
 
 
-#-----------------------------------------------------------------------------------------
-#                                      Add project
-#-----------------------------------------------------------------------------------------
-# Call this function in the root CMakeLists.txt to add a project. If it's a standalone
-# project, it will be equivalent to add_subdirectory command.
+#------------------------------------------------------------------------------
+#                                 Add project
+#------------------------------------------------------------------------------
+# Call this function in the root CMakeLists.txt to add a project. If it's a
+# standalone project, it will be equivalent to add_subdirectory command.
 # However, if the project is linked to others just notice and all will be managed.
 # e.g. add_project (project_folder [DEPENDS project_folder1 project_folder2..])
 
@@ -94,7 +98,7 @@ MACRO (add_project)
     set (PROJECT_LINKS)
 
     if (PROJECT_DEPENDS)
-        foreach (PROJECT_DEPENDS_DIR ${PROJECT_DEPENDS}) 
+        foreach (PROJECT_DEPENDS_DIR ${PROJECT_DEPENDS})
             include_directories (${MODULES_SOURCE_DIR}/${PROJECT_DEPENDS_DIR})
             link_directories (${MODULES_SOURCE_DIR}/${PROJECT_DEPENDS_DIR})
             set (PROJECT_LINKS ${PROJECT_LINKS} ${PROJECT_DEPENDS}${UOBJECT_ENGINE_LIBRARY_SUFFIX})
@@ -105,10 +109,11 @@ MACRO (add_project)
 
 ENDMACRO (add_project)
 
-#-----------------------------------------------------------------------------------------
-#                                   Link UObject libraries
-#-----------------------------------------------------------------------------------------
-# Link your current executable with all libraries required for a standard remote UObject
+#------------------------------------------------------------------------------
+#                           Link UObject libraries
+#------------------------------------------------------------------------------
+# Link your current executable with all libraries required for a standard
+# remote UObject
 # e.g. link_uobject_libraries (uobject_name)
 
 MACRO (link_uobject_libraries UOBJECT_NAME)
@@ -137,21 +142,22 @@ MACRO (link_uobject_libraries UOBJECT_NAME)
 
     # Default libraries, in case they're not found
     if (NOT SDK_REMOTE_INCLUDE_DIR)
-          message ("SDK Remote INCLUDE directory has not been found. Make sure you've installed "
-                   "URBI SDK remote on your computer or please specify the library path manually "
+          message ("SDK Remote INCLUDE directory has not been found. Make sure"
+                   " you've installed URBI SDK remote on your computer or "
+                   "please specify the library path manually "
                    "(-DSDK_REMOTE_INCLUDE_DIR).")
     endif (NOT SDK_REMOTE_INCLUDE_DIR)
 
     if (NOT JPEG_LIBRARY)
-          message ("The JPEG library has not been found. Make sure you've installed URBI SDK remote "
-                   "on your computer or please specify the library path manually "
-                   "(-DJPEG_LIBRARY).")
+          message ("The JPEG library has not been found. Make sure you've "
+                   "installed URBI SDK remote on your computer or please "
+                   "specify the library path manually (-DJPEG_LIBRARY).")
     endif (NOT JPEG_LIBRARY)
 
     if (NOT SDK_REMOTE_LIBRARY)
-          message ("The URBI library has not been found. Make sure you've installed URBI SDK remote "
-                   "on your computer or please specify the library path manually "
-                   "(-DSDK_REMOTE_LIBRARY).")
+          message ("The URBI library has not been found. Make sure you've "
+                   "installed URBI SDK remote on your computer or please "
+                   "specify the library path manually (-DSDK_REMOTE_LIBRARY).")
     endif (NOT SDK_REMOTE_LIBRARY)
 
     # Link
@@ -162,7 +168,8 @@ MACRO (link_uobject_libraries UOBJECT_NAME)
     elseif (UNIX)
       target_link_libraries (${UOBJECT_NAME} pthread)
       else (UNIX)
-        message ("[UOBJECT] No auto-link has been pre-configured for your platform into CMake.")
+        message ("[UOBJECT] No auto-link has been pre-configured for your "
+                 "platform into CMake.")
     endif (WIN32)
 
 ENDMACRO (link_uobject_libraries)
