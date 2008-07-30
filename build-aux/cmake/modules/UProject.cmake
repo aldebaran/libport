@@ -110,6 +110,56 @@ MACRO (add_project)
 ENDMACRO (add_project)
 
 #------------------------------------------------------------------------------
+#                              Search library/path
+#------------------------------------------------------------------------------
+# Call find_library/find_path command. If the library/path still cannot be found,
+# it prints a message you can customize by adding FULLNAME and PACKAGE info.
+# You can ask for one library or one path. Not both.
+# e.g. search(LIBRARY URBI_LIBRARY urbi FULLNAME "Urbi remote" PACKAGE "SDK Remote")
+
+MACRO (search)
+
+    # Check parameters and look for the element (library/path)
+    parse_arguments (ELEMENT "LIBRARY;PATH;FULLNAME;PACKAGE" "" ${ARGN})
+    if (ELEMENT_LIBRARY AND ELEMENT_PATH)
+        message (FATAL_ERROR "Invalid call of search macro. You cannot ask for"
+                             " both library and path finding.")
+    endif (ELEMENT_LIBRARY AND ELEMENT_PATH)
+    
+    if (ELEMENT_LIBRARY)
+        find_library (${ELEMENT_LIBRARY})
+        set(ELEMENT_TYPE library)
+    elseif (ELEMENT_PATH)
+        find_path (${ELEMENT_PATH})
+        set(ELEMENT_TYPE directory)
+    else (ELEMENT_PATH)
+        message (FATAL_ERROR "Invalid syntax. Specify LIBRARY or PATH section.")
+    endif (ELEMENT_LIBRARY)
+   
+    # If we don't find the element
+    if (NOT ${ARGV1})
+
+        # Replace undefined parameters by generic ones
+        if (NOT ELEMENT_FULLNAME)
+            set (ELEMENT_FULLNAME ${ARGV2})
+        else (NOT ELEMENT_FULLNAME)
+            set (ELEMENT_FULLNAME ${ELEMENT_FULLNAME} " (" ${ARGV2} ")")
+        endif (NOT ELEMENT_FULLNAME)
+
+        if (NOT ELEMENT_PACKAGE)
+            set (ELEMENT_PACKAGE it)
+        endif (NOT ELEMENT_PACKAGE)
+
+       # Custom message
+       message ( STATUS ${ELEMENT_FULLNAME} " " ${ELEMENT_TYPE}
+                 " has not been found. Make sure you've installed "
+                 ${ELEMENT_PACKAGE} " on your computer or please specify the "
+                 "library path manually (-D" ${ARGV1} ").")
+    endif (NOT ${ARGV1})
+
+ENDMACRO (search)
+
+#------------------------------------------------------------------------------
 #                           Link UObject libraries
 #------------------------------------------------------------------------------
 # Link your current executable with all libraries required for a standard
@@ -124,9 +174,11 @@ MACRO (link_uobject_libraries UOBJECT_NAME)
       set (CMAKE_FIND_LIBRARY_PREFIXES ${CMAKE_FIND_LIBRARY_PREFIXES} "" "lib")
     endif (WIN32)
 
-    find_library (SDK_REMOTE_LIBRARY urbi)
-    find_library (JPEG_LIBRARY jpeg)
-    find_path (SDK_REMOTE_INCLUDE_DIR urbi)
+    search (LIBRARY SDK_REMOTE_LIBRARY urbi PACKAGE "URBI SDK remote")
+    search (LIBRARY JPEG_LIBRARY jpeg)
+    search (PATH SDK_REMOTE_INCLUDE_DIR urbi 
+            FULLNAME "SDK Remote INCLUDE"
+            PACKAGE  "URBI SDK Remote")
 
     # Keeps only required libs
     if (WIN32)
@@ -139,26 +191,6 @@ MACRO (link_uobject_libraries UOBJECT_NAME)
     if (WIN32)
       set (CMAKE_BUILD_TYPE "Release")
     endif (WIN32)
-
-    # Default libraries, in case they're not found
-    if (NOT SDK_REMOTE_INCLUDE_DIR)
-          message ("SDK Remote INCLUDE directory has not been found. Make sure"
-                   " you've installed URBI SDK remote on your computer or "
-                   "please specify the library path manually "
-                   "(-DSDK_REMOTE_INCLUDE_DIR).")
-    endif (NOT SDK_REMOTE_INCLUDE_DIR)
-
-    if (NOT JPEG_LIBRARY)
-          message ("The JPEG library has not been found. Make sure you've "
-                   "installed URBI SDK remote on your computer or please "
-                   "specify the library path manually (-DJPEG_LIBRARY).")
-    endif (NOT JPEG_LIBRARY)
-
-    if (NOT SDK_REMOTE_LIBRARY)
-          message ("The URBI library has not been found. Make sure you've "
-                   "installed URBI SDK remote on your computer or please "
-                   "specify the library path manually (-DSDK_REMOTE_LIBRARY).")
-    endif (NOT SDK_REMOTE_LIBRARY)
 
     # Link
     include_directories (${SDK_REMOTE_INCLUDE_DIR})
