@@ -177,11 +177,11 @@ get_options ()
 
     # If this is a directory, append a slash.
     case $1$(test -d "$1" && echo '/') in
-      *=*)                   makeargs="$makeargs '$1'" ;;
-      *.h |*.hh|*.hxx|*.hpp) headers="$headers '$1'";   havearg=true ;;
-      *.cc|*.cpp|*.c|*.C)    sources="$sources '$1'";   havearg=true ;;
-      *.a)                   libs="$libs '$1'";         havearg=true ;;
-      */)
+      (*=*)                   makeargs="$makeargs '$1'" ;;
+      (*.h |*.hh|*.hxx|*.hpp) headers="$headers '$1'";   havearg=true ;;
+      (*.cc|*.cpp|*.c|*.C)    sources="$sources '$1'";   havearg=true ;;
+      (*.a)                   libs="$libs '$1'";         havearg=true ;;
+      (*/)
 	# Is it a directory
 	files=$(find "$1"				\
 	    -iname '*.h'				\
@@ -196,8 +196,8 @@ get_options ()
 	havearg=true;
 	shift
 	set dummy $files ${1+"$@"};;
-	*)
-	  error 3 "unknown type of file '$1'"
+      (*)
+        error 3 "unknown type of file '$1'"
 	;;
     esac
     shift
