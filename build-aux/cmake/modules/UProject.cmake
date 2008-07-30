@@ -79,8 +79,28 @@ ENDMACRO (add_uobject)
 #------------------------------------------------------------------------------
 #                                  Add engine
 #------------------------------------------------------------------------------
-# FIXME: Implement me :)
+# Allows you to create custom engine. Put in the MODULES section the name
+# of each module you want to put in (directory name)
+# e.g. add_engine (executable_name MODULES module1 module2..)
 
+MACRO (add_engine)
+
+    parse_arguments (PROJECT "MODULES" "" ${ARGN})
+    set (UOBJECT_NAME ${PROJECT_DEFAULT_ARGS}${UOBJECT_ENGINE_SUFFIX})
+
+    include_directories (/home/petit/engine-1.5.1/include)
+    add_executable (${UOBJECT_NAME} /home/petit/engine-1.5.1/share/umain/umain.cc)
+
+    # Link with needed projects
+    foreach (ENGINE_MODULE ${PROJECT_MODULES})
+        target_link_libraries (${UOBJECT_NAME} ${ENGINE_MODULE}${UOBJECT_ENGINE_LIBRARY_SUFFIX})
+    endforeach (ENGINE_MODULE)
+
+    # Link with urbi engine and dependencies
+
+    # FIXME: To be continued :)
+
+ENDMACRO (add_engine)
 
 
 #------------------------------------------------------------------------------
@@ -125,7 +145,7 @@ MACRO (search)
         message (FATAL_ERROR "Invalid call of search macro. You cannot ask for"
                              " both library and path finding.")
     endif (ELEMENT_LIBRARY AND ELEMENT_PATH)
-    
+
     if (ELEMENT_LIBRARY)
         find_library (${ELEMENT_LIBRARY})
         set(ELEMENT_TYPE library)
@@ -135,7 +155,7 @@ MACRO (search)
     else (ELEMENT_PATH)
         message (FATAL_ERROR "Invalid syntax. Specify LIBRARY or PATH section.")
     endif (ELEMENT_LIBRARY)
-   
+
     # If we don't find the element
     if (NOT ${ARGV1})
 
@@ -176,7 +196,7 @@ MACRO (link_uobject_libraries UOBJECT_NAME)
 
     search (LIBRARY SDK_REMOTE_LIBRARY urbi PACKAGE "URBI SDK remote")
     search (LIBRARY JPEG_LIBRARY jpeg)
-    search (PATH SDK_REMOTE_INCLUDE_DIR urbi 
+    search (PATH SDK_REMOTE_INCLUDE_DIR urbi
             FULLNAME "SDK Remote INCLUDE"
             PACKAGE  "URBI SDK Remote")
 
