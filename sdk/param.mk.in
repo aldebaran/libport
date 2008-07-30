@@ -124,7 +124,7 @@ else
 	$(LINK) \
 	    $(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ \
 	    $(ARGUMENT_LIBS) $(LIBS) $(LTOBJECTS) \
-	    $(envdir)/$(LIBNAME).la \
+	    $(envdir)/$(LIBNAME).la $(UMAKE_EXTRALIB) \
 	    $(EXTRA_LDFLAGS)
 endif
 

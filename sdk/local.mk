@@ -8,6 +8,7 @@ UMAKE_WRAPPERS =				\
 sdk/umake-aibo					\
 sdk/umake-deepclean				\
 sdk/umake-engine				\
+sdk/umake-fullengine				\
 sdk/umake-lib					\
 sdk/umake-remote
 

@@ -6,21 +6,21 @@ usage ()
 Usage: $me [OPTION]... [FILE]...
 
 General options:
-  -D, --debug          turn on shell debugging (set -x)
-  -h, --help           display this help and exit successfully
-  -q, --quiet          no output unless errors (implies --batch)
-  -v, --version        display version information and exit successfully
-  -V, --verbose        report on what is done
+  -D, --debug       turn on shell debugging (set -x)
+  -h, --help        display this help and exit successfully
+  -q, --quiet       no output unless errors (implies --batch)
+  -v, --version     display version information and exit successfully
+  -V, --verbose     report on what is done
 
 Compilation options:
-      --deep-clean     remove all building directories
-  -c, --clean          clean building directory before compilation
-  -j, --jobs=JOBS      specify the numbers of commands to run simultaneously
-  -l, --library        produce a library, don't link to a particular core
-  -o, --output=output  output file name
-  -C, --core=CORE      build type [$core]
-  -H, --host=HOST      destination host [$host]
-
+      --deep-clean       remove all building directories
+  -c, --clean            clean building directory before compilation
+  -j, --jobs=JOBS        specify the numbers of commands to run simultaneously
+  -l, --library          produce a library, don't link to a particular core
+  -o, --output=output    output file name
+  -C, --core=CORE        build type [$core]
+  -H, --host=HOST        destination host [$host]
+  -m, --disable-automain prevent umake from adding the main function
 Developper options:
   -p, --prefix=DIR     library file location [$prefix]
   -P, --param-mk=FILE  param.mk location [$(param_mk)]
@@ -54,7 +54,7 @@ param_mk ()
   if test -n "$param_mk"; then
     echo "$param_mk"
   else
-    echo "$prefix/gostai/core/$host/param.mk"
+    echo "$prefix/gostai/core/$host/$core/param.mk"
   fi
 }
 
@@ -84,11 +84,15 @@ prefix='@prefix@'
 #prefix="${prefix%/bin*}"
 target=         # target name
 
+urbilibdir=${prefix}/lib
+
 libs=
 sources=
 headers=
 makeargs=
 njobs=1
+
+automain=true
 
 ## ---------------------- ##
 ## Command line parsing.  ##
@@ -133,6 +137,7 @@ get_options ()
       -C | --core  ) shift; core=$1;;
       -H | --host  ) shift; host=$1;;
       -o | --output) shift; target=$1;;
+      -m | --disable-automain) automain=false;;
 
       -p | --prefix)   shift; prefix=$1;;
       -P | --param-mk) shift; param_mk=$1;;
@@ -180,7 +185,7 @@ get_options ()
       (*=*)                   makeargs="$makeargs '$1'" ;;
       (*.h |*.hh|*.hxx|*.hpp) headers="$headers '$1'";   havearg=true ;;
       (*.cc|*.cpp|*.c|*.C)    sources="$sources '$1'";   havearg=true ;;
-      (*.a)                   libs="$libs '$1'";         havearg=true ;;
+      (*.a|*.o)               libs="$libs '$1'";         havearg=true ;;
       (*/)
 	# Is it a directory
 	files=$(find "$1"				\
@@ -189,9 +194,9 @@ get_options ()
 	    -or -iname '*.hxx'				\
 	    -or -iname '*.hpp'				\
 	    -or -iname '*.c'				\
-	    -or -iname '*.C'				\
 	    -or -iname '*.cc'				\
 	    -or -iname '*.cpp'				\
+	    -or -iname '*.o'				\
 	    -or -iname '*.a' | grep -Fv "$builddir_pref" ) || true
 	havearg=true;
 	shift
@@ -209,6 +214,11 @@ initialize
 
 if test x$core = xdefault; then
   core=$defaultenv
+fi
+
+# Use default main
+if $automain; then
+    sources="$sources $prefix/share/umain/umain.cc"
 fi
 
 # Produce objects in the current directory, not in the source tree.
@@ -267,6 +277,9 @@ if test -z "$LIBNAME"; then
   case $core in
     remote)         UMAKE_LIBNAME="liburbi";;
     engine|webots)  UMAKE_LIBNAME="liburbicore";;
+    fullengine)     UMAKE_LIBNAME="liburbicore";
+                    UMAKE_EXTRALIB="${urbilibdir}/liburbi.la ${urbilibdir}/libjpeg.la";
+		    core=engine;;
     aibo)           UMAKE_LIBNAME="libaibo";;
     *);;
   esac
@@ -358,6 +371,7 @@ run eval make -j $njobs -f "$(param_mk)"	\
     UMAKE_URBI_ENV="$core"			\
     URBI_KERNEL_PATH="$(kernel)"		\
     UMAKE_LIBNAME="$UMAKE_LIBNAME"		\
+    UMAKE_EXTRALIB="\"$UMAKE_EXTRALIB\""	\
     UMAKE_LINK="$UMAKE_LINK"			\
     HEADERS="'$headers'"			\
     ARGUMENT_LIBS="'$libs'"			\

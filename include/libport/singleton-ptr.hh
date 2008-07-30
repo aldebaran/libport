@@ -1,24 +1,44 @@
 #ifndef LIBPORT_SINGLETON_PTR_HH
 # define LIBPORT_SINGLETON_PTR_HH
 
-# define LIBPORT_SINGLETON(Class, Name)         \
-  Class ## _ ## Name
+# define STATIC_INSTANCE_(Cl, Name)					\
+  class Cl ## Name;							\
+  libport::SingletonPtr<Cl ## Name> Name;				\
+  template<> Cl ## Name* libport::SingletonPtr<Cl ## Name>::ptr = 0
 
-# define STATIC_INSTANCE(Class, Name)					\
-  class LIBPORT_SINGLETON(Class, Name);                                 \
-  libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)> Name
-
-# define STATIC_INSTANCE_DECL(Class, Name)       \
-  class LIBPORT_SINGLETON(Class, Name)           \
-    : public Class                               \
-  {};                                            \
-  STATIC_INSTANCE(Class, Name)
-
-# define EXTERN_STATIC_INSTANCE(Class, Name)				\
-  class LIBPORT_SINGLETON(Class, Name)                                  \
-    : public Class                                                      \
+# define STATIC_INSTANCE_DECL_(Cl, Name)				\
+  class Cl ## Name							\
+    : public Cl								\
   {};									\
-  extern libport::SingletonPtr<LIBPORT_SINGLETON(Class, Name)> Name
+  STATIC_INSTANCE_(Cl, Name)
+
+# define EXTERN_STATIC_INSTANCE(Cl, Name)				\
+  class Cl ## Name							\
+    : public Cl								\
+  {};									\
+  extern libport::SingletonPtr<Cl ## Name> Name;
+
+// These _NS version are made to bypass vcxx error C2888
+// cf: http://msdn.microsoft.com/en-us/library/27zksbks(VS.80).aspx
+// Symbol in libport cannot be defined inside urbi. This appeared
+// after changes done for liburbi Java.
+// Use them "outside" of any namespace.
+
+# define STATIC_INSTANCE_NS(Cl, Name, NS)				\
+  namespace NS {							\
+    class Cl ## Name;							\
+    libport::SingletonPtr<Cl ## Name> Name;				\
+  }									\
+  template<> NS::Cl ## Name*						\
+  libport::SingletonPtr<NS::Cl ## Name>::ptr = 0
+
+# define STATIC_INSTANCE_DECL_NS(Cl, Name, NS)				\
+  namespace NS {							\
+    class Cl ## Name							\
+      : public Cl							\
+    {};									\
+  }									\
+  STATIC_INSTANCE_NS(Cl, Name, NS)
 
 namespace libport
 {
@@ -29,24 +49,27 @@ namespace libport
   public:
     operator T* ()
     {
-      return &instance();
+      return instance();
     }
     operator T& ()
     {
-      return instance();
+      return *instance();
     }
 
     T* operator ->()
     {
-      return &instance();
+      return instance();
     }
 
   private:
-    static T& instance()
+    static T* instance()
     {
-      static T t;
-      return t;
+      if (!ptr)
+	ptr = new T();
+      return ptr;
     }
+
+    static T* ptr;
   };
 
 }  // namespace libport

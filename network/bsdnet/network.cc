@@ -237,16 +237,18 @@ namespace Network
     return tsp->getLocalPort();
   }
 
-
-  namespace
-  {
 #if !defined WIN32
-    int controlPipe[2] = { -1, -1 };
+  int controlPipe[2] = { -1, -1 };
 #endif
-    typedef std::list<Pipe*> pipes_type;
-    STATIC_INSTANCE_DECL(pipes_type, pList);
-  }
+  typedef std::list<Pipe*> pipes_type;
+};
 
+// This is called out of any namespace due to vcxx error C2888
+// cf: http://msdn.microsoft.com/en-us/library/27zksbks(VS.80).aspx
+STATIC_INSTANCE_DECL_NS(pipes_type, pList, Network);
+
+namespace Network
+{
 
   int
   buildFD(fd_set& rd, fd_set& wr, fd_set &er)

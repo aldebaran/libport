@@ -16,8 +16,8 @@ struct foo
   int val;
 };
 
-STATIC_INSTANCE_DECL(foo, f1);
-STATIC_INSTANCE_DECL(foo, f2);
+STATIC_INSTANCE_DECL_NS(foo, f1, /* anonymous namespace */);
+STATIC_INSTANCE_DECL_NS(foo, f2, /* anonymous namespace */);
 
 void
 check()
