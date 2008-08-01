@@ -29,22 +29,34 @@ set(UMODULE_UOBJECT_SOURCE_PREFIX)
 set(UMODULE_WRAPPER_SOURCE_PREFIX)
 set(UMODULE_TEST_SOURCE_PREFIX)
 
+
 #------------------------------------------------------------------------------
-#                                Add Remote UObject
+#                                 Add UModule
 #------------------------------------------------------------------------------
-# Create a remote UObject
-# e.g. add_remote(name_of_binary SOURCES cpp1 cpp2..
-#                  [DEPENDS target1 target2..] [NO_DEFAULT_MAIN])
+# Call this function in the root CMakeLists.txt to add a UModule. If it's a
+# standalone project, it will be equivalent to add_subdirectory command.
+# However, if the project is linked to others just notice and all will be
+# managed.
+# e.g. add_umodule(umodule_folder [DEPENDS umodule_folder1 umodule_folder2..])
 
-MACRO(add_remote)
+MACRO(add_umodule)
 
-    parse_arguments(REMOTE_UOBJECT "SOURCES;DEPENDS" "NO_DEFAULT_MAIN" ${ARGN})
-    set(REMOTE_UOBJECT_NAME ${REMOTE_UOBJECT_DEFAULT_ARGS})
-    add_executable(${REMOTE_UOBJECT_NAME} ${REMOTE_UOBJECT_SOURCES})
-    link_uobject_libraries(${REMOTE_UOBJECT_NAME})
-    target_link_libraries(${REMOTE_UOBJECT_NAME} ${REMOTE_UOBJECT_DEPENDS})
+    parse_arguments(UMODULE "DEPENDS" "" ${ARGN})
+    set(UMODULE_DIR ${UMODULE_DEFAULT_ARGS})
+    set(UMODULE_LINKS)
 
-ENDMACRO(add_remote)
+    if(UMODULE_DEPENDS)
+        foreach(UMODULE_DEPENDS_DIR ${UMODULE_DEPENDS})
+            include_directories(${MODULES_SOURCE_DIR}/${UMODULE_DEPENDS_DIR})
+            link_directories(${MODULES_SOURCE_DIR}/${UMODULE_DEPENDS_DIR})
+            list(APPEND UMODULE_LINKS ${${UMODULE_DEPENDS}_TARGET_NAME}${UMODULE_LIBRARY_TARGET_SUFFIX})
+        endforeach(UMODULE_DEPENDS_DIR)
+    endif(UMODULE_DEPENDS)
+
+    add_subdirectory(${UMODULE_DIR})
+
+ENDMACRO(add_umodule)
+
 
 #------------------------------------------------------------------------------
 #                              Add UModule library
@@ -61,6 +73,8 @@ MACRO(add_umodule_library)
     target_link_libraries(${UMODULE_LIBRARY_NAME} ${UMODULE_LIBRARY_DEPENDS})
 
 ENDMACRO(add_umodule_library)
+
+
 
 #------------------------------------------------------------------------------
 #                                 Add UObject
@@ -121,6 +135,66 @@ ENDMACRO(add_uobject)
 
 
 #------------------------------------------------------------------------------
+#                                Add Remote UObject
+#------------------------------------------------------------------------------
+# Create a remote UObject
+# e.g. add_remote(name_of_binary SOURCES cpp1 cpp2..
+#                  [DEPENDS target1 target2..] [NO_DEFAULT_MAIN])
+
+MACRO(add_remote)
+
+    parse_arguments(REMOTE_UOBJECT "SOURCES;DEPENDS" "NO_DEFAULT_MAIN" ${ARGN})
+    set(REMOTE_UOBJECT_NAME ${REMOTE_UOBJECT_DEFAULT_ARGS})
+    add_executable(${REMOTE_UOBJECT_NAME} ${REMOTE_UOBJECT_SOURCES})
+    link_remote_libraries(${REMOTE_UOBJECT_NAME})
+    target_link_libraries(${REMOTE_UOBJECT_NAME} ${REMOTE_UOBJECT_DEPENDS})
+
+ENDMACRO(add_remote)
+
+
+#------------------------------------------------------------------------------
+#                                Add Engine UObject
+#------------------------------------------------------------------------------
+# Allows you to create custom engine. Put in the UMODULES section the name
+# of each umodule you want to put in (directory name ). You can also add
+# custom library in the DEPENDS section.
+# You can just fill UMODULES and DEPENDS sections. In such case, a .cc file
+# will be generated to link your libs.
+# e.g. add_engine(executable_name UMODULES module1 module2.. DEPENDS lib1 lib2..)
+
+MACRO(add_engine)
+
+    parse_arguments(ENGINE "SOURCES;UMODULES;DEPENDS" "" ${ARGN})
+    set(ENGINE_UOBJECT_NAME ${ENGINE_DEFAULT_ARGS}${UOBJECT_ENGINE_TARGET_SUFFIX})
+
+    include_directories(/home/petit/engine-1.5.1/include)
+    include_directories(/media/MEMUP_/boost/boost_1_34)
+
+    if(NOT ENGINE_SOURCES)
+        set(ENGINE_SOURCES /home/petit/engine-1.5.1/share/umain/umain.cc)
+    endif(NOT ENGINE_SOURCES)
+    add_executable(${ENGINE_UOBJECT_NAME} ${ENGINE_SOURCES})
+
+    # Link with needed umodules
+    foreach(ENGINE_UMODULE ${ENGINE_UMODULES})
+        target_link_libraries(${ENGINE_UOBJECT_NAME}
+                              ${${ENGINE_UMODULE}_TARGET_NAME}${UMODULE_LIBRARY_TARGET_SUFFIX})
+    endforeach(ENGINE_UMODULE)
+
+    # Link with custom libraries
+    foreach(ENGINE_DEPEND ${ENGINE_DEPENDS})
+        target_link_libraries(${ENGINE_UOBJECT_NAME} ${ENGINE_DEPEND})
+    endforeach(ENGINE_DEPEND)
+
+    # Link with urbi engine and dependencies
+    set(SDK_ENGINE_ROOT_DIR /home/petit/engine-1.5.1/gostai/core/i686-pc-linux-gnu/engine)
+    set(Boost_ROOT /media/MEMUP_/boost/boost_1_34)
+    link_engine_libraries(${ENGINE_UOBJECT_NAME})
+
+ENDMACRO(add_engine)
+
+
+#------------------------------------------------------------------------------
 #                                   Add test
 #------------------------------------------------------------------------------
 # Add a binary test for your eventual library wrapper linked to your uobject.
@@ -135,84 +209,14 @@ ENDMACRO(add_wrapper_test)
 
 
 #------------------------------------------------------------------------------
-#                                  Add engine
-#------------------------------------------------------------------------------
-# Allows you to create custom engine. Put in the UMODULES section the name
-# of each umodule you want to put in (directory name ). You can also add
-# custom library in the DEPENDS section.
-# You can just fill UMODULES and DEPENDS sections. In such case, a .cc file
-# will be generated to link your libs.
-# e.g. add_engine(executable_name UMODULES module1 module2.. DEPENDS lib1 lib2..)
-
-MACRO(add_engine)
-
-    parse_arguments(ENGINE "SOURCES;UMODULES;DEPENDS" "" ${ARGN})
-
-    if(NOT ENGINE_SOURCES)
-        message(STATUS "Add a generated .cc file")
-        set(ENGINE_SOURCES /home/petit/engine-1.5.1/share/umain/umain.cc)
-    endif(NOT ENGINE_SOURCES)
-
-    set(UOBJECT_NAME ${ENGINE_DEFAULT_ARGS}${UOBJECT_ENGINE_TARGET_SUFFIX})
-
-    include_directories(/home/petit/engine-1.5.1/include)
-    add_executable(${UOBJECT_NAME} ${ENGINE_SOURCES})
-
-    # Link with needed umodules
-    foreach(ENGINE_UMODULE ${ENGINE_UMODULES})
-        target_link_libraries(${UOBJECT_NAME}
-                              ${${ENGINE_UMODULE}_TARGET_NAME}${UMODULE_LIBRARY_TARGET_SUFFIX})
-    endforeach(ENGINE_UMODULE)
-
-    # Link with custom libraries
-    foreach(ENGINE_DEPEND ${ENGINE_DEPENDS})
-        target_link_libraries(${UOBJECT_NAME} ${ENGINE_DEPEND})
-    endforeach(ENGINE_DEPEND)
-
-    # Link with urbi engine and dependencies
-
-    # FIXME: To be continued :)
-
-ENDMACRO(add_engine)
-
-
-#------------------------------------------------------------------------------
-#                                 Add UModule
-#------------------------------------------------------------------------------
-# Call this function in the root CMakeLists.txt to add a UModule. If it's a
-# standalone project, it will be equivalent to add_subdirectory command.
-# However, if the project is linked to others just notice and all will be
-# managed.
-# e.g. add_umodule(umodule_folder [DEPENDS umodule_folder1 umodule_folder2..])
-
-MACRO(add_umodule)
-
-    parse_arguments(UMODULE "DEPENDS" "" ${ARGN})
-    set(UMODULE_DIR ${UMODULE_DEFAULT_ARGS})
-    set(UMODULE_LINKS)
-
-    if(UMODULE_DEPENDS)
-        foreach(UMODULE_DEPENDS_DIR ${UMODULE_DEPENDS})
-            include_directories(${MODULES_SOURCE_DIR}/${UMODULE_DEPENDS_DIR})
-            link_directories(${MODULES_SOURCE_DIR}/${UMODULE_DEPENDS_DIR})
-            list(APPEND UMODULE_LINKS ${${UMODULE_DEPENDS}_TARGET_NAME}${UMODULE_LIBRARY_TARGET_SUFFIX})
-        endforeach(UMODULE_DEPENDS_DIR)
-    endif(UMODULE_DEPENDS)
-
-    add_subdirectory(${UMODULE_DIR})
-
-ENDMACRO(add_umodule)
-
-
-#------------------------------------------------------------------------------
-#                           Link UObject libraries
+#                           Link Remote libraries
 #------------------------------------------------------------------------------
 # Link your current executable with all libraries required for a standard
 # remote UObject
 # e.g. link_uobject_libraries(uobject_name)
 
-MACRO(link_uobject_libraries UOBJECT_NAME)
-# e.g. "link_uobject_libraries(NAME_OF_EXECUTABLE CPP1 CPP2)"
+MACRO(link_remote_libraries UOBJECT_NAME)
+# e.g. "link_remote_libraries(NAME_OF_EXECUTABLE)"
 
     find_package(SdkRemoteNew)
 
@@ -232,4 +236,22 @@ MACRO(link_uobject_libraries UOBJECT_NAME)
     include_directories(${SDK_REMOTE_NEW_INCLUDE_DIRS})
     target_link_libraries(${UOBJECT_NAME} ${SDK_REMOTE_NEW_LIBRARIES})
 
-ENDMACRO(link_uobject_libraries)
+ENDMACRO(link_remote_libraries)
+
+
+#------------------------------------------------------------------------------
+#                           Link Engine libraries
+#------------------------------------------------------------------------------
+# Link your current executable with all libraries required for a standard
+# engine UObject.
+# e.g. link_uobject_libraries(uobject_name)
+
+MACRO(link_engine_libraries UOBJECT_NAME)
+# e.g. "link_engine_libraries(NAME_OF_EXECUTABLE)"
+
+    find_package(SdkEngine)
+    include_directories(${SDK_ENGINE_INCLUDE_DIRS})
+    target_link_libraries(${UOBJECT_NAME} ${SDK_ENGINE_LIBRARIES})
+
+ENDMACRO(link_engine_libraries)
+

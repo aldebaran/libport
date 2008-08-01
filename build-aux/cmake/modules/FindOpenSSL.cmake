@@ -1,5 +1,5 @@
 ##
-## FindSdkRemote.cmake: This file is part of cmake-aux.
+## FindSdkEngine.cmake: This file is part of cmake-aux.
 ## Copyright (C) Gostai S.A.S., 2006-2008.
 ##
 ## This software is provided "as is" without warranty of any kind,
@@ -10,11 +10,18 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 ##-----------------------------------------------------------------
-## CMake PACKAGE - URBI SDK Remote
-## Find URBI Sdk Remote libraries and paths.
+## CMake PACKAGE - URBI SDK Engine
+## Find URBI Sdk Engine libraries and paths.
+#
+# Current FindOpenSSL module provided by CMake is laking:
+#    * support for choosing between static/shared library to search for
+#    * search of the libcrypto
+# that's why we provide this alternative package waiting for better solution
+# coming from upstream.
+#
 ##-----------------------------------------------------------------
 
-set(PACKAGE_FULLNAME "URBI SDK Remote")
+set(PACKAGE_FULLNAME "OpenSSL (TLS)")
 
 ##-----------------------------------------------------------------
 # This package tries to respect CMake guidelines to be easily
@@ -73,56 +80,33 @@ if(NOT ${PACKAGE_NAME}_FOUND)
     set(${PACKAGE_NAME}_FOUND FALSE)
     set(${PACKAGE_NAME}_LIBRARY_DIRS ${CMAKE_LIBRARY_PATH})
 
-    # Some libraries names are not WIN32 standards
-    if(WIN32)
-        list(APPEND CMAKE_STATIC_PREFIX "" "lib")
-    endif(WIN32)
-
-    # Search for URBI library
-    search(LIBRARY SDK_REMOTE_URBI_LIBRARY urbi
-           FULLNAME "SDK Remote"
+    # Search for the associated crypto library.
+    search(LIBRARY OPEN_SSL_CRYPTO_LIBRARY crypto
+           FULLNAME "SDK Engine's Cryptography"
            PACKAGE ${PACKAGE_FULLNAME}
            PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-           ${SEARCH_OPTIONS})
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_REMOTE_URBI_LIBRARY})
+           ${SEARCH_OPTIONS}
+           STATIC)
+    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${OPEN_SSL_CRYPTO_LIBRARY})
 
-    # Search for the associated jpeg library.
-    search(LIBRARY SDK_REMOTE_JPEG_LIBRARY jpeg
-           FULLNAME "SDK Remote's JPEG"
+    # Search for the associated dl library.
+    search(LIBRARY OPEN_SSL_DL_LIBRARY dl
+           FULLNAME "SDK Engine's dl"
            PACKAGE ${PACKAGE_FULLNAME}
            PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-           ${SEARCH_OPTIONS})
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_REMOTE_JPEG_LIBRARY})
+           ${SEARCH_OPTIONS}
+           SHARED)
+    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_ENGINE_DL_LIBRARY})
 
-    # Search for the include directory.
-    search(PATH SDK_REMOTE_INCLUDE uobject.h
-           FULLNAME "SDK Remote INCLUDE"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-           ${SEARCH_OPTIONS})
-    list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${SDK_REMOTE_INCLUDE})
-
-    if(SDK_REMOTE_URBI_LIBRARY AND SDK_REMOTE_INCLUDE AND SDK_REMOTE_JPEG_LIBRARY)
+    if(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE )
         set(${PACKAGE_NAME}_FOUND TRUE)
-    else(SDK_REMOTE_URBI_LIBRARY AND SDK_REMOTE_INCLUDE AND SDK_REMOTE_JPEG_LIBRARY)
+    else(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE)
         if(${PACKAGE_FILENAME}_FIND_REQUIRED)
             message(FATAL_ERROR "Could not find the whole package. Use -D"
                                 ${PACKAGE_NAME}_ROOT_DIR "to specify paths to help"
                                 "CMake find this package.")
         endif(${PACKAGE_FILENAME}_FIND_REQUIRED)
-    endif(SDK_REMOTE_URBI_LIBRARY AND SDK_REMOTE_INCLUDE AND SDK_REMOTE_JPEG_LIBRARY)
-
-    # Add platform specific libraries.
-    if(WIN32)
-        list(APPEND ${PACKAGE_NAME}_LIBRARIES ws2_32)
-    elseif(UNIX)
-        list(APPEND ${PACKAGE_NAME}_LIBRARIES pthread)
-    else(UNIX)
-        if(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
-            message( STATUS "Warning! No dependencies with SDK Remote has been "
-                        "pre-configured for your platform into CMake. There "
-                        "may be problem during the link.." )
-        endif(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
-    endif(WIN32)
+    endif(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE)
 
 endif(NOT ${PACKAGE_NAME}_FOUND)
+
