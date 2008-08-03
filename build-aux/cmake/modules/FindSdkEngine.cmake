@@ -70,11 +70,15 @@ set_package_name(${CMAKE_CURRENT_LIST_FILE})
 
 if(NOT ${PACKAGE_NAME}_FOUND)
 
-    # Add dependencies to the SDK engine results
+    # Add dependencies to the SDK engine
     list(APPEND ${PACKAGE_NAME}_LIBRARIES ${OPEN_SSL_LIBRARIES})
     list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${OPEN_SSL_INCLUDE_DIRS})
     list(APPEND ${PACKAGE_NAME}_LIBRARIES ${Boost_LIBRARIES})
     list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
+    if(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
+        message(STATUS "Found boost lib: " ${Boost_LIBRARIES})
+        message(STATUS "Found boost include: " ${Boost_INCLUDE_DIRS})
+    endif(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
 
     # Load search macro and set additional options
     include(Search)
@@ -111,8 +115,12 @@ if(NOT ${PACKAGE_NAME}_FOUND)
            ${SEARCH_OPTIONS})
     list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${SDK_ENGINE_INCLUDE})
 
-    # Add platform specific libraries
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES pthread)
+    # Search for the thread part of the boost library
+    search(LIBRARY SDK_ENGINE_THREAD_BOOST_LIBRARY boost_thread-gcc41-mt-1_34_1
+           PACKAGE "Boost version 1.34.1 (thread part)"
+           PATHS ${${PACKAGE_NAME}_ROOT_DIR})
+    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_ENGINE_THREAD_BOOST_LIBRARY})
+
 
     if(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE )
         set(${PACKAGE_NAME}_FOUND TRUE)

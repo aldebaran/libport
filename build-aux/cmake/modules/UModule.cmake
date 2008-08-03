@@ -119,7 +119,12 @@ MACRO(add_uobject)
         ${ARGN}
     )
 
-#   add_engine
+   add_engine(
+        ${PROJECT_NAME}${UOBJECT_ENGINE_TARGET_SUFFIX}
+        SOURCES ${${UMODULE_DIR}_UOBJECT_SOURCES}
+        DEPENDS ${UMODULE_LINKS}
+        ${ARGN}
+    )
 
     if(${UMODULE_DIR}_TEST_SOURCES)
         add_wrapper_test(
@@ -143,11 +148,11 @@ ENDMACRO(add_uobject)
 
 MACRO(add_remote)
 
-    parse_arguments(REMOTE_UOBJECT "SOURCES;DEPENDS" "NO_DEFAULT_MAIN" ${ARGN})
-    set(REMOTE_UOBJECT_NAME ${REMOTE_UOBJECT_DEFAULT_ARGS})
-    add_executable(${REMOTE_UOBJECT_NAME} ${REMOTE_UOBJECT_SOURCES})
-    link_remote_libraries(${REMOTE_UOBJECT_NAME})
-    target_link_libraries(${REMOTE_UOBJECT_NAME} ${REMOTE_UOBJECT_DEPENDS})
+    parse_arguments(UOBJECT_REMOTE "SOURCES;DEPENDS" "NO_DEFAULT_MAIN" ${ARGN})
+    set(UOBJECT_REMOTE_NAME ${UOBJECT_REMOTE_DEFAULT_ARGS})
+    add_executable(${UOBJECT_REMOTE_NAME} ${UOBJECT_REMOTE_SOURCES})
+    link_remote_libraries(${UOBJECT_REMOTE_NAME})
+    target_link_libraries(${UOBJECT_REMOTE_NAME} ${UOBJECT_REMOTE_DEPENDS})
 
 ENDMACRO(add_remote)
 
@@ -158,38 +163,41 @@ ENDMACRO(add_remote)
 # Allows you to create custom engine. Put in the UMODULES section the name
 # of each umodule you want to put in (directory name ). You can also add
 # custom library in the DEPENDS section.
+# Fill the SOURCES section if you want to create directly the engine from
+# sources.
 # You can just fill UMODULES and DEPENDS sections. In such case, a .cc file
 # will be generated to link your libs.
-# e.g. add_engine(executable_name UMODULES module1 module2.. DEPENDS lib1 lib2..)
+# e.g. add_engine(executable_name SOURCES cpp1 cpp2...
+#                                 UMODULES module1 module2..
+#                                 DEPENDS lib1 lib2..)
 
 MACRO(add_engine)
 
-    parse_arguments(ENGINE "SOURCES;UMODULES;DEPENDS" "" ${ARGN})
-    set(ENGINE_UOBJECT_NAME ${ENGINE_DEFAULT_ARGS}${UOBJECT_ENGINE_TARGET_SUFFIX})
+    parse_arguments(UOBJECT_ENGINE "SOURCES;UMODULES;DEPENDS" "" ${ARGN})
+    set(UOBJECT_ENGINE_NAME ${UOBJECT_ENGINE_DEFAULT_ARGS})
 
-    include_directories(/home/petit/engine-1.5.1/include)
-    include_directories(/media/MEMUP_/boost/boost_1_34)
-
-    if(NOT ENGINE_SOURCES)
-        set(ENGINE_SOURCES /home/petit/engine-1.5.1/share/umain/umain.cc)
-    endif(NOT ENGINE_SOURCES)
-    add_executable(${ENGINE_UOBJECT_NAME} ${ENGINE_SOURCES})
+    set(SDK_INSTALL_DIRECTORY /home/petit/engine-1.5.1)
+    if(NOT UOBJECT_ENGINE_SOURCES)
+        set(UOBJECT_ENGINE_SOURCES ${SDK_INSTALL_DIRECTORY}/share/umain/umain.cc)
+        include_directories(${SDK_INSTALL_DIRECTORY}/include)
+    endif(NOT UOBJECT_ENGINE_SOURCES)
+    add_executable(${UOBJECT_ENGINE_NAME} ${UOBJECT_ENGINE_SOURCES})
 
     # Link with needed umodules
-    foreach(ENGINE_UMODULE ${ENGINE_UMODULES})
-        target_link_libraries(${ENGINE_UOBJECT_NAME}
-                              ${${ENGINE_UMODULE}_TARGET_NAME}${UMODULE_LIBRARY_TARGET_SUFFIX})
-    endforeach(ENGINE_UMODULE)
+    foreach(UOBJECT_ENGINE_UMODULE ${UOBJECT_ENGINE_UMODULES})
+        target_link_libraries(${UOBJECT_ENGINE_NAME}
+                              ${${UOBJECT_ENGINE_UMODULE}_TARGET_NAME}${UMODULE_LIBRARY_TARGET_SUFFIX})
+    endforeach(UOBJECT_ENGINE_UMODULE)
 
     # Link with custom libraries
-    foreach(ENGINE_DEPEND ${ENGINE_DEPENDS})
-        target_link_libraries(${ENGINE_UOBJECT_NAME} ${ENGINE_DEPEND})
-    endforeach(ENGINE_DEPEND)
+    foreach(UOBJECT_ENGINE_DEPEND ${UOBJECT_ENGINE_DEPENDS})
+        target_link_libraries(${UOBJECT_ENGINE_NAME} ${UOBJECT_ENGINE_DEPEND})
+    endforeach(UOBJECT_ENGINE_DEPEND)
 
     # Link with urbi engine and dependencies
-    set(SDK_ENGINE_ROOT_DIR /home/petit/engine-1.5.1/gostai/core/i686-pc-linux-gnu/engine)
+    set(SDK_ENGINE_ROOT_DIR ${SDK_INSTALL_DIRECTORY}/gostai/core/i686-pc-linux-gnu/engine)
     set(Boost_ROOT /media/MEMUP_/boost/boost_1_34)
-    link_engine_libraries(${ENGINE_UOBJECT_NAME})
+    link_engine_libraries(${UOBJECT_ENGINE_NAME})
 
 ENDMACRO(add_engine)
 
