@@ -9,7 +9,7 @@
 ## ---------------------------------------------------------------
 ## CMake - UObject project
 ## User-friendly macros for UObject projects.
-## ------------------------------- -------------------------------
+## ---------------------------------------------------------------
 ##
 
 include(Macro-toolbox)
@@ -150,7 +150,15 @@ MACRO(add_remote)
 
     parse_arguments(UOBJECT_REMOTE "SOURCES;DEPENDS" "NO_DEFAULT_MAIN" ${ARGN})
     set(UOBJECT_REMOTE_NAME ${UOBJECT_REMOTE_DEFAULT_ARGS})
+
+    if(NOT UOBJECT_REMOTE_SOURCES OR NOT NO_DEFAULT_MAIN)
+        find_package(SdkRemote)
+        list(INSERT UOBJECT_REMOTE_SOURCES 0 ${SDK_REMOTE_UMAIN_DIR}/umain.cc)
+    endif(NOT UOBJECT_REMOTE_SOURCES OR NOT NO_DEFAULT_MAIN)
+
     add_executable(${UOBJECT_REMOTE_NAME} ${UOBJECT_REMOTE_SOURCES})
+    set_target_properties(${UOBJECT_REMOTE_NAME}
+                          PROPERTIES COMPILE_DEFINITIONS URBI_ENV_REMOTE)
     link_remote_libraries(${UOBJECT_REMOTE_NAME})
     target_link_libraries(${UOBJECT_REMOTE_NAME} ${UOBJECT_REMOTE_DEPENDS})
 
@@ -169,19 +177,21 @@ ENDMACRO(add_remote)
 # will be generated to link your libs.
 # e.g. add_engine(executable_name SOURCES cpp1 cpp2...
 #                                 UMODULES module1 module2..
-#                                 DEPENDS lib1 lib2..)
+#                                 DEPENDS lib1 lib2..
+#                                 [NO_DEFAULT_MAIN])
 
 MACRO(add_engine)
 
-    parse_arguments(UOBJECT_ENGINE "SOURCES;UMODULES;DEPENDS" "" ${ARGN})
+    parse_arguments(UOBJECT_ENGINE "SOURCES;UMODULES;DEPENDS" "NO_DEFAULT_MAIN" ${ARGN})
     set(UOBJECT_ENGINE_NAME ${UOBJECT_ENGINE_DEFAULT_ARGS})
 
-    set(SDK_INSTALL_DIRECTORY /home/petit/engine-1.5.1)
-    if(NOT UOBJECT_ENGINE_SOURCES)
-        set(UOBJECT_ENGINE_SOURCES ${SDK_INSTALL_DIRECTORY}/share/umain/umain.cc)
-        include_directories(${SDK_INSTALL_DIRECTORY}/include)
-    endif(NOT UOBJECT_ENGINE_SOURCES)
+    if(NOT UOBJECT_ENGINE_SOURCES OR NOT NO_DEFAULT_MAIN)
+        find_package(SdkEngine)
+        list(APPEND UOBJECT_ENGINE_SOURCES ${SDK_ENGINE_UMAIN_DIR}/umain.cc)
+    endif(NOT UOBJECT_ENGINE_SOURCES OR NOT NO_DEFAULT_MAIN)
     add_executable(${UOBJECT_ENGINE_NAME} ${UOBJECT_ENGINE_SOURCES})
+    set_target_properties(${UOBJECT_REMOTE_NAME}
+                          PROPERTIES COMPILE_DEFINITIONS URBI_ENV_REMOTE)
 
     # Link with needed umodules
     foreach(UOBJECT_ENGINE_UMODULE ${UOBJECT_ENGINE_UMODULES})
@@ -195,8 +205,6 @@ MACRO(add_engine)
     endforeach(UOBJECT_ENGINE_DEPEND)
 
     # Link with urbi engine and dependencies
-    set(SDK_ENGINE_ROOT_DIR ${SDK_INSTALL_DIRECTORY}/gostai/core/i686-pc-linux-gnu/engine)
-    set(Boost_ROOT /media/MEMUP_/boost/boost_1_34)
     link_engine_libraries(${UOBJECT_ENGINE_NAME})
 
 ENDMACRO(add_engine)
@@ -226,7 +234,7 @@ ENDMACRO(add_wrapper_test)
 MACRO(link_remote_libraries UOBJECT_NAME)
 # e.g. "link_remote_libraries(NAME_OF_EXECUTABLE)"
 
-    find_package(SdkRemoteNew)
+    find_package(SdkRemote)
 
     # Keeps only required libs
     if(WIN32)
@@ -241,8 +249,8 @@ MACRO(link_remote_libraries UOBJECT_NAME)
     endif(WIN32)
 
     # Link
-    include_directories(${SDK_REMOTE_NEW_INCLUDE_DIRS})
-    target_link_libraries(${UOBJECT_NAME} ${SDK_REMOTE_NEW_LIBRARIES})
+    include_directories(${SDK_REMOTE_INCLUDE_DIRS})
+    target_link_libraries(${UOBJECT_NAME} ${SDK_REMOTE_LIBRARIES})
 
 ENDMACRO(link_remote_libraries)
 

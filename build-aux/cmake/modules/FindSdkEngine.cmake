@@ -62,6 +62,12 @@ set(PACKAGE_FULLNAME "URBI SDK Engine")
 # REQUIRED option    You can ask the package to throw a FATAL_ERROR
 #                    if the whole package has not been found.
 #
+# Here is the current XXX_YY list :
+# SDK_ENGINE_URBI_LIBRARY
+# SDK_ENGINE_INCLUDE
+# SDK_ENGINE_UMAIN_DIR
+# SDK_ENGINE_THREAD_BOOST_LIBRARY
+#
 ##-----------------------------------------------------------------
 
 # Retrieve PACKAGE_NAME and PACKAGE_FILENAME
@@ -104,6 +110,7 @@ if(NOT ${PACKAGE_NAME}_FOUND)
            FULLNAME "SDK Engine"
            PACKAGE ${PACKAGE_FULLNAME}
            PATHS ${${PACKAGE_NAME}_ROOT_DIR}
+                 ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
            ${SEARCH_OPTIONS})
     list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_ENGINE_URBI_LIBRARY})
 
@@ -112,8 +119,19 @@ if(NOT ${PACKAGE_NAME}_FOUND)
            FULLNAME "SDK Engine INCLUDE"
            PACKAGE ${PACKAGE_FULLNAME}
            PATHS ${${PACKAGE_NAME}_ROOT_DIR}
+                 ${${PACKAGE_NAME}_ROOT_DIR}/include
            ${SEARCH_OPTIONS})
     list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${SDK_ENGINE_INCLUDE})
+
+    # Search for the optionnal main.cc added to link libraries
+    search(PATH SDK_ENGINE_UMAIN_DIR umain.cc
+           FULLNAME "SDK Engine UMAIN"
+           PACKAGE ${PACKAGE_FULLNAME}
+           PATHS ${SDK_ENGINE_ROOT_DIR}/share/umain
+                 ${SDK_ENGINE_INCLUDE}/../share/umain
+           ${SEARCH_OPTIONS})
+    set(SDK_ENGINE_UMAIN_FILE ${SDK_ENGINE_UMAIN_DIR})
+    list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${SDK_ENGINE_UMAIN_DIR})
 
     # Search for the thread part of the boost library
     search(LIBRARY SDK_ENGINE_THREAD_BOOST_LIBRARY boost_thread-gcc41-mt-1_34_1
@@ -122,7 +140,7 @@ if(NOT ${PACKAGE_NAME}_FOUND)
     list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_ENGINE_THREAD_BOOST_LIBRARY})
 
 
-    if(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE )
+    if(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE)
         set(${PACKAGE_NAME}_FOUND TRUE)
     else(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE)
         if(${PACKAGE_FILENAME}_FIND_REQUIRED)

@@ -58,6 +58,10 @@ set(PACKAGE_FULLNAME "OpenSSL (TLS)")
 # REQUIRED option    You can ask the package to throw a FATAL_ERROR
 #                    if the whole package has not been found.
 #
+# Here is the XXX_YY list:
+# OPEN_SSL_CRYPTO_LIBRARY
+# OPEN_SSL_DL_LIBRARY
+#
 ##-----------------------------------------------------------------
 
 # Retrieve PACKAGE_NAME and PACKAGE_FILENAME
