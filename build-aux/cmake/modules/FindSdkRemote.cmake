@@ -61,88 +61,37 @@ set(PACKAGE_FULLNAME "URBI SDK Remote")
 
 # Retrieve PACKAGE_NAME and PACKAGE_FILENAME
 include(Package-toolbox)
-set_package_name(${CMAKE_CURRENT_LIST_FILE})
+package_header(${CMAKE_CURRENT_LIST_FILE})
 
-if(NOT ${PACKAGE_NAME}_FOUND)
+# Search for the include directory.
+package_search(PATH ${PACKAGE_NAME}_INCLUDE uobject.h
+               FULLNAME "SDK Remote INCLUDE"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/include)
 
-    # Load search macro and set additional options
-    include(Search)
-    set(SEARCH_OPTIONS)
+# Search for URBI library
+package_search(LIBRARY ${PACKAGE_NAME}_URBI_LIBRARY urbi
+               FULLNAME "SDK Remote"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/lib
+                     ${${PACKAGE_NAME}_INCLUDE}/../lib)
 
-    if(${PACKAGE_FILENAME}_FIND_QUIETLY)
-        list(APPEND SEARCH_OPTIONS QUIET)
-    else(${PACKAGE_FILENAME}_FIND_QUIETLY)
-        message(STATUS "Loading package " ${PACKAGE_FULLNAME} " ("
-                       ${PACKAGE_NAME} ")")
-    endif(${PACKAGE_FILENAME}_FIND_QUIETLY)
+# Search for the associated jpeg library.
+package_search(LIBRARY ${PACKAGE_NAME}_JPEG_LIBRARY jpeg
+               FULLNAME "SDK Remote's JPEG"
+               PATHS ${${PACKAGE_NAME}_URBI_LIBRARY})
 
-    set(${PACKAGE_NAME}_FOUND FALSE)
-    set(${PACKAGE_NAME}_LIBRARY_DIRS ${CMAKE_LIBRARY_PATH})
+# Add platform specific libraries.
+if(WIN32)
+    list(APPEND ${PACKAGE_NAME}_LIBRARIES ws2_32 gdi32)
+elseif(UNIX)
+    list(APPEND ${PACKAGE_NAME}_LIBRARIES pthread)
+else(UNIX)
+    if(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
+        message( STATUS "Warning! No dependencies with SDK Remote has been "
+                    "pre-configured for your platform into CMake. There "
+                    "may be problem during the link.." )
+    endif(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
+endif(WIN32)
 
-    # Some libraries names are not WIN32 standards
-    if(WIN32)
-        list(APPEND CMAKE_STATIC_PREFIX "" "lib")
-    endif(WIN32)
-
-    # Search for the include directory.
-    search(PATH SDK_REMOTE_INCLUDE uobject.h
-           FULLNAME "SDK Remote INCLUDE"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-	         ${${PACKAGE_NAME}_ROOT_DIR}/include
-           ${SEARCH_OPTIONS})
-    list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${SDK_REMOTE_INCLUDE})
-
-    # Search for URBI library
-    search(LIBRARY SDK_REMOTE_URBI_LIBRARY urbi
-           FULLNAME "SDK Remote"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-	         ${${PACKAGE_NAME}_ROOT_DIR}/lib
-		 ${SDK_REMOTE_INCLUDE}/../lib
-           ${SEARCH_OPTIONS})
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_REMOTE_URBI_LIBRARY})
-
-    # Search for the optionnal main.cc added to link libraries
-    search(PATH SDK_REMOTE_UMAIN_DIR umain.cc
-           FULLNAME "SDK Remote UMAIN"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${SDK_REMOTE_ROOT_DIR}/share/umain
-                 ${SDK_REMOTE_INCLUDE}/../share/umain
-           ${SEARCH_OPTIONS})
-    set(SDK_REMOTE_UMAIN_FILE ${SDK_REMOTE_UMAIN_DIR})
-    list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${SDK_REMOTE_UMAIN_DIR})
-
-    # Search for the associated jpeg library.
-    search(LIBRARY SDK_REMOTE_JPEG_LIBRARY jpeg
-           FULLNAME "SDK Remote's JPEG"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-	         ${SDK_REMOTE_URBI_LIBRARY}
-           ${SEARCH_OPTIONS})
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_REMOTE_JPEG_LIBRARY})
-
-    if(SDK_REMOTE_URBI_LIBRARY AND SDK_REMOTE_INCLUDE AND SDK_REMOTE_JPEG_LIBRARY)
-        set(${PACKAGE_NAME}_FOUND TRUE)
-    else(SDK_REMOTE_URBI_LIBRARY AND SDK_REMOTE_INCLUDE AND SDK_REMOTE_JPEG_LIBRARY)
-        if(${PACKAGE_FILENAME}_FIND_REQUIRED)
-            message(FATAL_ERROR "Could not find the whole package. Use -D"
-                                ${PACKAGE_NAME}_ROOT_DIR "to specify paths to help"
-                                "CMake find this package.")
-        endif(${PACKAGE_FILENAME}_FIND_REQUIRED)
-    endif(SDK_REMOTE_URBI_LIBRARY AND SDK_REMOTE_INCLUDE AND SDK_REMOTE_JPEG_LIBRARY)
-
-    # Add platform specific libraries.
-    if(WIN32)
-        list(APPEND ${PACKAGE_NAME}_LIBRARIES ws2_32)
-    elseif(UNIX)
-        list(APPEND ${PACKAGE_NAME}_LIBRARIES pthread)
-    else(UNIX)
-        if(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
-            message( STATUS "Warning! No dependencies with SDK Remote has been "
-                        "pre-configured for your platform into CMake. There "
-                        "may be problem during the link.." )
-        endif(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
-    endif(WIN32)
-
-endif(NOT ${PACKAGE_NAME}_FOUND)
+package_foot(${PACKAGE_NAME}_URBI_LIBRARY
+             ${PACKAGE_NAME}_INCLUDE
+             ${PACKAGE_NAME}_JPEG_LIBRARY)

@@ -22,8 +22,7 @@
 ##-----------------------------------------------------------------
 
 # Dependencies
-find_package(OpenSSL)
-find_package(BoostV2 1.34.1)
+find_package(OpenSSL REQUIRED)
 
 set(PACKAGE_FULLNAME "URBI SDK Engine")
 
@@ -70,85 +69,41 @@ set(PACKAGE_FULLNAME "URBI SDK Engine")
 #
 ##-----------------------------------------------------------------
 
-# Retrieve PACKAGE_NAME and PACKAGE_FILENAME
 include(Package-toolbox)
-set_package_name(${CMAKE_CURRENT_LIST_FILE})
+package_header(${CMAKE_CURRENT_LIST_FILE})
 
-if(NOT ${PACKAGE_NAME}_FOUND)
+# Add dependencies to the SDK engine
+list(APPEND ${PACKAGE_NAME}_LIBRARIES ${OPEN_SSL_LIBRARIES})
+list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${OPEN_SSL_INCLUDE_DIRS})
 
-    # Add dependencies to the SDK engine
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${OPEN_SSL_LIBRARIES})
-    list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${OPEN_SSL_INCLUDE_DIRS})
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${Boost_LIBRARIES})
-    list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
-    if(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
-        message(STATUS "Found boost lib: " ${Boost_LIBRARIES})
-        message(STATUS "Found boost include: " ${Boost_INCLUDE_DIRS})
-    endif(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
+# Search for the include directory.
+package_search(PATH ${PACKAGE_NAME}_INCLUDE uobject.h
+               FULLNAME "SDK Engine INCLUDE"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/include)
 
-    # Load search macro and set additional options
-    include(Search)
-    set(SEARCH_OPTIONS)
+# Search for URBI library
+package_search(LIBRARY ${PACKAGE_NAME}_URBI_LIBRARY urbicore
+               FULLNAME "SDK Engine"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
+                     ${${PACKAGE_NAME}_ROOT_DIR}/lib
+                     ${SDK_ENGINE_INCLUDE}/../lib)
 
-    if(${PACKAGE_FILENAME}_FIND_QUIETLY)
-        list(APPEND SEARCH_OPTIONS QUIET)
-    else(${PACKAGE_FILENAME}_FIND_QUIETLY)
-        message(STATUS "Loading package " ${PACKAGE_FULLNAME} " ("
-                       ${PACKAGE_NAME} ")")
-    endif(${PACKAGE_FILENAME}_FIND_QUIETLY)
+# Search for the thread part of the boost library
+if(UNIX)
+  package_search(LIBRARY ${PACKAGE_NAME}_THREAD_BOOST_LIBRARY boost_thread-gcc41-mt-1_34_1
+        INSTALL "Boost version 1.34.1 (thread part)")
+endif(UNIX)
+if(WIN32)
+  package_search(LIBRARY ${PACKAGE_NAME}_THREAD_BOOST_LIBRARY boost_thread-vc80-mt-1_34_1
+        INSTALL "Boost version 1.34.1 (thread part)")
+endif(WIN32)
 
-    set(${PACKAGE_NAME}_FOUND FALSE)
-    set(${PACKAGE_NAME}_LIBRARY_DIRS ${CMAKE_LIBRARY_PATH})
+# Additionnal libraries for windows platform.
+if(WIN32)
+  # Those libraries are included with Visual/Windows by default
+  list(APPEND ${PACKAGE_NAME}_LIBRARIES ws2_32 gdi32 Iphlpapi)
+endif(WIN32)
 
-    # Some libraries names are not WIN32 standards
-    if(WIN32)
-        list(APPEND CMAKE_STATIC_PREFIX "" "lib")
-    endif(WIN32)
-
-    # Search for URBI library
-    search(LIBRARY SDK_ENGINE_URBI_LIBRARY urbicore
-           FULLNAME "SDK Engine"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-                 ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
-           ${SEARCH_OPTIONS})
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_ENGINE_URBI_LIBRARY})
-
-    # Search for the include directory.
-    search(PATH SDK_ENGINE_INCLUDE uobject.h
-           FULLNAME "SDK Engine INCLUDE"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-                 ${${PACKAGE_NAME}_ROOT_DIR}/include
-           ${SEARCH_OPTIONS})
-    list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${SDK_ENGINE_INCLUDE})
-
-    # Search for the optionnal main.cc added to link libraries
-    search(PATH SDK_ENGINE_UMAIN_DIR umain.cc
-           FULLNAME "SDK Engine UMAIN"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${SDK_ENGINE_ROOT_DIR}/share/umain
-                 ${SDK_ENGINE_INCLUDE}/../share/umain
-           ${SEARCH_OPTIONS})
-    set(SDK_ENGINE_UMAIN_FILE ${SDK_ENGINE_UMAIN_DIR})
-    list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${SDK_ENGINE_UMAIN_DIR})
-
-    # Search for the thread part of the boost library
-    search(LIBRARY SDK_ENGINE_THREAD_BOOST_LIBRARY boost_thread-gcc41-mt-1_34_1
-           PACKAGE "Boost version 1.34.1 (thread part)"
-           PATHS ${${PACKAGE_NAME}_ROOT_DIR})
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_ENGINE_THREAD_BOOST_LIBRARY})
-
-
-    if(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE)
-        set(${PACKAGE_NAME}_FOUND TRUE)
-    else(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE)
-        if(${PACKAGE_FILENAME}_FIND_REQUIRED)
-            message(FATAL_ERROR "Could not find the whole package. Use -D"
-                                ${PACKAGE_NAME}_ROOT_DIR "to specify paths to help"
-                                "CMake find this package.")
-        endif(${PACKAGE_FILENAME}_FIND_REQUIRED)
-    endif(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE)
-
-endif(NOT ${PACKAGE_NAME}_FOUND)
-
+package_foot(${PACKAGE_NAME}_INCLUDE
+             ${PACKAGE_NAME}_URBI_LIBRARY
+             ${PACKAGE_NAME}_THREAD_BOOST_LIBRARY)

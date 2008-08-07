@@ -21,7 +21,7 @@
 #
 ##-----------------------------------------------------------------
 
-set(PACKAGE_FULLNAME "OpenSSL (TLS)")
+set(PACKAGE_FULLNAME "OpenSSL/TLS")
 
 ##-----------------------------------------------------------------
 # This package tries to respect CMake guidelines to be easily
@@ -64,53 +64,27 @@ set(PACKAGE_FULLNAME "OpenSSL (TLS)")
 #
 ##-----------------------------------------------------------------
 
-# Retrieve PACKAGE_NAME and PACKAGE_FILENAME
 include(Package-toolbox)
-set_package_name(${CMAKE_CURRENT_LIST_FILE})
+package_header(${CMAKE_CURRENT_LIST_FILE})
 
-if(NOT ${PACKAGE_NAME}_FOUND)
-
-    # Load search macro and set additional options
-    include(Search)
-    set(SEARCH_OPTIONS)
-
-    if(${PACKAGE_FILENAME}_FIND_QUIETLY)
-        list(APPEND SEARCH_OPTIONS QUIET)
-    else(${PACKAGE_FILENAME}_FIND_QUIETLY)
-        message(STATUS "Loading package " ${PACKAGE_FULLNAME} " ("
-                       ${PACKAGE_NAME} ")")
-    endif(${PACKAGE_FILENAME}_FIND_QUIETLY)
-
-    set(${PACKAGE_NAME}_FOUND FALSE)
-    set(${PACKAGE_NAME}_LIBRARY_DIRS ${CMAKE_LIBRARY_PATH})
-
+if(UNIX)
     # Search for the associated crypto library.
-    search(LIBRARY OPEN_SSL_CRYPTO_LIBRARY crypto
-           FULLNAME "SDK Engine's Cryptography"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-           ${SEARCH_OPTIONS}
-           STATIC)
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${OPEN_SSL_CRYPTO_LIBRARY})
+    package_search(LIBRARY ${PACKAGE_NAME}_CRYPTO_LIBRARY crypto
+                   FULLNAME "SDK Engine's Cryptography"
+                   STATIC)
 
     # Search for the associated dl library.
-    search(LIBRARY OPEN_SSL_DL_LIBRARY dl
-           FULLNAME "SDK Engine's dl"
-           PACKAGE ${PACKAGE_FULLNAME}
-           PATHS ${${PACKAGE_NAME}_ROOT_DIR}
-           ${SEARCH_OPTIONS}
-           SHARED)
-    list(APPEND ${PACKAGE_NAME}_LIBRARIES ${SDK_ENGINE_DL_LIBRARY})
+    package_search(LIBRARY ${PACKAGE_NAME}_DL_LIBRARY dl
+                   FULLNAME "SDK Engine's dl"
+                   SHARED)
+endif(UNIX)
 
-    if(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE )
-        set(${PACKAGE_NAME}_FOUND TRUE)
-    else(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE)
-        if(${PACKAGE_FILENAME}_FIND_REQUIRED)
-            message(FATAL_ERROR "Could not find the whole package. Use -D"
-                                ${PACKAGE_NAME}_ROOT_DIR "to specify paths to help"
-                                "CMake find this package.")
-        endif(${PACKAGE_FILENAME}_FIND_REQUIRED)
-    endif(SDK_ENGINE_URBI_LIBRARY AND SDK_ENGINE_INCLUDE)
+if(WIN32)
+    package_search(LIBRARY ${PACKAGE_NAME}_EAY32_LIBRARY eay32
+                   FULLNAME "OpenSSL for Windows"
+                   INSTALL "URBI SDK Engine"
+                   PATHS ${${PACKAGE_NAME}_ROOT_DIR}/lib)
+endif(WIN32)
 
-endif(NOT ${PACKAGE_NAME}_FOUND)
-
+package_foot(UNIX  ${PACKAGE_NAME}_DL_LIBRARY ${PACKAGE_NAME}_CRYPTO_LIBRARY
+             WIN32 ${PACKAGE_NAME}_EAY32_LIBRARY)
