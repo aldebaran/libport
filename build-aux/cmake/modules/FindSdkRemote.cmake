@@ -22,35 +22,40 @@ set(PACKAGE_FULLNAME "URBI SDK Remote")
 # This module handles the following variables. Please note XXX is
 # the name specified in the PACKAGE_NAME variable (just above).
 #
-# XXX_INCLUDE_DIRS   The final set of include directories listed in
-#                    one variable for use by client code.
+# XXX_INCLUDE_DIRS     The final set of include directories listed in
+#                      one variable for use by client code.
 #
-# XXX_LIBRARY_DIRS   Optionally, the final set of library
-#                    directories listed in one variable for use
-#                    by client code.
+# XXX_LIBRARY_DIRS     Optionally, the final set of library
+#                      directories listed in one variable for use
+#                      by client code.
 #
-# XXX_LIBRARIES      The libraries to link against to use XXX. These
-#                    should include full paths.
+# XXX_LIBRARIES        The libraries to link against to use XXX. These
+#                      should include full paths.
 #
-# XXX_YY_FOUND       FALSE/Unidefined if YY part of XXX package has
-#                    not been found.
+# XXX_SHARED_LIBRARIES The list of all shared libraries found in the
+#                      package. This can be usefull if you're looking
+#                      for .dll or .so to export during the install.
 #
-# XXX_FOUND          FALSE/Undefined if the whole package has not
-#                    been found.
-#                    Set it manually to FALSE don't want to use XXX.
+# XXX_YY_FOUND         FALSE/Unidefined if YY part of XXX package has
+#                      not been found.
 #
-# XXX_ROOT_DIR       Paths you want to add in the path list in order
-#                    to help cmake find your package on your computer.
+# XXX_FOUND            FALSE/Undefined if the whole package has not
+#                      been found.
+#                      Set it manually to FALSE don't want to use XXX.
 #
-# QUIET option       You can ask the package not to complain if there
-#                    is library/path not found. This means no output.
-#                    If you specify both QUIET and REQUIRED option,
-#                    the QUIET option has a lower priority and
-#                    critical messages are displayed.
+# XXX_ROOT_DIR         Paths you want to add in the path list in order
+#                      to help cmake find your package on your computer.
 #
-# REQUIRED option    You can ask the package to throw a FATAL_ERROR
-#                    if the whole package has not been found.
+# QUIET option         You can ask the package not to complain if there
+#                      is library/path not found. This means no output.
+#                      If you specify both QUIET and REQUIRED option,
+#                      the QUIET option has a lower priority and
+#                      critical messages are displayed.
 #
+# REQUIRED option      You can ask the package to throw a FATAL_ERROR
+#                      if the whole package has not been found.
+#
+
 # Here is the XXX_YY list:
 # SDK_REMOTE_URBI_LIBRARY
 # SDK_REMOTE_JPEG_LIBRARY
@@ -66,18 +71,35 @@ package_header(${CMAKE_CURRENT_LIST_FILE})
 # Search for the include directory.
 package_search(PATH ${PACKAGE_NAME}_INCLUDE uobject.h
                FULLNAME "SDK Remote INCLUDE"
-               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/include)
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/include
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Release/include
+                     ${${PACKAGE_NAME}_ROOT_DIR}/include)
 
-# Search for URBI library
-package_search(LIBRARY ${PACKAGE_NAME}_URBI_LIBRARY urbi
-               FULLNAME "SDK Remote"
-               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/lib
-                     ${${PACKAGE_NAME}_INCLUDE}/../lib)
+# Search for URBI debug library
+package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbi
+               FULLNAME "SDK Remote for debug"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/lib)
+
+# Search for URBI release library
+package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi
+               FULLNAME "SDK Remote for release"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Release/lib
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 # Search for the associated jpeg library.
 package_search(LIBRARY ${PACKAGE_NAME}_JPEG_LIBRARY jpeg
                FULLNAME "SDK Remote's JPEG"
-               PATHS ${${PACKAGE_NAME}_URBI_LIBRARY})
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
+                     ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 # Add platform specific libraries.
 if(WIN32)
@@ -92,6 +114,4 @@ else(UNIX)
     endif(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
 endif(WIN32)
 
-package_foot(${PACKAGE_NAME}_URBI_LIBRARY
-             ${PACKAGE_NAME}_INCLUDE
-             ${PACKAGE_NAME}_JPEG_LIBRARY)
+package_foot(${${PACKAGE_NAME}_PARTS_LIST})

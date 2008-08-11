@@ -27,35 +27,40 @@ set(PACKAGE_FULLNAME "URBI SDK Umain.cc directory")
 # This module handles the following variables. Please note XXX is
 # the name specified in the PACKAGE_NAME variable (just above).
 #
-# XXX_INCLUDE_DIRS   The final set of include directories listed in
-#                    one variable for use by client code.
+# XXX_INCLUDE_DIRS     The final set of include directories listed in
+#                      one variable for use by client code.
 #
-# XXX_LIBRARY_DIRS   Optionally, the final set of library
-#                    directories listed in one variable for use
-#                    by client code.
+# XXX_LIBRARY_DIRS     Optionally, the final set of library
+#                      directories listed in one variable for use
+#                      by client code.
 #
-# XXX_LIBRARIES      The libraries to link against to use XXX. These
-#                    should include full paths.
+# XXX_LIBRARIES        The libraries to link against to use XXX. These
+#                      should include full paths.
 #
-# XXX_YY_FOUND       FALSE/Unidefined if YY part of XXX package has
-#                    not been found.
+# XXX_SHARED_LIBRARIES The list of all shared libraries found in the
+#                      package. This can be usefull if you're looking
+#                      for .dll or .so to export during the install.
 #
-# XXX_FOUND          FALSE/Undefined if the whole package has not
-#                    been found.
-#                    Set it manually to FALSE don't want to use XXX.
+# XXX_YY_FOUND         FALSE/Unidefined if YY part of XXX package has
+#                      not been found.
 #
-# XXX_ROOT_DIR       Paths you want to add in the path list in order
-#                    to help cmake find your package on your computer.
+# XXX_FOUND            FALSE/Undefined if the whole package has not
+#                      been found.
+#                      Set it manually to FALSE don't want to use XXX.
 #
-# QUIET option       You can ask the package not to complain if there
-#                    is library/path not found. This means no output.
-#                    If you specify both QUIET and REQUIRED option,
-#                    the QUIET option has a lower priority and
-#                    critical messages are displayed.
+# XXX_ROOT_DIR         Paths you want to add in the path list in order
+#                      to help cmake find your package on your computer.
 #
-# REQUIRED option    You can ask the package to throw a FATAL_ERROR
-#                    if the whole package has not been found.
+# QUIET option         You can ask the package not to complain if there
+#                      is library/path not found. This means no output.
+#                      If you specify both QUIET and REQUIRED option,
+#                      the QUIET option has a lower priority and
+#                      critical messages are displayed.
 #
+# REQUIRED option      You can ask the package to throw a FATAL_ERROR
+#                      if the whole package has not been found.
+#
+
 # Here is the XXX_YY list:
 # UMAIN_CC_DIR
 #
@@ -63,7 +68,7 @@ set(PACKAGE_FULLNAME "URBI SDK Umain.cc directory")
 
 # Retrieve PACKAGE_NAME and PACKAGE_FILENAME
 include(Package-toolbox)
-package_header(${CMAKE_CURRENT_LIST_FILE})    
+package_header(${CMAKE_CURRENT_LIST_FILE})
 
 # Add dependencies to the UMain package
 list(APPEND ${PACKAGE_NAME}_LIBRARIES ${Boost_LIBRARIES})
@@ -78,9 +83,13 @@ endif(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
 # Search for umain.cc file
 package_search(PATH ${PACKAGE_NAME}_CC_DIR umain.cc
                FULLNAME "SDK Umain"
-               PATHS ${SDK_ENGINE_ROOT_DIR}/share/umain
-                     ${SDK_ENGINE_INCLUDE}/../share/umain
+               PATHS ${SDK_ENGINE_ROOT_DIR}/Release/share/umain
+                     ${SDK_ENGINE_ROOT_DIR}/Debug/share/umain
+                     ${SDK_REMOTE_ROOT_DIR}/Release/share/umain
+                     ${SDK_REMOTE_ROOT_DIR}/Debug/share/umain
+                     ${SDK_ENGINE_ROOT_DIR}/share/umain
                      ${SDK_REMOTE_ROOT_DIR}/share/umain
+                     ${SDK_ENGINE_INCLUDE}/../share/umain
                      ${SDK_REMOTE_INCLUDE}/../share/umain)
 
-package_foot(UMAIN_CC_DIR)
+package_foot(${${PACKAGE_NAME}_PARTS_LIST})

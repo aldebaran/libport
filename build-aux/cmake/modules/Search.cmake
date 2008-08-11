@@ -45,13 +45,18 @@ endif(WIN32)
 # module. Note that an alias for this mode is defined in <Package-toolbox.cmake>
 # It will use your package information and update ${PACKAGE_NAME}_INCLUDE_DIRS,
 # ${PACKAGE_NAME}_LIBRARIES and ${PACKAGE_NAME}_LIBRARY_DIRS variables.
+# If you add RELEASE option, the library will be tagged and only added
+# if the user choose to build his project in Release mode.
+# Same logic for DEBUG option. If you want the library to be added
+# in all build configuration, do not use those two options.
 #
-# syntax : search([PACKAGE] LIBRARY|PATH RESULT_VAR file
+# syntax : search(LIBRARY|PATH RESULT_VAR file
 #                 [FULLNAME "Full name of your file"]
 #                 [INSTALL "What to install to get it"]
 #                 [PATHS /some/additional/paths/to/find/the/file]
 #                 [STATIC|SHARED]
-#                 [QUIET])
+#                 [QUIET]
+#                 [ [PACKAGE_MODE] [RELEASE|DEBUG] ])
 #
 # e.g. : search(LIBRARY URBI_LIBRARY urbi
 #               FULLNAME "Urbi remote"
@@ -65,12 +70,23 @@ MACRO(_search_update_package_vars)
 
     if(ELEMENT_PACKAGE_MODE)
         if(ELEMENT_LIBRARY)
+            # Look if the library has to be linked in a
+            # special build configuration only.
+            if(ELEMENT_RELEASE)
+                list(APPEND ${PACKAGE_NAME}_LIBRARIES "optimized")
+            endif(ELEMENT_RELEASE)
+            if(ELEMENT_DEBUG)
+                list(APPEND ${PACKAGE_NAME}_LIBRARIES "debug")
+            endif(ELEMENT_DEBUG)
+
+            # Add the result
             list(APPEND ${PACKAGE_NAME}_LIBRARIES ${${ELEMENT_RESULT}})
             get_filename_component(ELEMENT_TEMP0 ${${ELEMENT_RESULT}} PATH)
             list(APPEND ${PACKAGE_NAME}_LIBRARY_DIRS ${ELEMENT_TEMP0})
         else(ELEMENT_LIBRARY)
             list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${${ELEMENT_RESULT}})
         endif(ELEMENT_LIBRARY)
+        list(APPEND ${PACKAGE_NAME}_PARTS_LIST ${ELEMENT_RESULT})
     endif(ELEMENT_PACKAGE_MODE)
 
 ENDMACRO(_search_update_package_vars)
@@ -82,7 +98,7 @@ MACRO(search)
     # Check parameters and look for the element(library/path)
     parse_arguments(ELEMENT
                     "LIBRARY;PATH;FULLNAME;INSTALL;PATHS"
-                    "STATIC;SHARED;QUIET;PACKAGE_MODE"
+                    "STATIC;SHARED;QUIET;PACKAGE_MODE;RELEASE;DEBUG"
                     ${ARGN})
     if(ELEMENT_LIBRARY AND ELEMENT_PATH)
         message(FATAL_ERROR "Invalid call of search macro. You cannot ask for"

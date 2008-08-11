@@ -17,8 +17,11 @@
 if(NOT MODULE_PACKAGE_TOOLBOX_LOADED)
 SET(MODULE_PACKAGE_TOOLBOX_LOADED TRUE)
 
-include( Search )
+include(Search)
 # Used by package_search macro.
+
+include(Macro-toolbox)
+# Used by package_foot (list_shared_libraries)
 
 #-----------------------------------------------------------------
 #                           Set PACKAGE_NAME
@@ -118,6 +121,7 @@ MACRO(package_header PACKAGE_PATH)
 
     # Look if the package has already been found
     if(DEFINED ${PACKAGE_NAME}_FOUND)
+        package_foot()
         return()
     endif(DEFINED ${PACKAGE_NAME}_FOUND)
 
@@ -132,8 +136,10 @@ MACRO(package_header PACKAGE_PATH)
                        ${PACKAGE_NAME} ")")
     endif(${PACKAGE_FILENAME}_FIND_QUIETLY)
 
-    set(${PACKAGE_NAME}_FOUND FALSE)
+    set(${PACKAGE_NAME}_FOUND)
     set(${PACKAGE_NAME}_LIBRARY_DIRS)
+    set(${PACKAGE_NAME}_SHARED_LIBRARIES)
+    set(${PACKAGE_NAME}_LIBRARIES)
 
 ENDMACRO(package_header)
 
@@ -159,6 +165,9 @@ MACRO(package_foot)
                             ${PACKAGE_NAME}_ROOT_DIR " to specify paths to help"
                             " CMake find this package.")
     endif(NOT ${PACKAGE_NAME}_FOUND AND ${PACKAGE_FILENAME}_FIND_REQUIRED)
+
+    list_shared_libraries(${PACKAGE_NAME}_LIBRARIES
+                          ${PACKAGE_NAME}_SHARED_LIBRARIES)
 
 ENDMACRO(package_foot)
 

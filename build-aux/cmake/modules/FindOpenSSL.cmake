@@ -29,34 +29,38 @@ set(PACKAGE_FULLNAME "OpenSSL/TLS")
 # This module handles the following variables. Please note XXX is
 # the name specified in the PACKAGE_NAME variable (just above).
 #
-# XXX_INCLUDE_DIRS   The final set of include directories listed in
-#                    one variable for use by client code.
+# XXX_INCLUDE_DIRS     The final set of include directories listed in
+#                      one variable for use by client code.
 #
-# XXX_LIBRARY_DIRS   Optionally, the final set of library
-#                    directories listed in one variable for use
-#                    by client code.
+# XXX_LIBRARY_DIRS     Optionally, the final set of library
+#                      directories listed in one variable for use
+#                      by client code.
 #
-# XXX_LIBRARIES      The libraries to link against to use XXX. These
-#                    should include full paths.
+# XXX_LIBRARIES        The libraries to link against to use XXX. These
+#                      should include full paths.
 #
-# XXX_YY_FOUND       FALSE/Unidefined if YY part of XXX package has
-#                    not been found.
+# XXX_SHARED_LIBRARIES The list of all shared libraries found in the
+#                      package. This can be usefull if you're looking
+#                      for .dll or .so to export during the install.
 #
-# XXX_FOUND          FALSE/Undefined if the whole package has not
-#                    been found.
-#                    Set it manually to FALSE don't want to use XXX.
+# XXX_YY_FOUND         FALSE/Unidefined if YY part of XXX package has
+#                      not been found.
 #
-# XXX_ROOT_DIR       Paths you want to add in the path list in order
-#                    to help cmake find your package on your computer.
+# XXX_FOUND            FALSE/Undefined if the whole package has not
+#                      been found.
+#                      Set it manually to FALSE don't want to use XXX.
 #
-# QUIET option       You can ask the package not to complain if there
-#                    is library/path not found. This means no output.
-#                    If you specify both QUIET and REQUIRED option,
-#                    the QUIET option has a lower priority and
-#                    critical messages are displayed.
+# XXX_ROOT_DIR         Paths you want to add in the path list in order
+#                      to help cmake find your package on your computer.
 #
-# REQUIRED option    You can ask the package to throw a FATAL_ERROR
-#                    if the whole package has not been found.
+# QUIET option         You can ask the package not to complain if there
+#                      is library/path not found. This means no output.
+#                      If you specify both QUIET and REQUIRED option,
+#                      the QUIET option has a lower priority and
+#                      critical messages are displayed.
+#
+# REQUIRED option      You can ask the package to throw a FATAL_ERROR
+#                      if the whole package has not been found.
 #
 # Here is the XXX_YY list:
 # OPEN_SSL_CRYPTO_LIBRARY
@@ -79,11 +83,20 @@ if(UNIX)
                    SHARED)
 endif(UNIX)
 
+# In windows, some programs could have already installed the libeay32
+# Because it may not be the same version as ours, we must search in
+# the install dir our lib.
 if(WIN32)
     package_search(LIBRARY ${PACKAGE_NAME}_EAY32_LIBRARY eay32
                    FULLNAME "OpenSSL for Windows"
                    INSTALL "URBI SDK Engine"
-                   PATHS ${${PACKAGE_NAME}_ROOT_DIR}/lib)
+                   PATHS ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
+                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
+                         ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
+                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
+                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
+                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
+                         ${SDK_ENGINE_ROOT_DIR}/lib)
 endif(WIN32)
 
 package_foot(UNIX  ${PACKAGE_NAME}_DL_LIBRARY ${PACKAGE_NAME}_CRYPTO_LIBRARY
