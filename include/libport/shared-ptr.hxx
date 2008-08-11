@@ -219,6 +219,7 @@ namespace libport
   T*
   shared_ptr<T, true>::operator->() const
   {
+    assert(pointee_);
     return pointee_;
   }
 
