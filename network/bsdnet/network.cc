@@ -1,3 +1,7 @@
+
+// Must be first to avoid inclusion of windows.h which will include winsock.h
+#include <network/bsdnet/network.hh>
+
 #include <boost/thread.hpp>
 #include <boost/foreach.hpp>
 #include <libport/compiler.hh>

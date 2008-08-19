@@ -40,7 +40,16 @@ namespace libport
     /// The type pointed to.
     typedef T element_type;
 
+# ifdef _MSC_VER
+    // Using super_type::operator = fails for vcxx2005
+    shared_ptr<T, Intrusive>& operator = (T* src)
+    {
+      super_type::operator = (super_type(src));
+      return *this;
+    }
+# else
     using super_type::operator =;
+# endif
 
     /// \name Constructors & Destructor.
     /// \{

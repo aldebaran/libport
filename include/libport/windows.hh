@@ -62,6 +62,11 @@ sleep(unsigned int seconds)
   return 0;
 }
 
+inline int getpagesize()
+{
+  // FIXME: find the equivalent call.
+  return 4096;
+}
 
 # endif // !WIN32
 
