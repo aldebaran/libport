@@ -56,7 +56,7 @@ namespace libport
   inline T
   Statistics<T>::standard_deviation() const
   {
-    return static_cast<T>(sqrt(variance()));
+    return static_cast<T>(sqrt(static_cast<double>(variance())));
   }
 
   template<typename T>
