@@ -202,6 +202,16 @@ namespace libport
 
   template <typename T>
   template <typename U>
+  inline
+  shared_ptr<U>
+  shared_ptr<T, true>::unchecked_cast() const
+  {
+    assert(dynamic_cast<U*>(pointee_));
+    return static_cast<U*>(pointee_);
+  }
+
+  template <typename T>
+  template <typename U>
   bool
   shared_ptr<T, true>::is_a () const
   {

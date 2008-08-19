@@ -194,6 +194,11 @@ namespace libport
     template <typename U> shared_ptr<U> unsafe_cast () const;
     /// \}
 
+    /** \brief Cast the reference, using a static_cast.
+     **/
+    template <typename U> shared_ptr<U> unchecked_cast () const;
+    /// \}
+
     /** \brief Test fellowship.
      ** Return true if the reference points to an object which is
      ** really of the specified type.
