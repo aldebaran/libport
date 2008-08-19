@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <cctype>
 
+#include <libport/detect-win32.h>
 #include <libport/contract.hh>
 #include <libport/finally.hh>
 #include <libport/path.hh>
@@ -93,7 +94,7 @@ namespace libport
   {
     absolute_ = rhs.absolute_;
     path_ = rhs.path_;
-#if WIN32
+#if defined WIN32
     volume_ = rhs.volume_;
 #endif
     return *this;
