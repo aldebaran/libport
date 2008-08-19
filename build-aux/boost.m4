@@ -98,7 +98,7 @@ AC_LANG_PUSH([C++])dnl
       # mistakenly accept a wrong include path without this check.
       test -e "$boost_inc/boost/version.hpp" || continue
       boost_save_CPPFLAGS=$CPPFLAGS
-      test x"$boost_inc" != x && CPPFLAGS="$CPPFLAGS -I$boost_inc"
+      test x"$boost_inc" != x && test x"$boost_inc" != x/usr/include && CPPFLAGS="$CPPFLAGS -I$boost_inc"
 m4_pattern_allow([^BOOST_VERSION$])dnl
       AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <boost/version.hpp>
 #ifndef BOOST_VERSION
@@ -127,7 +127,7 @@ AC_LANG_POP([C++])dnl
       no)
         AC_MSG_ERROR([Could not find Boost headers[]BOOST_VERSION_REQ])
         ;;#(
-      yes)
+      yes|/usr/include)
         BOOST_CPPFLAGS=
         ;;#(
       *)
