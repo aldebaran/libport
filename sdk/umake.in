@@ -1,5 +1,5 @@
 @UMAKE_COMMON@
-
+EXEEXT=@EXEEXT@
 usage ()
 {
     cat <<EOF
@@ -236,10 +236,8 @@ case $target:$core in
     :*) target=urbiengine-$host-$core$EXEEXT;;
     # FIXME: Shamelessly discarding any part of the name if it has
     # a dot in it (e.g., urbi.my-uobject).
-    *:) target=$(echo $target | sed -e 's/\.[^.]*//')
-	target="$target.a";;
-    *:*)target=$(echo $target | sed -e 's/\.[^.]*//')
-	target="$target$EXEEXT";;
+    *:) target="${target%.a}.a";;
+    *:*) target="${target%$EXEEXT}$EXEEXT";;
 esac
 
 # Remove ourselves from library list in lib generation mode, add OUTBIN
