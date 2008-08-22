@@ -69,7 +69,7 @@ namespace std
 | VC++ part.  |
 `------------*/
 
-#  if (_MSC_VER == 1400)
+#  if (_MSC_VER >= 1400)
 #   define LIBPORT_HASH_NAMESPACE stdext
 #   pragma warning( disable : 4355 4996)
 #  else
