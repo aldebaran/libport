@@ -7,6 +7,8 @@
 
 #if defined LIBPORT_WIN32 || defined WIN32
 # include <libport/windows.hh>
+# include <libport/lockable.hh>
+# include <iostream>
 #else
 # if not defined LIBPORT_URBI_ENV_AIBO
 #  include <sys/select.h>
@@ -21,12 +23,28 @@
 
 namespace libport
 {
+  #if defined LIBPORT_WIN32 || defined WIN32
+  typedef std::pair<std::string, Lockable> data_type;
+  static DWORD WINAPI
+  readThread(void* d)
+  {
+    data_type&data = *reinterpret_cast<data_type*>(d);
+    while (true)
+    {
+      static char buf[512];
+      DWORD count = 0;
+      ReadFile(GetStdHandle(STD_INPUT_HANDLE), buf, 512, &count, 0);
+      BlockLock bl(data.second);
+      data.first.append(buf, count);
+    }
+  }
+  #endif
   std::string
   read_stdin()
   {
-#if not defined LIBPORT_URBI_ENV_AIBO
+#if ! defined LIBPORT_URBI_ENV_AIBO
     char buf[1024];
-# if not defined LIBPORT_WIN32 &&  not defined WIN32
+# if ! defined LIBPORT_WIN32 &&  ! defined WIN32
     //select
     fd_set fd;
     FD_ZERO(&fd);
@@ -47,18 +65,19 @@ namespace libport
 	return std::string(buf, r);
     }
 # else
-    HANDLE hstdin = GetStdHandle(STD_INPUT_HANDLE);
-    DWORD r = WaitForSingleObject(hstdin, 0);
-    if (r != WAIT_TIMEOUT)
+    static bool started = false;
+    static data_type data;
+    if (!started)
     {
-      DWORD bytesRead;
-      if (ReadFile(hstdin, buf, sizeof buf, &bytesRead, 0))
-	return std::string(buf, bytesRead);
-      else
-	throw exception::Exception(__PRETTY_FUNCTION__,
-	    std::string("read error on stdin: ")
-	      + boost::lexical_cast<std::string>(GetLastError()));
+      started = true;
+      unsigned long id;
+      CreateThread(NULL, 0, &readThread, &data, 0, &id);
+      return std::string();
     }
+    BlockLock bl(data.second);
+    std::string res = data.first;
+    data.first.clear();
+    return res;
 # endif
 #endif
     return std::string();
