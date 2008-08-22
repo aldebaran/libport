@@ -1,6 +1,7 @@
+#include <libport/program-name.hh>
 namespace libport
 {
 
-  const char* program_name = "";
+  LIBPORT_API const char* program_name = "";
 
 }

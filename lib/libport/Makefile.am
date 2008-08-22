@@ -10,7 +10,7 @@ include libport-sources.mk
 # Can be useful for some.  Others will use libport_sources directly.
 noinst_LTLIBRARIES = libport.la
 dist_libport_la_SOURCES = $(libport_sources)
-AM_CPPFLAGS += $(LIBPORT_CPPFLAGS) $(BOOST_CPPFLAGS)
+AM_CPPFLAGS += $(LIBPORT_CPPFLAGS) -DBUILDING_LIBPORT $(BOOST_CPPFLAGS)
 
 
 # Make sure noone uses config.h instead of libport/config.h.

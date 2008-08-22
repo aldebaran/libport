@@ -9,10 +9,11 @@
 # include <iosfwd>
 # include <string>
 
+# include <libport/export.hh>
 namespace libport
 {
 
-  class Escape
+  class LIBPORT_API Escape
   {
   public:
     std::ostream& print (std::ostream& ostr) const;

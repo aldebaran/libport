@@ -8,9 +8,11 @@
 
 #include <string>
 
+#include <libport/export.hh>
+
 namespace libport
 {
-  bool is_dir (const std::string& f);
+  bool LIBPORT_API is_dir (const std::string& f);
 }
 
 #endif // !LIBPORT_FILE_SYSTEM_HH

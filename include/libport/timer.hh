@@ -11,11 +11,13 @@
 # include <string>
 # include <iosfwd>
 
+# include <libport/export.hh>
+
 namespace libport
 {
 
   /// Timing nested tasks.
-  class timer
+  class LIBPORT_API timer
   {
   public:
     timer ();

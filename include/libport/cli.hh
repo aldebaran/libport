@@ -2,7 +2,7 @@
 # define LIBPORT_CLI_HH
 
 # include <string>
-
+# include <libport/export.hh>
 # include <libport/compiler.hh>
 
 // Hopefully some day we will use Boost.ProgramOptions and get rid of
@@ -10,19 +10,19 @@
 
 namespace libport
 {
-  ATTRIBUTE_NORETURN
+  LIBPORT_API ATTRIBUTE_NORETURN
   void usage_error(const std::string& opt, const std::string& err);
 
-  ATTRIBUTE_NORETURN
+  LIBPORT_API ATTRIBUTE_NORETURN
   void required_argument(const std::string& opt);
 
-  ATTRIBUTE_NORETURN
+  LIBPORT_API ATTRIBUTE_NORETURN
   void missing_argument(const std::string& opt);
 
-  ATTRIBUTE_NORETURN
+  LIBPORT_API ATTRIBUTE_NORETURN
   void invalid_option(const std::string& opt);
 
-  ATTRIBUTE_NORETURN
+  LIBPORT_API ATTRIBUTE_NORETURN
   void invalid_option_val(const std::string& opt, const std::string& arg);
 
   /// Can be used on with T = const char* to simply require that \a arg

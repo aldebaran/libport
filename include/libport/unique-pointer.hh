@@ -2,11 +2,12 @@
 # define LIBPORT_UNIQUE_POINTER_HH
 
 # include <set>
+# include <libport/export.hh>
 
 namespace libport
 {
   /// Check whether a pointer was defined once only.
-  class UniquePointer
+  class LIBPORT_API UniquePointer
   {
   public:
     UniquePointer();

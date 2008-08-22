@@ -13,13 +13,14 @@
 # define LIBPORT_EXCEPTION_HH
 
 # include <stdexcept>
+# include <libport/export.hh>
 
 namespace libport
 {
   namespace exception
   {
     /// Interface for all exceptions thrown by the libfsm.
-    struct Exception: public std::logic_error
+    struct LIBPORT_API Exception: public std::logic_error
     {
       /** Ctor.
        *  @param  thrower  Name of function/method throwing the exception.
@@ -31,7 +32,7 @@ namespace libport
     };
 
     /// Exception.
-    struct  Semaphore : public Exception
+    struct LIBPORT_API Semaphore : public Exception
     {
       Semaphore (const std::string& thrower, const std::string& msg);
     };

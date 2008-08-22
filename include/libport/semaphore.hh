@@ -29,7 +29,7 @@ namespace libport
 
 namespace libport
 {
-  class Semaphore
+  class LIBPORT_API Semaphore
   {
   public:
     Semaphore (int cnt = 0);

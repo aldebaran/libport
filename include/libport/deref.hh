@@ -8,7 +8,7 @@
 
 # include <iosfwd>
 # include <memory>
-
+# include <libport/export.hh>
 # ifndef LIBPORT_NO_BOOST
 #  include <libport/shared-ptr.hh>
 # endif
@@ -17,7 +17,7 @@ namespace libport
 {
   enum deref_e { deref };
 
-  class Deref
+  class LIBPORT_API Deref
   {
   protected:
     Deref (std::ostream&);

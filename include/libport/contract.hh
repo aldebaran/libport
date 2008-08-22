@@ -6,12 +6,13 @@
 #ifndef LIBPORT_CONTRACT_HH
 # define LIBPORT_CONTRACT_HH
 
-#include <libport/compiler.hh>
+# include <libport/export.hh>
+# include <libport/compiler.hh>
 
 
 
-
- ATTRIBUTE_NORETURN void  __Terminate (const char*, int, const char*);
+LIBPORT_API ATTRIBUTE_NORETURN
+void  __Terminate (const char*, int, const char*);
 
 # define die(reason)		  __Terminate (__FILE__, __LINE__, reason)
 # define unreached()		  die ("unreachable code reached")
@@ -25,7 +26,7 @@
 
 # else // NDEBUG
 
-ATTRIBUTE_NORETURN
+LIBPORT_API ATTRIBUTE_NORETURN
 void __FailedCondition (const char* condType,
 		       const char* condText,
 		       const char* fileName,

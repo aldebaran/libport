@@ -6,6 +6,7 @@
 
 # include <iosfwd>
 
+# include <libport/export.hh>
 # include <libport/compiler.hh>
 
 // FIXME: Should be moved in libport and lowercased?
@@ -38,7 +39,7 @@ enum sysexit
 
 namespace libport
 {
-  class exit
+  class LIBPORT_API exit
   {
   public:
     explicit exit(unsigned s);
@@ -47,7 +48,7 @@ namespace libport
     unsigned status_;
   };
 
-  ATTRIBUTE_NORETURN
+  LIBPORT_API ATTRIBUTE_NORETURN
   std::ostream& operator<<(std::ostream& o, const exit& e);
 
 }

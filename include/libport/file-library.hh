@@ -8,6 +8,7 @@
 
 # include <string>
 # include <list>
+# include <libport/export.hh>
 # include <libport/path.hh>
 # include <exception>
 
@@ -17,7 +18,7 @@ namespace libport
 
       Store search path and all informations used for handling
       paths when processing import directives. */
-  class file_library
+  class LIBPORT_API file_library
   {
   public:
 

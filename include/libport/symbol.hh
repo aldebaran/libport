@@ -14,6 +14,8 @@
 # include <boost/serialization/tracking.hpp>
 # include <boost/functional/hash.hpp>
 
+# include <libport/export.hh>
+
 namespace libport
 {
 
@@ -23,7 +25,7 @@ namespace libport
    ** This allows to avoid an "strcmp ()" style comparison of strings:
    ** reference comparison is much faster.
    */
-  class Symbol
+  class LIBPORT_API Symbol
   {
     /// The type "set of strings".
     typedef std::set<std::string> string_set_type;

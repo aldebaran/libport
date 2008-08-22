@@ -8,16 +8,17 @@
 
 # include <string>
 # include <list>
-
+# include <libport/export.hh>
+# include <libport/detect-win32.h>
 namespace libport
 {
   /** \brief Helper for handling paths
    **/
-  class path
+  class LIBPORT_API path
   {
   public:
     /// Exception thrown on invalid path
-    class invalid_path
+    class LIBPORT_API invalid_path
     {
     public:
       invalid_path(const std::string& msg)

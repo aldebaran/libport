@@ -4,11 +4,12 @@
 # include <iostream>
 # include <string>
 
+# include <libport/export.hh>
 # include <libport/hash.hh>
 
 namespace libport
 {
-  class PackageInfo
+  class LIBPORT_API PackageInfo
   {
   public:
     /// The keys.
