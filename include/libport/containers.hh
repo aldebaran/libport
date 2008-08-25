@@ -6,7 +6,10 @@
 #ifndef LIBPORT_CONTAINERS_HH
 # define LIBPORT_CONTAINERS_HH
 
+# include <deque>
 # include <iosfwd>
+# include <list>
+# include <vector>
 
 namespace libport
 {
@@ -66,7 +69,25 @@ namespace libport
   template<typename Container, typename Functor>
   void
   erase_if(Container& c, const Functor& f);
-}
+} // namespace libport
+
+namespace std
+{
+#define APPLY_ON_BACK_INSERTION_CONTAINERS(Macro)       \
+  Macro(deque);                                         \
+  Macro(list);                                          \
+  Macro(vector);                                        \
+
+  // Insert with '<<'
+#define INSERT(Container)                                       \
+  template<typename Value, typename Arg>                        \
+  Container<Value>&                                             \
+  operator << (Container<Value>& container, const Arg& v)       \
+
+  APPLY_ON_BACK_INSERTION_CONTAINERS(INSERT)
+
+#undef INSERT
+} // namespace std
 
 # include <libport/containers.hxx>
 

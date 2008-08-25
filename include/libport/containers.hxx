@@ -129,7 +129,22 @@ namespace libport
     typename Container::iterator end_c = end(c);
     c.erase(std::remove_if(begin(c), end_c, f), end_c);
   }
-
 } // namespace libport
+
+namespace std
+{
+#define INSERT(Container)                                       \
+  template<typename Value, typename Arg>                        \
+  Container<Value>&                                             \
+  operator << (Container<Value>& container, const Arg& v)       \
+  {                                                             \
+    container.push_back(v);                                     \
+    return container;                                           \
+  }                                                             \
+
+  APPLY_ON_BACK_INSERTION_CONTAINERS(INSERT)
+
+#undef INSERT
+} // namespace std
 
 #endif // !LIBPORT_CONTAINERS_HXX
