@@ -23,6 +23,12 @@ namespace libport
   }
 
   inline
+  Finally::Finally(unsigned int n)
+  {
+    actions_.reserve(n);
+  }
+
+  inline
   Finally::~Finally()
   {
     foreach (const Action& a, actions_)

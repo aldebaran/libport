@@ -23,6 +23,9 @@ namespace libport
     /// Build a Finally object, and register \a a to be executed add
     /// destruction.
     Finally(const Action& a);
+    /// Build a Finally object which can store up to \a n objects
+    /// without reallocation.
+    Finally(unsigned int n);
     /// Execute all registered actions and destroy the Finally object.
     ~Finally();
 
