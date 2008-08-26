@@ -98,7 +98,9 @@ s/[ \t]+\$//;
 
   # Fuse the switches of the parser.
   case $file in
-    *.cc) $fuse_switch $file;;
+    *.cc) $fuse_switch $file
+          # diff -uw $file.bak $file || true
+          ;;
   esac
 }
 

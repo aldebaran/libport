@@ -82,8 +82,6 @@ sub fuse($$)
           if (/^\s*switch\b/)
             {
               $in_switch = 1;
-              $previous_case = '';
-              $pre_case = '';
             }
         }
       else
@@ -123,7 +121,9 @@ sub fuse($$)
           elsif (m/}/)
             {
               # The closing brace of the switch.
-              $_ = $previous_case . $_;
+              $_ = $previous_case . $pre_case . $_;
+              $pre_case = '';
+              $previous_case = '';
               $in_switch = 0;
             }
           else
@@ -139,7 +139,8 @@ sub fuse($$)
         }
       print $out $_;
     }
-  die if $pre_case;
+  die "could not insert $pre_case"
+    if $pre_case;
 }
 
 use File::Copy;
