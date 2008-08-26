@@ -163,6 +163,10 @@ namespace libport
 
 } // namespace libport
 
+# ifdef LOCKED
+#  undef LOCKED
+# endif
+
 # define LOCKED(lock, cmd)			\
   do {						\
     lock.lock();				\
