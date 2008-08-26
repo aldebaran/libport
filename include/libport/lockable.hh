@@ -126,11 +126,11 @@ namespace libport
   class Lockable
   {
   public:
-    Lockable()     { initLock(_lock);		}
-    ~Lockable()    { deleteLock(_lock);		}
-    void lock()    { lockLock(_lock);		}
-    void unlock()  { lockUnlock(_lock);		}
-    bool tryLock() { return lockTryLock(_lock);	}
+    Lockable()     { libport::initLock(_lock); }
+    ~Lockable()    { libport::deleteLock(_lock); }
+    void lock()    { libport::lockLock(_lock); }
+    void unlock()  { libport::lockUnlock(_lock); }
+    bool tryLock() { return libport::lockTryLock(_lock); }
   private:
     Lock _lock;
   };
