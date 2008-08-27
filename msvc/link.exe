@@ -1,0 +1,98 @@
+#! /bin/bash
+
+#wrapper to use Microsoft compiler and linker under wine with autotools.
+
+set -e
+
+PROG=$(basename "$0")
+VCXX_BIN=$(winepath -u $VCINSTALLDIR)/bin/
+if ! test -x $VCXX_BIN/cl.exe; then
+  echo cl.exe not found in $VCXX_BIN 1>&2; exit 1
+fi
+
+outargs=
+#echo PROG is $PROG >&2
+if test "$PROG" = "cl.exe"; then
+  outargs=" /nologo /EHsc "
+fi
+linkargs=
+compile_mode=false
+got_output_arg=false
+source=
+#output file name
+output=
+transform()
+{
+  if echo $1 | egrep -q '^/'; then
+    winepath -w $1
+  else
+    echo $1
+  fi
+}
+
+while ! test -z $1; do
+  larg=
+  carg=
+  case $1 in
+  -link) ;;
+  -dll) larg="/DLL" ;;
+  -L*)  larg=/LIBPATH:$(transform ${1#-L}) ;;
+  -l*)  larg=$(transform ${1#-l}.lib) ;;
+  *.lib) larg=$(transform $1) ;;
+  *.a)  larg=$(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
+  -c)  compile_mode=true; carg=/c ;;
+  -o)  shift
+       got_output_arg=true
+       output="$1"
+       if $compile_mode || echo $1 | egrep -q '(.o|.obj)$'; then
+         carg=/Fo$(transform $1)
+       else
+         if test "$PROG" = link.exe ; then
+           carg="/OUT:$(transform $1)"
+	 else
+	   carg=/Fe$(transform $1)
+	 fi
+	 larg="/SUBSYSTEM:console  /MANIFEST kernel32.lib"
+       fi
+       # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
+      ;;
+  -g|-ggdb) ;; # carg="/Zi";;
+  -O2|-O3) carg=/O2;;
+  -f*)  ;;
+  *.S)  carg="/TP $1";;
+  *.c|*.cc) carg=$(transform $1); source=$1  ;;
+  *)  carg=$1;;
+  esac
+  outargs="$outargs $carg"
+  linkargs="$linkargs $larg"
+  shift
+done
+# handle -c without -o
+if $compile_mode && ! $got_output_arg; then
+  obj=$(echo $source |sed -re 's/\.[^.]+$/.obj/')
+  obj=$(basename "$obj")
+  outargs="$outargs /Fo$(transform $obj)"
+fi
+
+if test "$PROG" = cl.exe && ! test -z "$linkargs"; then
+  outargs="$outargs /link $linkargs"
+  linkargs=
+fi
+if test x$WRAP_VERBOSE != x; then
+  echo "  command:" $PROG "$outargs $linkargs" >/dev/stderr
+fi
+
+
+$VCXX_BIN/$PROG $outargs $linkargs
+
+#embed manifest
+#if echo $output | egrep -q '(exe|dll)$'; then
+  #$REAL_BASE/mt.exe -manifest "$output.manifest" -outputresource:"$output"
+  #rm "$output.manifest"
+#fi
+
+#rename .lib with a versioned name.
+if echo $output | egrep -q -- '-[0-9.]+.dll'; then
+  mv -f $(echo $output | sed -re 's/dll/lib/') $(echo $output | sed -re 's/-[0-9.]+\.dll/.lib/')
+fi
+

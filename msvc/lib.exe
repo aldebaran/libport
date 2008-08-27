@@ -1,0 +1,56 @@
+#! /bin/bash
+
+
+
+PROG=lib.exe
+
+VCXX_BIN=$(winepath -u $VCINSTALLDIR)/bin/
+if ! test -x $VCXX_BIN/cl.exe; then
+  echo cl.exe not found in $VCXX_BIN 1>&2; exit 1
+fi
+
+outargs=
+linkargs=
+got_output_arg=false
+source=
+transform()
+{
+  # winepath -w $1
+  echo $1
+}
+
+case $1 in
+  cru) shift
+    outargs="/OUT:$(transform $1)" ; shift ;;
+  x)  #gnah, we have to remove them one by one
+   lib=$(winepath -w $2)
+   for f in $($VCXX_BIN/lib.exe /LIST $lib |tail -n +4 |sed -e 's/\r//g'); do
+     mkdir -p $(dirname $f)
+     $VCXX_BIN/lib.exe  "/EXTRACT:$f"   "/OUT:$f" $lib
+   done
+   exit ;;
+ t) shift
+    lib=$(winepath -w $1)
+    $VCXX_BIN/lib.exe /LIST $lib |tail -n +4 |sed -e 's/\r//g'
+    exit;;
+ *) ;;
+esac
+while ! test -z $1; do
+  larg=
+  carg=
+  case $1 in
+  -L*)  larg=/LIBPATH:$(transform ${1#-L}) ;;
+  -l*)  larg=${1#-l}.lib ;;
+  *.lib) larg=$1 ;;
+  *)  carg=$1 # $(echo $1 | sed -e 's@/@\\@g');;
+  esac
+  outargs="$outargs $carg"
+  linkargs="$linkargs $larg"
+  shift
+done
+
+if test x$WRAP_VERBOSE != x; then
+  echo command: $PROG "$outargs $linkargs" >/dev/stderr
+fi
+
+$VCXX_BIN/$PROG $outargs $linkargs
