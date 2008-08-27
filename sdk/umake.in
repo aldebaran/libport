@@ -94,6 +94,11 @@ njobs=1
 
 automain=true
 
+
+# Produce objects in the current directory, not in the source tree.
+objects=
+vpath=.
+
 ## ---------------------- ##
 ## Command line parsing.  ##
 ## ---------------------- ##
@@ -182,7 +187,13 @@ get_options ()
 
     # If this is a directory, append a slash.
     case $1$(test -d "$1" && echo '/') in
-      (*=*)                   makeargs="$makeargs '$1'" ;;
+      (*=*)
+	argname=$(echo $1 | cut -d '=' -f 1)
+	argval=$(echo $1 | cut -d '=' -f 2-)
+	case $argname in
+	  (VPATH) vpath=$vpath:$argval ;;
+	  (*) makeargs="$makeargs '$1'" ;;
+	esac   ;;
       (*.h |*.hh|*.hxx|*.hpp) headers="$headers '$1'";   havearg=true ;;
       (*.cc|*.cpp|*.c|*.C)    sources="$sources '$1'";   havearg=true ;;
       (*.a|*.o)               libs="$libs '$1'";         havearg=true ;;
@@ -221,9 +232,6 @@ if $automain; then
     sources="$sources $prefix/share/umain/umain.cc"
 fi
 
-# Produce objects in the current directory, not in the source tree.
-objects=
-vpath=.
 for s in $(eval echo "$sources")
 do
   objects="$objects '"$(basename "$s" | sed 's/\.[^.]*$/.o/g')"'"
