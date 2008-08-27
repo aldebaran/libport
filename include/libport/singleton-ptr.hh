@@ -14,6 +14,14 @@
   {};									\
   STATIC_INSTANCE_(Cl, Name)
 
+
+# define EXTERN_STATIC_INSTANCE_EX(Cl, Name, api)			\
+  class api Cl ## Name							\
+    : public Cl								\
+  {};									\
+  api extern libport::SingletonPtr<Cl ## Name> Name;
+
+
 # define EXTERN_STATIC_INSTANCE(Cl, Name)				\
   class Cl ## Name							\
     : public Cl								\
@@ -33,6 +41,15 @@
   }									\
   template<> NS::Cl ## Name*						\
   libport::SingletonPtr<NS::Cl ## Name>::ptr = 0
+
+# define STATIC_INSTANCE_NS_EX(Cl, Name, NS, api)			\
+  namespace NS {							\
+    class api Cl ## Name;					        \
+    api libport::SingletonPtr<Cl ## Name> Name;				\
+  }									\
+  template<> NS::Cl ## Name*						\
+  libport::SingletonPtr<NS::Cl ## Name>::ptr = 0
+
 
 # define STATIC_INSTANCE_DECL_NS(Cl, Name, NS)				\
   namespace NS {							\
