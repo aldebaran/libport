@@ -22,6 +22,11 @@ check_qtversion(${DESIRED_QT_VERSION})
 # sdk-remote
 find_package(SdkRemote REQUIRED)
 
+# Boost
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREAD OFF)
+find_package(Boost 1.34.1)
+
 # QScintilla2
 if(WITH_QURBI_EDITOR)
   find_package(QScintilla2 REQUIRED)
