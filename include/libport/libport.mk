@@ -31,6 +31,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/escape.hxx		\
 	$(include_libport)/exception.hh		\
 	$(include_libport)/exception.hxx	\
+	$(include_libport)/fifo.hh		\
+	$(include_libport)/fifo.hxx		\
 	$(include_libport)/file-library.hh	\
 	$(include_libport)/file-library.hxx	\
 	$(include_libport)/file-system.hh	\
