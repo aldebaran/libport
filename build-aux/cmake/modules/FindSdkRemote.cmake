@@ -86,7 +86,7 @@ package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbi liburbi
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 # Search for URBI release library
-package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi
+package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi liburbi
                FULLNAME "SDK Remote for release"
                PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/remote
@@ -96,7 +96,7 @@ package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 # Search for the associated jpeg library.
-package_search(LIBRARY ${PACKAGE_NAME}_JPEG_LIBRARY jpeg
+package_search(LIBRARY ${PACKAGE_NAME}_JPEG_LIBRARY jpeg libjpeg
                FULLNAME "SDK Remote's JPEG"
                PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
