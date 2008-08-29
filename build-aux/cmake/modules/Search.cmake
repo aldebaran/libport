@@ -19,10 +19,6 @@ set(MODULE_SEARCH_LOADED TRUE)
 # prefix/suffix on library name. Allow also the search of shared lib (.dll)
 if(WIN32)
 
-    list(APPEND CMAKE_STATIC_PREFIX "lib")
-    list(APPEND CMAKE_SHARED_PREFIX "lib")
-    list(APPEND CMAKE_FIND_LIBRARY_PREFIXES "lib")
-
     # Avoid the automatic add of a big set of not needed libraries by CMake
     # under visual projects.
     set(CMAKE_CXX_STANDARD_LIBRARIES)

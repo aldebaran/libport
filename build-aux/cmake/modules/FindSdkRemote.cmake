@@ -76,7 +76,7 @@ package_search(PATH ${PACKAGE_NAME}_INCLUDE uobject.h
                      ${${PACKAGE_NAME}_ROOT_DIR}/include)
 
 # Search for URBI debug library
-package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbi
+package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbi liburbi
                FULLNAME "SDK Remote for debug"
                PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/remote
