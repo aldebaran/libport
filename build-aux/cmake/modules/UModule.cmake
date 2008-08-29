@@ -296,12 +296,12 @@ MACRO(add_remote)
                     "NO_DEFAULT_MAIN;INSTALL" ${ARGN})
     set(UOBJECT_REMOTE_NAME ${UOBJECT_REMOTE_DEFAULT_ARGS})
 
-    if(NOT UOBJECT_REMOTE_SOURCES OR NOT NO_DEFAULT_MAIN)
+    if(NOT NO_DEFAULT_MAIN)
         find_package(Umain REQUIRED)
         include_directories(${UMAIN_INCLUDE_DIRS})
         list(APPEND UOBJECT_REMOTE_SOURCES ${UMAIN_CC_DIR}/umain.cc)
         list(APPEND ${UMODULE_DIR}_REMOTE_SHARED_LIBRARIES ${UMAIN_SHARED_LIBRARIES})
-    endif(NOT UOBJECT_REMOTE_SOURCES OR NOT NO_DEFAULT_MAIN)
+    endif(NOT NO_DEFAULT_MAIN)
 
     # This policy command will be unnecessary after CMake 2.6
     cmake_policy(SET CMP0003 NEW)
@@ -358,7 +358,7 @@ MACRO(add_engine)
     add_executable(${UOBJECT_ENGINE_NAME} ${UOBJECT_ENGINE_SOURCES})
     add_manifest(${UOBJECT_ENGINE_NAME})
     set_target_properties(${UOBJECT_REMOTE_NAME}
-                          PROPERTIES COMPILE_DEFINITIONS URBI_ENV_REMOTE)
+                          PROPERTIES COMPILE_DEFINITIONS URBI_ENV_ENGINE)
 
     # Link with needed umodules
     foreach(UOBJECT_ENGINE_UMODULE ${UOBJECT_ENGINE_UMODULES})
