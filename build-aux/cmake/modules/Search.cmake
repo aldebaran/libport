@@ -82,7 +82,6 @@ MACRO(_search_update_package_vars)
         else(ELEMENT_LIBRARY)
             list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${${ELEMENT_RESULT}})
         endif(ELEMENT_LIBRARY)
-        list(APPEND ${PACKAGE_NAME}_PARTS_LIST ${ELEMENT_RESULT})
     endif(ELEMENT_PACKAGE_MODE)
 
 ENDMACRO(_search_update_package_vars)
@@ -160,7 +159,7 @@ MACRO(search)
 
             # Update guidelines variables for package
             _search_update_package_vars()
-        else(EXISTS $${{ELEMENT_RESULT}})
+        else(EXISTS ${${ELEMENT_RESULT}})
             # Replace undefined parameters by generic ones
             # or by package info if PACKAGE option is defined
             if(NOT ELEMENT_FULLNAME)
@@ -192,6 +191,10 @@ MACRO(search)
         # Just add previously found elements
         _search_update_package_vars()
     endif(NOT EXISTS ${${ELEMENT_RESULT}})
+
+    if(ELEMENT_PACKAGE_MODE)
+        list(APPEND ${PACKAGE_NAME}_PARTS_LIST ${ELEMENT_RESULT})
+    endif(ELEMENT_PACKAGE_MODE)
 
 ENDMACRO(search)
 
