@@ -49,6 +49,7 @@ namespace libport
   Fifo<T, Terminator, Alloc>::clear()
   {
     first_item_ = next_item_ = buffer_;
+    *first_item_ = Terminator;
   }
 
   template<typename T, T Terminator, typename Alloc>
