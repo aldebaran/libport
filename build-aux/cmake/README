@@ -60,7 +60,7 @@ the whole command line it generates to build each target. Pass this option:
 
   -DCMAKE_VERBOSE_MAKEFILE=ON
 
-** Exta CXX flags
+** Extra CXX flags
 
 Extra CXX flags are specified this way:
 
@@ -78,6 +78,80 @@ Option to tweak the build of a given project are set using the
 -DMYOPT=VAL arguments. Example
 
   -DENABLE_LOCKSYSTEM=OFF
+
+* Platform/compiler specific setup
+
+On some platform additionnal setup are required in order to call cmake in a
+proper environment.
+
+** cygwin/cl
+
+In order to compile using Visual Studio compiler (cl.exe) from the cygwin
+environment you have to make sure:
+
+1) You use the following patch version of cygwin make:
+
+http://www.cmake.org/files/cygwin/make.exe
+
+2) Make sure you have the following environment variable set at the time you
+call cmake or make:
+
+export INCLUDE="C:\vcxx8\VC\PlatformSDK\INCLUDE;C:\vcxx8\VC\INCLUDE;"
+
+export LIB="C:\vcxx8\VC\PlatformSDK\LIB;C:\vcxx8\VC\LIB;"
+
+export LIBPATH="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\vcxx8\VC\PlatformSDK\LIB;C:\vcxx\VC\LIB;"
+
+export PATH=/cygdrive/c/vcxx8/Common7/IDE:/cygdrive/c/vcxx8/VC/BIN:/cygdrive/c/vcxx8/Common7/Tools:/cygdrive/c/WINDOWS/Microsoft.NET/Framework/v2.0.50727:/cygdrive/c/vcxx8/VC/VCPackages:${PATH}
+
+NOTE: vcxx8 is the installation directory of Visual Studio 2005.
+
+3) You use the 'Unix Makefile Generator':
+
+i.e: -G 'Unix Makefiles'
+
+4) You have CC and CXX set properly when you call cmake:
+
+export CC=cl
+export CXX=cl
+
+5) There is no conflicting /usr/bin/link.exe
+
+6) You give windows style path to cmake. You are encourage to use cygpath to
+   make the conversion.
+
+7) You use the windows version of cmake.
+
+Here the conf.sh file, I use for urbiLab:
+
+myhome=$(cygpath -w "$HOME/despres")
+liburbi=$(cygpath -w "$myhome/install/sdk-remote-1.5")
+qt=$(cygpath -w "/cygdrive/c/Qt/4.4.1-com")
+qt_ext=$(cygpath -w "$myhome/install/qt-ext/cygwin-cl")
+prefix=$(cygpath -w "$myhome/install/urbi-lab/cygwin-cl")
+include_path=$(cygpath -w "$liburbi/include;$qt_ext/include")
+library_path=$(cygpath -w "$liburbi/lib;$qt_ext/lib")
+program_path=$(cygpath -w "$qt/bin")
+cmake="$HOME/share/cmake-2.6.1/win32_x86/bin/cmake.exe"
+export CC=cl
+export CXX=cl
+"$cmake" .. \
+    -G 'Unix Makefiles' \
+    -DBUILDFARM=ON \
+    -DCMAKE_VERBOSE_MAKEFILE=ON \
+    -DCMAKE_INSTALL_PREFIX="$prefix" \
+    -DCMAKE_INCLUDE_PATH="$include_path" \
+    -DCMAKE_LIBRARY_PATH="$library_path" \
+    -DCMAKE_PROGRAM_PATH="$program_path" \
+    -DCMAKE_PREFIX_PATH="$qt_ext" \
+    -DBUILD_TYPE=Relase \
+    -DENABLE_LOCKSYSTEM=OFF \
+    "$@"
+
+
+NOTE: This setup has been tested with:
+ - Visual Studio 2005 Express Editon
+ - Microsoft .NET Framework 2.0 Service Pack 1
 
 * Directories
 
