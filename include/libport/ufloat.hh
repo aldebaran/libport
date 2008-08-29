@@ -24,14 +24,7 @@
 # include <libport/detect-win32.h>
 # ifdef WIN32
 #  include <float.h>
-#  define isinf(X) !_finite(X)
-#  define isnan(X) _isnan(X)
-# endif
-
-# include <libport/detect-win32.h>
-# ifdef WIN32
-#  include <float.h>
-#  define isinf(X) !_finite(X)
+#  define isinf(X) (!_isnan(X) && !_finite(X))
 #  define isnan(X) _isnan(X)
 # endif
 
