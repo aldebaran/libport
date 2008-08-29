@@ -117,6 +117,14 @@ namespace libport
     */
     size_type size() const;
 
+    //! Check the queue capacity.
+    /*
+      \return The capacity of the queue. To know what you can store in
+              it, do not forget that the extra terminator is included in
+	      this value.
+    */
+    size_type capacity() const;
+
   private:
     /// Allocator.
     allocator_type allocator_;

@@ -38,6 +38,13 @@ namespace libport
   }
 
   template<typename T, T Terminator, typename Alloc>
+  inline typename Fifo<T, Terminator, Alloc>::size_type
+  Fifo<T, Terminator, Alloc>::capacity() const
+  {
+    return capacity_;
+  }
+
+  template<typename T, T Terminator, typename Alloc>
   inline bool
   Fifo<T, Terminator, Alloc>::empty() const
   {
