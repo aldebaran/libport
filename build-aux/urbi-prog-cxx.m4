@@ -189,6 +189,8 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 #
 # warning C4710: 'method_inline' : function not inlined
 #
+# warning C4711: 'method' selected for inline expansion
+#
 # warning C4800: 'type' : forcing value to bool 'true' or 'false' (performance
 #                warning)
 # "This warning is generated when a value that is not bool is assigned or
@@ -208,6 +210,7 @@ TC_CXX_WARNINGS([[/wd4099],
 		 [/wd4626],
 		 [/wd4668],
 		 [/wd4710],
+		 [/wd4711],
 		 [/wd4800],
 		 [/wd4820]])
 
