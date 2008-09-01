@@ -19,11 +19,7 @@ namespace libport
   typedef float ufloat;
 #  define UFLT_EPSILON FLT_EPSILON
 
-  inline
-  long long to_long_long (ufloat u)
-  {
-    return static_cast <long long> (u);
-  }
+  inline long long to_long_long (ufloat u);
 }
 # endif
 
@@ -33,11 +29,7 @@ namespace libport
   typedef double ufloat;
 #  define UFLT_EPSILON DBL_EPSILON
 
-  inline
-  long long to_long_long (ufloat u)
-  {
-    return static_cast <long long> (u);
-  }
+  inline long long to_long_long (ufloat u);
 }
 # endif
 
@@ -82,17 +74,14 @@ namespace libport
 
   /** @return the tabulated arccosinus of given @a angle, in radian, using
    * linear interpolation.  */
-  inline ufloat tabulatedACos(ufloat angle)
-  {
-    return (PI >> 1) - tabulatedASin(angle);
-  }
+  inline ufloat tabulatedACos(ufloat angle);
 
-  inline ufloat sin(ufloat angle) {return tabulatedSin(angle);}
-  inline ufloat cos(ufloat angle) {return tabulatedCos(angle);}
-  inline ufloat tan(ufloat angle) {return sin(angle)/cos(angle);}
+  inline ufloat sin(ufloat angle);
+  inline ufloat cos(ufloat angle);
+  inline ufloat tan(ufloat angle);
 
-  inline ufloat asin(ufloat angle) {return tabulatedASin(angle);}
-  inline ufloat acos(ufloat angle) {return tabulatedACos(angle);}
+  inline ufloat asin(ufloat angle);
+  inline ufloat acos(ufloat angle);
 }
 # endif
 
@@ -103,20 +92,9 @@ namespace libport
 #  include <cmath>
 namespace libport
 {
-  inline float round (float d)
-  {
-    return floor (d + 0.5f + FLT_EPSILON);
-  }
-
-  inline double round (double d)
-  {
-    return floor (d + 0.5 + DBL_EPSILON);
-  }
-
-  inline long double round (long double d)
-  {
-    return floor (d + 0.5 + LDBL_EPSILON);
-  }
+  inline float round (float d);
+  inline double round (double d);
+  inline long double round (long double d);
 
 }
 # endif /* !LIBPORT_HAVE_ROUND */
@@ -128,13 +106,7 @@ namespace libport
 #  include <cmath>
 namespace libport
 {
-  inline double trunc (double d)
-  {
-    if (d < 0.0)
-      return ceil (d);
-    else
-      return floor (d);
-  }
+  inline double trunc (double d);
 }
 # endif /* !LIBPORT_HAVE_TRUNC */
 
@@ -143,9 +115,19 @@ namespace libport
 {
   struct bad_numeric_cast : public std::exception {};
 
-  // This function will raise libport::bad_numeric_cast if the
-  // provided argument cannot be converted to an integer.
-  int ufloat_to_int (ufloat);
+  /// Convert a libport::ufloat to a T. raise
+  /// libport::bad_numeric_cast if the provided argument is directly
+  /// convertible to T.
+  template <typename T>
+  T ufloat_cast(ufloat val);
+
+  /// Convert a libport::ufloat to a int. raise
+  /// libport::bad_numeric_cast if the provided argument is directly
+  /// convertible to an integer.
+  int ufloat_to_int(ufloat val);
+
 } // namespace libport
+
+# include <libport/ufloat.hxx>
 
 #endif // !LIBPORT_UFLOAT_HH
