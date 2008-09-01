@@ -19,7 +19,8 @@ namespace libport
 #ifdef LIBPORT_URBI_UFLOAT_TABULATED
 
 # ifndef SINTABLE_POWER
-#  define SINTABLE_POWER 10  //the tables will containe 2^sintable_power elements
+  // The tables will containe 2^sintable_power elements.
+#  define SINTABLE_POWER 10
 # endif
 
   void buildSinusTable(int powersize);
@@ -128,21 +129,21 @@ namespace libport
   {
     typedef S source_type ;
     typedef S argument_type ;
-    
+
     static source_type nearbyint (argument_type s)
     {
       if (s != ceil (s))
 	throw boost::numeric::bad_numeric_cast ();
       return s;
     }
-    
+
     typedef boost::mpl::integral_c<std::float_round_style,std::round_to_nearest>
       round_style ;
   };
 
   // Convert a libport::ufloat to a int. This function will raise
   // boost::numeric::bad_numeric_cast if the provided argument is directly
-  // convertible to an integer.  
+  // convertible to an integer.
   static boost::numeric::converter
     <int,
      ufloat,
