@@ -1,20 +1,5 @@
-/*! \file ufloat.hh
- *******************************************************************************
-
- File: ufloat.hh\n
- Definition of the ufloat classes.
-
- This file is part of
- %URBI Kernel, version __kernelversion__\n
- (c) Jean-Christophe Baillie, 2004-2005.
-
- This software is provided "as is" without warranty of any kind,
- either expressed or implied, including but not limited to the
- implied warranties of fitness for a particular purpose.
-
- For more information, comments, bug reports: http://www.urbiforge.net
-
- **************************************************************************** */
+/// \file libport/ufloat.hh
+/// \brief Definition of the ufloat classes.
 
 #ifndef LIBPORT_UFLOAT_HH
 # define LIBPORT_UFLOAT_HH
