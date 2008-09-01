@@ -1,0 +1,37 @@
+/// \file libport/cmath
+/// \brief Portable <cmath>
+
+#ifndef LIBPORT_CMATH
+# define LIBPORT_CMATH
+
+# include <cmath>
+
+# include <libport/config.h>
+# include <libport/detect-win32.h>
+
+# if defined WIN32
+
+#  include <float.h>
+namespace std
+{
+
+#  define LIBPORT_BOUNCE(Posix, WinExpr)        \
+  template<typename _Tp>                        \
+  inline                                        \
+  int                                           \
+  Posix(_Tp __f)                                \
+  {                                             \
+    return WinExpr;                             \
+  }
+
+  LIBPORT_BOUNCE(isfinite, _finite(__f))
+  LIBPORT_BOUNCE(isinf,    !_isnan(__f) && !_finite(__f))
+  LIBPORT_BOUNCE(isnan,    _isnan(__f))
+
+#  undef LIBPORT_BOUNCE
+
+}
+
+# endif // defined WIN32
+
+#endif // !LIBPORT_CMATH
