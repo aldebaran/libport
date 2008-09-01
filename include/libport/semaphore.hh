@@ -7,6 +7,7 @@
 #  include <string>
 # endif
 
+# include <libport/export.hh>
 # include <libport/windows.hh>
 
 # if defined WIN32
