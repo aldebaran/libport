@@ -1,0 +1,60 @@
+#! /usr/bin/perl
+
+sub rewrite($$)
+{
+  my ($input, $output) = @_;
+  use IO::File;
+
+  my $in = new IO::File($input) or die "cannot open $input";
+  my $out = new IO::File(">$output") or die "cannot open $output for writing";
+
+  print $out <<EOF;
+/* $output.  Generated from $input by $0.  */
+
+#ifndef LIBPORT_CONFIG_H
+# define LIBPORT_CONFIG_H
+
+EOF
+  while ($_ = $in->getline())
+  {
+    s/#undef  *([A-Z_])/#undef LIBPORT_$1/;
+    s/#undef  *([a-z])/#undef _libport_$1/;
+    s/#define  *([A-Z_]\w+)(.*)/#ifndef LIBPORT_$1 \
+# define LIBPORT_$1 $2 \
+#endif/;
+    s/#define  *([a-z]\w+)(.*)/#ifndef libport_$1 \
+# define libport_$1 $2 \
+#endif/;
+    print $out $_;
+  }
+
+  print $out <<EOF;
+
+// Needed for std::min and std::max on Windows.
+#ifndef NOMINMAX
+# define NOMINMAX
+#endif
+
+#endif LIBPORT_CONFIG_H
+EOF
+}
+
+rewrite ($ARGV[0], $ARGV[1]);
+
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:

@@ -88,6 +88,7 @@ libport_include_HEADERS +=			\
 	$(include_libport)/uffloat.hh		\
 	$(include_libport)/ufloat.h		\
 	$(include_libport)/ufloat.hh		\
+	$(include_libport)/ufloat.hxx		\
 	$(include_libport)/ull-fixed-point.hh	\
 	$(include_libport)/unique-pointer.hh	\
 	$(include_libport)/unique-pointer.hxx	\
@@ -112,14 +113,15 @@ sys_libport_include_HEADERS =			\
 nodist_libport_include_HEADERS =		\
 	$(include_libport)/config.h
 
-EXTRA_DIST += $(include_libport)/libport-config-h.sed
+generate_libport_config_h = $(srcdir)/$(include_libport)/generate-libport-config-h
+EXTRA_DIST += $(generate_libport_config_h)
 # There is no point in maintaining a stamp file, Automake already does
 # this for config.h.  Arguably, we could use _configs.sed, but it is
 # not documented.
-$(include_libport)/config.h: $(CONFIG_HEADER)
+$(include_libport)/config.h: $(CONFIG_HEADER) $(generate_libport_config_h)
 	rm -f $@ $@.tmp
 	test -d $(include_libport) || $(mkdir_p) $(include_libport)
-	sed -f $(srcdir)/$(include_libport)/libport-config-h.sed $< >$@.tmp
+	$(generate_libport_config_h) $< $@.tmp
 	mv $@.tmp $@
 
 CLEANFILES += $(nodist_libport_include_HEADERS)
