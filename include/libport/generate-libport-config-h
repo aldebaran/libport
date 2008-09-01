@@ -17,25 +17,21 @@ sub rewrite($$)
 EOF
   while ($_ = $in->getline())
   {
-    s/#undef  *([A-Z_])/#undef LIBPORT_$1/;
-    s/#undef  *([a-z])/#undef _libport_$1/;
-    s/#define  *([A-Z_]\w+)(.*)/#ifndef LIBPORT_$1 \
-# define LIBPORT_$1 $2 \
-#endif/;
-    s/#define  *([a-z]\w+)(.*)/#ifndef libport_$1 \
-# define libport_$1 $2 \
-#endif/;
+    s/#undef  *([A-Z_])/# undef LIBPORT_$1/;
+    s/#undef  *([a-z])/# undef _libport_$1/;
+    s/#define  *([A-Z_]\w+)(.*)/# define LIBPORT_$1 $2/;
+    s/#define  *([a-z]\w+)(.*)/# define libport_$1 $2/;
     print $out $_;
   }
 
   print $out <<EOF;
 
 // Needed for std::min and std::max on Windows.
-#ifndef NOMINMAX
-# define NOMINMAX
-#endif
+# ifndef NOMINMAX
+#  define NOMINMAX
+# endif
 
-#endif LIBPORT_CONFIG_H
+#endif // LIBPORT_CONFIG_H
 EOF
 }
 
