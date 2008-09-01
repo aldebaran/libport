@@ -56,6 +56,7 @@ while ! test -z $1; do
        fi
        # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
       ;;
+   -Wno-unused-parameter) ;;
   -g|-ggdb) ;; # carg="/Zi";;
   -O2|-O3) carg=/O2;;
   -f*)  ;;
