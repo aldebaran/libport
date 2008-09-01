@@ -13,25 +13,29 @@ deref.cc					\
 foreach.cc					\
 path.cc						\
 singleton-ptr.cc				\
+symbol.cc					\
 test-erase_if.cc				\
 test-escape.cc					\
-test-finally.cc					\
 test-fifo.cc					\
+test-finally.cc					\
 test-has_if.cc					\
 test-indent.cc					\
 test-separator.cc				\
 test-shared-ptr-intrusive.cc			\
 test-shared-ptr-non-intrusive.cc		\
 test-shared-ptr-serialize.cc			\
-symbol.cc					\
 test-timer.cc					\
 test-unescape.cc				\
+ufloat-double.cc				\
+ufloat-float.cc					\
 visitor.cc
 
-#udouble1
-#ufloat1
-#ullfp1
-#ullfptab1
+# Tabulation does not seem to work: doesn't even compile.
+#ufloat-float-tab.cc				\
+#ufloat-double-tab.cc				\
+#ufloat-floating-tab.cc
+#ufloat-floating.cc
+
 
 TEST_LOGS = $(TESTS:.cc=.log)
 
@@ -43,14 +47,11 @@ AM_LDFLAGS += $(BOOST_SERIALIZATION_LDFLAGS) $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS
 LDADD = $(top_builddir)/lib/libport/libport.la \
 	$(BOOST_UNIT_TEST_FRAMEWORK_LIBS) $(BOOST_SERIALIZATION_LIBS)
 
-#udouble1_SOURCES        = udouble1.cc
-#ufloat1_SOURCES         = ufloat1.cc
-#ullfp1_SOURCES          = ullfp1.cc
-#ullfptab1_SOURCES       = ullfptab1.cc
 deref_SOURCES      	= deref.cc
 foreach_SOURCES      	= foreach.cc
 path_SOURCES		= path.cc
 singleton_ptr_SOURCES	= singleton-ptr.cc
+symbol_SOURCES          = symbol.cc
 test_erase_if_SOURCES	= test-erase_if.cc
 test_escape_SOURCES     = test-escape.cc
 test_fifo_SOURCES	= test-fifo.cc
@@ -61,9 +62,14 @@ test_separator_SOURCES  = test-separator.cc
 test_shared_ptr_intrusive_SOURCES = test-shared-ptr-intrusive.cc
 test_shared_ptr_non_intrusive_SOURCES = test-shared-ptr-non-intrusive.cc
 test_shared_ptr_serialize_SOURCES = test-shared-ptr-serialize.cc
-symbol_SOURCES          = symbol.cc
 test_timer_SOURCES      = test-timer.cc
 test_unescape_SOURCES   = test-unescape.cc
+#ufloat_double_tab_SOURCES = ufloat-double-tab.cc
+ufloat_double_SOURCES     = ufloat-double.cc
+#ufloat_float_tab_SOURCES = ufloat-float-tab.cc
+ufloat_float_SOURCES     = ufloat-float.cc
+#ufloat_floating_tab_SOURCES = ufloat-floating-tab.cc
+#ufloat_floating_SOURCES = ufloat-floating.cc
 visitor_SOURCES		= visitor.cc
 
 # Automake thinks the following line is not POSIX, help it.

@@ -1,5 +1,3 @@
-#include <libport/config.h>
-
 #include <iostream>
 #include <libport/ufloat.h>
 
