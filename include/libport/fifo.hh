@@ -48,7 +48,7 @@ namespace libport
     typedef typename Alloc::pointer pointer;
     typedef typename Alloc::const_reference const_reference;
     typedef typename Alloc::const_pointer const_pointer;
-    typedef unsigned int size_type;
+    typedef size_t size_type;
     typedef Alloc allocator_type;
 
     //! Fifo constructor.
