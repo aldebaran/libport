@@ -141,25 +141,27 @@ namespace libport
       round_style ;
   };
 
-  // Convert a libport::ufloat to a int. This function will raise
-  // boost::numeric::bad_numeric_cast if the provided argument is directly
-  // convertible to an integer.
-  static boost::numeric::converter
-    <int,
-     ufloat,
-     boost::numeric::conversion_traits<int, ufloat>,
-     boost::numeric::def_overflow_handler,
-     ExactFloat2IntRounderPolicy<ufloat> > ufloat_to_int_converter;
 
   int
-  ufloat_to_int (ufloat val)
+  ufloat_to_int(ufloat val)
   {
-    try {
-      return ufloat_to_int_converter (val);
+    try
+    {
+      // Convert a libport::ufloat to a int. This function will raise
+      // boost::numeric::bad_numeric_cast if the provided argument is
+      // directly convertible to an integer.
+      static boost::numeric::converter
+        <int,
+        ufloat,
+        boost::numeric::conversion_traits<int, ufloat>,
+        boost::numeric::def_overflow_handler,
+        ExactFloat2IntRounderPolicy<ufloat> > converter;
+
+      return converter(val);
     }
     catch (boost::numeric::bad_numeric_cast&)
     {
-      throw bad_numeric_cast ();
+      throw bad_numeric_cast();
     }
   }
 
