@@ -6,6 +6,7 @@ branddir = @branddir@
 hostdir = @hostdir@
 envdir = @hostdir@/$(URBI_ENV)
 builddir = $(UMAKE_BUILD_DIR)
+SHLIBEXT=@SHLIBEXT@
 #@hostdir@/$(URBI_ENV)
 
 # The basename (no extension) of the library we should link against.
@@ -100,6 +101,14 @@ $(builddir)/%.$(URBI_HOST).lo: %.cpp $(HEADERS)
 $(OUTLIB): $(LTOBJECTS) $(ARGUMENT_LIBS)
 	$(CXXLINK) $(LTOBJECTS) $(ARGUMENT_LIBS) $(LIBS)
 
+# I know no way to build shared libraries through libtool without a .la...
+lalib = lib$(OUTSHLIB:$(SHLIBEXT)=.la)
+$(OUTSHLIB): $(LTOBJECTS) $(ARGUMENT_LIBS)
+	 $(LIBTOOL) --tag=CXX --mode=link \
+	   $(CXX) $(CXXFLAGS) $(LDFLAGS) $(EXTRA_LDFLAGS) -export-dynamic -o $(lalib) \
+	   $(LTOBJECTS) $(ARGUMENT_LIBS) $(LIBS) $(hostdir)/remote/libuobject.la -rpath $(hostdir)
+	cp .libs/lib$(OUTSHLIB) ./$(OUTSHLIB)
+	rm lib$(OUTSHLIB).la
 # The command to generate the library.
 #
 # We pass -whole-archive because there are global objects to be

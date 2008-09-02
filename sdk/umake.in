@@ -1,5 +1,6 @@
 @UMAKE_COMMON@
 EXEEXT=@EXEEXT@
+SHLIBEXT=@SHLIBEXT@
 usage ()
 {
     cat <<EOF
@@ -17,6 +18,7 @@ Compilation options:
   -c, --clean            clean building directory before compilation
   -j, --jobs=JOBS        specify the numbers of commands to run simultaneously
   -l, --library          produce a library, don't link to a particular core
+  -s, --shared-library   produce a shared library loadable by any core
   -o, --output=output    output file name
   -C, --core=CORE        build type [$core]
   -H, --host=HOST        destination host [$host]
@@ -51,10 +53,17 @@ EOF
 # Return the location of param_mk
 param_mk ()
 {
+  # If we are building a library, there is no core, so use param.mk from
+  # the remote core which is always present.
+  if test -z $core; then
+    lcore=remote
+  else
+    lcore=$core
+  fi
   if test -n "$param_mk"; then
     echo "$param_mk"
   else
-    echo "$prefix/gostai/core/$host/$core/param.mk"
+    echo "$prefix/gostai/core/$host/$lcore/param.mk"
   fi
 }
 
@@ -135,7 +144,8 @@ get_options ()
       -q | --quiet  ) quiet=true;;
       -v | --version) version;;
 
-      -l | --library)       core= ;;
+      -l | --library)       core= ; shared=false ;;
+      -s | --shared-library) core= ; shared=true ;;
 	   --deep-clean)    deep_clean="true"; havearg="noneed" ;;
       -c | --clean)         clean="true" ;;
       -j | --jobs)  shift; njobs=$1;;
@@ -240,11 +250,21 @@ done
 
 # Select target name if unspecified.
 case $target:$core in
-    :)  target=uobject-$host.a;;
+    :)  if $shared; then
+          target=uobject-$host$SHLIBEXT
+        else
+	  target=uobject-$host.a
+	fi
+	;;
     :*) target=urbiengine-$host-$core$EXEEXT;;
     # FIXME: Shamelessly discarding any part of the name if it has
     # a dot in it (e.g., urbi.my-uobject).
-    *:) target="${target%.a}.a";;
+    *:) if $shared; then
+         target="${target%.$SHLIBEXT}.$SHLIBEXT"
+       else
+         target="${target%.a}.a"
+       fi
+       ;;
     *:*) target="${target%$EXEEXT}$EXEEXT";;
 esac
 
@@ -253,7 +273,11 @@ esac
 case $core in
   '')
     libs=$(echo "$libs" | sed -e "s/$target//")
-    makeargs="$makeargs OUTLIB=$target"
+    if $shared; then
+      makeargs="$makeargs OUTSHLIB=$target"
+    else
+      makeargs="$makeargs OUTLIB=$target"
+    fi
     ;;
   *)
     makeargs="$makeargs OUTBIN=$target"
@@ -281,10 +305,10 @@ fi
 # Define lib to link against.
 if test -z "$LIBNAME"; then
   case $core in
-    remote)         UMAKE_LIBNAME="liburbi";;
-    engine|webots)  UMAKE_LIBNAME="liburbicore";;
-    fullengine)     UMAKE_LIBNAME="liburbicore";
-                    UMAKE_EXTRALIB="${urbilibdir}/liburbi.la ${urbilibdir}/libjpeg.la";
+    remote)         UMAKE_LIBNAME="libuobject";;
+    engine|webots)  UMAKE_LIBNAME="libuobject";;
+    fullengine)     UMAKE_LIBNAME="libuobject";
+                    UMAKE_EXTRALIB="${libdir}/liburbi.la ${libdir}/libjpeg.la";
 		    core=engine;;
     aibo)           UMAKE_LIBNAME="libaibo";;
     *);;

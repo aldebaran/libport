@@ -26,6 +26,9 @@ AC_SUBST([SDK_CFLAGS])
 AC_SUBST([SDK_CXXFLAGS])
 AC_SUBST([SDK_LDFLAGS])
 AC_SUBST([SDK_LIBS])
+# This variable is set by libtool, ensure AC_PROG_LIBTOOL is called
+# before URBI_SDK.
+AC_SUBST([SHLIBEXT], [$shrext_cmds])
 ])
 
 ## Local Variables:
