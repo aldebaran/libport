@@ -173,7 +173,7 @@ AC_LANG_POP([C++])dnl
 ])# BOOST_FIND_HEADER
 
 
-# BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST])
+# BOOST_FIND_LIB([LIB-NAME], [PREFERRED-RT-OPT], [HEADER-NAME], [CXX-TEST], [dependency])
 # -------------------------------------------------------------------------
 # Look for the Boost library LIB-NAME (e.g., LIB-NAME = `thread', for
 # libboost_thread).  Check that HEADER-NAME works and check that
@@ -251,13 +251,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$1$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$1$boost_tag_$boost_mt_ \
-    boost_$1$boost_tag_$boost_ver_
+  for sfx in \
+      $boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+      $boost_tag_$boost_mt_$boost_ver_ \
+      $boost_tag_$boost_rtopt_$boost_ver_ \
+      $boost_tag_$boost_mt_ \
+      $boost_tag_$boost_ver_
   do
+    boost_lib=boost_$1$sfx
+    boost_extra_lib=boost_$5$sfx
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       *@$boost_lib@*) continue;;
@@ -279,9 +281,17 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
           # $libext is computed by Libtool but let's make sure it's non empty.
           test -z "$libext" &&
             AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
-          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext";; #(
+          Boost_lib_LIBS="$boost_ldpath/lib$boost_lib.$libext"
+	  if ! test -z $5; then
+	    Boost_lib_LIBS="$Boost_lib_LIBS $boost_ldpath/lib$boost_extra_lib.$libext"
+	  fi
+	  ;; #(
         *) # No: use -lboost_foo to find the shared library.
-          Boost_lib_LIBS="-l$boost_lib";;
+          Boost_lib_LIBS="-l$boost_lib"
+	  if ! test -z $5; then
+	    Boost_lib_LIBS="$Boost_lib_LIBS -l$boost_extra_lib"
+	  fi
+	  ;;
       esac
       boost_save_LIBS=$LIBS
       LIBS="$Boost_lib_LIBS $LIBS"
@@ -364,7 +374,7 @@ AC_DEFUN([BOOST_DATE_TIME],
 # Do not check for boost/filesystem.hpp because this file was introduced in 1.34.
 AC_DEFUN([BOOST_FILESYSTEM],
 [BOOST_FIND_LIB([filesystem], [$1],
-                [boost/filesystem/path.hpp], [boost::filesystem::path p;])
+                [boost/filesystem/path.hpp], [boost::filesystem::path p;], [system])
 ])# BOOST_FILESYSTEM
 
 
