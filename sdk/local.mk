@@ -2,7 +2,7 @@
 host_SCRIPTS += $(top_builddir)/libtool
 
 # This file tells umake how to build things.
-nodist_host_DATA += sdk/param.mk
+nodist_env_DATA = sdk/param.mk
 
 UMAKE_WRAPPERS =				\
 sdk/umake-aibo					\
