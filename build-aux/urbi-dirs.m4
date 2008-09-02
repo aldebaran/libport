@@ -114,7 +114,7 @@ URBI_PACKAGE_KIND_SWITCH(
 # /usr/local/gostai/core/$host
 URBI_PACKAGE_KIND_SWITCH(
   [core\|sdk], [AC_SUBST([hostdir], ['${branddir}/core/${URBI_HOST}'])],
-  [kernel],    [AC_SUBST([hostdir], ['${branddir}/kernel/${URBI_HOST}'])])
+  [kernel],    [AC_SUBST([hostdir], ['${branddir}/core/${URBI_HOST}'])])
 
 # /usr/local/gostai/core/$host/$env.
 # Could have been named sdklibdir too.
