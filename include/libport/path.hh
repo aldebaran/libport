@@ -70,8 +70,11 @@ namespace libport
 #ifdef SWIG
     %rename (__str__) operator std::string () const;
 #endif
+    /// path is represented with a list of directories.
+    typedef std::list<std::string> path_type;
     std::string to_string () const;
     operator std::string () const;
+    const path_type& components() const;
     std::ostream& dump (std::ostream& ostr) const;
 
     /// \}
@@ -80,8 +83,6 @@ namespace libport
     bool absolute_get () const;
 
   private:
-    /// path is represented with a list of directories.
-    typedef std::list<std::string> path_type;
 
     /// Append a single directory \a dir.
     void append_dir (const std::string& dir);

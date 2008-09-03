@@ -238,4 +238,8 @@ namespace libport
     return 0 == stat (to_string().c_str(), &buf);
   }
 
+  const path::path_type& path::components() const
+  {
+    return path_;
+  }
 }
