@@ -87,7 +87,26 @@ endif(UNIX)
 # Because it may not be the same version as ours, we must search in
 # the install dir our lib.
 if(WIN32)
-    package_search(LIBRARY ${PACKAGE_NAME}_EAY32_LIBRARY eay32
+
+    # Search for the include directory.
+    package_search(PATH ${PACKAGE_NAME}_INCLUDE openssl/ssl.h
+                   FULLNAME "SDK Remote INCLUDE"
+                   PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/include
+                         ${${PACKAGE_NAME}_ROOT_DIR}/Release/include
+                         ${${PACKAGE_NAME}_ROOT_DIR}/include)
+
+    package_search(LIBRARY ${PACKAGE_NAME}_EAY32_LIBRARY eay32 libeay32
+                   FULLNAME "OpenSSL Crypto for Windows"
+                   INSTALL "URBI SDK Engine"
+                   PATHS ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
+                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
+                         ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
+                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
+                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
+                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
+                         ${SDK_ENGINE_ROOT_DIR}/lib)
+
+    package_search(LIBRARY ${PACKAGE_NAME}_SSLEAY32_LIBRARY ssleay32
                    FULLNAME "OpenSSL for Windows"
                    INSTALL "URBI SDK Engine"
                    PATHS ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
@@ -97,6 +116,18 @@ if(WIN32)
                          ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
                          ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
                          ${SDK_ENGINE_ROOT_DIR}/lib)
+
+    package_search(LIBRARY ${PACKAGE_NAME}_IPHLPAPI_LIBRARY iphlpapi
+                   FULLNAME "OpenSSL IPHLPAPI for Windows"
+                   INSTALL "URBI SDK Engine"
+                   PATHS ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
+                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
+                         ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
+                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
+                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
+                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
+                         ${SDK_ENGINE_ROOT_DIR}/lib)
+
 endif(WIN32)
 
 package_foot(UNIX  ${PACKAGE_NAME}_DL_LIBRARY ${PACKAGE_NAME}_CRYPTO_LIBRARY
