@@ -12,7 +12,7 @@
 # endif
 
 // OSX does not have O_LARGEFILE.  No information was found whether
-// some equivalent file is needed or not.  Other projects simply do as
+// some equivalent flag is needed or not.  Other projects simply do as
 // follows.
 # ifndef O_LARGEFILE
 #  define O_LARGEFILE 0
