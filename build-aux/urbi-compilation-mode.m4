@@ -17,6 +17,10 @@ urbi_compilation_mode_set ()
         compiler_flags -O0
         ;;
 
+      (cov)
+        compiler_flags -fprofile-arcs -ftest-coverage
+        ;;
+
       (debug)
         compiler_flags -O2 -ggdb
         # Not all the code includes config.h.
@@ -40,6 +44,10 @@ urbi_compilation_mode_set ()
 
       (ndebug)
         CPPFLAGS="$CPPFLAGS -DNDEBUG"
+        ;;
+
+      (prof)
+        compiler_flags -pg
         ;;
 
       (space)
@@ -73,10 +81,10 @@ urbi_compilation_mode_set ()
 }
 
 URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
-                    [Compilaton mode],
-                    [build|debug|ndebug|final|space|speed|symbols|threads],
-                    [debug],
-                    [
+               [Compilaton mode],
+               [build|cov|debug|ndebug|final|prof|space|speed|symbols|threads],
+               [debug],
+               [
      MODE: comma-separated list of:
         Overall Levels:
           - build: Disable optimization for faster compilation.
@@ -85,8 +93,10 @@ URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
           - speed: Optimize for speed (implies final).
 
         Finer grain components:
+          - cov: Request code coverage instrumentation
           - ndebug: Define NDEBUG.
           - final: Implies ndebug and symbols
+          - prof: Request profiling instrumentation
           - symbols: Activate precompiled-symbols.
           - threads: Implement coroutines with threads.])
 
