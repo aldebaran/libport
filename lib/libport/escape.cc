@@ -56,9 +56,10 @@ namespace libport
     return o;
   }
 
-  std::string unescape(const std::string& s)
+  std::string
+  unescape(const std::string& s)
   {
-    std::string ret;
+    std::string res;
     for (unsigned int i=0; i<s.length(); i++)
     {
       if (s[i] == '\\')
@@ -67,19 +68,19 @@ namespace libport
 	  throw std::runtime_error("invalid escape: '\\' at end of string");
 	switch(s[++i])
 	{
-	  case 'b': ret += '\b'; break;
-	  case 'f': ret += '\f'; break;
-	  case 'n': ret += '\n'; break;
-	  case 'r': ret += '\r'; break;
-	  case 't': ret += '\t'; break;
-	  case 'v': ret += '\v'; break;
-	  case '\\': ret += '\\'; break;
-	  case '\"': ret += '"'; break;
-	  case '\'': ret += '\''; break;
+	  case 'b': res += '\b'; break;
+	  case 'f': res += '\f'; break;
+	  case 'n': res += '\n'; break;
+	  case 'r': res += '\r'; break;
+	  case 't': res += '\t'; break;
+	  case 'v': res += '\v'; break;
+	  case '\\': res += '\\'; break;
+	  case '\"': res += '"'; break;
+	  case '\'': res += '\''; break;
 	  case 'x':
 	    if (s.length() < i + 3 || !isxdigit(s[i+1]) || !isxdigit(s[i+2]))
 	      throw std::runtime_error("invalid escape: '\\x' not followed by two digits");
-	    ret += static_cast<char>(strtol(s.substr(i+1, 2).c_str(), 0, 16));
+	    res += strtol(s.substr(i+1, 2).c_str(), 0, 16);
 	    i += 2;
 	    break;
 	  default:
@@ -87,8 +88,8 @@ namespace libport
 	}
       }
       else
-	ret += s[i];
+	res += s[i];
     }
-    return ret;
+    return res;
   }
 }
