@@ -63,7 +63,7 @@ perl -pi						\
      -e 's,<FlexLexer.h>,"parser/flex-lexer.hh",;'	\
      -e 's/class istream;/#include <iostream>/;'	\
      -e 's/([	 &])('$flex_nonstd')/$1std::$2/g;'	\
-     -e 's,# *include *<unistd.h>,#include <sdk/config.h>\n#ifndef WIN32\n$&\n#endif,;'	\
+     -e 's,# *include *<unistd.h>,#include <libport/config.h>\n#ifndef WIN32\n$&\n#endif,;'	\
      "$output"
 ## For some reason, on Windows perl does not remove the back up file.
 rm -f "$output.bak"
