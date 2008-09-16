@@ -65,8 +65,8 @@ urbi_compilation_mode_set ()
         ;;
 
       (symbols)
-       AC_DEFINE([SYMBOLS_PRECOMPILED], 1,
-                 [Define if Urbi symbols should be precompiled]);;
+        AC_DEFINE([SYMBOLS_PRECOMPILED], 1,
+                  [Define if Urbi symbols should be precompiled])
         ;;
 
       (threads)
