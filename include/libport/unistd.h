@@ -24,6 +24,17 @@
 #  include <io.h>
 # endif
 
+# ifdef WIN32
+#  include <direct.h>
+extern "C"
+{
+  int chdir (const char* path)
+  {
+    return _chdir(path);
+  }
+}
+# endif
+
 # if !defined LIBPORT_HAVE_GETCWD
 #  if defined LIBPORT_HAVE__GETCWD
 #   define getcwd _getcwd
