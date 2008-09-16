@@ -12,6 +12,21 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
+pid=$$
+
+if test "X$TERM" != Xdumb                       \
+    && test -t 1 2>/dev/null                    \
+    && tput bold 1 >/dev/null 2>&1              \
+    && tput setaf 1 >/dev/null 2>&1		\
+    && tput sgr0 >/dev/null 2>&1; then
+  blu=$(tput setaf 4)
+  grn=$(tput setaf 2)
+  lgn=$(tput bold)$(tput setaf 2)
+  red=$(tput setaf 1)
+  ylw=$(tput setaf 3)
+  std=$(tput sgr0)
+fi
+
 usage ()
 {
   cat <<EOF
@@ -84,8 +99,9 @@ run ()
 
 fatal ()
 {
-  echo >&2 "$0: $@"
-  exit 1
+  stderr "$red" "$@" "$std"
+  # Be sure to die, even in subshell.  Exit is not strong enough.
+  kill $pid
 }
 
 awk_strverscmp='
@@ -206,7 +222,21 @@ link_symbolic ()
   local to=$2
   local morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
 
-  run ln -sf $morf/$to $from
+  # It is a nightmare to have incorrect links, diagnose this.
+  if test -e $from; then
+    if test ! -L $from; then
+      fatal "$from exists and is not a symlink." \
+            "Please remove and restart."
+    fi
+    current_to=$(readlink $from)
+    if test "$current_to" != "$morf/$to"; then
+      fatal "$from is a symlink to $current_to instead of $morf/$to." \
+            "Please remove and restart."
+    fi
+  else
+    # All is good, install the symlink.
+    run ln -sf $morf/$to $from
+  fi
 }
 
 
@@ -234,7 +264,11 @@ link_copy ()
   "## developpers.  This mode should be used by the buildfarm only, ##" \
   "## or on Windows.  See boostrap --help.                          ##" \
   "## ------------------------------------------------------------- ##"
-  run cp -pr "$2" "$1"
+  if test -e "$2"; then
+    stderr "${red}Not copying $2 on $1: $1 exists."
+  else
+    run cp -pr "$2" "$1"
+  fi
 }
 
 
@@ -316,9 +350,7 @@ do
   from=$(echo "$link" | perl -pe 's/\s*->.*$//')
   to=$(echo "$link"   | perl -pe 's/^.*->\s*//')
 
-  if ! test -e $from; then
-    link "$from" "$to"
-  fi
+  link "$from" "$to"
 done
 
 if test -f .externals; then
