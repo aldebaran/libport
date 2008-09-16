@@ -17,6 +17,7 @@ libport_la = $(top_builddir)/lib/libport/libport.la
 libport_sources =				\
 	$(libport_srcdir)/cli.cc		\
 	$(libport_srcdir)/contract.cc		\
+	$(libport_srcdir)/csignal.cc		\
 	$(libport_srcdir)/cstdio.cc		\
 	$(libport_srcdir)/deref.cc		\
 	$(libport_srcdir)/escape.cc		\

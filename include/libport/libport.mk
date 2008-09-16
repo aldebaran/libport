@@ -9,6 +9,7 @@
 # C headers.
 libport_includedir = $(libport_include_basedir)/libport
 libport_include_HEADERS =			\
+	$(include_libport)/csignal		\
 	$(include_libport)/cstdio		\
 	$(include_libport)/cstring		\
 	$(include_libport)/unistd.h

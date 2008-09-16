@@ -1,0 +1,23 @@
+// -*- C++ -*-
+#ifndef LIBPORT_CSIGNAL
+# define LIBPORT_CSIGNAL
+
+# include <libport/detect-win32.h>
+# include <csignal>
+
+#if defined WIN32 || defined _MSC_VER
+extern "C"
+{
+  // In this case, we just ignore it.
+  typedef void (*sig_t) (int);
+  sig_t signal(int sig, sig_t func);
+}
+#endif
+
+namespace libport
+{
+  /// Call std::signal, wrapped with perror on failure.
+  sig_t signal(int sig, sig_t func);
+}
+
+#endif LIBPORT_CSIGNAL
