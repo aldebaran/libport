@@ -20,4 +20,4 @@ namespace libport
   sig_t signal(int sig, sig_t func);
 }
 
-#endif LIBPORT_CSIGNAL
+#endif // LIBPORT_CSIGNAL
