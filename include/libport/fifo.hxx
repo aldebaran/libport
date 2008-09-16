@@ -126,6 +126,12 @@ namespace libport
   inline typename Fifo<T, Terminator, Alloc>::const_pointer
   Fifo<T, Terminator, Alloc>::peek(size_type count) const
   {
+    // If we want 0 items and have none, return a constant pointer
+    // onto a terminator.
+    static const T terminator = Terminator;
+    if (!count && !size())
+      return &terminator;
+
     // Return the data if we have enough, 0 otherwise.
     return size() < count ? 0 : first_item_;
   }
@@ -143,7 +149,7 @@ namespace libport
       // beginning so that no reallocation will be needed in the near
       // future.
       if (empty())
-	clear();
+	first_item_ = next_item_ = buffer_;
     }
     return res;
   }
