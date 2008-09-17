@@ -4,7 +4,7 @@
 
 @set projectCopyrightYears ${PROJECT_COPYRIGHT_YEARS}
 @set projectCopyrightHolder ${PROJECT_COPYRIGHT_HOLDER}
-@set projectCopyrightString ${PACKAGE_COPYRIGHT_STRING}
+@set projectCopyrightString ${PROJECT_COPYRIGHT_STRING}
 @set projectName ${PROJECT_NAME}
 @set projectLongname ${PROJECT_LONGNAME}
 @set projectVersion ${PROJECT_VERSION}
@@ -17,7 +17,7 @@
 @set projectTarname ${PROJECT_TARNAME}
 @set projectHomepage ${PROJECT_HOMEPAGE}
 @set projectHelpLink ${PROJECT_HELP_LINK}
-@set projectRevision ${PACKAGE_REVISION}
-@set projectId ${PACKAGE_ID}
-@set projectDate ${PACKAGE_DATE}
-@set projectVersionRev ${PACKAGE_VERSION_REV}
+@set projectRevision ${PROJECT_REVISION}
+@set projectId ${PROJECT_ID}
+@set projectDate ${PROJECT_DATE}
+@set projectVersionRev ${PROJECT_VERSION_REV}
