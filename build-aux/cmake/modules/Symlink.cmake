@@ -16,13 +16,17 @@
 if(NOT COMMAND SYMLINK)
 
   function(SYMLINK TARGET DIRECTORY)
+    if(IS_DIRECTORY ${TARGET})
+      set(TARGET "${TARGET}/")
+    endif(IS_DIRECTORY ${TARGET})
+    string(REGEX REPLACE "/+$" "" DIRECTORY ${DIRECTORY})
     if(UNIX)
       execute_process(COMMAND ${CMAKE_COMMAND}
         -E create_symlink
         "${TARGET}" "${DIRECTORY}"
         )
     else(UNIX)
-      if(IS_DIRECTORY)
+      if(IS_DIRECTORY ${TARGET})
         execute_process(COMMAND ${CMAKE_COMMAND}
           -E copy_directory
           "${TARGET}" "${DIRECTORY}"
