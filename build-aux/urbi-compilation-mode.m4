@@ -9,6 +9,7 @@ compiler_flags ()
 # Compilation mode.
 urbi_compilation_mode_set ()
 {
+  local stacksize=128
   local mode
   for mode
   do
@@ -36,6 +37,7 @@ urbi_compilation_mode_set ()
         AC_CHECK_HEADER([valgrind/valgrind.h],
                         [AC_DEFINE([USE_VALGRIND], [1],
                                    [Define if <valgrind/valgrind.h> exists.])])
+        stacksize=1024
         ;;
 
       (final)
@@ -79,10 +81,12 @@ urbi_compilation_mode_set ()
         ;;
     esac
   done
+  AC_DEFINE_UNQUOTED([URBI_KERNEL_STACK_SIZE], [$stacksize],
+                     [Default coroutine stack size in kB])
 }
 
 URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
-               [Compilaton mode],
+               [Compilation mode],
                [build|cov|debug|ndebug|final|prof|space|speed|symbols|threads],
                [debug],
                [
