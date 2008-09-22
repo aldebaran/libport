@@ -6,23 +6,24 @@
 namespace libport
 {
 
-  /// \c T must be a type convertible to double. When \c extra_precision
-  /// is true, the mean is computed with a double division instead of a
-  /// T/size_t division, and then converted back to T.
-  template<typename T, bool extra_precision = false>
+  /// \c T is the type of the samples, \c R is the type of the result
+  /// and intermediate computations.
+  /// \c T must be a type convertible to \c R and \c R must be a type
+  /// compatible to double.
+  template<typename T, typename R = double>
   class Statistics
   {
   public:
-    Statistics(size_t capacity);
+    Statistics(size_t capacity = 0);
     void reserve(size_t capacity);
     size_t capacity() const;
     size_t size() const;
     bool empty() const;
     void add_sample(T value);
     size_t n_samples() const;
-    T mean() const;
-    double variance() const;
-    double standard_deviation() const;
+    R mean() const;
+    R variance() const;
+    R standard_deviation() const;
     T min() const;
     T max() const;
   private:

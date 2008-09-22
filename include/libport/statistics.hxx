@@ -6,15 +6,15 @@
 namespace libport
 {
 
-  template<typename T, bool extra_precision>
-  Statistics<T, extra_precision>::Statistics(size_t capacity)
+  template<typename T, typename R>
+  Statistics<T, R>::Statistics(size_t capacity)
   {
     reserve(capacity);
   }
 
-  template<typename T, bool extra_precision>
+  template<typename T, typename R>
   inline void
-  Statistics<T, extra_precision>::reserve(size_t capacity)
+  Statistics<T, R>::reserve(size_t capacity)
   {
     capacity_ = capacity;
     count_ = index_ = 0;
@@ -23,9 +23,9 @@ namespace libport
     samples_.reserve(capacity_);
   }
 
-  template<typename T, bool extra_precision>
+  template<typename T, typename R>
   inline void
-  Statistics<T, extra_precision>::add_sample(T value)
+  Statistics<T, R>::add_sample(T value)
   {
     if (capacity_)  // Running
     {
@@ -98,55 +98,54 @@ namespace libport
     sum2_ += value * value;
   }
 
-  template<typename T, bool extra_precision>
+  template<typename T, typename R>
   inline size_t
-  Statistics<T, extra_precision>::size() const
+  Statistics<T, R>::size() const
   {
     return count_;
   }
 
-  template<typename T, bool extra_precision>
+  template<typename T, typename R>
   inline size_t
-  Statistics<T, extra_precision>::capacity() const
+  Statistics<T, R>::capacity() const
   {
     return capacity_;
   }
 
-  template<typename T, bool extra_precision>
+  template<typename T, typename R>
   inline bool
-  Statistics<T, extra_precision>::empty() const
+  Statistics<T, R>::empty() const
   {
     return !size();
   }
 
-  template<typename T, bool extra_precision>
+  template<typename T, typename R>
+  inline R
+  Statistics<T, R>::mean() const
+  {
+    return static_cast<R>(sum_) / static_cast<R>(count_);
+  }
+
+  template<typename T, typename R>
+  inline R
+  Statistics<T, R>::variance() const
+  {
+    return (static_cast<R>(sum2_) -
+	    (static_cast<R>(sum_) * static_cast<R>(sum_))
+	        / static_cast<R>(count_)) /
+      static_cast<R>(count_);
+  }
+
+  template<typename T, typename R>
+  inline R
+  Statistics<T, R>::standard_deviation() const
+  {
+    return static_cast<R>(sqrt(static_cast<double>(variance())));
+  }
+
+  template<typename T, typename R>
   inline T
-  Statistics<T, extra_precision>::mean() const
-  {
-    if (extra_precision)
-      return round(static_cast<double>(sum_) / static_cast<double>(count_));
-    else
-      return sum_ / count_;
-  }
-
-  template<typename T, bool extra_precision>
-  inline double
-  Statistics<T, extra_precision>::variance() const
-  {
-    const double m = static_cast<double>(sum_) / static_cast<double>(count_);
-    return static_cast<double>(sum2_) / static_cast<double>(count_) - m * m;
-  }
-
-  template<typename T, bool extra_precision>
-  inline double
-  Statistics<T, extra_precision>::standard_deviation() const
-  {
-    return sqrt(variance());
-  }
-
-  template<typename T, bool extra_precision>
-  inline T
-  Statistics<T, extra_precision>::min() const
+  Statistics<T, R>::min() const
   {
     if (!min_ok_)
     {
@@ -159,9 +158,9 @@ namespace libport
     return min_;
   }
 
-  template<typename T, bool extra_precision>
+  template<typename T, typename R>
   inline T
-  Statistics<T, extra_precision>::max() const
+  Statistics<T, R>::max() const
   {
     if (!max_ok_)
     {
