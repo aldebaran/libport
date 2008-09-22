@@ -24,6 +24,7 @@ test-separator.cc				\
 test-shared-ptr-intrusive.cc			\
 test-shared-ptr-non-intrusive.cc		\
 test-shared-ptr-serialize.cc			\
+test-statistics.cc				\
 test-timer.cc					\
 test-unescape.cc				\
 ufloat-double.cc				\
@@ -62,6 +63,7 @@ test_separator_SOURCES  = test-separator.cc
 test_shared_ptr_intrusive_SOURCES = test-shared-ptr-intrusive.cc
 test_shared_ptr_non_intrusive_SOURCES = test-shared-ptr-non-intrusive.cc
 test_shared_ptr_serialize_SOURCES = test-shared-ptr-serialize.cc
+test_statistics_SOURCES = test-statistics.cc
 test_timer_SOURCES      = test-timer.cc
 test_unescape_SOURCES   = test-unescape.cc
 #ufloat_double_tab_SOURCES = ufloat-double-tab.cc
