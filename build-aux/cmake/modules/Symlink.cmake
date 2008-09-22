@@ -56,12 +56,12 @@ if(NOT COMMAND SYMLINK)
           -E copy_directory
           "${OLD}" "${NEW}"
           )
-      else(IS_DIRECTORY)
+      else(IS_DIRECTORY ${OLD})
         execute_process(COMMAND ${CMAKE_COMMAND}
           -E copy
           "${OLD}" "${NEW}"
           )
-      endif(IS_DIRECTORY)
+      endif(IS_DIRECTORY ${OLD})
     endif(UNIX)
 
     ## Check
