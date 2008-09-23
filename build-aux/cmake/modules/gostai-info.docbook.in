@@ -1,0 +1,7 @@
+<!ENTITY urbiName "@URBI_NAME@">
+<!ENTITY gostai "@GOSTAI@">
+<!ENTITY urbiScript "@URBI_SCRIPT_NAME@">
+<!ENTITY urbiStudio "@URBI_STUDIO_NAME@">
+<!ENTITY gostaiHomepage "@GOSTAI_HOMEPAGE@">
+<!ENTITY gostaiCommunityUrl "@GOSTAI_COMMUNITY_URL@">
+<!ENTITY gostaiForumUrl "@GOSTAI_FORUM_URL@">
