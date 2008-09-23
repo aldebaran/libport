@@ -44,7 +44,7 @@ namespace Network
   LIBPORT_API void unregisterNetworkPipe(Pipe* p);
 
   /// Create a tcp server, binding on specified address/port, return local port.
-  LIBPORT_API int createTCPServer(int port=0, const char *address=0);
+  LIBPORT_API int createTCPServer(int port=0, std::string address = "");
 
   /// Perform the select with a delay of usedDelay microseconds.
   /// \returns  whether at least one action was performed

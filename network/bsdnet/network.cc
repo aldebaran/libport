@@ -227,13 +227,10 @@ namespace Network
   }
 
   int
-  createTCPServer(int port, const char* address)
+  createTCPServer(int port, std::string address)
   {
     TCPServerPipe* tsp = new TCPServerPipe();
-    std::string addr;
-    if (address)
-      addr = address;
-    if (!tsp->init(port, addr))
+    if (!tsp->init(port, address))
     {
       delete tsp;
       return 0;
