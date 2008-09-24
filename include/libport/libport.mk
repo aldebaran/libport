@@ -44,6 +44,8 @@ libport_include_HEADERS +=			\
 	$(include_libport)/fwd.hh		\
 	$(include_libport)/hash.hh		\
 	$(include_libport)/indent.hh		\
+	$(include_libport)/instance-tracker.hh	\
+	$(include_libport)/instance-tracker.hxx	\
 	$(include_libport)/lexical-cast.hh	\
 	$(include_libport)/lockable.hh		\
 	$(include_libport)/network.h		\
