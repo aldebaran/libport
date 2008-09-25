@@ -66,6 +66,17 @@ Extra CXX flags are specified this way:
 
   -DCMAKE_CXX_FLAGS="-W -Wall -ggdb3 -fno-inline"
 
+*** CXX flags and cl.exe (Visual C++ compiler)
+
+Add to CMAKE_CXX_FLAGS:
+
+  "/W4"     - Set warning level to 4 (default is 3)
+  "/wd4127" - Disable warning 4127
+  "/wd4512" - Disable warning 4512
+
+And cl will issue all warnings enabled by default on other platforms
+while still skipping many that would be raised in dependencies (e.g. Qt).
+
 ** Build type
 
 You can choose your build type, debug or release, this way:
