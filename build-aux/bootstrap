@@ -214,12 +214,20 @@ attributes ()
 # Install a link FROM that goes to TO.
 link_symbolic ()
 {
+  local from=$1
+  local to=$2
+  # If we have an empty directory, we may have had a submodule
+  # here in the past, so remove it. It is empty, so nothing
+  # will be lost anyway.
+  if test -d $from; then
+    rmdir $from 2> /dev/null || true
+  fi
+  # Under cygwin, we will end up doing a copy anyway, so do not
+  # even pretend to try to create a link.
   case $(uname) in
       *CYGWIN*)
 	  return 1;;
   esac
-  local from=$1
-  local to=$2
   local morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
 
   # It is a nightmare to have incorrect links, diagnose this.
