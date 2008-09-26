@@ -30,6 +30,8 @@ EXTRA_HEADERS =
 LIBS =
 MAINTAINERCLEANFILES =
 SUFFIXES =
+# Automake still does not honor AM_LDADD.
+LDADD = $(AM_LDADD)
 
 nodist_bin_SCRIPTS =
 dist_bin_SCRIPTS =
