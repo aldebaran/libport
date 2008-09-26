@@ -16,7 +16,7 @@ namespace libport
   }
 
   inline
-  Finally::Finally(const Action& a)
+  Finally::Finally(const action_type& a)
   {
     actions_.reserve(4);
     *this << a;
@@ -31,12 +31,12 @@ namespace libport
   inline
   Finally::~Finally()
   {
-    foreach (const Action& a, actions_)
+    foreach (const action_type& a, actions_)
       a();
   }
 
   inline
-  Finally& Finally::operator <<(const Action& a)
+  Finally& Finally::operator <<(const action_type& a)
   {
     actions_.push_back(a);
     return *this;
@@ -44,15 +44,15 @@ namespace libport
 
   template<typename T>
   inline
-  Finally::Action restore(T& v)
+  Finally::action_type restore(T& v)
   {
     return boost::lambda::var(v) = v;
   }
 
   template<typename T>
-  Finally::Action scoped_set(T& v, T n)
+  Finally::action_type scoped_set(T& v, T n)
   {
-    Finally::Action res = restore(v);
+    Finally::action_type res = restore(v);
     v = n;
     return res;
   }
