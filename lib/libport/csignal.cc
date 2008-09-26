@@ -7,7 +7,7 @@ namespace libport
   sig_t
   signal(int sig, sig_t func)
   {
-    sig_t res = signal(sig, func);
+    sig_t res = ::signal(sig, func);
     if (res == SIG_ERR)
       perror("signal");
     return res;
