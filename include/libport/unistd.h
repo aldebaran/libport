@@ -26,13 +26,7 @@
 
 # ifdef WIN32
 #  include <direct.h>
-extern "C"
-{
-  int chdir (const char* path)
-  {
-    return _chdir(path);
-  }
-}
+#  define chdir _chdir
 # endif
 
 # if !defined LIBPORT_HAVE_GETCWD
