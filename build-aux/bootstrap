@@ -219,7 +219,7 @@ link_symbolic ()
   # If we have an empty directory, we may have had a submodule
   # here in the past, so remove it. It is empty, so nothing
   # will be lost anyway.
-  if test -d $from; then
+  if test -d $from -a ! -L $from; then
     stderr "Attempting to remove pre-existing $from directory"
     rmdir $from 2> /dev/null || true
     if test -d $from; then
