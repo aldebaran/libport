@@ -23,7 +23,7 @@ function(COPY_DEPENDENT_LIBRARIES target destination)
   add_custom_target(
     ${target}-dldep ALL
     COMMAND ${generator} ${binary} ${destination}
-    DEPENDS ${binary} ${generator}
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${binary} ${generator}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "${CMAKE_COMMAND} -E cmake_echo_color "
     "--switch=${CMAKE_MAKEFILE_COLOR} --cyan "
