@@ -21,7 +21,7 @@
 #
 # These variables are set to <var-name>-NOTFOUND if an error occurs.
 
-set(QSINTILLA2_FOUND FALSE)
+set(QSCINTILLA2_FOUND FALSE)
 
 # Search for the library.
 if(NOT QSCINTILLA2_LIBRARY)
