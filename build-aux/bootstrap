@@ -411,12 +411,6 @@ fi
 
 run autoreconf --no-recursive --force --verbose --install
 
-# FIXME: autoheader does not obey --force.
-autoheader_in=$(find . -name 'config.h.in')
-if test -n "$autoheader_in"; then
-  run touch $autoheader_in
-fi
-
 for i in $keep
 do
   run mv -f $i.bak $i
