@@ -3,7 +3,7 @@
 # define LIBPORT_CSTDLIB
 
 # include <cstdlib>
-# include <export.hh>
+# include <libport/export.hh>
 # include <libport/detect-win32.h>
 
 # ifdef WIN32
