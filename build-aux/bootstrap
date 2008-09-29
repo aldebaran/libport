@@ -220,7 +220,12 @@ link_symbolic ()
   # here in the past, so remove it. It is empty, so nothing
   # will be lost anyway.
   if test -d $from; then
+    stderr "Attempting to remove pre-existing $from directory"
     rmdir $from 2> /dev/null || true
+    if test -d $from; then
+      fatal "$from is a non-empty directory. " \
+	    "Please remove and restart."
+    fi
   fi
   # Under cygwin, we will end up doing a copy anyway, so do not
   # even pretend to try to create a link.
