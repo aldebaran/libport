@@ -56,6 +56,13 @@ namespace libport
     v = n;
     return res;
   }
+
+  template<typename Value, typename Container>
+  Finally::action_type scoped_push(const Value& value, Container& container)
+  {
+    container.push_back(value);
+    return Finally::action_type(boost::bind(&Container::pop_back, &container));
+  }
 }
 
 

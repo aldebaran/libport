@@ -49,6 +49,11 @@ namespace libport
   /// end of the scope.
   template<typename T>
   Finally::action_type scoped_set(T&, T);
+
+  /// Push \a value at the end of \a container, and pop it at the end
+  /// of the scope
+  template<typename Value, typename Container>
+  Finally::action_type scoped_push(const Value& value, Container& container);
 }
 
 # include <libport/finally.hxx>
