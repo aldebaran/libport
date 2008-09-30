@@ -36,6 +36,8 @@ LDADD = $(AM_LDADD)
 nodist_bin_SCRIPTS =
 dist_bin_SCRIPTS =
 
+bin_PROGRAMS =
+
 # Useful variables.
 build_aux_dir = $(top_srcdir)/build-aux
 
