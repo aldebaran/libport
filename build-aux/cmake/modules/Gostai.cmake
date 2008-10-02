@@ -5,6 +5,8 @@ if(NOT COMMAND gostai_add_executable)
 include(ParseArguments)
 include(InstallQtPlugins)
 include(Dirs)
+include(DynLibDep)
+include(GenLibLoader)
 
 # Add a Gostai executable target named _name_
 # Arguments:
@@ -120,6 +122,13 @@ macro(gostai_add_executable name)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt.conf.install
     DESTINATION ${BINARIES_DIR}
     RENAME qt.conf)
+
+  # ========================== #
+  # Deploy dependent libraries #
+  # ========================== #
+
+  gen_lib_loader(${name})
+  dldep_install(${name})
 
 endmacro(gostai_add_executable)
 

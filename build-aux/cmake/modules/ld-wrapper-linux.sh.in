@@ -17,7 +17,7 @@ case "$dirname" in
 	dirname="$PWD/$dirname"
 	;;
 esac
-paths="$dirname/../lib/$appname"
+paths="$dirname/../@EXTRA_LIBRARIES_DIR@"
 LD_LIBRARY_PATH="$paths"
 export LD_LIBRARY_PATH
 DYLD_LIBRARY_PATH="$paths"

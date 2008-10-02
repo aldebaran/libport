@@ -20,7 +20,7 @@ include(CheckCMakeVarsExists)
 # generated wrapper script is schedule for installation.
 function(GEN_LIB_LOADER target)
 
-  check_cmake_vars_exists(CMAKE_AUX_DIR)
+  check_cmake_vars_exists(BINARIES_DIR EXTRA_LIBRARIES_DIR)
 
   # Extension of the script.
   if(UNIX)
@@ -31,15 +31,18 @@ function(GEN_LIB_LOADER target)
     set(ext ".bat")
   endif(UNIX)
   # Output script file name.
+  get_target_property(target_loc ${target} LOCATION_${CMAKE_BUILD_TYPE})
+  get_filename_component(target_path ${target_loc} PATH)
   string(REGEX REPLACE "^(.*)\\.[^.]+$" "\\1" output ${target})
-  set(output "${CMAKE_CURRENT_BINARY_DIR}/${output}${ext}")
+  set(output "${target_path}/${output}${ext}")
   # Add target
-  message(STATUS "Configure '${input}' to '${output}'")
+  message(STATUS
+    "Generate library loader script from '${input}' to '${output}'")
   configure_file(${input} ${output} ESCAPE_QUOTES @ONLY)
   # Let clean target remove it.
   set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${output})
   # Install the script
-  INSTALL(PROGRAMS ${output} DESTINATION bin)
+  INSTALL(PROGRAMS ${output} DESTINATION ${BINARIES_DIR})
 endfunction(GEN_LIB_LOADER target)
 
 endif(NOT COMMAND GEN_LIB_LOADER)
