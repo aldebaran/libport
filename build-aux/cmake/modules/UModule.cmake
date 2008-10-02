@@ -309,6 +309,8 @@ MACRO(add_remote)
     add_manifest(${UOBJECT_REMOTE_NAME})
     set_target_properties(${UOBJECT_REMOTE_NAME}
                           PROPERTIES COMPILE_DEFINITIONS URBI_ENV_REMOTE)
+
+    # Link with urbi remote and dependencies
     link_remote_libraries(${UOBJECT_REMOTE_NAME})
     target_link_libraries(${UOBJECT_REMOTE_NAME} ${UOBJECT_REMOTE_DEPENDS})
     list_shared_libraries(UOBJECT_REMOTE_DEPENDS
@@ -357,7 +359,7 @@ MACRO(add_engine)
     cmake_policy(SET CMP0003 NEW)
     add_executable(${UOBJECT_ENGINE_NAME} ${UOBJECT_ENGINE_SOURCES})
     add_manifest(${UOBJECT_ENGINE_NAME})
-    set_target_properties(${UOBJECT_REMOTE_NAME}
+    set_target_properties(${UOBJECT_ENGINE_NAME}
                           PROPERTIES COMPILE_DEFINITIONS URBI_ENV_ENGINE)
 
     # Link with needed umodules
@@ -446,6 +448,8 @@ ENDMACRO(link_remote_libraries)
 MACRO(link_engine_libraries UOBJECT_NAME)
 
     find_package(SdkEngine REQUIRED)
+
+    # Link
     include_directories(${SDK_ENGINE_INCLUDE_DIRS})
     target_link_libraries(${UOBJECT_NAME} ${SDK_ENGINE_LIBRARIES})
     list(APPEND ${UMODULE_DIR}_ENGINE_SHARED_LIBRARIES

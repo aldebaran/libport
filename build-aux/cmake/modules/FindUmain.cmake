@@ -17,7 +17,7 @@
 ##-----------------------------------------------------------------
 
 # Dependencies
-find_package(BoostV2 1.34.1 REQUIRED)
+find_package(Boost 1.34.1 REQUIRED)
 
 set(PACKAGE_FULLNAME "URBI SDK Umain.cc directory")
 
