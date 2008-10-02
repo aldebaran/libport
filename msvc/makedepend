@@ -1,0 +1,6 @@
+#! /bin/sh
+#
+# Pretend that makedepend is not usable (really, it is not).
+#
+
+exit 1

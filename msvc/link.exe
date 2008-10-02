@@ -17,6 +17,7 @@ if test "$PROG" = "cl.exe"; then
 fi
 linkargs=
 compile_mode=false
+preprocess_mode=false
 got_output_arg=false
 source=
 #output file name
@@ -40,6 +41,7 @@ while ! test -z $1; do
   -l*)  larg=$(transform ${1#-l}.lib) ;;
   *.lib) larg=$(transform $1) ;;
   *.a)  larg=$(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
+  -E)  preprocess_mode=true; carg=/E ;;
   -c)  compile_mode=true; carg=/c ;;
   -o)  shift
        got_output_arg=true
@@ -83,8 +85,15 @@ if test x$WRAP_VERBOSE != x; then
   echo "  command:" $PROG "$outargs $linkargs" >/dev/stderr
 fi
 
-
-$VCXX_BIN/$PROG $outargs $linkargs
+if $preprocess_mode; then
+  # Split into two commands so that "set -e" will work
+  tmp=/tmp/preprocess.$$
+  $VCXX_BIN/$PROG $outargs $linkargs > $tmp
+  cppoutput < $tmp
+  rm $tmp
+else
+  $VCXX_BIN/$PROG $outargs $linkargs
+fi
 
 #embed manifest
 #if echo $output | egrep -q '(exe|dll)$'; then
