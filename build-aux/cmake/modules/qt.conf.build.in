@@ -1,9 +1,0 @@
-[Paths]
-	Prefix = @CMAKE_CURRENT_BINARY_DIR@
-	Binaries = .
-	Documentation = @CMAKE_SOURCE_DIR@/@DOCUMENTATION_DIR@
-	Examples = @CMAKE_SOURCE_DIR@/@EXAMPLES_DIR@
-	Demos = @CMAKE_SOURCE_DIR@/@DEMOS_DIR@
-        Plugins = @QT_PLUGINS_DIR@
-	Data = @CMAKE_SOURCE_DIR@/@DATA_DIR@
-	Translations = @CMAKE_SOURCE_DIR@/@TRANSLATIONS_DIR@

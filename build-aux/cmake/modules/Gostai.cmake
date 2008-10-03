@@ -92,11 +92,13 @@ macro(gostai_add_executable name)
     ${CMAKE_CURRENT_BINARY_DIR}/qt.conf.install
     ESCAPE_QUOTES
     @ONLY)
-  configure_file(
-    ${CMAKE_MODULE_PATH}/qt.conf.build.in
-    ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
-    ESCAPE_QUOTES
-    @ONLY)
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/qt.conf.build.in)
+    configure_file(
+      ${CMAKE_CURRENT_SOURCE_DIR}/qt.conf.build.in
+      ${CMAKE_CURRENT_BINARY_DIR}/qt.conf
+      ESCAPE_QUOTES
+      @ONLY)
+  endif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/qt.conf.build.in)
   configure_file(
     ${CMAKE_MODULE_PATH}/project-info.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/project-info.h
