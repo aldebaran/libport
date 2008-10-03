@@ -16,7 +16,7 @@ if(NOT MODULE_UMODULE_LOADED)
 set(MODULE_UMODULE_LOADED TRUE)
 
 include(Macro-toolbox)
-include(ParseArguments)
+include(Tools)
 
 #------------------------------------------------------------------------------
 #                                 Default parameters

@@ -12,7 +12,7 @@
 if(NOT MODULE_SEARCH_LOADED)
 set(MODULE_SEARCH_LOADED TRUE)
 
-include(ParseArguments)
+include(Tools)
 
 #------------------------------------------------------------------------------
 #                                 Win32 Addon

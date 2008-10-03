@@ -10,7 +10,7 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
-include(CheckCMakeVarsExists)
+include(Tools)
 
 #FIXME: Remove guards ASAP
 # if(NOT PROJECT_INFO_CMAKE)

@@ -4,7 +4,7 @@
 
 set(CMAKE_MODULE_PATH @CMAKE_MODULE_PATH@)
 include(DynLibDep)
-include(Echo)
+include(Tools)
 include(File)
 include(If)
 

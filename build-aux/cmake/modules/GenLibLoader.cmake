@@ -12,7 +12,7 @@
 
 if(NOT COMMAND GEN_LIB_LOADER)
 
-include(CheckCMakeVarsExists)
+include(Tools)
 
 # Generate a wrapper script, for _target_, that sets
 # LD_LIBRARY_PATH/DYLD_LIBRARY_PATH/PATH to the prefix/lib directory according

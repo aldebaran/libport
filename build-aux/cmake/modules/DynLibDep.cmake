@@ -4,7 +4,7 @@
 if(NOT DYN_LIB_DEP_CMAKE_GUARD)
   set(DYN_LIB_DEP_CMAKE_GUARD TRUE)
 
-  include(Echo)
+  include(Tools)
   include(String)
 
   # The list of excluded Unix libraries.

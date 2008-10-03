@@ -2,7 +2,7 @@
 
 if(NOT COMMAND gostai_add_executable)
 
-include(ParseArguments)
+include(Tools)
 include(InstallQtPlugins)
 include(Dirs)
 include(DynLibDep)

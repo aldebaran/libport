@@ -12,7 +12,7 @@
 
 if(NOT COMMAND COPY_DEPENDENT_LIBRARIES)
 
-include(CheckCMakeVarsExists)
+include(Tools)
 
 # Copy dependent libraries of _target_ in target-dldep and schedule them for
 # installation. It uses dldep.

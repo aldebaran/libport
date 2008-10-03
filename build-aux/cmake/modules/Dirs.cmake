@@ -26,7 +26,7 @@ if(NOT DEFINED DIRS_CMAKE)
       #FIXME: Implement me!
     else(APPLE)
       # Unix, cygwin, mingw
-      include(CheckCMakeVarsExists)
+      include(Tools)
       check_cmake_vars_exists(PROJECT_NAME PROJECT_VERSION)
       set(_share_prefix share/${PROJECT_NAME}/${PROJECT_VERSION})
 
