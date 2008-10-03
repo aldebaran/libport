@@ -20,7 +20,6 @@ enable_testing()
 include(Tools)
 hostname(BUILDER_HOSTNAME)
 set(BUILDFARM $ENV{BUILDFARM})
-include(CopyDependentLibraries)
 include(GenLibLoader)
 include(GostaiInfo)
 
