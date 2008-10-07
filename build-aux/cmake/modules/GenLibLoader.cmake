@@ -14,11 +14,12 @@ if(NOT COMMAND GEN_LIB_LOADER)
 
 include(Tools)
 
-# Generate a wrapper script, for _target_, that sets
+# Generate a wrapper script, for _binary_, that sets
 # LD_LIBRARY_PATH/DYLD_LIBRARY_PATH/PATH to the prefix/lib directory according
 # to the platform. Extra directories maybe given as extra arguments. The
 # generated wrapper script is schedule for installation.
-function(GEN_LIB_LOADER target)
+# NOTE: _binary_ my be a target.
+function(GEN_LIB_LOADER binary)
 
   check_cmake_vars_exists(BINARIES_DIR EXTRA_LIBRARIES_DIR)
 
@@ -31,18 +32,24 @@ function(GEN_LIB_LOADER target)
     set(ext ".bat")
   endif(UNIX)
   # Output script file name.
-  get_target_property(target_loc ${target} LOCATION_${CMAKE_BUILD_TYPE})
-  get_filename_component(target_path ${target_loc} PATH)
-  string(REGEX REPLACE "^(.*)\\.[^.]+$" "\\1" output ${target})
-  set(output "${target_path}/${output}${ext}")
-  # Add target
+  if(TARGET ${binary})
+    get_target_property(binary_loc ${binary} LOCATION_${CMAKE_BUILD_TYPE})
+    set(binary_name ${binary})
+  else(TARGET ${binary})
+    set(binary_loc ${binary})
+    get_filename_component(binary_name ${binary} NAME)
+  endif(TARGET ${binary})
+  get_filename_component(binary_path ${binary_loc} PATH)
+  string(REGEX REPLACE "^(.*)\\.[^.]+$" "\\1" output ${binary_name})
+  set(output "${binary_path}/${output}${ext}")
+  # Configure wrapper script.
   message(STATUS
     "Generate library loader script from '${input}' to '${output}'")
   configure_file(${input} ${output} ESCAPE_QUOTES @ONLY)
-  # Let clean target remove it.
+  # Let 'clean' target remove configured file.
   set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${output})
   # Install the script
   INSTALL(PROGRAMS ${output} DESTINATION ${BINARIES_DIR})
-endfunction(GEN_LIB_LOADER target)
+endfunction(GEN_LIB_LOADER binary)
 
 endif(NOT COMMAND GEN_LIB_LOADER)

@@ -1,6 +1,6 @@
 # This is the script template used to install the dependent dynamic libraries
-# of a given target. It is supposed to be expanded by the dldep_install
-# function declared in DynLibDep.cmake.
+# of a given binary or target. It is supposed to be expanded by the
+# dldep_install function declared in DynLibDep.cmake.
 
 set(CMAKE_MODULE_PATH @CMAKE_MODULE_PATH@)
 include(DynLibDep)
@@ -8,8 +8,8 @@ include(Tools)
 include(File)
 include(If)
 
-echo("Installing dependent dynamic libraries of '@target@'")
-dldep(@target_loc@ libs)
+echo("Installing dependent dynamic libraries of '@binary_name@'")
+dldep(@binary_loc@ libs)
 set(destdir "${CMAKE_INSTALL_PREFIX}/@EXTRA_LIBRARIES_DIR@")
 
 foreach(lib ${libs})

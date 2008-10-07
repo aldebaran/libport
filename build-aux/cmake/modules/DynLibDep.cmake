@@ -131,17 +131,24 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
 
   endfunction(dldep)
 
-  # Schedule for installation all dependent dynamic libraries of _target_.
-  function(dldep_install target)
+  # Schedule for installation all dependent dynamic libraries of _binary_.
+  # NOTE: _binary_ might be a target name.
+  function(dldep_install binary)
 
     include(Dirs)
-    get_target_property(target_loc ${target} LOCATION_${CMAKE_BUILD_TYPE})
-    get_filename_component(target_path ${target_loc} PATH)
+    if(TARGET ${binary})
+      get_target_property(binary_loc ${binary} LOCATION_${CMAKE_BUILD_TYPE})
+      set(binary_name ${binary})
+    else(TARGET ${binary})
+      set(binary_loc ${binary})
+      get_filename_component(binary_name ${binary} NAME)
+    endif(TARGET ${binary})
+    get_filename_component(binary_path ${binary_loc} PATH)
     configure_file(
       ${CMAKE_MODULE_PATH}/install-dyn-lib-dep.cmake.in
-      ${target_path}/install-dyn-lib-dep.cmake
+      ${binary_path}/install-dyn-lib-dep.cmake
       @ONLY)
-    install(SCRIPT ${target_path}/install-dyn-lib-dep.cmake)
+    install(SCRIPT ${binary_path}/install-dyn-lib-dep.cmake)
 
   endfunction(dldep_install)
 
