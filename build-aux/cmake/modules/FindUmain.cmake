@@ -18,6 +18,11 @@
 
 # Dependencies
 find_package(Boost 1.34.1 REQUIRED)
+# Check if boost was found, because, FindBoost don't display
+# a FATAL_ERROR message.
+if(NOT Boost_FOUND)
+  message(FATAL_ERROR "Boost not found")
+endif()
 
 set(PACKAGE_FULLNAME "URBI SDK Umain.cc directory")
 

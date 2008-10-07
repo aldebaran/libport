@@ -50,8 +50,11 @@ if(DOXYGEN_FOUND)
     COMMENT "Generate the doxygen mainpage to ${DOXYGEN_MAINPAGE}"
     VERBATIM)
   # Add some file to clean.
+  if(NOT DOXYGEN_HTML_OUTPUT)
+    set(DOXYGEN_HTML_OUTPUT "html")
+  endif(NOT DOXYGEN_HTML_OUTPUT)
   set_directory_properties(PROPERTIES
-    ADDITIONAL_MAKE_CLEAN_FILES "doxygen.log;${DOXYGEN_MAINPAGE}")
+    ADDITIONAL_MAKE_CLEAN_FILES "doxygen.log;${DOXYGEN_MAINPAGE};${DOXYGEN_HTML_OUTPUT}")
 
   # Set DOXYGEN_HAVE_DOT
   if(DOXYGEN_DOT_EXECUTABLE)
