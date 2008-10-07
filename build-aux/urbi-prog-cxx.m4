@@ -225,7 +225,7 @@ TC_CXX_WARNINGS([[/wd4099],
 # Generally speaking, once there will be a decent version of GCC for MinGW,
 # we'll remove this.
 case $GXX:$host in
-  yes:cygwin* | yes:*mingw* | yes:mipsel-*linux-*) :;;
+  yes:cygwin* | yes:*mingw* | yes:mipsel-*linux-* | yes:*arm*) :;;
   yes:*) # for other occurrences of G++, it's fine to use -Werror
     TC_CXX_WARNINGS([-Werror])
   ;;
