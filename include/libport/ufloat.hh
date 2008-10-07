@@ -6,7 +6,7 @@
 
 # include <libport/config.h>
 
-# include <cfloat>
+# include <float.h>
 # include <exception>
 
 /*-----------------.

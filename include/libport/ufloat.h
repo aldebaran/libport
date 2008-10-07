@@ -11,10 +11,16 @@ using libport::UINFINITY;
 
 # include <libport/config.h>
 # ifndef LIBPORT_HAVE_ROUND
-using libport::round;
+inline double round(double x)
+{
+  return libport::round(x);
+}
 # endif /* !LIBPORT_HAVE_ROUND */
 # ifndef LIBPORT_HAVE_TRUNC
-using libport::trunc;
+inline double trunc(double x)
+{
+  return libport::trunc(x);
+}
 # endif /* !LIBPORT_HAVE_TRUNC */
 
 #endif // !LIBPORT_UFLOAT_H
