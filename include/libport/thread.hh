@@ -2,7 +2,8 @@
 # define LIBPORT_THREAD_HH
 
 # include <libport/config.h>
-
+# include <boost/function.hpp>
+# include <boost/bind.hpp>
 # ifdef LIBPORT_WIN32
 #  define WIN32
 # endif
@@ -18,14 +19,6 @@
 
 namespace libport
 {
-  template<class T>
-  class StartInfo
-  {
-  public:
-    T* inst;
-    void (T::*func)(void);
-  };
-
 # if defined WIN32
   typedef DWORD ThreadStartRet;
 #  define THREADSTARTCALL WINAPI
@@ -33,66 +26,41 @@ namespace libport
   typedef void* ThreadStartRet;
 #  define THREADSTARTCALL
 # endif
-
-  template<class T> ThreadStartRet THREADSTARTCALL
-  _startThread2(void * data)
-  {
-    StartInfo<T> * st = (StartInfo<T>*)data;
-    ((*st->inst).*st->func)();
-    delete st;
-    return static_cast<ThreadStartRet> (0);
-  }
-
-  template<class T> ThreadStartRet THREADSTARTCALL
+  inline
+  ThreadStartRet THREADSTARTCALL
   _startThread(void * data)
   {
-    T * t = (T*)data;
-    (*t)();
+    boost::function0<void> * s =(boost::function0<void>*) data;
+    (*s)();
+    delete s;
     return static_cast<ThreadStartRet> (0);
   }
 
-  template<class T> void*
-  startThread(T * obj, void (T::*func)(void))
+  inline
+  void* startThread(boost::function0<void> func)
   {
-    StartInfo<T> * si = new StartInfo<T>();
-    si->inst = obj;
-    si->func = func;
-
+    boost::function0<void> * cp = new boost::function0<void>(func);
 # if defined WIN32
     unsigned long id;
-    void* r = CreateThread(NULL, 0, &_startThread2<T>, si, 0, &id);
+    void* r = CreateThread(NULL, 0, &_startThread, cp, 0, &id);
 # else
     pthread_t* pt = new pthread_t;
-    pthread_create(pt, 0, &_startThread2<T>, si);
+    pthread_create(pt, 0, &_startThread, cp);
     void* r = pt;
 # endif
-
-    if (false)
-      {
-	//force instanciation
-	_startThread2<T>(0);
-      }
-
     return r;
   }
 
   template<class T> void* startThread(T* obj)
   {
-# if defined WIN32
-    unsigned long id;
-    void* r = CreateThread(NULL, 0, &_startThread<T>, obj, 0, &id);
-# else
-    pthread_t* pt = new pthread_t;
-    pthread_create(pt, 0, &_startThread<T>, obj);
-    void* r = pt;
-# endif
-    if (false)
-      //force instanciation
-      _startThread<T>(0);
-
-    return r;
+    return startThread(boost::bind(&T::operator(), obj));
   }
 
+  template<class T> void*
+  startThread(T * obj, void (T::*func)(void))
+  {
+    return startThread(boost::bind(func, obj));
+  }
 
   inline void joinThread(void* t)
   {
