@@ -1,0 +1,6 @@
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
+
+  <xsl:variable name="extra_files">@extra_files_xml@</xsl:variable>
+  <xsl:variable name="base_dir">@chunk_dir@/</xsl:variable>
+
+</xsl:stylesheet>
