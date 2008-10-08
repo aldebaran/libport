@@ -10,10 +10,10 @@ if ! test -x $VCXX_BIN/cl.exe; then
   echo cl.exe not found in $VCXX_BIN 1>&2; exit 1
 fi
 
-outargs=
+outargs=/MD
 #echo PROG is $PROG >&2
 if test "$PROG" = "cl.exe"; then
-  outargs=" /nologo /EHsc "
+  outargs="$outargs /nologo /EHsc"
 fi
 linkargs=
 compile_mode=false
