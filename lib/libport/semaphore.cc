@@ -151,7 +151,7 @@ namespace libport
   {
     if (sem_post(sem_))
     {
-      ~Semaphore();
+      destroy();
       errabort("sem_post");
     }
   }
@@ -167,7 +167,7 @@ namespace libport
     while (err == -1 && errno == EINTR);
     if (err)
     {
-      ~Semaphore();
+      destroy();
       errabort("sem_wait");
     }
   }
@@ -177,7 +177,7 @@ namespace libport
     int res;
     if (sem_getvalue(sem_, &res))
     {
-      ~Semaphore();
+      destroy();
       errabort("sem_getvalue");
     }
     return res;
