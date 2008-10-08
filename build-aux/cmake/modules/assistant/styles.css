@@ -90,3 +90,8 @@ span.string,span.char
 {
   color: darkgreen;
 }
+
+dd
+{
+  margin-left: 20px;
+}
