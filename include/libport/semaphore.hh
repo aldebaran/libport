@@ -42,6 +42,7 @@ namespace libport
     operator int ();
 
   private:
+    void destroy();
     sem_t* sem_;
 # ifdef __APPLE__
     std::string name_;

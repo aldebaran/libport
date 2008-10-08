@@ -107,13 +107,19 @@ namespace libport
     sem_ = new sem_t;
     if (sem_init(sem_, 0, cnt))
     {
-      ~Semaphore();
+      destroy();
       errabort("sem_init(" << cnt << ')');
     }
 # endif
   }
 
   Semaphore::~Semaphore ()
+  {
+    destroy();
+  }
+
+  void
+  Semaphore::destroy()
   {
 # ifdef __APPLE__
     // We *really* need to unlink the semaphores when we are done,
