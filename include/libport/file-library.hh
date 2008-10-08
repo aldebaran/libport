@@ -22,7 +22,7 @@ namespace libport
   {
   public:
 
-    /// Exception thrown when a file is not localisable
+    /// Exception thrown when a file cannot be located.
     class Not_found : public std::exception
     {};
 

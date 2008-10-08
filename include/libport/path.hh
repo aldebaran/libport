@@ -18,16 +18,17 @@ namespace libport
   {
   public:
     /// Exception thrown on invalid path
-    class LIBPORT_API invalid_path
+    class LIBPORT_API invalid_path : public std::exception
     {
     public:
       invalid_path(const std::string& msg)
         : _msg(msg)
       {}
-      std::string what()
+      const char* what() const throw ()
       {
-        return _msg;
+        return _msg.c_str();
       }
+      virtual ~invalid_path() throw () {};
     private:
       std::string _msg;
     };
