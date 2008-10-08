@@ -2,7 +2,7 @@
 <QHelpCollectionProject version="1.0">
   <assistant>
     <title>@name@ Documentation</title>
-    <startPage>qthelp://com.gostai/doc/@name@/index.html</startPage>
+    <startPage>qthelp://com.gostai/doc/@chunk_dir@/index.html</startPage>
     <enableFilterFunctionality>false</enableFilterFunctionality>
     <enableDocumentationManager>false</enableDocumentationManager>
     <applicationIcon>gostai-doc.png</applicationIcon>

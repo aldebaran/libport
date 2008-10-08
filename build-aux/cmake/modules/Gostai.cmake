@@ -177,7 +177,7 @@ function(gostai_add_qt_assistant name)
   endif(main_idx STREQUAL -1)
 
   # Configure extra files style sheet.
-  set(extra_files ${css_filename})
+  set(extra_files ${css_filename} index.html)
   list(APPEND extra_files ${${prefix}_EXTRA})
   foreach(extra_file ${extra_files})
     set(extra_files_xml
