@@ -45,7 +45,7 @@ CLEANFILES += $(EXTRA_PROGRAMS)
 
 AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 AM_LDFLAGS += $(BOOST_SERIALIZATION_LDFLAGS) $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
-LDADD = $(top_builddir)/lib/libport/libport.la \
+LDADD += $(top_builddir)/lib/libport/libport.la \
 	$(BOOST_UNIT_TEST_FRAMEWORK_LIBS) $(BOOST_SERIALIZATION_LIBS)
 
 deref_SOURCES      	= deref.cc
