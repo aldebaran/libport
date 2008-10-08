@@ -61,7 +61,6 @@ EOF
     io.puts(" * \\section #{path.basename}")
     io.puts(" * \\verbatim")
     path.each_line do |l|
-      #l = " * " + l
       io.print(l)
     end
     io.puts("\\endverbatim")
