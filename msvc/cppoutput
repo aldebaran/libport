@@ -60,6 +60,10 @@ for l in sys.stdin:
     seen[x.group(2)] = transform(x.group(2))
 r = [f for f in seen.values() if not f.startswith('/home/build/local_wine')]
 r.sort
+# We sometimes end up with lines containing "Bison:" in the output. This
+# messes up the "make" rules, so we do not issue them if they contain
+# ":".
 for f in r:
-  print '#line 1 "%s"' % f
+  if ':' not in f:
+    print '#line 1 "%s"' % f
 db.commit()
