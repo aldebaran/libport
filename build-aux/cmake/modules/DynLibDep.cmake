@@ -139,11 +139,12 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
     if(TARGET ${binary})
       get_target_property(binary_loc ${binary} LOCATION_${CMAKE_BUILD_TYPE})
       set(binary_name ${binary})
+      get_filename_component(binary_path ${binary_loc} PATH)
     else(TARGET ${binary})
       set(binary_loc ${binary})
       get_filename_component(binary_name ${binary} NAME)
+      set(binary_path ${CMAKE_CURRENT_BINARY_DIR})
     endif(TARGET ${binary})
-    get_filename_component(binary_path ${binary_loc} PATH)
     configure_file(
       ${CMAKE_MODULE_PATH}/install-dyn-lib-dep.cmake.in
       ${binary_path}/install-dyn-lib-dep.cmake
