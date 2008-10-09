@@ -276,7 +276,7 @@ namespace libport
   }
 
   const long timer::clocks_per_sec =
-#if not defined LIBPORT_URBI_ENV_AIBO
+#if ! defined LIBPORT_URBI_ENV_AIBO
     sysconf (_SC_CLK_TCK);
 #else
     100;
