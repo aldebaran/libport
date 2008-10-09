@@ -90,7 +90,7 @@ if(WIN32)
 
     # Search for the include directory.
     package_search(PATH ${PACKAGE_NAME}_INCLUDE openssl/ssl.h
-                   FULLNAME "SDK Remote INCLUDE"
+                   FULLNAME "OpenSSL SSL INCLUDE"
                    PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/include
                          ${${PACKAGE_NAME}_ROOT_DIR}/Release/include
                          ${${PACKAGE_NAME}_ROOT_DIR}/include)
