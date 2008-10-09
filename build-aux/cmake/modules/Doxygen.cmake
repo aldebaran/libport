@@ -126,8 +126,6 @@ if(DOXYGEN_FOUND)
 
   add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${DOXY_CONFIG})
   add_dependencies(doxygen doxygen_mainpage)
-  add_custom_target(doc)
-  add_dependencies(doc doxygen)
 
   # create a windows help .chm file using hhc.exe
   # HTMLHelp DLL must be in path!
