@@ -22,7 +22,7 @@
 ##-----------------------------------------------------------------
 
 # Dependencies
-find_package(OpenSSL REQUIRED)
+find_package(UrbiOpenSSL REQUIRED)
 
 set(PACKAGE_FULLNAME "URBI SDK Engine")
 
@@ -78,8 +78,8 @@ include(Package-toolbox)
 package_header(${CMAKE_CURRENT_LIST_FILE})
 
 # Add dependencies to the SDK engine
-list(APPEND ${PACKAGE_NAME}_LIBRARIES ${OPENSSL_LIBRARIES})
-list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${OPENSSL_INCLUDE_DIRS})
+list(APPEND ${PACKAGE_NAME}_LIBRARIES ${URBI_OPEN_SSL_LIBRARIES})
+list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${URBI_OPEN_SSL_INCLUDE_DIRS})
 
 # Places to look for the library/dll
 list(APPEND ${PACKAGE_NAME}_ADDITIONAL_DEBUG_PATHS
