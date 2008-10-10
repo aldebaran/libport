@@ -29,7 +29,7 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
 
   # Puts respectively the name and the path of the binary _binary_ in
   # _list_names_ and _libthe dependent libraries of _binary_.
-  function(dldep_unix binary lib_names lib_paths)
+  function(dldep_ldd binary lib_names lib_paths)
 
     set(tools ldd)
     find_program(tool ${tools})
@@ -78,7 +78,7 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
     set(${lib_names} ${_lib_names} PARENT_SCOPE)
     set(${lib_paths} ${_lib_paths} PARENT_SCOPE)
 
-  endfunction(dldep_unix)
+  endfunction(dldep_ldd)
 
   # Filter library names from _lib_names_ that match one of the regexp from
   # _exclusions_. Corresponding library paths from _lib_paths_ are stored in
@@ -119,7 +119,7 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
   function(dldep binary outlist)
 
     if(UNIX)
-      dldep_unix(${binary} lib_names lib_paths)
+      dldep_ldd(${binary} lib_names lib_paths)
       dldep_filter(
 	"${lib_names}"
 	"${lib_paths}"
