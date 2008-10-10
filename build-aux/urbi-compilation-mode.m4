@@ -25,7 +25,7 @@ urbi_compilation_mode_set ()
       (debug)
         compiler_flags -O2 -ggdb
         # Not all the code includes config.h.
-        CPPFLAGS="$CPPFLAGS -DURBI_DEBUG -D_GLIBCXX_DEBUG -DUSE_VALGRIND"
+        CPPFLAGS="$CPPFLAGS -DURBI_DEBUG -D_GLIBCXX_DEBUG"
         AC_DEFINE([URBI_DEBUG], [1],
                   [Define to enable Urbi debugging tools.])
         AC_DEFINE([_GLIBCXX_DEBUG], [1],
@@ -33,10 +33,9 @@ urbi_compilation_mode_set ()
         AC_DEFINE([YYDEBUG], [1],
                   [Define to enable parser runtime debug traces.])
         AC_SUBST([BISON_FLAGS], ["$BISON_FLAGS -Dassert"])
-        # Pass USE_VALGRIND only if valgrind/valgrind.h exists.
+        # Define USE_VALGRIND only if valgrind/valgrind.h exists.
         AC_CHECK_HEADER([valgrind/valgrind.h],
-                        [AC_DEFINE([USE_VALGRIND], [1],
-                                   [Define if <valgrind/valgrind.h> exists.])])
+                        [CPPFLAGS="$CPPFLAGS -DUSE_VALGRIND"])
         stacksize=1024
         ;;
 
