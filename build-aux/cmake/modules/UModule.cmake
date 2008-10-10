@@ -99,12 +99,20 @@ MACRO(add_umodule)
     parse_arguments(UMODULE "DEPENDS" "" ${ARGN})
     list(LENGTH UMODULE_DEFAULT_ARGS args_length)
     list(GET UMODULE_DEFAULT_ARGS 0 UMODULE_DIR)
+    set(UMODULE_SOURCE_DIR ${UMODULE_DIR})
     if(args_length GREATER 1)
       list(GET UMODULE_DEFAULT_ARGS 1 UMODULE_BINARY_DIR)
+      set(UMODULE_DIR ${UMODULE_BINARY_DIR})
     else()
       set(UMODULE_BINARY_DIR)
     endif()
     set(UMODULE_LINKS)
+
+    # Change all '/' from UMODULE_DIR variable because it use to create
+    # target and output file, but we can't create file with '/' in his
+    # filename. So, this replace all '/' by '-'.
+    # FIXME: do this for Win32 directory separator (\)
+    string(REPLACE "/" "-" UMODULE_DIR ${UMODULE_DIR})
 
     foreach(i ${UMODULE_INSTALL_TYPES})
         set(${UMODULE_DIR}_${i}_SHARED_LIBRARIES)
@@ -134,7 +142,7 @@ MACRO(add_umodule)
         endforeach(UMODULE_DEPENDS_DIR)
     endif(UMODULE_DEPENDS)
 
-    add_subdirectory(${UMODULE_DIR} ${UMODULE_BINARY_DIR})
+    add_subdirectory(${UMODULE_SOURCE_DIR} ${UMODULE_BINARY_DIR})
 
 ENDMACRO(add_umodule)
 
