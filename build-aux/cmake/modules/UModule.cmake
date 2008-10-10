@@ -91,13 +91,21 @@ endif(MSVC_VERSION)
 # umodules (with for example 'add_uobject' command) to grab all dependencies.
 # Indeed, ${UMODULE_DIR}_${TYPE}_SHARED_LIBRARIES variables are set during
 # those steps.
-# e.g. add_umodule(umodule_folder [DEPENDS umodule_folder1 umodule_folder2..])
+# e.g. add_umodule(umodule_folder [umodule_binary_dir]
+#                  [DEPENDS umodule_folder1 umodule_folder2..])
 
 MACRO(add_umodule)
 
     parse_arguments(UMODULE "DEPENDS" "" ${ARGN})
-    set(UMODULE_DIR ${UMODULE_DEFAULT_ARGS})
+    list(LENGTH UMODULE_DEFAULT_ARGS args_length)
+    list(GET UMODULE_DEFAULT_ARGS 0 UMODULE_DIR)
+    if(args_length GREATER 1)
+      list(GET UMODULE_DEFAULT_ARGS 1 UMODULE_BINARY_DIR)
+    else()
+      set(UMODULE_BINARY_DIR)
+    endif()
     set(UMODULE_LINKS)
+
     foreach(i ${UMODULE_INSTALL_TYPES})
         set(${UMODULE_DIR}_${i}_SHARED_LIBRARIES)
     endforeach(i ${UMODULE_INSTALL_TYPES})
@@ -126,7 +134,7 @@ MACRO(add_umodule)
         endforeach(UMODULE_DEPENDS_DIR)
     endif(UMODULE_DEPENDS)
 
-    add_subdirectory(${UMODULE_DIR})
+    add_subdirectory(${UMODULE_DIR} ${UMODULE_BINARY_DIR})
 
 ENDMACRO(add_umodule)
 
