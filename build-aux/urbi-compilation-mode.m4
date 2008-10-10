@@ -25,7 +25,7 @@ urbi_compilation_mode_set ()
       (debug)
         compiler_flags -O2 -ggdb
         # Not all the code includes config.h.
-        CPPFLAGS="$CPPFLAGS -DURBI_DEBUG -D_GLIBCXX_DEBUG"
+        CPPFLAGS="$CPPFLAGS -DURBI_DEBUG -D_GLIBCXX_DEBUG -DUSE_VALGRIND"
         AC_DEFINE([URBI_DEBUG], [1],
                   [Define to enable Urbi debugging tools.])
         AC_DEFINE([_GLIBCXX_DEBUG], [1],
