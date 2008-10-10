@@ -63,8 +63,8 @@ set(PACKAGE_FULLNAME "OpenSSL/TLS")
 #                      if the whole package has not been found.
 #
 # Here is the XXX_YY list:
-# OPEN_SSL_CRYPTO_LIBRARY
-# OPEN_SSL_DL_LIBRARY
+# URBI_OPEN_SSL_CRYPTO_LIBRARY
+# URBI_OPEN_SSL_DL_LIBRARY
 #
 ##-----------------------------------------------------------------
 
@@ -72,6 +72,15 @@ include(Package-toolbox)
 package_header(${CMAKE_CURRENT_LIST_FILE})
 
 if(UNIX)
+    # Search for openssl library.
+    find_package(OpenSSL)
+    if(OPENSSL_FOUND)
+      # FIXME: Check if other variable are requiered
+      list(APPEND ${PACKAGE_NAME}_LIBRARIES ${OPENSSL_LIBRARIES})
+      list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${OPENSSL_INCLUDE_DIRS})
+      list(APPEND ${PACKAGE_NAME}_LIBRARY_DIRS ${OPENSSL_LIBRARY_DIRS})
+    endif()
+
     # Search for the associated crypto library.
     package_search(LIBRARY ${PACKAGE_NAME}_CRYPTO_LIBRARY crypto
                    FULLNAME "SDK Engine's Cryptography"
