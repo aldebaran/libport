@@ -20,7 +20,7 @@
 //   puts "T#{i})>"
 // }
 
-#define TYPELIST_0(T0) libport::meta::typelist::Null
+#define TYPELIST_0() libport::meta::typelist::Null
 #define TYPELIST_1(T1) libport::meta::typelist::List<T1, TYPELIST_0()>
 #define TYPELIST_2(T1, T2) libport::meta::typelist::List<T1, TYPELIST_1(T2)>
 #define TYPELIST_3(T1, T2, T3) libport::meta::typelist::List<T1, TYPELIST_2(T2, T3)>
