@@ -12,8 +12,6 @@
 #include <libport/ref-counted.hh>
 #include <libport/shared-ptr.hh>
 
-using libport::shared_ptr;
-
 static int ninstances;
 
 struct Counted : libport::RefCounted
@@ -28,7 +26,7 @@ struct Counted : libport::RefCounted
     ar & val;
   }
 };
-typedef shared_ptr<Counted, true> rCounted;
+typedef libport::shared_ptr<Counted, true> rCounted;
 BOOST_CLASS_TRACKING(rCounted, boost::serialization::track_never)
 
 int
