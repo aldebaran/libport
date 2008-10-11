@@ -19,7 +19,7 @@ int main()
   v.push_back(4);
   v.push_back(5);
   assert(v.size() == 5);
-  erase_if(v, odd);
+  erase_if(v, &odd);
   assert(v.size() == 3);
   assert(libport::has(v, 1));
   assert(libport::has(v, 3));
