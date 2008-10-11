@@ -4,7 +4,7 @@
 // Avoid numerous unrelevant warnings triggered by metaprogramming
 # pragma GCC system_header
 
-# include <cassert>
+# include <cstdlib>
 # include <iostream>
 
 # include <libport/meta.hh>
@@ -40,7 +40,7 @@ namespace libport
           std::cerr << "Root node: " << typeid(T).name() << std::endl;
           std::cerr << "Actual type: " << typeid(elt).name() << std::endl;
           std::cerr << "Visitor type: " << typeid(*this).name() << std::endl;
-          assert(0);
+          abort();
         }
     };
 
