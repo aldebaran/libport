@@ -1,14 +1,14 @@
-dnl
+#
 # urbi-doc.m4: This file is part of build-aux.
 # Copyright (C) Gostai S.A.S., 2006-2008.
-dnl
+#
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
 # implied warranties of fitness for a particular purpose.
-dnl
+#
 # See the LICENSE file for more information.
 # For comments, bug reports and feedback: http://www.urbiforge.com
-dnl
+#
 
 m4_pattern_forbid([^URBI_])dnl
 
