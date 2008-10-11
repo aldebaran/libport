@@ -1,8 +1,6 @@
-#include <boost/bind.hpp>
 #include <libport/unit-test.hh>
 #include <libport/visitor.hh>
 
-using boost::bind;
 using libport::test_suite;
 
 
@@ -84,7 +82,7 @@ class MyVisitor: public libport::meta::Visitor
     }
 };
 
-int check()
+static void check()
 {
   MyVisitor v;
   Child1 c1;
@@ -101,6 +99,6 @@ test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::Visitor test suite");
-  suite->add(BOOST_TEST_CASE(bind(check)));
+  suite->add(BOOST_TEST_CASE(check));
   return suite;
 }
