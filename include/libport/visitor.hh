@@ -41,6 +41,11 @@ namespace libport
           std::cerr << "Actual type: " << typeid(elt).name() << std::endl;
           std::cerr << "Visitor type: " << typeid(*this).name() << std::endl;
           abort();
+	  // This is not enough for Visual C++, which requires an explicit
+	  // return.  In this case, make a dummy recursive call (which will
+	  // of course never take place).  We will get a warning, but not
+          // an error.
+	  return _libport_visitor_dispatch_(elt, 0);
         }
     };
 
