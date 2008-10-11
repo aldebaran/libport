@@ -3,6 +3,14 @@
 
 #include <iostream>
 
+// Visual C++ gets confused if we use "fabs" in the template below, as
+// it is an overloaded operator.
+static double
+_fabs(double d)
+{
+  return fabs(d);
+}
+
 template<typename T, typename R>
 static void
 check(const libport::Statistics<T, R>& s,
@@ -13,8 +21,8 @@ check(const libport::Statistics<T, R>& s,
   assert(size == s.size());
   assert(min == s.min());
   assert(max == s.max());
-  assert(fabs(mean - s.mean()) < 1e-4);
-  assert(fabs(variance - s.variance()) < 1e-4);
+  assert(_fabs(mean - s.mean()) < 1e-4);
+  assert(_fabs(variance - s.variance()) < 1e-4);
 }
 
 template<typename R>
