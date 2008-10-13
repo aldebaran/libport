@@ -1,7 +1,8 @@
-# -helper macro to add a "doc" target with CMake build system.
-# and configure doxy.config.in to doxy.config
+# -helper macro to add a "doxygen" target with CMake build system.
+# and configure doxygen.config.in to doxygen.config
 #
-# target "doc" allows building the documentation with doxygen/dot on WIN32 and Linux
+# target "doxygen" allows building the documentation with doxygen/dot on
+# WIN32 and Linux.
 # Creates .chm windows help file if MS HTML help workshop
 # (available from http://msdn.microsoft.com/workshop/author/htmlhelp)
 # is installed with its DLLs in PATH.
@@ -137,7 +138,7 @@ if(DOXYGEN_FOUND)
       string(REGEX REPLACE "[/]" "\\\\" HHP_FILE ${TMP} )
       # MESSAGE(SEND_ERROR "DBG  HHP_FILE=${HHP_FILE}")
       add_custom_target(winhelp ${HTML_HELP_COMPILER} ${HHP_FILE})
-      add_dependencies(winhelp doc)
+      add_dependencies(winhelp doxygen)
 
       if(NOT TARGET_DOC_SKIP_INSTALL)
       # install windows help?
