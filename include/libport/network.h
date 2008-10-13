@@ -93,25 +93,4 @@ namespace std
   }
 }
 
-
-/*--------------.
-| closeSocket.  |
-`--------------*/
-
-namespace libport
-{
-
-  inline
-  int
-  closeSocket(int socket)
-  {
-# ifdef WIN32
-    return closesocket(socket);
-# else
-    return close(socket);
-# endif
-  }
-
-}
-
 #endif // !LIBPORT_NETWORK_H

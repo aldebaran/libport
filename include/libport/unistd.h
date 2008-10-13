@@ -24,10 +24,39 @@
 #  include <io.h>
 # endif
 
+
+/*--------.
+| chdir.  |
+`--------*/
+
 # ifdef WIN32
 #  include <direct.h>
 #  define chdir _chdir
 # endif
+
+/*--------------.
+| closeSocket.  |
+`--------------*/
+
+namespace libport
+{
+
+  inline
+  int
+  closeSocket(int socket)
+  {
+# if defined WIN32
+    return closesocket(socket);
+# else
+    return close(socket);
+# endif
+  }
+
+}
+
+/*---------.
+| getcwd.  |
+`---------*/
 
 # if !defined LIBPORT_HAVE_GETCWD
 #  if defined LIBPORT_HAVE__GETCWD
