@@ -16,6 +16,11 @@ libport_include_HEADERS =			\
   $(include_libport)/cstring			\
   $(include_libport)/unistd.h
 
+# arpa/ headers
+arpa_libport_includedir = $(libport_includedir)/arpa
+arpa_libport_include_HEADERS =			\
+  $(include_libport)/arpa/inet.h
+
 # sys/ headers
 sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
