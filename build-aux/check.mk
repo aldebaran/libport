@@ -110,7 +110,7 @@ test "X$$TERM" != Xdumb &&			\
 
 # To be inserted before the command running the test.  Creates the
 # directory for the log if needed.  Stores in $dir the directory
-# containing $<, and passes the TEST_ENVIRONMENT.
+# containing $<, and passes the TESTS_ENVIRONMENT.
 am__check_pre =					\
 $(mkdir_p) "$$(dirname $@)";			\
 if test -f ./$<; then dir=./;			\
