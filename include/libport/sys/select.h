@@ -1,0 +1,49 @@
+/// \file libport/sys/select.h
+
+#ifndef LIBPORT_SYS_SELECT_H
+# define LIBPORT_SYS_SELECT_H
+
+# include <libport/detect-win32.h>
+
+# include <sys/select.h>
+
+/*---------.
+| fd_set.  |
+`---------*/
+
+# ifdef WIN32
+// On windows, file descriptors are defined as u_int (i.e., unsigned int).
+#  define LIBPORT_FD_SET(N, P) FD_SET(static_cast<u_int>(N), P)
+# else
+#  define LIBPORT_FD_SET(N, P) FD_SET(N, P)
+# endif
+
+// On MingW, using "mingw32-gcc.exe (GCC) 3.4.5 (mingw special)", it
+// seems that FD_ISSSET casts its argument as "fd_set*", without
+// const.
+# define LIBPORT_FD_ISSET(I, S) FD_ISSET(I, const_cast<fd_set*> (S))
+
+
+# include <iostream>
+
+namespace std
+{
+  inline
+  std::ostream&
+  operator<< (std::ostream& o, const fd_set& s)
+  {
+    o << "fd_set {";
+    bool not_first = false;
+# ifndef WIN32
+    for (int i = 0; i < FD_SETSIZE; ++i)
+      if (LIBPORT_FD_ISSET(i, &s))
+        o << (not_first++ ? ", " : "") << i;
+# else
+    for (unsigned int i = 0; i < s.fd_count; ++i)
+      o << (not_first++ ? ", " : "") << s.fd_array[i];
+# endif
+    return o << " }";
+  }
+}
+
+#endif // !LIBPORT_SYS_SELECT_H
