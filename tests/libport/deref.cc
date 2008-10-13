@@ -38,7 +38,7 @@ check ()
 test_suite*
 init_test_suite()
 {
-  test_suite* suite = BOOST_TEST_SUITE("libport::test-deref");
+  test_suite* suite = BOOST_TEST_SUITE("libport::deref");
   suite->add(BOOST_TEST_CASE(check));
   return suite;
 }

@@ -43,5 +43,4 @@ int main ()
     except = e.what();
   }
   passert(except, except == "invalid escape: '\\x' not followed by two digits");
-		    
 }
