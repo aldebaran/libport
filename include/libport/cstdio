@@ -5,6 +5,7 @@
 
 # include <cstdio>
 # include <string>
+# include <sstream>
 
 # include <libport/export.hh>
 
@@ -20,6 +21,10 @@ namespace libport
   /// Convenience wrapper for C++.
   LIBPORT_API
   void perror(const std::string& s);
+
+  /// Convenience wrapper for C++.
+  LIBPORT_API
+  void perror(const std::ostringstream& s);
 
   /// Portable for Windows.
   LIBPORT_API

@@ -44,6 +44,12 @@ namespace libport
     perror(s.c_str());
   }
 
+  void
+  perror(const std::ostringstream& s)
+  {
+    perror(s.str());
+  }
+
   const char*
   strerror(int errnum)
   {
