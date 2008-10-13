@@ -122,7 +122,8 @@ find_urbi_server ()
        URBI_SERVER=$(find_prog "$URBI_SERVER" "$PATH")
        # If we can't find it, then ucore-pc was probably not installed.
        # Skip.
-       test x"$URBI_SERVER" != x || exit 77
+       test x"$URBI_SERVER" != x ||
+         fatal 77 "cannot find $URBI_SERVER in $PATH"
        ;;
   esac
 
