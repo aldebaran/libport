@@ -9,5 +9,4 @@ namespace libport
   LIBPORT_API utime_t utime();
 }
 
-
 #endif // !LIBPORT_UTIME_HH
