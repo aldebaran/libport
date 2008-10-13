@@ -18,7 +18,7 @@ SUBDIRS = lib/libport doc tests
 EXTRA_DIST += bootstrap
 
 include_libport = include/libport
-include include/libport/libport.mk
+include include/libport/local.mk
 
 .PHONY: doc html
 doc html:
