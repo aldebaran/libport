@@ -128,16 +128,24 @@ namespace libport
     // them from the shell (ipcs shows nothing), so I had to reboot my
     // machine.
     //
-    // So really, try to call the dtor in all the cases, including
+    // So really, try to call sem)unlink in all the cases, including
     // aborts here.
     //
     // http://lists.apple.com/archives/darwin-dev/2005/Jun/msg00078.html
     int c = sem_close(sem_);
+    int close_errno = errno;
     int u = sem_unlink(name_.c_str());
+    int unlink_errno = errno;
     if (c)
-      errabort("sem_close");
+      {
+	errno = close_errno;
+	errabort("sem_close");
+      }
     if (u)
-      errabort("sem_unlink");
+      {
+	errno = unlink_errno;
+	errabort("sem_unlink");
+      }
 # else
     if (sem_destroy(sem_))
       errabort("sem_destroy");
