@@ -6,9 +6,6 @@
 
 # include <libport/ufloat.hh>
 
-#include <boost/mpl/integral_c.hpp>
-#include <boost/numeric/conversion/converter.hpp>
-
 /*-----------------.
 | Ufloat support.  |
 `-----------------*/
@@ -100,55 +97,5 @@ namespace libport
   }
 }
 # endif /* !LIBPORT_HAVE_TRUNC */
-
-
-/*-------------------.
-| ufloat converter.  |
-`-------------------*/
-namespace libport
-{
-
-  template<typename S>
-  struct ExactFloat2IntRounderPolicy
-  {
-    typedef S source_type;
-    typedef S argument_type;
-
-    static source_type nearbyint(argument_type s)
-    {
-      if (s != ceil(s))
-	throw boost::numeric::bad_numeric_cast();
-      return s;
-    }
-
-    typedef boost::mpl::integral_c<std::float_round_style,std::round_to_nearest>
-      round_style ;
-  };
-
-
-  template <typename T>
-  inline
-  T
-  ufloat_cast(ufloat val)
-  {
-    try
-    {
-      static boost::numeric::converter
-        <T,
-        ufloat,
-        boost::numeric::conversion_traits<T, ufloat>,
-        boost::numeric::def_overflow_handler,
-        ExactFloat2IntRounderPolicy<ufloat> > converter;
-
-      return converter(val);
-    }
-    catch (boost::numeric::bad_numeric_cast&)
-    {
-      throw bad_numeric_cast();
-    }
-  }
-
-
-} // namespace libport
 
 #endif // !LIBPORT_UFLOAT_HXX

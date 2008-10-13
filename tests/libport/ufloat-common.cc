@@ -25,14 +25,11 @@ int main()
   TESTME(f <= g);
   TESTME(f >= g);
 
-  TESTME(libport::ufloat_cast<int>(f) == int(1));
-  TESTME(libport::ufloat_cast<int>(g) == int(10));
+  TESTME(libport::ufloat_to_int(f) == int(1));
+  TESTME(libport::ufloat_to_int(g) == int(10));
 
-  TESTME(libport::ufloat_cast<int>(-f) == int(-1));
-  TESTME(libport::ufloat_cast<int>(-g) == int(-10));
-
-  TESTME(libport::ufloat_cast<size_t>(f) == size_t(1));
-  TESTME(libport::ufloat_cast<size_t>(g) == size_t(10));
+  TESTME(libport::ufloat_to_int(-f) == int(-1));
+  TESTME(libport::ufloat_to_int(-g) == int(-10));
 
   return 0;
 }

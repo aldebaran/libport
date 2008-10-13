@@ -115,12 +115,6 @@ namespace libport
 {
   struct bad_numeric_cast : public std::exception {};
 
-  /// Convert a libport::ufloat to a T. raise
-  /// libport::bad_numeric_cast if the provided argument is directly
-  /// convertible to T.
-  template <typename T>
-  T ufloat_cast(ufloat val);
-
   /// Convert a libport::ufloat to a int. raise
   /// libport::bad_numeric_cast if the provided argument is directly
   /// convertible to an integer.

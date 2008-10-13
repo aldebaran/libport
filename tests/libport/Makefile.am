@@ -27,8 +27,10 @@ TESTS =						\
   timer.cc					\
   unescape.cc					\
   ufloat-double.cc				\
-  ufloat-float.cc				\
   visitor.cc
+
+# This test has been commented out as we do not support ufloat /= double.
+# ufloat-float.cc
 
 if WITH_BOOST_SERIALIZATION
 TESTS += shared-ptr-serialize.cc
@@ -76,7 +78,7 @@ unescape_SOURCES			= unescape.cc
 #ufloat_double_tab_SOURCES		= ufloat-double-tab.cc
 ufloat_double_SOURCES			= ufloat-double.cc
 #ufloat_float_tab_SOURCES		= ufloat-float-tab.cc
-ufloat_float_SOURCES			= ufloat-float.cc
+#ufloat_float_SOURCES			= ufloat-float.cc
 #ufloat_floating_tab_SOURCES		= ufloat-floating-tab.cc
 #ufloat_floating_SOURCES		= ufloat-floating.cc
 visitor_SOURCES				= visitor.cc
