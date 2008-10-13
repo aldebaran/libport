@@ -3,10 +3,10 @@
 # define LIBPORT_CSTDLIB
 
 # include <cstdlib>
+# include <libport/compiler.hh>
 # include <libport/export.hh>
-# include <libport/detect-win32.h>
 
-# ifdef WIN32
+# if defined WIN32
 #  include <string>
 
 extern "C"

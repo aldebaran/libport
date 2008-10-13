@@ -4,6 +4,9 @@
 # define LIBPORT_CSTDIO
 
 # include <cstdio>
+# include <string>
+
+# include <libport/export.hh>
 
 #ifdef _MSC_VER
 /* MS Visual C++ doesn't have snprintf and co. */
@@ -14,8 +17,16 @@
 namespace libport
 {
 
+  /// Convenience wrapper for C++.
+  LIBPORT_API
+  void perror(const std::string& s);
+
+  /// Portable for Windows.
+  LIBPORT_API
   void perror(const char* s);
 
+  /// Portable for Windows.
+  LIBPORT_API
   const char* strerror(int errnum);
 
 }

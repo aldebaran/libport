@@ -38,6 +38,11 @@ namespace libport
     std::cerr << strerror(errno) << std::endl;
   }
 
+  void
+  perror(const std::string& s)
+  {
+    perror(s.c_str());
+  }
 
   const char*
   strerror(int errnum)

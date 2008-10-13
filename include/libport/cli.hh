@@ -2,8 +2,8 @@
 # define LIBPORT_CLI_HH
 
 # include <string>
-# include <libport/export.hh>
 # include <libport/compiler.hh>
+# include <libport/export.hh>
 
 // Hopefully some day we will use Boost.ProgramOptions and get rid of
 // this junk.  Yet, better share the junk than duplicate it.
