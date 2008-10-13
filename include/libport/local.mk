@@ -20,7 +20,8 @@ libport_include_HEADERS =			\
 sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
   $(include_libport)/sys/param.h		\
-  $(include_libport)/sys/stat.h
+  $(include_libport)/sys/stat.h			\
+  $(include_libport)/sys/time.h
 
 # C++ headers.
 libport_include_HEADERS +=			\

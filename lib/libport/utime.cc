@@ -1,5 +1,6 @@
 #include <libport/config.h>
 #include <libport/detect-win32.h>
+#include <libport/sys/time.h>
 #include <libport/utime.hh>
 
 #if defined WIN32 || defined LIBPORT_WIN32
@@ -30,7 +31,6 @@ namespace libport
 
 #else /* !WIN32 */
 
-# include <sys/time.h>
 # include <time.h>
 
 namespace libport

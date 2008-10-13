@@ -94,25 +94,6 @@ namespace std
 }
 
 
-/*----------.
-| timeval.  |
-`----------*/
-
-namespace std
-{
-  inline
-  std::ostream&
-  operator<< (std::ostream& o, const timeval& t)
-  {
-    return o
-      << "time_val"
-      << "{ tv_sec = " << t.tv_sec
-      << ", tv_usec = " << t.tv_usec
-      << " }";
-  }
-}
-
-
 /*--------------.
 | closeSocket.  |
 `--------------*/
