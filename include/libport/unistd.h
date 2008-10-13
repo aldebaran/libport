@@ -24,6 +24,18 @@
 #  include <io.h>
 # endif
 
+/*---------.
+| access.  |
+`---------*/
+
+# ifdef WIN32
+// Windows does not define access() or the corresponding constants.
+// http://msdn.microsoft.com/en-us/library/1w06ktdy(VS.80).aspx
+#  define F_OK 0
+#  define W_OK 2
+#  define R_OK 4
+#  define access _access
+# endif
 
 /*--------.
 | chdir.  |
