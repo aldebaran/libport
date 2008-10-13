@@ -128,7 +128,7 @@ namespace libport
     // them from the shell (ipcs shows nothing), so I had to reboot my
     // machine.
     //
-    // So really, try to call sem)unlink in all the cases, including
+    // So really, try to call sem_unlink in all the cases, including
     // aborts here.
     //
     // http://lists.apple.com/archives/darwin-dev/2005/Jun/msg00078.html
