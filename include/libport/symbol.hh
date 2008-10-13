@@ -16,7 +16,6 @@
 #  include <boost/serialization/serialization.hpp>
 #  include <boost/serialization/tracking.hpp>
 # endif // WITH_BOOST_SERIALIZATION
-# include <boost/functional/hash.hpp>
 
 # include <libport/export.hh>
 

@@ -9,6 +9,7 @@
 #include <ostream>
 #include <sstream>
 
+#include <boost/functional/hash.hpp>
 #include <boost/static_assert.hpp>
 
 #include <libport/containers.hh>
@@ -66,6 +67,12 @@ namespace libport
   Symbol::fresh (const Symbol& s)
   {
     return fresh(s.name_get ());
+  }
+
+  std::size_t
+  hash_value(libport::Symbol s)
+  {
+    return boost::hash<const void*>()(&s.name_get());
   }
 
   std::ostream&

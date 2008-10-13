@@ -98,12 +98,6 @@ namespace libport
 
 #endif // WITH_BOOST_SERIALIZATION
 
-  inline std::size_t
-  hash_value(libport::Symbol s)
-  {
-    return boost::hash<const void*>()(&s.name_get());
-  }
-
 }
 
 #endif // !LIBPORT_SYMBOL_HXX
