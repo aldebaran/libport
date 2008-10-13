@@ -80,6 +80,15 @@ namespace libport
   }
   //>>
 
+  inline std::size_t
+  hash_value(libport::Symbol s)
+  {
+    const std::string* v = &s.name_get();
+    std::size_t x =
+      static_cast<std::size_t>(reinterpret_cast<std::ptrdiff_t>(v));
+    return x + (x >> 3);
+  }
+
 #ifdef WITH_BOOST_SERIALIZATION
 
   template <typename Archive>
