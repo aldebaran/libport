@@ -66,4 +66,7 @@ r.sort
 for f in r:
   if ':' not in f:
     print '#line 1 "%s"' % f
-db.commit()
+try:
+  db.commit()
+except:
+  pass
