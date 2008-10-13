@@ -33,7 +33,17 @@ AC_PROG_LIBTOOL
 # AutoTroll with Qt.
 # AT_WITH_QT
 # AC_CONFIG_FILES([gui/Makefile])
-BOOST_SERIALIZATION
+URBI_ARG_ENABLE([enable-boost-serialization],
+                [Enable boost::serialization support],
+                [yes|no], [no])
+AM_CONDITIONAL([WITH_BOOST_SERIALIZATION],
+               [test x$enable_boost_serialization = xyes])
+if test x$enable_boost_serialization = xyes; then
+  AC_DEFINE([WITH_BOOST_SERIALIZATION], [1],
+            [Define to enable boost::serialization support.])
+  BOOST_SERIALIZATION
+fi
+
 BOOST_TEST
 
 ## -------------- ##

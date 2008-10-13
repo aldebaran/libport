@@ -6,7 +6,9 @@
 #ifndef LIBPORT_SYMBOL_HXX
 # define LIBPORT_SYMBOL_HXX
 
-# include <boost/serialization/string.hpp>
+# ifdef WITH_BOOST_SERIALIZATION
+#  include <boost/serialization/string.hpp>
+# endif
 
 # include <libport/symbol.hh>
 # include <libport/assert.hh>
@@ -78,6 +80,8 @@ namespace libport
   }
   //>>
 
+#ifdef WITH_BOOST_SERIALIZATION
+
   template <typename Archive>
   void Symbol::save(Archive& ar, const unsigned int /* version */) const
   {
@@ -91,6 +95,8 @@ namespace libport
     ar & s;
     str_ = &*string_set_instance ().insert (s).first;
   }
+
+#endif // WITH_BOOST_SERIALIZATION
 
   inline std::size_t
   hash_value(libport::Symbol s)

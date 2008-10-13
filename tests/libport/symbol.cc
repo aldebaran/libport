@@ -4,8 +4,12 @@
 
 #include <sstream>
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include <libport/config.h>
+
+#ifdef WITH_BOOST_SERIALIZATION
+# include <boost/archive/text_oarchive.hpp>
+# include <boost/archive/text_iarchive.hpp>
+#endif // WITH_BOOST_SERIALIZATION
 #include <libport/unit-test.hh>
 
 #include <libport/symbol.hh>
@@ -52,6 +56,7 @@ check_fresh()
 void
 check_serialization()
 {
+#ifdef WITH_BOOST_SERIALIZATION
   std::stringstream s;
   Symbol foo("foo"), bar("bar");
   boost::archive::text_oarchive oa(s);
@@ -65,6 +70,7 @@ check_serialization()
   BOOST_CHECK(s1 != s3);
   BOOST_CHECK_EQUAL(s1.name_get(), "foo");
   BOOST_CHECK_EQUAL(s3.name_get(), "bar");
+#endif // WITH_BOOST_SERIALIZATION
 }
 
 test_suite*

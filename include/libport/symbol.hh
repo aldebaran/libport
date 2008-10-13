@@ -10,8 +10,12 @@
 # include <string>
 # include <iosfwd>
 
-# include <boost/serialization/serialization.hpp>
-# include <boost/serialization/tracking.hpp>
+#include <libport/config.h>
+
+# ifdef WITH_BOOST_SERIALIZATION
+#  include <boost/serialization/serialization.hpp>
+#  include <boost/serialization/tracking.hpp>
+# endif // WITH_BOOST_SERIALIZATION
 # include <boost/functional/hash.hpp>
 
 # include <libport/export.hh>
@@ -92,6 +96,7 @@ namespace libport
     /// Pointer to the unique referenced string.
     const std::string* str_;
 
+# ifdef WITH_BOOST_SERIALIZATION
     /// Serializer.
     friend class boost::serialization::access;
     template <typename Archive>
@@ -99,6 +104,7 @@ namespace libport
     template <typename Archive>
     void load(Archive& ar, const unsigned int version);
     BOOST_SERIALIZATION_SPLIT_MEMBER()
+# endif // WITH_BOOST_SERIALIZATION
   };
 
   /** \brief Intercept output stream redirection.
@@ -112,7 +118,9 @@ namespace libport
   hash_value(libport::Symbol s);
 }
 
+# ifdef WITH_BOOST_SERIALIZATION
 BOOST_CLASS_TRACKING(libport::Symbol, boost::serialization::track_never)
+# endif // WITH_BOOST_SERIALIZATION
 
 # include <libport/symbol.hxx>
 

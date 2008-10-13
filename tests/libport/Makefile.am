@@ -23,7 +23,6 @@ TESTS =						\
   separator.cc					\
   shared-ptr-intrusive.cc			\
   shared-ptr-non-intrusive.cc			\
-  shared-ptr-serialize.cc			\
   statistics.cc					\
   timer.cc					\
   unescape.cc					\
@@ -31,6 +30,9 @@ TESTS =						\
   ufloat-float.cc				\
   visitor.cc
 
+if WITH_BOOST_SERIALIZATION
+TESTS += shared-ptr-serialize.cc
+endif
 # Tabulation does not seem to work: doesn't even compile.
 #ufloat-float-tab.cc				\
 #ufloat-double-tab.cc				\
