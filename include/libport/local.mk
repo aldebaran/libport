@@ -66,6 +66,7 @@ libport_include_HEADERS +=			\
   $(include_libport)/instance-tracker.hxx	\
   $(include_libport)/lexical-cast.hh		\
   $(include_libport)/lockable.hh		\
+  $(include_libport)/netdb.h			\
   $(include_libport)/network.h			\
   $(include_libport)/map.hh			\
   $(include_libport)/map.hxx			\
