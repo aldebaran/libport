@@ -117,7 +117,9 @@ case $($libtool --config) in
 
   (*)
   # Static mode: we need to insert a --whole-archive or similar.
-  command=$($libtool -n --tag=CXX --mode=link "$@")
+  command=$($libtool -n --tag=CXX --mode=link "$@" |
+      # libtool 2.2 outputs additional prefixes.
+      sed -e 's/^libtool: link: //')
   case $urbi_env:$urbi_host in
     (aibo:*)
       command=$(echo "$command" |
