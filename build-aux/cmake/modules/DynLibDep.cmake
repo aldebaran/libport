@@ -27,8 +27,10 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
     message(FATAL_ERROR "dldep: error: ${msg}")
   endfunction(dldep_error)
 
-  # Puts respectively the name and the path of the binary _binary_ in
-  # _list_names_ and _libthe dependent libraries of _binary_.
+  # Puts respectively the name and the path of the dependent libraries of the
+  # binary _binary_ in _list_names_ and _lib_paths_.
+  #
+  # It uses 'ldd' to gather the list of dependencies.
   function(dldep_ldd binary lib_names lib_paths)
 
     set(tools ldd)
@@ -47,7 +49,7 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
       )
 
     if(err)
-      dldep_info("${LDD_EXECUTABLE} prints some error: '${err}'")
+      dldep_info("${tool} prints some error: '${err}'")
     endif(err)
 
     set(_lib_names "")
