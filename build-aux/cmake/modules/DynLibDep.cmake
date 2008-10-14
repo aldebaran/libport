@@ -13,6 +13,14 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
     "^libdl.so"
     )
 
+  # The list of excluded Unix libraries.
+  set(DLDEP_WIN32_EXCLUSION_LIST
+    "^KERNEL32.dll"
+    "^ntdll.dll"
+    "^USER32.dll"
+    "^GDI32.dll"
+    )
+
   set(DLDEP_VERBOSE TRUE)
 
   # Display message _msg_ if DLDEP_VERBOSE is true.
@@ -83,6 +91,82 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
 
   endfunction(dldep_ldd)
 
+  # Puts respectively the name and the path of the dependent libraries of the
+  # binary _binary_ in _list_names_ and _lib_dirs_.
+  #
+  # It uses 'cygcheck.exe' to gather the list of dependencies.
+  function(dldep_cygcheck binary lib_names lib_dirs)
+
+    find_program(cygcheck_executable cygcheck.exe)
+    if(cygcheck_executable)
+      dldep_info("use '${cygcheck_executable}' to list dependent dynamic "
+	"libraries.")
+    else(cygcheck_executable)
+      dldep_error("cannot find an executable called '${cygcheck_executable'")
+    endif(cygcheck_executable)
+
+    execute_process(
+      COMMAND ${cygcheck_executable} ${binary}
+      OUTPUT_VARIABLE out
+      ERROR_VARIABLE err
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+
+    if(err)
+      dldep_info("${cygcheck_executable} prints some error: '${error}'")
+    endif(err)
+
+    set(_lib_names "")
+    set(_lib_dirs "")
+
+    string(REPLACE "\\" "/" lines ${out})
+    string(REPLACE "\n" ";" lines ${lines})
+    set(found_regexp "^   *([^ ]+)/([^ ]+)$")
+    set(not_found_regexp "^Error: could not find ([^ ]+)$")
+    foreach(line ${lines})
+      # We found one library
+      if(line MATCHES ${found_regexp})
+
+	list(APPEND _lib_names ${CMAKE_MATCH_2})
+	list(APPEND _lib_dirs ${CMAKE_MATCH_1})
+
+      # or one library has not been found.
+      elseif(line MATCHES ${not_found_regexp})
+
+	set(lib_name ${CMAKE_MATCH_1})
+	get_filename_component(lib_name_we ${lib_name} NAME_WE)
+
+	list(APPEND _lib_names ${lib_name})
+
+	# Try to search in programs.
+	find_program(${lib_name_we}_prog ${lib_name})
+	if(${lib_name_we}_prog)
+	  get_filename_component(lib_dir ${${lib_name_we}_prog} PATH)
+	  list(APPEND _lib_dirs ${lib_dir})
+	else(${lib_name_we}_prog)
+	  # Try to search in libraries.
+	  find_library(${lib_name_we}_lib ${lib_name})
+	  if(${lib_name_we}_lib)
+	    get_filename_component(lib_dir ${${lib_name_we}_lib} PATH)
+	    list(APPEND _lib_dirs ${lib_dir})
+	  else(${lib_name_we}_lib)
+	    # Failed to find the library.
+	    dldep_info("cannot find '${lib_name}'")
+	    list(APPEND _lib_dirs "")
+	  endif(${lib_name_we}_lib)
+	endif(${lib_name_we}_prog)
+
+      # or we cannot parse the line.
+      else(line MATCHES ${found_regexp})
+	dldep_info("cannot parse '${line}'")
+      endif(line MATCHES ${found_regexp})
+    endforeach(line)
+
+    set(${lib_names} ${_lib_names} PARENT_SCOPE)
+    set(${lib_dirs} ${_lib_dirs} PARENT_SCOPE)
+
+  endfunction(dldep_cygcheck)
+
   # Filter library names from _lib_names_ that match one of the regexp from
   # _exclusions_. Corresponding library paths from _lib_dirs_ are stored in
   # _result_ with library name appended.
@@ -128,6 +212,15 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
 	"${lib_dirs}"
 	"${DLDEP_UNIX_EXCLUSION_LIST}"
 	outlist_)
+    else(UNIX)
+      if(WIN32)
+	dldep_cygcheck(${binary} lib_names lib_dirs)
+	dldep_filter(
+	  "${lib_names}"
+	  "${lib_dirs}"
+	  "${DLDEP_WIN32_EXCLUSION_LIST}"
+	  outlist_)
+      endif(WIN32)
     endif(UNIX)
 
     set(${outlist} ${outlist_} PARENT_SCOPE)
