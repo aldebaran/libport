@@ -167,17 +167,43 @@ namespace libport
   void
   Semaphore::operator-- ()
   {
+    get(0);
+  }
+
+  inline bool
+  Semaphore::get(const int timeout)
+  {
     int err;
     do
+    {
+      if (timeout == 0)
+        err = sem_wait(sem_);
+# if defined __linux
+      else
       {
-	err = sem_wait(sem_);
+        struct timespec ts;
+        ts.tv_sec = time(NULL) + timeout;
+        ts.tv_nsec = 0;
+        err = sem_timedwait(sem_, &ts);
       }
+# else
+      else
+        pabort("Using timeout is implemented only on linux.");
+# endif
+    }
     while (err == -1 && errno == EINTR);
+
+# if defined __linux
+    if (err && errno == ETIMEDOUT)
+      return false;
+# endif
+
     if (err)
     {
       destroy();
       errabort("sem_wait");
     }
+    return true;
   }
 
   Semaphore::operator int ()

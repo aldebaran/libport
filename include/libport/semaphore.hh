@@ -41,6 +41,11 @@ namespace libport
     void operator-- ();
     operator int ();
 
+    /** Get semaphore with a limit of \b timeout in second.
+     * Fixme: Use timeout != 0 work only on linux.
+     */
+    bool get(const int timeout = 0);
+
   private:
     void destroy();
     sem_t* sem_;
