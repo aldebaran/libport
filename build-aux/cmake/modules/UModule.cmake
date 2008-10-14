@@ -33,6 +33,8 @@ set(UOBJECT_REMOTE_TARGET_SUFFIX -remote)
 set(UOBJECT_ENGINE_TARGET_SUFFIX -engine)
 set(UMODULE_TEST_TARGET_SUFFIX -test)
 set(UMODULE_LIBRARY_TARGET_SUFFIX)
+set(UMODULE_LIBRARY_ENGINE_TARGET_SUFFIX -lib-engine)
+set(UMODULE_LIBRARY_REMOTE_TARGET_SUFFIX -lib-remote)
 
 # Input default naming
 set(UMODULE_UOBJECT_SOURCE_PREFIX)
@@ -328,7 +330,7 @@ MACRO(add_remote)
 
     # Link with urbi remote and dependencies
     link_remote_libraries(${UOBJECT_REMOTE_NAME})
-    target_link_libraries(${UOBJECT_REMOTE_NAME} ${UOBJECT_REMOTE_DEPENDS})
+    handler_remote_dependency(${UOBJECT_REMOTE_NAME} ${UOBJECT_REMOTE_DEPENDS})
     list_shared_libraries(UOBJECT_REMOTE_DEPENDS
                           ${UMODULE_DIR}_REMOTE_SHARED_LIBRARIES)
 
@@ -379,15 +381,10 @@ MACRO(add_engine)
                           PROPERTIES COMPILE_DEFINITIONS URBI_ENV_ENGINE)
 
     # Link with needed umodules
-    foreach(UOBJECT_ENGINE_UMODULE ${UOBJECT_ENGINE_UMODULES})
-        target_link_libraries(${UOBJECT_ENGINE_NAME}
-                              ${${UOBJECT_ENGINE_UMODULE}_TARGET_NAME}${UMODULE_LIBRARY_TARGET_SUFFIX})
-    endforeach(UOBJECT_ENGINE_UMODULE)
+    handler_engine_dependency(${UOBJECT_ENGINE_NAME} ${UOBJECT_ENGINE_UMODULE})
 
     # Link with custom libraries
-    foreach(UOBJECT_ENGINE_DEPEND ${UOBJECT_ENGINE_DEPENDS})
-        target_link_libraries(${UOBJECT_ENGINE_NAME} ${UOBJECT_ENGINE_DEPEND})
-    endforeach(UOBJECT_ENGINE_DEPEND)
+    handler_engine_dependency(${UOBJECT_ENGINE_NAME} ${UOBJECT_ENGINE_DEPENDS})
 
     # Link with urbi engine and dependencies
     link_engine_libraries(${UOBJECT_ENGINE_NAME})
@@ -400,6 +397,121 @@ MACRO(add_engine)
     endif(UOBJECT_ENGINE_INSTALL)
 
 ENDMACRO(add_engine)
+
+#------------------------------------------------------------------------------
+#                           Add library for umodule
+#------------------------------------------------------------------------------
+# Add rules to compile a library. This can be use to add an engine or a remote.
+# By default, it is not assign to an engine or remote environment.
+#
+# FIXME: Add install, but not by default.
+# FIXME: Add handle of test.
+# FIXME: In general case, if lib depend of an engine lib, use env_engine.
+
+MACRO(add_library_for_uobject)
+  set(${UMODULE_DIR}_TARGET_NAME ${PROJECT_NAME} PARENT_SCOPE)
+  message(STATUS "Add workspace for library named: ${PROJECT_NAME}")
+
+  parse_arguments(UOBJECT_LIBRARY "DEPENDS" "ENV_ENGINE;ENV_REMOTE" ${ARGN})
+
+  # General case
+  if(NOT UOBJECT_LIBRARY_ENV_ENGINE AND NOT UOBJECT_LIBRARY_ENV_REMOTE)
+    set(TARGET ${PROJECT_NAME}${UMODULE_LIBRARY_TARGET_SUFFIX})
+
+    add_library(${TARGET} ${${UMODULE_DIR}_UOBJECT_SOURCES})
+    target_link_libraries(${TARGET} ${UMODULE_LINKS} ${UOBJECT_LIBRARY_DEPENDS})
+  endif()
+
+  # Case of engine environment
+  if(UOBJECT_LIBRARY_ENV_ENGINE)
+    set(TARGET ${PROJECT_NAME}${UMODULE_LIBRARY_ENGINE_TARGET_SUFFIX})
+
+    add_library(${TARGET} ${${UMODULE_DIR}_UOBJECT_SOURCES})
+    set_target_properties(${TARGET} PROPERTIES COMPILE_DEFINITIONS URBI_ENV_ENGINE)
+    handler_engine_dependency(${TARGET} ${UMODULE_LINKS} ${UOBJECT_LIBRARY_DEPENDS})
+  endif()
+
+  # Case of remote environment
+  if(UOBJECT_LIBRARY_ENV_REMOTE)
+    set(TARGET ${PROJECT_NAME}${UMODULE_LIBRARY_REMOTE_TARGET_SUFFIX})
+
+    add_library(${TARGET} ${${UMODULE_DIR}_UOBJECT_SOURCES})
+    set_target_properties(${TARGET} PROPERTIES COMPILE_DEFINITIONS URBI_ENV_REMOTE)
+    handler_remote_dependency(${TARGET} ${UMODULE_LINKS} ${UOBJECT_LIBRARY_DEPENDS})
+  endif()
+
+ENDMACRO(add_library_for_uobject)
+
+#------------------------------------------------------------------------------
+#               Handler for dependency between umodule
+#------------------------------------------------------------------------------
+# This macro was use to link target with libraries, it check if we can
+# use libraries.
+# Some library was only build for engine and can't be use with a
+# remote.
+
+macro(handler_engine_dependency TARGET)
+    foreach(DEPEND ${ARGN})
+      # Check if the custom library has in umodule
+      if(NOT ${DEPEND}_TARGET_NAME)
+        # Link with external library
+        target_link_libraries(${TARGET} ${DEPEND})
+      else()
+        # Check if target exist
+        get_target_property(res ${${DEPEND}_TARGET_NAME} TYPE)
+
+        if(res)
+          # Link to a standard library
+          target_link_libraries(${TARGET} ${DEPEND})
+        else(res)
+          # Check if a library only for engine exist
+          get_target_property(res
+            ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_ENGINE_TARGET_SUFFIX} TYPE)
+          if(res)
+            # Link with it
+            target_link_libraries(${TARGET}
+              ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_ENGINE_TARGET_SUFFIX})
+          else()
+            message(SEND_ERROR
+              "${DEPEND} can't be link to ${TARGET}")
+          endif()
+        endif()
+
+      endif()
+    endforeach(DEPEND)
+endmacro()
+
+
+macro(handler_remote_dependency TARGET)
+    foreach(DEPEND ${ARGN})
+      # Check if the custom library has in umodule
+      if(NOT ${DEPEND}_TARGET_NAME)
+        # Link with external library
+        target_link_libraries(${TARGET} ${DEPEND})
+      else()
+        # Check if target exist
+        get_target_property(res ${${DEPEND}_TARGET_NAME} TYPE)
+
+        if(res)
+          # Link to a standard library
+          target_link_libraries(${TARGET} ${DEPEND})
+        else(res)
+          # Check if a library only for remote exist
+          get_target_property(res
+            ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_REMOTE_TARGET_SUFFIX} TYPE)
+          if(res)
+            # Link with it
+            target_link_libraries(${TARGET}
+              ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_REMOTE_TARGET_SUFFIX})
+          else()
+            message(SEND_ERROR
+              "${DEPEND} can't be link to ${TARGET}")
+          endif()
+        endif()
+
+      endif()
+    endforeach(DEPEND)
+endmacro()
 
 
 #------------------------------------------------------------------------------
@@ -473,8 +585,6 @@ MACRO(link_engine_libraries UOBJECT_NAME)
 
 ENDMACRO(link_engine_libraries)
 
-endif(NOT MODULE_UMODULE_LOADED)
-
 
 #------------------------------------------------------------------------------
 #                                   Install
@@ -539,3 +649,4 @@ MACRO(add_install)
 
 ENDMACRO(add_install)
 
+endif(NOT MODULE_UMODULE_LOADED)
