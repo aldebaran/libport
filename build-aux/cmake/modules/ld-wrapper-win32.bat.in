@@ -1,1 +1,4 @@
-@binary_name@
+@echo off
+break=on
+call @binary_name@
+exit
