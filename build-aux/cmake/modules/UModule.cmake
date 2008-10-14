@@ -144,6 +144,10 @@ MACRO(add_umodule)
         endforeach(UMODULE_DEPENDS_DIR)
     endif(UMODULE_DEPENDS)
 
+    if(UMODULE_LINKS)
+      list(REMOVE_DUPLICATES UMODULE_LINKS)
+    endif()
+
     add_subdirectory(${UMODULE_SOURCE_DIR} ${UMODULE_BINARY_DIR})
 
 ENDMACRO(add_umodule)
@@ -418,8 +422,19 @@ MACRO(add_library_for_uobject)
   if(NOT UOBJECT_LIBRARY_ENV_ENGINE AND NOT UOBJECT_LIBRARY_ENV_REMOTE)
     set(TARGET ${PROJECT_NAME}${UMODULE_LIBRARY_TARGET_SUFFIX})
 
-    add_library(${TARGET} ${${UMODULE_DIR}_UOBJECT_SOURCES})
-    target_link_libraries(${TARGET} ${UMODULE_LINKS} ${UOBJECT_LIBRARY_DEPENDS})
+    search_env_of_dependency(env ${UMODULE_LINKS} ${UOBJECT_LIBRARY_DEPENDS})
+    if (NOT env)
+      add_library(${TARGET} ${${UMODULE_DIR}_UOBJECT_SOURCES})
+      target_link_libraries(${TARGET}
+        ${UMODULE_LINKS} ${UOBJECT_LIBRARY_DEPENDS})
+    else()
+      # If one of the dependence is build is engine/remote
+      # environment, we don't build general lib, but a lib with
+      # particulary environment.
+      foreach(i ${env})
+        set(UOBJECT_LIBRARY_ENV_${i} TRUE)
+      endforeach()
+    endif()
   endif()
 
   # Case of engine environment
@@ -442,6 +457,27 @@ MACRO(add_library_for_uobject)
 
 ENDMACRO(add_library_for_uobject)
 
+# Macro use by add_library_for_uobject.
+# It search build environment of all dependence and fill ${OUT} var.
+macro(search_env_of_dependency OUT)
+  set(${OUT})
+  foreach(DEPEND ${ARGN})
+    if(${DEPEND}_TARGET_NAME)
+      if(NOT TARGET ${${DEPEND}_TARGET_NAME})
+        if(TARGET ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_ENGINE_TARGET_SUFFIX})
+          # depend of an lib engine
+          list(APPEND ${OUT} ENGINE)
+        endif()
+        if(TARGET ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_REMOTE_TARGET_SUFFIX})
+          # depend of an lib remote
+          list(APPEND ${OUT} REMOTE)
+        endif()
+      endif()
+    endif()
+  endforeach(DEPEND)
+  list(REMOVE_DUPLICATES ${OUT})
+endmacro()
+
 #------------------------------------------------------------------------------
 #               Handler for dependency between umodule
 #------------------------------------------------------------------------------
@@ -458,22 +494,20 @@ macro(handler_engine_dependency TARGET)
         target_link_libraries(${TARGET} ${DEPEND})
       else()
         # Check if target exist
-        get_target_property(res ${${DEPEND}_TARGET_NAME} TYPE)
-
-        if(res)
+        if(TARGET ${${DEPEND}_TARGET_NAME})
           # Link to a standard library
           target_link_libraries(${TARGET} ${DEPEND})
-        else(res)
+        else()
           # Check if a library only for engine exist
-          get_target_property(res
-            ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_ENGINE_TARGET_SUFFIX} TYPE)
-          if(res)
+          if(TARGET ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_ENGINE_TARGET_SUFFIX})
             # Link with it
             target_link_libraries(${TARGET}
               ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_ENGINE_TARGET_SUFFIX})
           else()
+            set(suffix ${UMODULE_LIBRARY_ENGINE_TARGET_SUFFIX})
             message(SEND_ERROR
-              "${DEPEND} can't be link to ${TARGET}")
+              "Target '${DEPEND}' can't be link to target '${TARGET}'\n"
+              "We have not found target '${DEPEND}' or '${DEPEND}${suffix}'\n")
           endif()
         endif()
 
@@ -490,22 +524,20 @@ macro(handler_remote_dependency TARGET)
         target_link_libraries(${TARGET} ${DEPEND})
       else()
         # Check if target exist
-        get_target_property(res ${${DEPEND}_TARGET_NAME} TYPE)
-
-        if(res)
+        if(TARGET ${${DEPEND}_TARGET_NAME})
           # Link to a standard library
           target_link_libraries(${TARGET} ${DEPEND})
         else(res)
           # Check if a library only for remote exist
-          get_target_property(res
-            ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_REMOTE_TARGET_SUFFIX} TYPE)
-          if(res)
+          if(TARGET ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_REMOTE_TARGET_SUFFIX})
             # Link with it
             target_link_libraries(${TARGET}
               ${${DEPEND}_TARGET_NAME}${UMODULE_LIBRARY_REMOTE_TARGET_SUFFIX})
           else()
+            set(suffix ${UMODULE_LIBRARY_REMOTE_TARGET_SUFFIX})
             message(SEND_ERROR
-              "${DEPEND} can't be link to ${TARGET}")
+              "Target '${DEPEND}' can't be link to target '${TARGET}'\n"
+              "We have not found target '${DEPEND}' or '${DEPEND}${suffix}'\n")
           endif()
         endif()
 
