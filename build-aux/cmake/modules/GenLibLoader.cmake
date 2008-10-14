@@ -49,11 +49,25 @@ function(GEN_LIB_LOADER binary)
   # Configure wrapper script.
   message(STATUS
     "Generate library loader script from '${input}' to '${output}'")
-  configure_file(${input} ${output} ESCAPE_QUOTES @ONLY)
+  if(WIN32)
+    set(cmake_prefix_path "")
+    foreach(path ${CMAKE_PREFIX_PATH})
+      list(APPEND cmake_prefix_path "${path}/bin" "${path}/lib")
+    endforeach(path)
+    configure_file_with_native_paths(${input} ${output}
+      OPTIONS ESCAPE_QUOTES @ONLY
+      VARIABLES binary_path CMAKE_PROGRAM_PATH cmake_prefix_path)
+  else(WIN32)
+    configure_file(${input} ${output} ESCAPE_QUOTES @ONLY)
+  endif(WIN32)
   # Let 'clean' target remove configured file.
   set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES ${output})
-  # Install the script
-  INSTALL(PROGRAMS ${output} DESTINATION ${BINARIES_DIR})
+  # Install the script.
+  # We don't install script on windows since there is no LD_LIBRARY_PATH
+  # equivalent.
+  if(UNIX)
+    install(PROGRAMS ${output} DESTINATION ${BINARIES_DIR})
+  endif(UNIX)
 endfunction(GEN_LIB_LOADER binary)
 
 endif(NOT COMMAND GEN_LIB_LOADER)

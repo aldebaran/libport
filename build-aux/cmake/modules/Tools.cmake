@@ -184,4 +184,25 @@ if(NOT TOOLS_CMAKE_GUARD)
 
   endmacro(parse_arguments)
 
+  # Wrapper around 'configure_file'
+  # _in_: the input file
+  # _out_ the output file
+  # OPTIONS: the list of options to give to 'configure_file'.
+  # VARIABLES: the list of variables to convert. The result is stored in a
+  #            variable suffixed by '_in'. Use this variable in your template.
+  function(configure_file_with_native_paths in out)
+
+    parse_arguments(
+      ${in}
+      "OPTIONS;VARIABLES;"
+      ""
+      ${ARGN})
+
+    foreach(var ${${in}_VARIABLES})
+      string(REPLACE "/" "\\" ${var}_in "${${var}}")
+    endforeach(var)
+
+    configure_file(${in} ${out} ${${in}_OPTIONS})
+  endfunction(configure_file_with_native_paths)
+
 endif(NOT TOOLS_CMAKE_GUARD)

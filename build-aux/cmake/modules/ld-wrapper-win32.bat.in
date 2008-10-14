@@ -1,4 +1,6 @@
 @echo off
 break=on
-call @binary_name@
+set PATH=@CMAKE_PROGRAM_PATH_in@;@CMAKE_LIBRARY_PATH_in@;@cmake_prefix_path_in@;%PATH%
+cd @binary_path_in@
+call @binary_name@ $*
 exit
