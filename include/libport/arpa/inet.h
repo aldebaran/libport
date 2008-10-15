@@ -6,6 +6,7 @@
 # if !defined WIN32 && !defined LIBPORT_WIN32
 #  include <arpa/inet.h>
 # else
+#  include <libport/sys/socket.h>
 #  include <ws2tcpip.h>
 # endif
 

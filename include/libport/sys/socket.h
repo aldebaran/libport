@@ -3,9 +3,10 @@
 # define LIBPORT_SYS_SOCKET_H
 
 # include <libport/detect-win32.h>
-# include <libport/unistd.h>
 
 # if defined WIN32 || defined LIBPORT_WIN32
+
+# include <libport/windows.hh>
 
 /*--------.
 | Win32.  |
@@ -21,6 +22,8 @@
 #  define GROUP __GROUP
 #  include <WinSock2.h>
 #  undef GROUP
+
+# include <libport/unistd.h>
 
 // Define POSIX types if compiling with Visual C++.
 

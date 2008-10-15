@@ -50,9 +50,7 @@
 | closesocket.  |
 `--------------*/
 
-# ifdef WIN32
-#  include <libport/sys/socket.h>
-# endif
+# include <libport/sys/socket.h>
 
 /*--------------.
 | closeSocket.  |
