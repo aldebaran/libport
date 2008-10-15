@@ -19,6 +19,17 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
     "^ntdll.dll"
     "^USER32.dll"
     "^GDI32.dll"
+    "^ADVAPI32.dll"
+    "^COMCTL32.dll"
+    "^COMDLG32.DLL"
+    "^IMM32.DLL"
+    "^OLE32.dll"
+    "^OLEAUT32.DLL"
+    "^RPCRT4.dll"
+    "^SHELL32.dll"
+    "^SHLWAPI.dll"
+    "^WINMM.DLL"
+    "^WINSPOOL.DRV"
     )
 
   set(DLDEP_VERBOSE TRUE)
