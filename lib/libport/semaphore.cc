@@ -7,10 +7,10 @@ namespace libport
 
 # if defined WIN32 || defined LIBPORT_WIN32
   sem_t*
-  sem_open (const char* name,
-	    int oflag,
-	    unsigned int /*mode_t*/ mode,
-	    unsigned int value)
+  sem_open (const char* /* name */,
+	    int /* oflag */,
+	    unsigned int /*mode_t*/ /* mode */,
+	    unsigned int /* value */)
   {
     return 0; // Use sem_init instead.
   }
@@ -49,7 +49,7 @@ namespace libport
   }
 
   int
-  sem_getvalue(sem_t* sem, int* v)
+  sem_getvalue(sem_t* /* sem */, int* /* v */)
   {
     *v = 1; //TODO: implement
     // Maybe look at: http://www.codeguru.com/Cpp/W-P/win32/article.php/c1423
