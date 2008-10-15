@@ -27,6 +27,7 @@ include(GostaiInfo)
 configure_file(
   ${CMAKE_MODULE_PATH}/clean-install-target.cmake.in
   ${CMAKE_BINARY_DIR}/clean-install-target.cmake
+  @ONLY
   )
 add_custom_target(clean-install
   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/clean-install-target.cmake
