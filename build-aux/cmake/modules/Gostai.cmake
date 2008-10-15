@@ -67,7 +67,12 @@ macro(gostai_add_executable name)
     endif(EXISTS ${${name}_ICON_PATH})
   endif(WIN32)
 
-  add_executable(${name} WIN32 MACOSX_BUNDLE ${${name}_ALL_SOURCES})
+  add_executable(${name} MACOSX_BUNDLE ${${name}_ALL_SOURCES})
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set_target_properties(${name} PROPERTIES WIN32_EXECUTABLE FALSE)
+  else(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set_target_properties(${name} PROPERTIES WIN32_EXECUTABLE TRUE)
+  endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
   if(${name}_CPPFLAGS)
     set_target_properties(${name} PROPERTIES
