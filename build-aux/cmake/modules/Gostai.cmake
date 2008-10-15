@@ -55,11 +55,39 @@ macro(gostai_add_executable name)
     set(${name}_ICON_PATH ${CMAKE_CURRENT_SOURCE_DIR}/${name}.ico)
     if(EXISTS ${${name}_ICON_PATH})
       set(${name}_ICON_RC_PATH ${CMAKE_CURRENT_BINARY_DIR}/${name}.rc)
-      file(WRITE
+      #FIXME: Make this macro a function to avoid cluttering the namespace
+      # with the icon_path variable.
+      string(REPLACE "/" "\\\\" icon_path "${${name}_ICON_PATH}")
+      #FIXME: Touching project resource template do not trigger resource file
+      #       to be compiled by windres.
+      configure_file(
+	${CMAKE_MODULE_PATH}/project.rc.in
 	${${name}_ICON_RC_PATH}
-	"IDI_ICON1   ICON  DISCARDABLE  \"${${name}_ICON_PATH}\"\n"
-	)
-      list(APPEND ${name}_ALL_SOURCES ${${name}_ICON_RC_PATH})
+	ESCAPE_QUOTES
+	@ONLY)
+      if(MINGW)
+	find_package(WindRes REQUIRED)
+	set(${name}_ICON_RC_PATH_OUTPUT "${${name}_ICON_RC_PATH}.o")
+	add_custom_command(
+	  OUTPUT ${${name}_ICON_RC_PATH_OUTPUT}
+
+          COMMAND
+	  ${WINDRES_EXECUTABLE}
+	  -I${CMAKE_CURRENT_SOURCE_DIR}
+          -i${${name}_ICON_RC_PATH}
+          -o ${${name}_ICON_RC_PATH_OUTPUT}
+
+	  DEPENDS
+	  ${WINDRES_EXECUTABLE}
+	  ${${name}_ICON_RC_PATH}
+	  ${${name}_ICON_PATH}
+
+	  COMMENT
+	  "Building resource file '${${name}_ICON_RC_PATH_OUTPUT}'")
+	list(APPEND ${name}_ALL_SOURCES ${${name}_ICON_RC_PATH_OUTPUT})
+      else(MINGW)
+	list(APPEND ${name}_ALL_SOURCES ${${name}_ICON_RC_PATH})
+      endif(MINGW)
     elseif(EXISTS ${${name}_ICON_PATH})
       message(STATUS
 	"warning: cannot find the application icon '${${name}_ICON_PATH}' "
