@@ -58,20 +58,17 @@ for l in sys.stdin:
   x = _line.match(l)
   if x:
     origin = x.group(2)
-    # If we have a relative name, this is not a dependency but a
-    # directive manually placed here (by Bison for example), so
-    # only care about absolute paths.
-    if origin and (origin[0] in "/\\" or origin[1:2] == ":") \
-	   and origin not in seen:
+    if origin not in seen:
       seen[origin] = transform(origin)
 r = [f for f in seen.values() if not f.startswith('/home/build/local_wine')]
 r.sort
-# We sometimes end up with lines containing "Bison:" in the output. This
-# messes up the "make" rules, so we do not issue them if they contain
-# ":". This may be already caught above, but never mind, this is a safety.
 for f in r:
-  if ':' not in f:
+  try:
+    # Use a filename only if it exists as a real file
+    os.stat(f)
     print '#line 1 "%s"' % f
+  except:
+    pass
 try:
   db.commit()
 except:
