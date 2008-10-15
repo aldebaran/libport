@@ -5,8 +5,11 @@
 
 # include <libport/detect-win32.h>
 
-# include <sys/select.h>
-
+# ifndef WIN32
+#  include <sys/select.h>
+# else
+#  include <Winsock2.h>
+# endif
 /*---------.
 | fd_set.  |
 `---------*/

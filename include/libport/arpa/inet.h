@@ -5,6 +5,8 @@
 
 # if !defined WIN32 && !defined LIBPORT_WIN32
 #  include <arpa/inet.h>
+# else
+#  include <ws2tcpip.h>
 # endif
 
 #endif // LIBPORT_ARPA_INET_H

@@ -10,6 +10,7 @@
 #  include <boost/serialization/string.hpp>
 # endif
 
+# include <ostream>
 # include <libport/symbol.hh>
 # include <libport/assert.hh>
 
