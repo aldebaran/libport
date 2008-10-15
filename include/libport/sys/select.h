@@ -8,7 +8,7 @@
 # ifndef WIN32
 #  include <sys/select.h>
 # else
-#  include <Winsock2.h>
+#  include <libport/sys/socket.h>
 # endif
 /*---------.
 | fd_set.  |

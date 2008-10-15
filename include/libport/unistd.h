@@ -51,7 +51,7 @@
 `--------------*/
 
 # ifdef WIN32
-#  include <winsock2.h>
+#  include <libport/sys/socket.h>
 # endif
 
 /*--------------.

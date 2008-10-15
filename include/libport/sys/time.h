@@ -5,7 +5,7 @@
 # if !defined WIN32 && ! defined LIBPORT_WIN32
 #  include <sys/time.h>
 # else
-#  include <Winsock2.h>
+#  include <libport/sys/socket.h>
 # endif
 
 # include <iostream>
