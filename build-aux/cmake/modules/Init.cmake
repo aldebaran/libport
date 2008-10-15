@@ -33,4 +33,11 @@ add_custom_target(clean-install
   COMMENT "Clean installation directory."
   )
 
+# Add re-install target
+add_custom_target(re-install
+  COMMAND ${CMAKE_BUILD_TOOL} install
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Re-install")
+add_dependencies(re-install clean-install)
+
 endif(NOT DEFINED INIT_CMAKE)
