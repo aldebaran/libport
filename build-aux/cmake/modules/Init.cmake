@@ -23,4 +23,14 @@ set(BUILDFARM $ENV{BUILDFARM})
 include(GenLibLoader)
 include(GostaiInfo)
 
+# Add clean-install target
+configure_file(
+  ${CMAKE_MODULE_PATH}/clean-install-target.cmake.in
+  ${CMAKE_BINARY_DIR}/clean-install-target.cmake
+  )
+add_custom_target(clean-install
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/clean-install-target.cmake
+  COMMENT "Clean installation directory."
+  )
+
 endif(NOT DEFINED INIT_CMAKE)

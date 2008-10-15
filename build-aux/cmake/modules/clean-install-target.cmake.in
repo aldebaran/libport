@@ -1,0 +1,12 @@
+# set(CMAKE_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@")
+execute_process(
+  COMMAND ${CMAKE_COMMAND} -E remove_directory $ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}
+  RESULT_VARIABLE res
+  ERROR_QUIET
+  OUTPUT_QUIET
+  )
+if(NOT res EQUAL 0)
+  message(FATAL_ERROR
+    "Removing directory '$ENV{DESTDIR}${CMAKE_INSTALL_DIR}' failed")
+endif(NOT res EQUAL 0)
+
