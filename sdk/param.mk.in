@@ -44,7 +44,7 @@ CXX = @CXX@
 # Ld.
 LD = @CC@
 LIBS = $(SDK_LIBS)
-LDFLAGS = @LDFLAGS@ @BOOST_THREAD_LDFLAGS@ $(SDK_LDFLAGS)
+LDFLAGS = @LDFLAGS@ @BOOST_THREAD_LDFLAGS@ $(SDK_LDFLAGS) -no-undefined
 
 if URBI_ENV_AIBO
 # Aibo.
@@ -103,12 +103,13 @@ $(OUTLIB): $(LTOBJECTS) $(ARGUMENT_LIBS)
 
 # I know no way to build shared libraries through libtool without a .la...
 lalib = lib$(OUTSHLIB:$(SHLIBEXT)=.la)
+libbase = $(OUTSHLIB:$(SHLIBEXT)=)
 $(OUTSHLIB): $(LTOBJECTS) $(ARGUMENT_LIBS)
 	 $(LIBTOOL) --tag=CXX --mode=link \
 	   $(CXX) $(CXXFLAGS) $(LDFLAGS) $(EXTRA_LDFLAGS) -export-dynamic -o $(lalib) \
-	   $(LTOBJECTS) $(ARGUMENT_LIBS) $(LIBS) $(hostdir)/remote/libuobject.la -rpath $(hostdir)
-	cp .libs/lib$(OUTSHLIB) ./$(OUTSHLIB)
-	rm lib$(OUTSHLIB).la
+	   $(LTOBJECTS) $(ARGUMENT_LIBS) $(LIBS) $(envdir)/libuobject.la -rpath $(hostdir)
+	 cp $$(ls .libs/lib$(libbase)*$(SHLIBEXT) | head -n 1) ./$(OUTSHLIB)
+	 rm  $(lalib)
 # The command to generate the library.
 #
 # We pass -whole-archive because there are global objects to be
