@@ -260,7 +260,7 @@ case $target:$core in
     # FIXME: Shamelessly discarding any part of the name if it has
     # a dot in it (e.g., urbi.my-uobject).
     *:) if $shared; then
-         target="${target%.$SHLIBEXT}.$SHLIBEXT"
+         target="${target%$SHLIBEXT}$SHLIBEXT"
        else
          target="${target%.a}.a"
        fi
