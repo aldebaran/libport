@@ -11,7 +11,7 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
   set(DLDEP_UNIX_EXCLUSION_LIST
     "^libc.so"
     "^libdl.so"
-    "^libpthread*"      # Fedora 9
+    "^libpthread.*"     # Fedora 9
     )
 
   # The list of excluded Windows libraries.
