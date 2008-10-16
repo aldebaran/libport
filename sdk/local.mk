@@ -10,6 +10,7 @@ sdk/umake-deepclean				\
 sdk/umake-engine				\
 sdk/umake-fullengine				\
 sdk/umake-lib					\
+sdk/umake-shared				\
 sdk/umake-remote
 
 UMAKE_CONFIGURED =				\
