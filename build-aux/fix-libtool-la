@@ -1,0 +1,53 @@
+#! /bin/sh
+#
+# Fix libtool .la file so that .dll/.lib files are organized into the
+# right section on Windows.
+#
+# Usage: fix-libtool-la <la-file> <stamp-file>
+#
+# The time stamp of the <la-file> will be preserved. The file will not
+# be modified unless a .dll is being installed.
+#
+# In any case, this will touch the stamp file with the current date.
+#
+
+lafile="$1"
+stampfile="$2"
+
+# Read libtool definitions.
+. "$lafile"
+
+# Check whether we need to transform the file
+transform=false
+set $library_names
+case "$1:$2" in
+    *.dll:*.lib)
+	library_names="$1"
+	old_library="$2"
+	transform=true
+	;;
+    *)
+	;;
+esac
+
+if $transform; then
+    tmpfile="$lafile.tmp"
+    exec >"$tmpfile"
+    echo "dlname='$dlname'"
+    echo "library_names='$library_names'"
+    echo "old_library='$old_library'"
+    echo "dependency_libs='$dependency_libs'"
+    echo "current=$current"
+    echo "age=$age"
+    echo "revision=$revision"
+    echo "installed=$installed"
+    echo "shouldnotlink=$shouldnotlink"
+    echo "dlopen='$dlopen'"
+    echo "dlreopen='$dlreopen'"
+    echo "libdir='$libdir'"
+    echo "relink_command='$relink_command'"
+    touch --reference="$lafile" "$tmpfile"
+    mv "$tmpfile" "$lafile"
+fi
+
+touch "$stampfile"
