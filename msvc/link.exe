@@ -5,7 +5,9 @@
 set -e
 
 PROG=$(basename "$0")
-VCXX_BIN=$(winepath -u $VCINSTALLDIR)/bin/
+VCXX_PATH=$(winepath -u $VCINSTALLDIR)
+VCXX_BIN=$VCXX_PATH/bin/
+
 if ! test -x $VCXX_BIN/cl.exe; then
   echo cl.exe not found in $VCXX_BIN 1>&2; exit 1
 fi
@@ -30,6 +32,22 @@ transform()
     echo $1
   fi
 }
+# The libs we produce are called libfoo.lib, whereas the system libs are
+# called foo.lib
+systemlibs=$(find ~/.wine/winroot/boost_1_35_0/lib $VCXX_PATH/lib $VCXX_PATH/PlatformSDK/Lib -iname *.lib -exec basename {} ';' | tr A-Z a-z)
+
+handle_lib()
+{
+  echo "start: $1" >&2
+  base=${1#-l}.lib
+  complete=lib$base
+  for l in $systemlibs; do
+    if [ $l = $base ]; then
+      complete=$base
+    fi
+  done
+  echo $(transform $complete)
+}
 
 while ! test -z $1; do
   larg=
@@ -38,7 +56,8 @@ while ! test -z $1; do
   -link) ;;
   -dll) larg="/DLL" ;;
   -L*)  larg=/LIBPATH:$(transform ${1#-L}) ;;
-  -l*)  larg=$(transform ${1#-l}.lib) ;;
+#  -l*)  larg=$(transform ${1#-l}.lib) ;;
+  -l*)  larg=$(handle_lib $1) ;;
   *.lib) larg=$(transform $1) ;;
   *.a)  larg=$(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
   -E)  preprocess_mode=true; carg=/E ;;
@@ -62,6 +81,7 @@ while ! test -z $1; do
   -g|-ggdb) ;; # carg="/Zi";;
   -O2|-O3) carg=/O2;;
   -f*)  ;;
+  *.dll)   carg=$(transform $(echo $1 |sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
   *.S)  carg="/TP $1";;
   *.c|*.cc) carg=$(transform $1); source=$1  ;;
   *)  carg=$1;;
