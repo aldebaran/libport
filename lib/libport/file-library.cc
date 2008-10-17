@@ -15,9 +15,9 @@
 
 #include <libport/contract.hh>
 #include <libport/file-library.hh>
+#include <libport/file-system.hh>
 #include <libport/foreach.hh>
 #include <libport/tokenizer.hh>
-#include <libport/sys/param.h>
 #include <libport/unistd.h>
 
 namespace libport
@@ -26,16 +26,7 @@ namespace libport
   void
   file_library::push_cwd ()
   {
-    // Store the working directory
-    char cwd[MAXPATHLEN + 1];
-
-    // The various getcwd() documentations are not clear on whether the
-    // NUL string terminator is accounted for in the length or not. To err
-    // on the safe side, we assume it is not.
-    if (!getcwd (cwd, MAXPATHLEN))
-      throw std::runtime_error ("working directory name too long");
-
-    push_current_directory (cwd);
+    push_current_directory (get_current_directory());
   }
 
 

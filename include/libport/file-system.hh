@@ -9,10 +9,12 @@
 #include <string>
 
 #include <libport/export.hh>
+#include <libport/path.hh>
 
 namespace libport
 {
-  bool LIBPORT_API is_dir (const std::string& f);
+  path LIBPORT_API get_current_directory();
+  bool LIBPORT_API is_dir(const std::string& f);
 }
 
 #endif // !LIBPORT_FILE_SYSTEM_HH
