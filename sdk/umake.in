@@ -1,6 +1,7 @@
 @UMAKE_COMMON@
 EXEEXT=@EXEEXT@
 SHLIBEXT=@SHLIBEXT@
+
 usage ()
 {
     cat <<EOF
@@ -248,30 +249,25 @@ do
   vpath="$vpath:"$(dirname "$s")
 done
 
+# The library extension.
+libext=$SHLIBEXT
+$shared || libext=.a
+	
 # Select target name if unspecified.
 case $target:$core in
-    :)  if $shared; then
-          target=uobject-$host$SHLIBEXT
-        else
-	  target=uobject-$host.a
-	fi
-	;;
-    :*) target=urbiengine-$host-$core$EXEEXT;;
-    # FIXME: Shamelessly discarding any part of the name if it has
-    # a dot in it (e.g., urbi.my-uobject).
-    *:) if $shared; then
-         target="${target%$SHLIBEXT}$SHLIBEXT"
-       else
-         target="${target%.a}.a"
-       fi
-       ;;
+    :)   target=uobject-$host$libext;;
+    :*)  target=urbiengine-$host-$core$EXEEXT;;
+
+   # The user can provide $target with or without extension.  Be sure
+   # to give it the proper extension.
+    *:)  target="${target%$libext}$libext";;
     *:*) target="${target%$EXEEXT}$EXEEXT";;
 esac
 
 # Remove ourselves from library list in lib generation mode, add OUTBIN
 # option otherwise.
 case $core in
-  '')
+  ('')
     libs=$(echo "$libs" | sed -e "s/$target//")
     if $shared; then
       makeargs="$makeargs OUTSHLIB=$target"
@@ -279,7 +275,7 @@ case $core in
       makeargs="$makeargs OUTLIB=$target"
     fi
     ;;
-  *)
+  (*)
     makeargs="$makeargs OUTBIN=$target"
     ;;
 esac
@@ -305,13 +301,14 @@ fi
 # Define lib to link against.
 if test -z "$LIBNAME"; then
   case $core in
-    remote)         UMAKE_LIBNAME="libuobject";;
-    engine|webots)  UMAKE_LIBNAME="libuobject";;
-    fullengine)     UMAKE_LIBNAME="libuobject";
-                    UMAKE_EXTRALIB="${libdir}/liburbi.la ${libdir}/libjpeg.la";
-		    core=engine;;
-    aibo)           UMAKE_LIBNAME="libaibo";;
-    *);;
+    (remote|engine|webots)
+	  UMAKE_LIBNAME=libuobject;;
+    (fullengine)
+          UMAKE_LIBNAME=libuobject
+          UMAKE_EXTRALIB="${libdir}/liburbi.la ${libdir}/libjpeg.la"
+	  core=engine;;
+    (aibo)
+          UMAKE_LIBNAME=libaibo;;
   esac
 else
   UMAKE_LIBNAME=$LIBNAME
