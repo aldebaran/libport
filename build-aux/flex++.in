@@ -56,7 +56,7 @@ perl >&2 -p                                     \
     -e 's/warning, //;'				\
      $output_log
 
-if test -s $output_log
+if test -s $output_log; then
   rm -f $output_log
   exit 1
 else
