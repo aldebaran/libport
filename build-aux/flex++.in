@@ -56,8 +56,12 @@ perl >&2 -p                                     \
     -e 's/warning, //;'				\
      $output_log
 
-test ! -s $output_log ||
+if test -s $output_log
+  rm -f $output_log
   exit 1
+else
+  rm -f $output_log
+fi
 
 perl -pi						\
      -e 's,<FlexLexer.h>,"parser/flex-lexer.hh",;'	\
