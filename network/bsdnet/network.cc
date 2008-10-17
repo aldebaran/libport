@@ -370,17 +370,18 @@ namespace Network
   enum { delay = 1000000 };
 #endif
 
+#ifdef WITH_BOOST_THREADS
   static void processNetwork()
   {
     while (true)
       selectAndProcess(delay);
   }
 
-
   void startNetworkProcessingThread()
   {
     boost::thread networkThread(&processNetwork);
   }
+#endif // WITH_BOOST_THREADS
 
 
 

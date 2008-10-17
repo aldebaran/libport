@@ -5,6 +5,7 @@
 #   error network/bsdnet/network.hh must be loaded before kernel/userver.hh.
 # endif
 
+# include <libport/config.h>
 # include <libport/export.hh>
 # include <libport/network.h>
 # include <libport/utime.hh>
@@ -50,8 +51,10 @@ namespace Network
   /// \returns  whether at least one action was performed
   LIBPORT_API bool selectAndProcess(libport::utime_t usDelay);
 
+# ifdef WITH_BOOST_THREADS
   /// Create a thread that will loop forever on selectAndProcess.
   LIBPORT_API void startNetworkProcessingThread();
+# endif // WITH_BOOST_THREADS
 }
 
 #endif // !NETWORK_BSDNET_NETWORK_HH
