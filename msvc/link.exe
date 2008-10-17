@@ -103,6 +103,9 @@ fi
 
 #rename .lib with a versioned name.
 if echo $output | egrep -q -- '-[0-9.]+.dll'; then
-  mv -f $(echo $output | sed -re 's/dll/lib/') $(echo $output | sed -re 's/-[0-9.]+\.dll/.lib/')
+  libname=$(echo $output | sed -re 's/dll/lib/')
+  if test -f "$libname"; then
+    mv -f $libname $(echo $output | sed -re 's/-[0-9.]+\.dll/.lib/')
+  fi
 fi
 
