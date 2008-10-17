@@ -1,5 +1,5 @@
 # boost.m4: Locate Boost headers and libraries for autoconf-based projects.
-# Copyright (C) 2007  Benoit Sigoure <tsuna@lrde.epita.fr>
+# Copyright (C) 2007, 2008  Benoit Sigoure <tsuna@lrde.epita.fr>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# serial 8
+# serial 9
 # Original sources can be found at http://repo.or.cz/w/boost.m4.git
 # You can fetch the latest version of the script by doing:
 #   wget 'http://repo.or.cz/w/boost.m4.git?a=blob_plain;f=build-aux/boost.m4;hb=HEAD' -O boost.m4
@@ -832,8 +832,7 @@ AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag]
 #endif
 ]])], [boost_cv_lib_tag=$boost_tag; break], [])
   done
-AC_LANG_POP([C++])dnl
-])
+  AC_LANG_POP([C++])dnl
   case $boost_cv_lib_tag in #(
     # Some newer (>= 1.35?) versions of Boost seem to only use "gcc" as opposed
     # to "gcc41" for instance.
@@ -847,6 +846,7 @@ AC_LANG_POP([C++])dnl
       boost_cv_lib_tag=
       ;;
   esac
+])
 ])# _BOOST_FIND_COMPILER_TAG
 
 
