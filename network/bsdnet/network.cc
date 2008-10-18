@@ -2,7 +2,9 @@
 // Must be first to avoid inclusion of windows.h which will include winsock.h
 #include <network/bsdnet/network.hh>
 
-#include <boost/thread.hpp>
+#ifdef WITH_BOOST_THREADS
+# include <boost/thread.hpp>
+#endif // WITH_BOOST_THREADS
 #include <boost/foreach.hpp>
 #include <libport/compiler.hh>
 #include <libport/cstdio>
