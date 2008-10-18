@@ -44,15 +44,6 @@ if test x$enable_boost_serialization = xyes; then
   BOOST_SERIALIZATION
 fi
 
-URBI_ARG_ENABLE([enable-boost-threads],
-		[Enable boost::threads support],
-		[yes|no], [no])
-if text $xenable_boost_threads = xyes; then
-  AC_DEFINE([WITH_BOOST_THREADS], [1],
-	    [Define to enable boost::thread support.])
-  BOOST_THREADS
-fi
-
 BOOST_TEST
 
 ## -------------- ##

@@ -28,12 +28,16 @@ AC_CHECK_FUNCS([sched_setscheduler setpriority mlockall times getcwd _getcwd])
 # Check for Boost headers
 BOOST_REQUIRE([1.34])
 # Check for Boost.Thread
-if test -n "$openr" && $openr; then
-  AC_MSG_NOTICE([[OpenR in use: not using Boost.Thread.]])
-else
-  if test x$with_boost_thread_static = xyes; then
-    boost_threads_flag=s
-  fi
+if test x$with_boost_thread_static = xyes; then
+  boost_threads_flag=s
+fi
+
+URBI_ARG_ENABLE([enable-boost-threads],
+		[Enable boost::threads support],
+		[yes|no], [no])
+if test x$enable_boost_threads = xyes; then
+  AC_DEFINE([WITH_BOOST_THREADS], [1],
+	    [Define to enable boost::thread support.])
   BOOST_THREADS([$boost_threads_flag])
 fi
 ])
