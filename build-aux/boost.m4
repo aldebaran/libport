@@ -252,7 +252,7 @@ AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
     mt* | mt-*) boost_mt=-mt; boost_rtopt=`expr "X$2" : 'Xmt-*\(.*\)'`;; #(
     *) boost_mt=; boost_rtopt=$2;;
   esac
-  if test $enable_static_boost = yes; then
+  if test x$enable_static_boost = xyes; then
     boost_rtopt="s$boost_rtopt"
   fi
   # Find the proper debug variant depending on what we've been asked to find.
