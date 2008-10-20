@@ -145,8 +145,8 @@ get_options ()
       -q | --quiet  ) quiet=true;;
       -v | --version) version;;
 
-      -l | --library)       core= ; shared=false ;;
-      -s | --shared-library) core= ; shared=true ;;
+      -l | --library)       shared=false ;;
+      -s | --shared-library) shared=true ;;
 	   --deep-clean)    deep_clean="true"; havearg="noneed" ;;
       -c | --clean)         clean="true" ;;
       -j | --jobs)  shift; njobs=$1;;
