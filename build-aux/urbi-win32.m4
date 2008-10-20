@@ -1,0 +1,21 @@
+#
+# urbi-win32.m4: This file is part of build-aux.
+# Copyright (C) Gostai S.A.S., 2006-2008.
+#
+# This software is provided "as is" without warranty of any kind,
+# either expressed or implied, including but not limited to the
+# implied warranties of fitness for a particular purpose.
+#
+# See the LICENSE file for more information.
+# For comments, bug reports and feedback: http://www.urbiforge.com
+#
+
+# URBI_WIN32
+# ----------
+# Look for windows. Define the automake conditional WIN32 as well
+# as $windows.
+AC_DEFUN([URBI_WIN32],
+[AC_CHECK_HEADERS([windows.h], [windows=true], [windows=false])
+AM_CONDITIONAL([WIN32], [$windows])
+])
+
