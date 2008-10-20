@@ -14,21 +14,10 @@
 
 # URBI_PTHREAD
 # ------------
-# Look for the pthreads, or for windows.  Define the automake conditional
-# WIN32.
-# FIXME: Deprecate/remove this macro.
+# Look for the pthreads.
 AC_DEFUN([URBI_PTHREAD],
 [ACX_PTHREAD([pthreads=true], [pthreads=false])
 AC_CHECK_HEADERS([pthread.h])
-
-AC_REQUIRE([URBI_WIN32])
-if $windows; then
-  AC_SUBST([PTHREAD_LIBS], ['-lws2_32 -lgdi32'])
-fi
-
-#if $windows || $pthreads; then :; else
-#  AC_MSG_ERROR([pthreads or WIN32 API is required])
-#fi
 
 SDK_CFLAGS="$SDK_CFLAGS $PTHREAD_CFLAGS"
 SDK_CXXFLAGS="$SDK_CXXFLAGS $PTHREAD_CFLAGS"
