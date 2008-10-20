@@ -117,9 +117,25 @@ fi
 
 #embed manifest
 #if echo $output | egrep -q '(exe|dll)$'; then
-  #$REAL_BASE/mt.exe -manifest "$output.manifest" -outputresource:"$output"
-  #rm "$output.manifest"
+#  $VCXX_BIN/mt.exe -manifest "$(transform $output.manifest)" -outputresource:"$(transform $output);1"
+#  rm "$output.manifest"
 #fi
+
+# embed manifest by compiling it into a resource to avoid mt.exe crash with
+# -outputresource when using Wine
+# Following procedure described at:
+# http://msdn.microsoft.com/fr-fr/library/ms235591.aspx
+if echo $output | egrep -q '(exe|dll)$'; then
+  #$VCXX_BIN/mt.exe -manifest "$(transform $output).manifest" "-out:$(transform $output).auto.manifest"
+  # Escape quotes
+  sed -e 's/"/""/g' < "$output.manifest" > "$output.escaped.manifest"
+  cat > "$output.auto.rc" << __EOF__
+#include <winuser.h>
+1 RT_MANIFEST {"$(cat $output.escaped.manifest)"}
+__EOF__
+  $VCXX_BIN/rc.exe /r "$(transform $output).auto.rc"
+  $VCXX_BIN/$PROG $outargs $linkargs "$(transform $output).auto.RES"
+fi
 
 #rename .lib with a versioned name.
 if echo $output | egrep -q -- '-[0-9.]+.dll'; then
