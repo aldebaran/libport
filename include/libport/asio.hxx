@@ -43,7 +43,6 @@ inline boost::asio::io_service& get_io_service()
     io = new boost::asio::io_service;
     libport::startThread(boost::bind(&runIoService, io));
   }
-  std::cerr << "ioserv is " << io << std::endl;
   return *io;
 }
 template<typename SocketPtr> void
@@ -86,10 +85,8 @@ void readOne
  Buf buf
  )
 {
-  std::cerr << "ReadOne"<< std::endl;
   if (onRead(s, *buf, erc))
   {
-    std::cerr << "async_read(readone)" << std::endl;
     boost::asio::async_read(*s, *buf, boost::asio::transfer_at_least(1),
                             boost::bind(&readOne<SocketPtr, Buf>, _1, s, onRead, buf));
   }
@@ -102,7 +99,6 @@ runReader
  boost::system::error_code> onRead
  )
 {
-  std::cerr <<"runreader on " << s.get() << std::endl;
   typedef  boost::shared_ptr<boost::asio::streambuf> Buf;
   Buf buf(new boost::asio::streambuf);
   boost::asio::async_read(*s, *buf,
