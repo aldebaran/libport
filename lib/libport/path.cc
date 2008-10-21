@@ -31,62 +31,73 @@ namespace libport
   void
   path::test_absolute (std::string& p)
   {
-    absolute_ = false;
-
 #if defined WIN32
     // Under Win32, absolute paths start with a letter followed by
-    // ':\'
-    absolute_ = p.length() >= 3;
-    absolute_ = absolute_ && isalpha(p[0]);
-    absolute_ = absolute_ && (p[1] == ':');
-    absolute_ = absolute_ && (p[2] == '\\');
-
-    if (absolute_)
+    // ":\". If the trailing slash is missing, this is a relative
+    // path.
+    if (p.length() >= 2 &&
+	isalpha(p[0]) &&
+	p[1] == ':')
     {
-      volume_ = p[0];
-      p = p.erase(0, 2);
+      volume_ = p.substr(0, 2);
+      absolute_ = p.length() >= 3 && p[2] == '\\';
+      p = absolute_ ? p.erase(0, 3) : p.erase(0, 2);
     }
-#endif
-
-    // Under unix, absolute paths start with a slash
-    if (!absolute_)
+    // Network share, such as "\\shared volume\foo\bar"
+    else if (p.length() >= 3 &&
+	     p[0] == '\\' &&
+	     p[1] == '\\')
     {
-      absolute_ = (p.length() > 0) && (p[0] == '/');
-
-      if (absolute_)
-	p = p.erase(0, 0);
+      absolute_ = true;
+      std::string::size_type pos = p.find("\\", 3);
+      if (pos == std::string::npos)
+      {
+	volume_ = p;
+	p = "";
+      }
+      else
+      {
+	volume_ = p.substr(0, pos);
+	p = p.erase(0, pos);
+      }
     }
+    // Fallback to Unix cases for subsystems such as cygwin
+    else
+#endif // WIN32
+    if ((p.length() > 0) && (p[0] == '/'))
+    {
+      absolute_ = true;
+      p = p.erase(0, 0);
+    }
+    else
+      absolute_ = false;
   }
 
   void
   path::init (std::string p)
   {
+    static std::string sep =
+#ifdef WIN32
+      "/\\";
+#else
+      "/";
+#endif // WIN32
+
     if (p.empty())
       throw invalid_path("Path can't be empty.");
 
     test_absolute(p);
 
     // Cut directories on / and \.
-    std::string::size_type pos_s = p.find('/');
-    std::string::size_type pos_b = p.find('\\');
 
-    for (;
-         pos_s != std::string::npos || pos_b != std::string::npos;
-         pos_s = p.find('/'), pos_b = p.find('\\'))
+    for (std::string::size_type pos = p.find_first_of(sep);
+	 pos != std::string::npos;
+	 pos = p.find_first_of(sep))
     {
-      std::string::size_type pos =
-	pos_s == std::string::npos ? pos_b :
-	pos_b == std::string::npos ? pos_s :
-	std::min(pos_s, pos_b);
-
-      std::string dir;
-
-      dir = p.substr (0, pos);
+      this->append_dir(p.substr(0, pos));
       p.erase (0, pos + 1);
-
-      this->append_dir (dir);
     }
-    this->append_dir (p);
+    this->append_dir(p);
   }
 
   path&
@@ -106,12 +117,15 @@ namespace libport
     if (rhs.absolute_get())
       throw invalid_path(
         "Rhs of concatenation is absolute: " + rhs.to_string());
+#ifdef WIN32
+    if (!rhs.volume_.empty())
+      throw invalid_path("concatenation of path with volume: " +
+			 rhs.to_string());
+#endif
     for (path_type::const_iterator dir = rhs.path_.begin ();
 	 dir != rhs.path_.end ();
 	 ++dir)
-    {
       this->append_dir (*dir);
-    }
 
     return *this;
   }
@@ -138,9 +152,9 @@ namespace libport
     if (absolute_)
     {
 #ifdef WIN32
-      if (volume_ != "")
+      if (!volume_.empty())
       {
-	path_str = volume_ + ":\\" + path_str;
+	path_str = volume_ + "\\" + path_str;
 	separator = '\\';
       }
       else
@@ -197,9 +211,7 @@ namespace libport
 	  path_.pop_back ();
       }
       else
-      {
 	path_.push_back (dir);
-      }
     }
   }
 

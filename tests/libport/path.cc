@@ -74,6 +74,7 @@ init_test_suite()
   def("", false);
 #ifdef WIN32
   def("C:\\Documents and Settings", true);
+  def("\\\\shared_volume\\subdir", true);
 #endif
 #undef def
 
@@ -94,6 +95,8 @@ init_test_suite()
   def("C:\\", true);
   def("C:\\absolute", true);
   def("C:\\absolute\\but\\on\\stupid\\OS", true);
+  def("\\\\shared_volume\\subdir", true);
+  def("\\relative\\because\\of\\missing\\volume", false);
 #endif
 #undef def
 
@@ -135,11 +138,20 @@ init_test_suite()
   def("/foo", "bar", "/foo/bar");
   def("/", "foo", "/foo");
   def("/", ".", "/");
+#ifdef WIN32
+  def("\\\\share\\foo", "bar", "\\\\share\\foo\\bar");
+  def("c:\\", "foo", "c:\\foo");
+  def("c:", "bar", "c:bar");
+#endif
 #undef def
 #define def(lhs, rhs)                                           \
   concat_suite->add(BOOST_TEST_CASE(bind(invalid_concat, lhs, rhs)));
   def("/", "/");
   def("foo", "/bar");
+#ifdef WIN32
+  def("\\\\share\\foo", "\\\\share\\bar");
+  def("c:", "d:");
+#endif
 #undef def
 
   test_suite* exist_suite = BOOST_TEST_SUITE("File existence test suite");
