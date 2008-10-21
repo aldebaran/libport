@@ -11,16 +11,23 @@
 # In any case, this will touch the stamp file with the current date.
 #
 
-lafile="$1"
-stampfile="$2"
+set -e
+
+lafile=$1
+stampfile=$2
+
+rm -f "$stampfile" "$stampfile.tmp"
+touch "$stampfile.tmp"
 
 library_names=$(sed -ne "s/^library_names='\\(.*\\)'/\\1/p" < "$lafile")
-set $library_names
-case "$1:$2" in
+set x $library_names
+shift
+echo >&2 "$0: libnames: $@"
+case $1:$2 in
     *.dll:*.lib)
-	library_names="$1"
-	old_library="$2"
-	tmpfile="$lafile.tmp"
+	library_names=$1
+	old_library=$2
+	tmpfile=$lafile.tmp
 	sed -e "s/^library_names=.*/library_names='$library_names'/" \
 	    -e "s/^old_library=.*/old_library='$old_library'/" < "$lafile" \
 	    > "$tmpfile"
@@ -31,4 +38,4 @@ case "$1:$2" in
 	;;
 esac
 
-touch "$stampfile"
+mv "$stampfile.tmp" "$stampfile"
