@@ -1,10 +1,10 @@
-# Define include_libport to the path from the Makefile.am that
-# includes this file, to this file.  E.g., if TOP/include/Makefile.am
-# does
-#
-#   include $(top_srcdir)/include/libport/libport.mk
-#
-# then define include_libport = libport
+## Define include_libport to the path from the Makefile.am that
+## includes this file, to this file.  E.g., if TOP/include/Makefile.am
+## does
+##
+##   include $(top_srcdir)/include/libport/local.mk
+##
+## then define include_libport = libport
 
 # C headers.
 libport_includedir = $(libport_include_basedir)/libport
