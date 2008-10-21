@@ -30,6 +30,8 @@ AC_CONFIG_HEADERS([include/config.h])
 # If you need to create a library, USE libtool:
 AC_PROG_LIBTOOL
 
+BOOST_TEST
+
 # AutoTroll with Qt.
 # AT_WITH_QT
 # AC_CONFIG_FILES([gui/Makefile])
@@ -43,8 +45,6 @@ if test x$enable_boost_serialization = xyes; then
             [Define to enable boost::serialization support.])
   BOOST_SERIALIZATION
 fi
-
-BOOST_TEST
 
 ## -------------- ##
 ## Sub packages.  ##
