@@ -72,23 +72,27 @@ namespace libport
   Symbol::print_escaped (std::ostream& ostr) const
   {
     assert (str_);
+    const std::string& str = *str_;   // Shortcut
 
     // Check if the symbol is not a standard one, i.e. if it does not match
     // [A-Za-z_][A-Za-z0-9_]*
-    unsigned i = 0;
-    if (str_->length() && ((*str_)[0] == '_' || isalpha((*str_)[0])))
-    {
-      i++;
-      while (i < str_->length() && ((*str_)[i] == '_' || isalnum((*str_)[i])))
-	i++;
-    }
-
-    // If the symbol contains special characters, escape them, and print the
-    // symbol between single quotes.
-    if (!str_->length() || i < str_->length())
-      return ostr << '\'' << escape(*str_) << '\'';
+    bool needs_escaping = false;
+    if (str.empty())
+      needs_escaping = true;
+    else if (str[0] != '_' && !isalpha(str[0]))
+      needs_escaping = true;
     else
-      return ostr << *str_;
+      for (std::string::size_type i = 1; i < str.length(); ++i)
+	if (str[i] != '_' && !isalnum(str[i]))
+	{
+	  needs_escaping = true;
+	  break;
+	}
+
+    if (needs_escaping)
+      return ostr << '\'' << escape(str) << '\'';
+    else
+      return ostr << str;
   }
 
 } // namespace libport
