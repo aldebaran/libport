@@ -13,7 +13,8 @@ namespace libport
 {
 
   template <class T>
-  Escape::Escape (const T& obj)
+  Escape::Escape (const T& obj, char delimeter)
+    : delimeter_(delimeter)
   {
     std::ostringstream os;
     os << obj;
@@ -23,9 +24,9 @@ namespace libport
 
   template <class T>
   Escape
-  escape(const T& obj)
+  escape(const T& obj, char delimeter)
   {
-    return Escape (obj);
+    return Escape (obj, delimeter);
   }
 
   inline

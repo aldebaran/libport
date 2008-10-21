@@ -20,10 +20,10 @@ namespace libport
 
   protected:
     template <class T>
-    Escape (const T&);
+      Escape (const T&, char delimeter);
 
     template <class T>
-    friend Escape escape (const T&);
+      friend Escape escape (const T&, char delimeter);
 
   protected:
     std::string  str_;
@@ -31,10 +31,11 @@ namespace libport
   private:
     std::ostream&
     escape_ (std::ostream& o, const std::string& es) const;
+    char delimeter_;
   };
 
   template <class T>
-  Escape escape (const T&);
+  Escape escape (const T&, char delimeter);
 
   std::ostream& operator<< (std::ostream& o, const Escape&);
 

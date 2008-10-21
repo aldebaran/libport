@@ -90,7 +90,7 @@ namespace libport
 	}
 
     if (needs_escaping)
-      return ostr << '\'' << escape(str) << '\'';
+      return ostr << '\'' << escape(str, '\'') << '\'';
     else
       return ostr << str;
   }

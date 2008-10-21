@@ -40,12 +40,11 @@ namespace libport
 	case '\r': o << "\\r"; break;
 	case '\t': o << "\\t"; break;
 	case '\v': o << "\\v"; break;
-
 	case '\\': o << "\\\\"; break;
-	case '\"': o << "\\\""; break;
-	case '\'': o << "\\\'"; break;
 	default:
-	  if (std::isprint (*p))
+	  if (*p == delimeter_)
+	    o << '\\' << *p;
+	  else if (std::isprint (*p))
 	    o << *p;
 	  else
 	    o << "\\x" << std::setw (2) << (int) (unsigned char) *p;
