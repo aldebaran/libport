@@ -11,6 +11,7 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
+require 'pathname'
 require 'fileutils'
 require 'rbconfig'
 
@@ -199,9 +200,12 @@ end
 
 # Copy the array of file _files_ to directory _dest_
 def copy(files, dest)
-  fatal "not a directory `#{dest}'" unless File.directory?(dest)
-  r = FileUtils.cp(files, dest)
-  r.each { |x| puts "#{x} -> #{dest}" }
+  path = Pathname.new(dest)
+  path.mkpath
+  r = FileUtils.cp(files, path.to_s, :verbose => true)
+  for f in files do
+    FileUtils.chmod(0755, path + File.basename(f), :verbose => true)
+  end
   error("some file may not have been copied") if r.size != files.size
 rescue Errno::ENOENT => ex
   error(ex.to_s)
@@ -221,6 +225,7 @@ if $0 == __FILE__
 
   require 'optparse'
 
+  $output = '-'
   optparser = OptionParser.new do |op|
 
     op.banner = <<EOF
@@ -247,6 +252,11 @@ EOF
       end
     end
 
+    op.on('-o', '--output FILE',
+          'Output list to FILE instead of standard output.') do |path|
+      $output = path
+    end
+
     op.on_tail('-h', '--help', 'Show this message.') do
       puts op
       exit 0
@@ -264,7 +274,13 @@ EOF
 
   deps = dldep(binFile)
   files_exists? deps
-  deps.each { |x| puts "#{x}" }
+  if $output == '-'
+    io = STDOUT
+  else
+    io = File.open($output, 'w')
+  end
+  deps.each { |x| io.puts x }
+  io.close
 
   if ARGV.size > 1
     dest = ARGV[1]

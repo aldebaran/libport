@@ -33,20 +33,20 @@ if(NOT QT_EXT_LIBRARY)
     set(QT_EXT_FOUND TRUE)
   else(QT_EXT_LIBRARY)
     message(SEND_ERROR "no qt-ext library found "
-      "(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
+      "(setting -DCMAKE_INCLUDE_PATH may solve this problem).")
   endif(QT_EXT_LIBRARY)
 endif(NOT QT_EXT_LIBRARY)
 
 if(QT_EXT_FOUND)
   # Search for the include directory.
   if(NOT QT_EXT_INCLUDE_DIR)
-    find_path(QT_EXT_INCLUDE_DIR qt-ext/qt-info.h)
+    find_path(QT_EXT_INCLUDE_DIR qt-ext/_qt-ext.hh)
     if(QT_EXT_INCLUDE_DIR)
       message(STATUS "Found qt-ext include directory: "
 	"${QT_EXT_INCLUDE_DIR}")
     else(QT_EXT_INCLUDE_DIR)
       message(SEND_ERROR "no qt-ext headers found "
-	"(setting -DQT_EXT_ROOT_DIR=/path/to/qt-ext may solve this problem).")
+	"(setting -DCMAKE_INCLUDE_PATH may solve this problem).")
       set(QT_EXT_FOUND FALSE)
     endif(QT_EXT_INCLUDE_DIR)
   endif(NOT QT_EXT_INCLUDE_DIR)
@@ -54,19 +54,18 @@ endif(QT_EXT_FOUND)
 
 if(QT_EXT_FOUND)
   # Use this variables iff you use all those libraries otherwise you will add
-  # unused dependencies.
+  # unused dependencies. Unfortunately cmake is unable to track dependent
+  # library that are not built by itself (e.g. sdk-remote and qscintilla2).
   set(QT_EXT_LIBRARIES
     ${QT_EXT_LIBRARY}
     ${SDK_REMOTE_LIBRARY}
     ${QSCINTILLA2_LIBRARY}
-    ${QT_LIBRARIES}
     )
 
   set(QT_EXT_INCLUDES
     ${QT_EXT_INCLUDE_DIR}
     ${SDK_REMOTE_INCLUDE_DIR}
     ${QSCINTILLA2_INCLUDE_DIR}
-    ${QT_INCLUDES}
     )
 endif(QT_EXT_FOUND)
 

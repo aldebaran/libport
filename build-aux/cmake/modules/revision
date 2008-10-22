@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+##
+## revision: This file is part of libport.
+## Copyright (C) Gostai S.A.S., 2006-2008.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
+class String
+  def escape
+    gsub(/(["\\])/, '\\\\\1')
+  end
+end # class String
+
+def git_rev_list(format)
+  output = `git rev-list --max-count=1 --pretty="format:#{format}" HEAD`
+  output.split("\n")[1].escape
+end
+
+$package_info = {}
+$package_info[:date] = git_rev_list('%ai')
+$package_info[:id] = git_rev_list('%h (%ai %ae: %s)')
+$package_info[:rev] = git_rev_list('%h')
+
+def write(io)
+  io.puts <<EOF
+// The SCM revision string.
+#define PACKAGE_REVISION "#{$package_info[:rev]}"
+
+// The SCM identification string.
+#define PACKAGE_ID \\
+  "#{$package_info[:id]}"
+
+// The SCM date string.
+#define PACKAGE_DATE "#{$package_info[:date]}"
+
+// Version and revision together.
+#define PACKAGE_VERSION_REV \\
+  "version " PACKAGE_VERSION " rev. " PACKAGE_REVISION
+EOF
+end
+
+if ARGV.empty?
+  write(STDOUT)
+else
+  File.open(ARGV[0], 'w') { |io| write(io) }
+end

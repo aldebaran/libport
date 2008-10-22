@@ -12,8 +12,33 @@
 
 # Set common variables used in all Gostai project using cmake.
 
+if(NOT DEFINED INIT_CMAKE)
+set(INIT_CMAKE)
+
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
 enable_testing()
-include(Hostname)
+include(Tools)
 hostname(BUILDER_HOSTNAME)
-include(PrintVar)
+set(BUILDFARM $ENV{BUILDFARM})
+include(GenLibLoader)
+include(GostaiInfo)
+
+# Add clean-install target
+configure_file(
+  ${CMAKE_MODULE_PATH}/clean-install-target.cmake.in
+  ${CMAKE_BINARY_DIR}/clean-install-target.cmake
+  @ONLY
+  )
+add_custom_target(clean-install
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/clean-install-target.cmake
+  COMMENT "Clean installation directory."
+  )
+
+# Add re-install target
+add_custom_target(re-install
+  COMMAND ${CMAKE_BUILD_TOOL} install
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Re-install")
+add_dependencies(re-install clean-install)
+
+endif(NOT DEFINED INIT_CMAKE)

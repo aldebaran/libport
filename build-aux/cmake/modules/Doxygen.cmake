@@ -1,7 +1,8 @@
-# -helper macro to add a "doc" target with CMake build system.
-# and configure doxy.config.in to doxy.config
+# -helper macro to add a "doxygen" target with CMake build system.
+# and configure doxygen.config.in to doxygen.config
 #
-# target "doc" allows building the documentation with doxygen/dot on WIN32 and Linux
+# target "doxygen" allows building the documentation with doxygen/dot on
+# WIN32 and Linux.
 # Creates .chm windows help file if MS HTML help workshop
 # (available from http://msdn.microsoft.com/workshop/author/htmlhelp)
 # is installed with its DLLs in PATH.
@@ -38,13 +39,6 @@ if(DOXYGEN_FOUND)
   if(NOT DOXYGEN_CONFIG_FILE)
     set(DOXYGEN_CONFIG_FILE "doxygen.config.in")
   endif(NOT DOXYGEN_CONFIG_FILE)
-  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${DOXYGEN_CONFIG_FILE})
-    message(STATUS "Doxygen configuration file: "
-      "`${CMAKE_CURRENT_SOURCE_DIR}/${DOXYGEN_CONFIG_FILE}'")
-  else(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${DOXYGEN_CONFIG_FILE})
-    message(FATAL_ERROR "Cannot find doxygen configuration file: "
-      "`${CMAKE_CURRENT_SOURCE_DIR}/${DOXYGEN_CONFIG_FILE}'")
-  endif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${DOXYGEN_CONFIG_FILE})
 
   string(REGEX REPLACE ".in$" ""
     DOXYGEN_OUT_CONFIG_FILE ${DOXYGEN_CONFIG_FILE})
@@ -57,8 +51,11 @@ if(DOXYGEN_FOUND)
     COMMENT "Generate the doxygen mainpage to ${DOXYGEN_MAINPAGE}"
     VERBATIM)
   # Add some file to clean.
+  if(NOT DOXYGEN_HTML_OUTPUT)
+    set(DOXYGEN_HTML_OUTPUT "html")
+  endif(NOT DOXYGEN_HTML_OUTPUT)
   set_directory_properties(PROPERTIES
-    ADDITIONAL_MAKE_CLEAN_FILES "doxygen.log;${DOXYGEN_MAINPAGE}")
+    ADDITIONAL_MAKE_CLEAN_FILES "doxygen.log;${DOXYGEN_MAINPAGE};${DOXYGEN_HTML_OUTPUT}")
 
   # Set DOXYGEN_HAVE_DOT
   if(DOXYGEN_DOT_EXECUTABLE)
@@ -112,7 +109,7 @@ if(DOXYGEN_FOUND)
       if(EXISTS "${CMAKE_MODULE_PATH}/${DOXYGEN_CONFIG_FILE}")
         # using template DOXYGEN_CONFIG_FILE
         message(STATUS "configured "
-	  "${CMAKE_CMAKE_MODULE_PATH}/${DOXYGEN_CONFIG_FILE} "
+	  "${CMAKE_MODULE_PATH}/${DOXYGEN_CONFIG_FILE} "
 	  "--> ${CMAKE_CURRENT_BINARY_DIR}/${DOXYGEN_OUT_CONFIG_FILE}")
         configure_file(${CMAKE_MODULE_PATH}/${DOXYGEN_CONFIG_FILE}
           ${CMAKE_CURRENT_BINARY_DIR}/${DOXYGEN_OUT_CONFIG_FILE}
@@ -128,8 +125,8 @@ if(DOXYGEN_FOUND)
     endif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${DOXYGEN_OUT_CONFIG_FILE}")
   endif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${DOXYGEN_CONFIG_FILE}")
 
-  add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${DOXY_CONFIG})
-  add_dependencies(doc doxygen_mainpage)
+  add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${DOXY_CONFIG})
+  add_dependencies(doxygen doxygen_mainpage)
 
   # create a windows help .chm file using hhc.exe
   # HTMLHelp DLL must be in path!
@@ -141,7 +138,7 @@ if(DOXYGEN_FOUND)
       string(REGEX REPLACE "[/]" "\\\\" HHP_FILE ${TMP} )
       # MESSAGE(SEND_ERROR "DBG  HHP_FILE=${HHP_FILE}")
       add_custom_target(winhelp ${HTML_HELP_COMPILER} ${HHP_FILE})
-      add_dependencies(winhelp doc)
+      add_dependencies(winhelp doxygen)
 
       if(NOT TARGET_DOC_SKIP_INSTALL)
       # install windows help?

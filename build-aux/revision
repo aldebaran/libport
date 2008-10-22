@@ -45,7 +45,10 @@ for my $k (sort keys %package_info)
   print STDERR "$k -> $package_info{$k}\n";
 }
 
-print <<EOF;
+my $outfile = $ARGV[0] || "-";
+open(OUTFILE, ">$outfile");
+
+print OUTFILE <<EOF;
 // The SCM revision string.
 #define PACKAGE_REVISION "$package_info{Rev}"
 
@@ -60,6 +63,8 @@ print <<EOF;
 #define PACKAGE_VERSION_REV \\
   "version " PACKAGE_VERSION " rev. " PACKAGE_REVISION
 EOF
+
+close(OUTFILE);
 
 ### Setup "GNU" style for perl-mode and cperl-mode.
 ## Local Variables:

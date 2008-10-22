@@ -1,0 +1,9 @@
+@c This file holds information about gostai.
+
+@set urbiName ${URBI_NAME}
+@set gostai ${GOSTAI}
+@set urbiScript ${URBI_SCRIPT_NAME}
+@set urbiStudio ${URBI_STUDIO_NAME}
+@set gostaiHomepage ${GOSTAI_HOMEPAGE}
+@set gostaiCommunityUrl ${GOSTAI_COMMUNITY_URL}
+@set gostaiForumUrl ${GOSTAI_FORUM_URL}

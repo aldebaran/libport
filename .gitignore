@@ -9,3 +9,5 @@ build-aux/ltmain.sh
 build-aux/missing
 configure
 config.h.in
+*.[ao]
+*~

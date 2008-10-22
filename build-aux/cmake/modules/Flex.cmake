@@ -17,33 +17,40 @@
 
 # Find flex on the system.
 # Set FLEX_EXECUTABLE to the executable name.
-macro(FIND_FLEX)
+function(FIND_FLEX)
   if(NOT FLEX_EXECUTABLE)
     find_program(FLEX_EXECUTABLE flex)
     if (NOT FLEX_EXECUTABLE)
       message(FATAL_ERROR "flex not found - aborting")
     endif (NOT FLEX_EXECUTABLE)
   endif(NOT FLEX_EXECUTABLE)
-endmacro(FIND_FLEX)
+endfunction(FIND_FLEX)
 
 # Add flex files to the source list.
-macro(ADD_FLEX_FILES _sources)
+function(ADD_FLEX_FILES _sources)
   find_flex()
   foreach(_current_FILE ${ARGN})
     get_filename_component(_in ${_current_FILE} ABSOLUTE)
     get_filename_component(_basename ${_current_FILE} NAME_WE)
 
+    set(intermediate lex.yy.c)
     set(_out ${CMAKE_CURRENT_BINARY_DIR}/flex_${_basename}.cpp)
     # Invoke flex.
     add_custom_command(
-      OUTPUT ${_out}
+      OUTPUT ${intermediate}
       COMMAND ${FLEX_EXECUTABLE}
       ARGS
-      -o${_out}
       ${_in}
       DEPENDS ${_in}
       )
+    # Copy intermediate file to output file.
+    add_custom_command(
+      OUTPUT ${_out}
+      COMMAND ${CMAKE_COMMAND}
+      ARGS -E copy ${intermediate} ${_out}
+      DEPENDS ${intermediate}
+      )
     # Add the generated source file to the source list.
-    set(${_sources} ${${_sources}} ${_out})
+    set(${_sources} ${${_sources}} ${_out} PARENT_SCOPE)
   endforeach(_current_FILE)
-endmacro(ADD_FLEX_FILES)
+endfunction(ADD_FLEX_FILES)

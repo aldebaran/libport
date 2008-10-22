@@ -25,17 +25,17 @@ set(QWT_FOUND FALSE)
 
 # Search for the library urbi.
 if(NOT QWT_LIBRARY)
-  find_library(QWT_LIBRARY qwt)
+  # We need qwt5 on cygwin/mingw.
+  find_library(QWT_LIBRARY NAMES qwt qwt5)
   if(QWT_LIBRARY)
     message(STATUS "Found qwt library: ${QWT_LIBRARY}")
-    set(QWT_FOUND TRUE)
   else(QWT_LIBRARY)
     message(SEND_ERROR "no qwt library found "
       "(setting -DQWT_ROOT_DIR=/path/to/qwt may solve this problem).")
   endif(QWT_LIBRARY)
 endif(NOT QWT_LIBRARY)
 
-if(QWT_FOUND)
+if(QWT_LIBRARY)
   # Search for the include directory.
   if(NOT QWT_INCLUDE_DIR)
     find_path(QWT_INCLUDE_DIR qwt.h)
@@ -48,4 +48,5 @@ if(QWT_FOUND)
       set(QWT_FOUND FALSE)
     endif(QWT_INCLUDE_DIR)
   endif(NOT QWT_INCLUDE_DIR)
-endif(QWT_FOUND)
+  add_definitions(-DQWT_DLL)
+endif(QWT_LIBRARY)

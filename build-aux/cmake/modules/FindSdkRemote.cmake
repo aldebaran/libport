@@ -9,57 +9,109 @@
 ## See the LICENSE file for more information.
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
+##-----------------------------------------------------------------
+## CMake PACKAGE - URBI SDK Remote
+## Find URBI Sdk Remote libraries and paths.
+##-----------------------------------------------------------------
 
-# Find sdk-remote library.
+set(PACKAGE_FULLNAME "URBI SDK Remote")
+
+##-----------------------------------------------------------------
+# This package tries to respect CMake guidelines to be easily
+# reusable.
+# This module handles the following variables. Please note XXX is
+# the name specified in the PACKAGE_NAME variable (just above).
 #
-# You can set SDK_REMOTE_ROOT_DIR to a custom path to search in.
+# XXX_INCLUDE_DIRS     The final set of include directories listed in
+#                      one variable for use by client code.
 #
-# This module set two variables:
+# XXX_LIBRARY_DIRS     Optionally, the final set of library
+#                      directories listed in one variable for use
+#                      by client code.
 #
-#   SDK_REMOTE_LIBRARY: the path to the libraries found.
-#   SDK_REMOTE_LIBRARIES: the set of libraries of the remote sdk. Add this
-#                         variables to target_link_libraries.
-#   SDK_REMOTE_INCLUDE_DIR: the include path.
+# XXX_LIBRARIES        The libraries to link against to use XXX. These
+#                      should include full paths.
 #
-# These variables are set to <var-name>-NOTFOUND if an error occurs.
+# XXX_SHARED_LIBRARIES The list of all shared libraries found in the
+#                      package. This can be usefull if you're looking
+#                      for .dll or .so to export during the install.
+#
+# XXX_YY_FOUND         FALSE/Unidefined if YY part of XXX package has
+#                      not been found.
+#
+# XXX_FOUND            FALSE/Undefined if the whole package has not
+#                      been found.
+#                      Set it manually to FALSE don't want to use XXX.
+#
+# XXX_ROOT_DIR         Paths you want to add in the path list in order
+#                      to help cmake find your package on your computer.
+#
+# QUIET option         You can ask the package not to complain if there
+#                      is library/path not found. This means no output.
+#                      If you specify both QUIET and REQUIRED option,
+#                      the QUIET option has a lower priority and
+#                      critical messages are displayed.
+#
+# REQUIRED option      You can ask the package to throw a FATAL_ERROR
+#                      if the whole package has not been found.
+#
 
+# Here is the XXX_YY list:
+# SDK_REMOTE_URBI_LIBRARY
+# SDK_REMOTE_JPEG_LIBRARY
+# SDK_REMOTE_INCLUDE
+# SDK_REMOTE_UMAIN_DIR
+#
+##-----------------------------------------------------------------
 
-set(SDK_REMOTE_FOUND FALSE)
+# Retrieve PACKAGE_NAME and PACKAGE_FILENAME
+include(Package-toolbox)
+package_header(${CMAKE_CURRENT_LIST_FILE})
 
-# Search for the library urbi.
-if(NOT SDK_REMOTE_LIBRARY)
-  find_library(SDK_REMOTE_LIBRARY urbi)
-  if(SDK_REMOTE_LIBRARY)
-    message(STATUS "Found sdk-remote library: ${SDK_REMOTE_LIBRARY}")
-    set(SDK_REMOTE_FOUND TRUE)
-  else(SDK_REMOTE_LIBRARY)
-    message(SEND_ERROR "no sdk-remote library found "
-      "(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
-      "problem).")
-  endif(SDK_REMOTE_LIBRARY)
-endif(NOT SDK_REMOTE_LIBRARY)
+# Search for the include directory.
+package_search(PATH ${PACKAGE_NAME}_INCLUDE uobject.h
+               FULLNAME "SDK Remote INCLUDE"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/include
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Release/include
+                     ${${PACKAGE_NAME}_ROOT_DIR}/include)
 
-if(SDK_REMOTE_FOUND)
-  # Search for the include directory.
-  if(NOT SDK_REMOTE_INCLUDE_DIR)
-    find_path(SDK_REMOTE_INCLUDE_DIR uobject.h)
-    if(SDK_REMOTE_INCLUDE_DIR)
-      message(STATUS "Found sdk-remote include directory: "
-	"${SDK_REMOTE_INCLUDE_DIR}")
-    else(SDK_REMOTE_INCLUDE_DIR)
-      message(SEND_ERROR "no sdk-remote headers found "
-	"(setting -DSDK_REMOTE_ROOT_DIR=/path/to/sdk-remote may solve this "
-	"problem).")
-      set(SDK_REMOTE_FOUND FALSE)
-    endif(SDK_REMOTE_INCLUDE_DIR)
-  endif(NOT SDK_REMOTE_INCLUDE_DIR)
+# Search for URBI debug library
+package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbi liburbi
+               FULLNAME "SDK Remote for debug"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
-  set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARY})
-  # Add dependent libraries.
-  if(WIN32)
-    set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARIES} libjpeg ws2_32)
-  else()
-    set(SDK_REMOTE_LIBRARIES ${SDK_REMOTE_LIBRARIES} jpeg)
-  endif()
-endif(SDK_REMOTE_FOUND)
+# Search for URBI release library
+package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi liburbi
+               FULLNAME "SDK Remote for release"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Release/lib
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
+# Search for the associated jpeg library.
+package_search(LIBRARY ${PACKAGE_NAME}_JPEG_LIBRARY jpeg libjpeg
+               FULLNAME "SDK Remote's JPEG"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
+                     ${${PACKAGE_NAME}_ROOT_DIR}/lib)
+
+# Add platform specific libraries.
+if(WIN32)
+    list(APPEND ${PACKAGE_NAME}_LIBRARIES ws2_32 gdi32)
+elseif(UNIX)
+    list(APPEND ${PACKAGE_NAME}_LIBRARIES pthread)
+else(UNIX)
+    if(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
+        message( STATUS "Warning! No dependencies with SDK Remote has been "
+                    "pre-configured for your platform into CMake. There "
+                    "may be problem during the link.." )
+    endif(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
+endif(WIN32)
+
+package_foot(${${PACKAGE_NAME}_PARTS_LIST})

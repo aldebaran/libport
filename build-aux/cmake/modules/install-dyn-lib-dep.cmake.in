@@ -1,0 +1,45 @@
+# This is the script template used to install the dependent dynamic libraries
+# of a given binary or target. It is supposed to be expanded by the
+# dldep_install function declared in DynLibDep.cmake.
+
+# Set CMAKE environment variables.
+set(CMAKE_MODULE_PATH "@CMAKE_MODULE_PATH@")
+set(CMAKE_INCLUDE_PATH "@CMAKE_INCLUDE_PATH@")
+set(CMAKE_LIBRARY_PATH "@CMAKE_LIBRARY_PATH@")
+set(CMAKE_PROGRAM_PATH "@CMAKE_PROGRAM_PATH@")
+set(CMAKE_PREFIX_PATH "@CMAKE_PREFIX_PATH@")
+set(CMAKE_FIND_LIBRARY_PREFIXES "@CMAKE_FIND_LIBRARY_PREFIXES@")
+set(CMAKE_FIND_LIBRARY_SUFFIXES "@CMAKE_FIND_LIBRARY_SUFFIXES@")
+
+# Include modules.
+include(DynLibDep)
+include(Tools)
+include(File)
+include(If)
+
+# Install files.
+echo("Installing dependent dynamic libraries of '@binary_name@'")
+dldep(@binary_loc@ libs)
+set(destdir "${CMAKE_INSTALL_PREFIX}/@EXTRA_LIBRARIES_DIR@")
+
+foreach(lib ${libs})
+  # Is it a symbolic links?
+  if_is_symlink(${lib} is_symlink)
+  if(is_symlink)
+    file_readlink(${lib} realfile)
+    get_filename_component(lib_name ${lib} NAME)
+    file(INSTALL
+      DESTINATION ${destdir}
+      TYPE FILE
+      RENAME ${lib_name}
+      FILES ${realfile})
+  # else
+  else(is_symlink)
+    file(INSTALL DESTINATION ${destdir} TYPE FILE FILES ${lib})
+  endif(is_symlink)
+endforeach(lib)
+
+# Local Variables:
+# mode: cmake
+# mode: flyspell
+# End:

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# This script overload the dynamic library path.
+
+# Resolve links referring to me.
+if test -L "$0"; then
+    exec $(readlink -f "$0")
+fi
+
+appname=$(basename $0 | sed s,\.sh$,,)
+dirname=$(dirname $0)
+case "$dirname" in
+    /*)
+	# nothing to do
+	;;
+    *)
+	dirname="$PWD/$dirname"
+	;;
+esac
+paths="$dirname/../@EXTRA_LIBRARIES_DIR@"
+LD_LIBRARY_PATH="$paths"
+export LD_LIBRARY_PATH
+DYLD_LIBRARY_PATH="$paths"
+export DYLD_LIBRARY_PATH
+"$dirname/$appname" $*
