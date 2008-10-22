@@ -72,6 +72,7 @@ namespace libport
         // together again.
 	if (split_on_colon
             && s[0] == '\\'
+            && !res.empty()
             && res.back().length() == 1)
 	  res.back() += ':' + s;
 	else
