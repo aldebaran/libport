@@ -81,6 +81,13 @@ namespace libport
   }
   //>>
 
+  inline Symbol
+  Symbol::make_empty()
+  {
+    static Symbol empty_symbol = Symbol("");
+    return empty_symbol;
+  }
+
   inline std::size_t
   hash_value(libport::Symbol s)
   {

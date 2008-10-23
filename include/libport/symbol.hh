@@ -86,6 +86,8 @@ namespace libport
     static Symbol fresh (const std::string& s);
     /** \brief Create a new unique symbol, forged from \a s. */
     static Symbol fresh (const Symbol& s);
+    /** \brief Return (and cache) an empty symbol. */
+    static Symbol make_empty();
     /** \} */
 
   private:
