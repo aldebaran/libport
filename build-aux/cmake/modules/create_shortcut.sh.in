@@ -1,0 +1,121 @@
+#! /bin/sh
+
+## Variables
+: ${DEBUG=0}
+: ${TYPE="install"}
+DESKTOP_FILE=@STGZ_XDG_FILENAME@.desktop
+DESKTOP_ICON=@STGZ_XDG_FILENAME@.png
+MIME_XML=@STGZ_XDG_FILENAME@.xml
+
+## Debug
+if test $DEBUG -ge 1; then
+  set -x
+  export XDG_UTILS_DEBUG_LEVEL=$DEBUG
+fi
+
+## Init, create desktop file
+cat > $DESKTOP_FILE << EOF
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Gostai urbiLab
+Type=Application
+Icon=Gostai-urbiLab
+TryExec=$(pwd)/urbiLab.sh
+Exec=$(pwd)/urbiLab.sh --remote=%f
+Categories=Education;Science;Robotics
+MimeType=text/x-urbiLab;
+EOF
+
+cat > $MIME_XML << EOF
+<?xml version="1.0"?>
+<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
+  <mime-type type="text/x-urbiLab">
+    <comment>urbiLab remote file</comment>
+    <magic priority="50">
+      <match type="string" offset="0" value="&lt;!DOCTYPE uremote&gt;" />
+    </magic>
+    <glob pattern="*.@STGZ_SHORTCUTS_FILE_EXTENSION@"/>
+  </mime-type>
+</mime-info>
+EOF
+
+## Generic fctions
+warn()
+{
+  echo 1>&2 "$@"
+}
+
+run()
+{
+  local desc="$1"
+  shift
+  $@ 2>&1 > /dev/null
+  local res=$?
+  if test $res -ne 0; then
+    if test $res -eq 127; then
+      warn "Not making $desc (missing $1)"
+    else
+      warn "$1: unknown error.  The $desc may not have been installed."
+    fi
+  fi
+  return $res
+}
+
+ask()
+{
+  ## Check if enabled for this app
+  if test $(eval echo '$'$1) -ne 1; then
+    eval $1=0
+    return
+  fi
+
+  echo "Do you want to $2? [Yn] "
+  read line leftover || line="EOF"
+  case ${line} in
+    n | N)
+      eval $1=0;;
+    y | Y | "")
+      eval $1=1;;
+    *)
+      warn "Please answer with 'y', 'Y', 'n' or 'N'"
+      ask "$1" "$2";;
+  esac
+}
+
+init_var()
+{
+  case $2 in
+    @* | "" | 0)
+      eval $1=0;;
+    *)
+      eval $1=1;;
+  esac
+}
+
+## Main code
+init_var DESKTOP_ENABLE "@STGZ_SHORTCUTS_DESKTOP@"
+init_var MENU_ENABLE "@STGZ_SHORTCUTS_MENU@"
+init_var FILE_ASSOC_ENABLE "@STGZ_SHORTCUTS_FILE_EXTENSION@"
+
+if test "x$TYPE" = "xinstall"
+then
+  ask DESKTOP_ENABLE "create a desktop shortcut"
+  ask MENU_ENABLE "create a menu shortcut"
+  ask FILE_ASSOC_ENABLE "open .@STGZ_SHORTCUTS_FILE_EXTENSION@ files with Gostai urbiLab"
+fi
+
+if test $DESKTOP_ENABLE -gt 0 -o $MENU_ENABLE -gt 0; then
+  run "icon" xdg-icon-resource $TYPE --size 48 $DESKTOP_ICON Gostai-urbiLab
+fi
+if test $DESKTOP_ENABLE -gt 0; then
+  run "Desktop icon" xdg-desktop-icon $TYPE $DESKTOP_FILE
+fi
+if test $MENU_ENABLE -gt 0; then
+  run "menu item" xdg-desktop-menu $TYPE $DESKTOP_FILE
+fi
+
+if test $FILE_ASSOC_ENABLE -gt 0; then
+  run ".urm file MIME registration" xdg-mime $TYPE $MIME_XML
+  run ".urm file MIME association" xdg-mime default $DESKTOP_FILE text/x-urbiLab
+fi
