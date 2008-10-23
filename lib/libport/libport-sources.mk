@@ -20,6 +20,7 @@ libport_sources =				\
 	$(libport_srcdir)/csignal.cc		\
 	$(libport_srcdir)/cstdio.cc		\
 	$(libport_srcdir)/deref.cc		\
+	$(libport_srcdir)/dirent.cc		\
 	$(libport_srcdir)/escape.cc		\
 	$(libport_srcdir)/path.cc		\
 	$(libport_srcdir)/file-library.cc	\
