@@ -10,7 +10,6 @@ extern "C"
 {
   // In this case, we just ignore it.
   typedef void (*sig_t) (int);
-  sig_t signal(int sig, sig_t func);
 }
 #endif
 
