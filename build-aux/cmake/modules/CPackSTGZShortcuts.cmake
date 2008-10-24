@@ -10,21 +10,32 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
+##
+## ***PLEASE*** update your application README if you need this macro.
+##
+## * How to package this application
+##
+## To package this application on Linux, run ``make package_linux'' in your
+## build directory.
+##
+## For any other OS, simply run ``make package''.
+##
+
 include(Dirs)
+
+## I want CPACK_PACKAGE_FILE_NAME for binary package, not for source package :(
+include(${CMAKE_BINARY_DIR}/CPackConfig.cmake)
 
 if(UNIX AND NOT WIN32 AND NOT STGZ_SHORTCUTS)
 macro(STGZ_SHORTCUTS)
   parse_arguments(
     "STGZ_SHORTCUTS"
-    "DATA_DIR;PATCH_FILENAME;FILE_EXTENSION"
+    "DATA_DIR;FILE_EXTENSION;MIME"
     "DESKTOP;MENU"
     ${ARGN})
 
   set(STGZ_XDG_FILENAME
       "${GOSTAI}-${PROJECT_NAME}"
-      )
-  set(PATCH_PATH
-      "${STGZ_SHORTCUTS_DATA_DIR}/${STGZ_SHORTCUTS_PATCH_FILENAME}"
       )
 
   configure_file(
@@ -32,16 +43,15 @@ macro(STGZ_SHORTCUTS)
     ${CMAKE_BINARY_DIR}/create_shortcut.sh
     @ONLY
     )
+  configure_file(
+    ${CMAKE_MODULE_PATH}/CPackSTGZShortcuts.patch.in
+    ${CMAKE_BINARY_DIR}/CPackSTGZShortcuts.patch
+    @ONLY
+    )
 
-  add_custom_target(package_patch ALL
-    COMMAND sh -c
-      'grep
-         '"'"'patch -i .*${STGZ_SHORTCUTS_PATCH_FILENAME}$$'"'"' Makefile
-       || \(sed -i -e 
-         '"'"'s=^.PHONY : package$$=\\tpatch -i ${PATCH_PATH}\\n&='"'"'
-         Makefile
-       && echo \"Please, relaunch me\"\; exit 42\)'
-    COMMENT "Patching package rule"
+  add_custom_target(package_linux
+    COMMAND $(MAKE) package
+    COMMAND patch -i CPackSTGZShortcuts.patch
     )
   install(PROGRAMS ${CMAKE_BINARY_DIR}/create_shortcut.sh
     DESTINATION ${DATA_DIR}

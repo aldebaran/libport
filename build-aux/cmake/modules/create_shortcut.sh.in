@@ -6,11 +6,12 @@
 DESKTOP_FILE=@STGZ_XDG_FILENAME@.desktop
 DESKTOP_ICON=@STGZ_XDG_FILENAME@.png
 MIME_XML=@STGZ_XDG_FILENAME@.xml
+MIME=@STGZ_SHORTCUTS_MIME@
 
 ## Debug
 if test $DEBUG -ge 1; then
   set -x
-  export XDG_UTILS_DEBUG_LEVEL=$DEBUG
+  export XDG_UTILS_DEBUG_LEVEL=$(($DEBUG - 1))
 fi
 
 ## Init, create desktop file
@@ -24,13 +25,13 @@ Icon=Gostai-urbiLab
 TryExec=$(pwd)/urbiLab.sh
 Exec=$(pwd)/urbiLab.sh --remote=%f
 Categories=Education;Science;Robotics
-MimeType=text/x-urbiLab;
+MimeType=$MIME;
 EOF
 
 cat > $MIME_XML << EOF
 <?xml version="1.0"?>
 <mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
-  <mime-type type="text/x-urbiLab">
+  <mime-type type="$MIME">
     <comment>urbiLab remote file</comment>
     <magic priority="50">
       <match type="string" offset="0" value="&lt;!DOCTYPE uremote&gt;" />
@@ -65,8 +66,7 @@ run()
 ask()
 {
   ## Check if enabled for this app
-  if test $(eval echo '$'$1) -ne 1; then
-    eval $1=0
+  if ! $(eval echo '$'$1); then
     return
   fi
 
@@ -74,9 +74,9 @@ ask()
   read line leftover || line="EOF"
   case ${line} in
     n | N)
-      eval $1=0;;
+      eval $1=false;;
     y | Y | "")
-      eval $1=1;;
+      eval $1=true;;
     *)
       warn "Please answer with 'y', 'Y', 'n' or 'N'"
       ask "$1" "$2";;
@@ -86,10 +86,10 @@ ask()
 init_var()
 {
   case $2 in
-    @* | "" | 0)
-      eval $1=0;;
+    @* | "" | 0 | "FALSE" | "false" )
+      eval $1=false;;
     *)
-      eval $1=1;;
+      eval $1=true;;
   esac
 }
 
@@ -105,17 +105,17 @@ then
   ask FILE_ASSOC_ENABLE "open .@STGZ_SHORTCUTS_FILE_EXTENSION@ files with Gostai urbiLab"
 fi
 
-if test $DESKTOP_ENABLE -gt 0 -o $MENU_ENABLE -gt 0; then
-  run "icon" xdg-icon-resource $TYPE --size 48 $DESKTOP_ICON Gostai-urbiLab
+if $DESKTOP_ENABLE && $MENU_ENABLE; then
+  run "icon" xdg-icon-resource $TYPE --size 48 $DESKTOP_ICON @STGZ_XDG_FILENAME@
 fi
-if test $DESKTOP_ENABLE -gt 0; then
+if $DESKTOP_ENABLE; then
   run "Desktop icon" xdg-desktop-icon $TYPE $DESKTOP_FILE
 fi
-if test $MENU_ENABLE -gt 0; then
+if $MENU_ENABLE; then
   run "menu item" xdg-desktop-menu $TYPE $DESKTOP_FILE
 fi
 
-if test $FILE_ASSOC_ENABLE -gt 0; then
+if $FILE_ASSOC_ENABLE; then
   run ".urm file MIME registration" xdg-mime $TYPE $MIME_XML
-  run ".urm file MIME association" xdg-mime default $DESKTOP_FILE text/x-urbiLab
+  run ".urm file MIME association" xdg-mime default $DESKTOP_FILE $MIME
 fi
