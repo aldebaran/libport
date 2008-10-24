@@ -259,7 +259,18 @@ function(gostai_add_qt_assistant name)
     # Configure project information.
     configure_file(
       ${CMAKE_MODULE_PATH}/project-info.docbook.in
-      ${CMAKE_CURRENT_BINARY_DIR}/project-info.xml)
+      ${CMAKE_CURRENT_BINARY_DIR}/project-info.xml
+      ESCAPE_QUOTES)
+    # \" => &quot;
+    file(READ
+      ${CMAKE_CURRENT_BINARY_DIR}/project-info.xml
+      XML_FILE)
+    string(REPLACE "\\\"" "&quot;"
+      XML_FILE
+      ${XML_FILE})
+    file(WRITE
+      ${CMAKE_CURRENT_BINARY_DIR}/project-info.xml
+      "${XML_FILE}")
     # Configure Gostai information.
     configure_file(
       ${CMAKE_MODULE_PATH}/gostai-info.docbook.in
