@@ -28,7 +28,7 @@ include(Dirs)
 function(STGZ_SHORTCUTS)
   parse_arguments(
     "STGZ_SHORTCUTS"
-    "DATA_DIR;FILE_EXTENSION;MIME"
+    "DATA_DIR;FILE_EXTENSION;MIME;CMD;CMD_ARGS;DESCRIPTION;DOCTYPE"
     "DESKTOP;MENU"
     ${ARGN})
 
@@ -36,6 +36,9 @@ function(STGZ_SHORTCUTS)
     set(STGZ_XDG_FILENAME
       "${GOSTAI}-${PROJECT_NAME}"
       )
+    if(NOT STGZ_SHORTCUTS_CMD_ARGS)
+      set(STGZ_SHORTCUTS_CMD_ARGS "%f")
+    endif(NOT STGZ_SHORTCUTS_CMD_ARGS)
 
     configure_file(
       ${CMAKE_MODULE_PATH}/create_shortcut.sh.in

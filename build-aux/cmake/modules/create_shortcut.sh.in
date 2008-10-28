@@ -19,11 +19,11 @@ cat > $DESKTOP_FILE << EOF
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
-Name=Gostai urbiLab
+Name=@PROJECT_LONGNAME@
 Type=Application
-Icon=Gostai-urbiLab
-TryExec=$(pwd)/urbiLab.sh
-Exec=$(pwd)/urbiLab.sh --remote=%f
+Icon=@CPACK_PACKAGE_VENDOR@-@CPACK_PACKAGE_NAME@
+TryExec=$(pwd)/@STGZ_SHORTCUTS_CMD@
+Exec=$(pwd)/@STGZ_SHORTCUTS_CMD@ @STGZ_SHORTCUTS_CMD_ARGS@
 Categories=Education;Science;Robotics
 MimeType=$MIME;
 EOF
@@ -32,9 +32,9 @@ cat > $MIME_XML << EOF
 <?xml version="1.0"?>
 <mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
   <mime-type type="$MIME">
-    <comment>urbiLab remote file</comment>
+    <comment>@STGZ_SHORTCUTS_DESCRIPTION@</comment>
     <magic priority="50">
-      <match type="string" offset="0" value="&lt;!DOCTYPE uremote&gt;" />
+      <match type="string" offset="0" value="@STGZ_SHORTCUTS_DOCTYPE@" />
     </magic>
     <glob pattern="*.@STGZ_SHORTCUTS_FILE_EXTENSION@"/>
   </mime-type>
@@ -102,7 +102,7 @@ if test "x$TYPE" = "xinstall"
 then
   ask DESKTOP_ENABLE "create a desktop shortcut"
   ask MENU_ENABLE "create a menu shortcut"
-  ask FILE_ASSOC_ENABLE "open .@STGZ_SHORTCUTS_FILE_EXTENSION@ files with Gostai urbiLab"
+  ask FILE_ASSOC_ENABLE "open .@STGZ_SHORTCUTS_FILE_EXTENSION@ files with @PROJECT_LONGNAME@"
 fi
 
 if $DESKTOP_ENABLE && $MENU_ENABLE; then
