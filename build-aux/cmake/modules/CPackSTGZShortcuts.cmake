@@ -21,44 +21,45 @@
 ## For any other OS, simply run ``make package''.
 ##
 
+if(NOT COMMAND STGZ_SHORTCUTS)
+
 include(Dirs)
 
-## I want CPACK_PACKAGE_FILE_NAME for binary package, not for source package :(
-include(${CMAKE_BINARY_DIR}/CPackConfig.cmake)
-
-if(UNIX AND NOT WIN32 AND NOT STGZ_SHORTCUTS)
-macro(STGZ_SHORTCUTS)
+function(STGZ_SHORTCUTS)
   parse_arguments(
     "STGZ_SHORTCUTS"
     "DATA_DIR;FILE_EXTENSION;MIME"
     "DESKTOP;MENU"
     ${ARGN})
 
-  set(STGZ_XDG_FILENAME
+  if(UNIX AND NOT WIN32)
+    set(STGZ_XDG_FILENAME
       "${GOSTAI}-${PROJECT_NAME}"
       )
 
-  configure_file(
-    ${CMAKE_MODULE_PATH}/create_shortcut.sh.in
-    ${CMAKE_BINARY_DIR}/create_shortcut.sh
-    @ONLY
-    )
-  configure_file(
-    ${CMAKE_MODULE_PATH}/CPackSTGZShortcuts.patch.in
-    ${CMAKE_BINARY_DIR}/CPackSTGZShortcuts.patch
-    @ONLY
-    )
+    configure_file(
+      ${CMAKE_MODULE_PATH}/create_shortcut.sh.in
+      ${CMAKE_BINARY_DIR}/create_shortcut.sh
+      @ONLY
+      )
+    configure_file(
+      ${CMAKE_MODULE_PATH}/CPackSTGZShortcuts.patch.in
+      ${CMAKE_BINARY_DIR}/CPackSTGZShortcuts.patch
+      @ONLY
+      )
 
-  add_custom_target(package_linux
-    COMMAND $(MAKE) package
-    COMMAND patch -i CPackSTGZShortcuts.patch
-    )
-  install(PROGRAMS ${CMAKE_BINARY_DIR}/create_shortcut.sh
-    DESTINATION ${DATA_DIR}
-    )
-  install(FILES "${STGZ_SHORTCUTS_DATA_DIR}/${STGZ_XDG_FILENAME}.png"
-    DESTINATION ${DATA_DIR}
-    )
+    add_custom_target(package_linux
+      COMMAND $(MAKE) package
+      COMMAND patch -i CPackSTGZShortcuts.patch
+      )
+    install(PROGRAMS ${CMAKE_BINARY_DIR}/create_shortcut.sh
+      DESTINATION ${DATA_DIR}
+      )
+    install(FILES "${STGZ_SHORTCUTS_DATA_DIR}/${STGZ_XDG_FILENAME}.png"
+      DESTINATION ${DATA_DIR}
+      )
+  endif(UNIX AND NOT WIN32)
 
-endmacro(STGZ_SHORTCUTS)
-endif(UNIX AND NOT WIN32 AND NOT STGZ_SHORTCUTS)
+endfunction(STGZ_SHORTCUTS)
+
+endif(NOT COMMAND STGZ_SHORTCUTS)
