@@ -176,4 +176,9 @@ namespace libport
     return ufloat_cast<int>(val);
   }
 
+  long long ufloat_to_long_long(ufloat val)
+  {
+    return ufloat_cast<long long>(val);
+  }
+
 } // namespace libport
