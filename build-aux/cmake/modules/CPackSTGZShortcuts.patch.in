@@ -4,7 +4,7 @@
  
  echo "Unpacking finished successfully"
 -
-+(cd ${toplevel}/@DATA_DIR@ && sh create_shortcut.sh)
++(cd ${toplevel}/ && sh @DATA_DIR@/create_shortcut.sh)
  exit 0
  #-----------------------------------------------------------
  #      Start of TAR.GZ file

@@ -24,6 +24,7 @@
 if(NOT COMMAND STGZ_SHORTCUTS)
 
 include(Dirs)
+include(Tools)
 
 function(STGZ_SHORTCUTS)
   parse_arguments(
@@ -40,6 +41,8 @@ function(STGZ_SHORTCUTS)
       set(STGZ_SHORTCUTS_CMD_ARGS "%f")
     endif(NOT STGZ_SHORTCUTS_CMD_ARGS)
 
+    xml_escape(STGZ_SHORTCUTS_DOCTYPE)
+
     configure_file(
       ${CMAKE_MODULE_PATH}/create_shortcut.sh.in
       ${CMAKE_BINARY_DIR}/create_shortcut.sh
@@ -54,6 +57,7 @@ function(STGZ_SHORTCUTS)
     add_custom_target(package_linux
       COMMAND $(MAKE) package
       COMMAND patch -i CPackSTGZShortcuts.patch
+      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
       )
     install(PROGRAMS ${CMAKE_BINARY_DIR}/create_shortcut.sh
       DESTINATION ${DATA_DIR}

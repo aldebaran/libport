@@ -205,4 +205,12 @@ if(NOT TOOLS_CMAKE_GUARD)
     configure_file(${in} ${out} ${${in}_OPTIONS})
   endfunction(configure_file_with_native_paths)
 
+  macro(xml_escape in)
+    set(variable ${${in}})
+    string(REPLACE "<" "&lt;" variable "${variable}")
+    string(REPLACE ">" "&gt;" variable "${variable}")
+    string(REPLACE "\"" "&quot;" variable "${variable}")
+    set(${in} "${variable}")
+  end(xml_escape)
+
 endif(NOT TOOLS_CMAKE_GUARD)
