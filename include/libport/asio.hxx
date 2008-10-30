@@ -1,216 +1,266 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <boost/system/error_code.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/construct.hpp>
 
 #include <libport/thread.hh>
-
+#include <libport/lockable.hh>
 
 namespace libport {
 namespace netdetail {
-#ifndef LIBPORT_NO_SSL
-struct SSLSettings
-{
-  boost::asio::ssl::context_base::method context;
-  boost::asio::ssl::context::options options;
-  std::string privateKeyFile;
-  std::string certChainFile;
-  std::string tmpDHFile;
-  std::string cipherList;
-};
-#endif
-template<class T> struct SocketFromAcceptor
-{
-  typedef typename T::protocol_type::socket type;
-};
-// FIXME: use the delete_ptr in boost::lambda.
-template<class T> void deletor(T* ptr)
-{
-  delete ptr;
-}
-inline
-void runIoService(boost::asio::io_service* io)
-{
-  // Trick to
-  boost::asio::io_service::work work(*io);
-  io->run();
-}
-inline boost::asio::io_service& get_io_service()
-{
-  static boost::asio::io_service* io = 0;
-  if (!io)
-  {
-    io = new boost::asio::io_service;
-    libport::startThread(boost::bind(&runIoService, io));
-  }
-  return *io;
-}
-template<typename SocketPtr> void
-socketClose(SocketPtr s)
-{
-  s->lowest_layer().close();
-}
-template<typename SocketPtr> void
-socketWrite(SocketPtr s, void* data, int sz)
-{
-  boost::asio::streambuf* request  = new boost::asio::streambuf();
-  std::ostream request_stream(request);
-  request_stream.write((char*)data, sz);
-  boost::asio::async_write
-  (*s, *request, 
-   boost::bind(&deletor<boost::asio::streambuf>, request));
-}
-template<typename SocketPtr> bool
-onReadDemux(BaseSocket* bs, SocketPtr, boost::asio::streambuf& buf,
-            boost::system::error_code erc)
-{
-  if (erc)
-  {
-    bs->connected_ = false;
-    std::cerr << "readdemux error " << erc.message() << std::endl;
-    bs->onErrorFunc(erc);
-    return false;
-  }
-  else
-  {
-    bs->onReadFunc(buf);
-    return true;
-  }
-}
-template<typename SocketPtr, typename Buf>
-void readOne
-(boost::system::error_code erc, SocketPtr s, 
- boost::function3<bool, SocketPtr, boost::asio::streambuf&,
- boost::system::error_code> onRead, 
- Buf buf
- )
-{
-  if (onRead(s, *buf, erc))
-  {
-    boost::asio::async_read(*s, *buf, boost::asio::transfer_at_least(1),
-                            boost::bind(&readOne<SocketPtr, Buf>, _1, s, onRead, buf));
-  }
-}
 
-template<typename SocketPtr> void
-runReader
-(SocketPtr s, 
- boost::function3<bool, SocketPtr, boost::asio::streambuf&,
- boost::system::error_code> onRead
- )
-{
-  typedef  boost::shared_ptr<boost::asio::streambuf> Buf;
-  Buf buf(new boost::asio::streambuf);
-  boost::asio::async_read(*s, *buf,
-                          boost::asio::transfer_at_least(1),
-                          boost::bind(&readOne<SocketPtr, Buf>, _1, s, onRead, buf));
-}
-template<typename SocketPtr> bool
-onAccept(SocketPtr sock, SocketFactory fact)
-{
-  BaseSocket* s = fact();
-  if (!s)
-    return false;
-  s->close = boost::bind(&socketClose<SocketPtr>, sock);
-  s->write = boost::bind(&socketWrite<SocketPtr>, sock, _1, _2);
-  runReader<SocketPtr>(sock, boost::bind(&onReadDemux<SocketPtr>, s, _1, _2, _3));
-  return true;
-}
-#ifndef LIBPORT_NO_SSL
-template<typename SocketPtr> bool
-onAcceptSSL(SocketPtr sock, SocketFactory fact, SSLSettings settings)
-{
-  using namespace boost::asio;
-  boost::system::error_code erc;
-  ssl::context context(sock->get_io_service(),
-                       boost::asio::ssl::context::sslv23_server);
-  context.set_options(settings.options);
-  if (!settings.cipherList.empty())
+  typedef ::libport::Socket::SocketFactory SocketFactory;
+  class SocketImplBase: public BaseSocket, private libport::Lockable
   {
-    SSL_CTX* ctx = context.impl();
-    if (!SSL_CTX_set_cipher_list(ctx, settings.cipherList.c_str()))
-      throw std::runtime_error("SSL_CTX_set_cipher_list failed");
+    public:
+      SocketImplBase(): current_(-1), pending_(false) {}
+      /// Start an asynchronous read operation.
+      virtual void startReader() = 0;
+    protected:
+      /// Write double-buffer.
+      boost::asio::streambuf buffers_[2];
+      /// Read buffer.
+      boost::asio::streambuf readBuffer_;
+      /// Buffer id currently engaged in an async write, -1 for none
+      int current_;
+      /// Second buffer has data to write.
+      bool pending_;
+      friend class Socket;
+      template<class Stream> friend class SocketImpl;
+  };
+  template<class Stream> class SocketImpl
+    : public SocketImplBase
+  {
+    public:
+      SocketImpl():base_(0) {}
+      ~SocketImpl() { delete base_;}
+      void write(const void* data, unsigned int length);
+      void close();
+      bool isConnected();
+      template<typename Acceptor, typename BaseFactory> static void
+        onAccept(Stream* s, SocketFactory fact, Acceptor *a, BaseFactory bf);
+      template<typename Acceptor, typename BaseFactory> static void
+        acceptOne(SocketFactory fact, Acceptor *a, BaseFactory bf);
+      static BaseSocket* create(Stream* base);
+      void startReader();
+    private:
+      Stream* base_;
+      void continueWrite(DestructionLock lock, boost::system::error_code erc, size_t sz);
+      void onReadDemux(DestructionLock lock, boost::system::error_code erc);
+      friend class Socket;
+    };
+
+
+#ifndef LIBPORT_NO_SSL
+  struct SSLSettings
+  {
+    boost::asio::ssl::context_base::method context;
+    boost::asio::ssl::context::options options;
+    std::string privateKeyFile;
+    std::string certChainFile;
+    std::string tmpDHFile;
+    std::string cipherList;
+  };
+#endif
+
+  // FIXME: use the delete_ptr in boost::lambda.
+  template<class T> void deletor(T* ptr)
+  {
+    delete ptr;
   }
-  
+
+  inline void
+  runIoService(boost::asio::io_service* io)
+  {
+    // Trick to have io->run() never return.
+    boost::asio::io_service::work work(*io);
+    io->run();
+  }
+
+  inline boost::asio::io_service&
+  get_io_service()
+  {
+    static boost::asio::io_service* io = 0;
+    if (!io)
+    {
+      io = new boost::asio::io_service;
+      libport::startThread(boost::bind(&runIoService, io));
+    }
+    return *io;
+  }
+
+  template<typename Stream> void
+  SocketImpl<Stream>::close()
+  {
+    base_->lowest_layer().close();
+  }
+
+  template<typename Stream> bool
+  SocketImpl<Stream>::isConnected()
+  {
+    return base_->lowest_layer().is_open();
+  }
+
+  template<typename Stream> void
+  SocketImpl<Stream>::write(const void* buffer, unsigned int length)
+  {
+    libport::BlockLock bl(this);
+    std::ostream stream(&buffers_[current_==-1 ? 0:1-current_]);
+    stream.write((const char*)buffer, length);
+    pending_ = true;
+    if (current_ == -1)
+    {
+      current_ = 1; // We wrote on 0, continueWrite will swap.
+      continueWrite(getDestructionLock(), boost::system::error_code(), 0 );
+    }
+  }
+
+  template<typename Stream> void
+  SocketImpl<Stream>::continueWrite(DestructionLock lock, boost::system::error_code er, size_t sz)
+  {
+    if (er)
+    {
+      if (onErrorFunc)
+	onErrorFunc(er);
+      close();
+      return;
+    }
+    libport::BlockLock bl(this);
+    current_ = 1 - current_;
+    if (pending_)
+      boost::asio::async_write(*base_, buffers_[current_],
+	  boost::bind(&SocketImpl<Stream>::continueWrite, this, lock,  _1, _2));
+    else
+    {
+      current_ = -1;
+    }
+    pending_ = false;
+  }
+
+
+  template<typename Stream> void
+  SocketImpl<Stream>::onReadDemux(DestructionLock lock, boost::system::error_code erc)
+  {
+    if (erc)
+    {
+      if (onErrorFunc)
+	onErrorFunc(erc);
+      close();
+    }
+    else
+    {
+      if (onReadFunc)
+	onReadFunc(readBuffer_);
+      if (isConnected())
+	boost::asio::async_read(*base_, readBuffer_,  boost::asio::transfer_at_least(1),
+	    boost::bind(&SocketImpl<Stream>::onReadDemux,this, lock, _1));
+    }
+  }
+
+
+  template<typename Stream> void
+  SocketImpl<Stream>::startReader()
+  {
+    boost::asio::async_read(*base_, readBuffer_,  boost::asio::transfer_at_least(1),
+       	boost::bind(&SocketImpl<Stream>::onReadDemux,this, getDestructionLock(), _1));
+  }
+
+  template<typename Stream>
+  template<typename Acceptor, typename BaseFactory> void
+  SocketImpl<Stream>::onAccept(Stream* s, SocketFactory fact, Acceptor *a, BaseFactory bf)
+  {
+    SocketImplBase* wrapper = dynamic_cast<SocketImplBase*>(bf(s));
+    if (!wrapper)
+    { // Failure.
+      delete s;
+    }
+    else
+    {
+      // This is now connected.
+      Socket* s = fact();
+      s->setBase(wrapper);
+      // Start reading.
+      wrapper->startReader();
+    }
+    acceptOne(fact, a, bf);
+  }
+
+  template<typename Stream>
+  template<typename Acceptor, typename BaseFactory> void
+  SocketImpl<Stream>::acceptOne(SocketFactory fact, Acceptor *a, BaseFactory bf)
+  {
+    Stream* s = new Stream(get_io_service());
+    a->async_accept(*s,
+	boost::bind(&SocketImpl<Stream>::template onAccept<Acceptor, BaseFactory>
+	  , s, fact, a, bf));
+  }
+
+
+  template<typename Stream>BaseSocket*
+  SocketImpl<Stream>::create(Stream*s)
+  {
+    SocketImpl<Stream>* bs = new SocketImpl<Stream>;
+    bs->base_ = s;
+    return bs;
+  }
+
+
+#ifndef LIBPORT_NO_SSL
+  template<typename Stream>
+  BaseSocket* SSLLayer(SSLSettings settings, Stream* s)
+  {
+    using namespace boost::asio;
+    boost::system::error_code erc;
+    ssl::context context(s->get_io_service(),
+	boost::asio::ssl::context::sslv23_server);
+    context.set_options(settings.options);
+    if (!settings.cipherList.empty())
+    {
+      SSL_CTX* ctx = context.impl();
+      if (!SSL_CTX_set_cipher_list(ctx, settings.cipherList.c_str()))
+	throw std::runtime_error("SSL_CTX_set_cipher_list failed");
+    }
+
 #define comma ,
 #define CHECK_CALL(param, call, args)  do \
-  if (!param.empty()) { call(param, args erc); if (erc) throw erc;} while(0)
-  CHECK_CALL(settings.tmpDHFile, context.use_tmp_dh_file, );
-  CHECK_CALL(settings.certChainFile, context.use_certificate_chain_file, );
-  CHECK_CALL(settings.privateKeyFile, context.use_private_key_file,
-             ssl::context_base::pem comma);
-#undef CHECK_CALL    
+    if (!param.empty()) { call(param, args erc); if (erc) throw erc;} while(0)
 
-  typedef boost::shared_ptr<ssl::stream<typename SocketPtr::element_type&> >
-  SSLSocketPtr;
-  SSLSocketPtr sslSock(
-                       new boost::asio::ssl::stream<typename SocketPtr::element_type&>(*sock, context));
-  
-  sslSock->handshake(sslSock->server, erc);
-  if (erc)
-  {
-    /// FIXME: add error reporting mechanism.
-    std::cerr << "Handshake error " << erc.message() << std::endl;
-    return true;
+    CHECK_CALL(settings.tmpDHFile, context.use_tmp_dh_file, );
+    CHECK_CALL(settings.certChainFile, context.use_certificate_chain_file, );
+    CHECK_CALL(settings.privateKeyFile, context.use_private_key_file,
+       	ssl::context_base::pem comma);
+#undef CHECK_CALL
+
+    // Create a SSL stream taking its underlying stream by ref.
+    typedef boost::asio::ssl::stream<Stream&> SSLStream;
+    SSLStream *sslStream = new SSLStream(*s, context);
+    sslStream->handshake(sslStream->server, erc);
+    if (erc)
+    {
+      delete sslStream;
+      return 0;
+    }
+    BaseSocket* bs = SocketImpl<SSLStream>::create(sslStream);
+    // s ownership is taken: mark for deletion when bs dies.
+    bs->deletor << boost::bind(deletor<Stream>, s);
+    return bs;
   }
-  BaseSocket* s = fact();
-  if (!s)
-    return true;
-  s->close = boost::bind(&socketClose<SSLSocketPtr>, sslSock);
-  s->write = boost::bind(&socketWrite<SSLSocketPtr>, sslSock, _1, _2);
-  
-  // At the end of this function, sock will die. So keep a sharedptr on it,
-  // and destroy it when the BaseSocket dies.
-  SocketPtr* sockHandle = new SocketPtr(sock);
-  s->deletor << boost::bind(&deletor<SocketPtr>, sockHandle);
-  runReader<SSLSocketPtr>(sslSock, boost::bind(&onReadDemux<SSLSocketPtr>,
-                                               s, _1, _2, _3));
-  return true;
-}
 #endif
-template<typename Acceptor, typename CB> void
-acceptOne
-(Acceptor& a, CB onAccept,
- boost::shared_ptr<typename netdetail::SocketFromAcceptor<Acceptor>::type> s,
- const boost::system::error_code& error)
-{
-  if (!error && onAccept(s))
-  {
-    boost::shared_ptr<typename SocketFromAcceptor<Acceptor>::type>
-    sptr (new typename SocketFromAcceptor<Acceptor>::type(a.get_io_service()));
-    a.async_accept(*sptr.get(),
-                   boost::bind(&acceptOne<Acceptor, CB>, boost::ref(a), onAccept, sptr, _1));
-  }
-}
-
-template<typename Acceptor, typename CB> void
-runAcceptor(Acceptor& a, CB onAccept)
-{
-  boost::shared_ptr<typename SocketFromAcceptor<Acceptor>::type>
-  sptr (new typename SocketFromAcceptor<Acceptor>::type(a.get_io_service()));
-  a.async_accept(*sptr.get(), 
-                 boost::bind(&acceptOne<Acceptor, CB>, boost::ref(a), onAccept, sptr, _1));
-}
-
 } //namespace netdetail
 
+
 inline void
-BaseSocket::destroy()
+Socket::setBase(BaseSocket* b)
 {
-  netdetail::get_io_service().post(boost::bind(
-                                        netdetail::deletor<BaseSocket>, this));
-  //std::cerr <<"Done posting destroy message on " << (void*)this << std::endl;
+  base_ = b;
+  base_-> onReadFunc = boost::bind(&Socket::onRead_, this, _1);
+  base_->onErrorFunc = boost::bind(&Socket::onError, this, _1);
+
 }
 
-inline
-Socket::Socket()
-{
-  onReadFunc = boost::bind(&Socket::onRead_, this, _1);
-  onErrorFunc = boost::bind(&Socket::onError, this, _1);
-}
 
-inline
-bool
+inline bool
 Socket::onRead_(boost::asio::streambuf& buf)
 {
   // Dump the stream in our linear buffer
@@ -234,56 +284,86 @@ Socket::onRead_(boost::asio::streambuf& buf)
   return true;
 }
 
-inline boost::system::error_code
-BaseSocket::connect(const std::string& host, const std::string& port, bool)
+template<class Proto, class BaseFactory> boost::system::error_code
+Socket::connectProto(const std::string& host, const std::string& port, BaseFactory bf)
 {
   using namespace netdetail;
-  typedef boost::shared_ptr<boost::asio::ip::tcp::socket> SocketPtr;
-  SocketPtr ptr(new SocketPtr::element_type(netdetail::get_io_service()));
-  boost::asio::ip::tcp::resolver::query query(host, port);
   boost::system::error_code erc;
-  boost::asio::ip::tcp::resolver resolver(netdetail::get_io_service());
-  boost::asio::ip::tcp::resolver::iterator iter = resolver.resolve(query,erc);
+  typename Proto::resolver::query query(host, port);
+  typename Proto::resolver resolver(netdetail::get_io_service());
+  typename Proto::resolver::iterator iter = resolver.resolve(query,erc);
   if (erc)
+    return erc;
+  typename Proto::socket* s = new typename Proto::socket(get_io_service());
+  s->connect(*iter, erc);
+  if (erc)
+    return erc;
+  SocketImplBase* newS = dynamic_cast<SocketImplBase*>(bf(s));
+  if (!newS)
   {
-    std::cerr << "Resolver error " << std::endl;
-    return erc;
-  }
-  ptr->connect(*iter, erc);
-  if (erc)
-    return erc;
-  this->close = boost::bind(&socketClose<SocketPtr>, ptr);
-  this->write = boost::bind(&socketWrite<SocketPtr>, ptr, _1, _2);
-  boost::function3<bool, SocketPtr, boost::asio::streambuf&,
-     boost::system::error_code> f =  boost::bind(&onReadDemux<SocketPtr>, this, _1, _2, _3);
-  netdetail::runReader<SocketPtr>(ptr,f);
-  connected_ = true;
-  return boost::system::error_code();
+    delete s;
+#if BOOST_VERSION >= 103600
+    return boost::system::errc::make_error_code(boost::system::errc::operation_canceled);
+#else
+    return boost::system::posix_error::make_error_code(boost::system::posix_error::operation_canceled);
+#endif
+}
+  setBase(newS);
+  // Start reading.
+  newS->startReader();
+  return erc;
 }
 
-inline
-Handle listenTCP(SocketFactory f, const std::string& , int port)
+inline boost::system::error_code
+Socket::connect(const std::string& host, const std::string& port, bool udp)
 {
-  boost::asio::io_service& io = netdetail::get_io_service();
-  typedef boost::shared_ptr<boost::asio::ip::tcp::socket> SocketPtr;
-  boost::asio::ip::tcp::acceptor* acceptor = new boost::asio::ip::tcp::acceptor
-    (io,
-     boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
-  boost::function1<bool, SocketPtr> adapter = 
-    boost::bind (&netdetail::onAccept<SocketPtr>, _1, f);
-  netdetail::runAcceptor(*acceptor, adapter);
-  return 0;
+  assert(!udp);
+  /*
+  if (udp)
+    return connectProto<boost::asio::ip::udp>(host, port,
+	&netdetail::SocketImpl<boost::asio::ip::udp::socket>::create);
+  else
+  */
+    return connectProto<boost::asio::ip::tcp>(host, port,
+	&netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
 }
+
+template<typename Proto, typename BaseFactory> boost::system::error_code
+Socket::listenProto(SocketFactory f, const std::string& host,
+    const std::string& port, BaseFactory bf)
+{
+  boost::system::error_code erc;
+  typename Proto::resolver::query query(host, port);
+  typename Proto::resolver resolver(netdetail::get_io_service());
+  typename Proto::resolver::iterator iter = resolver.resolve(query, erc);
+  if (erc)
+    return erc;
+  typename Proto::acceptor* a = new typename Proto::acceptor(netdetail::get_io_service(), *iter);
+  netdetail::SocketImpl<typename Proto::socket>::acceptOne(f, a, bf);
+  return erc;
+}
+
+inline Socket::Handle
+Socket::listen(SocketFactory f, const std::string& host,
+    const std::string& port, boost::system::error_code & erc, bool udp)
+{
+  assert(!udp);
+  erc = Socket::listenProto<boost::asio::ip::tcp>(f, host, port,
+      &netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
+  return Handle();
+}
+
 
 #ifndef LIBPORT_NO_SSL
-inline
-Handle listenSSL(SocketFactory f, const std::string& , int port,
-                 boost::asio::ssl::context_base::method ctx,
-                 boost::asio::ssl::context::options options,
-                 const std::string& privateKeyFile,
-                 const std::string& certChainFile,
-                 const std::string& tmpDHFile,
-                 const std::string& cipherList)
+inline Socket::Handle
+Socket::listenSSL(SocketFactory f, const std::string& host, const std::string&  port,
+    boost::system::error_code& erc,
+    boost::asio::ssl::context_base::method ctx,
+    boost::asio::ssl::context::options options,
+    const std::string& privateKeyFile,
+    const std::string& certChainFile,
+    const std::string& tmpDHFile,
+    const std::string& cipherList)
 {
   netdetail::SSLSettings settings;
   settings.context = ctx;
@@ -292,24 +372,35 @@ Handle listenSSL(SocketFactory f, const std::string& , int port,
   settings.certChainFile = certChainFile;
   settings.tmpDHFile = tmpDHFile;
   settings.cipherList = cipherList;
-  boost::asio::io_service& io = netdetail::get_io_service();
-  typedef boost::shared_ptr<boost::asio::ip::tcp::socket> SocketPtr;
-  boost::asio::ip::tcp::acceptor* acceptor = new boost::asio::ip::tcp::acceptor
-   (io,
-     boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
-  boost::function1<bool, SocketPtr> adapter = 
-    boost::bind (&netdetail::onAcceptSSL<SocketPtr>, _1, f, settings);
-  netdetail::runAcceptor(*acceptor, adapter);
-  return 0;
+  erc = Socket::listenProto<boost::asio::ip::tcp>(f, host, port,
+      (boost::function1<BaseSocket*, boost::asio::ip::tcp::socket*>)boost::bind(&netdetail::SSLLayer<boost::asio::ip::tcp::socket>, settings, _1));
+  return Handle();
 }
 #endif
+
 inline
-Handle listen(SocketFactory f, const std::string& host, int port, bool udp)
+Socket::~Socket()
 {
- if (!udp)
-   return listenTCP(f, host, port);
- else
-   return 0;
+  close();
+  base_->destroy();
+  base_->onReadFunc = 0;
+  base_->onErrorFunc = 0;
+  base_ = 0;
 }
+
+inline void
+Socket::destroy()
+{
+  close();
+  AsioDestructible::destroy();
+}
+
+inline void
+AsioDestructible::doDestroy()
+{
+  netdetail::get_io_service().post(boost::bind(
+	netdetail::deletor<AsioDestructible>, this));
+}
+
 
 }

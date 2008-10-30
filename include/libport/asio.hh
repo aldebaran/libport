@@ -9,91 +9,110 @@
 #endif
 # include <boost/function.hpp>
 
+# include <libport/destructible.hh>
 # include <libport/finally.hh>
 
 namespace libport
 {
-
+  class AsioDestructible: public Destructible
+  {
+    protected:
+      virtual void doDestroy();
+  };
   /** BaseSocket class.
    *
    * This class has a callback-based API: onReadFunc() and onErrorFunc().
-   * The other boost::function members are filled-in by the underlying
-   * implementation.
    */
-  class BaseSocket
+  class BaseSocket: public AsioDestructible
   {
     public:
-      BaseSocket() :connected_(false){}
       virtual ~BaseSocket(){}
       libport::Finally deletor;
-      /// Write data to the socket.
-      boost::function2<void, void*, int> write;
-      /// Connect to a remote host.
-      inline  boost::system::error_code connect(const std::string& host,
-	  const std::string& port, bool udp);
+      /// Write data asynchronously to the socket.
+      virtual void write(const void* data, unsigned int length) = 0;
       /// Alias on write() for API compatibility.
-      inline void send(void* addr, int len) {write(addr, len);}
+      inline void send(void* addr, int len) {write((const void*)addr, len);}
       /// Alias on close() for API compatibility.
       inline void disconnect() {close();}
       /// Return if the socket is connected to a remote host.
-      bool isConnected() { return connected_;}
+      virtual bool isConnected() = 0;
       /// Disconnect the socket from the remote host.
-      boost::function0<void> close;
+      virtual void close() = 0;
       /// Callback function called each time new data is available.
       boost::function1<bool, boost::asio::streambuf&> onReadFunc;
       /// Callback function called in case of error on the socket.
       boost::function1<void, boost::system::error_code> onErrorFunc;
-      /// Ask for the asynchronous deletion of this object.
-      inline void destroy();
-    public: // FIXME: !!!
-      bool connected_;
   };
+
+
   /** Socket class with a higher API.
    *
    */
-  class Socket: public BaseSocket
+  class Socket: public AsioDestructible
   {
     public:
+      virtual ~Socket();
+      /** Set underlying BaseSocket object, setup its callbacks to call our virtual functions.
+       */
+      virtual void setBase(BaseSocket*);
+
       /** Called each time new data is received.
        *   \return the number of bytes used in buffer. The remaining data will
        *   be passed again to this function as soon as at least an extra byte
        *   is available.
        */
       virtual int onRead(const void*, int length){return length;}
+
       /** Called in case of error on the socket.
       */
       virtual void onError(boost::system::error_code){}
-      inline Socket();
+
+      /// Ask for the asynchronous destruction of this object.
+      virtual void destroy();
+
+      inline void write(const void* data, unsigned int length)
+      { base_->write(data, length);}
+      /// Alias on write() for API compatibility.
+      inline void send(void* addr, int len) {write((const void*)addr, len);}
+      inline void close() {base_->close();}
+      inline bool isConnected() {return base_->isConnected();}
+
+      boost::system::error_code connect(const std::string& host,
+	  const std::string& port, bool udp=false);
+
+      typedef void* Handle;
+      typedef boost::function0<Socket*> SocketFactory;
+
+      static Handle listen(SocketFactory f, const std::string& host,
+	  const std::string& port, boost::system::error_code & erc,
+          bool udp = false);
+
+      static Handle listenSSL(SocketFactory f, const std::string& host,
+	  const std::string&  port,
+	  boost::system::error_code& erc,
+	  boost::asio::ssl::context_base::method ctx
+	    = boost::asio::ssl::context::sslv23_server,
+	  boost::asio::ssl::context::options options
+	    = boost::asio::ssl::context::verify_none,
+	  const std::string& privateKeyFile = "",
+	  const std::string& certChainFile = "",
+	  const std::string& tmpDHFile = "" ,
+	  const std::string& cipherList = "");
+
     protected:
       bool onRead_(boost::asio::streambuf&);
       std::string buffer;
+      BaseSocket* base_;
+    private:
+    template<typename Proto, typename BaseFactory> static boost::system::error_code
+      listenProto(SocketFactory f, const std::string& host,
+	  const std::string&port, BaseFactory bf);
+    template<typename Proto, typename BaseFactory> boost::system::error_code
+      connectProto(const std::string& host, const std::string& port, BaseFactory bf);
   };
 
-  /// FIXME: implement a way to stop listening.
-  //typedef boost::shared_ptr<libport::Finally> Handle;
-
-  typedef void* Handle;
-
-  typedef boost::function0<BaseSocket*> SocketFactory;
-
-  /** Listen on interface \b host, port \b port. Create a new BaseSocket for
-   *  each new connection using the factory \b f. 
-   */
-  inline Handle listen(SocketFactory f, const std::string& host, int port, bool udp);
-
-# ifndef LIBPORT_NO_SSL
-  /// Same as listen(), but wrap the connection in a SSL layer.
-  inline Handle listenSSL(SocketFactory f, const std::string& host, int port,
-	boost::asio::ssl::context_base::method method
-                   = boost::asio::ssl::context::sslv23_server,
-        boost::asio::ssl::context::options options
-                   = boost::asio::ssl::context::verify_none,
-	const std::string& privateKeyFile="",
-	const std::string& certChainFile="",
-	const std::string& tmpDHFile="",
-	const std::string& cipherList="");
-# endif
 }
+
 # include "libport/asio.hxx"
 
 #endif
