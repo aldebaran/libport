@@ -257,20 +257,9 @@ function(gostai_add_qt_assistant name)
     endforeach(extra_file)
 
     # Configure project information.
-    configure_file(
+    configure_xml(
       ${CMAKE_MODULE_PATH}/project-info.docbook.in
-      ${CMAKE_CURRENT_BINARY_DIR}/project-info.xml
-      ESCAPE_QUOTES)
-    # \" => &quot;
-    file(READ
-      ${CMAKE_CURRENT_BINARY_DIR}/project-info.xml
-      XML_FILE)
-    string(REPLACE "\\\"" "&quot;"
-      XML_FILE
-      ${XML_FILE})
-    file(WRITE
-      ${CMAKE_CURRENT_BINARY_DIR}/project-info.xml
-      "${XML_FILE}")
+      ${CMAKE_CURRENT_BINARY_DIR}/project-info.xml)
     # Configure Gostai information.
     configure_file(
       ${CMAKE_MODULE_PATH}/gostai-info.docbook.in

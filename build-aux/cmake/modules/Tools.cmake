@@ -214,4 +214,21 @@ if(NOT TOOLS_CMAKE_GUARD)
     set(${in} "${variable}" PARENT_SCOPE)
   endfunction(xml_escape)
 
+  function(configure_xml in out)
+    configure_file(
+      ${in}
+      ${out}
+      ESCAPE_QUOTES)
+    # \" => &quot;
+    file(READ
+      ${out}
+      XML_FILE)
+    string(REPLACE "\\\"" "&quot;"
+      XML_FILE
+      ${XML_FILE})
+    file(WRITE
+      ${out}
+      "${XML_FILE}")
+  endfunction(configure_xml)
+
 endif(NOT TOOLS_CMAKE_GUARD)
