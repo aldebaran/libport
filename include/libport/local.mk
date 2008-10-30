@@ -44,6 +44,8 @@ libport_include_HEADERS +=			\
   $(include_libport)/contract.hh		\
   $(include_libport)/deref.hh			\
   $(include_libport)/deref.hxx			\
+  $(include_libport)/destructible.hh		\
+  $(include_libport)/destructible.hxx		\
   $(include_libport)/detect-win32.h		\
   $(include_libport)/errors.hh			\
   $(include_libport)/escape.hh			\
