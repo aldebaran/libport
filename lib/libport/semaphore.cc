@@ -18,7 +18,7 @@ namespace libport
   int
   sem_init(sem_t* sem, int, int cnt)
   {
-    *sem = CreateSemaphore(0, cnt, 100000, 0);
+    *sem = CreateSemaphore(0, cnt, MAXLONG, 0);
     if (!sem)
       errabort("CreateSemaphore");
     return sem ? 0 : -1;
