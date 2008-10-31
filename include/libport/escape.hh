@@ -31,7 +31,7 @@ namespace libport
     // So declare it twice with the right prototype, including the
     // default argument.
     template <class T>
-      friend Escape escape(const T&, char delimiter = '"');
+      friend Escape escape(const T&, char delimiter);
 
   protected:
     std::string  str_;
