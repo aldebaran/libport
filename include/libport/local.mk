@@ -47,6 +47,7 @@ libport_include_HEADERS +=			\
   $(include_libport)/destructible.hh		\
   $(include_libport)/destructible.hxx		\
   $(include_libport)/detect-win32.h		\
+  $(include_libport)/dirent.h			\
   $(include_libport)/errors.hh			\
   $(include_libport)/escape.hh			\
   $(include_libport)/escape.hxx			\
