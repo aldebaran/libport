@@ -226,3 +226,22 @@ URBI_RST_PREPARE()dnl
 URBI_INSTRUMENT_PREPARE()dnl
 URBI_CHILDREN_PREPARE()dnl
 ])
+
+
+# URBI_INIT
+# ---------
+# Replaces the AS_INIT invocation.
+# Must be defined via "m4_define", not "m4_defun" since it is AS_INIT
+# which will set up the diversions used for "m4_defun".
+m4_define([URBI_INIT],
+[AS_INIT()dnl
+URBI_PREPARE()
+set -e
+case $VERBOSE in
+  x) set -x;;
+esac
+
+: ${abs_builddir='@abs_builddir@'}
+: ${abs_top_builddir='@abs_top_builddir@'}
+: ${abs_top_srcdir='@abs_top_srcdir@'}
+])
