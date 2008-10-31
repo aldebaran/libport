@@ -16,7 +16,7 @@ AC_PREREQ([2.60])
 # ----------------------------------
 # Create a testing wrapper for the COMPONENT-NAME.
 m4_define([URBI_CONFIG_WRAPPER],
-[AC_CONFIG_FILES([tests/$1:tests/wrapper.in], [chmod a+x tests/$1])
+[AC_CONFIG_FILES([tests/bin/$1:tests/bin/wrapper.in], [chmod a+x tests/bin/$1])
 ])
 
 # URBI_TESTS
@@ -31,6 +31,9 @@ URBI_CONFIG_WRAPPER([umake-shared])
 URBI_CONFIG_WRAPPER([umake-clean])
 URBI_CONFIG_WRAPPER([umake-link])
 URBI_CONFIG_WRAPPER([umake-lib])
+
+# Prepare the urbi-server wrapper.
+AC_CONFIG_FILES([tests/bin/urbi-console], [chmod a+x tests/bin/urbi-console])
 
 # Prepare the Makefile.
 AC_CONFIG_FILES([tests/Makefile])
