@@ -1,0 +1,36 @@
+#! /bin/sh
+
+set -e
+
+# This script is inspired from the GNU Lib's script of the same name.
+# But we are not GPL, so we have to reimplement it.  More
+# documentation is available there.
+
+me=$(basename "$0")
+
+stderr ()
+{
+  local i
+  for i
+  do
+    echo >&2 "$me: $i"
+  done
+}
+
+# A file that should be part of the shipped tarballs, but should never
+# be in a checked out repo.
+tarball_version_file=.tarball-version
+
+if test -f $tarball_version_file; then
+  res=$(cat $tarball_version_file)
+fi
+
+# Build the result using git-describe-version.
+if test -z "$res"; then
+  res=$(git describe)
+  # Slashes are a bad idea in a file name.
+  res=$(echo "$res" | sed 's,/,-,g')
+fi
+
+# m4_esyscmd does not strip the ending \n.
+echo "$res" | tr -d '\012'
