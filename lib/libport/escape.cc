@@ -42,7 +42,7 @@ namespace libport
 	case '\v': o << "\\v"; break;
 	case '\\': o << "\\\\"; break;
 	default:
-	  if (*p == delimeter_)
+	  if (*p == delimiter_)
 	    o << '\\' << *p;
 	  else if (std::isprint (*p))
 	    o << *p;

@@ -13,27 +13,27 @@ namespace libport
 {
 
   template <class T>
-  Escape::Escape (const T& obj, char delimeter)
-    : delimeter_(delimeter)
+  Escape::Escape(const T& obj, char delimiter)
+    : delimiter_(delimiter)
   {
     std::ostringstream os;
     os << obj;
-    str_ = os.str ();
+    str_ = os.str();
   }
 
 
   template <class T>
   Escape
-  escape(const T& obj, char delimeter)
+  escape(const T& obj, char delimiter)
   {
-    return Escape (obj, delimeter);
+    return Escape(obj, delimiter);
   }
 
   inline
   std::ostream&
   operator<< (std::ostream& o, const Escape& rhs)
   {
-    return rhs.print (o);
+    return rhs.print(o);
   }
 
 }
