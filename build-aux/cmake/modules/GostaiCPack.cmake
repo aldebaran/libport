@@ -79,11 +79,14 @@ if(NOT CPACK_GENERATOR)
   if(UNIX)
     if(APPLE)
       set(CPACK_GENERATOR "PackageMaker")
+      set(CPACK_PACKAGE_FILE_NAME_EXTENSION ".pkg")
     else(APPLE)
       set(CPACK_GENERATOR "STGZ")
+      set(CPACK_PACKAGE_FILE_NAME_EXTENSION ".sh")
     endif(APPLE)
   else(UNIX)
     set(CPACK_GENERATOR "NSIS")
+    set(CPACK_PACKAGE_FILE_NAME_EXTENSION ".exe")
   endif(UNIX)
 endif(NOT CPACK_GENERATOR)
 
@@ -123,5 +126,19 @@ if(WIN32 AND NOT UNIX)
     set(CPACK_NSIS_COMPRESSOR "lzma")
   endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif(WIN32 AND NOT UNIX)
+
+# ========================= #
+# Add upload-package target #
+# ========================= #
+
+set(UPLOAD_PACKAGE_URL "build@gate-bf:release/${CPACK_PACKAGE_NAME}"
+  CACHE STRING "The URL where to upload the generated package.")
+add_custom_target(upload-package
+  COMMAND
+  scp -q
+  "${CPACK_PACKAGE_FILE_NAME}${CPACK_PACKAGE_FILE_NAME_EXTENSION}"
+  ${UPLOAD_PACKAGE_URL}
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Uploading package to ${UPLOAD_PACKAGE_URL}")
 
 endif(NOT DEFINED CPACK_INFO_CMAKE)
