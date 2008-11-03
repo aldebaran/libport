@@ -1,12 +1,18 @@
-#! /bin/sh
+#! /bin/sh -x
 
 set -e
 
-# This script is inspired from the GNU Lib's script of the same name.
+# This script is inspired from the GNU Lib's script "git-version-gen".
 # But we are not GPL, so we have to reimplement it.  More
-# documentation is available there.
+# documentation is available there.  See also "package-version.txt".
 
 me=$(basename "$0")
+medir=$(dirname "$0")
+: ${TMPDIR=/tmp}
+tmp=$TMPDIR/$me.$$
+
+trap 'exit' 1 2 13 15
+trap 'res=$?; rm -f "$tmp" 2>/dev/null; exit $res' 0
 
 stderr ()
 {
@@ -29,32 +35,49 @@ usage ()
 Usage: $0 [OPTIONS...]
 
 Options:
-  -h, --help     display this message and exit
-  -n, --no-eol   do not output the trailing newline
+  -h, --help         display this message and exit
+  -n, --no-eol       do not output the trailing newline
+  -o, --output=FILE  file to create
+                     defaults to stdout
+  -s, --srcdir=DIR   location of the top srcdir
+                     used to locate the Git repository if in use
 
-Output kinds:
+Output formats:
   -f, --file     output a string suitable as a file name
                  (convert slashes to dashes)
   -r, --raw      output the raw result [default]
   -H, --header   output as a header file suitable for C/C++
+
+See build-aux/package-version.txt for more information.
 EOF
   exit 0
 }
 
 getopt ()
 {
-  local opt
-  for opt
-  do
-    case $opt in
+  while test $# -ne 0; do
+    case $1 in
+	--*=*)
+	    opt=$(echo "$1" | sed -e 's/=.*//')
+	    val=$(echo "$1" | sed -e 's/[^=]*=//')
+	    shift
+	    set dummy "$opt" "$val" ${1+"$@"};
+	    shift
+	    ;;
+    esac
+
+    case $1 in
       (-h | --help)   usage;;
-      (-H | --header) output=header;;
-      (-f | --file)   output=file;;
+      (-H | --header) format=header;;
+      (-f | --file)   format=file;;
       (-n | --no-eol) # m4_esyscmd does not strip the ending \n.
                       prune_eol="tr -d '\012'";;
-      (-r | --raw)    output=raw;;
-      (*)  fatal "unexpected argument: $opt";;
+      (-r | --raw)    format=raw;;
+      (-o | --output) output=$2; shift;;
+      (-s | --srcdir) srcdir=$2; shift;;
+      (*)  fatal "unexpected argument: $1";;
     esac
+    shift
   done
 }
 
@@ -62,27 +85,29 @@ getopt ()
 ## Main.  ##
 ## ------ ##
 
-# Output format
+# A command to kill the eol.
 prune_eol=cat
-output=raw
+# Output format
+format=raw
+srcdir=.
+output=
 
 getopt "$@"
 
-# A file that should be part of the shipped tarballs, but should never
-# be in a checked out repo.
-tarball_version_file=.tarball-version
+# Are we in a git repository?  If we are, there should be files here.
+if (cd $srcdir && git ls-files | grep .) >/dev/null 2>&1; then
+  # In a repo.  Compute the most up to date answer.
+  res=$(cd $srcdir && git describe)
+else
+  # Not in a repo.  We *need* .version to exist.
+  res=$(cat $srcdir/.version)
+fi
 
-test ! -f $tarball_version_file ||
-  res=$(cat $tarball_version_file)
-
-# Build the result using git-describe-version.
-test -n "$res" ||
-  res=$(git describe)
-
+# Should not happen.
 test -n "$res" ||
   res=UNKNOWN
 
-case $output in
+case $format in
   (raw)
      echo "$res" | $prune_eol;;
   (file)
@@ -96,5 +121,14 @@ case $output in
 
 #endif
 EOF
+    ;;
+esac >$tmp
+
+case $output in
+  ('')
+    cat $tmp
+    ;;
+  (*)
+    $medir/move-if-change $tmp $output
     ;;
 esac

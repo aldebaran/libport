@@ -2,7 +2,12 @@
 ##
 ## This file is not meant to processed by Automake, which dislikes
 ## that we play tricks with VERSION and so forth.  So include it in a
-## GNUmakefile.
+## GNUmakefile.  Which also explains why we have to ship it
+## "manually".
+EXTRA_DIST +=					\
+  build-aux/git-version-gen			\
+  build-aux/move-if-change			\
+  build-aux/package-version.mk
 
 VERSION = $(shell cat $(VERSION_FILE))
 
@@ -23,7 +28,4 @@ VERSION_FILE = $(top_srcdir)/.version
 all: $(VERSION_FILE)
 EXTRA_DIST += $(VERSION_FILE)
 $(VERSION_FILE):
-	rm -f $@.tmp &&					\
-	(cd $(top_srcdir) &&				\
-	 build-aux/git-version-gen --file) >$@.tmp &&	\
-	$(move_if_change) $@.tmp $@
+	$(build_aux_dir)/git-version-gen --srcdir=$(srcdir) --file --output=$@

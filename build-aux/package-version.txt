@@ -1,5 +1,6 @@
-urbi-package-version.m4
+package-version.m4
 package-version.mk
+package-version.txt
 
 The traditional Autotools approach requires that the version string be
 static (i.e., available at Autoconf time via AC_INIT).  This is very
