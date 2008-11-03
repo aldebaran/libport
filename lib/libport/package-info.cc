@@ -1,5 +1,5 @@
 #include <iostream>
-#include <boost/foreach.hpp>
+#include <libport/foreach.hh>
 #include <libport/package-info.hh>
 
 namespace libport
@@ -44,9 +44,9 @@ namespace libport
   std::ostream&
   PackageInfo::dump(std::ostream& o) const
   {
-    bool not_first = false;
-    BOOST_FOREACH(value_type p, map_)
-      o << (not_first++ ? ", " : "") << p.first << " = " << p.second;
+    bool tail = false;
+    foreach(value_type p, map_)
+      o << (tail++ ? ", " : "") << p.first << " = " << p.second;
     return o;
   }
 
