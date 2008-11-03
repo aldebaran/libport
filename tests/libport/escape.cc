@@ -3,17 +3,36 @@
  */
 
 #include <sstream>
-#include <libport/assert.hh>
 #include <libport/escape.hh>
+#include <libport/unit-test.hh>
 
 using libport::escape;
+using libport::test_suite;
 
-int main ()
+void
+check ()
 {
-  std::ostringstream s;
+# define CHECK(In, Out)                         \
+  do {                                          \
+    std::ostringstream o;                       \
+    o << In;                                    \
+    BOOST_CHECK_EQUAL(o.str(), Out);            \
+  } while (0)
 
-  s << escape("\a\b\f\n\r\t\v\\\"");
-  s << escape('\a');
+  CHECK(escape("\a\b\f\n\r\t\v\\\""), "\\x07\\b\\f\\n\\r\\t\\v\\\\\\\"");
 
-  passert(s.str(), s.str() == "\\x07\\b\\f\\n\\r\\t\\v\\\\\\\"\\x07");
+  CHECK(escape("\""), "\\\"");
+  CHECK(escape("'"), "'");
+
+  CHECK(escape("'",  '\''), "\\\'");
+  CHECK(escape("\"", '\''), "\"");
+}
+
+
+test_suite*
+init_test_suite()
+{
+  test_suite* suite = BOOST_TEST_SUITE("libport::escape");
+  suite->add(BOOST_TEST_CASE(check));
+  return suite;
 }

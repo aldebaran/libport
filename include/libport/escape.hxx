@@ -6,8 +6,8 @@
 #ifndef LIBPORT_ESCAPE_HXX
 # define LIBPORT_ESCAPE_HXX
 
-# include <libport/escape.hh>
 # include <sstream>
+# include <libport/escape.hh>
 
 namespace libport
 {
@@ -21,12 +21,18 @@ namespace libport
     str_ = os.str();
   }
 
-
   template <class T>
   Escape
   escape(const T& obj, char delimiter)
   {
     return Escape(obj, delimiter);
+  }
+
+  template <class T>
+  Escape
+  escape(const T& obj)
+  {
+    return escape(obj, '"');
   }
 
   inline

@@ -23,18 +23,11 @@ namespace libport
     template <class T>
       Escape(const T&, char delimiter);
 
-    // I (Akim) don't know if this is a bug in G++, but if I don't
-    // declare the optional argument here, the ("real") declaration
-    // that follows with the default value is not honored: callers
-    // with a single argument do not match the right function.
-    //
-    // So declare it twice with the right prototype, including the
-    // default argument.
     template <class T>
       friend Escape escape(const T&, char delimiter);
 
   protected:
-    std::string  str_;
+    std::string str_;
 
   private:
     std::ostream& escape_(std::ostream& o, const std::string& es) const;
@@ -44,7 +37,23 @@ namespace libport
   /// Wrap \a t so that once output non printable characters are
   /// converted in \-based escapes.
   template <class T>
-  Escape escape(const T& t, char delimiter = '"');
+  Escape escape(const T& t, char delimiter);
+
+  // Same as escape(), but with a delimiter set to '"'.
+  //
+  // Of course it would be simpler to use a default argument, but in
+  // that case, if I don't declare the optional argument here, GCC
+  // (4.0.1 on OSX) does not honor the ("real") declaration that
+  // follows with the default value: callers with a single argument do
+  // not match the right function.
+  //
+  // We used to declare it twice with the right prototype, including
+  // the default argument.  But then... VC++ broke, complaining about
+  // the friendship declaration with a default argument.
+  //
+  // Workaround using overloaded.
+  template <class T>
+  Escape escape(const T& t);
 
   /// Helper function.
   std::ostream& operator<< (std::ostream& o, const Escape&);
