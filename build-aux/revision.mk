@@ -1,6 +1,6 @@
 ##
 ## revision.mk: This file is part of build-aux.
-## Copyright (C) 2006-2008, Gostai S.A.S..
+## Copyright (C) 2006-2008, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -26,7 +26,7 @@ CLEANFILES += $(REVISION_FILE) $(REVISION_FILE_STAMP)
 $(REVISION_FILE_STAMP): $(REVISION) $(build_aux_dir)/revision.mk
 	@rm -f $@.tmp
 	@touch $@.tmp
-	top_srcdir=$(top_srcdir) $(REVISION) >$(REVISION_FILE).tmp
+	top_srcdir=$(top_srcdir) $(REVISION) - $(VERSION) >$(REVISION_FILE).tmp
 	$(move_if_change) $(REVISION_FILE).tmp $(REVISION_FILE)
 	@mv -f $@.tmp $@
 

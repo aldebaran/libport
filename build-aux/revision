@@ -20,35 +20,33 @@ sub revision_svn ()
     }
 }
 
-sub git_rev_list ($)
+# git_rev_list ($REVISION, $FORMAT)
+# ---------------------------------
+sub git_rev_list ($$)
 {
-  my ($format) = @_;
+  my ($rev, $format) = @_;
   my $res = `env "GIT_DIR=$top_srcdir/.git" \\
-    git log -1 --pretty="format:$format" HEAD`;
+             git log -1 --pretty="format:$format" $rev`;
   chomp $res;
   $res =~ s/\\/\\\\/g;
   $res =~ s/\"/\\\"/g;
   return $res;
 }
 
-sub revision_git ()
+sub revision_git ($)
 {
-  $package_info{'Date'} = git_rev_list('%ai');
-  $package_info{'Id'} = git_rev_list('%h (%ai %ae: %s)');
-  $package_info{'Rev'} = git_rev_list('%h');
+  my ($rev) = @_;
+  $package_info{'Date'} = git_rev_list($rev, '%ai');
+  $package_info{'Id'} = git_rev_list($rev, '%h (%ai %ae: %s)');
+  $package_info{'Rev'} = git_rev_list($rev, '%h');
 }
 
-revision_git ();
-
-for my $k (sort keys %package_info)
+sub output ($)
 {
-  print STDERR "$k -> $package_info{$k}\n";
-}
+  my ($outfile) = @_;
+  open(OUTFILE, ">$outfile");
 
-my $outfile = $ARGV[0] || "-";
-open(OUTFILE, ">$outfile");
-
-print OUTFILE <<EOF;
+  print OUTFILE <<EOF;
 // The SCM revision string.
 #define PACKAGE_REVISION "$package_info{Rev}"
 
@@ -64,7 +62,22 @@ print OUTFILE <<EOF;
   "version " PACKAGE_VERSION " rev. " PACKAGE_REVISION
 EOF
 
-close(OUTFILE);
+  close(OUTFILE);
+}
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
+my $out = $ARGV[0] || "-";
+my $rev = $ARGV[1] || 'HEAD';
+revision_git ($rev);
+
+for my $k (sort keys %package_info)
+{
+  print STDERR "$k -> $package_info{$k}\n";
+}
+output($out);
 
 ### Setup "GNU" style for perl-mode and cperl-mode.
 ## Local Variables:
