@@ -35,3 +35,8 @@ $(REVISION_FILE): $(REVISION_FILE_STAMP)
 	  rm -f $(REVISION_FILE_STAMP); \
 	  $(MAKE) $(AM_MAKEFLAGS) $(REVISION_FILE_STAMP); \
 	fi
+
+.PHONY: update-revision
+update-revision:
+	rm -f $(REVISION_FILE)
+	$(MAKE) $(REVISION_FILE)
