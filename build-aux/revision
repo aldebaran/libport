@@ -24,7 +24,7 @@ sub git_rev_list ($)
 {
   my ($format) = @_;
   my $res = `env "GIT_DIR=$top_srcdir/.git" \\
-    git rev-list --max-count=1 --pretty="format:$format" HEAD | sed 1d`;
+    git log -1 --pretty="format:$format" HEAD`;
   chomp $res;
   $res =~ s/\\/\\\\/g;
   $res =~ s/\"/\\\"/g;
