@@ -7,6 +7,10 @@
 <!ENTITY project.version.major "@PROJECT_VERSION_MAJOR@">
 <!ENTITY project.version.minor "@PROJECT_VERSION_MINOR@">
 <!ENTITY project.version.patch "@PROJECT_VERSION_PATCH@">
+<!ENTITY project.version.rc "@PROJECT_VERSION_RC@">
+<!ENTITY project.additional.commit "@PROJECT_VERSION_RC@">
+<!ENTITY project.vendor "@PROJECT_VENDOR@">
+<!ENTITY project.vendor.version "@PROJECT_VENDOR_VERSION@">
 <!ENTITY project.version.rev "@PROJECT_VERSION_REV@">
 <!ENTITY project.support "@PROJECT_SUPPORT@">
 <!ENTITY project.bugreport "@PROJECT_BUGREPORT@">

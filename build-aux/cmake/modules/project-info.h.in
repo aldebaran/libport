@@ -30,6 +30,14 @@
 # define PACKAGE_VERSION_MINOR @PROJECT_VERSION_MINOR@
 /* Patch number of the package */
 # define PACKAGE_VERSION_PATCH "@PROJECT_VERSION_PATCH@"
+/* Release candidate number */
+# define PACKAGE_VERSION_RC "@PROJECT_VERSION_RC@"
+/* Additional commit after the last tag. */
+# define PACKAGE_ADDITIONAL_COMMIT "@PROJECT_ADDITIONAL_COMMIT@"
+/* The package vendor name. */
+# define PACKAGE_VENDOR "@PROJECT_VENDOR@"
+/* The package vendor version number. */
+# define PACKAGE_VENDOR_VERSION "@PROJECT_VENDOR_VERSION@"
 /* Support address of the package */
 # define PACKAGE_SUPPORT "@PROJECT_BUGREPORT@"
 # define PACKAGE_BUGREPORT PACKAGE_SUPPORT

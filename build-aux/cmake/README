@@ -171,6 +171,114 @@ NOTE: This setup has been tested with:
 Holds cmake modules. See modules/README for further information about how to
 write/use the provided modules.
 
+* Version number, tags and branches policy
+
+** Version number format:
+
+Our version numbers can be of the following form:
+
+- in master branch:
+
+  <major>.<minor>
+  <major>.<minor>-RC-<rc>
+  <major>.<minor>-<vendor>-<vendor_ver>
+  <major>.<minor>-<vendor>-<vendor_ver>-RC-<rc>
+
+- in <major>.<minor>.x branch:
+
+  <major>.<minor>.<patch>
+  <major>.<minor>.<patch>-RC-<rc>
+
+- in <major>.<minor>-<vendor>-<vendor_ver>.x branch:
+
+  <major>.<minor>-<vendor>-<vendor_ver>.<patch>
+  <major>.<minor>-<vendor>-<vendor_ver>.<patch>-RC-<rc>
+
+Nightly built release may have the following suffix (added by
+git-describe(1)): <version>-<n>-<abbrev_sha1>
+
+ where n: is the number of commit since the last release
+       abbrev_sha1: is the first 8 char of the HEAD sha1 of the
+       current branch.
+
+** Legend:
+
+ * major: The major version number. Indicates major version introducing
+ backward incompatibility. Change it generally imply the development
+ of a converter. <major> count starts at 1.
+ * minor: The minor version number. Indicates minor version with
+ backward compatibility. <minor> count starts at 0.
+ * rc: The release candidate version number. Release of the form <foo>
+ are optionally followed by one or several release candidate of the
+ form <foo>-RC-<rc>. <rc> count starts at 1.
+ * vendor: The name of the customer for whom the release as been
+ done. It generally implies dedicated development owned by the
+ customer and not by Gostai. For instance, the look'n feel, icons,
+ packaging, etc are the customer's one. Most of the time we deliver a
+ driver with source code licensed for the customer (because it pays
+ for it) based on our libraries. Application for Gostai to not use the
+ vendor field.
+ * vendor_ver: The version number of the vendor release. It starts
+ from 1. In case of several release for the same vendor based on the
+ same version of our product we increment this version number. For
+ instance, with urbiLab, we may have the following version sequence:
+
+    1.6
+    1.6-Customer-1
+    1.6-Customer-2
+    1.7
+    1.7-Customer-1
+ * patch: The patch version number is used when we have to patch an
+ already released product because it includes a critical bug. Release
+ including a patch field with a version number like this:
+ <foo>.<patch> are made from a permanent branch called <foo>.x. The
+ branching point with master is on the commit tagged by <foo>. Every
+ other releases are made from the master branch which is supposed to
+ be linear as advised by
+ http://www.kernel.org/pub/software/scm/git/docs/user-manual.html
+ in the "Why bisecting merge commits can be harder than bisecting
+ linear history" section.
+
+** Example:
+
+Here the example of an history as shown by gitk --all:
+
+ * branch: master; Add fifi
+ |
+ * Add blaop
+ |
+ * Add blop
+ |
+ | * branch: 1.2-Orange-1.x; Add bla2
+ | |
+ | * Add bla1
+ |/
+ * tag: 1.2-Orange-1; Add plou1
+ |
+ * Add plou
+ |
+ * tag: 1.2; branch: 1.2.x; Add to2.0again
+ |
+ * Add foo
+ |
+ * tag: 1.2-RC-1; Add to2.0
+ |
+ * tag: 1.1; branch: 1.1.x; Add tata
+ |
+ * Add toto
+ |
+ * Add bar
+ |
+ | * branch: 1.0.x: Add non
+ | |
+ | * Add oui
+ | |
+ | * tag: 1.0.1: Add test2
+ | |
+ | * Add test1
+ |/
+ * tag: 1.0; Add foo.
+
 * End of this document.
 
 Local Variables:
@@ -179,4 +287,4 @@ mode: flyspell
 mode: auto-fill
 End:
 
- LocalWords:  cmake README CMakeCache
+ LocalWords:  cmake README CMakeCache Gostai
