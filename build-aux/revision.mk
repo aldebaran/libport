@@ -16,7 +16,6 @@
 ## avoid useless re-compilations.
 
 REVISION = $(build_aux_dir)/revision
-move_if_change = $(build_aux_dir)/move-if-change
 
 BUILT_SOURCES += $(REVISION_FILE)
 REVISION_FILE_STAMP = $(REVISION_FILE).stamp
