@@ -140,5 +140,10 @@ add_custom_target(upload-package
   ${UPLOAD_PACKAGE_URL}
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Uploading package to ${UPLOAD_PACKAGE_URL}")
+configure_file(
+  ${CMAKE_MODULE_PATH}/internal-release-mail.txt.in
+  ${CMAKE_BINARY_DIR}/internal-release-mail.txt
+  @ONLY
+  )
 
 endif(NOT DEFINED CPACK_INFO_CMAKE)
