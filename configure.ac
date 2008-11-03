@@ -12,8 +12,8 @@
 ## Package setup ##
 ## ------------- ##
 
-AC_INIT([Libport], [1.0], [common-bugs@lists.gostai.com])
-
+AC_INIT([Libport], [UNDEFINED], [common-bugs@lists.gostai.com])
+URBI_PACKAGE_VERSION
 AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([foreign -Wall])
@@ -55,7 +55,7 @@ URBI_PACKAGE_KIND([sdk])
 URBI_LIBPORT
 
 AC_CONFIG_FILES([
-  Makefile
+  Makefile GNUmakefile
       lib/libport/Makefile
     tests/Makefile
       tests/libport/Makefile

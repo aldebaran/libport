@@ -38,8 +38,9 @@ dist_bin_SCRIPTS =
 
 bin_PROGRAMS =
 
-# Useful variables.
+## Useful variables.
 build_aux_dir = $(top_srcdir)/build-aux
+move_if_change = $(build_aux_dir)/move-if-change
 
 # Sometimes it is really convenient to see the output of the
 # preprocessor.  But it's a pain to run the command by hand.

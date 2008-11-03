@@ -1,6 +1,6 @@
 ##
 ## revision.mk: This file is part of build-aux.
-## Copyright (C) Gostai S.A.S., 2006-2008.
+## Copyright (C) 2006-2008, Gostai S.A.S..
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -15,8 +15,8 @@
 ## We use a stamp to avoid updating the revision file too often to
 ## avoid useless re-compilations.
 
-REVISION = $(top_srcdir)/build-aux/revision
-move_if_change = $(top_srcdir)/build-aux/move-if-change
+REVISION = $(build_aux_dir)/revision
+move_if_change = $(build_aux_dir)/move-if-change
 
 BUILT_SOURCES += $(REVISION_FILE)
 REVISION_FILE_STAMP = $(REVISION_FILE).stamp
@@ -24,7 +24,7 @@ REVISION_FILE_STAMP = $(REVISION_FILE).stamp
 EXTRA_DIST += $(REVISION) $(move_if_change)
 CLEANFILES += $(REVISION_FILE) $(REVISION_FILE_STAMP)
 
-$(REVISION_FILE_STAMP): $(REVISION) $(top_srcdir)/build-aux/revision.mk
+$(REVISION_FILE_STAMP): $(REVISION) $(build_aux_dir)/revision.mk
 	@rm -f $@.tmp
 	@touch $@.tmp
 	top_srcdir=$(top_srcdir) $(REVISION) >$(REVISION_FILE).tmp

@@ -1,0 +1,21 @@
+urbi-package-version.m4
+package-version.mk
+
+The traditional Autotools approach requires that the version string be
+static (i.e., available at Autoconf time via AC_INIT).  This is very
+painful, as to keep the version information up to date, autoconf must
+be launched again, which in term should change config.h, resulting in
+never-ending recompilation cycles, especially if you want to depend on
+the actual revision!
+
+So we try to work around this.
+
+To hide our tricks from Autoconf and Automake, we define a fake static
+version (UNDEFINED), and use a GNUmakefile.
+
+URBI_PACKAGE_VERSION is used by configure load the actual version
+string from the file .version.
+
+package-version.mk (to be loaded by GNUmakefile after Automake's
+makefile) creates and maintains .version as up to date as possible.
+
