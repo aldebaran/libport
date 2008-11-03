@@ -17,20 +17,84 @@ stderr ()
   done
 }
 
+fatal ()
+{
+  stderr "$@"
+  exit 1
+}
+
+usage ()
+{
+  cat <<EOF
+Usage: $0 [OPTIONS...]
+
+Options:
+  -h, --help     display this message and exit
+  -n, --no-eol   do not output the trailing newline
+
+Output kinds:
+  -f, --file     output a string suitable as a file name
+                 (convert slashes to dashes)
+  -r, --raw      output the raw result [default]
+  -H, --header   output as a header file suitable for C/C++
+EOF
+  exit 0
+}
+
+getopt ()
+{
+  local opt
+  for opt
+  do
+    case $opt in
+      (-h | --help)   usage;;
+      (-H | --header) output=header;;
+      (-f | --file)   output=file;;
+      (-n | --no-eol) # m4_esyscmd does not strip the ending \n.
+                      prune_eol="tr -d '\012'";;
+      (-r | --raw)    output=raw;;
+      (*)  fatal "unexpected argument: $opt";;
+    esac
+  done
+}
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
+# Output format
+prune_eol=cat
+output=raw
+
+getopt "$@"
+
 # A file that should be part of the shipped tarballs, but should never
 # be in a checked out repo.
 tarball_version_file=.tarball-version
 
-if test -f $tarball_version_file; then
+test ! -f $tarball_version_file ||
   res=$(cat $tarball_version_file)
-fi
 
 # Build the result using git-describe-version.
-if test -z "$res"; then
+test -n "$res" ||
   res=$(git describe)
-  # Slashes are a bad idea in a file name.
-  res=$(echo "$res" | sed 's,/,-,g')
-fi
 
-# m4_esyscmd does not strip the ending \n.
-echo "$res" | tr -d '\012'
+test -n "$res" ||
+  res=UNKNOWN
+
+case $output in
+  (raw)
+     echo "$res" | $prune_eol;;
+  (file)
+     echo "$res" | sed 's,/,-,g' | $prune_eol;;
+  (header)
+    cat <<EOF
+#ifndef GIT_VERSION_HH
+# define GIT_VERSION_HH
+
+# define GIT_VERSION "$res"
+
+#endif
+EOF
+    ;;
+esac
