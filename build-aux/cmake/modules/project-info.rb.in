@@ -1,0 +1,33 @@
+# This file hold project information used by shell scrip.
+
+PROJECT = {}
+PROJECT[:copyright_years] = "@PROJECT_COPYRIGHT_YEARS@"
+PROJECT[:copyright_holder] = "@PROJECT_COPYRIGHT_HOLDER@"
+PROJECT[:copyright_string] = "@PROJECT_COPYRIGHT_STRING@"
+PROJECT[:name] = "@PROJECT_NAME@"
+PROJECT[:longname] = "@PROJECT_LONGNAME@"
+PROJECT[:version] = "@PROJECT_VERSION@"
+PROJECT[:version_major] = "@PROJECT_VERSION_MAJOR@"
+PROJECT[:version_minor] = "@PROJECT_VERSION_MINOR@"
+PROJECT[:version_patch] = "@PROJECT_VERSION_PATCH@"
+PROJECT[:version_rc] = "@PROJECT_VERSION_RC@"
+PROJECT[:additional_commit] = "@PROJECT_ADDITIONAL_COMMIT@"
+PROJECT[:vendor] = "@PROJECT_VENDOR@"
+PROJECT[:vendor_version] = "@PROJECT_VENDOR_VERSION@"
+PROJECT[:support] = "@PROJECT_SUPPORT@"
+PROJECT[:bugreport] = "@PROJECT_BUGREPORT@"
+PROJECT[:string] = "@PROJECT_STRING@"
+PROJECT[:tarname] = "@PROJECT_TARNAME@"
+PROJECT[:homepage] = "@PROJECT_HOMEPAGE@"
+PROJECT[:help_link] = "@PROJECT_HELP_LINK@"
+PROJECT[:revision] = "@PROJECT_REVISION@"
+PROJECT[:id] = "@PROJECT_ID@"
+PROJECT[:date] = "@PROJECT_DATE@"
+PROJECT[:version_rev] = "@PROJECT_VERSION_REV@"
+
+# End of this document.
+
+# Local Variables:
+# mode: ruby
+# mode: flyspell
+# End:
