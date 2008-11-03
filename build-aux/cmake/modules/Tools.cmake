@@ -40,9 +40,9 @@ if(NOT TOOLS_CMAKE_GUARD)
 
   # Set the given variable with the given value if the variable is not already
   # set.
-  macro(SET_IF_NOT_SET var val)
+  macro(SET_IF_NOT_SET var)
     IF(NOT DEFINED "${var}")
-      SET(${var} "${val}")
+      SET(${var} ${ARGN})
     ENDIF(NOT DEFINED "${var}")
   endmacro(SET_IF_NOT_SET var val)
 
