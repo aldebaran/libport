@@ -290,4 +290,36 @@ if(NOT PROJECT_INFO_CMAKE)
   set(PROJECT_STRING "${PROJECT_LONGNAME} ${PROJECT_VERSION}")
   set(PROJECT_TARNAME "${PROJECT_NAME}-${PROJECT_VERSION}")
 
+  # ========================== #
+  # Add the tag release target #
+  # ========================== #
+
+  # Format the next tag name.
+  string(REGEX REPLACE
+    "-([0-9]+)-([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]+)$"
+    ""
+    PROJECT_TAG_NAME
+    ${PROJECT_VERSION})
+
+  # Format the next tag message.
+  set(PROJECT_PROJECT_TAG_MSG "Release ")
+  if(PROJECT_VENDOR)
+    set(PROJECT_TAG_MSG "${PROJECT_TAG_MSG} for Gostai")
+  else(PROJECT_VENDOR)
+    set(PROJECT_TAG_MSG
+      "${PROJECT_TAG_MSG} ${PROJECT_VENDOR_VERSION} for ${PROJECT_VENDOR}")
+  endif(PROJECT_VENDOR)
+  set(PROJECT_TAG_MSG
+    "${PROJECT_TAG_MSG} version ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
+  if(RELEASE_CANDIDATE)
+    set(PROJECT_TAG_MSG "${PROJECT_TAG_MSG} candidate ${PROJECT_VERSION_RC}")
+  endif(RELEASE_CANDIDATE)
+  set(PROJECT_TAG_MSG "${PROJECT_TAG_MSG}.")
+
+  add_custom_target(tag-release
+    COMMAND
+    ${GIT_EXECUTABLE} tag -a -m ${PROJECT_TAG_MSG} ${PROJECT_TAG_NAME} HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Tagging release ${PROJECT_TAG_NAME}")
+
 endif(NOT PROJECT_INFO_CMAKE)
