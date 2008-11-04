@@ -16,3 +16,4 @@
 /sdk/config.h.in
 /tests/Makefile.in
 /tests/libport/Makefile.in
+*~
