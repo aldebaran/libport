@@ -15,7 +15,7 @@
 @set projectAdditionalCommit ${PROJECT_ADDITIONAL_COMMIT}
 @set projectVendor ${PROJECT_VENDOR}
 @set projectVendorVersion ${PROJECT_VENDOR_VERSION}
-@set projectSupport ${PROJECT_SUPPORT}
+@set projectSupport ${PROJECT_BUGREPORT}
 @set projectBugReport ${PROJECT_BUGREPORT}
 @set projectString ${PROJECT_STRING}
 @set projectTarname ${PROJECT_TARNAME}

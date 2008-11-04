@@ -12,7 +12,7 @@
 <!ENTITY project.vendor "@PROJECT_VENDOR@">
 <!ENTITY project.vendor.version "@PROJECT_VENDOR_VERSION@">
 <!ENTITY project.version.rev "@PROJECT_VERSION_REV@">
-<!ENTITY project.support "@PROJECT_SUPPORT@">
+<!ENTITY project.support "@PROJECT_BUGREPORT@">
 <!ENTITY project.bugreport "@PROJECT_BUGREPORT@">
 <!ENTITY project.string "@PROJECT_STRING@">
 <!ENTITY project.tarname "@PROJECT_TARNAME@">
