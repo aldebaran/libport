@@ -1,6 +1,6 @@
 # - Configure texinfo file
 # This function is very similar to configure_file except that it takes care to
-# escape @ characters. Prefers to use ${var} expansion form instead of @var@
+# escape @ characters. Prefers to use ${var} expansion form instead of @var@.
 
 if(NOT COMMAND CONFIGURE_TEXINFO)
 
@@ -18,10 +18,11 @@ function(CONFIGURE_TEXINFO input output)
   endforeach(i)
   set(varlist ${tmpvarlist})
   set(tmpvarlist)
+  list(REMOVE_DUPLICATES varlist)
   # Save and escape variables.
   foreach(i ${varlist})
     set(__configure_textinfo_copy__${i} ${${i}})
-    string(REGEX REPLACE "@([^@])" "@@\\1" tmp "${${i}}")
+    string(REGEX REPLACE "@" "@@" tmp "${${i}}")
     set(${i} ${tmp})
   endforeach(i)
   # Configure the file.
