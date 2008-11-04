@@ -63,8 +63,8 @@ m4_defun([_URBI_FIND_PROG_PREPARE],
 find_prog ()
 {
   _AS_PATH_WALK([$[2]],
-		[AS_IF([AS_TEST_X([$as_dir/$[1]])],
-		       [echo "$as_dir/$[1]"; break])])
+                [AS_IF([AS_TEST_X([$as_dir/$[1]])],
+                       [echo "$as_dir/$[1]"; break])])
 }
 ])
 
