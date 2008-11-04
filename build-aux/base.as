@@ -22,8 +22,8 @@ m4_defun([_URBI_ABSOLUTE_PREPARE],
 is_absolute ()
 {
   case $[1] in
-    [[\\/]]* | ?:[[\\/]]*) return 0;;
-			*) return 1;;
+    ([[\\/]]* | ?:[[\\/]]*) return 0;;
+    (                    *) return 1;;
   esac
 }
 
@@ -107,28 +107,28 @@ fatal ()
 ex_to_string ()
 {
   case $[1] in
-       0) echo ' (EX_OK: successful termination)';;
-      64) echo ' (EX_USAGE: command line usage error)';;
-      65) echo ' (EX_DATAERR: data format error)';;
-      66) echo ' (EX_NOINPUT: cannot open input)';;
-      67) echo ' (EX_NOUSER: addressee unknown)';;
-      68) echo ' (EX_NOHOST: host name unknown)';;
-      69) echo ' (EX_UNAVAILABLE: service unavailable)';;
-      70) echo ' (EX_SOFTWARE: internal software error)';;
-      71) echo ' (EX_OSERR: system error (e.g., cannot fork))';;
-      72) echo ' (EX_OSFILE: critical OS file missing)';;
-      73) echo ' (EX_CANTCREAT: cannot create (user) output file)';;
-      74) echo ' (EX_IOERR: input/output error)';;
-      75) echo ' (EX_TEMPFAIL: temp failure; user is invited to retry)';;
-      76) echo ' (EX_PROTOCOL: remote error in protocol)';;
-      77) echo ' (EX_NOPERM: permission denied)';;
-      78) echo ' (EX_CONFIG: configuration error)';;
-     176) echo ' (EX_SKIP: skip this test with unmet dependencies)';;
-     177) echo ' (EX_HARD: hard error that cannot be saved)';;
-     242) echo ' (killed by Valgrind)';;
-      *)  if test 127 -lt $[1]; then
-	    echo " (SIG$(kill -l $[1] || true))"
-	  fi;;
+     (  0) echo ' (EX_OK: successful termination)';;
+     ( 64) echo ' (EX_USAGE: command line usage error)';;
+     ( 65) echo ' (EX_DATAERR: data format error)';;
+     ( 66) echo ' (EX_NOINPUT: cannot open input)';;
+     ( 67) echo ' (EX_NOUSER: addressee unknown)';;
+     ( 68) echo ' (EX_NOHOST: host name unknown)';;
+     ( 69) echo ' (EX_UNAVAILABLE: service unavailable)';;
+     ( 70) echo ' (EX_SOFTWARE: internal software error)';;
+     ( 71) echo ' (EX_OSERR: system error (e.g., cannot fork))';;
+     ( 72) echo ' (EX_OSFILE: critical OS file missing)';;
+     ( 73) echo ' (EX_CANTCREAT: cannot create (user) output file)';;
+     ( 74) echo ' (EX_IOERR: input/output error)';;
+     ( 75) echo ' (EX_TEMPFAIL: temp failure; user is invited to retry)';;
+     ( 76) echo ' (EX_PROTOCOL: remote error in protocol)';;
+     ( 77) echo ' (EX_NOPERM: permission denied)';;
+     ( 78) echo ' (EX_CONFIG: configuration error)';;
+     (176) echo ' (EX_SKIP: skip this test with unmet dependencies)';;
+     (177) echo ' (EX_HARD: hard error that cannot be saved)';;
+     (242) echo ' (killed by Valgrind)';;
+     (  *) if test 127 -lt $[1]; then
+            echo " (SIG$(kill -l $[1] || true))"
+          fi;;
   esac
 }
 
@@ -138,27 +138,27 @@ ex_to_string ()
 ex_to_int ()
 {
   case $[1] in
-    OK		|EX_OK)          echo 0;;
-    USAGE	|EX_USAGE)       echo 64;;
-    DATAERR	|EX_DATAERR)     echo 65;;
-    NOINPUT	|EX_NOINPUT)     echo 66;;
-    NOUSER	|EX_NOUSER)      echo 67;;
-    NOHOST	|EX_NOHOST)      echo 68;;
-    UNAVAILABLE	|EX_UNAVAILABLE) echo 69;;
-    SOFTWARE	|EX_SOFTWARE)    echo 70;;
-    OSERR	|EX_OSERR)       echo 71;;
-    OSFILE	|EX_OSFILE)      echo 72;;
-    CANTCREAT	|EX_CANTCREAT)   echo 73;;
-    IOERR	|EX_IOERR)       echo 74;;
-    TEMPFAIL	|EX_TEMPFAIL)    echo 75;;
-    PROTOCOL	|EX_PROTOCOL)    echo 76;;
-    NOPERM	|EX_NOPERM)      echo 77;;
-    CONFIG	|EX_CONFIG)      echo 78;;
+    (OK         |EX_OK)          echo 0;;
+    (USAGE      |EX_USAGE)       echo 64;;
+    (DATAERR    |EX_DATAERR)     echo 65;;
+    (NOINPUT    |EX_NOINPUT)     echo 66;;
+    (NOUSER     |EX_NOUSER)      echo 67;;
+    (NOHOST     |EX_NOHOST)      echo 68;;
+    (UNAVAILABLE|EX_UNAVAILABLE) echo 69;;
+    (SOFTWARE   |EX_SOFTWARE)    echo 70;;
+    (OSERR      |EX_OSERR)       echo 71;;
+    (OSFILE     |EX_OSFILE)      echo 72;;
+    (CANTCREAT  |EX_CANTCREAT)   echo 73;;
+    (IOERR      |EX_IOERR)       echo 74;;
+    (TEMPFAIL   |EX_TEMPFAIL)    echo 75;;
+    (PROTOCOL   |EX_PROTOCOL)    echo 76;;
+    (NOPERM     |EX_NOPERM)      echo 77;;
+    (CONFIG     |EX_CONFIG)      echo 78;;
 
-    SKIP	|EX_SKIP)        echo 176;;
-    HARD	|EX_HARD)        echo 177;;
+    (SKIP       |EX_SKIP)        echo 176;;
+    (HARD       |EX_HARD)        echo 177;;
 
-    *)                           echo $[1];;
+    (*)                          echo $[1];;
   esac
 }
 
@@ -177,13 +177,13 @@ get_options ()
 {
   while test $[#] -ne 0; do
     case $[1] in
-	--*=*)
-	    opt=$(echo "$[1]" | sed -e 's/=.*//')
-	    val=$(echo "$[1]" | sed -e ['s/[^=]*=//'])
-	    shift
-	    set dummy "$opt" "$val" ${1+"$[@]"};
-	    shift
-	    ;;
+        (--*=*)
+            opt=$(echo "$[1]" | sed -e 's/=.*//')
+            val=$(echo "$[1]" | sed -e ['s/[^=]*=//'])
+            shift
+            set dummy "$opt" "$val" ${1+"$[@]"};
+            shift
+            ;;
     esac
 
     case $[1] in
@@ -238,7 +238,7 @@ m4_define([URBI_INIT],
 URBI_PREPARE()
 set -e
 case $VERBOSE in
-  x) set -x;;
+  (x) set -x;;
 esac
 
 : ${abs_builddir='@abs_builddir@'}
