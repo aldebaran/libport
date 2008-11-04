@@ -310,7 +310,7 @@ if(NOT PROJECT_INFO_CMAKE)
     ${PROJECT_VERSION})
 
   # Format the next tag message.
-  set(PROJECT_PROJECT_TAG_MSG "Release ")
+  set(PROJECT_PROJECT_TAG_MSG "Release ${PROJECT_NAME}")
   if(PROJECT_VENDOR)
     set(PROJECT_TAG_MSG "${PROJECT_TAG_MSG} for Gostai")
   else(PROJECT_VENDOR)
