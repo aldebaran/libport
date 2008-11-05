@@ -115,9 +115,9 @@ namespace libport
 {
   struct bad_numeric_cast : public std::exception {};
 
-  /// Convert a libport::ufloat to an int. raise
-  /// libport::bad_numeric_cast if the provided argument is directly
-  /// convertible to an integer.
+  /// Convert a libport::ufloat to a int. Raise
+  /// libport::bad_numeric_cast if the provided argument is not
+  /// directly convertible to an integer.
   int ufloat_to_int(ufloat val);
   long long ufloat_to_long_long(ufloat val);
 

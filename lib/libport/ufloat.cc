@@ -168,9 +168,6 @@ namespace libport
     }
   }
 
-  /// Convert a libport::ufloat to a int. raise
-  /// libport::bad_numeric_cast if the provided argument is directly
-  /// convertible to an integer.
   int ufloat_to_int(ufloat val)
   {
     return ufloat_cast<int>(val);
