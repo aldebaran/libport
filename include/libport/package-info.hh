@@ -38,7 +38,7 @@ namespace libport
   };
 
   /// Report \a p on \a o.
-  std::ostream& operator<<(std::ostream& o, const PackageInfo& p);
+  LIBPORT_API std::ostream& operator<<(std::ostream& o, const PackageInfo& p);
 
 }
 
