@@ -6,7 +6,7 @@ branddir = @branddir@
 hostdir = @hostdir@
 envdir = @hostdir@/$(URBI_ENV)
 builddir = $(UMAKE_BUILD_DIR)
-SHLIBEXT=@SHLIBEXT@
+SHLIBEXT = @SHLIBEXT@
 #@hostdir@/$(URBI_ENV)
 
 # The basename (no extension) of the library we should link against.
@@ -27,9 +27,10 @@ URBI_KERNEL_PATH = @URBI_KERNEL_PATH@
 # Upper case.
 URBI_ENV_CPPFLAGS = -DURBI_ENV_$(shell echo "$(URBI_ENV)" | tr 'a-z' 'A-Z')
 
-CPPFLAGS = @CPPFLAGS@ -I$(prefix)/include			\
-           -I$(URBI_KERNEL_PATH)/gostai/kernel/include		\
-	   $(URBI_ENV_CPPFLAGS)
+CPPFLAGS =							\
+  @CPPFLAGS@ -I$(prefix)/include				\
+  -I$(URBI_KERNEL_PATH)/gostai/kernel/include			\
+  $(URBI_ENV_CPPFLAGS)
 ALL_CPPFLAGS = $(PRE_CPPFLAGS) $(CPPFLAGS) $(EXTRA_CPPFLAGS)
 
 # C.
@@ -68,7 +69,7 @@ LTCOMPILE = $(LIBTOOL) --tag=C --mode=compile $(COMPILE)
 CXXCOMPILE = $(CXX) $(ALL_CPPFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --tag=CXX --mode=compile $(CXXCOMPILE)
 CXXLINK = $(LIBTOOL) --tag=CXX --mode=link \
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o $@
+  $(CXX) $(CXXFLAGS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o $@
 
 # We use GNU Make pattern rules so that we can provide extra
 # dependencies.  Before changing something, read the doc.
@@ -110,6 +111,7 @@ $(OUTSHLIB): $(LTOBJECTS) $(ARGUMENT_LIBS)
 	   $(LTOBJECTS) $(ARGUMENT_LIBS) $(LIBS) $(envdir)/libuobject.la -rpath $(hostdir)
 	 cp $$(ls .libs/lib$(libbase)*$(SHLIBEXT) | head -n 1) ./$(OUTSHLIB)
 	 rm  $(lalib)
+
 # The command to generate the library.
 #
 # We pass -whole-archive because there are global objects to be
@@ -118,10 +120,11 @@ $(OUTSHLIB): $(LTOBJECTS) $(ARGUMENT_LIBS)
 # the final executable does not have the global objects contructed.
 UMAKE_LINK = umake-link
 LINK =						\
-$(UMAKE_LINK) --libtool='$(LIBTOOL)'		\
-	      --env='$(URBI_ENV)'		\
-	      --host='$(URBI_HOST)'		\
-	      --
+  $(UMAKE_LINK)					\
+  --libtool='$(LIBTOOL)'			\
+  --env='$(URBI_ENV)'				\
+  --host='$(URBI_HOST)'				\
+  --
 $(OUTBIN): $(LTOBJECTS) $(ARGUMENT_LIBS)
 if URBI_ENV_AIBO
 	 $(LINK) \
