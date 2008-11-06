@@ -71,4 +71,24 @@ namespace libport
   {
     own_ = v;
   }
+
+  unsigned FdStream::fd_read()
+  {
+    return buf_->fd_read();
+  }
+
+  unsigned FdStream::fd_write()
+  {
+    return buf_->fd_write();
+  }
+
+  unsigned FdBuf::fd_read()
+  {
+    return read_;
+  }
+
+  unsigned FdBuf::fd_write()
+  {
+    return write_;
+  }
 }

@@ -12,6 +12,8 @@ namespace libport
     FdBuf(unsigned write, unsigned read);
     ~FdBuf();
     void own_fd(bool v);
+    unsigned fd_write();
+    unsigned fd_read();
 
   protected:
     virtual int underflow();
@@ -30,6 +32,8 @@ namespace libport
     FdStream(unsigned write, unsigned read);
     virtual ~FdStream();
     void own_fd(bool v);
+    unsigned fd_write();
+    unsigned fd_read();
 
   private:
     FdBuf* buf_;
