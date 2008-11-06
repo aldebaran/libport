@@ -44,6 +44,14 @@ done
 test -n "$VERSION" ||
   AC_MSG_ERROR([cannot get version information])
 AC_MSG_RESULT([$VERSION])
+
+# Change the definition of VERSION and PACKAGE_VERSION in the
+# Makefiles.  This is run before creating config.status.
+AC_CONFIG_COMMANDS_PRE([
+# Use something which is more useful for the Makefiles.
+VERSION='$(shell $(top_srcdir)/build-aux/git-version-gen --srcdir=$(top_srcdir))'
+PACKAGE_VERSION='$(VERSION)'
+])
 ])
 
 ## Local Variables:
