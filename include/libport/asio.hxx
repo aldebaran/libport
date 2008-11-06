@@ -265,14 +265,16 @@ Socket::onRead_(boost::asio::streambuf& buf)
 {
   // Dump the stream in our linear buffer
   std::istream is(&buf);
-  while (true)
+  static const int blockSize = 1024;
+  while (is.good())
   {
-    int c = is.get();
-    if (!is.good())
-      break;
-    buffer += (char)c;
+    int oldBufferLength = buffer.length();
+    buffer.resize(oldBufferLength + blockSize);
+    is.read(&buffer[0] + oldBufferLength, blockSize);
+    long len = is.gcount();
+    buffer.resize(oldBufferLength + len);
   }
-  // Call unread until it eats 0 characters.
+  // Call onRead until it eats 0 characters.
   int r;
   do
   {
