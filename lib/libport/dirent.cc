@@ -26,7 +26,7 @@ int closedir(DIR* dir)
   return 0;
 }
 
-dirent* readdir(DIR *dir)
+dirent* readdir(DIR* dir)
 {
   int ret;
   _finddata_t fileinfo;
