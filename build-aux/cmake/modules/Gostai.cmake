@@ -12,8 +12,8 @@ include(GenLibLoader)
 # Add a Gostai executable target named _name_
 # Arguments:
 #  SOURCES	- the list of sources of the executable
-#  MOC		- the list of sources of the executable that need to be moc'ed
-#  UI		- the list of UI files used by the executable
+#  MOCS		- the list of sources of the executable that need to be moc'ed
+#  UIS		- the list of UI files used by the executable
 #  CPPFLAGS	- the list of CPPFLAGS to add
 #  LIBRARIES	- the list of libraries to link with.
 #  RESOURCES	- the list of resources files.
