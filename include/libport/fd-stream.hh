@@ -9,15 +9,17 @@ namespace libport
   class FdBuf: public std::streambuf
   {
   public:
-    FdBuf(unsigned fd);
+    FdBuf(unsigned write, unsigned read);
     ~FdBuf();
+    void own_fd(bool v);
 
   protected:
     virtual int underflow();
     virtual int overflow(int c = EOF );
     virtual int sync();
   private:
-    unsigned fd_;
+    unsigned write_, read_;
+    bool own_;
     char ibuf_[BUFSIZ];
     char obuf_[BUFSIZ];
   };
@@ -25,8 +27,10 @@ namespace libport
   class FdStream: public std::iostream
   {
   public:
-    FdStream(unsigned fd);
+    FdStream(unsigned write, unsigned read);
     virtual ~FdStream();
+    void own_fd(bool v);
+
   private:
     FdBuf* buf_;
   };

@@ -3,8 +3,8 @@
 
 namespace libport
 {
-  FdStream::FdStream(unsigned fd)
-    : buf_(new FdBuf(fd))
+  FdStream::FdStream(unsigned write, unsigned read)
+    : buf_(new FdBuf(write, read))
   {
     rdbuf(buf_);
   }
@@ -14,8 +14,16 @@ namespace libport
     delete buf_;
   }
 
-  FdBuf::FdBuf(unsigned fd)
-    : fd_(fd)
+  void
+  FdStream::own_fd(bool v)
+  {
+    buf_->own_fd(v);
+  }
+
+  FdBuf::FdBuf(unsigned write, unsigned read)
+    : write_(write)
+    , read_(read)
+    , own_(false)
   {
     setg(ibuf_, ibuf_, ibuf_);
     setp(obuf_, obuf_ + BUFSIZ - 1);
@@ -24,11 +32,16 @@ namespace libport
   FdBuf::~FdBuf()
   {
     sync();
+    if (own_)
+    {
+      close(write_);
+      close(read_);
+    }
   }
 
   int FdBuf::underflow()
   {
-    int c = read(fd_, ibuf_, BUFSIZ);
+    int c = read(read_, ibuf_, BUFSIZ);
     if (c == 0)
     {
       setg(ibuf_, ibuf_, ibuf_);
@@ -48,8 +61,14 @@ namespace libport
 
   int FdBuf::sync()
   {
-    write(fd_, obuf_, pptr() - obuf_);
+    write(write_, obuf_, pptr() - obuf_);
     setp(obuf_, obuf_ + BUFSIZ - 1);
     return 0; // Success
+  }
+
+  void
+  FdBuf::own_fd(bool v)
+  {
+    own_ = v;
   }
 }
