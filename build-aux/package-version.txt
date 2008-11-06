@@ -15,8 +15,18 @@ To hide our tricks from Autoconf and Automake, we define a fake static
 version (UNDEFINED), and use a GNUmakefile.
 
 URBI_PACKAGE_VERSION is used by configure load the actual version
-string from the file .version.
+string from the file .version.  It will change $VERSION to get the
+actual value (either obtained by git describe or by .version), and it
+will also change the value of VERSION used in the Makefiles to be
+dynamic (i.e., computed each time "make" is run).  In other words, we
+no longer have to recreate configure and the Makefiles each time a
+version changes.
+
+URBI_PACKAGE_VERSION will also configure GNUmakefile: this file is
+needed, and typically looks as follows:
+
+   include Makefile
+   include $(build_aux_dir)/package-version.mk
 
 package-version.mk (to be loaded by GNUmakefile after Automake's
 makefile) creates and maintains .version as up to date as possible.
-

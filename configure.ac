@@ -55,7 +55,7 @@ URBI_PACKAGE_KIND([sdk])
 URBI_LIBPORT
 
 AC_CONFIG_FILES([
-  Makefile GNUmakefile
+  Makefile
       lib/libport/Makefile
     tests/Makefile
       tests/libport/Makefile
