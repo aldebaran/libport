@@ -133,8 +133,7 @@ namespace libport
   std::string
   Debug::category()
   {
-    if (categories_stack_.empty())
-      return "";
+    assert(!categories_stack_.empty());
     return categories_stack_.back();
   }
 
