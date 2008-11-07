@@ -33,9 +33,15 @@ cat > $MIME_XML << EOF
 <mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>
   <mime-type type="$MIME">
     <comment>@STGZ_SHORTCUTS_DESCRIPTION@</comment>
+EOF
+if test "x@STGZ_SHORTCUTS_DOCTYPE@" != x; then
+  cat >> $MIME_XML << EOF
     <magic priority="50">
       <match type="string" offset="0" value="@STGZ_SHORTCUTS_DOCTYPE@" />
     </magic>
+EOF
+fi
+cat >> $MIME_XML << EOF
     <glob pattern="*.@STGZ_SHORTCUTS_FILE_EXTENSION@"/>
   </mime-type>
 </mime-info>
