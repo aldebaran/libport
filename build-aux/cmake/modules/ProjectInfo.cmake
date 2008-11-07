@@ -17,7 +17,7 @@ if(NOT PROJECT_INFO_CMAKE)
   # Extract the project information obtained by gathering the git repository.
   # Example of git describe return format:
   #
-  # in master branch:
+  # in master or candidates/* or perso/* branch:
   #  <major>.<minor>
   #  <major>.<minor>-RC-<rc>
   #  <major>.<minor>-<vendor>-<vendor_ver>
@@ -69,8 +69,9 @@ if(NOT PROJECT_INFO_CMAKE)
     set(patch 0 PARENT_SCOPE)
 
     # Are we are on master branch?
-    if(branch MATCHES "^master$")
-
+    if(branch MATCHES "^master$"
+	OR branch MATCHES "^candidates/.*$"
+	OR branch MATCHES "^perso/.*$")
       set(ver1_rx "^${ver_base_rx}$")
       set(ver2_rx "^${ver_base_rx}-(.*)-([0-9]+)$")
       if(tag MATCHES ${ver1_rx})
@@ -99,7 +100,7 @@ if(NOT PROJECT_INFO_CMAKE)
 	return()
       endif(tag MATCHES ${ver1_rx})
 
-    endif(branch MATCHES "^master$")
+    endif()
 
     # Are we are on a Gostai bug fix branch?
     if(branch MATCHES "^${ver_base_rx}\\.x$")

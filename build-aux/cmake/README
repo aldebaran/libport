@@ -177,7 +177,7 @@ write/use the provided modules.
 
 Our version numbers can be of the following form:
 
-- in master branch:
+- in master or candidates/* or perso/* branch:
 
   <major>.<minor>
   <major>.<minor>-RC-<rc>
