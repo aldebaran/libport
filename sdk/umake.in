@@ -139,27 +139,27 @@ get_options ()
     esac
 
     case $1 in
-      -D | --debug  ) debug=true;;
-      -V | --verbose) verb=true;;
-      -h | --help   ) usage;;
-      -q | --quiet  ) quiet=true;;
-      -v | --version) version;;
+      (-D | --debug  ) debug=true;;
+      (-V | --verbose) verb=true;;
+      (-h | --help   ) usage;;
+      (-q | --quiet  ) quiet=true;;
+      (-v | --version) version;;
 
-      -l | --library)       core= ; shared=false ;;
-      -s | --shared-library) core= ; shared=true ;;
-	   --deep-clean)    deep_clean="true"; havearg="noneed" ;;
-      -c | --clean)         clean="true" ;;
-      -j | --jobs)  shift; njobs=$1;;
-      -C | --core  ) shift; core=$1;;
-      -H | --host  ) shift; host=$1;;
-      -o | --output) shift; target=$1;;
-      -m | --disable-automain) automain=false;;
+      (-l | --library)       core= ; shared=false ;;
+      (-s | --shared-library) core= ; shared=true ;;
+      (     --deep-clean)    deep_clean="true"; havearg="noneed" ;;
+      (-c | --clean)         clean="true" ;;
+      (-j | --jobs)  shift; njobs=$1;;
+      (-C | --core  ) shift; core=$1;;
+      (-H | --host  ) shift; host=$1;;
+      (-o | --output) shift; target=$1;;
+      (-m | --disable-automain) automain=false;;
 
-      -p | --prefix)   shift; prefix=$1;;
-      -P | --param-mk) shift; param_mk=$1;;
-      -k | --kernel)   shift; kernel=$1;;
+      (-p | --prefix)   shift; prefix=$1;;
+      (-P | --param-mk) shift; param_mk=$1;;
+      (-k | --kernel)   shift; kernel=$1;;
 
-      --) # What remains are not options.
+      (--) # What remains are not options.
 	shift
 	while test x"$1" != x"$arg_sep"
 	do
@@ -168,11 +168,11 @@ get_options ()
 	done
 	break
 	;;
-      -*)
+      (-*)
 	error 2 "Unknown or ambiguous option \`$1'." \
 	      "Try \`--help' for more information."
 	;;
-      *) set dummy ${1+"$@"} "$1"; shift;;
+      (*) set dummy ${1+"$@"} "$1"; shift;;
      esac
      shift
   done
@@ -180,13 +180,9 @@ get_options ()
   shift
 
   # Interpret remaining command line args as filenames.
-  case $# in
-   0|1);;
-   *)
-    if test -n "$oname"; then
-      error 2 "Can't use option \`--output' with more than one argument."
-    fi
-    ;;
+  case $#:$oname in
+   ([01]:* | *:);;
+   (*) error 2 "Can't use option \`--output' with more than one argument.";;
   esac
 
   while test x"$1" != x || test $havearg = false
@@ -236,7 +232,7 @@ fi
 
 # Use default main
 if $automain; then
-    sources="$sources $prefix/share/umain/umain.cc"
+  sources="$sources $prefix/share/umain/umain.cc"
 fi
 
 for s in $(eval echo "$sources")
@@ -251,13 +247,13 @@ $shared || libext=.a
 
 # Select target name if unspecified.
 case $target:$core in
-    (:)   target=uobject-$host$libext;;
-    (:*)  target=urbiengine-$host-$core$EXEEXT;;
+  (:)   target=uobject-$host$libext;;
+  (:*)  target=urbiengine-$host-$core$EXEEXT;;
 
-   # The user can provide $target with or without extension.  Be sure
-   # to give it the proper extension.
-    (*:)  target="${target%$libext}$libext";;
-    (*:*) target="${target%$EXEEXT}$EXEEXT";;
+  # The user can provide $target with or without extension.  Be sure
+  # to give it the proper extension.
+  (*:)  target=${target%$libext}$libext;;
+  (*:*) target=${target%$EXEEXT}$EXEEXT;;
 esac
 
 # Remove ourselves from library list in lib generation mode, add OUTBIN
@@ -298,13 +294,13 @@ fi
 if test -z "$LIBNAME"; then
   case $core in
     (remote|engine|webots)
-	  UMAKE_LIBNAME=libuobject;;
+       UMAKE_LIBNAME=libuobject;;
     (fullengine)
-          UMAKE_LIBNAME=libuobject
-          UMAKE_EXTRALIB="${libdir}/liburbi.la ${libdir}/libjpeg.la"
-	  core=engine;;
+       UMAKE_LIBNAME=libuobject
+       UMAKE_EXTRALIB="${libdir}/liburbi.la ${libdir}/libjpeg.la"
+       core=engine;;
     (aibo)
-          UMAKE_LIBNAME=libaibo;;
+       UMAKE_LIBNAME=libaibo;;
   esac
 else
   UMAKE_LIBNAME=$LIBNAME
