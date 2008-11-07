@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/utility/value_init.hpp>
 
 #include <libport/cli.hh>
 #include <libport/sysexits.hh>
@@ -56,7 +57,7 @@ namespace libport
       std::cerr << program_name << ": cannot open `"
                 << s << "' for reading: " << strerror(errno) << std::endl
                 << libport::exit(EX_NOINPUT);
-    T res;
+    boost::value_initialized<T> res;
     i >> res;
     if (i.bad())
       std::cerr << program_name << ": cannot read expected contents from `"
