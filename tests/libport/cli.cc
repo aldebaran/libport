@@ -2,7 +2,6 @@
  ** Test command line interface tools.
  */
 
-#include <memory>
 #include <libport/cli.hh>
 #include <libport/unit-test.hh>
 
@@ -11,8 +10,7 @@ using libport::test_suite;
 void
 check ()
 {
-  const std::string input =
-    std::string() + getenv("SRCDIR") + "/666.txt";
+  const std::string input = std::string() + getenv("SRCDIR") + "/666.txt";
 # define CHECK(Type, Value)                             \
   do {                                                  \
     Type v = libport::file_contents_get<Type>(input);   \

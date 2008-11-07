@@ -6,6 +6,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <libport/cli.hh>
+#include <libport/sysexits.hh>
 #include <libport/program-name.hh>
 
 namespace libport
@@ -53,18 +54,22 @@ namespace libport
     std::ifstream i(s.c_str());
     if (i.bad())
       std::cerr << program_name << ": cannot open `"
-                << s << "' for reading: " << strerror(errno)
-                << std::endl;
+                << s << "' for reading: " << strerror(errno) << std::endl
+                << libport::exit(EX_NOINPUT);
     T res;
     i >> res;
     if (i.bad())
-      std::cerr << program_name << ": cannot read an integer from `"
-                << s << "': " << strerror(errno)
-                << std::endl;
+      std::cerr << program_name << ": cannot read expected contents from `"
+                << s << "': " << strerror(errno) << std::endl
+                << libport::exit(EX_DATAERR);
+
+#if 0
+    // I don't know how to skip the spaces easily, so don't do that.
     if (!i.eof())
-      std::cerr << program_name << ": garbage after the integer in `"
-                << s << "': " << strerror(errno)
-                << std::endl;
+      std::cerr << program_name << ": garbage after contents in `"
+                << s << "'" << std::endl
+                << libport::exit(1);
+#endif
     return res;
   }
 
