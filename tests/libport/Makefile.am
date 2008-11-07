@@ -23,7 +23,6 @@ TESTS =						\
   indent.cc					\
   separator.cc					\
   shared-ptr-intrusive.cc			\
-  shared-ptr-non-intrusive.cc			\
   statistics.cc					\
   timer.cc					\
   unescape.cc					\
@@ -72,7 +71,6 @@ has_if_SOURCES				= has_if.cc
 indent_SOURCES				= indent.cc
 separator_SOURCES			= separator.cc
 shared_ptr_intrusive_SOURCES		= shared-ptr-intrusive.cc
-shared_ptr_non_intrusive_SOURCES	= shared-ptr-non-intrusive.cc
 shared_ptr_serialize_SOURCES		= shared-ptr-serialize.cc
 statistics_SOURCES			= statistics.cc
 timer_SOURCES				= timer.cc

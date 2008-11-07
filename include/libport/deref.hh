@@ -9,8 +9,9 @@
 # include <iosfwd>
 # include <memory>
 # include <libport/export.hh>
+# include <libport/shared-ptr.hh>
 # ifndef LIBPORT_NO_BOOST
-#  include <libport/shared-ptr.hh>
+#  include <boost/shared_ptr.hpp>
 # endif
 
 namespace libport
@@ -28,10 +29,13 @@ namespace libport
 
     template <typename T> std::ostream& operator<< (const std::auto_ptr<T>& t) const;
 
+    template <typename T>
+    std::ostream& operator<< (const shared_ptr<T>& t) const;
+
 # ifndef LIBPORT_NO_BOOST
-    template <typename T, bool Intrusive>
-    std::ostream& operator<< (const shared_ptr<T, Intrusive>& t) const;
-# endif // !LIBPORT_NO_BOOST
+    template <typename T>
+    std::ostream& operator<< (const boost::shared_ptr<T>& t) const;
+# endif
 
     template <typename T> std::ostream& operator<< (const T& t) const;
     template <typename T> std::ostream& operator<< (T& t) const;

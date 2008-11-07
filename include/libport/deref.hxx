@@ -40,14 +40,21 @@ namespace libport
     return operator <<(t.get());
   }
 
-#ifndef LIBPORT_NO_BOOST
-  template <typename T, bool Intrusive>
+  template <typename T>
   std::ostream&
-  Deref::operator<< (const shared_ptr<T, Intrusive>& t) const
+  Deref::operator<< (const shared_ptr<T>& t) const
   {
     return operator <<(t.get());
   }
-#endif // !LIBPORT_NO_BOOST
+
+# ifndef LIBPORT_NO_BOOST
+  template <typename T>
+  std::ostream&
+  Deref::operator<< (const boost::shared_ptr<T>& t) const
+  {
+    return operator <<(t.get());
+  }
+# endif
 
   template <typename T>
   std::ostream&

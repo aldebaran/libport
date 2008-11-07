@@ -6,116 +6,35 @@
 #ifndef LIBPORT_BOOST_SHARED_PTR_HXX
 # define LIBPORT_BOOST_SHARED_PTR_HXX
 
+# include <cassert>
+# include <typeinfo>
+
 # include <libport/shared-ptr.hh>
 
 namespace libport
 {
-
-  /*-----------------.
-  | Ctors and dtor.  |
-  `-----------------*/
-
-  template <typename T, bool I>
-  template <typename U>
-  shared_ptr<T,I>::shared_ptr (const shared_ptr<U,I>& other)
-    : super_type (other)
-  {
-  }
-
-  template <typename T, bool I>
-  shared_ptr<T,I>::shared_ptr (const shared_ptr<T,I>& other)
-    : super_type (other)
-  {
-  }
-
-  template <typename T, bool I>
-  shared_ptr<T,I>::shared_ptr (T* p)
-    : super_type (p)
-  {
-  }
-
-  template <typename T, bool I>
-  shared_ptr<T,I>::~shared_ptr ()
-  {
-  }
-
-
-  /*---------------------.
-  | Equality operators.  |
-  `---------------------*/
-
-  template <typename T, bool I>
-  bool
-  shared_ptr<T,I>::operator== (const T* other) const
-  {
-    return this->get () == other;
-  }
-
-  template <typename T, bool I>
-  bool
-  shared_ptr<T,I>::operator!= (const T* other) const
-  {
-    return !(*this == other);
-  }
-
-
-  /*--------.
-  | Casts.  |
-  `--------*/
-
-  template <typename T, bool I>
-  template <typename U>
-  shared_ptr<U>
-  shared_ptr<T,I>::unsafe_cast () const
-  {
-    shared_ptr<U> res;
-    (boost::dynamic_pointer_cast<U, element_type> (*this)).swap (res);
-    return res;
-  }
-
-  template <typename T, bool I>
-  template <typename U>
-  shared_ptr<U>
-  shared_ptr<T,I>::cast () const
-  {
-    if (!this->get () || !this->is_a<U> ())
-      throw std::bad_cast ();
-    return unsafe_cast<U> ();
-  }
-
-  template <typename T, bool I>
-  template <typename U>
-  bool
-  shared_ptr<T,I>::is_a () const
-  {
-    return dynamic_cast<U*> (this->get ());
-  }
-
-  /*---------------------------.
-  | Intrusive smart pointers.  |
-  `---------------------------*/
   template <typename T>
   template <typename U>
-  shared_ptr<T, true>::shared_ptr(const shared_ptr<U, true>& other)
+  shared_ptr<T>::shared_ptr(const shared_ptr<U>& other)
     :pointee_(0)
   {
     (*this) = other;
   }
   template <typename T>
-  shared_ptr<T, true>::shared_ptr(const shared_ptr<T, true>& other)
+  shared_ptr<T>::shared_ptr(const shared_ptr<T>& other)
     :pointee_(0)
   {
     (*this) = other;
   }
   template <typename T>
-  shared_ptr<T, true>::shared_ptr (T* p)
+  shared_ptr<T>::shared_ptr (T* p)
   :pointee_(0)
   {
     (*this) = p;
   }
 
   template <typename T>
-  shared_ptr<T, true>::~shared_ptr()
+  shared_ptr<T>::~shared_ptr()
   {
     // This cast is required, or the compiler uses the shared_ptr ctor,
     // leading to an infinite loop.
@@ -124,23 +43,23 @@ namespace libport
 
   template <typename T>
   template <typename U>
-  shared_ptr<T, true>&
-  shared_ptr<T, true>::operator = (const shared_ptr<U, true>& other)
+  shared_ptr<T>&
+  shared_ptr<T>::operator = (const shared_ptr<U>& other)
   {
     return (*this) = other.get();
   }
 
   template <typename T>
-  shared_ptr<T, true>&
-  shared_ptr<T, true>::operator = (const shared_ptr<T, true>& other)
+  shared_ptr<T>&
+  shared_ptr<T>::operator = (const shared_ptr<T>& other)
   {
     return (*this) = other.get();
   }
 
   template <typename T>
   template <typename U>
-  shared_ptr<T, true>&
-  shared_ptr<T, true>::operator = (U* other)
+  shared_ptr<T>&
+  shared_ptr<T>::operator = (U* other)
   {
     // This is the only place where the counter is used.
     if (pointee_ != other)
@@ -158,24 +77,24 @@ namespace libport
   }
 
   template <typename T> bool
-  shared_ptr<T, true>::operator == (const T* p) const
+  shared_ptr<T>::operator == (const T* p) const
   {
     return pointee_ == p;
   }
 
   template <typename T> bool
-  shared_ptr<T, true>::operator == (const shared_ptr<T, true> &p) const
+  shared_ptr<T>::operator == (const shared_ptr<T> &p) const
   {
     return pointee_ == p.get();
   }
 
   template <typename T> bool
-  shared_ptr<T, true>::operator != (const shared_ptr<T, true> &p) const
+  shared_ptr<T>::operator != (const shared_ptr<T> &p) const
   {
     return pointee_ != p.get();
   }
   template <typename T> bool
-  shared_ptr<T, true>::operator != (const T* p) const
+  shared_ptr<T>::operator != (const T* p) const
   {
     return pointee_ != p;
   }
@@ -183,7 +102,7 @@ namespace libport
   template <typename T>
   template <typename U>
   shared_ptr<U>
-  shared_ptr<T, true>::cast() const
+  shared_ptr<T>::cast() const
   {
     U* ptr = dynamic_cast<U*>(pointee_);
     if (!ptr)
@@ -194,7 +113,7 @@ namespace libport
   template <typename T>
   template <typename U>
   shared_ptr<U>
-  shared_ptr<T, true>::unsafe_cast() const
+  shared_ptr<T>::unsafe_cast() const
   {
     U* ptr = dynamic_cast<U*>(pointee_);
     return ptr;
@@ -204,7 +123,7 @@ namespace libport
   template <typename U>
   inline
   shared_ptr<U>
-  shared_ptr<T, true>::unchecked_cast() const
+  shared_ptr<T>::unchecked_cast() const
   {
     assert(dynamic_cast<U*>(pointee_));
     return static_cast<U*>(pointee_);
@@ -213,21 +132,21 @@ namespace libport
   template <typename T>
   template <typename U>
   bool
-  shared_ptr<T, true>::is_a () const
+  shared_ptr<T>::is_a () const
   {
     return dynamic_cast<U*> (pointee_);
   }
 
   template <typename T>
   T*
-  shared_ptr<T, true>::get() const
+  shared_ptr<T>::get() const
   {
     return pointee_;
   }
 
   template <typename T>
   T*
-  shared_ptr<T, true>::operator->() const
+  shared_ptr<T>::operator->() const
   {
     assert(pointee_);
     return pointee_;
@@ -235,28 +154,29 @@ namespace libport
 
   template <typename T>
   T&
-  shared_ptr<T, true>::operator*() const
+  shared_ptr<T>::operator*() const
   {
     return *pointee_;
   }
 
   template <typename T>
   void
-  shared_ptr<T, true>::reset()
+  shared_ptr<T>::reset()
   {
     (*this) = 0;
   }
 
   template <typename T>
-  shared_ptr<T, true>::operator bool() const
+  shared_ptr<T>::operator bool() const
   {
     return pointee_;
   }
 
+#ifndef LIBPORT_NO_BOOST
   template <typename T>
   template <typename Archive>
   void
-  shared_ptr<T, true>::save(Archive& ar, const unsigned int /* version */) const
+  shared_ptr<T>::save(Archive& ar, const unsigned int /* version */) const
   {
     ar & pointee_;
   }
@@ -264,7 +184,7 @@ namespace libport
   template <typename T>
   template <typename Archive>
   void
-  shared_ptr<T, true>::load(Archive& ar, const unsigned int /* version */)
+  shared_ptr<T>::load(Archive& ar, const unsigned int /* version */)
   {
     if (pointee_)
       pointee_->counter_dec();
@@ -276,18 +196,19 @@ namespace libport
   template <typename T>
   template <typename Archive>
   void
-  shared_ptr<T, true>::serialize(Archive& ar, const unsigned int version)
+  shared_ptr<T>::serialize(Archive& ar, const unsigned int version)
   {
     boost::serialization::split_member(ar, *this, version);
   }
+#endif // !LIBPORT_NO_BOOST
 
   /*--------------------------.
   | Free standing functions.  |
   `--------------------------*/
 
-  template <typename T, bool Intrusive>
+  template <typename T>
   T*
-  get_pointer(const shared_ptr<T, Intrusive>& p)
+  get_pointer(const shared_ptr<T>& p)
   {
     return p.get();
   }
@@ -298,7 +219,6 @@ namespace libport
   {
     return shared_ptr<T> (t);
   }
-
 
   template <typename U, typename T>
   shared_ptr<U>

@@ -3,6 +3,7 @@
  */
 
 #include <memory>
+#include <boost/shared_ptr.hpp>
 #include <libport/deref.hh>
 #include <libport/unit-test.hh>
 #include <libport/shared-ptr.hh>
@@ -31,7 +32,7 @@ check ()
   const std::auto_ptr<int> ai(new int(123));
   CHECK(ai);
 
-  const libport::shared_ptr<int, false> si = new int(123);
+  const boost::shared_ptr<int> si(new int(123));
   CHECK(si);
 }
 

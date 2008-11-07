@@ -26,7 +26,7 @@ struct Counted : libport::RefCounted
     ar & val;
   }
 };
-typedef libport::shared_ptr<Counted, true> rCounted;
+typedef libport::shared_ptr<Counted> rCounted;
 BOOST_CLASS_TRACKING(rCounted, boost::serialization::track_never)
 
 int
