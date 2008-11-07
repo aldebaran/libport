@@ -198,18 +198,14 @@ get_options ()
 
     # If this is a directory, append a slash.
     case $1$(test -d "$1" && echo '/') in
-      (*=*)
-	argname=$(echo $1 | cut -d '=' -f 1)
-	argval=$(echo $1 | cut -d '=' -f 2-)
-	case $argname in
-	  (VPATH) vpath=$vpath:$argval ;;
-	  (*) makeargs="$makeargs '$1'" ;;
-	esac   ;;
+      (VPATH=*) vpath=$vpath:$(echo "$1" | sed -e 's/^[^=]*=//');;
+      (*=*)     makeargs="$makeargs '$1'" ;;
+
       (*.h |*.hh|*.hxx|*.hpp) headers="$headers '$1'";   havearg=true ;;
       (*.cc|*.cpp|*.c|*.C)    sources="$sources '$1'";   havearg=true ;;
       (*.a|*.o)               libs="$libs '$1'";         havearg=true ;;
       (*/)
-	# Is it a directory
+	# It is a directory.
 	files=$(find "$1"				\
 	    -iname '*.h'				\
 	    -or -iname '*.hh'				\
@@ -252,16 +248,16 @@ done
 # The library extension.
 libext=$SHLIBEXT
 $shared || libext=.a
-	
+
 # Select target name if unspecified.
 case $target:$core in
-    :)   target=uobject-$host$libext;;
-    :*)  target=urbiengine-$host-$core$EXEEXT;;
+    (:)   target=uobject-$host$libext;;
+    (:*)  target=urbiengine-$host-$core$EXEEXT;;
 
    # The user can provide $target with or without extension.  Be sure
    # to give it the proper extension.
-    *:)  target="${target%$libext}$libext";;
-    *:*) target="${target%$EXEEXT}$EXEEXT";;
+    (*:)  target="${target%$libext}$libext";;
+    (*:*) target="${target%$EXEEXT}$EXEEXT";;
 esac
 
 # Remove ourselves from library list in lib generation mode, add OUTBIN
