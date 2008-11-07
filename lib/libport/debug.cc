@@ -35,6 +35,8 @@ namespace libport
         // Don't use GD_ABORT here, we're in the debugger constructor!
         assert(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP)");
     }
+    foreach (const std::string& c, categories())
+      categories_[c] = true;
   }
 
   void
@@ -55,11 +57,18 @@ namespace libport
     message(msg, type, fun, file, line);
   }
 
+  std::list<std::string>&
+  Debug::categories()
+  {
+    static std::list<std::string> categories_;
+    return categories_;
+  }
+
   int
   Debug::add_category(const std::string& name)
   {
-    categories_[name] = true;
-    return 0;
+    categories().push_back(name);
+    return 42;
   }
 
   void

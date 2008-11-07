@@ -66,7 +66,8 @@ namespace libport
                               const std::string& file = "",
                               unsigned line = 0) = 0;
 
-    int  add_category(const std::string& name);
+    static std::list<std::string>& categories();
+    static int add_category(const std::string& name);
     libport::Finally::action_type push_category(const std::string& name);
     void disable_category(const std::string& name);
     void enable_category(const std::string& name);
@@ -293,16 +294,20 @@ namespace libport
 | Categories |
 `-----------*/
 
+#  define GD_ADD_CATEGORY(Name)                                         \
+  static int _gd_category_##Name =                                      \
+    ::libport::Debug::add_category(#Name);                              \
+
 #  define GD_CATEGORY(Cat)                                              \
   libport::Finally _gd_pop_category_##Cat                               \
-  (GD_DEBUGGER->push_category(#Cat));                                    \
+  (GD_DEBUGGER->push_category(#Cat));                                   \
 
 #  define GD_DISABLE_CATEGORY(Cat)                                      \
-  GD_DEBUGGER->disable_category(#Cat);                                   \
+  GD_DEBUGGER->disable_category(#Cat);                                  \
 
-#  define GD_ENABLE_CATEGORY(Cat)               \
+#  define GD_ENABLE_CATEGORY(Cat)                \
   GD_DEBUGGER->enable_category(#Cat);            \
-                                                \
+                                                 \
 /*------.
 | Level |
 `------*/
@@ -380,9 +385,6 @@ namespace libport
     { return new SyslogDebug(#Program); }                               \
     boost::function0<Debug*> make_debugger(_libport_mkdebug_);          \
   }                                                                     \
-
-#  define GD_ADD_CATEGORY(Name)                                         \
-  static int _gd_category_##Name = GD_DEBUGGER->add_category(#Name);    \
 
 #  define GD_ENABLE(Name)                         \
   GD_DEBUGGER->Name(true);                         \
