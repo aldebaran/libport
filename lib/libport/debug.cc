@@ -2,6 +2,7 @@
 #include <cassert>
 #include <iostream>
 
+#include <libport/containers.hh>
 #include <libport/debug.hh>
 
 #ifndef NDEBUG
@@ -337,6 +338,15 @@ namespace libport
   SyslogDebug::pop()
   {
     indent_ -= 2;
+  }
+
+  Debug* debugger()
+  {
+    static std::map<boost::thread::id, Debug*> debuggers;
+    boost::thread::id id = boost::this_thread::get_id();
+    if (!libport::mhas(debuggers, id))
+      debuggers[id] = make_debugger();
+    return debuggers[id];
   }
 
 }

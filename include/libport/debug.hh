@@ -12,6 +12,7 @@
 #  include <boost/format.hpp>
 #  include <boost/function.hpp>
 #  include <boost/preprocessor/seq/for_each.hpp>
+#  include <boost/thread.hpp>
 
 #  include <libport/finally.hh>
 
@@ -138,7 +139,8 @@ namespace libport
     unsigned indent_;
   };
 
-  extern Debug& debugger;
+  extern boost::function0<Debug*> make_debugger;
+  Debug* debugger();
 
   std::string gd_ihexdump(const unsigned char* data, unsigned size);
 
@@ -169,7 +171,7 @@ namespace libport
 | Helpers |
 `--------*/
 
-#  define GD_DEBUGGER libport::debugger
+#  define GD_DEBUGGER libport::debugger()
 
 #  define GD_FORMAT_ELEM(R, Data, Elem) % Elem  \
 
@@ -189,7 +191,7 @@ namespace libport
 // INFO
 
 #  define GD_INFO(Message)                                            \
-  GD_DEBUGGER.debug(Message, ::libport::Debug::types::info,           \
+  GD_DEBUGGER->debug(Message, ::libport::Debug::types::info,           \
                     GD_FUNCTION, __FILE__, __LINE__);        \
 
 #  define GD_FINFO(Msg, Seq)                 \
@@ -252,7 +254,7 @@ namespace libport
 
 
 #  define GD_WARN(Message)                                      \
-  GD_DEBUGGER.debug(Message, ::libport::Debug::types::warn,      \
+  GD_DEBUGGER->debug(Message, ::libport::Debug::types::warn,      \
                     GD_FUNCTION, __FILE__, __LINE__);           \
 
 #  define GD_FWARN(Msg, Seq)                 \
@@ -266,7 +268,7 @@ namespace libport
 
 
 #  define GD_ERROR(Message)                                             \
-  GD_DEBUGGER.debug(Message, ::libport::Debug::types::error,             \
+  GD_DEBUGGER->debug(Message, ::libport::Debug::types::error,             \
                     GD_FUNCTION, __FILE__, __LINE__);                   \
 
 #  define GD_FERROR(Msg, Seq)               \
@@ -281,7 +283,7 @@ namespace libport
 
 #  define GD_PUSH(Message)                                             \
   libport::Finally _gd_pop_                                            \
-  (GD_DEBUGGER.push(Message,                                           \
+  (GD_DEBUGGER->push(Message,                                           \
                     GD_FUNCTION, __FILE__, __LINE__));                 \
 
 #  define GD_FPUSH(Message, Seq)                \
@@ -293,13 +295,13 @@ namespace libport
 
 #  define GD_CATEGORY(Cat)                                              \
   libport::Finally _gd_pop_category_##Cat                               \
-  (GD_DEBUGGER.push_category(#Cat));                                    \
+  (GD_DEBUGGER->push_category(#Cat));                                    \
 
 #  define GD_DISABLE_CATEGORY(Cat)                                      \
-  GD_DEBUGGER.disable_category(#Cat);                                   \
+  GD_DEBUGGER->disable_category(#Cat);                                   \
 
 #  define GD_ENABLE_CATEGORY(Cat)               \
-  GD_DEBUGGER.enable_category(#Cat);            \
+  GD_DEBUGGER->enable_category(#Cat);            \
                                                 \
 /*------.
 | Level |
@@ -307,7 +309,7 @@ namespace libport
 
 #  define GD_LEVEL(Lvl)                                                 \
   libport::Finally _gd_pop_level_##Lvl                                  \
-  (GD_DEBUGGER.push_level(Lvl));                                        \
+  (GD_DEBUGGER->push_level(Lvl));                                        \
 
 #  define GD_LOG()                              \
   GD_LEVEL(1);                                  \
@@ -322,7 +324,7 @@ namespace libport
   GD_LEVEL(4);                                  \
 
 #  define GD_FILTER(Lvl)                                                \
-  GD_DEBUGGER.filter(Lvl);                                              \
+  GD_DEBUGGER->filter(Lvl);                                              \
 
 #  define GD_FILTER_NONE()                       \
   GD_FILTER(0);                                  \
@@ -363,25 +365,27 @@ namespace libport
 #  define GD_INIT()                               \
   GD_INIT_CONSOLE()                               \
 
-#  define GD_INIT_CONSOLE()                     \
-  namespace libport                              \
-  {                                             \
-    Debug* debugger_p = new ConsoleDebug();     \
-    Debug& debugger   = *debugger_p;            \
-  }                                             \
+#  define GD_INIT_CONSOLE()                                     \
+  namespace libport                                             \
+  {                                                             \
+    static Debug* _libport_mkdebug_()                           \
+    { return new ConsoleDebug(); }                              \
+    boost::function0<Debug*> make_debugger(_libport_mkdebug_);  \
+  }                                                             \
 
-#  define GD_INIT_SYSLOG(Program)                       \
-  namespace libport                                      \
-  {                                                     \
-    Debug* debugger_p = new SyslogDebug(Program);       \
-    Debug& debugger   = *debugger_p;                    \
-  }                                                     \
+#  define GD_INIT_SYSLOG(Program)                                       \
+  namespace libport                                                     \
+  {                                                                     \
+    static Debug* _libport_mkdebug_()                                   \
+    { return new SyslogDebug(#Program); }                               \
+    boost::function0<Debug*> make_debugger(_libport_mkdebug_);          \
+  }                                                                     \
 
 #  define GD_ADD_CATEGORY(Name)                                         \
-  static int _gd_category_##Name = GD_DEBUGGER.add_category(#Name);     \
+  static int _gd_category_##Name = GD_DEBUGGER->add_category(#Name);    \
 
 #  define GD_ENABLE(Name)                         \
-  GD_DEBUGGER.Name(true);                         \
+  GD_DEBUGGER->Name(true);                         \
 
 #  define GD_ENABLE_LOCATIONS()                   \
   GD_ENABLE(locations)                            \
