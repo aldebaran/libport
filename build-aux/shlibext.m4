@@ -29,8 +29,10 @@ case $shrext_cmds in
      AC_MSG_WARN([unexpected \$shlibext_cmds: $shlibext_cmds])
      SHLIBEXT=$shrext_cmds;;
 esac
-AC_MSG_RESULT([$SHLIBEXT])
 AC_SUBST([SHLIBEXT])
+AC_DEFINE_UNQUOTED([SHLIBEXT], ["$SHLIBEXT"],
+                   [The shared library extension.])
+AC_MSG_RESULT([$SHLIBEXT])
 ])
 
 ## Local Variables:
