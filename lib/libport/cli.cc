@@ -6,6 +6,7 @@
 
 namespace libport
 {
+
   void
   usage_error (const std::string& opt, const std::string& err)
   {

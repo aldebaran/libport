@@ -9,6 +9,7 @@ include $(top_srcdir)/build-aux/check.mk
 
 # Program to check:
 TESTS =						\
+  cli.cc					\
   deref.cc					\
   foreach.cc					\
   path.cc					\
@@ -57,6 +58,7 @@ LDADD +=					\
   $(BOOST_SERIALIZATION_LIBS)			\
   $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
+cli_SOURCES			        = cli.cc
 deref_SOURCES				= deref.cc
 foreach_SOURCES				= foreach.cc
 path_SOURCES				= path.cc
@@ -83,5 +85,5 @@ ufloat_double_SOURCES			= ufloat-double.cc
 #ufloat_floating_SOURCES		= ufloat-floating.cc
 visitor_SOURCES				= visitor.cc
 
-EXTRA_DIST += ufloat-common.cc ufloat-config.h
+EXTRA_DIST += ufloat-common.cc ufloat-config.h 666.txt
 TESTS_ENVIRONMENT = SRCDIR=$(srcdir)

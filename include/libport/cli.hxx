@@ -1,6 +1,12 @@
+#include <libport/cstdio>
+#include <cerrno>
+#include <fstream>
+#include <iostream>
+
 #include <boost/lexical_cast.hpp>
 
 #include <libport/cli.hh>
+#include <libport/program-name.hh>
 
 namespace libport
 {
@@ -38,4 +44,28 @@ namespace libport
     return convert_argument<T>(std::string("$") + envvar,
                                getenv(envvar.c_str()));
   }
+
+
+  template <typename T>
+  T
+  file_contents_get(const std::string& s)
+  {
+    std::ifstream i(s.c_str());
+    if (i.bad())
+      std::cerr << program_name << ": cannot open `"
+                << s << "' for reading: " << strerror(errno)
+                << std::endl;
+    T res;
+    i >> res;
+    if (i.bad())
+      std::cerr << program_name << ": cannot read an integer from `"
+                << s << "': " << strerror(errno)
+                << std::endl;
+    if (!i.eof())
+      std::cerr << program_name << ": garbage after the integer in `"
+                << s << "': " << strerror(errno)
+                << std::endl;
+    return res;
+  }
+
 }

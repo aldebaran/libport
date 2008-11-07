@@ -34,6 +34,12 @@ namespace libport
   /// \precondition getenv(envvar).
   template<typename T>
   T convert_envvar(const std::string& envvar);
+
+  /// Read the file \a s and return its contents as \a T.
+  /// It must contain a T, and nothing else.  Based on the operator>>.
+  template <typename T>
+  T
+  file_contents_get(const std::string& s);
 }
 
 # include <libport/cli.hxx>
