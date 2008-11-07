@@ -7,7 +7,6 @@ hostdir = @hostdir@
 envdir = @hostdir@/$(URBI_ENV)
 builddir = $(UMAKE_BUILD_DIR)
 SHLIBEXT = @SHLIBEXT@
-#@hostdir@/$(URBI_ENV)
 
 # The basename (no extension) of the library we should link against.
 # This default value is for backward compatibility: find the
@@ -69,7 +68,7 @@ LTCOMPILE = $(LIBTOOL) --tag=C --mode=compile $(COMPILE)
 CXXCOMPILE = $(CXX) $(ALL_CPPFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --tag=CXX --mode=compile $(CXXCOMPILE)
 CXXLINK = $(LIBTOOL) --tag=CXX --mode=link \
-  $(CXX) $(CXXFLAGS) $(LDFLAGS) $(EXTRA_LDFLAGS) -o $@
+  $(CXX) $(CXXFLAGS) $(LDFLAGS) $(EXTRA_LDFLAGS)
 
 # We use GNU Make pattern rules so that we can provide extra
 # dependencies.  Before changing something, read the doc.
@@ -100,17 +99,16 @@ $(builddir)/%.$(URBI_HOST).lo: %.cpp $(HEADERS)
 
 # UObject target.
 $(OUTLIB): $(LTOBJECTS) $(ARGUMENT_LIBS)
-	$(CXXLINK) $(LTOBJECTS) $(ARGUMENT_LIBS) $(LIBS)
+	$(CXXLINK) $(LTOBJECTS) $(ARGUMENT_LIBS) $(LIBS) -o $@
 
 # I know no way to build shared libraries through libtool without a .la...
 lalib = lib$(OUTSHLIB:$(SHLIBEXT)=.la)
 libbase = $(OUTSHLIB:$(SHLIBEXT)=)
 $(OUTSHLIB): $(LTOBJECTS) $(ARGUMENT_LIBS)
-	 $(LIBTOOL) --tag=CXX --mode=link \
-	   $(CXX) $(CXXFLAGS) $(LDFLAGS) $(EXTRA_LDFLAGS) -export-dynamic -o $(lalib) \
-	   $(LTOBJECTS) $(ARGUMENT_LIBS) $(LIBS) $(envdir)/libuobject.la -rpath $(hostdir)
-	 cp $$(ls .libs/lib$(libbase)*$(SHLIBEXT) | head -n 1) ./$(OUTSHLIB)
-	 rm  $(lalib)
+	$(CXXLINK) -export-dynamic -o $(lalib) \
+	  $(LTOBJECTS) $(ARGUMENT_LIBS) $(LIBS) $(envdir)/libuobject.la -rpath $(hostdir)
+	cp $$(ls .libs/lib$(libbase)*$(SHLIBEXT) | head -n 1) $(OUTSHLIB)
+	rm -f $(lalib)
 
 # The command to generate the library.
 #
