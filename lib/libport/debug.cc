@@ -238,6 +238,12 @@ namespace libport
       if (pid)
         std::cerr << "[" << getpid() << "] ";
     }
+    {
+      static bool thread = getenv("GD_THREAD");
+      if (thread)
+        std::cerr << "[" << boost::this_thread
+::get_id() << "] ";
+    }
     color(c);
     for (unsigned i = 0; i < indent_; ++i)
       std::cerr << " ";
