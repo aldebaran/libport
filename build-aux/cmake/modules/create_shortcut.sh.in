@@ -123,5 +123,5 @@ fi
 
 if $FILE_ASSOC_ENABLE; then
   run ".urm file MIME registration" xdg-mime $TYPE $MIME_XML
-  run ".urm file MIME association" xdg-mime default $DESKTOP_FILE $MIME
+  run ".urm file MIME association" xdg-mime default @STGZ_XDG_FILENAME@.desktop $MIME
 fi
