@@ -57,8 +57,10 @@ namespace libport
       std::cerr << program_name << ": cannot open `"
                 << s << "' for reading: " << strerror(errno) << std::endl
                 << libport::exit(EX_NOINPUT);
+    // FIXME: The call to boost::get() below can be omitted when Boost 1.36.0
+    // or later is available, by initializing res with "initialized_value".
     boost::value_initialized<T> res;
-    i >> res;
+    i >> boost::get(res);
     if (i.bad())
       std::cerr << program_name << ": cannot read expected contents from `"
                 << s << "': " << strerror(errno) << std::endl
