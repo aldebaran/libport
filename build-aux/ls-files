@@ -58,7 +58,7 @@ getopt ()
       (-h | --help)   usage;;
       (-s | --srcdir) srcdir=$2; shift;;
       (-*)  fatal "unexpected option: $1";;
-      (*)   args="$args $1";;
+      (*)   args="$args '$1'";;
     esac
     shift
   done
@@ -73,6 +73,10 @@ trap 'exit 1' 1 2 13 15
 args=
 srcdir=.
 getopt "$@"
+# $args contains the patterns.
+eval "set x $args"
+shift
+
 cd "$srcdir"
 
 # It's not clear how to make the difference bw a globbing pattern that
@@ -81,7 +85,7 @@ cd "$srcdir"
 # here via "ls-files".
 if test "${FORCE_FIND+set}" != set \
     && git ls-files | grep . >/dev/null 2>&1; then
-  git ls-files "$args" >$tmp
+  git ls-files "$@" >$tmp
 else
   # Cannot use git, let's use shell globbing.  But it must be "deep":
   # "git ls-files *.c" and "git ls-files foo/*.c" can return
@@ -108,10 +112,10 @@ else
 fi
 
 test -s $tmp ||
-  echo "$args" >$tmp
+  echo "$@" >$tmp
 
 if test -n "$VERBOSE"; then
-  stderr "returning:" $(cat $tmp)
+  stderr "returning:" "$(cat $tmp)"
 fi
 cat $tmp
 
