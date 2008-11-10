@@ -57,7 +57,7 @@ getopt ()
 {
   while test $# -ne 0; do
     case $1 in
-	--*=*)
+       (--*=*)
 	    opt=$(echo "$1" | sed -e 's/=.*//')
 	    val=$(echo "$1" | sed -e 's/[^=]*=//')
 	    shift

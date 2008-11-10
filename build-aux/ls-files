@@ -1,0 +1,118 @@
+#! /bin/sh
+
+set -e
+case $VERBOSE in (x) set -x;; esac
+
+me=$(basename "$0")
+
+stderr ()
+{
+  local i
+  for i
+  do
+    echo >&2 "$me: $i"
+  done
+}
+
+fatal ()
+{
+  stderr "$@"
+  exit 1
+}
+
+usage ()
+{
+  cat <<EOF
+Usage: $0 [OPTIONS...]
+
+Simulate the execution of \`git ls-files' using the files that are
+currently there instead of relying on the git repository if there is
+none.  Contrary to \`git ls-files', when a pattern fails to match,
+return the pattern itself instead of nothing.  This is useful when
+running `make check TESTS=no-yet-git-added.chk'.
+
+Options:
+  -h, --help         display this message and exit
+  -s, --srcdir=DIR   location of the top srcdir
+                     used to locate the Git repository if in use
+
+If FORCE_FIND is defined, \`git' is not even tried, \`find' is used.
+EOF
+  exit 0
+}
+
+getopt ()
+{
+  while test $# -ne 0; do
+    case $1 in
+        (--*=*)
+	    opt=$(echo "$1" | sed -e 's/=.*//')
+	    val=$(echo "$1" | sed -e 's/[^=]*=//')
+	    shift
+	    set dummy "$opt" "$val" ${1+"$@"};
+	    shift
+	    ;;
+    esac
+
+    case $1 in
+      (-h | --help)   usage;;
+      (-s | --srcdir) srcdir=$2; shift;;
+      (-*)  fatal "unexpected option: $1";;
+      (*)   args="$args $1";;
+    esac
+    shift
+  done
+}
+
+
+: ${TMPDIR=/tmp}
+tmp=${TMPDIR}/$me.$$
+trap 'exit_status=$? && rm -f $tmp && exit $exit_status' 0
+trap 'exit 1' 1 2 13 15
+
+args=
+srcdir=.
+getopt "$@"
+cd "$srcdir"
+
+# It's not clear how to make the difference bw a globbing pattern that
+# produces nothing, and the fact that we are not in a repo.  We check
+# if we are in a repo by checking that there are files in the repo
+# here via "ls-files".
+if test "${FORCE_FIND+set}" != set \
+    && git ls-files | grep . >/dev/null 2>&1; then
+  git ls-files "$args" >$tmp
+else
+  # Cannot use git, let's use shell globbing.  But it must be "deep":
+  # "git ls-files *.c" and "git ls-files foo/*.c" can return
+  # foo/bar/baz.c.
+  find=
+  sep="find ."
+  for pattern
+  do
+    # `find . -path foo/bar' does not find foo/bar because its full
+    # name is ./foo/bar.  `find . -path ./foo/bar' does, and so does
+    # `find . -path "*foo/bar"'.  Using the latter gives unexpected
+    # matches (e.g., when we look for uob/*.chk, we don't want to
+    # catch 1.-/uob/*.chk).  So prefix with "./".  There should not be
+    # absolute path given as argument, so prepend "./" should be
+    # harmless.
+    find="$find$sep -path './$pattern'"
+    sep=" -or"
+  done
+
+  stderr "running $find"
+  # Git does not prefix by "./".
+  # It sorts, and does not issue duplicates.
+  eval "$find" | sed -e 's,^\./,,g' | sort -u >$tmp
+fi
+
+test -s $tmp ||
+  echo "$args" >$tmp
+
+if test -n "$VERBOSE"; then
+  stderr "returning:" $(cat $tmp)
+fi
+cat $tmp
+
+exit 0
