@@ -102,8 +102,9 @@ fatal ()
   # the prototypes of fatal and error: the first argument is unlikely
   # to be integer.
   case $[1] in
-    ([!0-9]) ;;
-    (*)  stderr "warning: possible confusion between fatal and error";;
+    (*[[!0-9]]*|'') ;;
+    (*)  stderr "warning: possible confusion between fatal and error" \
+                "fatal $[*]";;
   esac
 
   error 1 "$[@]"
