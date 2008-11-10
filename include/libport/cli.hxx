@@ -41,6 +41,14 @@ namespace libport
 
   template<typename T>
   T
+  convert_argument(const cli_args_type& args, unsigned i)
+  {
+    return convert_argument<T>(args[i],
+                               i + 1 < args.size() ? args[i + 1].c_str() : 0);
+  }
+
+  template<typename T>
+  T
   convert_envvar(const std::string& envvar)
   {
     return convert_argument<T>(std::string("$") + envvar,

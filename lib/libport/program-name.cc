@@ -2,6 +2,6 @@
 namespace libport
 {
 
-  LIBPORT_API const char* program_name = "";
+  LIBPORT_API std::string program_name = "";
 
 }

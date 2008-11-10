@@ -1,6 +1,7 @@
 #ifndef LIBPORT_CLI_HH
 # define LIBPORT_CLI_HH
 
+# include <vector>
 # include <string>
 # include <libport/compiler.hh>
 # include <libport/export.hh>
@@ -10,6 +11,9 @@
 
 namespace libport
 {
+  /// Command line arguments.
+  typedef std::vector<std::string> cli_args_type;
+
   LIBPORT_API ATTRIBUTE_NORETURN
   void usage_error(const std::string& opt, const std::string& err);
 
@@ -28,7 +32,13 @@ namespace libport
   /// Can be used on with T = const char* to simply require that \a arg
   /// is nonnull.
   template<typename T>
-  T convert_argument(const std::string& opt, const std::string& arg);
+  T convert_argument(const std::string& opt, const char* arg);
+
+  /// Same but in C++.
+  /// \param args     argv/argc as a C++ object.
+  /// \param optind   index of the option (argument is expected at optind+1).
+  template<typename T>
+  T convert_argument(const cli_args_type& args, unsigned optind);
 
   /// Convert the value contained in \a envvar to a \a T.
   /// \precondition getenv(envvar).
