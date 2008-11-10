@@ -32,7 +32,7 @@ namespace libport
 
   template<> inline
   const char *
-  convert_argument<>(const std::string& opt, const char* arg)
+  convert_argument<const char*>(const std::string& opt, const char* arg)
   {
     if (!arg)
       required_argument(opt);
@@ -45,6 +45,15 @@ namespace libport
   {
     return convert_argument<T>(args[i],
                                i + 1 < args.size() ? args[i + 1].c_str() : 0);
+  }
+
+  template<> inline
+  const std::string&
+  convert_argument<const std::string&>(const cli_args_type& args, unsigned i)
+  {
+    if (! (i + 1 < args.size()))
+      required_argument(args[i]);
+    return args[i+1];
   }
 
   template<typename T>
