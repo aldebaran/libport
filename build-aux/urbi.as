@@ -106,18 +106,18 @@ find_top_builddir ()
 find_urbi_server ()
 {
   case $URBI_SERVER in
-    '')
+    ('')
        # If URBI_SERVER is not defined, try to find one.  If we are in
        # $top_builddir/tests/TEST.dir, then look in $top_builddir/src.
        URBI_SERVER=$(find_prog "urbi-server" \
 			       "$top_builddir/src${PATH_SEPARATOR}.")
        ;;
 
-    *[[\\/]]* ) # A path, relative or absolute.  Make it absolute.
+    (*[[\\/]]*) # A path, relative or absolute.  Make it absolute.
        URBI_SERVER=$(absolute "$URBI_SERVER")
        ;;
 
-    *) # A simple name, most certainly urbi-server.
+    (*) # A simple name, most certainly urbi-server.
        # Find it in the PATH.
        local res
        res=$(find_prog "$URBI_SERVER" "$PATH")
