@@ -142,4 +142,33 @@ find_urbi_server ()
     fatal "cannot run $URBI_SERVER --version"
   fi
 }
+
+
+# spawn_urbi_server FLAGS
+# -----------------------
+# Spawn an $URBI_SERVER in back-ground, registering it as the child "server".
+# Wait until the server.port file is created.  Make it fatal if this does
+# not happen with 10s.
+spawn_urbi_server ()
+{
+  rm -f server.port
+  local flags="--port 0 --port-file server.port $*"
+  local cmd="$(instrument "server.val") $URBI_SERVER $flags"
+  echo "$cmd" >server.cmd
+  $cmd </dev/null >server.out 2>server.err &
+  children_register server
+
+  # Wait for the port file to be completed: it must have one full line
+  # (with \n to be sure it is complete).
+  local i=0
+  local imax=10
+  while test ! -f server.port || test $(wc -l <server.port) = 0;
+  do
+    if test $i = $imax; then
+      fatal "$URBI_SERVER did not issue port in server.port in $(my_sleep_duration $imax)s"
+    fi
+    sleep 1
+    i=$(($i + 1))
+  done
+}
 ])
