@@ -120,7 +120,7 @@ find_urbi_server ()
     (*) # A simple name, most certainly urbi-server.
        # Find it in the PATH.
        local res
-       res=$(find_prog "$URBI_SERVER" "$PATH")
+       res=$(find_prog "$URBI_SERVER")
        # If we can't find it, then ucore-pc was probably not installed.
        # Skip.
        test x"$res" != x ||

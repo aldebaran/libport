@@ -62,10 +62,28 @@ m4_defun([_URBI_FIND_PROG_PREPARE],
 # nothing if not found.
 find_prog ()
 {
-  _AS_PATH_WALK([$[2]],
+  local path=$PATH
+  test -z "$[2]" || path=$[2]
+
+  _AS_PATH_WALK([$path],
                 [AS_IF([AS_TEST_X([$as_dir/$[1]])],
                        [echo "$as_dir/$[1]"; break])])
 }
+
+# xfind_prog PROG PATH
+# --------------------
+# Same as xfind_prog, but don't take "no" for an answer.
+xfind_prog ()
+{
+  local path=$PATH
+  test -z "$[2]" || path=$[2]
+  local res
+  res=$(find_prog "$[1]" "$path")
+  test -n "$res" ||
+    error OSFILE "cannot find $[1] in $path"
+  echo "$res"
+}
+
 ])
 
 
