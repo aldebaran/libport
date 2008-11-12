@@ -24,7 +24,7 @@ set x $library_names
 shift
 echo >&2 "$0: libnames: $@"
 case $1:$2 in
-    *.dll:*.lib)
+    (*.dll:*.lib)
 	library_names=$1
 	old_library=$2
 	tmpfile=$lafile.tmp
@@ -33,8 +33,6 @@ case $1:$2 in
 	    > "$tmpfile"
 	touch --reference="$lafile" "$tmpfile"
 	mv "$tmpfile" "$lafile"
-	;;
-    *)
 	;;
 esac
 
