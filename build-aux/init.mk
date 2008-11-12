@@ -35,6 +35,7 @@ LDADD = $(AM_LDADD)
 
 nodist_bin_SCRIPTS =
 nodist_check_SCRIPTS =
+nodist_noinst_SCRIPTS =
 dist_bin_SCRIPTS =
 
 bin_PROGRAMS =
