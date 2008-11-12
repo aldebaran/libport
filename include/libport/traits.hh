@@ -1,7 +1,7 @@
 #ifndef LIBPORT_TRAITS_HH
 # define LIBPORT_TRAITS_HH
 
-# include <libport/shared-ptr.hh>
+# include <libport/intrusive-ptr.hh>
 
 namespace libport
 {
@@ -46,7 +46,7 @@ namespace libport
     template <typename T>
     struct SharedPtr
     {
-      typedef typename libport::shared_ptr<T> res;
+      typedef typename libport::intrusive_ptr<T> res;
     };
 
     template <typename T>

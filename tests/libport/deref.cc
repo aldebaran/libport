@@ -6,7 +6,6 @@
 #include <boost/shared_ptr.hpp>
 #include <libport/deref.hh>
 #include <libport/unit-test.hh>
-#include <libport/shared-ptr.hh>
 
 using libport::test_suite;
 

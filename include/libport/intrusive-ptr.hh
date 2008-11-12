@@ -1,10 +1,10 @@
 /**
- ** \file libport/shared-ptr.hh
- ** \brief Declaration of libport::shared_ptr.
+ ** \file libport/intrusive-ptr.hh
+ ** \brief Declaration of libport::intrusive_ptr.
  **/
 
-#ifndef LIBPORT_SHARED_PTR_HH
-# define LIBPORT_SHARED_PTR_HH
+#ifndef LIBPORT_INTRUSIVE_PTR_HH
+# define LIBPORT_INTRUSIVE_PTR_HH
 
 # include <libport/config.h>
 # include <libport/meta.hh>
@@ -17,20 +17,20 @@
 namespace libport
 {
 
-  /** A shared_ptr wrapper.
+  /** A intrusive_ptr wrapper.
     *
     * This implementation is intrusive (storing the counter in the
     * object).  T must provide the counter_inc and counter_dec
     * methods. counter_dec must return false if the counter reaches 0.
     *
-    * It is safe to create multiple shared_ptr from the raw
+    * It is safe to create multiple intrusive_ptr from the raw
     * pointer. This implementation provides cast operators, and
     * implicit constructors.
     *
-    * Its API is a superset of the boost::shared_ptr one.
+    * Its API is a superset of the boost::intrusive_ptr one.
     */
   template <typename T>
-  class shared_ptr
+  class intrusive_ptr
   {
   public:
     typedef T element_type;
@@ -39,7 +39,7 @@ namespace libport
     /** \brief Construct a new reference to the value pointed to by \a other.
      ** The new reference shares the property of the object with \a other. */
     template <typename U>
-    shared_ptr (const shared_ptr<U>& other);
+    intrusive_ptr (const intrusive_ptr<U>& other);
 
     /** \brief Copy constructor.
      **
@@ -48,28 +48,28 @@ namespace libport
      ** signature.  Otherwise, the compiler will provide a default
      ** implementation, which is of course wrong.  Note that the
      ** same applies for the assignment operator. */
-    shared_ptr (const shared_ptr<T>& other);
+    intrusive_ptr (const intrusive_ptr<T>& other);
 
     /** \brief Construct a counted reference to a newly allocated object.
      ** The new reference takes the property of the object pointed to
      ** by \a p.  If \a p is NULL, then the reference is invalid and
      ** must be \c reset () before use. */
-    shared_ptr (T* p = 0);
+    intrusive_ptr (T* p = 0);
 
     /** \brief Destroy a reference.
      ** The object pointed to is destroyed iff it is not referenced anymore. */
-    ~shared_ptr ();
+    ~intrusive_ptr ();
     /// \}
 
     /// \name Assignment operators.
     /// \{
       // This one is required or an incorrect implicit default will be used.
-      shared_ptr& operator=(const shared_ptr<T>& other);
+      intrusive_ptr& operator=(const intrusive_ptr<T>& other);
       template <typename U>
-      shared_ptr& operator=(const shared_ptr<U>& other);
+      intrusive_ptr& operator=(const intrusive_ptr<U>& other);
 
       template <typename U>
-      shared_ptr& operator=(U* ptr);
+      intrusive_ptr& operator=(U* ptr);
     /// \}
 
     /// \name Equality operators.
@@ -79,14 +79,14 @@ namespace libport
      ** Returns true if this points to \a p. */
     bool operator== (const T* p) const;
 
-    bool operator== (const shared_ptr<T>& p) const;
-    bool operator!= (const shared_ptr<T>& p) const;
+    bool operator== (const intrusive_ptr<T>& p) const;
+    bool operator!= (const intrusive_ptr<T>& p) const;
 
     /** \brief Reference comparison.
      ** Returns false if this points to \a p. */
     bool operator!= (const T* p) const;
 
-    /// \brief bool cast operator to use the shared_ptr in boolean contexts.
+    /// \brief bool cast operator to use the intrusive_ptr in boolean contexts.
     operator bool() const;
     /// \}
 
@@ -97,18 +97,18 @@ namespace libport
      ** Return a new reference, possibly throwing an exception if the
      ** dynamic_cast is invalid.
      **/
-    template <typename U> shared_ptr<U> cast () const;
+    template <typename U> intrusive_ptr<U> cast () const;
 
     /** \brief Cast the reference, using a dynamic_cast (unsafe).
      ** Return a new reference, possibly a NULL reference if the
      ** dynamic_cast is invalid.
      **/
-    template <typename U> shared_ptr<U> unsafe_cast () const;
+    template <typename U> intrusive_ptr<U> unsafe_cast () const;
     /// \}
 
     /** \brief Cast the reference, using a static_cast.
      **/
-    template <typename U> shared_ptr<U> unchecked_cast () const;
+    template <typename U> intrusive_ptr<U> unchecked_cast () const;
     /// \}
 
     /** \brief Test fellowship.
@@ -118,7 +118,7 @@ namespace libport
     template <typename U> bool is_a () const;
 
 
-    /// \name boost::shared_ptr API.
+    /// \name boost::intrusive_ptr API.
     /// \{
       /// Get the underlying pointee.
       T* get() const;
@@ -148,12 +148,12 @@ namespace libport
   /// For boost::mem_fn (and boost::bind) use.
   template<typename T>
   T*
-  get_pointer(const shared_ptr<T>&);
+  get_pointer(const intrusive_ptr<T>&);
 
   /// Simple wrapper to spare the explicit instantiation parameters.
   template <typename T>
-  shared_ptr<T>
-  make_shared_ptr(T* t);
+  intrusive_ptr<T>
+  make_intrusive_ptr(T* t);
 
   /// A more traditional syntax.
   ///
@@ -162,11 +162,11 @@ namespace libport
   /// variable in between), but accepts
   /// "libport::unsafe_cast<T>(children_->back())".
   template <typename U, typename T>
-  shared_ptr<U>
-  unsafe_cast(const shared_ptr<T>& p);
+  intrusive_ptr<U>
+  unsafe_cast(const intrusive_ptr<T>& p);
 
 }
 
-#  include <libport/shared-ptr.hxx>
+#  include <libport/intrusive-ptr.hxx>
 
-#endif // !LIBPORT_SHARED_PTR_HH
+#endif // !LIBPORT_INTRUSIVE_PTR_HH

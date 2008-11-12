@@ -1,5 +1,5 @@
 /**
- ** \file libport/shared-ptr.hxx
+ ** \file libport/weak-ptr.hxx
  ** \brief Implementation of libport::weak_ptr.
  **/
 

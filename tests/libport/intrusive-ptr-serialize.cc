@@ -1,5 +1,5 @@
 /**
- ** Test code for libport/shared-ptr.hh features.
+ ** Test code for libport/intrusive-ptr.hh features.
  */
 
 #include <iostream>
@@ -10,7 +10,7 @@
 #include <boost/serialization/export.hpp>
 
 #include <libport/ref-counted.hh>
-#include <libport/shared-ptr.hh>
+#include <libport/intrusive-ptr.hh>
 
 static int ninstances;
 
@@ -26,7 +26,7 @@ struct Counted : libport::RefCounted
     ar & val;
   }
 };
-typedef libport::shared_ptr<Counted> rCounted;
+typedef libport::intrusive_ptr<Counted> rCounted;
 BOOST_CLASS_TRACKING(rCounted, boost::serialization::track_never)
 
 int

@@ -1,13 +1,13 @@
 /**
- ** Test code for libport/shared-ptr.hh features.
+ ** Test code for libport/intrusive-ptr.hh features.
  */
 
 #include <libport/ref-counted.hh>
-#include <libport/shared-ptr.hh>
+#include <libport/intrusive-ptr.hh>
 
 #define INSTANCES(N) assert(Counted::instances == N)
 
-using libport::shared_ptr;
+using libport::intrusive_ptr;
 
 struct Counted : libport::RefCounted
 {
@@ -22,8 +22,8 @@ struct SubCounted : Counted
 
 unsigned Counted::instances;
 
-typedef shared_ptr<Counted> rCounted;
-typedef shared_ptr<SubCounted> rSubCounted;
+typedef intrusive_ptr<Counted> rCounted;
+typedef intrusive_ptr<SubCounted> rSubCounted;
 
 int
 main ()

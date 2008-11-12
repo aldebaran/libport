@@ -1,7 +1,7 @@
 #ifndef LIBPORT_DESTRUCTIBLE_HH
 # define LIBPORT_DESTRUCTIBLE_HH
 
-# include <libport/shared-ptr.hh>
+# include <libport/intrusive-ptr.hh>
 
 namespace libport
 {
@@ -28,7 +28,7 @@ namespace libport
       Destructible& parent_;
     };
 
-    typedef libport::shared_ptr<Lock, true> DestructionLock;
+    typedef libport::intrusive_ptr<Lock> DestructionLock;
 
     Destructible();
 

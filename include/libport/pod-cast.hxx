@@ -5,7 +5,7 @@
 # define LIBPORT_POD_CAST_HXX
 
 #include <libport/pod-cast.hh>
-#include <libport/shared-ptr.hh>
+#include <libport/intrusive-ptr.hh>
 
 namespace libport
 {
@@ -20,14 +20,14 @@ namespace libport
   };
 
   template <typename T>
-  struct SpecialActions<libport::shared_ptr<T> >
+  struct SpecialActions<libport::intrusive_ptr<T> >
   {
-      static inline void onWrite(const libport::shared_ptr<T>& p)
+      static inline void onWrite(const libport::intrusive_ptr<T>& p)
       {
         if (p)
           p->counter_inc();
       }
-      static inline void onRead(const libport::shared_ptr<T>& /*p*/)
+      static inline void onRead(const libport::intrusive_ptr<T>& /*p*/)
       {
         // FIXME: This imposes very strict and carefull use of the
         // pod. One and only one read must be performed

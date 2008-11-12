@@ -33,7 +33,7 @@ class libport::Lockable and macro BLOCKED.
 Same as std::pair, but with support for operator<<.
 
 ** ref-pt.hh
-libport::RefPt, ref counted pointers.  Prefer libport::shared_ptr from
+libport::RefPt, ref counted pointers.  Prefer libport::intrusive_ptr from
 now on.
 
 ** semaphore.hh.
@@ -42,10 +42,8 @@ class libport::Semaphore.
 ** separator.hh.
 Output the content of containers with a separator between items.
 
-** shared-ptr.hh
-libport::shared_ptr<T> ref-counted pointers on top of
-boost::shared_ptr.
-Can be disabled with NO_BOOST.
+** intrusive-ptr.hh
+libport::intrusive_ptr<T> ref-counted pointers with intrusive counters.
 
 ** singleton-ptr.hh
 Macros STATIC_INSTANCE(Cl, Name), EXTERN_STATIC_INSTANCE(Cl, Name).

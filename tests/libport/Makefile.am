@@ -22,7 +22,7 @@ TESTS =						\
   has_if.cc					\
   indent.cc					\
   separator.cc					\
-  shared-ptr-intrusive.cc			\
+  intrusive-ptr.cc				\
   statistics.cc					\
   timer.cc					\
   unescape.cc					\
@@ -33,7 +33,7 @@ TESTS =						\
 # ufloat-float.cc
 
 if WITH_BOOST_SERIALIZATION
-TESTS += shared-ptr-serialize.cc
+TESTS += intrusive-ptr-serialize.cc
 endif
 # Tabulation does not seem to work: doesn't even compile.
 #ufloat-float-tab.cc				\
@@ -70,8 +70,8 @@ finally_SOURCES				= finally.cc
 has_if_SOURCES				= has_if.cc
 indent_SOURCES				= indent.cc
 separator_SOURCES			= separator.cc
-shared_ptr_intrusive_SOURCES		= shared-ptr-intrusive.cc
-shared_ptr_serialize_SOURCES		= shared-ptr-serialize.cc
+intrusive_ptr_SOURCES			= intrusive-ptr.cc
+intrusive_ptr_serialize_SOURCES		= intrusive-ptr-serialize.cc
 statistics_SOURCES			= statistics.cc
 timer_SOURCES				= timer.cc
 unescape_SOURCES			= unescape.cc

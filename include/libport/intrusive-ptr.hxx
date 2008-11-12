@@ -1,65 +1,63 @@
 /**
- ** \file libport/shared-ptr.hxx
- ** \brief Implementation of libport::boost_shared_ptr.
+ ** \file libport/intrusive-ptr.hxx
+ ** \brief Implementation of libport::intrusive_ptr.
  **/
 
-#ifndef LIBPORT_BOOST_SHARED_PTR_HXX
-# define LIBPORT_BOOST_SHARED_PTR_HXX
+#ifndef LIBPORT_BOOST_INTRUSIVE_PTR_HXX
+# define LIBPORT_BOOST_INTRUSIVE_PTR_HXX
 
 # include <cassert>
 # include <typeinfo>
-
-# include <libport/shared-ptr.hh>
 
 namespace libport
 {
   template <typename T>
   template <typename U>
-  shared_ptr<T>::shared_ptr(const shared_ptr<U>& other)
+  intrusive_ptr<T>::intrusive_ptr(const intrusive_ptr<U>& other)
     :pointee_(0)
   {
     (*this) = other;
   }
   template <typename T>
-  shared_ptr<T>::shared_ptr(const shared_ptr<T>& other)
+  intrusive_ptr<T>::intrusive_ptr(const intrusive_ptr<T>& other)
     :pointee_(0)
   {
     (*this) = other;
   }
   template <typename T>
-  shared_ptr<T>::shared_ptr (T* p)
+  intrusive_ptr<T>::intrusive_ptr (T* p)
   :pointee_(0)
   {
     (*this) = p;
   }
 
   template <typename T>
-  shared_ptr<T>::~shared_ptr()
+  intrusive_ptr<T>::~intrusive_ptr()
   {
-    // This cast is required, or the compiler uses the shared_ptr ctor,
+    // This cast is required, or the compiler uses the intrusive_ptr ctor,
     // leading to an infinite loop.
     (*this) = (T*)0;
   }
 
   template <typename T>
   template <typename U>
-  shared_ptr<T>&
-  shared_ptr<T>::operator = (const shared_ptr<U>& other)
+  intrusive_ptr<T>&
+  intrusive_ptr<T>::operator = (const intrusive_ptr<U>& other)
   {
     return (*this) = other.get();
   }
 
   template <typename T>
-  shared_ptr<T>&
-  shared_ptr<T>::operator = (const shared_ptr<T>& other)
+  intrusive_ptr<T>&
+  intrusive_ptr<T>::operator = (const intrusive_ptr<T>& other)
   {
     return (*this) = other.get();
   }
 
   template <typename T>
   template <typename U>
-  shared_ptr<T>&
-  shared_ptr<T>::operator = (U* other)
+  intrusive_ptr<T>&
+  intrusive_ptr<T>::operator = (U* other)
   {
     // This is the only place where the counter is used.
     if (pointee_ != other)
@@ -77,32 +75,32 @@ namespace libport
   }
 
   template <typename T> bool
-  shared_ptr<T>::operator == (const T* p) const
+  intrusive_ptr<T>::operator == (const T* p) const
   {
     return pointee_ == p;
   }
 
   template <typename T> bool
-  shared_ptr<T>::operator == (const shared_ptr<T> &p) const
+  intrusive_ptr<T>::operator == (const intrusive_ptr<T> &p) const
   {
     return pointee_ == p.get();
   }
 
   template <typename T> bool
-  shared_ptr<T>::operator != (const shared_ptr<T> &p) const
+  intrusive_ptr<T>::operator != (const intrusive_ptr<T> &p) const
   {
     return pointee_ != p.get();
   }
   template <typename T> bool
-  shared_ptr<T>::operator != (const T* p) const
+  intrusive_ptr<T>::operator != (const T* p) const
   {
     return pointee_ != p;
   }
 
   template <typename T>
   template <typename U>
-  shared_ptr<U>
-  shared_ptr<T>::cast() const
+  intrusive_ptr<U>
+  intrusive_ptr<T>::cast() const
   {
     U* ptr = dynamic_cast<U*>(pointee_);
     if (!ptr)
@@ -112,8 +110,8 @@ namespace libport
 
   template <typename T>
   template <typename U>
-  shared_ptr<U>
-  shared_ptr<T>::unsafe_cast() const
+  intrusive_ptr<U>
+  intrusive_ptr<T>::unsafe_cast() const
   {
     U* ptr = dynamic_cast<U*>(pointee_);
     return ptr;
@@ -122,8 +120,8 @@ namespace libport
   template <typename T>
   template <typename U>
   inline
-  shared_ptr<U>
-  shared_ptr<T>::unchecked_cast() const
+  intrusive_ptr<U>
+  intrusive_ptr<T>::unchecked_cast() const
   {
     assert(dynamic_cast<U*>(pointee_));
     return static_cast<U*>(pointee_);
@@ -132,21 +130,21 @@ namespace libport
   template <typename T>
   template <typename U>
   bool
-  shared_ptr<T>::is_a () const
+  intrusive_ptr<T>::is_a () const
   {
     return dynamic_cast<U*> (pointee_);
   }
 
   template <typename T>
   T*
-  shared_ptr<T>::get() const
+  intrusive_ptr<T>::get() const
   {
     return pointee_;
   }
 
   template <typename T>
   T*
-  shared_ptr<T>::operator->() const
+  intrusive_ptr<T>::operator->() const
   {
     assert(pointee_);
     return pointee_;
@@ -154,20 +152,20 @@ namespace libport
 
   template <typename T>
   T&
-  shared_ptr<T>::operator*() const
+  intrusive_ptr<T>::operator*() const
   {
     return *pointee_;
   }
 
   template <typename T>
   void
-  shared_ptr<T>::reset()
+  intrusive_ptr<T>::reset()
   {
     (*this) = 0;
   }
 
   template <typename T>
-  shared_ptr<T>::operator bool() const
+  intrusive_ptr<T>::operator bool() const
   {
     return pointee_;
   }
@@ -176,7 +174,7 @@ namespace libport
   template <typename T>
   template <typename Archive>
   void
-  shared_ptr<T>::save(Archive& ar, const unsigned int /* version */) const
+  intrusive_ptr<T>::save(Archive& ar, const unsigned int /* version */) const
   {
     ar & pointee_;
   }
@@ -184,7 +182,7 @@ namespace libport
   template <typename T>
   template <typename Archive>
   void
-  shared_ptr<T>::load(Archive& ar, const unsigned int /* version */)
+  intrusive_ptr<T>::load(Archive& ar, const unsigned int /* version */)
   {
     if (pointee_)
       pointee_->counter_dec();
@@ -196,7 +194,7 @@ namespace libport
   template <typename T>
   template <typename Archive>
   void
-  shared_ptr<T>::serialize(Archive& ar, const unsigned int version)
+  intrusive_ptr<T>::serialize(Archive& ar, const unsigned int version)
   {
     boost::serialization::split_member(ar, *this, version);
   }
@@ -208,25 +206,25 @@ namespace libport
 
   template <typename T>
   T*
-  get_pointer(const shared_ptr<T>& p)
+  get_pointer(const intrusive_ptr<T>& p)
   {
     return p.get();
   }
 
   template <typename T>
-  shared_ptr<T>
-  make_shared_ptr(T* t)
+  intrusive_ptr<T>
+  make_intrusive_ptr(T* t)
   {
-    return shared_ptr<T> (t);
+    return intrusive_ptr<T> (t);
   }
 
   template <typename U, typename T>
-  shared_ptr<U>
-  unsafe_cast(const shared_ptr<T>& p)
+  intrusive_ptr<U>
+  unsafe_cast(const intrusive_ptr<T>& p)
   {
     return p.unsafe_cast<U>();
   }
 
 }
 
-#endif // !LIBPORT_BOOST_SHARED_PTR_HXX
+#endif // !LIBPORT_BOOST_INTRUSIVE_PTR_HXX

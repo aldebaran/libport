@@ -67,6 +67,8 @@ libport_include_HEADERS +=			\
   $(include_libport)/indent.hh			\
   $(include_libport)/instance-tracker.hh	\
   $(include_libport)/instance-tracker.hxx	\
+  $(include_libport)/intrusive-ptr.hh		\
+  $(include_libport)/intrusive-ptr.hxx		\
   $(include_libport)/lexical-cast.hh		\
   $(include_libport)/lockable.hh		\
   $(include_libport)/netdb.h			\
@@ -95,8 +97,6 @@ libport_include_HEADERS +=			\
   $(include_libport)/semaphore.hxx		\
   $(include_libport)/separator.hh		\
   $(include_libport)/separator.hxx		\
-  $(include_libport)/shared-ptr.hh		\
-  $(include_libport)/shared-ptr.hxx		\
   $(include_libport)/singleton-ptr.hh		\
   $(include_libport)/statistics.hh		\
   $(include_libport)/statistics.hxx		\

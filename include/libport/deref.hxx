@@ -42,7 +42,7 @@ namespace libport
 
   template <typename T>
   std::ostream&
-  Deref::operator<< (const shared_ptr<T>& t) const
+  Deref::operator<< (const intrusive_ptr<T>& t) const
   {
     return operator <<(t.get());
   }
