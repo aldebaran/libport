@@ -51,6 +51,7 @@ namespace libport
   class Socket: public AsioDestructible
   {
     public:
+      Socket(): base_(0){}
       virtual ~Socket();
       /** Set underlying BaseSocket object, setup its callbacks to call our virtual functions.
        */
@@ -74,8 +75,8 @@ namespace libport
       { base_->write(data, length);}
       /// Alias on write() for API compatibility.
       inline void send(void* addr, int len) {write((const void*)addr, len);}
-      inline void close() {base_->close();}
-      inline bool isConnected() {return base_->isConnected();}
+      inline void close() {if (base_) base_->close();}
+      inline bool isConnected() {return base_?base_->isConnected():false;}
 
       boost::system::error_code connect(const std::string& host,
 	  const std::string& port, bool udp=false);
@@ -86,7 +87,7 @@ namespace libport
       static Handle listen(SocketFactory f, const std::string& host,
 	  const std::string& port, boost::system::error_code & erc,
           bool udp = false);
-
+#ifndef LIBPORT_NO_SSL
       static Handle listenSSL(SocketFactory f, const std::string& host,
 	  const std::string&  port,
 	  boost::system::error_code& erc,
@@ -98,7 +99,7 @@ namespace libport
 	  const std::string& certChainFile = "",
 	  const std::string& tmpDHFile = "" ,
 	  const std::string& cipherList = "");
-
+#endif
     protected:
       bool onRead_(boost::asio::streambuf&);
       std::string buffer;
