@@ -101,27 +101,23 @@ init_var()
 
 ## Main code
 init_var DESKTOP_ENABLE "@STGZ_SHORTCUTS_DESKTOP@"
-init_var MENU_ENABLE "@STGZ_SHORTCUTS_MENU@"
-init_var FILE_ASSOC_ENABLE "@STGZ_SHORTCUTS_FILE_EXTENSION@"
+init_var MENU_AND_FILE_ASSOC_ENABLE "@STGZ_SHORTCUTS_MENU@"
 
 if test "x$TYPE" = "xinstall"
 then
   ask DESKTOP_ENABLE "create a desktop shortcut"
-  ask MENU_ENABLE "create a menu shortcut"
-  ask FILE_ASSOC_ENABLE "open .@STGZ_SHORTCUTS_FILE_EXTENSION@ files with @PROJECT_LONGNAME@"
+  ask MENU_AND_FILE_ASSOC_ENABLE \
+      "create a menu shortcut and open .@STGZ_SHORTCUTS_FILE_EXTENSION@ files with @PROJECT_LONGNAME@"
 fi
 
-if $DESKTOP_ENABLE && $MENU_ENABLE; then
+if $DESKTOP_ENABLE || $MENU_AND_FILE_ASSOC_ENABLE; then
   run "icon" xdg-icon-resource $TYPE --size 48 $DESKTOP_ICON @STGZ_XDG_FILENAME@
 fi
 if $DESKTOP_ENABLE; then
   run "Desktop icon" xdg-desktop-icon $TYPE $DESKTOP_FILE
 fi
-if $MENU_ENABLE; then
+if $MENU_AND_FILE_ASSOC_ENABLE; then
   run "menu item" xdg-desktop-menu $TYPE $DESKTOP_FILE
-fi
-
-if $FILE_ASSOC_ENABLE; then
   run ".@STGZ_SHORTCUTS_FILE_EXTENSION@ file MIME registration" xdg-mime $TYPE $MIME_XML
   run ".@STGZ_SHORTCUTS_FILE_EXTENSION@ file MIME association" xdg-mime default @STGZ_XDG_FILENAME@.desktop $MIME
 fi
