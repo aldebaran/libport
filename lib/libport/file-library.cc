@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <iostream>
 
+#include <libport/detect-win32.h>
 #include <libport/config.h>
 
 #ifdef LIBPORT_HAVE_DIRECT_H
@@ -68,6 +69,7 @@ namespace libport
       strings_type res;
       foreach (const std::string& s, make_tokenizer(lib, sep))
       {
+#ifdef WIN32
         // In case we split "c:\foo" into "c" and "\foo", glue them
         // together again.
 	if (split_on_colon
@@ -76,6 +78,7 @@ namespace libport
             && res.back().length() == 1)
 	  res.back() += ':' + s;
 	else
+#endif
 	  res.push_back(s);
       }
       return res;
