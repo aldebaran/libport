@@ -24,14 +24,12 @@ case $shrext_cmds in
      #   shrext_cmds='`test .$module = .yes && echo .so || echo .dylib`'
      # that depends on $module which is a runtime value.
      # Currently, we use only *.dylib on OSX.
-     SHLIBEXT=.dylib;;
+     SHLIBEXT=.so;;
   (*)
      AC_MSG_WARN([unexpected \$shlibext_cmds: $shlibext_cmds])
      SHLIBEXT=$shrext_cmds;;
 esac
 AC_SUBST([SHLIBEXT])
-AC_DEFINE_UNQUOTED([SHLIBEXT], ["$SHLIBEXT"],
-                   [The shared library extension.])
 AC_MSG_RESULT([$SHLIBEXT])
 ])
 
