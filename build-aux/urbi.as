@@ -165,7 +165,7 @@ spawn_urbi_server ()
   while test ! -f server.port || test $(wc -l <server.port) = 0;
   do
     if test $i = $imax; then
-      fatal "$URBI_SERVER did not issue port in server.port in $(my_sleep_duration $imax)s"
+      fatal "$URBI_SERVER did not issue port in server.port in ${imax}s"
     fi
     sleep 1
     i=$(($i + 1))
