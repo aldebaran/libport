@@ -293,6 +293,11 @@ case $VERBOSE in
 esac
 
 : ${abs_builddir='@abs_builddir@'}
+: ${abs_srcdir='@abs_srcdir@'}
 : ${abs_top_builddir='@abs_top_builddir@'}
 : ${abs_top_srcdir='@abs_top_srcdir@'}
+: ${builddir='@builddir@'}
+: ${srcdir='@srcdir@'}
+: ${top_builddir='@top_builddir@'}
+: ${top_srcdir='@top_srcdir@'}
 ])
