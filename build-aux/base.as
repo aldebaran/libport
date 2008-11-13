@@ -108,6 +108,16 @@ xfind_prog ()
   echo "$res"
 }
 
+# require_file FILE [HINT]
+# ------------------------
+require_file ()
+{
+  local file=$[1]
+  shift
+  test -f "$file" ||
+    fatal OSFILE "no such file: $file" "$[@]"
+}
+
 ])
 
 
