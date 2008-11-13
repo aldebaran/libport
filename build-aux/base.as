@@ -56,8 +56,32 @@ absolute ()
 
 
 m4_defun([_URBI_FIND_PROG_PREPARE],
-[# find_prog PROG PATH
+[# find_file FILE PATH
 # -------------------
+# Return full path to FILE in PATH ($PATH_SEPARATOR separated),
+# nothing if not found.
+find_prog ()
+{
+  _AS_PATH_WALK([$[2]],
+                [AS_IF([test -f $as_dir/$[1]],
+                       [echo "$as_dir/$[1]"; break])])
+}
+
+# xfind_file PROG PATH
+# --------------------
+# Same as xfind_prog, but don't take "no" for an answer.
+xfind_file ()
+{
+  local res
+  res=$(find_prog "$[1]" "$[2]")
+  test -n "$res" ||
+    error OSFILE "cannot find $[1] in $[2]"
+  echo "$res"
+}
+
+
+# find_prog PROG [PATH=$PATH]
+# ---------------------------
 # Return full path to PROG in PATH ($PATH_SEPARATOR separated),
 # nothing if not found.
 find_prog ()
@@ -70,8 +94,8 @@ find_prog ()
                        [echo "$as_dir/$[1]"; break])])
 }
 
-# xfind_prog PROG PATH
-# --------------------
+# xfind_prog PROG [PATH=$PATH]
+# ----------------------------
 # Same as xfind_prog, but don't take "no" for an answer.
 xfind_prog ()
 {
@@ -80,7 +104,7 @@ xfind_prog ()
   local res
   res=$(find_prog "$[1]" "$path")
   test -n "$res" ||
-    error OSFILE "cannot find $[1] in $path"
+    error OSFILE "cannot find executable $[1] in $path"
   echo "$res"
 }
 

@@ -51,6 +51,15 @@ run ()
 }
 
 
+# xrun TITLE COMMAND...
+# ---------------------
+# Same as run, but die on errors.
+xrun ()
+{
+  run "$[@]" ||
+    fatal "$[2] failed"
+}
+
 
 ## ------------------------------------------------- ##
 ## PID sets -- Lower layer for children management.  ##
