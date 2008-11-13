@@ -22,6 +22,8 @@ namespace libport
   {
   public:
 
+    typedef std::list<path> path_list_type;
+
     /// Exception thrown when a file cannot be located.
     class Not_found : public std::exception
     {};
@@ -77,6 +79,11 @@ namespace libport
     std::ostream& dump (std::ostream& ostr) const;
     /// \}
 
+    /// \name Accessor.
+    /// \{
+    const path_list_type& search_path_get() const;
+    /// \}
+
   private:
     /// Push the working directory on the stack.
     void push_cwd ();
@@ -90,8 +97,6 @@ namespace libport
     /** \brief Ensure that path is absolute by prepending current
 	directory if necessary */
     path ensure_absolute_path (const path& p) const;
-
-    typedef std::list<path> path_list_type;
 
     /// Inclusion path list.
     path_list_type search_path_;

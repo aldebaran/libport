@@ -20,6 +20,12 @@ namespace libport
     push_front(p);
   }
 
+  inline const file_library::path_list_type&
+  file_library::search_path_get() const
+  {
+    return search_path_;
+  }
+
   inline std::ostream&
   operator<< (std::ostream& ostr, const file_library& l)
   {
