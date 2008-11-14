@@ -381,6 +381,9 @@ namespace Network
 
   void startNetworkProcessingThread()
   {
+    static bool init = false;
+    assert (!init);
+    init = true;
     boost::thread networkThread(&processNetwork);
   }
 #endif // WITH_BOOST_THREADS

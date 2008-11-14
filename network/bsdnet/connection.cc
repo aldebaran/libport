@@ -55,9 +55,11 @@ Connection::dump(std::ostream& o) const
 void
 Connection::close()
 {
-  // Setting 'closing' to true tell the kernel not to use the
-  // connection any longer.
-  closing_ = true;
+  if (!closing_)
+  {
+    closing_ = true;
+    Network::unregisterNetworkPipe(this);
+  }
 
   // FIXME: Akim added those two lines, but he's not too sure
   // about them: should they be before "closing = true"?
@@ -77,7 +79,6 @@ Connection::close()
 #endif
   if (!ret)
     fd = -1;
-  Network::unregisterNetworkPipe(this);
   if (ret)
     error_ = UFAIL;
   else
@@ -115,6 +116,8 @@ Connection::effective_send(const char* buffer, size_t length)
   {
     perror("cannot send");
     close();
+    // Caught by Network::selectAndProcess inner loop.
+    throw std::runtime_error("connection closed");
   }
 
   return res;

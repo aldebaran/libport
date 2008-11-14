@@ -19,8 +19,8 @@ namespace Network
     Pipe();
     virtual ~Pipe();
     //returns read fd or -1 if none
-    virtual int readFD() = 0;
-    virtual int writeFD() = 0;
+    virtual int readFD() { return -1; } // = 0;
+    virtual int writeFD() { return -1; } // = 0;
 
     virtual void notifyRead() = 0;
     virtual void notifyWrite() = 0;
