@@ -182,14 +182,15 @@ if(NOT PROJECT_INFO_CMAKE)
   # Set PROJECT_XXXX variables according to project_describe_info results.
   function(project_set_info)
     project_describe_info(major minor patch rc vendor vendor_ver n sha1)
+    echo("Previous release info: major=${major} minor=${minor} patch=${patch} rc=${rc} vendor=${vendor} vendor_ver=${vendor_ver} n=${n} sha1=${sha1}")
     # Minor
     if(PROJECT_VERSION_MAJOR GREATER ${major})
       set(minor 0)
     elseif(PROJECT_VERSION_MAJOR EQUAL ${major})
       if(NOT n EQUAL 0)
-	if(NOT RELEASE_CANDIDATE OR rc EQUAL 0)
-	  math(EXPR minor "${minor} + 1")
-	endif(NOT RELEASE_CANDIDATE OR rc EQUAL 0)
+	if(NOT RELEASE_CANDIDATE AND rc EQUAL 0)
+ 	  math(EXPR minor "${minor} + 1")
+	endif(NOT RELEASE_CANDIDATE AND rc EQUAL 0)
       endif(NOT n EQUAL 0)
     else(PROJECT_VERSION_MAJOR GREATER ${major})
       message(SEND_ERROR
@@ -207,9 +208,9 @@ if(NOT PROJECT_INFO_CMAKE)
     # Vendor version
     if(vendor)
       if(NOT n EQUAL 0)
-	if(NOT RELEASE_CANDIDATE OR rc EQUAL 0)
+	if(NOT RELEASE_CANDIDATE AND rc EQUAL 0)
 	  math(EXPR vendor_ver "${vendor_ver} + 1")
-	endif(NOT RELEASE_CANDIDATE OR rc EQUAL 0)
+	endif(NOT RELEASE_CANDIDATE AND rc EQUAL 0)
       endif(NOT n EQUAL 0)
     elseif(vendor)
       set(vendor_ver -1)
@@ -304,6 +305,7 @@ if(NOT PROJECT_INFO_CMAKE)
   # ========================== #
 
   # Format the next tag name.
+  # We remove the trailing additional commit number and sha1
   string(REGEX REPLACE
     "-([0-9]+)-([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]+)$"
     ""
