@@ -108,14 +108,30 @@ xfind_prog ()
   echo "$res"
 }
 
+# require_thing TEST-FLAG ERROR_MESSAGE THING [HINT]
+# --------------------------------------------------
+require_thing ()
+{
+  local flag=$[1]
+  local error="$[2]: $[3]"
+  local thing=$[3]
+  shift 3
+  test $flag "$thing" ||
+    fatal OSFILE "$error" "$[@]"
+}
+
+# require_dir DIR [HINT]
+# ----------------------
+require_dir ()
+{
+  require_thing -d "no such directory" "$[@]"
+}
+
 # require_file FILE [HINT]
 # ------------------------
 require_file ()
 {
-  local file=$[1]
-  shift
-  test -f "$file" ||
-    fatal OSFILE "no such file: $file" "$[@]"
+  require_thing -f "no such file" "$[@]"
 }
 
 ])
