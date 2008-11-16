@@ -165,10 +165,13 @@ spawn_urbi_server ()
   local dt=.5
   while test ! -f server.port || test $(wc -l <server.port) = 0;
   do
-    test $t -lt $tmax ||
-      fatal "$URBI_SERVER did not issue port in server.port in ${tmax}s"
-    sleep $dt
-    t=$(($t + $dt))
+    # test/expr don't like floating points.
+    case $(echo "$t <= $tmax" | bc) in
+      (1) sleep $dt
+          t=$(echo "$t + $dt" | bc);;
+      (0)
+      fatal "$URBI_SERVER did not issue port in server.port in ${tmax}s";;
+    esac
   done
 }
 ])
