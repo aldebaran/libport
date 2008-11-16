@@ -160,15 +160,15 @@ spawn_urbi_server ()
 
   # Wait for the port file to be completed: it must have one full line
   # (with \n to be sure it is complete).
-  local i=0
-  local imax=10
+  local t=0
+  local tmax=8
+  local dt=.5
   while test ! -f server.port || test $(wc -l <server.port) = 0;
   do
-    if test $i = $imax; then
-      fatal "$URBI_SERVER did not issue port in server.port in ${imax}s"
-    fi
-    sleep 1
-    i=$(($i + 1))
+    test $t -lt $tmax ||
+      fatal "$URBI_SERVER did not issue port in server.port in ${tmax}s"
+    sleep $dt
+    t=$(($t + $dt))
   done
 }
 ])
