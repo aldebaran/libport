@@ -44,6 +44,18 @@ bin_PROGRAMS =
 build_aux_dir = $(top_srcdir)/build-aux
 move_if_change = $(build_aux_dir)/move-if-change
 
+
+# ls_files GLOBBING-PATTERNS
+# --------------------------
+# The GLOBBING-PATTERNS are put in single quotes to avoid being
+# caught by the shell.
+ls_files =								    \
+  $(or									    \
+    $(shell $(build_aux_dir)/ls-files -s $(srcdir) $(patsubst %,'%',$(1))), \
+    $(error ls-files returned nothing for: $(1)))
+EXTRA_DIST += $(build_aux_dir)/ls-files
+
+
 # Sometimes it is really convenient to see the output of the
 # preprocessor.  But it's a pain to run the command by hand.
 SUFFIXES += .i .ii
