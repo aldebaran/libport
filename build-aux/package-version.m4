@@ -21,26 +21,10 @@ AC_PREREQ([2.60])
 # version number.
 AC_DEFUN([URBI_PACKAGE_VERSION],
 [AC_MSG_CHECKING([for current version])
-while true
-do
-  # If the version is already defined, do nothing.
-  test "$VERSION" != UNDEFINED ||
-    break
-  for ac_f in .tarball-version .version
-  do
-    if test -f $srcdir/$ac_f; then
-      VERSION=$(cat $srcdir/$ac_f) ||
-        AC_MSG_ERROR([cannot read $srcdir/$ac_f])
-      test -n "$VERSION" ||
-        AC_MSG_ERROR([cannot $srcdir/$ac_f is empty])
-      # Found it.
-      break 2
-    fi
-  done
-  # Nothing found, try to get it from the the repo.
-  VERSION=$(cd $srcdir && build-aux/git-version-gen --file)
-  break
-done
+# If the version is already defined, do nothing.
+case $VERSION in (''|UNDEFINED)
+  VERSION=$("$srcdir/build-aux/git-version-gen" -s "$srcdir" --file);;
+esac
 test -n "$VERSION" ||
   AC_MSG_ERROR([cannot get version information])
 AC_MSG_RESULT([$VERSION])
