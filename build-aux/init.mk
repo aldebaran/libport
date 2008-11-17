@@ -15,30 +15,36 @@ AM_CFLAGS =
 AM_CPPFLAGS =
 AM_CXXFLAGS =
 AM_LDFLAGS =
-AUTOMAKE_OPTIONS = -Wall -Wno-portability 1.10 nostdinc
+AUTOMAKE_OPTIONS =
 BUILT_SOURCES =
+CLEANFILES =
+DISTCLEANFILES =
+EXTRA_DIST =
+EXTRA_HEADERS =
+EXTRA_LTLIBRARIES =
+LIBS =
+MAINTAINERCLEANFILES =
+MOSTLYCLEANFILES =
+SUFFIXES =
+bin_PROGRAMS =
+dist_bin_SCRIPTS =
+include_HEADERS =
+lib_LTLIBRARIES =
+nodist_bin_SCRIPTS =
+nodist_check_SCRIPTS =
+nodist_noinst_SCRIPTS =
+noinst_LTLIBRARIES =
+
 # Visual Studio Debugger PDB Files (C++).
 # http://msdn2.microsoft.com/en-us/library/yd4f8bd1.aspx.
-CLEANFILES = vc80.pdb
+CLEANFILES += vc80.pdb
 # Files created by MSC++.
 CLEANFILES += *.exe.manifest *.exe.intermediate.manifest
 # Files which are not shipped should be cleaned.
 CLEANFILES += $(nodist_check_SCRIPTS) $(nodist_noinst_SCRIPTS)
-DISTCLEANFILES =
-EXTRA_DIST =
-EXTRA_HEADERS =
-LIBS =
-MAINTAINERCLEANFILES =
-SUFFIXES =
+
 # Automake still does not honor AM_LDADD.
 LDADD = $(AM_LDADD)
-
-nodist_bin_SCRIPTS =
-nodist_check_SCRIPTS =
-nodist_noinst_SCRIPTS =
-dist_bin_SCRIPTS =
-
-bin_PROGRAMS =
 
 ## Useful variables.
 build_aux_dir = $(top_srcdir)/build-aux
