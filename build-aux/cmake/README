@@ -164,6 +164,60 @@ NOTE: This setup has been tested with:
  - Visual Studio 2005 Express Editon
  - Microsoft .NET Framework 2.0 Service Pack 1
 
+** cygwin/mingw
+
+In order to compile using MinGW C/C++ compiler from the Cygwin
+environment you have to make sure:
+
+1) You use the following patch version of cygwin make:
+
+http://www.cmake.org/files/cygwin/make.exe
+
+2) Make sure you have the following environment variable set at the time you
+call cmake or make:
+
+export PATH="/cygdrive/c/MinGW/bin:$PATH"
+export INCLUDE="C:/MinGW/include;$INCLUDE"
+export LIB="C:/MinGW/lib;$LIB"
+
+3) Install MinGW :-)
+
+http://garr.dl.sourceforge.net/sourceforge/mingw/MinGW-5.1.4.exe
+
+4) You use the 'Unix Makefile Generator':
+
+i.e: -G 'Unix Makefiles'
+
+with the win32 version of cmake (not the cygwin version).
+
+http://www.cmake.org/files/v2.6/cmake-2.6.2-win32-x86.exe
+
+5) Here an example of the option given to cmake:
+
+liburbi="$home/install/sdk-remote-1.5-mingw"
+qt="c:/Qt/4.4.1mc"
+prefix="$home/install/urbi-lab/mingw/d"
+include_path="$qt/include;$liburbi/include;$openssl/include"
+library_path="$qt/lib;$liburbi/lib;$openssl/lib"
+program_path="$qt/bin;$openssl/bin"
+prefix_path="$qt_ext;$lock_system;$openssl;$qt"
+cmake="win-cmake.exe"
+export CC="c:/MinGW/bin/gcc.exe"
+export CXX="c:/MinGW/bin/g++.exe"
+"$cmake" .. \
+    -G 'Unix Makefiles' \
+    -DCMAKE_VERBOSE_MAKEFILE=ON \
+    -DCMAKE_INSTALL_PREFIX="$prefix" \
+    -DCMAKE_INCLUDE_PATH="$include_path" \
+    -DCMAKE_LIBRARY_PATH="$library_path" \
+    -DCMAKE_PROGRAM_PATH="$program_path" \
+    -DCMAKE_PREFIX_PATH="$prefix_path" \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_CXX_FLAGS="-W -Wall" \
+    "$@"
+
+6) You can use ccache.exe for windows:
+
 * Directories
 
 ** modules
