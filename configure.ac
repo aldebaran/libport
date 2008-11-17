@@ -1,13 +1,3 @@
-#
-# Copyright (c) Gostai S.A.S., 2008.
-#
-# This software is provided "as is" without warranty of any kind,
-# either expressed or implied, including but not limited to the
-# implied warranties of fitness for a particular purpose.
-#
-# See the LICENSE file for more information.
-# For comments, bug reports and feedback: http://www.urbiforge.com
-
 ## ------------- ##
 ## Package setup ##
 ## ------------- ##
@@ -27,8 +17,10 @@ URBI_PROG_CXX
 
 AC_CONFIG_HEADERS([include/config.h])
 
-# If you need to create a library, USE libtool:
-AC_PROG_LIBTOOL
+# If you need to create a library, use libtool.
+LT_PREREQ([2.2.6])
+LT_INIT([pic-only shared disable-static win32-dll])
+AC_SUBST([LIBTOOL_DEPS])
 
 BOOST_TEST
 

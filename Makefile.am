@@ -1,6 +1,8 @@
 include build-aux/build-aux.mk
 
 ACLOCAL_AMFLAGS = -I build-aux
+libtool: $(LIBTOOL_DEPS)
+	$(SHELL) ./config.status --recheck
 
 SUBDIRS = lib/libport doc tests
 # SUBDIRS += gui
