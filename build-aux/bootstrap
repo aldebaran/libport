@@ -15,7 +15,7 @@
 # Required version of these tools.
 : ${autoconf_prereq=2.61}
 : ${automake_prereq=1.10}
-: ${libtool_prereq=1.5.22}
+: ${libtool_prereq=2.2.6}
 
 pid=$$
 
