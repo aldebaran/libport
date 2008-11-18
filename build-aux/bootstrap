@@ -256,10 +256,22 @@ install_libtool ()
   local tarball=${dir}a.tar.gz
   local url=http://ftp.gnu.org/gnu/libtool/$tarball
   local here=$(pwd)
+
   mkdir -p "$where"
   cd "$where"
-  wget "$url"
-  tar zxf $tarball
+
+  # Get the source tree.
+  test -f $tarball ||
+    wget "$url"
+  rm -rf "$dir"
+  if tar zxf $tarball; then
+    # Probably a broken tarball, fetch it again.
+    rm -f $tarball
+    wget "$url"
+    tar zxf $tarball
+  fi
+
+  # Build.
   cd $dir
   mkdir _build
   cd _build
@@ -465,7 +477,9 @@ export LIBTOOLIZE=$libtoolize
 for pass in 1 2
 do
   case $pass in
-    (1) if ! require $libtoolize $libtool_prereq; then
+    (1) if require $libtoolize $libtool_prereq; then
+          break
+        else
           install_libtool "$install_libtool"
           export LIBTOOLIZE=libtoolize
         fi;;
