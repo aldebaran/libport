@@ -51,6 +51,9 @@ build_aux_dir = $(top_srcdir)/build-aux
 move_if_change = $(build_aux_dir)/move-if-change
 
 
+## The following uses GNU Make.
+AUTOMAKE_OPTIONS += -Wno-portability
+
 # ls_files GLOBBING-PATTERNS
 # --------------------------
 # The GLOBBING-PATTERNS are put in single quotes to avoid being

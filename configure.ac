@@ -5,6 +5,7 @@
 AC_INIT([Libport], [UNDEFINED], [common-bugs@lists.gostai.com])
 URBI_PACKAGE_VERSION
 AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([foreign -Wall])
 
@@ -19,7 +20,12 @@ AC_CONFIG_HEADERS([include/config.h])
 
 # If you need to create a library, use libtool.
 LT_PREREQ([2.2.6])
-LT_INIT([pic-only shared disable-static win32-dll])
+# Name the subdirectory that contains libltdl sources
+LT_CONFIG_LTDL_DIR([libltdl])
+LT_INIT([pic-only shared disable-static dlopen win32-dll])
+# I don't know why I need this with Libtool 2.2.6
+mkdir -p .deps/libltdl
+LTDL_INIT([nonrecursive])
 AC_SUBST([LIBTOOL_DEPS])
 
 BOOST_TEST

@@ -78,8 +78,6 @@ subpackage: DIR-NAME
 
 Options:
   -h, --help                    display this message and exit
-      --install-libtool WHERE   if needed, install the latest libtool
-                                in the directory WHERE (e.g., \`build-aux')
   -n, --dry-run                 do nothing
       --no-recursive            do not bootstrap subpackages
 EOF
@@ -106,7 +104,6 @@ getopt ()
             (-n|--dry-run) run=false;;
             (-h|--help) usage;;
             (--no-recursive)  recurse=false;;
-            (--install-libtool) install_libtool=$2; shift;;
             (*) error 64 "invalid argument: $1";;
         esac
         shift
@@ -247,43 +244,6 @@ require ()
 }
 
 
-# install_libtool WHERE
-# ---------------------
-# Install libtool in the directory WHERE.
-install_libtool ()
-{
-  local where
-  where=$(cd "$1" && pwd)
-  local dir=libtool-2.2.6
-  local tarball=${dir}a.tar.gz
-  local url=http://ftp.gnu.org/gnu/libtool/$tarball
-  local here=$(pwd)
-
-  mkdir -p "$where"
-  cd "$where"
-
-  # Get the source tree.
-  test -f $tarball ||
-    wget "$url"
-  rm -rf "$dir"
-  if tar zxf $tarball; then
-    # Probably a broken tarball, fetch it again.
-    rm -f $tarball
-    wget "$url"
-    tar zxf $tarball
-  fi
-
-  # Build.
-  cd $dir
-  mkdir _build
-  cd _build
-  ../configure --prefix=$where
-  make
-  make install
-  cd "$here"
-}
-
-
 # Return the set of attributes corresponding to TAG in .externals.
 attributes ()
 {
@@ -403,7 +363,6 @@ link ()
 
 set -e
 
-install_libtool=build-aux
 recurse=true
 run=true
 
@@ -460,31 +419,9 @@ done
 require autoconf $autoconf_prereq
 require automake $automake_prereq
 
-# On some environments (Darwin Ports), libtoolize is glibtoolize.
-# I suppose their autoreconf is adjusted accordingly, but I use
-# my custom Autoconf...
-libtoolize=libtoolize
-for l in $(cd $install_libtool && pwd)/bin/libtoolize "$LIBTOOLIZE" glibtoolize libtoolize;
-do
-  if ($l --version) >/dev/null 2>&1; then
-    libtoolize=$l
-    break
-  fi
-done
-export LIBTOOLIZE=$libtoolize
-# Two passes, in the second we use our libtool.
-for pass in 1 2
-do
-  case $pass in
-    (1) if require $libtoolize $libtool_prereq false; then
-          break
-        else
-          install_libtool "$install_libtool"
-          export LIBTOOLIZE=$(cd $install_libtool && pwd)/bin/libtoolize
-        fi;;
-    (2) require $libtoolize $libtool_prereq;;
-  esac
-done
+# Do not use libtoolize, because Libport embeds its own Libtool in the
+# repo.  Do not override it.
+export LIBTOOLIZE=true
 
 # Recursive bootstrapping.
 if $recurse; then
@@ -502,7 +439,6 @@ if $recurse; then
   done
 fi
 
-run $LIBTOOLIZE --copy --force
 run autoreconf --no-recursive --force --verbose --install
 
 for i in $keep
