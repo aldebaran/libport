@@ -219,11 +219,12 @@ version_compare ()
   )
 }
 
-# require TOOL REQUIREMENT
-# ------------------------
+# require TOOL REQUIREMENT [ERROR]
+# --------------------------------
 # Test that TOOL exists, and its version is at least REQUIREMENT.
 # Check whether the environment contains a variable named like TOOL,
-# but upper-cased, and use it instead of TOOL if so.
+# but upper-cased, and use it instead of TOOL if so. If ERROR is
+# present, use it instead of "error" to report it.
 require ()
 {
   local envvar_name
@@ -232,15 +233,16 @@ require ()
   tool=$(printenv $envvar_name || echo $1)
   local version=$($tool --version | \
     sed -n 's/.*[^0-9.]\([0-9][0-9.]*\).*/\1/p;' | head -n1)
+  local error="${3:-error}"
 
   test x"$version" != x ||
-    error 1 "$tool is required"
+    $error 1 "$tool is required"
 
   local path
   path=$(which $tool)
   stderr "found $tool $version at $path"
   case $(version_compare "$2" "$version") in
-   ( '>') error 1 "$1 $2 or better is required: this is $tool $version";;
+   ( '>') $error 1 "$1 $2 or better is required: this is $tool $version";;
   esac
 }
 
@@ -477,7 +479,7 @@ export LIBTOOLIZE=$libtoolize
 for pass in 1 2
 do
   case $pass in
-    (1) if require $libtoolize $libtool_prereq; then
+    (1) if require $libtoolize $libtool_prereq false; then
           break
         else
           install_libtool "$install_libtool"
