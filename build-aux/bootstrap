@@ -480,7 +480,7 @@ do
           break
         else
           install_libtool "$install_libtool"
-          export LIBTOOLIZE=libtoolize
+          export LIBTOOLIZE=$(cd $install_libtool && pwd)/bin/libtoolize
         fi;;
     (2) require $libtoolize $libtool_prereq;;
   esac
