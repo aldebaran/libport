@@ -12,6 +12,11 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
+# Required version of these tools.
+: ${autoconf_prereq=2.61}
+: ${automake_prereq=1.10}
+: ${libtool_prereq=1.5.22}
+
 pid=$$
 
 if test "X$TERM" != Xdumb                       \
@@ -384,8 +389,8 @@ do
 done
 
 # Requirements over bootstrap tools.
-require autoconf 2.61
-require automake 1.10
+require autoconf $autoconf_prereq
+require automake $automake_prereq
 # On some environments (Darwin Ports), libtoolize is glibtoolize.
 # I suppose their autoreconf is adjusted accordingly, but I use
 # my custom Autoconf...
@@ -398,7 +403,7 @@ do
   fi
 done
 export LIBTOOLIZE=$libtoolize
-require $libtoolize 1.5.22
+require $libtoolize $libtool_prereq
 
 # Recursive bootstrapping.
 if $recurse; then
