@@ -403,7 +403,7 @@ link ()
 
 set -e
 
-install_libtool=
+install_libtool=build-aux
 recurse=true
 run=true
 
@@ -460,14 +460,11 @@ done
 require autoconf $autoconf_prereq
 require automake $automake_prereq
 
-# Check possible installations of Libtool in build-aux.
-export PATH=$(cd build-aux && pwd)/bin:$PATH
-
 # On some environments (Darwin Ports), libtoolize is glibtoolize.
 # I suppose their autoreconf is adjusted accordingly, but I use
 # my custom Autoconf...
 libtoolize=libtoolize
-for l in $install_libtool/bin/libtoolize "$LIBTOOLIZE" glibtoolize libtoolize;
+for l in $(cd $install_libtool && pwd)/bin/libtoolize "$LIBTOOLIZE" glibtoolize libtoolize;
 do
   if ($l --version) >/dev/null 2>&1; then
     libtoolize=$l
