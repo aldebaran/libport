@@ -89,6 +89,14 @@ stderr ()
   done
 }
 
+error ()
+{
+  local exit=$1
+  shift
+  stderr "$@"
+  exit $exit
+}
+
 run ()
 {
   stderr "running: $*"
@@ -230,7 +238,7 @@ link_symbolic ()
   # Under cygwin, we will end up doing a copy anyway, so do not
   # even pretend to try to create a link.
   case $(uname) in
-      *CYGWIN*)
+      (*CYGWIN*)
 	  return 1;;
   esac
   local morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
@@ -260,7 +268,7 @@ link_symbolic ()
 link_hard ()
 {
   case $(uname) in
-      *CYGWIN*)
+     (*CYGWIN*)
 	  return 1;;
   esac
   run ln "$2" "$1"
@@ -299,12 +307,12 @@ link ()
   for kind in $link_types
   do
       case $kind in
-	  symbolic|copy)
+	  (symbolic|copy)
 	      if link_$kind "$from" "$to"; then
 		  return 0
 	      fi
 	      ;;
-	  *)
+	  (*)
 	      fatal "invalid link type: $kind"
 	      ;;
       esac
@@ -321,11 +329,10 @@ run=true
 for arg
 do
   case $arg in
-    -n|--dry-run) run=false;;
-    -h|--help) usage;;
-    --no-recursive)  recurse=false;;
-    *) stderr "invalid argument: $arg"
-       exit 64;;
+    (-n|--dry-run) run=false;;
+    (-h|--help) usage;;
+    (--no-recursive)  recurse=false;;
+    (*) error 64 "invalid argument: $arg";;
   esac
 done
 
