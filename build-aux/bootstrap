@@ -502,6 +502,7 @@ if $recurse; then
   done
 fi
 
+run $LIBTOOLIZE --copy --force
 run autoreconf --no-recursive --force --verbose --install
 
 for i in $keep
