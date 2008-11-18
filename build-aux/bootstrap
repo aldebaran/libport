@@ -77,11 +77,40 @@ subpackage: DIR-NAME
   E.g., \`subpackage: lock-system'.
 
 Options:
-  -h, --help          display this message and exit
-  -n, --dry-run       do nothing
-      --no-recursive  do not bootstrap subpackages
+  -h, --help                    display this message and exit
+      --install-libtool WHERE   if needed, install the latest libtool
+                                in the directory WHERE (e.g., \`build-aux')
+  -n, --dry-run                 do nothing
+      --no-recursive            do not bootstrap subpackages
 EOF
   exit 0
+}
+
+getopt ()
+{
+    while test $# -ne 0
+    do
+        # Split options with an argument.
+        case $1 in
+          (*=*)
+            local opt
+            opt=$(echo "$1" | sed -e 's/=.*//')
+            local arg
+            arg=$(echo "$1" | sed -e 's/^[^=]*=//')
+            shift
+            set x "$opt" "$arg" "$@"
+            shift
+        esac
+
+        case $1 in
+            (-n|--dry-run) run=false;;
+            (-h|--help) usage;;
+            (--no-recursive)  recurse=false;;
+            (--install-libtool) install_libtool=$2; shift;;
+            (*) error 64 "invalid argument: $1";;
+        esac
+        shift
+    done
 }
 
 stderr ()
@@ -197,15 +226,47 @@ version_compare ()
 # but upper-cased, and use it instead of TOOL if so.
 require ()
 {
+  local envvar_name
   envvar_name=$(echo $1 | tr '[:lower:]' '[:upper:]')
+  local tool
   tool=$(printenv $envvar_name || echo $1)
   local version=$($tool --version | \
     sed -n 's/.*[^0-9.]\([0-9][0-9.]*\).*/\1/p;' | head -n1)
+
   test x"$version" != x ||
-    fatal "$tool is required"
+    error 1 "$tool is required"
+
+  local path
+  path=$(which $tool)
+  stderr "found $tool $version at $path"
   case $(version_compare "$2" "$version") in
-    '>') fatal "$1 $2 or better is required: this is $tool $version";;
+   ( '>') error 1 "$1 $2 or better is required: this is $tool $version";;
   esac
+}
+
+
+# install_libtool WHERE
+# ---------------------
+# Install libtool in the directory WHERE.
+install_libtool ()
+{
+  local where
+  where=$(cd "$1" && pwd)
+  local dir=libtool-2.2.6
+  local tarball=${dir}a.tar.gz
+  local url=http://ftp.gnu.org/gnu/libtool/$tarball
+  local here=$(pwd)
+  mkdir -p "$where"
+  cd "$where"
+  wget "$url"
+  tar zxf $tarball
+  cd $dir
+  mkdir _build
+  cd _build
+  ../configure --prefix=$where
+  make
+  make install
+  cd "$here"
 }
 
 
@@ -328,18 +389,11 @@ link ()
 
 set -e
 
+install_libtool=
 recurse=true
 run=true
 
-for arg
-do
-  case $arg in
-    (-n|--dry-run) run=false;;
-    (-h|--help) usage;;
-    (--no-recursive)  recurse=false;;
-    (*) error 64 "invalid argument: $arg";;
-  esac
-done
+getopt "$@"
 
 # If there are links to install, do it here.
 #
@@ -391,11 +445,15 @@ done
 # Requirements over bootstrap tools.
 require autoconf $autoconf_prereq
 require automake $automake_prereq
+
+# Check possible installations of Libtool in build-aux.
+export PATH=$(cd build-aux && pwd)/bin:$PATH
+
 # On some environments (Darwin Ports), libtoolize is glibtoolize.
 # I suppose their autoreconf is adjusted accordingly, but I use
 # my custom Autoconf...
 libtoolize=libtoolize
-for l in "$LIBTOOLIZE" glibtoolize libtoolize;
+for l in $install_libtool/bin/libtoolize "$LIBTOOLIZE" glibtoolize libtoolize;
 do
   if ($l --version) >/dev/null 2>&1; then
     libtoolize=$l
@@ -403,7 +461,17 @@ do
   fi
 done
 export LIBTOOLIZE=$libtoolize
-require $libtoolize $libtool_prereq
+# Two passes, in the second we use our libtool.
+for pass in 1 2
+do
+  case $pass in
+    (1) if ! require $libtoolize $libtool_prereq; then
+          install_libtool "$install_libtool"
+          export LIBTOOLIZE=libtoolize
+        fi;;
+    (2) require $libtoolize $libtool_prereq;;
+  esac
+done
 
 # Recursive bootstrapping.
 if $recurse; then
