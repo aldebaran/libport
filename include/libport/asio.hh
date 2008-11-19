@@ -75,6 +75,7 @@ namespace libport
       { base_->write(data, length);}
       /// Alias on write() for API compatibility.
       inline void send(void* addr, int len) {write((const void*)addr, len);}
+      inline void send(const std::string& s) {write(s.c_str(), s.length());}
       inline void close() {if (base_) base_->close();}
       inline bool isConnected() {return base_?base_->isConnected():false;}
 
