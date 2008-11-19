@@ -20,7 +20,7 @@
 # endif
 
 #  define GROUP __GROUP
-#  include <WinSock2.h>
+#  include <winsock2.h>
 #  undef GROUP
 
 # include <libport/unistd.h>

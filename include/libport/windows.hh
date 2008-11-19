@@ -26,7 +26,7 @@
 #   define NOMINMAX 1
 #  endif
 
-#  include <Windows.h>
+#  include <windows.h>
 
 /* If we defined _WINSOCKAPI_ to prevent WinSock1 stuff to be imported,
  * restore the situation since the user might really want to import WinSock.h
