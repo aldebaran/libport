@@ -117,7 +117,7 @@ namespace netdetail {
   }
 
   template<typename Stream> void
-  SocketImpl<Stream>::continueWrite(DestructionLock lock, boost::system::error_code er, size_t sz)
+  SocketImpl<Stream>::continueWrite(DestructionLock lock, boost::system::error_code er, size_t)
   {
     if (er)
     {
@@ -319,6 +319,7 @@ Socket::connectProto(const std::string& host, const std::string& port, BaseFacto
 inline boost::system::error_code
 Socket::connect(const std::string& host, const std::string& port, bool udp)
 {
+  (void)udp;
   assert(!udp);
   /*
   if (udp)
@@ -349,6 +350,7 @@ inline Socket::Handle
 Socket::listen(SocketFactory f, const std::string& host,
     const std::string& port, boost::system::error_code & erc, bool udp)
 {
+  (void)udp;
   assert(!udp);
   erc = Socket::listenProto<boost::asio::ip::tcp>(f, host, port,
       &netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
