@@ -15,6 +15,7 @@ include(GenLibLoader)
 #  MOCS		- the list of sources of the executable that need to be moc'ed
 #  UIS		- the list of UI files used by the executable
 #  CPPFLAGS	- the list of CPPFLAGS to add
+#  INCLUDE_DIRS - the list of include directories to search in.
 #  LIBRARIES	- the list of libraries to link with.
 #  RESOURCES	- the list of resources files.
 macro(gostai_add_executable name)
