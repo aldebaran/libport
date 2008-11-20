@@ -43,8 +43,14 @@ namespace libport
       /// Callback function called in case of error on the socket.
       boost::function1<void, boost::system::error_code> onErrorFunc;
   };
-
-
+  /// Endpoint on an UDP socket.
+  class UDPLink
+  {
+    public:
+    virtual ~UDPLink() {}
+    virtual void reply(const void* data, int length) = 0;
+    inline void reply(const std::string& s) {reply(s.c_str(), s.length());}
+  };
   /** Socket class with a higher API.
    *
    */
@@ -84,7 +90,13 @@ namespace libport
 
       typedef void* Handle;
       typedef boost::function0<Socket*> SocketFactory;
-
+      /** Listen using udp.
+        * Call onRead(data, length, link) for each new packet. Link can be used
+        * to reply to the sender.
+        */
+      static Handle listenUDP(const std::string& host, const std::string& port,
+                  boost::function3<void, const void*, int,
+                  boost::shared_ptr<UDPLink> > onRead);
       static Handle listen(SocketFactory f, const std::string& host,
 	  const std::string& port, boost::system::error_code & erc,
           bool udp = false);

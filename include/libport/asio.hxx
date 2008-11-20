@@ -9,9 +9,8 @@
 
 namespace libport {
 namespace netdetail {
-
   typedef ::libport::Socket::SocketFactory SocketFactory;
-  class SocketImplBase: public BaseSocket, private libport::Lockable
+  class SocketImplBase: public BaseSocket, protected libport::Lockable
   {
     public:
       SocketImplBase(): current_(-1), pending_(false) {}
@@ -49,9 +48,85 @@ namespace netdetail {
       void continueWrite(DestructionLock lock, boost::system::error_code erc, size_t sz);
       void onReadDemux(DestructionLock lock, boost::system::error_code erc);
       friend class Socket;
+      template<class T, class L> friend void read_or_recv(SocketImpl<T>*, L);
+      template<class T> friend void send_bounce(SocketImpl<T>*,const void*,int);
+      friend void recv_bounce(SocketImpl<Stream>*,
+                              SocketImpl<Stream>::DestructionLock,
+                              boost::system::error_code, size_t);
+      std::vector<char> udpBuffer_;
     };
 
+    inline void
+    runIoService(boost::asio::io_service* io)
+    {
+      // Trick to have io->run() never return.
+      boost::asio::io_service::work work(*io);
+      io->run();
+    }
 
+    inline boost::asio::io_service&
+    get_io_service()
+    {
+      static boost::asio::io_service* io = 0;
+      if (!io)
+      {
+        io = new boost::asio::io_service;
+        libport::startThread(boost::bind(&runIoService, io));
+      }
+      return *io;
+    }
+
+    class UDPLinkImpl: public UDPLink
+    {
+      public:
+      UDPLinkImpl(boost::asio::ip::udp::socket& socket,
+                  boost::asio::ip::udp::endpoint endpoint)
+      : socket_(socket)
+      , endpoint_(endpoint)
+      {}
+      virtual void reply(const void* data, int length);
+      private:
+      boost::asio::ip::udp::socket& socket_;
+      boost::asio::ip::udp::endpoint endpoint_;
+    };
+
+    class UDPSocket
+    {
+      public:
+      UDPSocket();
+      boost::function3<void, const void*, int,
+                  boost::shared_ptr<UDPLink> > onRead;
+      void start_receive();
+      void handle_receive(const boost::system::error_code& error, size_t sz);
+      private:
+      boost::array<char, 2000> recv_buffer_;
+      boost::asio::ip::udp::endpoint remote_endpoint_;
+      boost::asio::ip::udp::socket socket_;
+      friend class Socket;
+    };
+    inline
+    UDPSocket::UDPSocket()
+    :socket_(get_io_service())
+    {
+    }
+
+    inline void
+    UDPSocket::start_receive()
+    {
+      socket_.async_receive_from(boost::asio::buffer(recv_buffer_),
+        remote_endpoint_,
+        boost::bind(&UDPSocket::handle_receive, this,
+                    boost::asio::placeholders::error,
+                    boost::asio::placeholders::bytes_transferred));
+    }
+    inline void
+    UDPSocket::handle_receive(const boost::system::error_code& error,
+                              size_t sz)
+    {
+      boost::shared_ptr<UDPLink> l(new UDPLinkImpl(socket_, remote_endpoint_));
+      onRead(&recv_buffer_[0], sz, l);
+      start_receive();
+    }
 #ifndef LIBPORT_NO_SSL
   struct SSLSettings
   {
@@ -63,31 +138,15 @@ namespace netdetail {
     std::string cipherList;
   };
 #endif
-
+  inline void
+  UDPLinkImpl::reply(const void* data, int length)
+  {
+    socket_.send_to(boost::asio::buffer(data, length), endpoint_);
+  }
   // FIXME: use the delete_ptr in boost::lambda.
   template<class T> void deletor(T* ptr)
   {
     delete ptr;
-  }
-
-  inline void
-  runIoService(boost::asio::io_service* io)
-  {
-    // Trick to have io->run() never return.
-    boost::asio::io_service::work work(*io);
-    io->run();
-  }
-
-  inline boost::asio::io_service&
-  get_io_service()
-  {
-    static boost::asio::io_service* io = 0;
-    if (!io)
-    {
-      io = new boost::asio::io_service;
-      libport::startThread(boost::bind(&runIoService, io));
-    }
-    return *io;
   }
 
   template<typename Stream> void
@@ -102,18 +161,43 @@ namespace netdetail {
     return base_->lowest_layer().is_open();
   }
 
+  typedef  boost::asio::basic_datagram_socket<boost::asio::ip::udp,
+    boost::asio::datagram_socket_service<boost::asio::ip::udp> > udpsock;
+
+  template<class T> void send_bounce(SocketImpl<T>* s,const void* buffer,
+                                     int length)
+  {
+    libport::BlockLock bl(s);
+    std::ostream stream(&s->buffers_[s->current_==-1 ? 0:1-s->current_]);
+    stream.write((const char*)buffer, length);
+    s->pending_ = true;
+    if (s->current_ == -1)
+    {
+      s->current_ = 1; // We wrote on 0, continueWrite will swap.
+      s->continueWrite(s->getDestructionLock(), boost::system::error_code(), 0);
+    }
+  }
+  inline void
+  delete_check(boost::system::error_code erc, std::string* buf)
+  {
+    if (erc)
+      std::cerr <<"Socket error: " << erc.message() << std::endl;
+    delete buf;
+  }
+  template<> inline void
+  send_bounce(SocketImpl<udpsock>* s, const void* buffer,
+                              int length)
+  {
+    std::string* buf = new std::string(static_cast<const char*>(buffer),
+                                       length);
+    s->base_->async_send(boost::asio::buffer(*buf),
+                         boost::bind(&delete_check, _1, buf));
+  }
+
   template<typename Stream> void
   SocketImpl<Stream>::write(const void* buffer, unsigned int length)
   {
-    libport::BlockLock bl(this);
-    std::ostream stream(&buffers_[current_==-1 ? 0:1-current_]);
-    stream.write((const char*)buffer, length);
-    pending_ = true;
-    if (current_ == -1)
-    {
-      current_ = 1; // We wrote on 0, continueWrite will swap.
-      continueWrite(getDestructionLock(), boost::system::error_code(), 0 );
-    }
+    send_bounce(this, buffer, length);
   }
 
   template<typename Stream> void
@@ -139,6 +223,29 @@ namespace netdetail {
   }
 
 
+  template<typename Stream, typename Lock> void
+  read_or_recv(SocketImpl<Stream>* s,
+               Lock lock)
+  {
+    boost::asio::async_read(*s->base_, s->readBuffer_,  boost::asio::transfer_at_least(1),
+	    boost::bind(&SocketImpl<Stream>::onReadDemux, s, lock, _1));
+  }
+  inline void
+  recv_bounce(SocketImpl<udpsock>*s, SocketImpl<udpsock>::DestructionLock lock,
+              boost::system::error_code erc, size_t recv)
+  {
+    std::ostream stream(&s->readBuffer_);
+    stream.write(&s->udpBuffer_[0], recv);
+    s->onReadDemux(lock, erc);
+  }
+  template<> inline void
+  read_or_recv(SocketImpl<udpsock>*s,
+               SocketImpl<udpsock>::DestructionLock lock)
+  {
+    s->udpBuffer_.resize(2000);
+    s->base_->async_receive(boost::asio::buffer(&s->udpBuffer_[0], 2000),
+	    boost::bind(&recv_bounce, s, lock, _1, _2));
+  }
   template<typename Stream> void
   SocketImpl<Stream>::onReadDemux(DestructionLock lock, boost::system::error_code erc)
   {
@@ -153,8 +260,7 @@ namespace netdetail {
       if (onReadFunc)
 	onReadFunc(readBuffer_);
       if (isConnected())
-	boost::asio::async_read(*base_, readBuffer_,  boost::asio::transfer_at_least(1),
-	    boost::bind(&SocketImpl<Stream>::onReadDemux,this, lock, _1));
+        read_or_recv(this, lock);
     }
   }
 
@@ -162,8 +268,7 @@ namespace netdetail {
   template<typename Stream> void
   SocketImpl<Stream>::startReader()
   {
-    boost::asio::async_read(*base_, readBuffer_,  boost::asio::transfer_at_least(1),
-       	boost::bind(&SocketImpl<Stream>::onReadDemux,this, getDestructionLock(), _1));
+    read_or_recv(this, getDestructionLock());
   }
 
   template<typename Stream>
@@ -286,18 +391,32 @@ Socket::onRead_(boost::asio::streambuf& buf)
   return true;
 }
 
+
+template<typename Proto> typename Proto::endpoint
+resolve(const std::string& host,
+       const std::string& port, boost::system::error_code &erc)
+{
+  typename Proto::resolver::query query(host, port);
+  typename Proto::resolver resolver(netdetail::get_io_service());
+  typename Proto::resolver::iterator iter = resolver.resolve(query, erc);
+  if (erc)
+    return typename Proto::endpoint();
+  return *iter;
+}
+
 template<class Proto, class BaseFactory> boost::system::error_code
 Socket::connectProto(const std::string& host, const std::string& port, BaseFactory bf)
 {
+  std::cerr << "connect " << host <<" " << port << std::endl;
   using namespace netdetail;
   boost::system::error_code erc;
-  typename Proto::resolver::query query(host, port);
-  typename Proto::resolver resolver(netdetail::get_io_service());
-  typename Proto::resolver::iterator iter = resolver.resolve(query,erc);
+  typename Proto::endpoint ep = resolve<Proto>(host, port, erc);
   if (erc)
     return erc;
+  std::cerr <<"resolved " << std::endl;
   typename Proto::socket* s = new typename Proto::socket(get_io_service());
-  s->connect(*iter, erc);
+  s->connect(ep, erc);
+  std::cerr <<"connected " << (!erc) << std::endl;
   if (erc)
     return erc;
   SocketImplBase* newS = dynamic_cast<SocketImplBase*>(bf(s));
@@ -319,29 +438,24 @@ Socket::connectProto(const std::string& host, const std::string& port, BaseFacto
 inline boost::system::error_code
 Socket::connect(const std::string& host, const std::string& port, bool udp)
 {
-  (void)udp;
-  assert(!udp);
-  /*
   if (udp)
     return connectProto<boost::asio::ip::udp>(host, port,
 	&netdetail::SocketImpl<boost::asio::ip::udp::socket>::create);
   else
-  */
     return connectProto<boost::asio::ip::tcp>(host, port,
 	&netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
 }
+
 
 template<typename Proto, typename BaseFactory> boost::system::error_code
 Socket::listenProto(SocketFactory f, const std::string& host,
     const std::string& port, BaseFactory bf)
 {
   boost::system::error_code erc;
-  typename Proto::resolver::query query(host, port);
-  typename Proto::resolver resolver(netdetail::get_io_service());
-  typename Proto::resolver::iterator iter = resolver.resolve(query, erc);
+  typename Proto::endpoint ep = resolve<Proto>(host, port, erc);
   if (erc)
     return erc;
-  typename Proto::acceptor* a = new typename Proto::acceptor(netdetail::get_io_service(), *iter);
+  typename Proto::acceptor* a = new typename Proto::acceptor(netdetail::get_io_service(), ep);
   netdetail::SocketImpl<typename Proto::socket>::acceptOne(f, a, bf);
   return erc;
 }
@@ -357,7 +471,21 @@ Socket::listen(SocketFactory f, const std::string& host,
   return Handle();
 }
 
-
+inline Socket::Handle
+Socket::listenUDP(const std::string& host, const std::string& port,
+                  boost::function3<void, const void*, int,
+                  boost::shared_ptr<UDPLink> > onRead)
+{
+  netdetail::UDPSocket*s = new netdetail::UDPSocket();
+  s->onRead = onRead;
+  boost::system::error_code erc;
+  boost::asio::ip::udp::endpoint ep =
+    resolve<boost::asio::ip::udp>(host, port, erc);
+  s->socket_.open(boost::asio::ip::udp::v4());
+  s->socket_.bind(ep);
+  s->start_receive();
+  return Handle();
+}
 #ifndef LIBPORT_NO_SSL
 inline Socket::Handle
 Socket::listenSSL(SocketFactory f, const std::string& host, const std::string&  port,
