@@ -13,6 +13,23 @@
 
 set -e
 
+me=$(basename "$0")
+
+stderr ()
+{
+  local i
+  for i
+  do
+    echo >&2 "$me: $i"
+  done
+}
+
+run ()
+{
+  stderr "run: $*"
+  "$@"
+}
+
 lafile=$1
 stampfile=$2
 
@@ -22,17 +39,20 @@ touch "$stampfile.tmp"
 library_names=$(sed -ne "s/^library_names='\\(.*\\)'/\\1/p" < "$lafile")
 set x $library_names
 shift
-echo >&2 "$0: libnames: $@"
+stderr "libnames for $lafile: $@"
 case $1:$2 in
     (*.dll:*.lib)
 	library_names=$1
 	old_library=$2
-	tmpfile=$lafile.tmp
-	sed -e "s/^library_names=.*/library_names='$library_names'/" \
-	    -e "s/^old_library=.*/old_library='$old_library'/" < "$lafile" \
-	    > "$tmpfile"
-	touch --reference="$lafile" "$tmpfile"
-	mv "$tmpfile" "$lafile"
+        mv "$lafile" "$lafile.bak"
+        {
+          echo "# Modified by $me"
+	  sed -e "s/^library_names=.*/library_names='$library_names'/"    \
+	      -e "s/^old_library=.*/old_library='$old_library'/"          \
+              <"$lafile.bak"
+        } >"$lafile"
+	touch --reference="$lafile.bak" "$lafile"
+        run diff -u "$lafile.bak" "$lafile"
 	;;
 esac
 
