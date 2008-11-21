@@ -1,8 +1,13 @@
 #! /bin/bash
 
-#wrapper to use Microsoft compiler and linker under wine with autotools.
+# Wrapper to use Microsoft compiler and linker under wine with
+# Autotools.
 
 set -e
+
+case $VERBOSE in (x)
+  set -x;;
+esac
 
 me=$(basename "$0")
 
@@ -39,9 +44,10 @@ fi
 
 outargs=/MD
 #echo PROG is $PROG >&2
-if test "$PROG" = "cl.exe"; then
-  outargs="$outargs /nologo /EHsc"
-fi
+case $PROG in
+  (cl.exe) outargs="$outargs /nologo /EHsc";;
+esac
+
 linkargs=
 compile_mode=false
 preprocess_mode=false
@@ -51,19 +57,19 @@ source=
 output=
 transform()
 {
-  if echo $1 | egrep -q '^/'; then
-    winepath -w $1
-  else
-    echo $1
-  fi
+  case $1 in
+    (/*) winepath -w "$1";;
+    (*)  echo "$1";;
+  esac
 }
 # The libs we produce are called libfoo.lib, whereas the system libs are
-# called foo.lib
-systemlibs=$(find ~/.wine/winroot/boost_1_35_0/lib $VCXX_PATH/lib $VCXX_PATH/PlatformSDK/Lib -iname *.lib -exec basename {} ';' | tr A-Z a-z)
+# called foo.lib.
+lib_dirs='~/.wine/winroot/boost_1_35_0/lib $VCXX_PATH/lib $VCXX_PATH/PlatformSDK/Lib'
+systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' | tr A-Z a-z)
 
 handle_lib()
 {
-  echo "start: $1" >&2
+  stderr "start: $1"
   base=${1#-l}.lib
   complete=lib$base
   for l in $systemlibs; do
