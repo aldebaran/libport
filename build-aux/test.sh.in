@@ -162,11 +162,8 @@ new_reference_output_file()
   fi
 }
 
-test x"$DEBUG" != x && set -x
-
 # Program to test
 prog=$(echo "$0" | sed 's/\.test$//;y/ /_/')
-progexe=$prog$exeext
 # Basename of the program to test
 bprog=$(basename $prog)
 
@@ -177,6 +174,8 @@ if host_windows; then
   remove_trailing_cr=true
   exeext=.exe
 fi
+
+progexe=$prog$exeext
 
 test -f $progexe ||
   fatal "$progexe: No such file or directory"
