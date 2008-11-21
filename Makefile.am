@@ -13,7 +13,7 @@ include include/libport/local.mk
 
 .PHONY: doc html
 doc html:
-	cd doc && $(MAKE) $(AM_MAKEFLAGS) $@
+	$(MAKE) $(AM_MAKEFLAGS) -C doc $@
 
 check-buildfarm: check
 
