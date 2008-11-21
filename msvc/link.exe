@@ -4,12 +4,37 @@
 
 set -e
 
-PROG=$(basename "$0")
+me=$(basename "$0")
+
+stderr ()
+{
+  local i
+  for i
+  do
+    echo >&2 "$me: $i"
+  done
+}
+
+error ()
+{
+  local exit=$1
+  shift
+  stderr "$@"
+  exit $exit
+}
+
+fatal ()
+{
+  error 1 "$@"
+}
+
+
+PROG=$me
 VCXX_PATH=$(winepath -u $VCINSTALLDIR)
-VCXX_BIN=$VCXX_PATH/bin/
+VCXX_BIN=$VCXX_PATH/bin
 
 if ! test -x $VCXX_BIN/cl.exe; then
-  echo cl.exe not found in $VCXX_BIN 1>&2; exit 1
+  fatal "cl.exe not found in $VCXX_BIN"
 fi
 
 outargs=/MD
@@ -49,20 +74,20 @@ handle_lib()
   echo $(transform $complete)
 }
 
-while ! test -z $1; do
+while ! test -z "$1"; do
   larg=
   carg=
   case $1 in
-  -link) ;;
-  -dll) larg="/DLL" ;;
-  -L*)  larg=/LIBPATH:$(transform ${1#-L}) ;;
-#  -l*)  larg=$(transform ${1#-l}.lib) ;;
-  -l*)  larg=$(handle_lib $1) ;;
-  *.lib) larg=$(transform $1) ;;
-  *.a)  larg=$(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
-  -E)  preprocess_mode=true; carg=/E ;;
-  -c)  compile_mode=true; carg=/c ;;
-  -o)  shift
+  (-link) ;;
+  (-dll) larg="/DLL" ;;
+  (-L*)  larg=/LIBPATH:$(transform ${1#-L}) ;;
+#  (-l*)  larg=$(transform ${1#-l}.lib) ;;
+  (-l*)  larg=$(handle_lib $1) ;;
+  (*.lib) larg=$(transform $1) ;;
+  (*.a)  larg=$(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
+  (-E)  preprocess_mode=true; carg=/E ;;
+  (-c)  compile_mode=true; carg=/c ;;
+  (-o)  shift
        got_output_arg=true
        output="$1"
        if $compile_mode || echo $1 | egrep -q '(.o|.obj)$'; then
@@ -77,19 +102,20 @@ while ! test -z $1; do
        fi
        # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
       ;;
-   -Wno-unused-parameter) ;;
-  -g|-ggdb) ;; # carg="/Zi";;
-  -O2|-O3) carg=/O2;;
-  -f*)  ;;
-  *.dll)   carg=$(transform $(echo $1 |sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
-  *.S)  carg="/TP $1";;
-  *.c|*.cc) carg=$(transform $1); source=$1  ;;
-  *)  carg=$1;;
+   (-Wno-unused-parameter) ;;
+  (-g|-ggdb) ;; # carg="/Zi";;
+  (-O2|-O3) carg=/O2;;
+  (-f*)  ;;
+  (*.dll)   carg=$(transform $(echo $1 |sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
+  (*.S)  carg="/TP $1";;
+  (*.c|*.cc) carg=$(transform $1); source=$1  ;;
+  (*)  carg=$1;;
   esac
   outargs="$outargs $carg"
   linkargs="$linkargs $larg"
   shift
 done
+
 # handle -c without -o
 if $compile_mode && ! $got_output_arg; then
   obj=$(echo $source |sed -re 's/\.[^.]+$/.obj/')
@@ -144,4 +170,3 @@ if echo $output | egrep -q -- '-[0-9.]+.dll'; then
     mv -f $libname $(echo $output | sed -re 's/-[0-9.]+\.dll/.lib/')
   fi
 fi
-
