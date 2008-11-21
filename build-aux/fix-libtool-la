@@ -47,12 +47,12 @@ case $1:$2 in
         mv "$lafile" "$lafile.bak"
         {
           echo "# Modified by $me"
-	  sed -e "s/^library_names=.*/library_names='$library_names'/"    \
-	      -e "s/^old_library=.*/old_library='$old_library'/"          \
-              <"$lafile.bak"
+	  sed -e "s/^library_names=.*/# &\nlibrary_names='$library_names'/"  \
+	      -e "s/^old_library=.*/# &\nold_library='$old_library'/"        \
+              "$lafile.bak"
         } >"$lafile"
 	touch --reference="$lafile.bak" "$lafile"
-        run diff -u "$lafile.bak" "$lafile"
+        run diff -u "$lafile.bak" "$lafile" || true
 	;;
 esac
 
