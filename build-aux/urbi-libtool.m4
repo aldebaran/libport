@@ -10,6 +10,9 @@
 # For comments, bug reports and feedback: http://www.urbiforge.com
 #
 
+# Don't call before the creation of libtool.  There is no means to
+# control the order in which AC_CONFIG_COMMANDS are run, so just call
+# this macro after the invocation to LT_INIT.
 AC_DEFUN([URBI_LIBTOOL],
 [
 case $ac_cv_cxx_compiler_ms in (yes)

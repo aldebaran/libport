@@ -40,7 +40,7 @@ AC_SUBST([LIBTOOL_DEPS])
 AC_SUBST([LTDL_CPPFLAGS], ['-I$(top_srcdir)/libltdl'])
 AC_SUBST([LTDL_LIBS],     ['$(top_builddir)/libltdl/libltdlc.la'])
 
-AC_REQUIRE([URBI_LIBTOOL])
+URBI_LIBTOOL
 ])
 
 ## Local Variables:
