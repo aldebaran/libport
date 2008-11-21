@@ -157,7 +157,8 @@ fi
 # -outputresource when using Wine
 # Following procedure described at:
 # http://msdn.microsoft.com/fr-fr/library/ms235591.aspx
-if echo $output | egrep -q '(exe|dll)$'; then
+case $output in
+  (*exe|*dll)
   #$VCXX_BIN/mt.exe -manifest "$(transform $output).manifest" "-out:$(transform $output).auto.manifest"
   # Escape quotes
   sed -e 's/"/""/g' < "$output.manifest" > "$output.escaped.manifest"
@@ -167,12 +168,15 @@ if echo $output | egrep -q '(exe|dll)$'; then
 __EOF__
   $VCXX_BIN/rc.exe /r "$(transform $output).auto.rc"
   $VCXX_BIN/$PROG $outargs $linkargs "$(transform $output).auto.RES"
-fi
+  ;;
+esac
 
-#rename .lib with a versioned name.
-if echo $output | egrep -q -- '-[0-9.]+.dll'; then
+# Rename .lib with a versioned name.
+case $output in
+ (*-[0-9.]*.dll)
   libname=$(echo $output | sed -re 's/dll/lib/')
   if test -f "$libname"; then
     mv -f $libname $(echo $output | sed -re 's/-[0-9.]+\.dll/.lib/')
   fi
-fi
+  ;;
+esac
