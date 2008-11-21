@@ -57,11 +57,14 @@ function(GEN_LIB_LOADER binary)
     configure_file_with_native_paths(${input} ${output}
       OPTIONS ESCAPE_QUOTES @ONLY
       VARIABLES binary_path CMAKE_PROGRAM_PATH cmake_prefix_path)
-    string(REGEX REPLACE "\\.bat\\.in$" ".sh.in" input_sh ${input})
-    string(REGEX REPLACE "\\.bat$" ".sh" output_sh ${output})
-    configure_file_with_native_paths(${input_sh} ${output_sh}
-      OPTIONS ESCAPE_QUOTES @ONLY
-      VARIABLES binary_path CMAKE_PROGRAM_PATH cmake_prefix_path)
+    if(MINGW)
+      string(REGEX REPLACE "\\.bat\\.in$" ".sh.in" input_sh ${input})
+      string(REGEX REPLACE "\\.bat$" ".sh" output_sh ${output})
+      configure_file_with_native_paths(${input_sh} ${output_sh}
+	OPTIONS ESCAPE_QUOTES @ONLY
+	VARIABLES binary_path CMAKE_PROGRAM_PATH cmake_prefix_path)
+      dos2unix(${output_sh})
+    endif(MINGW)
   else(WIN32)
     configure_file(${input} ${output} ESCAPE_QUOTES @ONLY)
   endif(WIN32)

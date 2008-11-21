@@ -231,4 +231,18 @@ if(NOT TOOLS_CMAKE_GUARD)
       "${XML_FILE}")
   endfunction(configure_xml)
 
+  # Convert all file path passed in argument to the Unix text format.
+  function(dos2unix)
+    find_package(Dos2Unix REQUIRED)
+    if(DOS2UNIX_EXECUTABLE)
+      execute_process(
+	COMMAND ${DOS2UNIX_EXECUTABLE} ${ARGV}
+	RESULT_VARIABLE dos2unix_status
+	)
+      if(NOT dos2unix_status EQUAL 0)
+	message(SEND_ERROR "${DOS2UNIX_EXECUTABLE} failed on '${output_sh}'")
+      endif(NOT dos2unix_status EQUAL 0)
+    endif(DOS2UNIX_EXECUTABLE)
+  endfunction(dos2unix)
+
 endif(NOT TOOLS_CMAKE_GUARD)
