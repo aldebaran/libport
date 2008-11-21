@@ -20,6 +20,12 @@ stderr ()
   done
 }
 
+run ()
+{
+  stderr "run: $*"
+  "$@"
+}
+
 error ()
 {
   local exit=$1
@@ -133,9 +139,9 @@ if test "$PROG" = cl.exe && ! test -z "$linkargs"; then
   outargs="$outargs /link $linkargs"
   linkargs=
 fi
-if test x$WRAP_VERBOSE != x; then
-  echo "  command:" $PROG "$outargs $linkargs" >/dev/stderr
-fi
+
+test x$WRAP_VERBOSE = x ||
+  stderr "command: $PROG $outargs $linkargs"
 
 if $preprocess_mode; then
   # Split into two commands so that "set -e" will work
@@ -176,7 +182,7 @@ case $output in
  (*-[0-9.]*.dll)
   libname=$(echo $output | sed -re 's/dll/lib/')
   if test -f "$libname"; then
-    mv -f $libname $(echo $output | sed -re 's/-[0-9.]+\.dll/.lib/')
+    run mv -f $libname $(echo $output | sed -re 's/-[0-9.]+\.dll/.lib/')
   fi
   ;;
 esac
