@@ -136,21 +136,15 @@ fatal ()
 # Return whether the host is running windows or not.
 host_windows ()
 {
-  host_os='@host_os@'
-  if [ x"${host_os%@}" = 'x@host_os' ]; then
-    # We don't have host_os, let's try uname -s:
-    if (uname -s) >/dev/null 2>/dev/null; then
-      case $(uname -s) in
-        (CYGWIN* | MINGW* | [wW]indows* | PW* | Interix* | UWIN*)
-	  return 0;;
-      esac
-    fi
-  else
-    case $host_os in
-      (cygwin* | mingw* | pw32* | interix*) return 0;;
-    esac
-  fi
-  return 1
+  local host_os='@host_os@'
+  case $host_os:$(uname -s) in
+    (cygwin* | mingw* | pw32* | interix* | \
+     *:CYGWIN* | *:MINGW* | *:[wW]indows* | *:PW* | *:Interix* | *:UWIN*)
+      return 0;;
+
+    (*)
+      return 1;;
+  esac
 }
 
 # new_reference_output_file [ret|stdout|stderr] <ref-file>
