@@ -9,6 +9,7 @@ SUBDIRS = libport
 
 # Program to check:
 check_PROGRAMS = testme
+nodist_check_SCRIPTS = $(top_builddir)/build-aux/test.sh
 testme_SOURCES = testme.cc
 
 # If your test programs includes header from the source tree:
@@ -29,6 +30,9 @@ $(TESTS):
 EXTRA_DIST = $(TESTS:.test=.stdout)
 CLEANFILES = *.my_stdout *.my_stderr
 TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
+
+$(top_builddir)/build-aux/test.sh: $(top_srcdir)/build-aux/test.sh.in
+	cd $(top_builddir) && ./config.status build-aux/test.sh
 
 # List the tests that are expected to fail:
 # XFAIL_TESTS =
