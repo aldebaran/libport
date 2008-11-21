@@ -76,7 +76,6 @@ systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' | tr A-Z a-z)
 
 handle_lib()
 {
-  stderr "start: $1"
   base=${1#-l}.lib
   complete=lib$base
   for l in $systemlibs; do
@@ -84,7 +83,10 @@ handle_lib()
       complete=$base
     fi
   done
-  echo $(transform $complete)
+  local res
+  res=$(transform $complete)
+  stderr "handle_lib: $1 -> $res"
+  echo "$res"
 }
 
 while ! test -z "$1"; do
@@ -110,7 +112,7 @@ while ! test -z "$1"; do
            (link.exe) carg=/OUT:$(transform $1);;
            (*)        carg=/Fe$(transform $1);;;
 	 esac
-	 larg="/SUBSYSTEM:console  /MANIFEST kernel32.lib"
+	 larg="/SUBSYSTEM:console /MANIFEST kernel32.lib"
        fi
        # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
       ;;
