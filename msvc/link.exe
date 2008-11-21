@@ -39,6 +39,13 @@ fatal ()
   error 1 "$@"
 }
 
+transform ()
+{
+  case $1 in
+    (/*) winepath -w "$1";;
+    (*)  echo "$1";;
+  esac
+}
 
 PROG=$me
 VCXX_PATH=$(winepath -u $VCINSTALLDIR)
@@ -61,13 +68,7 @@ got_output_arg=false
 source=
 #output file name
 output=
-transform()
-{
-  case $1 in
-    (/*) winepath -w "$1";;
-    (*)  echo "$1";;
-  esac
-}
+
 # The libs we produce are called libfoo.lib, whereas the system libs are
 # called foo.lib.
 lib_dirs="$HOME/.wine/winroot/boost_1_35_0/lib $VCXX_PATH/lib $VCXX_PATH/PlatformSDK/Lib"
@@ -105,16 +106,15 @@ while ! test -z "$1"; do
        if $compile_mode || echo $1 | egrep -q '(.o|.obj)$'; then
          carg=/Fo$(transform $1)
        else
-         if test "$PROG" = link.exe ; then
-           carg="/OUT:$(transform $1)"
-	 else
-	   carg=/Fe$(transform $1)
-	 fi
+         case $PROG in
+           (link.exe) carg=/OUT:$(transform $1);;
+           (*)        carg=/Fe$(transform $1);;;
+	 esac
 	 larg="/SUBSYSTEM:console  /MANIFEST kernel32.lib"
        fi
        # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
       ;;
-   (-Wno-unused-parameter) ;;
+  (-Wno-unused-parameter) ;;
   (-g|-ggdb) ;; # carg="/Zi";;
   (-O2|-O3) carg=/O2;;
   (-f*)  ;;
