@@ -57,7 +57,7 @@ LT_SCOPE int	    lt_dlexit		(void);
 LT_SCOPE int	    lt_dladdsearchdir	 (const char *search_dir);
 LT_SCOPE int	    lt_dlinsertsearchdir (const char *before,
 						  const char *search_dir);
-LT_SCOPE int	    lt_dlsetsearchpath	 (const char *search_path);
+LT_SCOPE int 	    lt_dlsetsearchpath	 (const char *search_path);
 LT_SCOPE const char *lt_dlgetsearchpath	 (void);
 LT_SCOPE int	    lt_dlforeachfile	 (
 			const char *search_path,
@@ -102,7 +102,7 @@ LT_SCOPE int	lt_dlpreload_open    (const char *originator,
 				      lt_dlpreload_callback_func *func);
 
 #define lt_preloaded_symbols	lt__PROGRAM__LTX_preloaded_symbols
-#define LTDL_SET_PRELOADED_SYMBOLS()			LT_STMT_START{	\
+#define LTDL_SET_PRELOADED_SYMBOLS() 			LT_STMT_START{	\
 	extern const lt_dlsymlist lt_preloaded_symbols[];		\
 	lt_dlpreload_default(lt_preloaded_symbols);			\
 							}LT_STMT_END
