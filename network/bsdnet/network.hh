@@ -6,13 +6,14 @@
 # endif
 
 # include <libport/config.h>
-# include <libport/export.hh>
 # include <libport/network.h>
 # include <libport/utime.hh>
 
+# include <urbi/export.hh>
+
 namespace Network
 {
-  class LIBPORT_API Pipe
+  class URBI_SDK_API Pipe
   {
   public:
     Pipe();
@@ -36,24 +37,24 @@ namespace Network
   std::ostream& operator<< (std::ostream& o, const Pipe& p);
 
   /// Build the two fd_sets according to registered connections, copy rd to er.
-  LIBPORT_API int buildFD(fd_set& rd, fd_set& wr, fd_set &er);
+  URBI_SDK_API int buildFD(fd_set& rd, fd_set& wr, fd_set &er);
 
   /// Notify the Pipe object associed with fd sets in the list.
-  LIBPORT_API void notify(fd_set& rd, fd_set& wr, fd_set &er);
+  URBI_SDK_API void notify(fd_set& rd, fd_set& wr, fd_set &er);
 
-  LIBPORT_API void registerNetworkPipe(Pipe* p);
-  LIBPORT_API void unregisterNetworkPipe(Pipe* p);
+  URBI_SDK_API void registerNetworkPipe(Pipe* p);
+  URBI_SDK_API void unregisterNetworkPipe(Pipe* p);
 
   /// Create a tcp server, binding on specified address/port, return local port.
-  LIBPORT_API int createTCPServer(int port=0, std::string address = "");
+  URBI_SDK_API int createTCPServer(int port=0, std::string address = "");
 
   /// Perform the select with a delay of usedDelay microseconds.
   /// \returns  whether at least one action was performed
-  LIBPORT_API bool selectAndProcess(libport::utime_t usDelay);
+  URBI_SDK_API bool selectAndProcess(libport::utime_t usDelay);
 
 # ifdef WITH_BOOST_THREADS
   /// Create a thread that will loop forever on selectAndProcess.
-  LIBPORT_API void startNetworkProcessingThread();
+  URBI_SDK_API void startNetworkProcessingThread();
 # endif // WITH_BOOST_THREADS
 }
 

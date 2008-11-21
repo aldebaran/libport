@@ -7,14 +7,14 @@
 
 # include <sys/types.h>
 
-# include <libport/export.hh>
+# include <urbi/export.hh>
 # include <kernel/utypes.hh>
 # include <kernel/uconnection.hh>
 
 # include <network/bsdnet/network.hh>
 
 //! LinuxConnection implements an TCP/IP client connection.
-class LIBPORT_API Connection : public UConnection, public Network::Pipe
+class URBI_SDK_API Connection : public UConnection, public Network::Pipe
 {
 public:
   // Parameters used by the constructor.
