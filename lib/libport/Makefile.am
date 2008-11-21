@@ -10,6 +10,7 @@ include libport-sources.mk
 # Can be useful for some.  Others will use libport_sources directly.
 lib_LTLIBRARIES += libport.la
 dist_libport_la_SOURCES = $(libport_sources)
+libport_la_LDFLAGS = -no-undefined
 AM_CPPFLAGS += $(LIBPORT_CPPFLAGS) -DBUILDING_LIBPORT $(BOOST_CPPFLAGS)
 
 
