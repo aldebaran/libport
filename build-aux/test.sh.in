@@ -103,6 +103,31 @@
 # By default valgrind errors are not fatal, however if want them to be fatal
 # set FATAL_VALGRIND to a non-empty value.
 
+me=$(basename "$0")
+
+stderr ()
+{
+  local i
+  for i
+  do
+    echo >&2 "$me: $i"
+  done
+}
+
+error ()
+{
+  local exit=$1
+  shift
+  stderr "$@"
+  exit $exit
+}
+
+fatal ()
+{
+  error 1 "$@"
+}
+
+
 # new_reference_output_file [ret|stdout|stderr] <ref-file>
 new_reference_output_file()
 {
@@ -125,15 +150,12 @@ prog=`echo "$0" | sed 's/\.test$//;y/ /_/'`
 # Basename of the program to test
 bprog=`basename $prog`
 
-test -f $prog || {
-  echo "$prog: No such file or directory." >&2
-  exit 127
-}
+if test ! -f $prog && test ! -f $prog.exe; then
+  fatal "$prog: No such file or directory."
+fi
 
-test -x $prog || {
-  echo "$prog: Not executable." >&2
-  exit 126
-}
+test -x $prog ||
+  fatal "$prog: Not executable."
 
 # We NEED the env var SRCDIR
 : ${SRCDIR=@srcdir@}
