@@ -18,16 +18,7 @@ URBI_PROG_CXX
 
 AC_CONFIG_HEADERS([include/config.h])
 
-# If you need to create a library, use libtool.
-LT_PREREQ([2.2.6])
-# Name the subdirectory that contains libltdl sources
-LT_CONFIG_LTDL_DIR([libltdl])
-LT_INIT([pic-only shared disable-static dlopen win32-dll])
-# I don't know why I need this with Libtool 2.2.6
-$MKDIR_P libltdl/.deps
-LTDL_INIT([nonrecursive])
-AC_SUBST([LIBTOOL_DEPS])
-
+URBI_LTDL
 BOOST_TEST
 
 # AutoTroll with Qt.

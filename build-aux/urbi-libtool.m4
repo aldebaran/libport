@@ -1,4 +1,4 @@
-#
+#                                               -*- autoconf -*-
 # urbi-libtool.m4: This file is part of build-aux.
 # Copyright (C) Gostai S.A.S., 2008.
 #
