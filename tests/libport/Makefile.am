@@ -2,9 +2,12 @@ include $(top_srcdir)/flags.mk
 include $(top_srcdir)/build-aux/m4sh.mk
 
 # No need to re-run the test if the sources have not changed.
-LAZY_TEST_SUITE = 1
+# LAZY_TEST_SUITE = 1
 # For some reason, this rule *must* be defined before loading check.mk.
-%.log: %$(EXEEXT)
+#
+# This is really weird: libtool does not create a wrapper with EXEEXT,
+# so do not add it here.
+%.log: % #$(EXEEXT)
 	@$(am__check_pre) $${dir}$< $(am__check_post)
 include $(top_srcdir)/build-aux/check.mk
 

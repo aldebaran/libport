@@ -34,55 +34,49 @@ EOF
     exit 0
 }
 
-
+# add_directory DIR
+# -----------------
+# Add DIR to the output path.
 add_directory ()
 {
   local dir=$1
-  test -d "$dir" ||
-    stderr "warning: $dir does not exist or is not a directory"
-  dir=$(winepath -w "$dir")
-  windirs="$windirs;$dir"
+  if test -d "$dir"; then
+    dir=$(winepath -w "$dir")
+    windirs="$windirs;$dir"
+  fi
 }
 
+# process_wrapper WRAPPER
+# -----------------------
+# Get the PATH spec from the libtool WRAPPER, and put its components
+# in the output path.
 process_wrapper ()
 {
   local wrapper=$1
   require_file "$wrapper"
   local path
-  path=$(sed -ne 's/^ *PATH=//p')
+  path=$(sed -ne 's/^ *PATH=//p' "$wrapper")
   local save_IFS=$IFS
   IFS=:
-  for p
+  for p in $path
   do
     IFS=$save_IFS
     add_directory "$p"
   done
 }
 
-set -x
-
-# By default, installed this here.
-where=$(pwd)
-# List of directories to add to the Path.
-windirs=
-# If we need wine, setup it.
-host=@host@
-
-stderr "host: $host"
-
 create_wine_directory ()
 {
-  local w=$where/wine
-  stderr "creating $where/wine"
-  rm -rf "$w"
-  mkdir -p "$w"
-  cp -a ~/.wine/dosdevices ~/.wine/*.reg ~/.wine/config "$w"
+  stderr "creating $WINEPREFIX"
+  rm -rf "$WINEPREFIX"
+  mkdir -p "$WINEPREFIX"
+  cp -a ~/.wine/dosdevices ~/.wine/*.reg ~/.wine/config "$WINEPREFIX"
   # Symlink everything from the .wine directory just in case.
   for f in ~/.wine/*
   do
     bf=$(basename $f)
-    if ! test -a "$w/$bf"; then
-      ln -s $f "$w/$bf"
+    if ! test -a "$WINEPREFIX/$bf"; then
+      ln -s $f "$WINEPREFIX/$bf"
     fi
   done
   # Add all the added path to the Path variable in user.reg config
@@ -93,18 +87,29 @@ create_wine_directory ()
   export windirs
   perl -pi                                                              \
     -e 'BEGIN { $dirs=$ENV{windirs}; $dirs =~ s/\\/\\\\/g; }'           \
-    -e 's/"Path"="(.*;.*)"/"Path"="\1$dirs"/' "$w/user.reg"
+    -e 's/"Path"="(.*;.*)"/"Path"="\1$dirs"/' "$WINEPREFIX/user.reg"
 }
+
+# By default, installed this here.
+where=$(pwd)
+# List of directories to add to the Path.
+windirs=
+# If we need wine, setup it.
+host=@host@
+
+get_options "$@"
+stderr "host: $host"
 
 if echo "$host" | grep -q pw32 \
      && uname -a | grep -v -q Cygwin \
      && test -z $WINEPREFIX; then
-  test -d "$w" ||
+  WINEPREFIX=$where/wine
+  test -d "$WINEPREFIX" ||
     create_wine_directory
-  export WINEPREFIX=$w
+  export WINEPREFIX
   stderr "WINEPREFIX='$WINEPREFIX'"
   echo "WINEPREFIX='$WINEPREFIX'"
 fi
-]
 
 exit 0
+]
