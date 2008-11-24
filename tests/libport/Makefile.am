@@ -2,13 +2,14 @@ include $(top_srcdir)/flags.mk
 include $(top_srcdir)/build-aux/m4sh.mk
 
 # No need to re-run the test if the sources have not changed.
-# LAZY_TEST_SUITE = 1
-# For some reason, this rule *must* be defined before loading check.mk.
+# LAZY_TEST_SUITE = 1 For some reason, this rule *must* be defined
+# before loading check.mk.
 #
 # This is really weird: libtool does not create a wrapper with EXEEXT,
-# so do not add it here.
-%.log: % #$(EXEEXT)
-	@$(am__check_pre) $${dir}$< $(am__check_post)
+# but this extension is required here, since the rules do mention the
+# EXEEXT.  So we have to remove the extension from $<.
+%.log: %$(EXEEXT)
+	@$(am__check_pre) ./$(<:$(EXEEXT)=) $(am__check_post)
 include $(top_srcdir)/build-aux/check.mk
 
 ## ------------------------------------- ##
@@ -95,7 +96,13 @@ ufloat_double_SOURCES			= ufloat-double.cc
 visitor_SOURCES				= visitor.cc
 
 EXTRA_DIST += ufloat-common.cc ufloat-config.h 666.txt
-TESTS_ENVIRONMENT =				\
-  SRCDIR=$(srcdir)				\
-  $(shell $(build_aux_builddir)/wine-ld-library-path --wrapper=$${dir}$<)
 
+# See above for an explanation on the $(EXEEXT) business.
+TESTS_ENVIRONMENT =					\
+  SRCDIR=$(srcdir)					\
+  $(shell $(build_aux_builddir)/wine-ld-library-path	\
+          --wrapper=$(<:$(EXEEXT)=))
+
+CLEANFILES += $(EXTRA_PROGRAMS:$(EXEEXT)=)
+clean-local:
+	-rm -rf wine
