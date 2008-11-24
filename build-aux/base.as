@@ -117,7 +117,7 @@ require_thing ()
   local thing=$[3]
   shift 3
   test $flag "$thing" ||
-    fatal OSFILE "$error" "$[@]"
+    error OSFILE "$error" "$[@]"
 }
 
 # require_dir DIR [HINT]
