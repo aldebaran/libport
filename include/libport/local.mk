@@ -98,6 +98,7 @@ libport_include_HEADERS +=			\
   $(include_libport)/separator.hh		\
   $(include_libport)/separator.hxx		\
   $(include_libport)/singleton-ptr.hh		\
+  $(include_libport)/singleton-ptr.hxx		\
   $(include_libport)/statistics.hh		\
   $(include_libport)/statistics.hxx		\
   $(include_libport)/symbol.hh			\

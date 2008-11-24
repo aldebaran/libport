@@ -1,8 +1,6 @@
 #ifndef LIBPORT_SINGLETON_PTR_HH
 # define LIBPORT_SINGLETON_PTR_HH
 
-# include <libport/export.hh>
-
 # define STATIC_INSTANCE_(Cl, Name)					\
   class Cl ## Name;							\
   libport::SingletonPtr<Cl ## Name> Name;				\
@@ -54,35 +52,21 @@
 namespace libport
 {
   /// Singleton smart pointer that creates the object on demand.
-  template<class T>
+  template<typename T>
   class SingletonPtr
   {
   public:
-    operator T* ()
-    {
-      return instance();
-    }
-    operator T& ()
-    {
-      return *instance();
-    }
-
-    T* operator ->()
-    {
-      return instance();
-    }
+    operator T* ();
+    operator T& ();
+    T* operator ->();
 
   private:
-    static T* instance()
-    {
-      if (!ptr)
-	ptr = new T();
-      return ptr;
-    }
-
+    static T* instance();
     static T* ptr;
   };
 
 }  // namespace libport
+
+# include <libport/singleton-ptr.hxx>
 
 #endif // !LIBPORT_SINGLETON_PTR_HH
