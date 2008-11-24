@@ -8,6 +8,7 @@
   libport::SingletonPtr<Cl ## Name> Name;				\
   template<> Cl ## Name* libport::SingletonPtr<Cl ## Name>::ptr = 0
 
+
 # define STATIC_INSTANCE_DECL_(Cl, Name)				\
   class Cl ## Name							\
     : public Cl								\
@@ -15,18 +16,15 @@
   STATIC_INSTANCE_(Cl, Name)
 
 
-# define EXTERN_STATIC_INSTANCE_EX(Cl, Name, api)			\
-  class api Cl ## Name							\
+# define EXTERN_STATIC_INSTANCE_EX(Cl, Name, Api)			\
+  class Api Cl ## Name							\
     : public Cl								\
   {};									\
-  api extern libport::SingletonPtr<Cl ## Name> Name;
+  Api extern libport::SingletonPtr<Cl ## Name> Name;
 
 
 # define EXTERN_STATIC_INSTANCE(Cl, Name)				\
-  class Cl ## Name							\
-    : public Cl								\
-  {};									\
-  extern libport::SingletonPtr<Cl ## Name> Name;
+  EXTERN_STATIC_INSTANCE_EX(Cl, Name, /* No API. */)
 
 // These _NS version are made to bypass vcxx error C2888
 // cf: http://msdn.microsoft.com/en-us/library/27zksbks(VS.80).aspx
@@ -34,22 +32,16 @@
 // after changes done for liburbi Java.
 // Use them "outside" of any namespace.
 
+# define STATIC_INSTANCE_NS_EX(Cl, Name, NS, Api)			\
+  namespace NS {							\
+    class Api Cl ## Name;					        \
+    Api libport::SingletonPtr<Cl ## Name> Name;				\
+  }									\
+  template<> NS::Cl ## Name*						\
+  libport::SingletonPtr<NS::Cl ## Name>::ptr = 0
+
 # define STATIC_INSTANCE_NS(Cl, Name, NS)				\
-  namespace NS {							\
-    class Cl ## Name;							\
-    libport::SingletonPtr<Cl ## Name> Name;				\
-  }									\
-  template<> NS::Cl ## Name*						\
-  libport::SingletonPtr<NS::Cl ## Name>::ptr = 0
-
-# define STATIC_INSTANCE_NS_EX(Cl, Name, NS, api)			\
-  namespace NS {							\
-    class api Cl ## Name;					        \
-    api libport::SingletonPtr<Cl ## Name> Name;				\
-  }									\
-  template<> NS::Cl ## Name*						\
-  libport::SingletonPtr<NS::Cl ## Name>::ptr = 0
-
+  STATIC_INSTANCE_NS_EX(Cl, Name, NS, /* No API */)
 
 # define STATIC_INSTANCE_DECL_NS(Cl, Name, NS)				\
   namespace NS {							\
