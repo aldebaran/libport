@@ -2,8 +2,10 @@ include $(top_srcdir)/flags.mk
 include $(top_srcdir)/build-aux/m4sh.mk
 
 # No need to re-run the test if the sources have not changed.
-# LAZY_TEST_SUITE = 1 For some reason, this rule *must* be defined
-# before loading check.mk.
+# LAZY_TEST_SUITE = 1
+
+# For some reason, this rule *must* be defined before loading
+# check.mk.
 #
 # This is really weird: libtool does not create a wrapper with EXEEXT,
 # but this extension is required here, since the rules do mention the
