@@ -80,7 +80,7 @@ namespace libport
       return ptr;
     }
 
-    static LIBPORT_API T* ptr;
+    static T* ptr;
   };
 
 }  // namespace libport
