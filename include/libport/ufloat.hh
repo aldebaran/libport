@@ -5,8 +5,9 @@
 # define LIBPORT_UFLOAT_HH
 
 # include <libport/config.h>
+# include <libport/export.hh>
 
-# include <float.h>
+# include <cfloat>
 # include <exception>
 
 /*-----------------.
@@ -118,8 +119,8 @@ namespace libport
   /// Convert a libport::ufloat to a int. Raise
   /// libport::bad_numeric_cast if the provided argument is not
   /// directly convertible to an integer.
-  int ufloat_to_int(ufloat val);
-  long long ufloat_to_long_long(ufloat val);
+  LIBPORT_API int ufloat_to_int(ufloat val);
+  LIBPORT_API long long ufloat_to_long_long(ufloat val);
 
 } // namespace libport
 
