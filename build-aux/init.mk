@@ -47,7 +47,9 @@ CLEANFILES += $(nodist_check_SCRIPTS) $(nodist_noinst_SCRIPTS)
 LDADD = $(AM_LDADD)
 
 ## Useful variables.
-build_aux_dir = $(top_srcdir)/build-aux
+build_aux_builddir = $(top_builddir)/build-aux
+build_aux_dir = $(build_aux_srcdir)
+build_aux_srcdir = $(top_srcdir)/build-aux
 move_if_change = $(build_aux_dir)/move-if-change
 
 

@@ -32,6 +32,7 @@ edit =									  \
   -e 's|@builddir[@]|$(builddir)|g'					  \
   -e 's|@configure_input[@]|Generated from $@.in; do not edit by hand.|g' \
   -e 's|@datadir[@]|$(pkgdatadir)|g'					  \
+  -e 's|@host[@]|$(host)|g'						  \
   -e 's|@prefix[@]|$(prefix)|g'						  \
   -e 's|@srcdir[@]|$(srcdir)|g'						  \
   -e 's|@top_builddir[@]|$(top_builddir)|g'				  \

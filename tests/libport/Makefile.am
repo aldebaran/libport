@@ -1,4 +1,5 @@
 include $(top_srcdir)/flags.mk
+include $(top_srcdir)/build-aux/m4sh.mk
 
 # No need to re-run the test if the sources have not changed.
 LAZY_TEST_SUITE = 1
@@ -6,6 +7,14 @@ LAZY_TEST_SUITE = 1
 %.log: %$(EXEEXT)
 	@$(am__check_pre) $${dir}$< $(am__check_post)
 include $(top_srcdir)/build-aux/check.mk
+
+## ------------------------------------- ##
+## Set up the LD_LIBRARY_PATH for wine.  ##
+## ------------------------------------- ##
+
+EXTRA_DIST += $(build_aux_dir)/wine-ld-library-path.as
+nodist_check_SCRIPTS += $(build_aux_builddir)/wine-ld-library-path
+m4sh_scripts = $(build_aux_builddir)/wine-ld-library-path
 
 # Program to check:
 TESTS =						\
@@ -83,4 +92,7 @@ ufloat_double_SOURCES			= ufloat-double.cc
 visitor_SOURCES				= visitor.cc
 
 EXTRA_DIST += ufloat-common.cc ufloat-config.h 666.txt
-TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
+TESTS_ENVIRONMENT =				\
+  SRCDIR=$(srcdir)				\
+  $(shell $(build_aux_builddir)/wine-ld-library-path --wrapper=$${dir}$<)
+
