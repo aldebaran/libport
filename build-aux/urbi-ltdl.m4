@@ -37,8 +37,9 @@ $MKDIR_P libltdl/.deps .deps/libltdl
 LTDL_INIT([nonrecursive])
 AC_SUBST([LIBTOOL_DEPS])
 
-AC_SUBST([LTDL_CPPFLAGS], ['-I$(top_srcdir)/libltdl'])
-AC_SUBST([LTDL_LIBS],     ['$(top_builddir)/libltdl/libltdlc.la'])
+AC_SUBST([LTDL_CPPFLAGS], ['$(LTDLINCL)'])
+AC_SUBST([LTDL_LIBS],     ['$(LIBLTDL)'])
+AC_SUBST([LTDL_DEPS],     ['$(LTDLDEPS)'])
 
 URBI_LIBTOOL
 ])
