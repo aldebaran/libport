@@ -151,6 +151,14 @@ stderr ()
   echo >&2
 }
 
+# verbose LINES
+# -------------
+verbose ()
+{
+  case $verbose:" $VERBOSE " in
+    (*true:*|*" $me "*) stderr "$@";;
+  esac
+}
 
 # error EXIT MESSAGES
 # -------------------

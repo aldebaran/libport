@@ -14,6 +14,13 @@ stderr ()
   done
 }
 
+verbose ()
+{
+  case $verbose:" $VERBOSE " in
+    (*true:*|*" $me "*) stderr "$@";;
+  esac
+}
+
 fatal ()
 {
   stderr "$@"
@@ -114,9 +121,7 @@ fi
 test -s $tmp ||
   echo "$@" >$tmp
 
-if test -n "$VERBOSE"; then
-  stderr "returning:" "$(cat $tmp)"
-fi
+verbose "returning:" "$(cat $tmp)"
 cat $tmp
 
 exit 0
