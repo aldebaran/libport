@@ -39,7 +39,7 @@ touch "$stampfile.tmp"
 library_names=$(sed -ne "s/^library_names='\\(.*\\)'/\\1/p" < "$lafile")
 set x $library_names
 shift
-stderr "libnames for $lafile: $@"
+stderr "libnames for $lafile: $*"
 case $1:$2 in
     (*.dll:*.lib)
 	library_names=$1
