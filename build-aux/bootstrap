@@ -77,9 +77,10 @@ subpackage: DIR-NAME
   E.g., \`subpackage: lock-system'.
 
 Options:
-  -h, --help                    display this message and exit
-  -n, --dry-run                 do nothing
-      --no-recursive            do not bootstrap subpackages
+  -h, --help               display this message and exit
+  -n, --dry-run            do nothing
+  -l, --libtoolize=NAME    invoke libtoolize as NAME [$LIBTOOLIZE]
+      --no-recursive       do not bootstrap subpackages
 EOF
   exit 0
 }
@@ -101,8 +102,9 @@ getopt ()
         esac
 
         case $1 in
-            (-n|--dry-run) run=false;;
             (-h|--help) usage;;
+            (-l|--libtoolize) shift; LIBTOOLIZE="$1 $LIBTOOLIZE_FLAGS";;
+            (-n|--dry-run) run=false;;
             (--no-recursive)  recurse=false;;
             (*) error 64 "invalid argument: $1";;
         esac
@@ -363,6 +365,10 @@ link ()
 
 set -e
 
+# Do not use libtoolize, because Libport embeds its own Libtool in the
+# repo.  Do not override it.
+export LIBTOOLIZE=true
+
 recurse=true
 run=true
 
@@ -418,10 +424,6 @@ done
 # Requirements over bootstrap tools.
 require autoconf $autoconf_prereq
 require automake $automake_prereq
-
-# Do not use libtoolize, because Libport embeds its own Libtool in the
-# repo.  Do not override it.
-export LIBTOOLIZE=true
 
 # Recursive bootstrapping.
 if $recurse; then

@@ -9,4 +9,5 @@
 # See the LICENSE file for more information.
 # For comments, bug reports and feedback: http://www.urbiforge.com
 
+export LIBTOOLIZE_FLAGS="--ltdl --nonrecursive"
 exec build-aux/bootstrap "$@"
