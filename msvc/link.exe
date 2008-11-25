@@ -48,6 +48,12 @@ transform ()
 }
 
 PROG=$me
+
+: ${TMPDIR=/tmp}
+tmp=$TMPDIR/$me.$$
+stdout=$tmp.stdout
+stderr=$tmp.stderr
+
 VCXX_PATH=$(winepath -u $VCINSTALLDIR)
 VCXX_BIN=$VCXX_PATH/bin
 
@@ -56,7 +62,6 @@ if ! test -x $VCXX_BIN/cl.exe; then
 fi
 
 outargs=/MD
-#echo PROG is $PROG >&2
 case $PROG in
   (cl.exe) outargs="$outargs /nologo /EHsc";;
 esac
@@ -145,15 +150,15 @@ fi
 test x$WRAP_VERBOSE = x ||
   stderr "command: $PROG $outargs $linkargs"
 
+$VCXX_BIN/$PROG $outargs $linkargs >$stdout 2>$stderr
 if $preprocess_mode; then
-  # Split into two commands so that "set -e" will work
-  tmp=/tmp/preprocess.$$
-  $VCXX_BIN/$PROG $outargs $linkargs > $tmp
-  cppoutput < $tmp
-  rm $tmp
-else
-  $VCXX_BIN/$PROG $outargs $linkargs
+  cppoutput <$stdout
 fi
+
+# Clear the \r from stderr, they are a nuisance for buildbot and
+# Emacs.
+tr -d '\r' $stderr >&2
+rm -f $stdout $stderr
 
 #embed manifest
 #if echo $output | egrep -q '(exe|dll)$'; then
