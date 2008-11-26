@@ -1,9 +1,11 @@
-#include <syslog.h>
-#include <cassert>
-#include <iostream>
-
 #include <libport/containers.hh>
 #include <libport/debug.hh>
+
+#ifndef WIN32
+# include <syslog.h>
+#endif
+#include <cassert>
+#include <iostream>
 
 #ifndef NDEBUG
 
@@ -290,6 +292,7 @@ namespace libport
     return res;
   }
 
+#ifndef WIN32
   /*-------------.
   | Syslog debug |
   `-------------*/
@@ -354,6 +357,7 @@ namespace libport
   {
     indent_ -= 2;
   }
+#endif
 
   Debug* debugger()
   {

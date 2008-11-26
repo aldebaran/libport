@@ -1,6 +1,8 @@
 #ifndef LIBPORT_DEBUG_HH
 # define LIBPORT_DEBUG_HH
 
+# include <libport/detect-win32.h>
+
 # ifndef NDEBUG
 
 #  include <signal.h>
@@ -121,6 +123,7 @@ namespace libport
     unsigned indent_;
   };
 
+#ifndef WIN32
   class SyslogDebug: public Debug
   {
   public:
@@ -139,6 +142,7 @@ namespace libport
   private:
     unsigned indent_;
   };
+#endif
 
   extern boost::function0<Debug*> make_debugger;
   Debug* debugger();
