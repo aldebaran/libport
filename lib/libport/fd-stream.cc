@@ -4,7 +4,7 @@
 namespace libport
 {
   FdStream::FdStream(unsigned write, unsigned read)
-    : buf_(new FdBuf(write, read))
+    : std::iostream(buf_ = new FdBuf(write, read))
   {
     rdbuf(buf_);
   }
