@@ -26,6 +26,7 @@ m4sh_scripts = $(build_aux_builddir)/wine-ld-library-path
 TESTS =						\
   cli.cc					\
   deref.cc					\
+  fd-stream.cc					\
   foreach.cc					\
   path.cc					\
   singleton-ptr.cc				\
