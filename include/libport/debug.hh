@@ -168,6 +168,7 @@ namespace libport
     mutable std::stringstream stream_;
   };
 
+  extern boost::function0<Debug*> make_debugger;
 }
 
 
@@ -371,23 +372,30 @@ namespace libport
 | Configure |
 `----------*/
 
+#  define GD__INIT_                                                     \
+  static int _libport_initdebug_()                                      \
+  { make_debugger = (_libport_mkdebug_); }                              \
+  static int _libport_debug_initialized_ = _libport_initdebug_;         \
+
+
 #  define GD_INIT()                               \
   GD_INIT_CONSOLE()                               \
 
-#  define GD_INIT_CONSOLE()                                     \
-  namespace libport                                             \
-  {                                                             \
-    static Debug* _libport_mkdebug_()                           \
-    { return new ConsoleDebug(); }                              \
-    boost::function0<Debug*> make_debugger(_libport_mkdebug_);  \
-  }                                                             \
+#  define GD_INIT_CONSOLE()                                             \
+  namespace libport                                                     \
+  {                                                                     \
+    static Debug* _libport_mkdebug_()                                   \
+    { return new ConsoleDebug(); }                                      \
+    GD__INIT_;                                                          \
+  }                                                                     \
 
 #  define GD_INIT_SYSLOG(Program)                                       \
   namespace libport                                                     \
   {                                                                     \
     static Debug* _libport_mkdebug_()                                   \
     { return new SyslogDebug(#Program); }                               \
-    boost::function0<Debug*> make_debugger(_libport_mkdebug_);          \
+    make_debugger = (_libport_mkdebug_);                                \
+    GD__INIT_;                                                          \
   }                                                                     \
 
 #  define GD_ENABLE(Name)                         \

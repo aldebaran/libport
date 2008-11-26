@@ -362,6 +362,8 @@ namespace libport
   }
 #endif
 
+  boost::function0<Debug*> make_debugger;
+
   Debug* debugger()
   {
 #ifndef WIN32
