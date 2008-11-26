@@ -26,6 +26,8 @@
 #   define NOMINMAX 1
 #  endif
 
+#  include <io.h>
+#  include <process.h>
 #  include <windows.h>
 
 /* If we defined _WINSOCKAPI_ to prevent WinSock1 stuff to be imported,
@@ -68,6 +70,10 @@ inline int getpagesize()
   return 4096;
 }
 
-# endif // !WIN32
+#  define getpid _getpid
+#  define isatty _isatty
+#  define STDOUT_FILENO _fileno(stdout)
+
+# endif // defined WIN32 || defined LIBPORT_WIN32
 
 #endif // !LIBPORT_WINDOWS_HH
