@@ -2,6 +2,7 @@
 # define LIBPORT_DEBUG_HH
 
 # include <libport/detect-win32.h>
+# include <libport/compiler.hh>
 
 # ifndef NDEBUG
 
@@ -81,7 +82,7 @@ namespace libport
     void timestamps(bool value);
     bool timestamps();
 
-    static void abort(const std::string& msg) __attribute__ ((noreturn));
+    ATTRIBUTE_NORETURN static void abort(const std::string& msg);
 
     void filter(unsigned lvl);
     bool disabled();

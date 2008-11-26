@@ -1,5 +1,6 @@
 #include <libport/containers.hh>
 #include <libport/debug.hh>
+#include <libport/windows.hh>
 
 #ifndef WIN32
 # include <syslog.h>
@@ -169,7 +170,7 @@ namespace libport
   void Debug::abort(const std::string& msg)
   {
     GD_ERROR(msg);
-    kill(getpid(), SIGKILL);
+    std::abort();
     throw 0;
   }
 
