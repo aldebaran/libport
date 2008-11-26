@@ -15,7 +15,6 @@
 #  include <boost/format.hpp>
 #  include <boost/function.hpp>
 #  include <boost/preprocessor/seq/for_each.hpp>
-#  include <boost/thread.hpp>
 
 #  include <libport/finally.hh>
 

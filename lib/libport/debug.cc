@@ -4,6 +4,7 @@
 
 #ifndef WIN32
 # include <syslog.h>
+# include <pthread.h>
 #endif
 #include <cassert>
 #include <iostream>
@@ -241,12 +242,13 @@ namespace libport
       if (pid)
         std::cerr << "[" << getpid() << "] ";
     }
+#ifndef WIN32
     {
       static bool thread = getenv("GD_THREAD");
       if (thread)
-        std::cerr << "[" << boost::this_thread
-::get_id() << "] ";
+        std::cerr << "[" << pthread_self() << "] ";
     }
+#endif
     color(c);
     for (unsigned i = 0; i < indent_; ++i)
       std::cerr << " ";
@@ -362,11 +364,16 @@ namespace libport
 
   Debug* debugger()
   {
-    static std::map<boost::thread::id, Debug*> debuggers;
-    boost::thread::id id = boost::this_thread::get_id();
+#ifndef WIN32
+    static std::map<pthread_t, Debug*> debuggers;
+    pthread_t id = pthread_self();
     if (!libport::mhas(debuggers, id))
       debuggers[id] = make_debugger();
     return debuggers[id];
+#else
+    static Debug* debug = make_debugger();
+    return debug;
+#endif
   }
 
 }
