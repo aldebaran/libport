@@ -19,7 +19,7 @@ void __FailedCondition (const char* condType,
 	    << ": "
 	    << condType << " `"
 	    << condText << "' failed." << std::endl;
-  abort ();
+  abort();
 }
 
 #endif // !NDEBUG
@@ -29,5 +29,5 @@ void __Terminate (const char* fileName, int fileLine, const char* reason)
   std::cerr << fileName << ":" << fileLine
 	    << ": Program abortion (" << reason << ')'
 	    << std::endl;
-  abort ();
+  abort();
 }

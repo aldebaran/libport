@@ -7,6 +7,7 @@
 # include <cstdlib>
 # include <iostream>
 
+# include <libport/assert.hh>
 # include <libport/meta.hh>
 # include <libport/typelist.hh>
 # include <libport/traits.hh>
@@ -36,15 +37,14 @@ namespace libport
         template <typename T>
         R _libport_visitor_dispatch_(T& elt, int)
         {
-          std::cerr << "A visitor failed." << std::endl;
-          std::cerr << "Root node: " << typeid(T).name() << std::endl;
-          std::cerr << "Actual type: " << typeid(elt).name() << std::endl;
-          std::cerr << "Visitor type: " << typeid(*this).name() << std::endl;
-          abort();
+          pabort("A visitor failed." << std::endl
+                 << "Root node: " << typeid(T).name() << std::endl
+                 << "Actual type: " << typeid(elt).name() << std::endl
+                 << "Visitor type: " << typeid(*this).name() << std::endl);
 	  // This is not enough for Visual C++, which requires an explicit
-	  // return.  In this case, make a dummy recursive call (which will
-	  // of course never take place).  We will get a warning, but not
-          // an error.
+          // return.  In this case, make a dummy recursive call (which
+          // will of course never take place).  We will get a warning,
+          // but not an error.
 	  return _libport_visitor_dispatch_(elt, 0);
         }
     };

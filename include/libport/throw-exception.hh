@@ -19,7 +19,7 @@ namespace libport
   void throw_exception(E const & e)
   {
     boost::throw_exception(e);
-    abort();
+    pabort("boost::throw_exception failed");
   }
 }
 
