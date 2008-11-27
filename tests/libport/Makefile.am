@@ -3,7 +3,7 @@ include $(top_srcdir)/build-aux/m4sh.mk
 include $(top_srcdir)/build-aux/wine-ld-library-path.mk
 
 # No need to re-run the test if the sources have not changed.
-# LAZY_TEST_SUITE = 1
+LAZY_TEST_SUITE = 1
 
 # For some reason, this rule *must* be defined before loading
 # check.mk.
