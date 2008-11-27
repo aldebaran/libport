@@ -8,11 +8,15 @@
 # include <sstream>
 
 # include <libport/export.hh>
+# include <libport/detect-win32.h>
 
-#ifdef _MSC_VER
-/* MS Visual C++ doesn't have snprintf and co. */
+#ifdef WIN32
+# include <io.h>
+# define close _close
+# define read _read
 # define snprintf _snprintf
 # define vsnprintf _vsnprintf
+# define write _write
 #endif
 
 namespace libport

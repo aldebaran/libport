@@ -72,7 +72,15 @@ inline int getpagesize()
 
 #  define getpid _getpid
 #  define isatty _isatty
+#  define STDIN_FILENO _fileno(stdin)
 #  define STDOUT_FILENO _fileno(stdout)
+#  define STDERR_FILENO _fileno(stderr)
+
+inline int pipe(int pipefd[2])
+{
+  // fds, memory to reserve, text mode
+  return _pipe(pipefd, BUFSIZ, 0);
+}
 
 # endif // defined WIN32 || defined LIBPORT_WIN32
 

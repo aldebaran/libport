@@ -4,9 +4,11 @@
 # include <iostream>
 # include <streambuf>
 
+# include <libport/export.hh>
+
 namespace libport
 {
-  class FdBuf: public std::streambuf
+  class LIBPORT_API FdBuf: public std::streambuf
   {
   public:
     FdBuf(unsigned write, unsigned read);
@@ -27,7 +29,7 @@ namespace libport
   };
 
   /// Standard stream that reads from and writes to file descriptors.
-  class FdStream: public std::iostream
+  class LIBPORT_API FdStream: public std::iostream
   {
   public:
     /// Create a FdStream that writes to fd \a write and reads from fd \a read

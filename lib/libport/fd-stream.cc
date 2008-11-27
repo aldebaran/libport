@@ -1,5 +1,6 @@
 #include <iostream>
 #include <libport/fd-stream.hh>
+#include <libport/cstdio>
 
 namespace libport
 {
@@ -48,7 +49,7 @@ namespace libport
       return EOF;
     }
     setg(ibuf_, ibuf_, ibuf_ + c);
-    return 'x';
+    return ibuf_[0];
   }
 
   int FdBuf::overflow(int c)

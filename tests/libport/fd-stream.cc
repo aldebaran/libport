@@ -1,13 +1,14 @@
 #include <cassert>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <unistd.h>
 
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
-#include <libport/unit-test.hh>
+#include <libport/cstdio>
 #include <libport/fd-stream.hh>
+#include <libport/unit-test.hh>
+#include <libport/windows.hh>
 
 
 using boost::bind;
@@ -36,8 +37,11 @@ own(bool own)
   }
   if (own)
   {
+#ifndef WIN32
+    // Fstat on a closed fd implodes under WIN32
     BOOST_CHECK(fstat(fd[0], &stat));
     BOOST_CHECK(fstat(fd[1], &stat));
+#endif
   }
   else
   {
