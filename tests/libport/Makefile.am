@@ -24,11 +24,11 @@ TESTS =                                         \
   path.cc                                       \
   singleton-ptr.cc                              \
   symbol.cc                                     \
-  erase_if.cc                                   \
+  erase-if.cc                                   \
   escape.cc                                     \
   fifo.cc                                       \
   finally.cc                                    \
-  has_if.cc                                     \
+  has-if.cc                                     \
   indent.cc                                     \
   separator.cc                                  \
   intrusive-ptr.cc                              \
@@ -72,11 +72,11 @@ foreach_SOURCES                   = foreach.cc
 path_SOURCES                      = path.cc
 singleton_ptr_SOURCES             = singleton-ptr.cc
 symbol_SOURCES                    = symbol.cc
-erase_if_SOURCES                  = erase_if.cc
+erase_if_SOURCES                  = erase-if.cc
 escape_SOURCES                    = escape.cc
 fifo_SOURCES                      = fifo.cc
 finally_SOURCES                   = finally.cc
-has_if_SOURCES                    = has_if.cc
+has_if_SOURCES                    = has-if.cc
 indent_SOURCES                    = indent.cc
 separator_SOURCES                 = separator.cc
 intrusive_ptr_SOURCES             = intrusive-ptr.cc
