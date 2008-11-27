@@ -115,7 +115,7 @@ while ! test -z "$1"; do
        else
          case $PROG in
            (link.exe) carg=/OUT:$(transform $1);;
-           (*)        carg=/Fe$(transform $1);;;
+           (*)        carg=/Fe$(transform $1);;
 	 esac
 	 larg="/SUBSYSTEM:console /MANIFEST kernel32.lib"
        fi
