@@ -24,6 +24,9 @@ typically returns (on stdout) something like
 
     WINEPREFIX=/SOME/PATH
 
+Arguments can also be passed via the envvar
+\`WINE_LD_LIBRARY_PATH_ARGS'.
+
 Options:
   -h, --help           display this message and exit
   -t, --to=DIR         install the \`wine' directory inside DIR
@@ -67,7 +70,7 @@ process_wrapper ()
 
 create_wine_directory ()
 {
-  stderr "creating $WINEPREFIX"
+  verbose "creating $WINEPREFIX"
   rm -rf "$WINEPREFIX"
   mkdir -p "$WINEPREFIX"
   cp -a ~/.wine/dosdevices ~/.wine/*.reg ~/.wine/config "$WINEPREFIX"
@@ -97,19 +100,23 @@ windirs=
 # If we need wine, setup it.
 host=@host@
 
-get_options "$@"
-stderr "host: $host"
+get_options $WINE_LD_LIBRARY_PATH_ARGS "$@"
+verbose "host: $host"
 
-if echo "$host" | grep -q pw32 \
-     && uname -a | grep -v -q Cygwin \
-     && test -z $WINEPREFIX; then
-  WINEPREFIX=$where/wine
-  test -d "$WINEPREFIX" ||
-    create_wine_directory
-  export WINEPREFIX
-  stderr "WINEPREFIX='$WINEPREFIX'"
-  echo "WINEPREFIX='$WINEPREFIX'"
-fi
+# We used to check that we are not running Cygwin underneath.  Does
+# not seem to make any sense here, and MN does not remember why he
+# checked that.  So this check is removed.
+case ${WINEPREFIX+set}:$host in
+    (set:*) # Don't override the user's choice.
+      ;;
+    (*:*pw32*|*:*mingw32*)
+      export WINEPREFIX=$where/wine
+      test -d "$WINEPREFIX" ||
+        create_wine_directory
+      verbose "WINEPREFIX='$WINEPREFIX'"
+      echo "WINEPREFIX='$WINEPREFIX'"
+      ;;
+esac
 
 exit 0
 ]

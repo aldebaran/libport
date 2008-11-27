@@ -1,6 +1,6 @@
 ##
 ## m4sh.mk: This file is part of build-aux.
-## Copyright (C) Gostai S.A.S., 2006-2008.
+## Copyright (C) 2006-2008, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -11,7 +11,9 @@
 ##
 
 # Use autom4te to create our scripts, with additions stored in
-# $(top_srcdir)build-aux.  Define m4sh_scripts.
+# $(top_srcdir)/build-aux.  Extend m4sh_scripts.
+
+m4sh_scripts =
 
 ## ------------- ##
 ## The scripts.  ##
