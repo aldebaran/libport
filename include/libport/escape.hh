@@ -59,7 +59,7 @@ namespace libport
   std::ostream& operator<< (std::ostream& o, const Escape&);
 
   /// Process \-based escapes.
-  std::string LIBPORT_API unescape(const std::string& s);
+  LIBPORT_API std::string unescape(const std::string& s);
 }
 
 # include <libport/escape.hxx>
