@@ -75,7 +75,7 @@ append ()
     case $val in
       (*[''""\\\\]*)
         # We use printf to avoid backslash-interpolation.
-        val='"'$(printf '%s' "$val" | sed -e 's/[''""\\\\]/\\&')'"'
+        val='"'$(printf '%s' "$val" | sed -e 's/[''""\\\\]/\\&/g')'"'
         ;;
     esac
     # Avoid useless spaces.
@@ -86,49 +86,49 @@ append ()
     esac
     eval "$var+=\$sep\$val"
   done
+  case $VERBOSE in (x)
+    eval stderr "$var=\$$var";;
+  esac
 }
 
 get_options ()
 {
   while test $# -ne 0
   do
-    larg=
-    carg=
+    local opt=$1
     case $1 in
     (-link) ;;
-    (-dll) larg="/DLL" ;;
-    (-L*)  larg=/LIBPATH:$(transform ${1#-L}) ;;
-#    (-l*)  larg=$(transform ${1#-l}.lib) ;;
-    (-l*)  larg=$(handle_lib $1) ;;
-    (*.lib) larg=$(transform $1) ;;
-    (*.a)  larg=$(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
-    (-E)  preprocess_mode=true; carg=/E ;;
-    (-c)  compile_mode=true; carg=/c ;;
+    (-dll) append linkargs "/DLL" ;;
+    (-L*)  append linkargs /LIBPATH:$(transform ${1#-L}) ;;
+    (-l*)  append linkargs $(handle_lib $1) ;;
+    (*.lib) append linkargs $(transform $1) ;;
+    (*.a)  append linkargs $(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
+    (-E)  preprocess_mode=true; append outargs /E ;;
+    (-c)  compile_mode=true; append outargs /c ;;
     (-o)  shift
          got_output_arg=true
-         output="$1"
+         output=$1
          if $compile_mode || echo $1 | egrep -q '(.o|.obj)$'; then
-           carg=/Fo$(transform $1)
+           append outargs /Fo$(transform $1)
          else
            case $PROG in
-             (link.exe) carg=/OUT:$(transform $1);;
-             (*)        carg=/Fe$(transform $1);;
+             (link.exe) append outargs /OUT:$(transform $1);;
+             (*)        append outargs /Fe$(transform $1);;
            esac
-           larg="/SUBSYSTEM:console /MANIFEST kernel32.lib"
+           append linkargs "/SUBSYSTEM:console" "/MANIFEST" "kernel32.lib"
          fi
          # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
         ;;
     (-Wno-unused-parameter) ;;
-    (-g|-ggdb) ;; # carg="/Zi";;
-    (-O2|-O3) carg=/O2;;
+    (-g|-ggdb) ;; # append outargs "/Zi";;
+    (-O2|-O3) append outargs /O2;;
     (-f*)  ;;
-    (*.dll)   carg=$(transform $(echo $1 |sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
-    (*.S)  carg="/TP $1";;
-    (*.c|*.cc) carg=$(transform $1); source=$1  ;;
-    (*)  carg=$1;;
+    (*.dll)
+      append outargs $(transform $(echo $1 |sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
+    (*.S)  append outargs "/TP $1";;
+    (*.c|*.cc) append outargs $(transform $1); source=$1  ;;
+    (*)  append outargs $1;;
     esac
-    append outargs "$carg"
-    append linkargs "$larg"
     shift
   done
 }
@@ -136,9 +136,10 @@ get_options ()
 PROG=$me
 
 : ${TMPDIR=/tmp}
-tmp=$TMPDIR/$me.$$
-stdout=$tmp.stdout
-stderr=$tmp.stderr
+tmp=$TMPDIR/$me/$$
+mkdir -p $tmp
+stdout=$tmp/stdout
+stderr=$tmp/stderr
 
 VCXX_PATH=$(winepath -u $VCINSTALLDIR)
 VCXX_BIN=$VCXX_PATH/bin
@@ -163,6 +164,7 @@ output=
 # The libs we produce are called libfoo.lib, whereas the system libs are
 # called foo.lib.
 lib_dirs="$HOME/.wine/winroot/boost_1_35_0/lib $VCXX_PATH/lib $VCXX_PATH/PlatformSDK/Lib"
+# On one line to make it easier to read set -x.
 systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' |
               tr A-Z a-z |
               sort -u |
@@ -179,7 +181,7 @@ if $compile_mode && ! $got_output_arg; then
 fi
 
 if test "$PROG" = cl.exe && ! test -z "$linkargs"; then
-  append outargs "/link $linkargs"
+  append outargs "/link" $linkargs
   linkargs=
 fi
 
@@ -192,20 +194,19 @@ else
   status=$?
 fi
 
-if $preprocess_mode; then
-  cppoutput <$stdout
-fi
-
 # Clear the \r from stderr, they are a nuisance for buildbot and
 # Emacs.
 tr -d "\r" <$stderr >&2
 tr -d "\r" <$stdout
-# rm -f $stdout $stderr
-
 case $status in
   (0);;
   (*) exit $status;;
 esac
+
+if $preprocess_mode; then
+  cppoutput <$stdout
+fi
+rm -rf $tmp
 
 #embed manifest
 #if echo $output | egrep -q '(exe|dll)$'; then
@@ -226,15 +227,15 @@ case $output in
 #include <winuser.h>
 1 RT_MANIFEST {"$(cat $output.escaped.manifest)"}
 __EOF__
-  run $VCXX_BIN/rc.exe /r "$(transform $output).auto.rc"
-  run $VCXX_BIN/$PROG $outargs $linkargs "$(transform $output).auto.RES"
+  run "$VCXX_BIN/rc.exe /r \"$(transform $output).auto.rc\""
+  run "$VCXX_BIN/$PROG $outargs $linkargs \"$(transform $output).auto.RES\""
   ;;
 esac
 
 # Rename .lib with a versioned name.
 case $output in
  (*-[0-9.]*.dll)
-  libname=$(echo $output | sed -re 's/dll/lib/')
+  libname=$(echo $output | sed -e 's/dll$/lib/')
   if test -f "$libname"; then
     run mv -f $libname $(echo $output | sed -re 's/-[0-9.]+\.dll/.lib/')
   fi
