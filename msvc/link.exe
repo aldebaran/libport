@@ -23,7 +23,7 @@ stderr ()
 run ()
 {
   stderr "run: $*"
-  "$@"
+  eval "$@"
 }
 
 error ()
@@ -47,6 +47,92 @@ transform ()
   esac
 }
 
+handle_lib ()
+{
+  local base=${1#-l}.lib
+  local complete=lib$base
+  # If $base is in $systemlibs, use $base instead of $complete.
+  case " $systemlibs " in
+    (" *$base* ") complete=$base;;
+  esac
+  local res
+  res=$(transform $complete)
+  stderr "handle_lib: $1 -> $res"
+  echo "$res"
+}
+
+# append VARIABLE VALUES...
+# -------------------------
+# Append the VALUES to $VARIABLE, making sure it has all the needed
+# escapes.  Separates with spaces.
+append ()
+{
+  local var=$1
+  shift
+  local val
+  for val
+  do
+    case $val in
+      (*[''""\\\\]*)
+        # We use printf to avoid backslash-interpolation.
+        val='"'$(printf '%s' "$val" | sed -e 's/[''""\\\\]/\\&')'"'
+        ;;
+    esac
+    # Avoid useless spaces.
+    local sep
+    case $var:$val in
+        (*:|:*) sep=;;
+        (*)     sep=' ';;
+    esac
+    eval "$var+=\$sep\$val"
+  done
+}
+
+get_options ()
+{
+  while test $# -ne 0
+  do
+    larg=
+    carg=
+    case $1 in
+    (-link) ;;
+    (-dll) larg="/DLL" ;;
+    (-L*)  larg=/LIBPATH:$(transform ${1#-L}) ;;
+#    (-l*)  larg=$(transform ${1#-l}.lib) ;;
+    (-l*)  larg=$(handle_lib $1) ;;
+    (*.lib) larg=$(transform $1) ;;
+    (*.a)  larg=$(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
+    (-E)  preprocess_mode=true; carg=/E ;;
+    (-c)  compile_mode=true; carg=/c ;;
+    (-o)  shift
+         got_output_arg=true
+         output="$1"
+         if $compile_mode || echo $1 | egrep -q '(.o|.obj)$'; then
+           carg=/Fo$(transform $1)
+         else
+           case $PROG in
+             (link.exe) carg=/OUT:$(transform $1);;
+             (*)        carg=/Fe$(transform $1);;
+           esac
+           larg="/SUBSYSTEM:console /MANIFEST kernel32.lib"
+         fi
+         # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
+        ;;
+    (-Wno-unused-parameter) ;;
+    (-g|-ggdb) ;; # carg="/Zi";;
+    (-O2|-O3) carg=/O2;;
+    (-f*)  ;;
+    (*.dll)   carg=$(transform $(echo $1 |sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
+    (*.S)  carg="/TP $1";;
+    (*.c|*.cc) carg=$(transform $1); source=$1  ;;
+    (*)  carg=$1;;
+    esac
+    append outargs "$carg"
+    append linkargs "$larg"
+    shift
+  done
+}
+
 PROG=$me
 
 : ${TMPDIR=/tmp}
@@ -63,7 +149,7 @@ fi
 
 outargs=/MD
 case $PROG in
-  (cl.exe) outargs="$outargs /nologo /EHsc";;
+  (cl.exe) append outargs "/nologo" "/EHsc";;
 esac
 
 linkargs=
@@ -77,88 +163,49 @@ output=
 # The libs we produce are called libfoo.lib, whereas the system libs are
 # called foo.lib.
 lib_dirs="$HOME/.wine/winroot/boost_1_35_0/lib $VCXX_PATH/lib $VCXX_PATH/PlatformSDK/Lib"
-systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' | tr A-Z a-z)
+systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' |
+              tr A-Z a-z |
+              sort -u |
+              tr -d '\r' |
+              tr '\n' ' ')
 
-handle_lib()
-{
-  base=${1#-l}.lib
-  complete=lib$base
-  for l in $systemlibs; do
-    if [ $l = $base ]; then
-      complete=$base
-    fi
-  done
-  local res
-  res=$(transform $complete)
-  stderr "handle_lib: $1 -> $res"
-  echo "$res"
-}
-
-while ! test -z "$1"; do
-  larg=
-  carg=
-  case $1 in
-  (-link) ;;
-  (-dll) larg="/DLL" ;;
-  (-L*)  larg=/LIBPATH:$(transform ${1#-L}) ;;
-#  (-l*)  larg=$(transform ${1#-l}.lib) ;;
-  (-l*)  larg=$(handle_lib $1) ;;
-  (*.lib) larg=$(transform $1) ;;
-  (*.a)  larg=$(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
-  (-E)  preprocess_mode=true; carg=/E ;;
-  (-c)  compile_mode=true; carg=/c ;;
-  (-o)  shift
-       got_output_arg=true
-       output="$1"
-       if $compile_mode || echo $1 | egrep -q '(.o|.obj)$'; then
-         carg=/Fo$(transform $1)
-       else
-         case $PROG in
-           (link.exe) carg=/OUT:$(transform $1);;
-           (*)        carg=/Fe$(transform $1);;
-	 esac
-	 larg="/SUBSYSTEM:console /MANIFEST kernel32.lib"
-       fi
-       # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
-      ;;
-  (-Wno-unused-parameter) ;;
-  (-g|-ggdb) ;; # carg="/Zi";;
-  (-O2|-O3) carg=/O2;;
-  (-f*)  ;;
-  (*.dll)   carg=$(transform $(echo $1 |sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
-  (*.S)  carg="/TP $1";;
-  (*.c|*.cc) carg=$(transform $1); source=$1  ;;
-  (*)  carg=$1;;
-  esac
-  outargs="$outargs $carg"
-  linkargs="$linkargs $larg"
-  shift
-done
+get_options "$@"
 
 # handle -c without -o
 if $compile_mode && ! $got_output_arg; then
   obj=$(echo $source |sed -re 's/\.[^.]+$/.obj/')
   obj=$(basename "$obj")
-  outargs="$outargs /Fo$(transform $obj)"
+  append outargs /Fo$(transform $obj)
 fi
 
 if test "$PROG" = cl.exe && ! test -z "$linkargs"; then
-  outargs="$outargs /link $linkargs"
+  append outargs "/link $linkargs"
   linkargs=
 fi
 
 test x$WRAP_VERBOSE = x ||
   stderr "command: $PROG $outargs $linkargs"
 
-$VCXX_BIN/$PROG $outargs $linkargs >$stdout 2>$stderr
+if run "$VCXX_BIN/$PROG $outargs $linkargs" >$stdout 2>$stderr; then
+  status=$?
+else
+  status=$?
+fi
+
 if $preprocess_mode; then
   cppoutput <$stdout
 fi
 
 # Clear the \r from stderr, they are a nuisance for buildbot and
 # Emacs.
-tr -d '\r' <$stderr >&2
-rm -f $stdout $stderr
+tr -d "\r" <$stderr >&2
+tr -d "\r" <$stdout
+# rm -f $stdout $stderr
+
+case $status in
+  (0);;
+  (*) exit $status;;
+esac
 
 #embed manifest
 #if echo $output | egrep -q '(exe|dll)$'; then
@@ -179,8 +226,8 @@ case $output in
 #include <winuser.h>
 1 RT_MANIFEST {"$(cat $output.escaped.manifest)"}
 __EOF__
-  $VCXX_BIN/rc.exe /r "$(transform $output).auto.rc"
-  $VCXX_BIN/$PROG $outargs $linkargs "$(transform $output).auto.RES"
+  run $VCXX_BIN/rc.exe /r "$(transform $output).auto.rc"
+  run $VCXX_BIN/$PROG $outargs $linkargs "$(transform $output).auto.RES"
   ;;
 esac
 
