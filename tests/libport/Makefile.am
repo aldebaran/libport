@@ -67,6 +67,7 @@ LDADD +=					\
 
 cli_SOURCES			        = cli.cc
 deref_SOURCES				= deref.cc
+fd_stream_SOURCES			= fd-stream.cc
 foreach_SOURCES				= foreach.cc
 path_SOURCES				= path.cc
 singleton_ptr_SOURCES			= singleton-ptr.cc
