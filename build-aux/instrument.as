@@ -1,6 +1,6 @@
 ##                                                        -*- shell-script -*-
 ## instrument.as: This file is part of build-aux.
-## Copyright (C) Gostai S.A.S., 2006-2008.
+## Copyright (C) 2006-2008, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -19,10 +19,11 @@ m4_defun([_URBI_INSTRUMENT_PREPARE],
   local val
   eval val=\$$var
   case $val in
-      yes|true|1) eval $var=true;;
-      *)          eval $var=false;;
+      (yes|true|1) val=true;;
+      (*)          val=false;;
   esac
-  eval stderr "$var=\$$var"
+  stderr "$var=$val"
+  eval "$var=$val"
 }
 
 
@@ -38,45 +39,45 @@ instrument ()
 {
   local log=$[1]
   case $INSTRUMENT:$(uname -s) in
-      true:Darwin)
-	  # Instrument to use Darwin's malloc features.  The man page
-	  # says "MallocBadFreeAbort" exists, but setting MallocHelp
-	  # reports about "MallocErrorAbort".  The former does not
-	  # work, the latter does.
-	  echo "env"				\
-	      "MallocGuardEdges=1"		\
-	      "MallocPreScribble=1"		\
-	      "MallocScribble=1"		\
-	      "MallocErrorAbort=1"		\
-	      "MallocCheckHeapAbort=1"		\
-	      "MallocLogFile=$log"
-	  ;;
-      true:*)
-	  # Instrument using Valgrind.
-	  : ${VALGRIND=valgrind}
-	  if ($VALGRIND --version) >/dev/null 2>&1; then
-	    local suppressions
-	    if test -f $srcdir/valgrind-suppressions; then
-	      suppressions="--suppressions=$srcdir/valgrind-suppressions"
-	    fi
+      (true:Darwin)
+          # Instrument to use Darwin's malloc features.  The man page
+          # says "MallocBadFreeAbort" exists, but setting MallocHelp
+          # reports about "MallocErrorAbort".  The former does not
+          # work, the latter does.
+          echo "env"                            \
+              "MallocGuardEdges=1"              \
+              "MallocPreScribble=1"             \
+              "MallocScribble=1"                \
+              "MallocErrorAbort=1"              \
+              "MallocCheckHeapAbort=1"          \
+              "MallocLogFile=$log"
+          ;;
+      (true:*)
+          # Instrument using Valgrind.
+          : ${VALGRIND=valgrind}
+          if ($VALGRIND --version) >/dev/null 2>&1; then
+            local suppressions
+            if test -f $srcdir/valgrind-suppressions; then
+              suppressions="--suppressions=$srcdir/valgrind-suppressions"
+            fi
 
-	    case $($VALGRIND --help) in
-	    *--log-file-exactly*) valgrind_log_option_name=--log-file-exactly ;;
-	    *) valgrind_log_option_name=--log-file ;;
-	    esac
+            case $($VALGRIND --help) in
+            *--log-file-exactly*) valgrind_log_option_name=--log-file-exactly ;;
+            *) valgrind_log_option_name=--log-file ;;
+            esac
 
-	    echo "$VALGRIND"				\
-	      "--error-exitcode=242"			\
-		 "$valgrind_log_option_name=$log"	\
-		 "$suppressions"			\
-		 "--"
-	  else
-	    stderr "cannot find valgrind as $VALGRIND"
-	  fi
-	  ;;
-      *)
-	  # Don't instrument.
-	  ;;
+            echo "$VALGRIND"                            \
+              "--error-exitcode=242"                    \
+                 "$valgrind_log_option_name=$log"       \
+                 "$suppressions"                        \
+                 "--"
+          else
+            stderr "cannot find valgrind as $VALGRIND"
+          fi
+          ;;
+      (*)
+          # Don't instrument.
+          ;;
   esac
 }
 
