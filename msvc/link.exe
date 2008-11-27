@@ -157,7 +157,7 @@ fi
 
 # Clear the \r from stderr, they are a nuisance for buildbot and
 # Emacs.
-tr -d '\r' $stderr >&2
+tr -d '\r' <$stderr >&2
 rm -f $stdout $stderr
 
 #embed manifest
