@@ -73,7 +73,7 @@ append ()
   for val
   do
     case $val in
-      (*[''""\\\\]*)
+      (*[''""\\\\\<\>\*\;\|]*)
         # We use printf to avoid backslash-interpolation.
         val='"'$(printf '%s' "$val" | sed -e 's/[''""\\\\]/\\&/g')'"'
         ;;
