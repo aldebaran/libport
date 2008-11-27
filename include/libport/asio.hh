@@ -11,6 +11,7 @@
 
 # include <libport/destructible.hh>
 # include <libport/finally.hh>
+# include <libport/utime.hh>
 
 namespace libport
 {
@@ -86,7 +87,7 @@ namespace libport
       inline bool isConnected() {return base_?base_->isConnected():false;}
 
       boost::system::error_code connect(const std::string& host,
-	  const std::string& port, bool udp=false);
+	  const std::string& port, bool udp=false, utime_t usTimeout = 0);
 
       typedef void* Handle;
       typedef boost::function0<Socket*> SocketFactory;
@@ -122,7 +123,8 @@ namespace libport
       listenProto(SocketFactory f, const std::string& host,
 	  const std::string&port, BaseFactory bf);
     template<typename Proto, typename BaseFactory> boost::system::error_code
-      connectProto(const std::string& host, const std::string& port, BaseFactory bf);
+      connectProto(const std::string& host, const std::string& port,
+                   utime_t timeout, BaseFactory bf);
   };
 
 }

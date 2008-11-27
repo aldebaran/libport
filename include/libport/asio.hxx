@@ -6,6 +6,7 @@
 
 #include <libport/thread.hh>
 #include <libport/lockable.hh>
+#include <libport/semaphore.hh>
 
 namespace libport {
 namespace netdetail {
@@ -310,6 +311,25 @@ namespace netdetail {
     return bs;
   }
 
+  template<class Socket> inline void
+  onTimer(boost::system::error_code erc, Socket& s)
+  {
+    // If timer reached the end, connection timeout, interrupt.
+    if (!erc)
+      s.close();
+    // Else we got aborted, do nothing
+  }
+
+  inline void onConnect(boost::system::error_code erc,
+                        boost::asio::deadline_timer & timer,
+                        libport::Semaphore& sem,
+                        boost::system::error_code& caller_erc)
+  {
+    caller_erc = erc;
+    // If timer was allready canceled, cancel is a noop and does no harm.
+    timer.cancel();
+    sem++;
+  }
 
 #ifndef LIBPORT_NO_SSL
   template<typename Stream>
@@ -405,7 +425,8 @@ resolve(const std::string& host,
 }
 
 template<class Proto, class BaseFactory> boost::system::error_code
-Socket::connectProto(const std::string& host, const std::string& port, BaseFactory bf)
+Socket::connectProto(const std::string& host, const std::string& port,
+                     utime_t timeout, BaseFactory bf)
 {
   std::cerr << "connect " << host <<" " << port << std::endl;
   using namespace netdetail;
@@ -415,7 +436,21 @@ Socket::connectProto(const std::string& host, const std::string& port, BaseFacto
     return erc;
   std::cerr <<"resolved " << std::endl;
   typename Proto::socket* s = new typename Proto::socket(get_io_service());
-  s->connect(ep, erc);
+  if (!timeout)
+    s->connect(ep, erc);
+  else
+  {
+    boost::asio::deadline_timer timer(netdetail::get_io_service());
+    libport::Semaphore sem;
+    s->async_connect(ep, boost::bind(&netdetail::onConnect, _1,
+                                     boost::ref(timer),
+                                     boost::ref(sem),
+                                     boost::ref(erc)));
+    timer.expires_from_now(boost::posix_time::microseconds(timeout));
+    timer.async_wait(boost::bind(&netdetail::onTimer<typename Proto::socket>,
+                                 _1, boost::ref(*s)));
+    sem--;
+  }
   std::cerr <<"connected " << (!erc) << std::endl;
   if (erc)
     return erc;
@@ -436,13 +471,14 @@ Socket::connectProto(const std::string& host, const std::string& port, BaseFacto
 }
 
 inline boost::system::error_code
-Socket::connect(const std::string& host, const std::string& port, bool udp)
+Socket::connect(const std::string& host, const std::string& port, bool udp,
+                utime_t timeout)
 {
   if (udp)
-    return connectProto<boost::asio::ip::udp>(host, port,
+    return connectProto<boost::asio::ip::udp>(host, port, timeout,
 	&netdetail::SocketImpl<boost::asio::ip::udp::socket>::create);
   else
-    return connectProto<boost::asio::ip::tcp>(host, port,
+    return connectProto<boost::asio::ip::tcp>(host, port, timeout,
 	&netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
 }
 
