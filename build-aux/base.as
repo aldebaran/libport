@@ -148,7 +148,11 @@ stderr ()
   do
     echo >&2 "$as_me: $i"
   done
-  echo >&2
+# This line is a nuisance in usual output, yet it makes sense in debug
+# output in RST files.  But the problem should be solved there
+# instead.
+#
+#  echo >&2
 }
 
 # verbose LINES
