@@ -137,6 +137,7 @@ PROG=$me
 
 : ${TMPDIR=/tmp}
 tmp=$TMPDIR/$me/$$
+# trap "exit=\$?; rm -rf $tmp; exit \$exit" 0
 mkdir -p $tmp
 stdout=$tmp/stdout
 stderr=$tmp/stderr
@@ -196,8 +197,8 @@ fi
 
 # Clear the \r from stderr, they are a nuisance for buildbot and
 # Emacs.
-tr -d "\r" <$stderr >&2
-tr -d "\r" <$stdout
+tr -d '\r' <$stderr >&2
+tr -d '\r' <$stdout
 case $status in
   (0);;
   (*) exit $status;;
@@ -206,7 +207,6 @@ esac
 if $preprocess_mode; then
   cppoutput <$stdout
 fi
-rm -rf $tmp
 
 #embed manifest
 #if echo $output | egrep -q '(exe|dll)$'; then
