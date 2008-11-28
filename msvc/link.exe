@@ -49,14 +49,31 @@ transform ()
 
 handle_lib ()
 {
+  # If $systemlibs is not defined, set it up.  It saves time (and
+  # traces) to do it only on demand instead of always.
+  test "${systemlibs+set}" = set ||
+  {
+    # The libs we produce are called libfoo.lib, whereas the system
+    # libs are called foo.lib.
+    local lib_dirs="$HOME/.wine/winroot/boost_1_35_0/lib"
+    lib_dirs+=" $VCXX_PATH/lib"
+    lib_dirs+=" $VCXX_PATH/PlatformSDK/Lib"
+    # On one line to make it easier to read set -x.
+    systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' |
+                    tr A-Z a-z |
+                    sort -u |
+                    tr -d '\r' |
+                    tr '\n' ' ')
+  }
+
   local base=${1#-l}.lib
-  local complete=lib$base
-  # If $base is in $systemlibs, use $base instead of $complete.
-  case " $systemlibs " in
-    (" *$base* ") complete=$base;;
-  esac
   local res
-  res=$(transform $complete)
+  # If $base is not in $systemlibs, prepend "lib".
+  case " $systemlibs " in
+    (*" $base "*) res=$base;;
+    (*)           res=lib$base;;
+  esac
+  res=$(transform $res)
   stderr "handle_lib: $1 -> $res"
   echo "$res"
 }
@@ -161,16 +178,6 @@ got_output_arg=false
 source=
 #output file name
 output=
-
-# The libs we produce are called libfoo.lib, whereas the system libs are
-# called foo.lib.
-lib_dirs="$HOME/.wine/winroot/boost_1_35_0/lib $VCXX_PATH/lib $VCXX_PATH/PlatformSDK/Lib"
-# On one line to make it easier to read set -x.
-systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' |
-              tr A-Z a-z |
-              sort -u |
-              tr -d '\r' |
-              tr '\n' ' ')
 
 get_options "$@"
 
