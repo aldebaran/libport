@@ -198,21 +198,23 @@ test x$WRAP_VERBOSE = x ||
 
 if run "$VCXX_BIN/$PROG $outargs $linkargs" >$stdout 2>$stderr; then
   status=$?
+  # Clear the \r from stderr, they are a nuisance for buildbot and
+  # Emacs.
+  tr -d '\r' <$stderr >&2
+  # In cpp mode, the output is sent to stdout and is expected there
+  # by depcomp.
+  if $preprocess_mode; then
+    cppoutput <$stdout
+  else
+    tr -d '\r' <$stdout
+  fi
 else
   status=$?
-fi
-
-# Clear the \r from stderr, they are a nuisance for buildbot and
-# Emacs.
-tr -d '\r' <$stderr >&2
-tr -d '\r' <$stdout
-case $status in
-  (0);;
-  (*) exit $status;;
-esac
-
-if $preprocess_mode; then
-  cppoutput <$stdout
+  # Clear the \r from stderr, they are a nuisance for buildbot and
+  # Emacs.
+  tr -d '\r' <$stderr >&2
+  tr -d '\r' <$stdout
+  exit $status
 fi
 
 #embed manifest
