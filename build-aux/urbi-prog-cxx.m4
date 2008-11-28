@@ -150,6 +150,12 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 # Remove MS Visual Compiler's spurious warnings.  #
 # ----------------------------------------------- #
 
+# warning C4061: enumerator 'destroy_functor_tag' in switch of enum
+#    'boost::detail::function::functor_manager_operation_type' is not
+#    explicitly handled by a case label
+# Although the switch has a "default:" case.  Disable this, since anyway
+# GCC does the check properly.
+#
 # warning C4099: 'symbol' : type name first seen using 'class' now seen using
 #                           'struct'
 # (which prints lots of useless warnings when forward declarations are
@@ -210,7 +216,8 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 #
 # warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
 #
-TC_CXX_WARNINGS([[/wd4099],
+TC_CXX_WARNINGS([[/wd4061],
+		 [/wd4099],
 		 [/wd4121],
 		 [/wd4127],
 		 [/wd4347],
