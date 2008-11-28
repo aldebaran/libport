@@ -7,6 +7,7 @@
 
 #include <libport/cstdio>
 #include <libport/fd-stream.hh>
+#include <libport/thread.hh>
 #include <libport/unit-test.hh>
 #include <libport/windows.hh>
 
@@ -136,31 +137,43 @@ fd_write_ints(FdStream*& stream, int fd)
   BOOST_CHECK_EQUAL(get(fd), "2a 52");
 }
 
-static void
-fd_read_jumbo(FdStream*& stream, int fd)
+static void thread_write(int fd, int size)
 {
-  static const int size = BUFSIZ * 1.5;
-
   for (int i = 0; i < size; ++i)
     put(i % 256, fd); // This might fail if the pipe isn't large enough ...
   close(fd);
+}
+
+static void
+fd_read_jumbo(FdStream*& stream, int fd)
+{
+  static const int size = BUFSIZ * 3 / 2;
+
+  void* thread = libport::startThread(boost::bind(thread_write, fd, size));
 
   char c;
   int count = 0;
   for (count = 0; stream->get(c); ++count)
     BOOST_CHECK_EQUAL(c, (char)(count % 256));
   BOOST_CHECK_EQUAL(count, size);
+  libport::joinThread(thread);
+}
+
+static void thread_write_stream(FdStream* stream, int size)
+{
+  for (int i = 0; i < size; ++i)
+    *stream << (char) (i % 256);
+  delete stream;
 }
 
 static void
 fd_write_jumbo(FdStream*& stream, int fd)
 {
-  static const int size = BUFSIZ * 1.5;
+  static const int size = BUFSIZ * 3 / 2;
 
-  for (int i = 0; i < size; ++i)
-    *stream << (char) (i % 256);
   stream->own_fd(true);
-  delete stream;
+  void* thread = libport::startThread
+    (boost::bind(thread_write_stream, stream, size));
   stream = 0;
   char c;
   for (int i = 0; i < size; ++i)

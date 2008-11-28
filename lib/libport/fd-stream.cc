@@ -62,8 +62,11 @@ namespace libport
 
   int FdBuf::sync()
   {
-    write(write_, obuf_, pptr() - obuf_);
-    setp(obuf_, obuf_ + BUFSIZ - 1);
+    if (pptr() - obuf_)
+    {
+      write(write_, obuf_, pptr() - obuf_);
+      setp(obuf_, obuf_ + BUFSIZ - 1);
+    }
     return 0; // Success
   }
 
