@@ -134,7 +134,7 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
      _AFX_SECURE_NO_WARNINGS                    \
      _ATL_SECURE_NO_WARNINGS
   do
-    CPPFLAGS+=" -D$ac_flags=1"
+    CPPFLAGS+=" -D$ac_flag=1"
   done
 fi
 
