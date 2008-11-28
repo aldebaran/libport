@@ -123,11 +123,19 @@ AC_CACHE_CHECK([whether $CXX is Microsoft's compiler], [ac_cv_cxx_compiler_ms],
 if test "$ac_cv_cxx_compiler_ms" = yes; then
   AC_DEFINE([WIN32], [], [Whether we're on Windows])
   # http://social.msdn.microsoft.com/Forums/en-US/vcgeneral/thread/167fb6e5-ef74-4b03-83ee-f1de8f7ef291/
+  # http://msdn.microsoft.com/en-us/library/ttcz0bys(VS.80).aspx
 
   # Unfortunately there are many files that do not use config.h, so it
   # is safer, but adds clutter, to add this to the CPPFLAGS rather
-  # than putting iit in the config.h.
-  CPPFLAGS+=" -D_CRT_SECURE_NO_DEPRECATE=1 -DCRT_NONSTDC_NO_DEPRECATE=1"
+  # than in config.h.
+  for ac_flag in                                \
+     _CRT_SECURE_NO_DEPRECATE                   \
+     _CRT_NONSTDC_NO_DEPRECATE                  \
+     _AFX_SECURE_NO_WARNINGS                    \
+     _ATL_SECURE_NO_WARNINGS
+  do
+    CPPFLAGS+=" -D$ac_flags=1"
+  done
 fi
 
 # There seems to be several models of exception handling with VC++.
