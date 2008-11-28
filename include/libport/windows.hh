@@ -3,6 +3,7 @@
 
 # include <boost/cstdint.hpp>
 # include <libport/detect-win32.h>
+# include <fcntl.h>
 
 # if defined WIN32 || defined LIBPORT_WIN32
 
@@ -78,8 +79,8 @@ inline int getpagesize()
 
 inline int pipe(int pipefd[2])
 {
-  // fds, memory to reserve, text mode
-  return _pipe(pipefd, BUFSIZ, 0);
+  // fds, memory to reserve, mode
+  return _pipe(pipefd, BUFSIZ, _O_BINARY);
 }
 
 # endif // defined WIN32 || defined LIBPORT_WIN32
