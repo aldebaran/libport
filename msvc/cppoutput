@@ -62,11 +62,18 @@ for l in sys.stdin:
       seen[origin] = transform(origin)
 r = [f for f in seen.values() if not f.startswith('/home/build/local_wine')]
 r.sort
+# Output all the files only once. Two different Windows file names may
+# in fact correspond to the same Unix file name, for example if the
+# path contains redundant "." components. We use a hash-table here for speed.
+output = {}
 for f in r:
   try:
-    # Use a filename only if it exists as a real file
+    # Use a filename only if it exists as a real file and if we haven't seen
+    # it before.
     os.stat(f)
-    print '#line 1 "%s"' % f
+    if f not in output:
+      print '#line 1 "%s"' % f
+    output[f] = True
   except:
     pass
 try:
