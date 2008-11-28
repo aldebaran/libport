@@ -122,9 +122,16 @@ AC_CACHE_CHECK([whether $CXX is Microsoft's compiler], [ac_cv_cxx_compiler_ms],
 
 if test "$ac_cv_cxx_compiler_ms" = yes; then
   AC_DEFINE([WIN32], [], [Whether we're on Windows])
+  # http://social.msdn.microsoft.com/Forums/en-US/vcgeneral/thread/167fb6e5-ef74-4b03-83ee-f1de8f7ef291/
   AC_DEFINE([_CRT_SECURE_NO_DEPRECATE], [],
             [Define if using VC++ to avoid messages such as
 	    "warning C4996: 'strerror' was declared deprecated".])
+  AC_DEFINE([_CRT_NONSTD_NO_DEPRECATE], [],
+            [Define if using VC++ to avoid messages such as
+	    "warning C4996: 'strerror' was declared deprecated".])
+  # Unfortunately there are many files that do not use config.h, so it
+  # is safer, but adds clutter, to add this to the CPPFLAGS.
+  CPPFLAGS+=" -D_CRT_SECURE_NO_DEPRECATE -DCRT_NONSTDC_NO_DEPRECATE"
 fi
 
 # There seems to be several models of exception handling with VC++.
