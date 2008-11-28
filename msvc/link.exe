@@ -117,8 +117,7 @@ get_options ()
     (-link) ;;
     (-dll) append linkargs "/DLL" ;;
     (-L*)  append linkargs /LIBPATH:$(transform ${1#-L}) ;;
-    (-l*)  append linkargs $(handle_lib $1) ;;
-    (*.lib) append linkargs $(transform $1) ;;
+    (-l* | *.lib) append linkargs $(transform $1) ;;
     (*.a)  append linkargs $(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
     (-E)  preprocess_mode=true; append outargs /E ;;
     (-c)  compile_mode=true; append outargs /c ;;
@@ -142,8 +141,8 @@ get_options ()
     (-f*)  ;;
     (*.dll)
       append outargs $(transform $(echo $1 |sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
-    (*.S)  append outargs "/TP $1";;
-    (*.c|*.cc) append outargs $(transform $1); source=$1  ;;
+    (*.S)  append outargs "/TP" "$1";;
+    (*.c|*.cc|*.i|*.ii) append outargs $(transform $1); source=$1  ;;
     (*)  append outargs $1;;
     esac
     shift
