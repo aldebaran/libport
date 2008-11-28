@@ -24,7 +24,10 @@ AC_PREREQ([2.60])
 # libtool: $(LIBTOOL_DEPS)
 #	$(SHELL) ./config.status --recheck
 #
-# and use LTDL_CPPFLAGS and LTDL_LIBS where appropriate.
+# and use LTDL_CPPFLAGS and LTDL_LIBS where appropriate.  You may also
+# use LTDL_DEPS, but beware that specifying PROG_DEPENDENCIES stops
+# Automake from generating dependencies from LDADD, which is a
+# nuisance.
 AC_DEFUN([URBI_LTDL],
 [# If you need to create a library, use libtool.
 LT_PREREQ([2.2.6])
