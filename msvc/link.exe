@@ -23,7 +23,7 @@ stderr ()
 run ()
 {
   stderr "run: $*"
-  eval "$@"
+  "$@"
 }
 
 error ()
@@ -196,7 +196,7 @@ fi
 test x$WRAP_VERBOSE = x ||
   stderr "command: $PROG $outargs $linkargs"
 
-if run "$VCXX_BIN/$PROG $outargs $linkargs" >$stdout 2>$stderr; then
+if eval "run \"$VCXX_BIN/$PROG\" $outargs $linkargs" >$stdout 2>$stderr; then
   status=$?
   # Clear the \r from stderr, they are a nuisance for buildbot and
   # Emacs.
@@ -236,8 +236,8 @@ case $output in
 #include <winuser.h>
 1 RT_MANIFEST {"$(cat $output.escaped.manifest)"}
 __EOF__
-  run "$VCXX_BIN/rc.exe /r \"$(transform $output).auto.rc\""
-  run "$VCXX_BIN/$PROG $outargs $linkargs \"$(transform $output).auto.RES\""
+  run $VCXX_BIN/rc.exe /r "$(transform $output).auto.rc"
+  eval run "$VCXX_BIN/$PROG $outargs $linkargs \"$(transform $output).auto.RES\""
   ;;
 esac
 
