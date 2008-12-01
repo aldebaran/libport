@@ -346,8 +346,8 @@ if test "$mode" = compile && ! $got_output_arg; then
 fi
 
 if test "$PROG" = cl.exe && test -n "$linkargs"; then
-  test -z "$mode"
-  mode=link
+#  test -z "$mode"
+#  mode=link
   outargs "/link" $linkargs
   linkargs=
 fi
