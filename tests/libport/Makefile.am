@@ -19,6 +19,7 @@ include $(top_srcdir)/build-aux/check.mk
 TESTS =                                         \
   cli.cc                                        \
   deref.cc                                      \
+  dirent.cc                                     \
   fd-stream.cc                                  \
   foreach.cc                                    \
   path.cc                                       \
@@ -67,6 +68,7 @@ LDADD +=                                        \
 
 cli_SOURCES                       = cli.cc
 deref_SOURCES                     = deref.cc
+dirent_SOURCES                    = dirent.cc
 fd_stream_SOURCES                 = fd-stream.cc
 foreach_SOURCES                   = foreach.cc
 path_SOURCES                      = path.cc
