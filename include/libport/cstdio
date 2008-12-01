@@ -13,7 +13,6 @@
 #ifdef WIN32
 # include <io.h>
 # define close _close
-# define read _read
 # define snprintf _snprintf
 # define vsnprintf _vsnprintf
 # define write _write

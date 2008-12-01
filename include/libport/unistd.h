@@ -1,6 +1,10 @@
 #ifndef LIBPORT_UNISTD_H
 # define LIBPORT_UNISTD_H
 
+/*-----------------------------------------------.
+| FIXME: #define is evil, use wrappers instead.  |
+`-----------------------------------------------*/
+
 # include <libport/detect-win32.h>
 # include <libport/windows.hh> // Get sleep wrapper
 
@@ -84,6 +88,21 @@ namespace libport
 #  else
 #   error I need either getcwd() or _getcwd()
 #  endif
+# endif
+
+
+
+/*-------.
+| read.  |
+`-------*/
+
+# ifdef WIN32
+inline
+ssize_t
+read(int d, void* buf, size_t nbytes)
+{
+  return _read(d, buf, nbytes);
+}
 # endif
 
 #endif // !LIBPORT_UNISTD_H
