@@ -5,6 +5,7 @@
 
 # ifdef WIN32
 
+#  include <libport/export.hh>
 #  include <libport/windows.hh>
 #  include <io.h>
 #  include <string>
