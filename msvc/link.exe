@@ -22,7 +22,7 @@ stderr ()
 
 run ()
 {
-  stderr "run: $*"
+  verbose "run: $*"
   "$@"
 }
 
@@ -32,6 +32,15 @@ error ()
   shift
   stderr "$@"
   exit $exit
+}
+
+verbose ()
+{
+  case " $VERBOSE " in
+    (*" cl.exe "*|*" link.exe "*|" x ")
+      stderr "$@"
+      ;;
+  esac
 }
 
 fatal ()
@@ -74,7 +83,7 @@ handle_lib ()
     (*)           res=lib$base;;
   esac
   res=$(transform $res)
-  stderr "handle_lib: $1 -> $res"
+  verbose "handle_lib: $1 -> $res"
   echo "$res"
 }
 
@@ -103,13 +112,12 @@ append ()
     esac
     eval "$var+=\$sep\$val"
   done
-  case $VERBOSE in (x)
-    eval stderr "$var=\$$var";;
-  esac
+#  eval verbose "$var=\$$var"
 }
 
 get_options ()
 {
+  verbose "arguments: $*"
   while test $# -ne 0
   do
     local opt=$1
@@ -119,12 +127,12 @@ get_options ()
     (-L*)  append linkargs /LIBPATH:$(transform ${1#-L}) ;;
     (-l* | *.lib) append linkargs $(transform $1) ;;
     (*.a)  append linkargs $(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
-    (-E)  preprocess_mode=true; append outargs /E ;;
-    (-c)  compile_mode=true; append outargs /c ;;
+    (-E)  mode=preprocess; append outargs /E ;;
+    (-c)  mode=compile; append outargs /c ;;
     (-o)  shift
          got_output_arg=true
          output=$1
-         if $compile_mode || echo $1 | egrep -q '(.o|.obj)$'; then
+         if test "$mode" = compile || echo $1 | egrep -q '(.o|.obj)$'; then
            append outargs /Fo$(transform $1)
          else
            case $PROG in
@@ -140,13 +148,20 @@ get_options ()
     (-O2|-O3) append outargs /O2;;
     (-f*)  ;;
     (*.dll)
-      append outargs $(transform $(echo $1 |sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
+      append outargs $(transform $(echo $1 | sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
     (*.S)  append outargs "/TP" "$1";;
-    (*.c|*.cc|*.i|*.ii) append outargs $(transform $1); source=$1  ;;
+    (*.c|*.cc) append outargs $(transform $1); source=$1  ;;
+    (*.i|*.ii) append outargs "/TP" "$(transform $1)"; source=$1  ;;
     (*)  append outargs $1;;
     esac
     shift
   done
+}
+
+dos2unix ()
+{
+  # Sed is easier to use than tr, which works on stdin only.
+  sed -e 's/\r//' "$@"
 }
 
 PROG=$me
@@ -171,8 +186,7 @@ case $PROG in
 esac
 
 linkargs=
-compile_mode=false
-preprocess_mode=false
+mode=
 got_output_arg=false
 source=
 #output file name
@@ -181,8 +195,8 @@ output=
 get_options "$@"
 
 # handle -c without -o
-if $compile_mode && ! $got_output_arg; then
-  obj=$(echo $source |sed -re 's/\.[^.]+$/.obj/')
+if test "$mode" = compile && ! $got_output_arg; then
+  obj=$(echo $source | sed -re 's/\.[^.]+$/.obj/')
   obj=$(basename "$obj")
   append outargs /Fo$(transform $obj)
 fi
@@ -192,27 +206,26 @@ if test "$PROG" = cl.exe && ! test -z "$linkargs"; then
   linkargs=
 fi
 
-test x$WRAP_VERBOSE = x ||
-  stderr "command: $PROG $outargs $linkargs"
+verbose "mode: $mode"
 
 if eval "run \"$VCXX_BIN/$PROG\" $outargs $linkargs" >$stdout 2>$stderr; then
   status=$?
   # Clear the \r from stderr, they are a nuisance for buildbot and
   # Emacs.
-  tr -d '\r' <$stderr >&2
+  dos2unix $stderr >&2
   # In cpp mode, the output is sent to stdout and is expected there
   # by depcomp.
-  if $preprocess_mode; then
+  if test $mode = preprocess; then
     cppoutput <$stdout
   else
-    tr -d '\r' <$stdout
+    dos2unix $stdout
   fi
 else
   status=$?
   # Clear the \r from stderr, they are a nuisance for buildbot and
   # Emacs.
-  tr -d '\r' <$stderr >&2
-  tr -d '\r' <$stdout
+  dos2unix $stderr >&2
+  dos2unix $stdout
   exit $status
 fi
 
