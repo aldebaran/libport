@@ -42,6 +42,7 @@ libport_include_HEADERS +=			\
   $(include_libport)/containers.hh		\
   $(include_libport)/containers.hxx		\
   $(include_libport)/contract.hh		\
+  $(include_libport)/debug.hh			\
   $(include_libport)/deref.hh			\
   $(include_libport)/deref.hxx			\
   $(include_libport)/destructible.hh		\
@@ -54,6 +55,7 @@ libport_include_HEADERS +=			\
   $(include_libport)/exception.hh		\
   $(include_libport)/exception.hxx		\
   $(include_libport)/export.hh			\
+  $(include_libport)/fd-stream.hh		\
   $(include_libport)/fifo.hh			\
   $(include_libport)/fifo.hxx			\
   $(include_libport)/file-library.hh		\
