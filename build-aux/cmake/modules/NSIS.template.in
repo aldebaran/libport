@@ -529,6 +529,10 @@ FunctionEnd
   @CPACK_NSIS_PAGE_COMPONENTS@
 
   !insertmacro MUI_PAGE_INSTFILES
+
+  StrCmp "@CPACK_RUN_EXENAME@" "" endRunWhenFinished 0
+    !define MUI_FINISHPAGE_RUN "$INSTDIR\@CPACK_RUN_EXENAME@"
+  endRunWhenFinished:
   !insertmacro MUI_PAGE_FINISH
 
   !insertmacro MUI_UNPAGE_CONFIRM
