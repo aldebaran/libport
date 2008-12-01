@@ -68,7 +68,7 @@ for l in sys.stdin:
       t = transform(origin)
       seen[origin] = t
     # If we have output this file already, we may not have to do it again
-    if output[origin] and not full:
+    if origin in output and not full:
       continue
     output[origin] = True
     # If the file does not really exist, prepend the line with "//" so that
