@@ -54,7 +54,7 @@ def transform(path):
 output = {}
 seen = {}
 full = "--full" in sys.argv
-_line = re.compile('#line (\d+) "(.*)"')
+_line = re.compile('\s*#\s*line\s+(\d+)\s+"(.*)"')
 
 for l in sys.stdin:
   x = _line.match(l)
