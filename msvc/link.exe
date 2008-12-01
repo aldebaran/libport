@@ -115,6 +115,23 @@ append ()
 #  eval verbose "$var=\$$var"
 }
 
+# linkargs ARG...
+# ---------------
+# Append to $linkargs.
+linkargs ()
+{
+  append linkargs "$@"
+}
+
+# outargs ARG...
+# --------------
+# Append to $outargs.
+outargs ()
+{
+  append outargs "$@"
+}
+
+
 get_options ()
 {
   verbose "arguments: $*"
@@ -123,37 +140,37 @@ get_options ()
     local opt=$1
     case $1 in
     (-link) ;;
-    (-dll)  append linkargs "/DLL" ;;
-    (-L*)   append linkargs /LIBPATH:$(transform ${1#-L}) ;;
-    (-l*)   append linkargs $(handle_lib $1) ;;
-    (*.lib) append linkargs $(transform $1) ;;
-    (*.a)   append linkargs $(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
-    (-E)  mode=preprocess; append outargs /E ;;
-    (-c)  mode=compile; append outargs /c ;;
+    (-dll)  linkargs "/DLL" ;;
+    (-L*)   linkargs /LIBPATH:$(transform ${1#-L}) ;;
+    (-l*)   linkargs $(handle_lib $1) ;;
+    (*.lib) linkargs $(transform $1) ;;
+    (*.a)   linkargs $(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
+    (-E)  mode=preprocess; outargs /E ;;
+    (-c)  mode=compile; outargs /c ;;
     (-o)  shift
          got_output_arg=true
          output=$1
          if test "$mode" = compile || echo $1 | egrep -q '(.o|.obj)$'; then
-           append outargs /Fo$(transform $1)
+           outargs /Fo$(transform $1)
          else
            case $PROG in
-             (link.exe) append outargs /OUT:$(transform $1);;
-             (*)        append outargs /Fe$(transform $1);;
+             (link.exe) outargs /OUT:$(transform $1);;
+             (*)        outargs /Fe$(transform $1);;
            esac
-           append linkargs "/SUBSYSTEM:console" "/MANIFEST" "kernel32.lib"
+           linkargs "/SUBSYSTEM:console" "/MANIFEST" "kernel32.lib"
          fi
          # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
         ;;
     (-Wno-unused-parameter) ;;
-    (-g|-ggdb) ;; # append outargs "/Zi";;
-    (-O2|-O3) append outargs /O2;;
+    (-g|-ggdb) ;; # outargs "/Zi";;
+    (-O2|-O3) outargs /O2;;
     (-f*)  ;;
     (*.dll)
-      append outargs $(transform $(echo $1 | sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
-    (*.S)  append outargs "/TP" "$1";;
-    (*.c|*.cc) append outargs $(transform $1); source=$1  ;;
-    (*.i|*.ii) append outargs "/TP" "$(transform $1)"; source=$1  ;;
-    (*)  append outargs $1;;
+      outargs $(transform $(echo $1 | sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
+    (*.S)  outargs "/TP" "$1";;
+    (*.c|*.cc) outargs $(transform $1); source=$1  ;;
+    (*.i|*.ii) outargs "/TP" "$(transform $1)"; source=$1  ;;
+    (*)  outargs $1;;
     esac
     shift
   done
@@ -183,7 +200,7 @@ fi
 
 outargs=/MD
 case $PROG in
-  (cl.exe) append outargs "/nologo" "/EHsc";;
+  (cl.exe) outargs "/nologo" "/EHsc";;
 esac
 
 linkargs=
@@ -199,11 +216,11 @@ get_options "$@"
 if test "$mode" = compile && ! $got_output_arg; then
   obj=$(echo $source | sed -re 's/\.[^.]+$/.obj/')
   obj=$(basename "$obj")
-  append outargs /Fo$(transform $obj)
+  outargs /Fo$(transform $obj)
 fi
 
 if test "$PROG" = cl.exe && ! test -z "$linkargs"; then
-  append outargs "/link" $linkargs
+  outargs "/link" $linkargs
   linkargs=
 fi
 
