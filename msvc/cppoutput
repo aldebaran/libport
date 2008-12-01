@@ -51,31 +51,38 @@ def transform(path):
     pass
   return res
 
+output = {}
+seen = {}
+full = "--full" in sys.argv
 _line = re.compile('#line (\d+) "(.*)"')
 
-seen = {}
 for l in sys.stdin:
   x = _line.match(l)
   if x:
     origin = x.group(2)
-    if origin not in seen:
-      seen[origin] = transform(origin)
-r = [f for f in seen.values() if not f.startswith('/home/build/local_wine')]
-r.sort
-# Output all the files only once. Two different Windows file names may
-# in fact correspond to the same Unix file name, for example if the
-# path contains redundant "." components. We use a hash-table here for speed.
-output = {}
-for f in r:
-  try:
-    # Use a filename only if it exists as a real file and if we haven't seen
-    # it before.
-    os.stat(f)
-    if f not in output:
-      print '#line 1 "%s"' % f
-    output[f] = True
-  except:
-    pass
+    try:
+      t = seen[origin]
+      if not full:
+	continue
+    except:
+      t = transform(origin)
+      seen[origin] = t
+    # If we have output this file already, we may not have to do it again
+    if output[origin] and not full:
+      continue
+    output[origin] = True
+    # If the file does not really exist, prepend the line with "//" so that
+    # we do not mess dependencies up
+    try:
+      os.stat(t)
+    except:
+      if not full:
+	continue
+      sys.stdout.write("//")
+    sys.stdout.write('#line %s "%s"\n' % (x.group(1), t))
+  elif full:
+    sys.stdout.write(l)
+
 try:
   db.commit()
 except:
