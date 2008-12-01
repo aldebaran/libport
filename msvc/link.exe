@@ -123,10 +123,11 @@ get_options ()
     local opt=$1
     case $1 in
     (-link) ;;
-    (-dll) append linkargs "/DLL" ;;
-    (-L*)  append linkargs /LIBPATH:$(transform ${1#-L}) ;;
-    (-l* | *.lib) append linkargs $(transform $1) ;;
-    (*.a)  append linkargs $(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
+    (-dll)  append linkargs "/DLL" ;;
+    (-L*)   append linkargs /LIBPATH:$(transform ${1#-L}) ;;
+    (-l*)   append linkargs $(handle_lib $1) ;;
+    (*.lib) append linkargs $(transform $1) ;;
+    (*.a)   append linkargs $(transform $(echo $1 | sed -e 's/.a$/.lib/')) ;;
     (-E)  mode=preprocess; append outargs /E ;;
     (-c)  mode=compile; append outargs /c ;;
     (-o)  shift
