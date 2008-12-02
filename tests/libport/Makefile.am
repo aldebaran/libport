@@ -16,7 +16,7 @@ LAZY_TEST_SUITE = 1
 include $(top_srcdir)/build-aux/check.mk
 
 # Program to check:
-TESTS =                                         \
+TESTS +=                                        \
   cli.cc                                        \
   cstdlib.cc                                    \
   deref.cc                                      \
@@ -99,7 +99,7 @@ visitor_SOURCES                   = visitor.cc
 EXTRA_DIST += ufloat-common.cc ufloat-config.h 666.txt
 
 # See above for an explanation on the $(EXEEXT) business.
-TESTS_ENVIRONMENT =                                     \
+TESTS_ENVIRONMENT +=                                    \
   SRCDIR=$(srcdir)                                      \
   WINE_LD_LIBRARY_PATH_ARGS='--wrapper=$(<:$(EXEEXT)=)' \
   $(RUN_WINE_LD_LIBRARY_PATH)

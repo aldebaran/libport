@@ -1,15 +1,10 @@
-#  _____ _____  ____  __ _____
-# |  ___|_ _\ \/ /  \/  | ____|
-# | |_   | | \  /| |\/| |  _|
-# |  _|  | | /  \| |  | | |___
-# |_|   |___/_/\_\_|  |_|_____|
-#
+include $(top_srcdir)/build-aux/init.mk
 
 SUBDIRS = libport
 
 # Program to check:
 check_PROGRAMS = testme
-nodist_check_SCRIPTS = $(top_builddir)/build-aux/test.sh
+nodist_check_SCRIPTS += $(top_builddir)/build-aux/test.sh
 testme_SOURCES = testme.cc
 
 # If your test programs includes header from the source tree:
@@ -20,16 +15,16 @@ testme_SOURCES = testme.cc
 # LDADD = $(top_builddir)/src/libfoo.la
 
 # List your tests here:
-TESTS = testme.test
+TESTS += testme.test
 
 $(TESTS):
 	for i in $(TESTS); do \
           $(LN_S) -f $(top_builddir)/build-aux/test.sh $$i || exit 1; \
         done
 
-EXTRA_DIST = $(TESTS:.test=.stdout)
-CLEANFILES = *.my_stdout *.my_stderr
-TESTS_ENVIRONMENT = SRCDIR=$(srcdir)
+EXTRA_DIST += $(TESTS:.test=.stdout)
+CLEANFILES += *.my_stdout *.my_stderr
+TESTS_ENVIRONMENT += SRCDIR=$(srcdir)
 
 $(top_builddir)/build-aux/test.sh: $(top_srcdir)/build-aux/test.sh.in
 	cd $(top_builddir) && ./config.status build-aux/test.sh
