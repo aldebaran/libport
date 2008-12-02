@@ -328,7 +328,11 @@ output=
 get_options "$@"
 
 case $mode in
-  (compile)     outargs /Fo$(transform $output);;
+  (compile)
+    # -c with -o.
+    test -n "$output" ||
+      output=$(basename "$source" | sed -re 's/\.[^.]+$/.obj/')
+    outargs /Fo$(transform $output);;
   (preprocess)  ;;
   (*) # Probably linking.
     mode=link
@@ -339,13 +343,6 @@ case $mode in
     linkargs "/SUBSYSTEM:console" "/MANIFEST" "kernel32.lib"
     ;;
 esac
-
-# handle -c without -o
-if test "$mode" = compile && test -z "$output"; then
-  obj=$(echo $source | sed -re 's/\.[^.]+$/.obj/')
-  obj=$(basename "$obj")
-  outargs /Fo$(transform $obj)
-fi
 
 if test "$PROG" = cl.exe && test -n "$linkargs"; then
 #  test -z "$mode"
