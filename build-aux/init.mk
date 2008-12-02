@@ -10,7 +10,9 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
-# Initialize some common variables so that we can always use +=.
+# Initialize some common variables so that we can always use +=.  Do
+# not initialize TESTS, otherwise Automake sees empty test suites
+# everywhere.
 AM_CFLAGS =
 AM_CPPFLAGS =
 AM_CXXFLAGS =
@@ -26,7 +28,6 @@ LIBS =
 MAINTAINERCLEANFILES =
 MOSTLYCLEANFILES =
 SUFFIXES =
-TESTS =
 TESTS_ENVIRONMENT =
 bin_PROGRAMS =
 dist_bin_SCRIPTS =

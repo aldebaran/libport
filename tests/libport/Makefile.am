@@ -16,7 +16,7 @@ LAZY_TEST_SUITE = 1
 include $(top_srcdir)/build-aux/check.mk
 
 # Program to check:
-TESTS +=                                        \
+TESTS =                                        \
   cli.cc                                        \
   cstdlib.cc                                    \
   deref.cc                                      \

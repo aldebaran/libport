@@ -15,7 +15,7 @@ testme_SOURCES = testme.cc
 # LDADD = $(top_builddir)/src/libfoo.la
 
 # List your tests here:
-TESTS += testme.test
+TESTS = testme.test
 
 $(TESTS):
 	for i in $(TESTS); do \
