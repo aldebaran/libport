@@ -263,7 +263,6 @@ get_options ()
     (-E)  mode=preprocess; outargs /E ;;
     (-c)  mode=compile; outargs /c ;;
     (-o)  shift
-         got_output_arg=true
          output=$1
          case $mode:$output in
              (:*.o|:*.obj) mode=compile;;
@@ -322,9 +321,8 @@ esac
 linkargs=
 # mode=compile|link|preprocess
 mode=
-got_output_arg=false
 source=
-#output file name
+# Output file name.
 output=
 
 get_options "$@"
@@ -343,7 +341,7 @@ case $mode in
 esac
 
 # handle -c without -o
-if test "$mode" = compile && ! $got_output_arg; then
+if test "$mode" = compile && test -z "$output"; then
   obj=$(echo $source | sed -re 's/\.[^.]+$/.obj/')
   obj=$(basename "$obj")
   outargs /Fo$(transform $obj)
