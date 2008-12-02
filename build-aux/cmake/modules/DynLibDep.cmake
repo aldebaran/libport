@@ -148,23 +148,22 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
 	set(lib_name ${CMAKE_MATCH_1})
 	get_filename_component(lib_name_we ${lib_name} NAME_WE)
 
-	list(APPEND _lib_names ${lib_name})
-
 	# Try to search in programs.
 	find_program(${lib_name_we}_prog ${lib_name})
 	if(${lib_name_we}_prog)
 	  get_filename_component(lib_dir ${${lib_name_we}_prog} PATH)
+	  list(APPEND _lib_names ${lib_name})
 	  list(APPEND _lib_dirs ${lib_dir})
 	else(${lib_name_we}_prog)
 	  # Try to search in libraries.
 	  find_library(${lib_name_we}_lib ${lib_name})
 	  if(${lib_name_we}_lib)
 	    get_filename_component(lib_dir ${${lib_name_we}_lib} PATH)
+	    list(APPEND _lib_names ${lib_name})
 	    list(APPEND _lib_dirs ${lib_dir})
 	  else(${lib_name_we}_lib)
 	    # Failed to find the library.
 	    dldep_info("cannot find '${lib_name}'")
-	    list(APPEND _lib_dirs "")
 	  endif(${lib_name_we}_lib)
 	endif(${lib_name_we}_prog)
 
