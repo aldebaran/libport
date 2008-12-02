@@ -138,6 +138,10 @@ URBI_PACKAGE_KIND_SWITCH(
   [sdk],
    [AC_SUBST([SDK_CPPFLAGS], ['-I${sdkincludedir} -I${kernelincludedir}'])
     AC_SUBST([SDK_LDFLAGS],  ['-L${envdir}'])])
+
+# Where we install umain.cc.  Used by umake.
+AC_SUBST([umaindir], ['${branddir}/share/umain'])
+
 ])
 
 
