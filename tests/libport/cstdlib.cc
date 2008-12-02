@@ -3,7 +3,7 @@
 
 using libport::test_suite;
 
-static void environ()
+static void test_environ()
 {
   // Variables we know to be defined.
   const char* path = getenv("PATH");
@@ -27,6 +27,6 @@ test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::cstdlib");
-  suite->add(BOOST_TEST_CASE(environ));
+  suite->add(BOOST_TEST_CASE(test_environ));
   return suite;
 }
