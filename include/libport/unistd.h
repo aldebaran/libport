@@ -22,7 +22,7 @@
 #  define O_LARGEFILE 0
 # endif
 
-// This seems to be its WIN32 equivalent.
+// Several functions (e.g., close, read, write) are defined in io.h.
 // http://msdn2.microsoft.com/en-us/library/ms811896(d=printer).aspx#ucmgch09_topic7.
 # if defined WIN32 || defined LIBPORT_WIN32
 #  include <io.h>
@@ -38,7 +38,7 @@
 #  define F_OK 0
 #  define W_OK 2
 #  define R_OK 4
-#  define access _access
+// #  define access _access
 # endif
 
 /*--------.
@@ -55,10 +55,6 @@
 `--------------*/
 
 # include <libport/sys/socket.h>
-
-/*--------------.
-| closeSocket.  |
-`--------------*/
 
 namespace libport
 {
@@ -88,21 +84,6 @@ namespace libport
 #  else
 #   error I need either getcwd() or _getcwd()
 #  endif
-# endif
-
-
-
-/*-------.
-| read.  |
-`-------*/
-
-# ifdef WIN32
-inline
-ssize_t
-read(int d, void* buf, size_t nbytes)
-{
-  return _read(d, buf, nbytes);
-}
 # endif
 
 #endif // !LIBPORT_UNISTD_H

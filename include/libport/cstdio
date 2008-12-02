@@ -12,10 +12,8 @@
 
 #ifdef WIN32
 # include <io.h>
-# define close _close
 # define snprintf _snprintf
 # define vsnprintf _vsnprintf
-# define write _write
 #endif
 
 namespace libport
