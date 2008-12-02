@@ -51,6 +51,7 @@ m4sh_dependencies =				\
 EXTRA_DIST += $(m4sh_dependencies)
 
 %.in: %.as $(m4sh_dependencies)
+	$(MKDIR_P) $(dir $@)
 	autom4te --language M4sh $(m4sh_dependencies) $< -o $@
 
 ## All the scripts depend on Makefile so that they are rebuilt when the
