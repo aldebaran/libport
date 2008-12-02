@@ -1,9 +1,6 @@
-#include <boost/bind.hpp>
-
 #include <libport/dirent.h>
 #include <libport/unit-test.hh>
 
-using boost::bind;
 using libport::test_suite;
 
 static const std::string myself = "dirent";
