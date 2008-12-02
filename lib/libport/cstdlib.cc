@@ -8,20 +8,17 @@ extern "C"
 {
 
   int
-  setenv(const char* key, const char* value, int /* overwrite */)
+  setenv(const char* key, const char* value, int overwrite)
   {
-    // The windows version is a joke.
-    return _putenv((std::string(key) + "=" + value).c_str());
+    if (!overwrite && getenv(name))
+      return 0;
+    return _putenv_s(key, value);
   }
 
   int
   unsetenv(const char* key)
   {
-    // The windows version is a BIG joke.
-    // It looks like, to unset an environment variable under windows,
-    // emptying it is sufficient. Which is pretty lame, since we thus
-    // can't have a defined yet empty variable.
-    return _putenv((std::string(key) + "=").c_str());
+    return setenv(key, 0, 1);
   }
 
 }

@@ -18,6 +18,7 @@ include $(top_srcdir)/build-aux/check.mk
 # Program to check:
 TESTS =                                         \
   cli.cc                                        \
+  cstdlib.cc                                    \
   deref.cc                                      \
   dirent.cc                                     \
   fd-stream.cc                                  \
@@ -67,6 +68,7 @@ LDADD +=                                        \
   $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
 cli_SOURCES                       = cli.cc
+cstdlib_SOURCES                   = cstdlib.cc
 deref_SOURCES                     = deref.cc
 dirent_SOURCES                    = dirent.cc
 fd_stream_SOURCES                 = fd-stream.cc
