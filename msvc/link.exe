@@ -239,6 +239,9 @@ usage ()
 /link [linker options and libraries]    /MD link with MSVCRT.LIB
 /MT link with LIBCMT.LIB                /MDd link with MSVCRTD.LIB debug lib
 /MTd link with LIBCMTD.LIB debug lib
+
+
+See also <URL:http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx>.
 EOF
   exit 0
 }
@@ -274,9 +277,10 @@ get_options ()
     (-f*)  ;;
     (*.dll)
       outargs $(transform $(echo $1 | sed -re 's/(-[0-9]*)?.dll/.lib/')) ;;
-    (*.S)  outargs "/TP" "$1";;
-    (*.c|*.cc) outargs $(transform $1); source=$1  ;;
-    (*.i|*.ii) outargs "/TP" "$(transform $1)"; source=$1  ;;
+    (*.S)  outargs "/Tp$(transform $1)";;
+    (*.c|*.cc) outargs "$(transform $1)"; source=$1  ;;
+    (*.i) outargs "/Tc$(transform $1)"; source=$1  ;;
+    (*.ii) outargs "/Tp$(transform $1)"; source=$1  ;;
     (*)  outargs $1;;
     esac
     shift
