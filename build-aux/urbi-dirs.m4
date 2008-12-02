@@ -61,9 +61,9 @@ AC_ARG_ENABLE([host],
 AC_REQUIRE([AC_CANONICAL_HOST])
 AC_MSG_CHECKING([for URBI host type])
 case $enable_host:$host_alias in
-  '':'') URBI_HOST=$host;;
-  '':* ) URBI_HOST=$host_alias;;
-   *:* ) URBI_HOST=$enable_host;;
+  ('':'') URBI_HOST=$host;;
+  ('':* ) URBI_HOST=$host_alias;;
+  ( *:* ) URBI_HOST=$enable_host;;
 esac
 AC_MSG_RESULT([$URBI_HOST])
 AC_SUBST([URBI_HOST])
@@ -75,21 +75,21 @@ AC_ARG_ENABLE([env],
 			       aibo, webots, korebot, engine [$1]])])
 AC_MSG_CHECKING([for URBI environment type])
 case $enable_env in
- '') URBI_ENV=$1;;
-  *) URBI_ENV=$enable_env;;
+ ('') URBI_ENV=$1;;
+  (*) URBI_ENV=$enable_env;;
 esac
 AC_MSG_RESULT([$URBI_ENV])
 case $URBI_ENV in
-  aibo)
+  (aibo)
      AC_DEFINE([URBI_ENV_AIBO], [1], [Define if compiling for Aibo.]);;
-  korebot)
+  (korebot)
      AC_DEFINE([URBI_ENV_KOREBOT], [1],
 	       [Define if compiling for Korebot-based robots.]);;
-  engine)
+  (engine)
      AC_DEFINE([URBI_ENV_ENGINE], [1], [Define if compiling generic engine.]);;
-  webots)
+  (webots)
      AC_DEFINE([URBI_ENV_WEBOTS], [1], [Define if compiling for Webots.]);;
-  *)
+  (*)
      AC_MSG_NOTICE([[unknown environment type: $URBI_ENV]]);;
 esac
 AC_SUBST([URBI_ENV])
