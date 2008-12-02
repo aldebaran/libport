@@ -7,7 +7,15 @@
 # include <cassert>
 # include <cstdlib>
 
-# if ! defined NDEBUG
+// We have mysterious random aborts on OSX which is compiled with
+// NDEBUG.  Temporarily disable NDEBUG to have verbose paborts.
+//# if defined NDEBUG
+//#  define LIBPORT_ASSERT_VERBOSE 0
+//# else
+#  define LIBPORT_ASSERT_VERBOSE 1
+//# endif
+
+# if LIBPORT_ASSERT_VERBOSE
 #  include <iostream> // std::cerr
 #  include <libport/cstdio> // libport::strerror.
 # endif
@@ -18,7 +26,7 @@
 
 /// \def passert(Subject, Assertion)
 /// Same as assert, but on failure, dump \a Subject of std::cerr.
-# ifdef NDEBUG
+# if ! LIBPORT_ASSERT_VERBOSE
 #  define passert(Subject, Assertion)
 # else
 
@@ -36,7 +44,7 @@
    std::abort(),                                                        \
    0)
 
-# endif // !NDEBUG
+# endif // LIBPORT_ASSERT_VERBOSE
 
 
 
@@ -51,7 +59,7 @@
 /// if Msg is complex, beware of predence issues with << and use parens
 /// on the invocation side.
 
-# ifdef NDEBUG
+# if ! LIBPORT_ASSERT_VERBOSE
 #  define pabort(Msg)       abort()
 # else
 
@@ -62,7 +70,7 @@
   (std::cerr << Loc << ": abort: " << Msg << std::endl,			\
    std::abort())
 
-# endif // !NDEBUG
+# endif // LIBPORT_ASSERT_VERBOSE
 
 
 /*----------------------------------------------.
@@ -79,7 +87,7 @@
 | assert_exp -- Require a non-null value, and return it.  |
 `--------------------------------------------------------*/
 
-# ifdef NDEBUG
+# if ! LIBPORT_ASSERT_VERBOSE
 #  define assert_exp(Obj)		(Obj)
 # else
 // Basically, an assert that can be used in an expression.  I meant to
@@ -104,7 +112,7 @@ namespace libport
 
 #  define assert_exp(Obj)		\
   libport::assert_exp_(Obj, __FILE__, __LINE__ , #Obj)
-# endif // !NDEBUG
+# endif // LIBPORT_ASSERT_VERBOSE
 
 
 #endif // !LIBPORT_ASSERT_HH
