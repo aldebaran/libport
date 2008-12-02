@@ -84,6 +84,7 @@ getopt "$@"
 eval "set x $args"
 shift
 
+verbose "cd $srcdir"
 cd "$srcdir"
 
 # It's not clear how to make the difference bw a globbing pattern that
