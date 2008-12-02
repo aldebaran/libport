@@ -10,7 +10,7 @@ extern "C"
   int
   setenv(const char* key, const char* value, int overwrite)
   {
-    if (!overwrite && getenv(name))
+    if (!overwrite && getenv(key))
       return 0;
     return _putenv_s(key, value);
   }
