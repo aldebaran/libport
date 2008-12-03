@@ -298,7 +298,18 @@ if(NOT PROJECT_INFO_CMAKE)
 
   set(PROJECT_VERSION_REV "version ${PROJECT_VERSION} rev. ${PROJECT_REVISION}")
   set(PROJECT_STRING "${PROJECT_LONGNAME} ${PROJECT_VERSION}")
-  set(PROJECT_TARNAME "${PROJECT_NAME}-${PROJECT_VERSION}")
+  if(PROJECT_VENDOR STREQUAL "")
+    set(vendor_prefix "${GOSTAI}")
+  else(PROJECT_VENDOR STREQUAL "")
+    set(vendor_prefix "${PROJECT_VENDOR}")
+  endif(PROJECT_VENDOR STREQUAL "")
+  # Do not prefix by vendor if it is already in the project's name.
+  if(${PROJECT_NAME} MATCHES ${vendor_prefix})
+    set(vendor_prefix)
+  elseif(${PROJECT_NAME} MATCHES ${vendor_prefix})
+    set(vendor_prefix "${vendor_prefix}-")
+  endif(${PROJECT_NAME} MATCHES ${vendor_prefix})
+  set(PROJECT_TARNAME "${vendor_prefix}${PROJECT_NAME}-${PROJECT_VERSION}")
 
   # ========================== #
   # Add the tag release target #
