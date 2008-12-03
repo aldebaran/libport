@@ -23,7 +23,7 @@ macro(gostai_add_executable name)
   parse_arguments(
     ${name}
     "SOURCES;MOCS;UIS;CPPFLAGS;INCLUDE_DIRS;LIBRARIES;RESOURCES"
-    ""
+    "NO_CONSOLE"
     ${ARGN})
 
   # =================== #
@@ -97,11 +97,15 @@ macro(gostai_add_executable name)
   endif(WIN32)
 
   add_executable(${name} MACOSX_BUNDLE ${${name}_ALL_SOURCES})
-  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set_target_properties(${name} PROPERTIES WIN32_EXECUTABLE FALSE)
-  else(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  if(${name}_NO_CONSOLE)
     set_target_properties(${name} PROPERTIES WIN32_EXECUTABLE TRUE)
-  endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  else(${name}_NO_CONSOLE)
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+      set_target_properties(${name} PROPERTIES WIN32_EXECUTABLE FALSE)
+    else(CMAKE_BUILD_TYPE STREQUAL "Debug")
+      set_target_properties(${name} PROPERTIES WIN32_EXECUTABLE TRUE)
+    endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  endif(${name}_NO_CONSOLE)
 
   if(${name}_CPPFLAGS)
     set_target_properties(${name} PROPERTIES
