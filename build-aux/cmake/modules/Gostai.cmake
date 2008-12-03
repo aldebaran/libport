@@ -193,7 +193,7 @@ function(gostai_add_qt_assistant name)
   set(prefix ${name}_assistant)
   parse_arguments(
     ${prefix}
-    "SOURCES;EXTRA;IMPORT_BUILD"
+    "SOURCES;EXTRA;IMPORT_BUILD;MAIN_SOURCE"
     ""
     ${ARGN})
   set(${prefix}_SOURCES ${${prefix}_SOURCES} PARENT_SCOPE)
@@ -226,7 +226,9 @@ function(gostai_add_qt_assistant name)
     find_package(QCollectionGenerator REQUIRED)
 
     # Search for the main file.
-    set(${prefix}_MAIN_SOURCE ${name}.xml)
+    if(NOT ${prefix}_MAIN_SOURCE)
+      set(${prefix}_MAIN_SOURCE ${name}.xml)
+    endif(NOT ${prefix}_MAIN_SOURCE)
     set(${prefix}_MAIN_SOURCE ${${prefix}_MAIN_SOURCE} PARENT_SCOPE)
     list(FIND ${prefix}_SOURCES ${${prefix}_MAIN_SOURCE} main_idx)
     if(main_idx STREQUAL -1)
