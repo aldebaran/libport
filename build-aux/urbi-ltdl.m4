@@ -22,7 +22,7 @@ AC_PREREQ([2.60])
 # top-level Makefile:
 #
 # libtool: $(LIBTOOL_DEPS)
-#	$(SHELL) ./config.status libtool
+#	$(SHELL) ./config.status $@
 #
 # and use LTDL_CPPFLAGS and LTDL_LIBS where appropriate.
 #
@@ -42,9 +42,6 @@ LT_PREREQ([2.2.6])
 # Name the subdirectory that contains libltdl sources
 LT_CONFIG_LTDL_DIR([libltdl])
 LT_INIT([pic-only shared disable-static dlopen win32-dll])
-# Work around a bug in Automake/Libtool, this dir should have been
-# created.
-$MKDIR_P libltdl/.deps .deps/libltdl
 LTDL_INIT([nonrecursive])
 AC_SUBST([LIBTOOL_DEPS])
 
