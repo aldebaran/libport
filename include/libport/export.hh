@@ -3,14 +3,20 @@
 
 # include <libport/detect-win32.h>
 
-# if defined WIN32
-#  if defined BUILDING_LIBPORT
+# ifdef BUILDING_LIBPORT
+#  ifdef WIN32
 #   define LIBPORT_API __declspec(dllexport)
 #  else
-#   define LIBPORT_API __declspec(dllimport)
+#    define LIBPORT_API __attribute__((visibility("default")))
 #  endif
-# else
-#  define LIBPORT_API
+# endif
+
+# ifndef LIBPORT_API
+#  ifdef WIN32
+#   define LIBPORT_API __declspec(dllimport)
+#  else
+#   define LIBPORT_API
+#  endif
 # endif
 
 #endif
