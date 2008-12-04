@@ -176,34 +176,7 @@ rst_run_report ()
 # i.e., return 1 iff there are no children alive.
 children_alive ()
 {
-  local pid
-  local pids
-  pids=$(children_pid "$[@]")
-  for pid in $pids
-  do
-    # Using "ps PID" to test whether a processus is alive is,
-    # unfortunately, non portable.  OS X Tiger always return 0, and
-    # outputs the ps-banner and the line of the processus (if there is
-    # none, it outputs just the banner).  On Cygwin, "ps PID" outputs
-    # everything, and "ps -p PID" outputs the banner, and the process
-    # line if alive.  In both cases it exits with success.
-    #
-    # We once used grep to check the result:
-    #
-    # ps -p $pid | grep ["^[	]*$pid[^0-9]"]
-    #
-    # Unfortunately sometimes there are flags displayed before the
-    # process number.  Since we never saw a "ps -p PID" that does not
-    # display the title line, we expect two lines.
-    case $(ps -p $pid | wc -l | sed -e '[s/^[	 ]*//]') in
-      (1) # process is dead.
-	 ;;
-      (2) # Process is live.
-	 return 0;;
-      (*) error SOFTWARE "unexpected ps output:" "$(ps -p $pid)" ;;
-    esac
-  done
-  return 1
+  pids_alive $(children_pid "$[@]")
 }
 
 
