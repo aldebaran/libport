@@ -32,7 +32,6 @@
 
 # define STATIC_INSTANCE_NS_EX(Cl, Name, NS, Api)			\
   namespace NS {							\
-    class Api Cl ## Name;					        \
     Api libport::SingletonPtr<Cl ## Name> Name;				\
   }									\
   template<> NS::Cl ## Name*						\
