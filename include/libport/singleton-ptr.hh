@@ -36,7 +36,7 @@
   namespace NS {							\
     Api libport::SingletonPtr<Cl ## Name> Name;				\
   }									\
-  template<> Api NS::Cl ## Name*					\
+  template<> NS::Cl ## Name*						\
   libport::SingletonPtr<NS::Cl ## Name>::ptr = 0
 
 # define STATIC_INSTANCE_NS(Cl, Name, NS)				\
@@ -54,7 +54,7 @@ namespace libport
 {
   /// Singleton smart pointer that creates the object on demand.
   template<typename T>
-  class LIBPORT_API SingletonPtr
+  class SingletonPtr
   {
   public:
     operator T* ();
