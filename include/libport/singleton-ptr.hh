@@ -34,7 +34,7 @@
   namespace NS {							\
     Api libport::SingletonPtr<Cl ## Name> Name;				\
   }									\
-  template<> NS::Cl ## Name*						\
+  template<> Api NS::Cl ## Name*					\
   libport::SingletonPtr<NS::Cl ## Name>::ptr = 0
 
 # define STATIC_INSTANCE_NS(Cl, Name, NS)				\
