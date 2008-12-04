@@ -3,6 +3,7 @@
 # define LIBPORT_CSIGNAL
 
 # include <libport/detect-win32.h>
+# include <libport/export.hh>
 # include <csignal>
 
 #if defined WIN32 || defined _MSC_VER
@@ -16,7 +17,7 @@ extern "C"
 namespace libport
 {
   /// Call std::signal, wrapped with perror on failure.
-  sig_t signal(int sig, sig_t func);
+  LIBPORT_API sig_t signal(int sig, sig_t func);
 }
 
 #endif // LIBPORT_CSIGNAL
