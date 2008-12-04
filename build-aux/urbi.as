@@ -149,6 +149,8 @@ find_urbi_server ()
 # Spawn an $URBI_SERVER in back-ground, registering it as the child "server".
 # Wait until the server.port file is created.  Make it fatal if this does
 # not happen with 10s.
+#
+# Dies if the server does not create server.port for whatever reason.
 spawn_urbi_server ()
 {
   rm -f server.port
@@ -163,7 +165,9 @@ spawn_urbi_server ()
   local t=0
   local tmax=8
   local dt=.5
-  while test ! -f server.port || test $(wc -l <server.port) = 0;
+  while children_alive server &&
+          { test ! -f server.port ||
+            test $(wc -l <server.port) = 0; };
   do
     # test/expr don't like floating points.
     case $(echo "$t <= $tmax" | bc) in
@@ -173,5 +177,7 @@ spawn_urbi_server ()
       fatal "$URBI_SERVER did not issue port in server.port in ${tmax}s";;
     esac
   done
+  test -f server.port ||
+    fatal "$URBI_SERVER failed before creating server.por"
 }
 ])

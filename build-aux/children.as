@@ -90,11 +90,11 @@ pids_alive ()
     # process number.  Since we never saw a "ps -p PID" that does not
     # display the title line, we expect two lines.
     case $(ps -p $pid | wc -l | sed -e '[s/^[	 ]*//]') in
-      1) # process is dead.
+      (1) # process is dead.
 	 ;;
-      2) # Process is live.
+      (2) # Process is live.
 	 return 0;;
-      *) error SOFTWARE "unexpected ps output:" "$(ps -p $pid)" ;;
+      (*) error SOFTWARE "unexpected ps output:" "$(ps -p $pid)" ;;
     esac
   done
   return 1
@@ -157,7 +157,7 @@ rst_run_report ()
 {
   local title=$[1]
   case $title in
-    ?*) title="$title ";;
+    (?*) title="$title ";;
   esac
 
   rst_pre "${title}Command"   $[2].cmd
@@ -196,11 +196,11 @@ children_alive ()
     # process number.  Since we never saw a "ps -p PID" that does not
     # display the title line, we expect two lines.
     case $(ps -p $pid | wc -l | sed -e '[s/^[	 ]*//]') in
-      1) # process is dead.
+      (1) # process is dead.
 	 ;;
-      2) # Process is live.
+      (2) # Process is live.
 	 return 0;;
-      *) error SOFTWARE "unexpected ps output:" "$(ps -p $pid)" ;;
+      (*) error SOFTWARE "unexpected ps output:" "$(ps -p $pid)" ;;
     esac
   done
   return 1
