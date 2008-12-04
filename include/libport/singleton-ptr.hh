@@ -1,6 +1,8 @@
 #ifndef LIBPORT_SINGLETON_PTR_HH
 # define LIBPORT_SINGLETON_PTR_HH
 
+# include <libport/export.hh>
+
 # define STATIC_INSTANCE_(Cl, Name)					\
   class Cl ## Name;							\
   libport::SingletonPtr<Cl ## Name> Name;				\
@@ -61,7 +63,7 @@ namespace libport
 
   private:
     static T* instance();
-    static T* ptr;
+    LIBPORT_API static T* ptr;
   };
 
 }  // namespace libport
