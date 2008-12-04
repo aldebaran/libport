@@ -22,12 +22,20 @@ AC_PREREQ([2.60])
 # top-level Makefile:
 #
 # libtool: $(LIBTOOL_DEPS)
-#	$(SHELL) ./config.status --recheck
+#	$(SHELL) ./config.status libtool
 #
-# and use LTDL_CPPFLAGS and LTDL_LIBS where appropriate.  You may also
-# use LTDL_DEPS, but beware that specifying PROG_DEPENDENCIES stops
-# Automake from generating dependencies from LDADD, which is a
-# nuisance.
+# and use LTDL_CPPFLAGS and LTDL_LIBS where appropriate.
+#
+# You may also use LTDL_DEPS, but beware that specifying
+# PROG_DEPENDENCIES stops Automake from generating dependencies from
+# LDADD, which is a nuisance.
+#
+# Note that using "PROG_LDADD = $(LTDL_LIBS)" using the following
+# AC_SUBST'ed LTDL_LIBS is *not* a good idea: because this variable is
+# opaque to Automake (could actually be -lFOO etc. which are not valid
+# dependencies), it cannot add it as is as a dependency.  As a result,
+# if libltdl changes, no relinking will be done.  It is better to
+# define LTDL_LIBS in the Makefile.am.
 AC_DEFUN([URBI_LTDL],
 [# If you need to create a library, use libtool.
 LT_PREREQ([2.2.6])
