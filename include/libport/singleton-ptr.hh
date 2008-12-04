@@ -54,7 +54,7 @@ namespace libport
 {
   /// Singleton smart pointer that creates the object on demand.
   template<typename T>
-  class SingletonPtr
+  class LIBPORT_API SingletonPtr
   {
   public:
     operator T* ();
@@ -63,7 +63,7 @@ namespace libport
 
   private:
     static T* instance();
-    LIBPORT_API static T* ptr;
+    static T* ptr;
   };
 
 }  // namespace libport
