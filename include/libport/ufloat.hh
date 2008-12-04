@@ -107,14 +107,14 @@ namespace libport
 #  include <cmath>
 namespace libport
 {
-  inline double trunc (double d);
+  LIBPORT_API inline double trunc (double d);
 }
 # endif /* !LIBPORT_HAVE_TRUNC */
 
 /* Float to int converter.  */
 namespace libport
 {
-  struct bad_numeric_cast : public std::exception {};
+  struct LIBPORT_API bad_numeric_cast : public std::exception {};
 
   /// Convert a libport::ufloat to a int. Raise
   /// libport::bad_numeric_cast if the provided argument is not

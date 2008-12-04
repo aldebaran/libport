@@ -25,7 +25,7 @@ namespace libport
     typedef std::list<path> path_list_type;
 
     /// Exception thrown when a file cannot be located.
-    class Not_found : public std::exception
+    class LIBPORT_API Not_found : public std::exception
     {};
 
     /// \name Constructor.

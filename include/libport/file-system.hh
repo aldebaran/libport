@@ -13,8 +13,8 @@
 
 namespace libport
 {
-  path LIBPORT_API get_current_directory();
-  bool LIBPORT_API is_dir(const std::string& f);
+  LIBPORT_API path get_current_directory();
+  LIBPORT_API bool is_dir(const std::string& f);
 }
 
 #endif // !LIBPORT_FILE_SYSTEM_HH
