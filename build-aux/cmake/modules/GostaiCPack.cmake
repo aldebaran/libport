@@ -75,12 +75,20 @@ set(CPACK_PACKAGE_FILE_NAME
   "${PROJECT_TARNAME}-${pkg_sys_name}${build_type}")
 
 # Installation directory.
+set(cpack_package_vendor_separator "")
+if(CPACK_PACKAGE_VENDOR)
+  if(WIN32)
+    set(cpack_package_vendor_separator " ")
+  else(WIN32)
+    set(cpack_package_vendor_separator "-")
+  endif(WIN32)
+endif(CPACK_PACKAGE_VENDOR)
 if(WIN32)
   set(CPACK_PACKAGE_INSTALL_DIRECTORY
-    "${CPACK_PACKAGE_VENDOR} ${PROJECT_NAME} ${PROJECT_VERSION}")
+    "${CPACK_PACKAGE_VENDOR}${cpack_package_vendor_separator}${PROJECT_NAME} ${PROJECT_VERSION}")
 else(WIN32)
   set(CPACK_PACKAGE_INSTALL_DIRECTORY
-    "${CPACK_PACKAGE_VENDOR}-${PROJECT_NAME}-${PROJECT_VERSION}")
+    "${CPACK_PACKAGE_VENDOR}${cpack_package_vendor_separator}${PROJECT_NAME}-${PROJECT_VERSION}")
 endif(WIN32)
 
 # Set generators
