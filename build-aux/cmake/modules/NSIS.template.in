@@ -607,6 +607,15 @@ FunctionEnd
 ;--------------------------------
 ;Installer Sections
 
+Function AddFirewallException
+    SimpleFC::AllowDisallowExceptionsNotAllowed 0 ; enable exceptions
+    Pop $0
+    SimpleFC::AddApplication "@PROJECT_NAME@" "$INSTDIR\@BINARIES_DIR@\@CPACK_FIREWALL_EXENAME@" 0 2 "" 1 ; add to exceptions list
+    Pop $0
+    SimpleFC::EnableDisableApplication "$INSTDIR\@BINARIES_DIR@\@CPACK_FIREWALL_EXENAME@"  1 ; enable in exceptions list
+    Pop $0
+FunctionEnd
+
 Section "-Core installation"
   ;Use the entire tree produced by the INSTALL target.  Keep the
   ;list of directories here in sync with the RMDir commands below.
@@ -687,6 +696,8 @@ Section "-Core installation"
 @CPACK_NSIS_EXTRA_INSTALL_COMMANDS@
 
   !insertmacro MUI_STARTMENU_WRITE_END
+
+  Call AddFirewallException
 
 SectionEnd
 
