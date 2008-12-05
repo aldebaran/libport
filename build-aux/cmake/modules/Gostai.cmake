@@ -38,7 +38,14 @@ macro(gostai_add_executable name)
   # =================== #
   qt4_wrap_ui(${name}_UI_SOURCES ${${name}_UIS})
   qt4_add_resources(${name}_RES_SOURCES ${${name}_RESOURCES})
-  qt4_wrap_cpp(${name}_MOC_SOURCES ${${name}_MOCS})
+
+  set(${name}_MOC_OPTIONS "")
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    list(APPEND ${name}_MOC_OPTIONS "-DQT_NO_DEBUG")
+    list(APPEND ${name}_MOC_OPTIONS "-DNDEBUG")
+  endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+  qt4_wrap_cpp(${name}_MOC_SOURCES ${${name}_MOCS}
+    OPTIONS ${${name}_MOC_OPTIONS})
 
   set(${name}_ALL_SOURCES
     ${${name}_SOURCES}
