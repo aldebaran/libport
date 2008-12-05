@@ -104,12 +104,13 @@ macro(gostai_add_executable name)
       set_target_properties(${name} PROPERTIES WIN32_EXECUTABLE FALSE)
     else(CMAKE_BUILD_TYPE STREQUAL "Debug")
       set_target_properties(${name} PROPERTIES WIN32_EXECUTABLE TRUE)
+      list(APPEND ${name}_CPPFLAGS "QT_NO_DEBUG")
     endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
   endif(${name}_NO_CONSOLE)
 
   if(${name}_CPPFLAGS)
     set_target_properties(${name} PROPERTIES
-      COMPILE_DEFINITIONS ${${name}_CPPFLAGS})
+      COMPILE_DEFINITIONS "${${name}_CPPFLAGS}")
   endif(${name}_CPPFLAGS)
 
   # ===================== #
