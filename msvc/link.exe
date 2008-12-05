@@ -3,6 +3,11 @@
 # Wrapper to use Microsoft compiler and linker under wine with
 # Autotools.
 
+# TODO:
+# - a test suite :(  Many bugs were regularly introduced.
+# - support link.exe -dump -symbols
+#   currenty we do junk
+
 set -e
 
 case $VERBOSE in (x)
