@@ -25,14 +25,16 @@ typically returns (on stdout) something like
     WINEPREFIX=/SOME/PATH
 
 Arguments can also be passed via the envvar
-\`WINE_LD_LIBRARY_PATH_ARGS'.
+\`WINE_LD_LIBRARY_PATH_ARGS'.  The DIRs are added to the pseudo
+LD_LIBRARY_PATH that Windows supports.
 
 Options:
   -h, --help           display this message and exit
   -t, --to=DIR         install the \`wine' directory inside DIR
                        [$where]
-  -w, --wrapper=FILE   use PATH as defined by the libtool wrapper FILE
-                       several invocation accumulate
+  -w, --wrapper=FILE   also add the DIRs required to load the libraries
+                       used by the Libtool wrapper FILE
+                       multiple invocations accumulate
 EOF
     exit 0
 }
