@@ -19,7 +19,7 @@ RUN_WINE_LD_LIBRARY_PATH :=						\
   $(shell								\
      case $(host) in							\
        (*pw32*|*mingw32*)						\
-	 echo '$(abs_top_builddir)/build-aux/wine-ld-library-path)';;	\
+	 echo '$(abs_top_builddir)/build-aux/wine-ld-library-path';;	\
      esac)
 
 clean-local: clean-wine-ld-library-path
