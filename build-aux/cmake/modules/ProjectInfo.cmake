@@ -306,7 +306,7 @@ if(NOT PROJECT_INFO_CMAKE)
   # Do not prefix by vendor if it is already in the project's name.
   if(${PROJECT_NAME} MATCHES ${vendor_prefix})
     set(vendor_prefix)
-  elseif(${PROJECT_NAME} MATCHES ${vendor_prefix})
+  else(${PROJECT_NAME} MATCHES ${vendor_prefix})
     set(vendor_prefix "${vendor_prefix}-")
   endif(${PROJECT_NAME} MATCHES ${vendor_prefix})
   set(PROJECT_TARNAME "${vendor_prefix}${PROJECT_NAME}-${PROJECT_VERSION}")
@@ -321,7 +321,7 @@ if(NOT PROJECT_INFO_CMAKE)
     "-([0-9]+)-([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]+)$"
     ""
     PROJECT_TAG_NAME
-    ${PROJECT_VERSION})
+    "${PROJECT_VERSION}")
 
   # Format the next tag message.
   set(PROJECT_TAG_MSG "Release ${PROJECT_NAME}")
@@ -340,7 +340,7 @@ if(NOT PROJECT_INFO_CMAKE)
 
   add_custom_target(tag-release
     COMMAND
-    ${GIT_EXECUTABLE} tag -a -m ${PROJECT_TAG_MSG} ${PROJECT_TAG_NAME} HEAD
+    ${GIT_EXECUTABLE} tag -a -m "${PROJECT_TAG_MSG}" "${PROJECT_TAG_NAME}" HEAD
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Tagging release ${PROJECT_TAG_NAME}")
 
