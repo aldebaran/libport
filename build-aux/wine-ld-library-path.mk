@@ -19,7 +19,6 @@ RUN_WINE_LD_LIBRARY_PATH :=					\
      esac)
 
 clean-local: clean-wine-ld-library-path
-
 .PHONY: clean-wine-ld-library-path
 clean-wine-ld-library-path:
 	-rm -rf wine
