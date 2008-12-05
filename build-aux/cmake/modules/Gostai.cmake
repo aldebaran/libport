@@ -446,20 +446,20 @@ function(gostai_add_library name)
   # Prepare the sources #
   # =================== #
   if(${name}_QTPLUGIN)
-    set(${name}_OPTS
+    set(${name}_MOC_OPTS
       -DQT_PLUGIN
       -DQT_SHARED
       )
   else(${name}_QTPLUGIN)
-    set(${name}_OPTS "")
+    set(${name}_MOC_OPTS "")
   endif(${name}_QTPLUGIN)
   if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    list(APPEND ${name}_OPTS -DQT_NO_DEBUG)
+    list(APPEND ${name}_MOC_OPTS -DQT_NO_DEBUG)
   endif(CMAKE_BUILD_TYPE STREQUAL "Release")
   qt4_wrap_ui(${name}_UI_SOURCES ${${name}_UIS})
   qt4_add_resources(${name}_SOURCES ${${name}_RESOURCES})
   qt4_wrap_cpp(${name}_MOC_SOURCES ${${name}_MOCS}
-    OPTIONS ${${name}_OPTS})
+    OPTIONS ${${name}_MOC_OPTS})
 
   set(${name}_ALL_SOURCES
     ${${name}_SOURCES}
@@ -490,10 +490,10 @@ function(gostai_add_library name)
     set(${name}_CPPFLAGS "")
   endif(NOT ${name}_CPPFLAGS)
   if(${name}_QTPLUGIN)
-    list(APPEND ${name}_QTPLUGIN QT_PLUGIN QT_SHARED)
+    list(APPEND ${name}_CPPFLAGS QT_PLUGIN QT_SHARED)
   endif(${name}_QTPLUGIN)
   if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    list(APPEND ${name}_QTPLUGIN QT_NO_DEBUG)
+    list(APPEND ${name}_CPPFLAGS QT_NO_DEBUG)
   endif(CMAKE_BUILD_TYPE STREQUAL "Release")
   set_target_properties(${name} PROPERTIES
     COMPILE_DEFINITIONS "${${name}_CPPFLAGS}")
