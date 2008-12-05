@@ -12,10 +12,14 @@ EXTRA_DIST += $(build_aux_dir)/wine-ld-library-path.as
 nodist_check_SCRIPTS += $(wine_ld_library_path)
 m4sh_scripts += $(wine_ld_library_path)
 
-RUN_WINE_LD_LIBRARY_PATH :=					\
-  $(shell							\
-     case $(host) in						\
-       (*pw32*|*mingw32*) echo '$(wine_ld_library_path)';;	\
+# Return an absolute path to wine-ld-library-path: many of our tests
+# are run in sub directories of the directory holding the Makefile
+# that includes this snippet.
+RUN_WINE_LD_LIBRARY_PATH :=						\
+  $(shell								\
+     case $(host) in							\
+       (*pw32*|*mingw32*)						\
+	 echo '$(abs_top_builddir)/build-aux/wine-ld-library-path)';;	\
      esac)
 
 clean-local: clean-wine-ld-library-path
