@@ -427,6 +427,106 @@ function(gostai_add_qt_assistant name)
 
 endfunction(gostai_add_qt_assistant name)
 
+function(gostai_add_library name)
+
+  parse_arguments(
+    ${name}
+    "SOURCES;MOCS;UIS;CPPFLAGS;INCLUDE_DIRS;LIBRARIES;RESOURCES"
+    "QTPLUGIN"
+    ${ARGN})
+
+  # =================== #
+  # Include directories #
+  # =================== #
+  if(${name}_INCLUDE_DIRS)
+    include_directories(${${name}_INCLUDE_DIRS})
+  endif(${name}_INCLUDE_DIRS)
+
+  # =================== #
+  # Prepare the sources #
+  # =================== #
+  if(${name}_QTPLUGIN)
+    set(${name}_OPTS
+      -DQT_PLUGIN
+      -DQT_SHARED
+      )
+  else(${name}_QTPLUGIN)
+    set(${name}_OPTS "")
+  endif(${name}_QTPLUGIN)
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    list(APPEND ${name}_OPTS -DQT_NO_DEBUG)
+  endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+  qt4_wrap_ui(${name}_UI_SOURCES ${${name}_UIS})
+  qt4_add_resources(${name}_SOURCES ${${name}_RESOURCES})
+  qt4_wrap_cpp(${name}_MOC_SOURCES ${${name}_MOCS}
+    OPTIONS ${${name}_OPTS})
+
+  set(${name}_ALL_SOURCES
+    ${${name}_SOURCES}
+    ${${name}_MOC_SOURCES}
+    ${${name}_RES_SOURCES}
+    ${${name}_UI_SOURCES}
+    )
+
+  if(NOT ${name}_ALL_SOURCES)
+    message(FATAL_ERROR "No sources provided for target library '${name}'")
+  endif(NOT ${name}_ALL_SOURCES)
+
+  # =================== #
+  # Compile the sources #
+  # =================== #
+  if(${name}_QTPLUGIN)
+    set(TYPE MODULE)
+  else(${name}_QTPLUGIN)
+    set(TYPE SHARED)
+  endif(${name}_QTPLUGIN)
+  add_library(${name} ${TYPE}
+    ${${name}_SOURCES}
+    ${${name}_MOC_SOURCES}
+    )
+
+
+  if(NOT ${name}_CPPFLAGS)
+    set(${name}_CPPFLAGS "")
+  endif(NOT ${name}_CPPFLAGS)
+  if(${name}_QTPLUGIN)
+    list(APPEND ${name}_QTPLUGIN QT_PLUGIN QT_SHARED)
+  endif(${name}_QTPLUGIN)
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    list(APPEND ${name}_QTPLUGIN QT_NO_DEBUG)
+  endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+  set_target_properties(${name} PROPERTIES
+    COMPILE_DEFINITIONS "${${name}_CPPFLAGS}")
+
+  # ===================== #
+  # Prepare the libraries #
+  # ===================== #
+  if(WIN32)
+    list(APPEND ${name}_LIBRARIES ${QT_QTMAIN_LIBRARY})
+  endif(WIN32)
+
+  if(${name}_LIBRARIES)
+    target_link_libraries(${name} ${${name}_LIBRARIES})
+  endif(${name}_LIBRARIES)
+
+  # ============= #
+  # Install files #
+  # ============= #
+
+  if(${name}_QTPLUGIN)
+    install(TARGETS ${name} DESTINATION ${PLUGINS_DIR})
+  else(${name}_QTPLUGIN)
+    install(TARGETS ${name} DESTINATION ${LIBRARIES_DIR})
+  endif(${name}_QTPLUGIN)
+
+  # ========================== #
+  # Deploy dependent libraries #
+  # ========================== #
+
+  dldep_install(${name})
+
+endfunction(gostai_add_library name)
+
 endif(NOT GOSTAI_CMAKE_GUARD)
 
 # LocalWords:  docbook
