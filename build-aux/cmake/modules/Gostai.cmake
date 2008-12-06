@@ -1,4 +1,4 @@
-# A collection of macro used to create Gostai executable and libraries
+# A collection of macros used to create Gostai executables and libraries.
 
 if(NOT GOSTAI_CMAKE_GUARD)
 set(GOSTAI_CMAKE_GUARD TRUE)
