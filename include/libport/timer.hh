@@ -70,15 +70,14 @@ namespace libport
     /// Total execution time of \a rhs is ignored.
     timer& operator<< (const timer& rhs);
 
-  private :
+  private:
     class time_var;
     class time
     {
       friend class timer;
       friend class timer::time_var;
     public:
-      time ();
-
+      time();
       time & operator += (const time& rhs);
 
     private :
@@ -87,15 +86,15 @@ namespace libport
       long wall;
     };
 
-    class time_var
+    class LIBPORT_API time_var
     {
     public:
-      time_var ();
+      time_var();
 
-      void start ();
-      void stop ();
+      void start();
+      void stop();
 
-      bool is_zero ();
+      bool is_zero();
 
       time begin;
       time elapsed;
