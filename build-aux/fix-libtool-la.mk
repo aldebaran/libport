@@ -1,4 +1,5 @@
-# See fix-libtool-la for more documentation.
+# See fix-libtool-la for more documentation.  Basically, just include
+# this file where Libtool libraries are defined.
 
 %.la.stamp: %.la
 	$(build_aux_dir)/fix-libtool-la $< $@
