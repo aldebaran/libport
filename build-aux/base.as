@@ -341,6 +341,8 @@ case $VERBOSE in
   (x) set -x;;
 esac
 
+# We can only check absolute dirs, since we may be called from other
+# directories than the ones we were created from.
 : ${abs_builddir='@abs_builddir@'}
 : ${abs_srcdir='@abs_srcdir@'}
 : ${abs_top_builddir='@abs_top_builddir@'}
@@ -350,9 +352,7 @@ check_dir abs_top_srcdir configure.ac
 : ${builddir='@builddir@'}
 : ${srcdir='@srcdir@'}
 : ${top_builddir='@top_builddir@'}
-check_dir top_builddir config.status
 : ${top_srcdir='@top_srcdir@'}
-check_dir top_srcdir configure.ac
 
 # Bounce the signals to trap 0, passing the signal as exit value.
 for signal in 1 2 13 15; do
