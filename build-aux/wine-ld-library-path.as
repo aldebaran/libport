@@ -8,7 +8,7 @@ URBI_INIT()[
 
 ]URBI_GET_OPTIONS(
 [  (-h|--help)    usage;;
-   (-t|--to)      shift; dir=$1;;
+   (-t|--to)      shift; where=$1;;
    (-w|--wrapper) shift; process_wrapper "$1";;
    (*)            add_directory "$1";;
 ])[
@@ -31,6 +31,7 @@ LD_LIBRARY_PATH that Windows supports.
 Options:
   -h, --help           display this message and exit
   -t, --to=DIR         install the \`wine' directory inside DIR
+                       in other words, make WINEPREFIX=DIR/wine
                        [$where]
   -w, --wrapper=FILE   also add the DIRs required to load the libraries
                        used by the Libtool wrapper FILE
@@ -108,16 +109,14 @@ verbose "host: $host"
 # We used to check that we are not running Cygwin underneath.  Does
 # not seem to make any sense here, and MN does not remember why he
 # checked that.  So this check is removed.
-case ${WINEPREFIX+set}:$host in
-    (set:*) # Don't override the user's choice.
-      ;;
-    (*:*pw32*|*:*mingw32*)
-      export WINEPREFIX=$where/wine
-      test -d "$WINEPREFIX" ||
-        create_wine_directory
-      verbose "WINEPREFIX='$WINEPREFIX'"
-      echo "WINEPREFIX='$WINEPREFIX'"
-      ;;
+case $host in
+  (*pw32*|*mingw32*)
+    export WINEPREFIX=$where/wine
+    test -d "$WINEPREFIX" ||
+      create_wine_directory
+    verbose "WINEPREFIX='$WINEPREFIX'"
+    echo "WINEPREFIX='$WINEPREFIX'"
+    ;;
 esac
 
 exit 0
