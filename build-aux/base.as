@@ -286,6 +286,17 @@ get_options ()
 
 m4_defun([_URBI_PREPARE],
 [
+# mkcd DIR
+# --------
+# Remove, create, and cd into DIR.
+mkcd ()
+{
+  local dir=$1
+  rm -rf "$dir"
+  mkdir -p "$dir"
+  cd "$dir"
+}
+
 # truth TEST-ARGUMENTS...
 # -----------------------
 # Run "test TEST-ARGUMENTS" and echo true/false depending on the result.
@@ -333,9 +344,19 @@ esac
 : ${abs_builddir='@abs_builddir@'}
 : ${abs_srcdir='@abs_srcdir@'}
 : ${abs_top_builddir='@abs_top_builddir@'}
+check_dir abs_top_builddir config.status
 : ${abs_top_srcdir='@abs_top_srcdir@'}
+check_dir abs_top_srcdir configure.ac
 : ${builddir='@builddir@'}
 : ${srcdir='@srcdir@'}
 : ${top_builddir='@top_builddir@'}
+check_dir top_builddir config.status
 : ${top_srcdir='@top_srcdir@'}
+check_dir top_srcdir configure.ac
+
+# Bounce the signals to trap 0, passing the signal as exit value.
+for signal in 1 2 13 15; do
+  trap 'error $((128 + $signal)) \
+	      "received signal $signal ($(kill -l $signal))"' $signal
+done
 ])
