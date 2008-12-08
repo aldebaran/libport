@@ -12,7 +12,7 @@
 # include <libport/detect-win32.h>
 
 # if defined WIN32
-#  include <libport/windows.h>
+#  include <libport/windows.hh>
 namespace libport
 {
   typedef HANDLE sem_t;
