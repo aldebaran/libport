@@ -2,6 +2,7 @@
 # define LIBPORT_SEMAPHORE_HH
 
 # include <cassert>
+# include <cstddef> // size_t
 
 # ifdef __APPLE__
 #  include <string>
