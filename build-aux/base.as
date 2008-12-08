@@ -291,7 +291,7 @@ m4_defun([_URBI_PREPARE],
 # Remove, create, and cd into DIR.
 mkcd ()
 {
-  local dir=$1
+  local dir=$[1]
   rm -rf "$dir"
   mkdir -p "$dir"
   cd "$dir"
