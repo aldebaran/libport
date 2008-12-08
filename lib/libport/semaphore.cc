@@ -87,21 +87,23 @@ namespace libport
     s << "sema/" << getpid() << "/" << counter++;
     name_ = s.str();
 
-    errno = 0;
     sem_ = sem_open(name_.c_str(), O_CREAT | O_EXCL, 0777, cnt);
 
     {
-      // Save the semaphore name if we can, in order to provide the user
-      // with a means to reclaim them.  Don't check for success, this is
-      // best effort.
+      // Save the semaphore name if we can, in order to provide the
+      // user with a means to reclaim them.  Don't check for success,
+      // this is best effort.
+      //
+      // If you change this file name, update
+      // build-aux/semaphores-clean.sh.
       std::ofstream o("/tmp/urbi-semaphores.log", std::ios_base::app);
       o << name_;
-      if (errno)
+      if (sem_ == SEM_FAILED)
         o << ": " << strerror(errno);
       o << std::endl;
     }
 
-    if (sem_ == static_cast<sem_t*>(0))
+    if (sem_ == SEM_FAILED)
       errabort("sem_open(" << name_ << ')');
 # else
     sem_ = new sem_t;
@@ -111,11 +113,21 @@ namespace libport
       errabort("sem_init(" << cnt << ')');
     }
 # endif
+    ++instances_;
   }
 
   Semaphore::~Semaphore ()
   {
     destroy();
+    --instances_;
+  }
+
+  size_t Semaphore::instances_ = 0;
+
+  size_t
+  Semaphore::instances()
+  {
+    return instances_;
   }
 
   void
@@ -137,15 +149,15 @@ namespace libport
     int u = sem_unlink(name_.c_str());
     int unlink_errno = errno;
     if (c)
-      {
-	errno = close_errno;
-	errabort("sem_close");
-      }
+    {
+      errno = close_errno;
+      errabort("sem_close");
+    }
     if (u)
-      {
-	errno = unlink_errno;
-	errabort("sem_unlink");
-      }
+    {
+      errno = unlink_errno;
+      errabort("sem_unlink");
+    }
 # else
     if (sem_destroy(sem_))
       errabort("sem_destroy");

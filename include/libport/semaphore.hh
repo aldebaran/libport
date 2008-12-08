@@ -8,16 +8,15 @@
 # endif
 
 # include <libport/export.hh>
-# include <libport/windows.hh>
+# include <libport/detect-win32.h>
 
 # if defined WIN32
 namespace libport
 {
   typedef HANDLE sem_t;
-  sem_t* sem_open (const char* name,
-		   int oflag,
-		   unsigned int /*mode_t*/ mode,
-		   unsigned int value);
+  sem_t* sem_open(const char* name, int oflag,
+                  unsigned int /*mode_t*/ mode,
+                  unsigned int value);
   int sem_init(sem_t* sem, int useless, int cnt);
   int sem_post(sem_t* sem);
   int sem_wait(sem_t* sem);
@@ -33,8 +32,8 @@ namespace libport
   class LIBPORT_API Semaphore
   {
   public:
-    Semaphore (int cnt = 0);
-    ~Semaphore ();
+    Semaphore(int cnt = 0);
+    ~Semaphore();
     void operator++ (int);
     void operator-- (int);
     void operator++ ();
@@ -46,12 +45,16 @@ namespace libport
      */
     bool get(const int timeout = 0);
 
+    /// The number of alive Semaphores (#constructed - #destroyed).
+    static size_t instances();
+
   private:
     void destroy();
     sem_t* sem_;
 # ifdef __APPLE__
     std::string name_;
 # endif
+    static size_t instances_;
   };
 
 } // namespace libport

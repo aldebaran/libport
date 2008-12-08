@@ -32,6 +32,7 @@ TESTS =                                        \
   finally.cc                                    \
   has-if.cc                                     \
   indent.cc                                     \
+  semaphore.cc                                  \
   separator.cc                                  \
   intrusive-ptr.cc                              \
   statistics.cc                                 \
@@ -82,6 +83,7 @@ fifo_SOURCES                      = fifo.cc
 finally_SOURCES                   = finally.cc
 has_if_SOURCES                    = has-if.cc
 indent_SOURCES                    = indent.cc
+semaphore_SOURCES                 = semaphore.cc
 separator_SOURCES                 = separator.cc
 intrusive_ptr_SOURCES             = intrusive-ptr.cc
 intrusive_ptr_serialize_SOURCES   = intrusive-ptr-serialize.cc
