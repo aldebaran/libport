@@ -76,13 +76,13 @@ create_wine_directory ()
   verbose "creating $WINEPREFIX"
   rm -rf "$WINEPREFIX"
   mkdir -p "$WINEPREFIX"
-  cp -a ~/.wine/dosdevices ~/.wine/*.reg ~/.wine/config "$WINEPREFIX"
+  local winehome=$HOME/.wine
+  cp -a $winehome/dosdevices $winehome/*.reg $winehome/config "$WINEPREFIX"
   # Symlink everything from the .wine directory just in case.
-  for f in ~/.wine/*
+  for f in $winehome/*
   do
-    bf=$(basename $f)
     if ! test -a "$WINEPREFIX/$bf"; then
-      ln -s $f "$WINEPREFIX/$bf"
+      ln -s $f "$WINEPREFIX"
     fi
   done
   # Add all the added path to the Path variable in user.reg config

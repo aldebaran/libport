@@ -15,13 +15,17 @@ m4sh_scripts += $(wine_ld_library_path)
 # Return an absolute path to wine-ld-library-path: many of our tests
 # are run in sub directories of the directory holding the Makefile
 # that includes this snippet.
+#
+# When evaluated, RUN_WINE_LD_LIBRARY_PATH must expand into an envvar
+# assignment, as it is often used before actual commands to set the
+# environment.  In particular to do return "true" for instance, as it
+# would swallow all the remainder of the command line.  If you mean to
+# run wine-ld-library-path, just use $(wine_ld_library_path) directly.
 RUN_WINE_LD_LIBRARY_PATH :=						\
   $(shell								\
      case $(host) in							\
        (*pw32*|*mingw32*)						\
 	 echo '$(abs_top_builddir)/build-aux/wine-ld-library-path';;	\
-       (*)								\
-         echo 'true';;							\
      esac)
 
 clean-local: clean-wine-ld-library-path
