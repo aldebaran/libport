@@ -86,6 +86,19 @@ namespace libport
 #  endif
 # endif
 
+/*-------.
+| getpid |
+`-------*/
+
+# if defined WIN32
+#  include <process.h>
+typedef int pid_t;
+inline pid_t getpid()
+{
+  return _getpid();
+}
+# endif
+
 /*---------.
 | unlink.  |
 `---------*/

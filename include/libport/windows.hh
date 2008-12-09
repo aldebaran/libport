@@ -71,7 +71,6 @@ inline int getpagesize()
   return 4096;
 }
 
-#  define getpid _getpid
 #  define isatty _isatty
 #  define STDIN_FILENO _fileno(stdin)
 #  define STDOUT_FILENO _fileno(stdout)

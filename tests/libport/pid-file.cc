@@ -2,6 +2,7 @@
 
 #include <libport/pid-file.hh>
 #include <libport/unit-test.hh>
+#include <libport/unistd.h>
 
 using libport::test_suite;
 
