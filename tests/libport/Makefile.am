@@ -32,9 +32,10 @@ TESTS =                                        \
   finally.cc                                    \
   has-if.cc                                     \
   indent.cc                                     \
+  intrusive-ptr.cc                              \
   semaphore.cc                                  \
   separator.cc                                  \
-  intrusive-ptr.cc                              \
+  pid-file.cc					\
   statistics.cc                                 \
   timer.cc                                      \
   unescape.cc                                   \
