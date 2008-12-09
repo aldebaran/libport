@@ -2,6 +2,14 @@
 m4_pattern_allow([^URBI_SERVER_FLAGS$])
 URBI_INIT()[
 
+# Exit asap.
+host=@host@
+case $host in
+  (*pw32*|*mingw32*);;
+  (*) error 0 "nothing to do on $host";;
+esac
+
+
 ## --------------------- ##
 ## Auxiliary functions.  ##
 ## --------------------- ##
@@ -10,7 +18,7 @@ URBI_INIT()[
 [  (-h|--help)    usage;;
    (-t|--to)      shift; where=$1;;
    (-w|--wrapper) shift; process_wrapper "$1";;
-   (*)            add_directory "$1";;
+   (*)            dirs+=" $1";;
 ])[
 
 # Print usage
@@ -40,17 +48,6 @@ EOF
     exit 0
 }
 
-# add_directory DIR
-# -----------------
-# Add DIR to the output path.
-add_directory ()
-{
-  local dir=$1
-  if test -d "$dir"; then
-    dir=$(winepath -w "$dir")
-    windirs="$windirs;$dir"
-  fi
-}
 
 # process_wrapper WRAPPER
 # -----------------------
@@ -67,7 +64,7 @@ process_wrapper ()
   for p in $path
   do
     IFS=$save_IFS
-    add_directory "$p"
+    dirs+=" $p"
   done
 }
 
@@ -85,6 +82,16 @@ create_wine_directory ()
       ln -s $f "$WINEPREFIX"
     fi
   done
+
+  # Convert the directories into a format that windows like.
+  local windirs=
+  local dir
+  for dir in $dirs
+  do
+    test ! -d "$dir" ||
+      windirs+=";$(winepath -w "$dir")"
+  done
+
   # Add all the added path to the Path variable in user.reg config
   # file.  That idiotic file may have multiple "Path=".  Only one
   # will have ';'.
@@ -96,12 +103,10 @@ create_wine_directory ()
     -e 's/"Path"="(.*;.*)"/"Path"="\1$dirs"/' "$WINEPREFIX/user.reg"
 }
 
-# By default, installed this here.
-where=$(pwd)
 # List of directories to add to the Path.
-windirs=
-# If we need wine, setup it.
-host=@host@
+dirs=
+# By default, installed this here (--to).
+where=$(pwd)
 
 get_options $WINE_LD_LIBRARY_PATH_ARGS "$@"
 verbose "host: $host"
@@ -109,15 +114,11 @@ verbose "host: $host"
 # We used to check that we are not running Cygwin underneath.  Does
 # not seem to make any sense here, and MN does not remember why he
 # checked that.  So this check is removed.
-case $host in
-  (*pw32*|*mingw32*)
-    export WINEPREFIX=$where/wine
-    test -d "$WINEPREFIX" ||
-      create_wine_directory
-    verbose "WINEPREFIX='$WINEPREFIX'"
-    echo "WINEPREFIX='$WINEPREFIX'"
-    ;;
-esac
+export WINEPREFIX=$where/wine
+test -d "$WINEPREFIX" ||
+  create_wine_directory
+verbose "WINEPREFIX='$WINEPREFIX'"
+echo "WINEPREFIX='$WINEPREFIX'"
 
 exit 0
 ]
