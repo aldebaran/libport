@@ -91,6 +91,7 @@ namespace libport
 `---------*/
 
 # if defined WIN32
+inline
 int unlink(const char* pathname)
 {
   return _unlink(pathname);
