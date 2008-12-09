@@ -18,7 +18,9 @@ extern "C"
   int
   unsetenv(const char* key)
   {
-    return setenv(key, 0, 1);
+    // Windows refuses 0 as a value.  But passing "" actually unsets
+    // the envvar.
+    return setenv(key, "", 1);
   }
 
 }
