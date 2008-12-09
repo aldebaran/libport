@@ -31,6 +31,7 @@ libport_sources =				\
   $(libport_srcdir)/file-system.cc		\
   $(libport_srcdir)/indent.cc			\
   $(libport_srcdir)/package-info.cc		\
+  $(libport_srcdir)/pid-file.cc			\
   $(libport_srcdir)/program-name.cc		\
   $(libport_srcdir)/read-stdin.cc		\
   $(libport_srcdir)/sched.cc			\
