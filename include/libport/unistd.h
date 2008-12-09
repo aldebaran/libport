@@ -86,4 +86,15 @@ namespace libport
 #  endif
 # endif
 
+/*---------.
+| unlink.  |
+`---------*/
+
+# if defined WIN32
+int unlink(const char* pathname)
+{
+  return _unlink(pathname);
+}
+# endif
+
 #endif // !LIBPORT_UNISTD_H
