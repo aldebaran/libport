@@ -6,39 +6,44 @@ namespace libport
   {
     class BufferBuf: public std::streambuf
     {
-      public:
+    public:
       BufferBuf(const char* data, size_t length);
-      protected:
-      virtual std::streamsize showmanyc() { return egptr() - gptr();}
+
+    protected:
+      virtual std::streamsize showmanyc()
+        {
+          return egptr() - gptr();
+        }
       virtual std::streampos seekoff(std::streamoff off,
                                      std::ios_base::seekdir way,
                                      std::ios_base::openmode which)
-      {
-        char* cur = gptr();
-        switch(way)
         {
-        case std::ios_base::beg:
-          cur = eback() + off;
-          break;
-        case std::ios_base::cur:
-          cur += off;
-          break;
-        case std::ios_base::end:
-          cur = egptr() - off;
-          break;
+          char* cur = gptr();
+          switch(way)
+          {
+          case std::ios_base::beg:
+            cur = eback() + off;
+            break;
+          case std::ios_base::cur:
+            cur += off;
+            break;
+          case std::ios_base::end:
+            cur = egptr() - off;
+            break;
+          }
+          if (cur < eback())
+            cur = eback();
+          if (cur > egptr())
+            cur = egptr();
+          setg(eback(), cur, egptr());
+          return cur - eback();
         }
-        if (cur < eback())
-          cur = eback();
-        if (cur > egptr())
-          cur = egptr();
-        setg(eback(), cur, egptr());
-        return cur - eback();
-      }
+
       virtual std::streampos seekpos(std::streampos pos,
                                      std::ios_base::openmode which)
-      {
-        return seekoff(pos, std::ios_base::beg, which);
-      }
+        {
+          return seekoff(pos, std::ios_base::beg, which);
+        }
     };
   }
 
@@ -50,7 +55,7 @@ namespace libport
   }
 
   BufferStream::BufferStream(const char* data, size_t length)
-  : std::iostream(new BufferBuf(data, length))
+    : std::iostream(new BufferBuf(data, length))
   {
   }
 
@@ -59,5 +64,3 @@ namespace libport
     delete rdbuf();
   }
 }
-
-

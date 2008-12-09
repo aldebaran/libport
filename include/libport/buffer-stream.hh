@@ -11,7 +11,7 @@ namespace libport
   /// Input stream similar to stringstream, without copying its data source.
   class LIBPORT_API BufferStream: public std::iostream
   {
-    public:
+  public:
     BufferStream(const char* data, size_t length);
     virtual ~BufferStream();
   };
