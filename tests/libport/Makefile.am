@@ -100,11 +100,16 @@ visitor_SOURCES                   = visitor.cc
 
 EXTRA_DIST += ufloat-common.cc ufloat-config.h 666.txt
 
+WINEPREFIX_ENVIRONMENT :=			\
+  $(shell					\
+     $(wine_ld_library_path)			\
+     --to=$(abs_builddir)			\
+     $(abs_top_builddir)/lib/libport)
+
 # See above for an explanation on the $(EXEEXT) business.
 TESTS_ENVIRONMENT +=                                    \
   SRCDIR=$(srcdir)                                      \
-  WINE_LD_LIBRARY_PATH_ARGS='--wrapper=$(<:$(EXEEXT)=)' \
-  $(RUN_WINE_LD_LIBRARY_PATH)
+  $(WINEPREFIX_ENVIRONMENT)
 
 
 CLEANFILES += $(EXTRA_PROGRAMS:$(EXEEXT)=)

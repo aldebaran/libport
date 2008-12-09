@@ -22,7 +22,7 @@ m4_defun([_URBI_INSTRUMENT_PREPARE],
       (yes|true|1) val=true;;
       (*)          val=false;;
   esac
-  stderr "$var=$val"
+  verbose "$var=$val"
   eval "$var=$val"
 }
 
