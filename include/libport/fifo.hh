@@ -125,6 +125,9 @@ namespace libport
     */
     size_type capacity() const;
 
+    //! Change the queue capacity so that it can hold at least \b len bytes.
+    void reserve(size_type len);
+
   private:
     /// Allocator.
     allocator_type allocator_;

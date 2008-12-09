@@ -81,11 +81,8 @@ namespace libport
 
   template<typename T, T Terminator, typename Alloc>
   inline void
-  Fifo<T, Terminator, Alloc>::push(const_pointer data, size_type count)
+  Fifo<T, Terminator, Alloc>::reserve(size_type nsz)
   {
-    // Compute the new size of the stored data and a null item.
-    size_type nsz = size() + count + 1;
-
     // Check whether we need to move data around, along with a possible
     // larger buffer if needed.
     if (first_item_ + nsz > buffer_ + capacity_)
@@ -113,6 +110,15 @@ namespace libport
       next_item_ += buffer_ - first_item_;
       first_item_ = buffer_;
     }
+  }
+
+  template<typename T, T Terminator, typename Alloc>
+  inline void
+  Fifo<T, Terminator, Alloc>::push(const_pointer data, size_type count)
+  {
+    // Compute the new size of the stored data and a null item.
+    size_type nsz = size() + count + 1;
+    reserve(nsz);
 
     // Append the new data and adjust the next item address.
     memcpy(next_item_, data, count * sizeof(value_type));
