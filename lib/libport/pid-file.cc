@@ -1,5 +1,4 @@
 #include <sys/types.h>
-#include <unistd.h>
 
 #include <fstream>
 
@@ -9,6 +8,7 @@
 #include <libport/path.hh>
 #include <libport/pid-file.hh>
 #include <libport/program-name.hh>
+#include <libport/unistd.h>
 
 namespace libport
 {
