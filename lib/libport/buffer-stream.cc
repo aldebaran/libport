@@ -50,8 +50,8 @@ namespace libport
   }
 
   BufferStream::BufferStream(const char* data, size_t length)
+  : std::iostream(new BufferBuf(data, length))
   {
-    rdbuf(new BufferBuf(data, length));
   }
 
   BufferStream::~BufferStream()
