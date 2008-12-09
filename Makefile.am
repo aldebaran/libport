@@ -15,7 +15,11 @@ include include/libport/local.mk
 doc html:
 	$(MAKE) $(AM_MAKEFLAGS) -C doc $@
 
-check-buildfarm: check
+# The target run by the buildfarm.
+CHECK_BUILDFARM_FLAGS = -j4 AM_COLOR_TESTS=no VERBOSE=1 INSTRUMENT=1
+check-buildfarm:
+        $(MAKE) $(AM_MAKEFLAGS) -C src/tests \
+          $(CHECK_BUILDFARM_FLAGS) check-html
 
 # Manually list the files you're using from build-aux here.
 # Note: Automake already takes care of the .mk and .m4 files you use.
