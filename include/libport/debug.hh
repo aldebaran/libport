@@ -374,8 +374,8 @@ namespace libport
 
 #  define GD__INIT_                                                     \
   static int _libport_initdebug_()                                      \
-  { make_debugger = (_libport_mkdebug_); }                              \
-  static int _libport_debug_initialized_ = _libport_initdebug_;         \
+  { make_debugger = (_libport_mkdebug_); return 42; }                   \
+  static int _libport_debug_initialized_ = _libport_initdebug_();       \
 
 
 #  define GD_INIT()                               \
