@@ -65,18 +65,6 @@ namespace netdetail {
       io->run();
     }
 
-    inline boost::asio::io_service&
-    get_io_service()
-    {
-      static boost::asio::io_service* io = 0;
-      if (!io)
-      {
-        io = new boost::asio::io_service;
-        libport::startThread(boost::bind(&runIoService, io));
-      }
-      return *io;
-    }
-
     class UDPLinkImpl: public UDPLink
     {
       public:
@@ -421,7 +409,7 @@ resolve(const std::string& host,
        const std::string& port, boost::system::error_code &erc)
 {
   typename Proto::resolver::query query(host, port);
-  typename Proto::resolver resolver(netdetail::get_io_service());
+  typename Proto::resolver resolver(get_io_service());
   typename Proto::resolver::iterator iter = resolver.resolve(query, erc);
   if (erc)
     return typename Proto::endpoint();
@@ -444,7 +432,7 @@ Socket::connectProto(const std::string& host, const std::string& port,
     s->connect(ep, erc);
   else
   {
-    boost::asio::deadline_timer timer(netdetail::get_io_service());
+    boost::asio::deadline_timer timer(get_io_service());
     libport::Semaphore sem;
     s->async_connect(ep, boost::bind(&netdetail::onConnect, _1,
                                      boost::ref(timer),
@@ -495,7 +483,7 @@ Socket::listenProto(SocketFactory f, const std::string& host,
   typename Proto::endpoint ep = resolve<Proto>(host, port, erc);
   if (erc)
     return erc;
-  typename Proto::acceptor* a = new typename Proto::acceptor(netdetail::get_io_service(), ep);
+  typename Proto::acceptor* a = new typename Proto::acceptor(get_io_service(), ep);
   netdetail::SocketImpl<typename Proto::socket>::acceptOne(f, a, bf);
   return erc;
 }
@@ -570,9 +558,22 @@ Socket::destroy()
 inline void
 AsioDestructible::doDestroy()
 {
-  netdetail::get_io_service().post(boost::bind(
+  get_io_service().post(boost::bind(
 	netdetail::deletor<AsioDestructible>, this));
 }
 
 
+
+inline boost::asio::io_service&
+get_io_service(bool startWorkerThread)
+{
+  static boost::asio::io_service* io = 0;
+  if (!io)
+  {
+    io = new boost::asio::io_service;
+    if (startWorkerThread)
+      libport::startThread(boost::bind(&netdetail::runIoService, io));
+  }
+  return *io;
+}
 }

@@ -127,6 +127,14 @@ namespace libport
                    utime_t timeout, BaseFactory bf);
   };
 
+  //FIXME: extend to provide a way to ensure workerThread not started.
+  /** Get the io_service handling all asynchronous operations.
+    *
+    * \param startWorkerThread create a thread in which to run the io_service.
+    * If \b startWorkerThread is false on \b first invocation, the user
+    * is responsible for calling the work or poll methods of the io_service.
+    */
+  boost::asio::io_service& get_io_service(bool startWorkerThread = true);
 }
 
 # include "libport/asio.hxx"
