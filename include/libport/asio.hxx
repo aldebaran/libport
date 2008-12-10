@@ -37,6 +37,10 @@ namespace netdetail {
       ~SocketImpl() { delete base_;}
       void write(const void* data, unsigned int length);
       void close();
+      unsigned short getRemotePort();
+      std::string getRemoteHost();
+      unsigned short getLocalPort();
+      std::string getLocalHost();
       bool isConnected();
       template<typename Acceptor, typename BaseFactory> static void
         onAccept(Stream* s, SocketFactory fact, Acceptor *a, BaseFactory bf);
@@ -146,6 +150,30 @@ namespace netdetail {
   SocketImpl<Stream>::close()
   {
     base_->lowest_layer().close();
+  }
+
+  template<typename Stream> unsigned short
+  SocketImpl<Stream>::getRemotePort()
+  {
+    return base_->lowest_layer().remote_endpoint().port();
+  }
+
+  template<typename Stream> std::string
+  SocketImpl<Stream>::getRemoteHost()
+  {
+    return base_->lowest_layer().remote_endpoint().address().to_string();
+  }
+
+  template<typename Stream> unsigned short
+  SocketImpl<Stream>::getLocalPort()
+  {
+    return base_->lowest_layer().local_endpoint().port();
+  }
+
+  template<typename Stream> std::string
+  SocketImpl<Stream>::getLocalHost()
+  {
+    return base_->lowest_layer().local_endpoint().address().to_string();
   }
 
   template<typename Stream> bool

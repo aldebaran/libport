@@ -39,6 +39,14 @@ namespace libport
       virtual bool isConnected() = 0;
       /// Disconnect the socket from the remote host.
       virtual void close() = 0;
+      /// Get port of remote endpoint
+      virtual unsigned short getRemotePort() = 0;
+      /// Get IP address of remote endpoint
+      virtual std::string getRemoteHost() = 0;
+      /// Get port of local endpoint
+      virtual unsigned short getLocalPort() = 0;
+      /// Get IP address of local endpoint
+      virtual std::string getLocalHost() = 0;
       /// Callback function called each time new data is available.
       boost::function1<bool, boost::asio::streambuf&> onReadFunc;
       /// Callback function called in case of error on the socket.
@@ -84,8 +92,19 @@ namespace libport
       inline void send(void* addr, int len) {write((const void*)addr, len);}
       inline void send(const std::string& s) {write(s.c_str(), s.length());}
       inline void close() {if (base_) base_->close();}
+      inline unsigned short getRemotePort() { return base_->getRemotePort();}
+      inline std::string getRemoteHost() {return base_->getRemoteHost();}
+      inline unsigned short getLocalPort() { return base_->getLocalPort();}
+      inline std::string getLocalHost() {return base_->getLocalHost();}
       inline bool isConnected() {return base_?base_->isConnected():false;}
 
+      /** Connect to a remote host.
+        * \param host hostname to connect to.
+        * \param port port to connect to, as a service name or an int.
+        * \param usTimeout timeout in microseconds, 0 meaning none.
+        * \return an error code if the connection failed.
+        *
+        */
       boost::system::error_code connect(const std::string& host,
 	  const std::string& port, bool udp=false, utime_t usTimeout = 0);
 
@@ -93,11 +112,17 @@ namespace libport
       typedef boost::function0<Socket*> SocketFactory;
       /** Listen using udp.
         * Call onRead(data, length, link) for each new packet. Link can be used
-        * to reply to the sender.
+        * to reply to the sender through its UDPLink::reply() method.
         */
       static Handle listenUDP(const std::string& host, const std::string& port,
                   boost::function3<void, const void*, int,
                   boost::shared_ptr<UDPLink> > onRead);
+
+      /** Listen using TCP or UDP.
+        *
+        * \param f a socket factory. For each new connection the function will
+        * be called and the resulting socket object bound to the new connection.
+        */
       static Handle listen(SocketFactory f, const std::string& host,
 	  const std::string& port, boost::system::error_code & erc,
           bool udp = false);
