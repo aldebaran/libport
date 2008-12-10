@@ -18,6 +18,9 @@ extern "C"
   LIBPORT_API
   int unsetenv(const char* key);
 
+  LIBPORT_API
+  long long strtoll(const char* nptr, char** endptr, int base);
+
 }
 # endif // WIN32
 

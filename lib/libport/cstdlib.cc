@@ -23,6 +23,12 @@ extern "C"
     return setenv(key, "", 1);
   }
 
+  long long
+  strtoll(const char* nptr, char** endptr, int base)
+  {
+    return _strtoi64(nptr, endptr, base);
+  }
+
 }
 
 #endif
