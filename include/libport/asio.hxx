@@ -81,17 +81,20 @@ namespace netdetail {
     {
       public:
       UDPLinkImpl(boost::asio::ip::udp::socket& socket,
-                  boost::asio::ip::udp::endpoint endpoint)
+                  boost::asio::ip::udp::endpoint endpoint,
+                  Destructible::DestructionLock destructionLock)
       : socket_(socket)
       , endpoint_(endpoint)
+      , destructionLock_(destructionLock)
       {}
       virtual void reply(const void* data, int length);
       private:
       boost::asio::ip::udp::socket& socket_;
       boost::asio::ip::udp::endpoint endpoint_;
+      Destructible::DestructionLock destructionLock_;
     };
 
-    class UDPSocket
+    class UDPSocket: public Destructible
     {
       public:
       UDPSocket();
@@ -124,7 +127,8 @@ namespace netdetail {
     UDPSocket::handle_receive(const boost::system::error_code& error,
                               size_t sz)
     {
-      boost::shared_ptr<UDPLink> l(new UDPLinkImpl(socket_, remote_endpoint_));
+      boost::shared_ptr<UDPLink> l(new UDPLinkImpl(socket_, remote_endpoint_,
+                                                   getDestructionLock()));
       onRead(&recv_buffer_[0], sz, l);
       start_receive();
     }
