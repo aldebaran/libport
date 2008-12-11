@@ -105,6 +105,7 @@ EXTRA_DIST += ufloat-common.cc ufloat-config.h 666.txt
 WINEPREFIX_ENVIRONMENT :=			\
   $(shell					\
      $(wine_ld_library_path)			\
+     --force					\
      --to=$(abs_builddir)			\
      $(abs_top_builddir)/lib/libport)
 
