@@ -5,6 +5,7 @@
 #include <boost/format.hpp>
 #include <boost/optional.hpp>
 
+#include <libport/assert.hh>
 #include <libport/path.hh>
 #include <libport/pid-file.hh>
 #include <libport/program-name.hh>
@@ -52,10 +53,19 @@ namespace libport
     out << getpid() << std::endl;
   }
 
+  bool check_program_name()
+  {
+    if (libport::program_name == "")
+      pabort("You forgot to set libport::program_name");
+    return true;
+  }
+
   std::string PidFile::default_filename()
   {
     static boost::format fmt("/var/run/%s.pid");
-    static std::string res = str(fmt % libport::path(program_name).basename());
+    static std::string res =
+      (check_program_name(),
+       str(fmt % libport::path(program_name).basename()));
     return res;
   }
 }
