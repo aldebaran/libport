@@ -50,6 +50,11 @@ namespace libport
       throw std::runtime_error(str(fmt % path_));
     }
     std::ofstream out(path_.to_string().c_str(), std::ios::out);
+    if (!out.good())
+    {
+      static boost::format fmt("unable to create PID file: %s");
+      throw std::runtime_error(str(fmt % path_));
+    }
     out << getpid() << std::endl;
   }
 
