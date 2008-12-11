@@ -432,7 +432,7 @@ function(gostai_add_library name)
   parse_arguments(
     ${name}
     "SOURCES;MOCS;UIS;CPPFLAGS;INCLUDE_DIRS;LIBRARIES;RESOURCES"
-    "QTPLUGIN"
+    "QTPLUGIN;NO_INSTALL"
     ${ARGN})
 
   # =================== #
@@ -513,17 +513,21 @@ function(gostai_add_library name)
   # Install files #
   # ============= #
 
-  if(${name}_QTPLUGIN)
-    install(TARGETS ${name} DESTINATION ${PLUGINS_DIR})
-  else(${name}_QTPLUGIN)
-    install(TARGETS ${name} DESTINATION ${LIBRARIES_DIR})
-  endif(${name}_QTPLUGIN)
+  if(NOT ${name}_NO_INSTALL)
+    if(${name}_QTPLUGIN)
+      install(TARGETS ${name} DESTINATION ${PLUGINS_DIR})
+    else(${name}_QTPLUGIN)
+      install(TARGETS ${name} DESTINATION ${LIBRARIES_DIR})
+    endif(${name}_QTPLUGIN)
+  endif(NOT ${name}_NO_INSTALL)
 
   # ========================== #
   # Deploy dependent libraries #
   # ========================== #
 
-  dldep_install(${name})
+  if(NOT ${name}_NO_INSTALL)
+    dldep_install(${name})
+  endif(NOT ${name}_NO_INSTALL)
 
 endfunction(gostai_add_library name)
 
