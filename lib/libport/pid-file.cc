@@ -12,12 +12,26 @@
 
 namespace libport
 {
-  PidFile::PidFile(boost::optional<std::string> path )
+  PidFile::PidFile(const std::string& path)
+    : path_(path)
+  {}
+
+  PidFile::PidFile(int& argc,
+                   const char* argv[],
+                   const std::string& path,
+                   const std::string& opt)
     : path_(".")
   {
-    static boost::format fmt("/var/run/%s.pid");
-    path_= path ? path.get()
-      : str(fmt % libport::path(program_name).basename());
+    assert(argc > 0);
+
+    for (int i = 1; i < argc; ++i)
+      if (opt == argv[i] && i + 1 < argc)
+      {
+        path_ = argv[i + 1];
+        for (int j = i; j < argc - 1; ++j)
+          argv[j] = argv[j + 1];
+        argc -= 2;
+      }
   }
 
   PidFile::~PidFile()
@@ -36,5 +50,12 @@ namespace libport
     }
     std::ofstream out(path_.to_string().c_str(), std::ios::out);
     out << getpid() << std::endl;
+  }
+
+  std::string PidFile::default_filename()
+  {
+    static boost::format fmt("/var/run/%s.pid");
+    static std::string res = str(fmt % libport::path(program_name).basename());
+    return res;
   }
 }

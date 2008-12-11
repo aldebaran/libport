@@ -3,8 +3,6 @@
 
 # include <string>
 
-# include <boost/optional.hpp>
-
 # include <libport/path.hh>
 
 namespace libport
@@ -17,14 +15,28 @@ namespace libport
   class LIBPORT_API PidFile
   {
   public:
-    /// Build a PidFile
-    /** \param path Path of the future PID file
+    /// Build a PidFile with specified path
+    /** \param path Path of the future PID file.
      */
-    PidFile(boost::optional<std::string> path);
+    PidFile(const std::string& path = default_filename());
+    /// Build a PidFile, parsing option line for the file name.
+    /* Extracts --pid-file option to determine the PID file name. The
+       option is removed from the given command line.
+
+       @param argc The number of arguments
+       @param argc The arguments
+       @param def  The default if no option is found
+       @param opt  The option name to look for */
+    PidFile(int& argc,
+            const char* argv[],
+            const std::string& path = default_filename(),
+            const std::string& opt = "--pid-file");
     /// Dispose of the PID file
     ~PidFile();
     /// Create the PID file
     void create();
+    /// Get a reasonable default PID filename: /var/run/$argv[0].pid
+    static std::string default_filename();
 
   private:
     libport::path path_;
