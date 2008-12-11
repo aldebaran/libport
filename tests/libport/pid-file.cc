@@ -1,5 +1,7 @@
 #include <fstream>
 
+#include <boost/format.hpp>
+
 #include <libport/pid-file.hh>
 #include <libport/program-name.hh>
 #include <libport/unit-test.hh>
@@ -44,6 +46,25 @@ void test_options()
   BOOST_CHECK_EQUAL(argc, old_argc - 2);
 }
 
+void test_exists()
+{
+  static const std::string file = "exists.pid";
+  // Create the file
+  int fd;
+  BOOST_CHECK(fd = open(file.c_str(), O_CREAT) != -1);
+  BOOST_CHECK(!close(fd));
+
+  libport::PidFile f(file);
+  BOOST_CHECK_THROW(f.create(), std::exception);
+}
+
+void test_unable_create()
+{
+  static const std::string file = "/does/not/exist/fail.pid";
+  libport::PidFile f(file);
+  BOOST_CHECK_THROW(f.create(), std::exception);
+}
+
 test_suite*
 init_test_suite()
 {
@@ -52,6 +73,8 @@ init_test_suite()
 
   suite->add(BOOST_TEST_CASE(test));
   suite->add(BOOST_TEST_CASE(test_options));
+  suite->add(BOOST_TEST_CASE(test_exists));
+  suite->add(BOOST_TEST_CASE(test_unable_create));
 
   return suite;
 }
