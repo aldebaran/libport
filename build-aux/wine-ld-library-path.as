@@ -6,7 +6,8 @@ URBI_INIT()[
 host=@host@
 case $host in
   (*pw32*|*mingw32*);;
-  (*) error 0 "nothing to do on $host";;
+  (*) verbose "nothing to do on $host"
+      exit 0;;
 esac
 
 

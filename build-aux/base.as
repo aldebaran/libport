@@ -160,7 +160,7 @@ stderr ()
 verbose ()
 {
   case $verbose:" $VERBOSE " in
-    (true:*|*" $me "*) stderr "$[@]";;
+    (true:*|*" $as_me "*) stderr "$[@]";;
   esac
 }
 
