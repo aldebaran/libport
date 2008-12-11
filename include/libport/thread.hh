@@ -4,6 +4,7 @@
 # include <libport/config.h>
 # include <boost/function.hpp>
 # include <boost/bind.hpp>
+# include <boost/optional.hpp>
 # ifdef LIBPORT_WIN32
 #  define WIN32
 # endif
@@ -70,6 +71,31 @@ namespace libport
     pthread_join(*(pthread_t*)t, 0);
 # endif
   }
+
+  template<typename Res> class ThreadedCall
+  {
+    public:
+    ThreadedCall():handle_(0) {};
+    ThreadedCall(boost::function0<Res> f) {start(f);}
+    void start(boost::function0<Res> f)
+    {
+      res_ = boost::none;
+      handle_ = startThread(boost::bind(&ThreadedCall<Res>::wrap, this, f));
+    }
+    void wrap(boost::function0<Res> f)
+    {
+      res_ = f();
+    }
+    /// Return true if a job finished
+    void clear() {res_ = boost::none; handle_ = 0;}
+    bool finished() {return res_;}
+    bool running() { return handle_ && !res_;}
+    void wait() {if (!res_ && handle_) joinThread(handle_);}
+    Res get() {return res_.get();}
+    private:
+    boost::optional<Res> res_;
+    void* handle_;
+  };
 
 } // namespace libport
 
