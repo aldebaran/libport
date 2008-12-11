@@ -1,4 +1,3 @@
-#include <cassert>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -28,9 +27,9 @@ own(bool own)
   int fd[2];
   struct stat stat;
 
-  assert(!pipe(fd));
-  assert(!fstat(fd[0], &stat));
-  assert(!fstat(fd[1], &stat));
+  BOOST_CHECK(!pipe(fd));
+  BOOST_CHECK(!fstat(fd[0], &stat));
+  BOOST_CHECK(!fstat(fd[1], &stat));
 
   {
     FdStream s(fd[1], fd[0]);
@@ -48,8 +47,8 @@ own(bool own)
   {
     BOOST_CHECK(!fstat(fd[0], &stat));
     BOOST_CHECK(!fstat(fd[1], &stat));
-    close(fd[0]);
-    close(fd[1]);
+    BOOST_CHECK(!close(fd[0]));
+    BOOST_CHECK(!close(fd[1]));
   }
 }
 
@@ -64,7 +63,7 @@ fd_get()
 static void
 put(const std::string& str, int fd)
 {
-  assert(write(fd, str.c_str(), str.length()) == str.length());
+  BOOST_CHECK_EQUAL(write(fd, str.c_str(), str.length()), str.length());
 }
 
 static void
@@ -159,7 +158,8 @@ fd_read_jumbo(FdStream*& stream, int fd)
   libport::joinThread(thread);
 }
 
-static void thread_write_stream(FdStream* stream, int size)
+static void
+thread_write_stream(FdStream* stream, int size)
 {
   for (int i = 0; i < size; ++i)
     *stream << (char) (i % 256);
@@ -178,7 +178,7 @@ fd_write_jumbo(FdStream*& stream, int fd)
   char c;
   for (int i = 0; i < size; ++i)
   {
-    BOOST_CHECK(read(fd, &c, 1) == 1);
+    BOOST_CHECK_EQUAL(read(fd, &c, 1), 1);
     BOOST_CHECK_EQUAL(c, (char)i % 256);
   }
   BOOST_CHECK_EQUAL(read(fd, &c, 1), 0);
@@ -190,28 +190,31 @@ static void
 fd_read(f_type action)
 {
   int fd[2];
-  assert(!pipe(fd));
+  BOOST_CHECK(!pipe(fd));
 
   FdStream* stream = new FdStream(STDOUT_FILENO, fd[0]);
   action(stream, fd[1]);
 
   close(fd[0]);
-  if (stream)
-    delete stream;
+  delete stream;
 }
 
 static void
-fd_write(f_type action)
+fd_write(f_type action, bool close_p)
 {
   int fd[2];
-  assert(!pipe(fd));
+  BOOST_CHECK(!pipe(fd));
 
   FdStream* stream = new FdStream(fd[1], STDIN_FILENO);
   action(stream, fd[0]);
 
-  close(fd[1]);
-  if (stream)
-    delete stream;
+  // Don't close twice the fd, it throws on Windows.  In the
+  // fd_write_jumbo case, the stream closes this fd.  The others
+  // don't.  There is no simple means to guarantee a single close for
+  // each case, so just don't close at all.
+  if (close_p)
+    BOOST_CHECK(!close(fd[1]));
+  delete stream;
 }
 
 test_suite*
@@ -220,13 +223,12 @@ init_test_suite()
   test_suite* suite = BOOST_TEST_SUITE("libport::FdStream test suite");
   test_suite* current;
 
-#define SUITE(Desc)                                                     \
-  current = BOOST_TEST_SUITE("Construction test suite");                \
-  suite->add(current);                                                  \
+#define SUITE(Desc)                             \
+  current = BOOST_TEST_SUITE(Desc);             \
+  suite->add(current);
 
-#define TEST(Args)                                                      \
-  current->add(BOOST_TEST_CASE                                          \
-               (boost::bind Args));                                     \
+#define TEST(Args)                                      \
+  current->add(BOOST_TEST_CASE(boost::bind Args));
 
   SUITE("Construction test suite");
   TEST((ctor, 0, 0));
@@ -244,9 +246,9 @@ init_test_suite()
   TEST((fd_read, fd_read_jumbo));
 
   SUITE("write test suite");
-  TEST((fd_write, fd_write_string));
-  TEST((fd_write, fd_write_ints));
-  TEST((fd_write, fd_write_jumbo));
+  TEST((fd_write, fd_write_string, true));
+  TEST((fd_write, fd_write_ints, true));
+  TEST((fd_write, fd_write_jumbo, false));
 
   return suite;
 }

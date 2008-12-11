@@ -21,6 +21,12 @@ namespace libport
     buf_->own_fd(v);
   }
 
+  bool
+  FdStream::own_fd() const
+  {
+    return buf_->own_fd();
+  }
+
   FdBuf::FdBuf(unsigned write, unsigned read)
     : write_(write)
     , read_(read)
@@ -74,6 +80,12 @@ namespace libport
   FdBuf::own_fd(bool v)
   {
     own_ = v;
+  }
+
+  bool
+  FdBuf::own_fd() const
+  {
+    return own_;
   }
 
   unsigned FdStream::fd_read()

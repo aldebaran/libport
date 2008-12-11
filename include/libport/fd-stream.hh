@@ -14,6 +14,7 @@ namespace libport
     FdBuf(unsigned write, unsigned read);
     ~FdBuf();
     void own_fd(bool v);
+    bool own_fd() const;
     unsigned fd_write();
     unsigned fd_read();
 
@@ -38,6 +39,7 @@ namespace libport
     virtual ~FdStream();
     /// Set whether the FdStream should close the fds upon destruction
     void own_fd(bool v);
+    bool own_fd() const;
     /// Get write fd
     unsigned fd_write();
     /// Get read fd
