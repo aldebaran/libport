@@ -88,11 +88,10 @@ get(int fd)
 static void
 fd_read_string(FdStream*& stream, int fd)
 {
-  std::string test;
-
   put("test", fd);
-  close(fd);
+  BOOST_CHECK(!close(fd));
 
+  std::string test;
   *stream >> test;
   BOOST_CHECK_EQUAL(test, "test");
 }
@@ -110,14 +109,13 @@ fd_write_string(FdStream*& stream, int fd)
 static void
 fd_read_ints(FdStream*& stream, int fd)
 {
-  int test;
-
   // Write
   put("42 ", fd);
+  int test;
   *stream >> test;
   BOOST_CHECK_EQUAL(test, 42);
   put("51 69", fd);
-  close(fd);
+  BOOST_CHECK(!close(fd));
   *stream >> test;
   BOOST_CHECK_EQUAL(test, 51);
   *stream >> test;
@@ -139,8 +137,9 @@ fd_write_ints(FdStream*& stream, int fd)
 static void thread_write(int fd, int size)
 {
   for (int i = 0; i < size; ++i)
-    put(i % 256, fd); // This might fail if the pipe isn't large enough ...
-  close(fd);
+    // This might fail if the pipe isn't large enough ...
+    put(i % 256, fd);
+  BOOST_CHECK(!close(fd));
 }
 
 static void
@@ -195,7 +194,7 @@ fd_read(f_type action)
   FdStream* stream = new FdStream(STDOUT_FILENO, fd[0]);
   action(stream, fd[1]);
 
-  close(fd[0]);
+  BOOST_CHECK(!close(fd[0]));
   delete stream;
 }
 
