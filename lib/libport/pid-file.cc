@@ -20,7 +20,7 @@ namespace libport
                    const char* argv[],
                    const std::string& path,
                    const std::string& opt)
-    : path_(".")
+    : path_(path)
   {
     assert(argc > 0);
 
