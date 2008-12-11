@@ -60,9 +60,13 @@ namespace libport
     path operator/ (const std::string& rhs) const;
     bool operator== (const path& rhs) const;
 
-    std::string basename () const;
-    path dirname () const;
-    bool exists () const;
+    std::string basename() const;
+    /// Return the volume.  Empty, unless on windows, in which
+    /// case it looks like "c:".
+    std::string volume_get() const;
+    void volume_set(const std::string& v);
+    path dirname() const;
+    bool exists() const;
 
     /// \}
 
@@ -77,7 +81,6 @@ namespace libport
     operator std::string () const;
     const path_type& components() const;
     std::ostream& dump (std::ostream& ostr) const;
-
     /// \}
 
     /// Whether is absolute.

@@ -21,9 +21,17 @@ void path_ctor(const std::string& path, bool valid)
   }
 }
 
-void path_absolute(const std::string& path, bool expected = true)
+void path_absolute(const std::string& path,
+#if WIN32
+                   const std::string& volume,
+#endif
+                   bool expected = true)
 {
-  BOOST_CHECK(libport::path(path).absolute_get() == expected);
+  libport::path p(path);
+  BOOST_CHECK_EQUAL(p.absolute_get(), expected);
+#if WIN32
+  BOOST_CHECK_EQUAL(p.volume_get(), volume);
+#endif
 }
 
 void path_name(const std::string& spath,
@@ -73,8 +81,8 @@ init_test_suite()
   def("/usr/local", true);
   def("", false);
 #ifdef WIN32
-  def("C:\\Documents and Settings", true);
-  def("\\\\shared_volume\\subdir", true);
+  def("C:\\Documents and Settings", "C:", true);
+  def("\\\\shared_volume\\subdir", "\\\\shared_volume", true);
 #endif
 #undef def
 

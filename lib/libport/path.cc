@@ -20,12 +20,12 @@ namespace libport
 {
   path::path (const std::string& p)
   {
-    init (p);
+    init(p);
   }
 
   path::path (const char* p)
   {
-    init (p);
+    init(p);
   }
 
   void
@@ -35,18 +35,16 @@ namespace libport
     // Under Win32, absolute paths start with a letter followed by
     // ":\". If the trailing slash is missing, this is a relative
     // path.
-    if (p.length() >= 2 &&
-	isalpha(p[0]) &&
-	p[1] == ':')
+    if (p.length() >= 2
+	&& isalpha(p[0]) && p[1] == ':')
     {
       volume_ = p.substr(0, 2);
       absolute_ = p.length() >= 3 && p[2] == '\\';
       p = absolute_ ? p.erase(0, 3) : p.erase(0, 2);
     }
     // Network share, such as "\\shared volume\foo\bar"
-    else if (p.length() >= 3 &&
-	     p[0] == '\\' &&
-	     p[1] == '\\')
+    else if (p.length() >= 3
+	     && p[0] == '\\' && p[1] == '\\')
     {
       absolute_ = true;
       std::string::size_type pos = p.find("\\", 3);
@@ -133,9 +131,8 @@ namespace libport
   path
   path::operator/ (const std::string& rhs) const
   {
-    path ret = *this;
-
-    return ret /= rhs;
+    path res = *this;
+    return res /= rhs;
   }
 
   path::operator std::string () const
@@ -144,7 +141,7 @@ namespace libport
   }
 
   std::string
-  path::to_string () const
+  path::to_string() const
   {
     std::string path_str;
     char separator = separator_;
