@@ -16,7 +16,8 @@ esac
 ## --------------------- ##
 
 ]URBI_GET_OPTIONS(
-[  (-h|--help)    usage;;
+[  (-f|--force)   force=true;;
+   (-h|--help)    usage;;
    (-t|--to)      shift; where=$1;;
    (-w|--wrapper) shift; process_wrapper "$1";;
    (*)            dirs+=" $1";;
@@ -39,6 +40,8 @@ LD_LIBRARY_PATH that Windows supports.
 
 Options:
   -h, --help           display this message and exit
+  -f, --force          force the creation of wine/, even if it exists
+                       previous content is lost
   -t, --to=DIR         install the \`wine' directory inside DIR
                        in other words, make WINEPREFIX=DIR/wine
                        [$where]
@@ -106,6 +109,8 @@ create_wine_directory ()
 
 # List of directories to add to the Path.
 dirs=
+# Be lazy.
+force=false
 # By default, installed this here (--to).
 where=$(pwd)
 
@@ -116,8 +121,9 @@ verbose "host: $host"
 # not seem to make any sense here, and MN does not remember why he
 # checked that.  So this check is removed.
 export WINEPREFIX=$where/wine
-test -d "$WINEPREFIX" ||
+if $force || test ! -d "$WINEPREFIX"; then
   create_wine_directory
+fi
 verbose "WINEPREFIX='$WINEPREFIX'"
 echo "WINEPREFIX='$WINEPREFIX'"
 
