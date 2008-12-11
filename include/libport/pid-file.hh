@@ -3,6 +3,7 @@
 
 # include <string>
 
+# include <libport/export.hh>
 # include <libport/path.hh>
 
 namespace libport
