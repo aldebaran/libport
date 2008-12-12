@@ -14,6 +14,9 @@ m4_pattern_forbid([^URBI_])
 
 AC_PREREQ([2.60])
 
+# Help aclocal finding this macro.
+AC_DEFUN([URBI_LTDL], [m4_fatal([aie])])
+
 # URBI_LTDL
 # ---------
 # Use libltdl as shipped by libport, as a convenience library.
@@ -36,10 +39,10 @@ AC_PREREQ([2.60])
 # dependencies), it cannot add it as is as a dependency.  As a result,
 # if libltdl changes, no relinking will be done.  It is better to
 # define LTDL_LIBS in the Makefile.am.
-AC_DEFUN([URBI_LTDL],
+m4_define([URBI_LTDL],
 [# If you need to create a library, use libtool.
 LT_PREREQ([2.2.6])
-# Name the subdirectory that contains libltdl sources
+# Name of the subdirectory that contains libltdl sources.
 LT_CONFIG_LTDL_DIR([libltdl])
 LT_INIT([pic-only shared disable-static dlopen win32-dll])
 LTDL_INIT([nonrecursive])
