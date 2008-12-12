@@ -60,16 +60,19 @@ EOF
 process_wrapper ()
 {
   local wrapper=$1
-  require_file "$wrapper"
-  local path
-  path=$(sed -ne 's/^ *PATH=//p' "$wrapper")
-  local save_IFS=$IFS
-  IFS=:
-  for p in $path
-  do
-    IFS=$save_IFS
-    dirs+=" $p"
-  done
+  if test -f "$wrapper"; then
+    local path
+    path=$(sed -ne 's/^ *PATH=//p' "$wrapper")
+    local save_IFS=$IFS
+    IFS=:
+    for p in $path
+    do
+      IFS=$save_IFS
+      dirs+=" $p"
+    done
+  else
+    verbose "no such file or directory: $wrapper"
+  fi
 }
 
 # create_wine_directory DIR
@@ -95,8 +98,11 @@ create_wine_directory ()
   local d
   for d in $dirs
   do
-    test ! -d "$d" ||
+    if test -d "$d"; then
       windirs+=";$(winepath -w "$d")"
+    else
+      verbose "no such directory: $d"
+    fi
   done
 
   # Add all the added path to the Path variable in user.reg config
