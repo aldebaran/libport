@@ -36,6 +36,7 @@ if(NOT PROJECT_INFO_CMAKE)
   function(project_describe_info major minor patch rc vendor vendor_ver n sha1)
 
     git_current_branch(branch)
+    message(STATUS "Project branch: ${branch}")
     if(branch STREQUAL "(no branch)")
       message(SEND_ERROR "project_describe_info: cannot extract information from no branch.")
       return()
@@ -66,12 +67,13 @@ if(NOT PROJECT_INFO_CMAKE)
     set(ver_base_rx "([0-9]+)\\.([0-9]+)")
     set(vendor_ver_base_rx "${ver_base_rx}-([^-]*)-([0-9]+)")
 
-    set(patch 0 PARENT_SCOPE)
+    set(patch -1 PARENT_SCOPE)
 
     # Are we are on master branch?
     if(branch MATCHES "^master$"
 	OR branch MATCHES "^candidates/.*$"
 	OR branch MATCHES "^perso/.*$")
+      message(STATUS "Project on the master branch.")
       set(ver1_rx "^${ver_base_rx}$")
       set(ver2_rx "^${ver_base_rx}-(.*)-([0-9]+)$")
       if(tag MATCHES ${ver1_rx})
@@ -105,6 +107,7 @@ if(NOT PROJECT_INFO_CMAKE)
     # Are we are on a Gostai bug fix branch?
     if(branch MATCHES "^${ver_base_rx}\\.x$")
 
+      message(STATUS "Project on a Gostai bug fix branch.")
       if(PROJECT_VENDOR)
 	message(SEND_ERROR
 	  "project_describe_info: mismatch project vendor '${PROJECT_VENDOR}' on branch '${branch}'")
@@ -137,6 +140,7 @@ if(NOT PROJECT_INFO_CMAKE)
     # Are we on a vendor bug fix branch?
     if(branch MATCHES "^${vendor_ver_base_rx}\\.x$")
 
+      message(STATUS "Project on a ${PROJECT_VENDOR} bug fix branch.")
       set(br_vendor ${CMAKE_MATCH_3})
       if(PROJECT_VENDOR)
 	if(NOT ${br_vendor} STREQUAL ${PROJECT_VENDOR})
@@ -199,11 +203,11 @@ if(NOT PROJECT_INFO_CMAKE)
     endif(PROJECT_VERSION_MAJOR GREATER ${major})
     set(PROJECT_VERSION_MINOR ${minor} PARENT_SCOPE)
     # Patch
-    if(patch GREATER 0)
+    if(patch GREATER 0 OR patch EQUAL 0)
       if(NOT n EQUAL 0)
 	math(EXPR patch "${patch} + 1")
       endif(NOT n EQUAL 0)
-    endif(patch GREATER 0)
+    endif(patch GREATER 0 OR patch EQUAL 0)
     set(PROJECT_VERSION_PATCH ${patch} PARENT_SCOPE)
     # Vendor version
     if(vendor)
@@ -227,6 +231,7 @@ if(NOT PROJECT_INFO_CMAKE)
     set(PROJECT_ADDITIONAL_COMMIT ${n} PARENT_SCOPE)
     # Sha1
     set(PROJECT_REVISION ${sha1} PARENT_SCOPE)
+    echo("Next release info: major=${major} minor=${minor} patch=${patch} rc=${rc} vendor=${vendor} vendor_ver=${vendor_ver} n=${n} sha1=${sha1}")
   endfunction(project_set_info)
 
   check_cmake_vars_exists(
