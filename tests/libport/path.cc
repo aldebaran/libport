@@ -11,8 +11,6 @@ void path_ctor(const std::string& path,
                const std::string& WIN32_IF(volume, /* nothing */),
                bool valid)
 {
-  // For some reason, the BOOST_CHECK_* macros are not blocks :(
-  // So we need the braces.
   if (valid)
   {
     BOOST_CHECK_NO_THROW(libport::path p(path));
@@ -22,9 +20,7 @@ void path_ctor(const std::string& path,
 #endif
   }
   else
-  {
     BOOST_CHECK_THROW(libport::path p(path), path::invalid_path);
-  }
 }
 
 void path_absolute(const std::string& path,
