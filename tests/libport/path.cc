@@ -7,13 +7,19 @@ using boost::bind;
 using libport::path;
 using libport::test_suite;
 
-void path_ctor(const std::string& path, bool valid)
+void path_ctor(const std::string& path,
+               const std::string& WIN32_IF(volume, /* nothing */),
+               bool valid)
 {
   // For some reason, the BOOST_CHECK_* macros are not blocks :(
   // So we need the braces.
   if (valid)
   {
     BOOST_CHECK_NO_THROW(libport::path p(path));
+#ifdef WIN32
+    libport::path p(path);
+    BOOST_CHECK_EQUAL(p.volume_get(), volume);
+#endif
   }
   else
   {
@@ -22,16 +28,10 @@ void path_ctor(const std::string& path, bool valid)
 }
 
 void path_absolute(const std::string& path,
-#if WIN32
-                   const std::string& volume,
-#endif
                    bool expected = true)
 {
   libport::path p(path);
   BOOST_CHECK_EQUAL(p.absolute_get(), expected);
-#if WIN32
-  BOOST_CHECK_EQUAL(p.volume_get(), volume);
-#endif
 }
 
 void path_name(const std::string& spath,
@@ -74,14 +74,15 @@ init_test_suite()
   // Test constructors
   test_suite* ctor_suite = BOOST_TEST_SUITE("Construction test suite");
   suite->add(ctor_suite);
-#define def(path, v)                                                      \
-  ctor_suite->add(BOOST_TEST_CASE(bind(path_ctor, path, v)));
-  def("urbi.u", true);
-  def("foo/bar.cc", true);
-  def("/usr/local", true);
-  def("", false);
+# define def(Path, Vol, Valid)                                            \
+  ctor_suite->add(BOOST_TEST_CASE(bind(path_ctor, Path, Vol, Valid)));
+  def("urbi.u", "", true);
+  def("foo/bar.cc", "", true);
+  def("/usr/local", "", true);
+  def("", "", false);
 #ifdef WIN32
   def("C:\\Documents and Settings", "C:", true);
+  def("c:", "c:", true);
   def("\\\\shared_volume\\subdir", "\\\\shared_volume", true);
 #endif
 #undef def
@@ -89,8 +90,8 @@ init_test_suite()
   // Test absoluteness
   test_suite* abs_suite = BOOST_TEST_SUITE("Absolute path detection test suite");
   suite->add(abs_suite);
-#define def(path, abs)                                                          \
-  abs_suite->add(BOOST_TEST_CASE(bind(path_absolute, path, abs)));
+#define def(Path, Abs)                                                          \
+  abs_suite->add(BOOST_TEST_CASE(bind(path_absolute, Path, Abs)));
   def("relative", false);
   def("relative/with/directories", false);
   def("relative/with/trailing/slash/", false);

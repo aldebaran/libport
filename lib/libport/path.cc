@@ -129,7 +129,7 @@ namespace libport
   }
 
   path
-  path::operator/ (const std::string& rhs) const
+  path::operator/ (const path& rhs) const
   {
     path res = *this;
     return res /= rhs;

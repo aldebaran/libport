@@ -57,7 +57,7 @@ namespace libport
     path& operator/= (const path& rhs);
     /** @throw invalid_path if \a rhs is absolute.
      */
-    path operator/ (const std::string& rhs) const;
+    path operator/ (const path& rhs) const;
     bool operator== (const path& rhs) const;
 
     std::string basename() const;
