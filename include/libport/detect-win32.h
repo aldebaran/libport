@@ -20,9 +20,9 @@
 # endif /* !WIN32 */
 
 # ifdef WIN32
-#  define WIN32_IF(Then, Else) (Then)
+#  define WIN32_IF(Then, Else) Then
 # else
-#  define WIN32_IF(Then, Else) (Else)
+#  define WIN32_IF(Then, Else) Else
 # endif
 
 #endif // !LIBPORT_DETECT_WIN32_H
