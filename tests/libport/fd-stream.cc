@@ -77,12 +77,8 @@ put(char c, int fd)
 static std::string
 get(int fd)
 {
-  char buf[BUFSIZ + 1];
-  int c;
-
-  c = read(fd, buf, sizeof (buf) - 1);
-  buf[c] = 0;
-  return buf;
+  char buf[BUFSIZ];
+  return std::string(buf, read(fd, buf, sizeof buf));
 }
 
 static void
@@ -99,7 +95,7 @@ fd_read_string(FdStream*& stream, int fd)
 static void
 fd_write_string(FdStream*& stream, int fd)
 {
-  static const std::string test = "test";
+  const std::string test = "test";
 
   *stream << test;
   stream->sync();
@@ -125,7 +121,7 @@ fd_read_ints(FdStream*& stream, int fd)
 static void
 fd_write_ints(FdStream*& stream, int fd)
 {
-  static const std::string test = "test";
+  const std::string test = "test";
 
   *stream << std::hex << 42 << ' ';
   *stream << std::oct << 42;
@@ -153,6 +149,7 @@ fd_read_jumbo(FdStream*& stream, int fd)
   int count = 0;
   for (count = 0; stream->get(c); ++count)
     BOOST_CHECK_EQUAL(c, (char)(count % 256));
+  BOOST_CHECK(stream->eof());
   BOOST_CHECK_EQUAL(count, size);
   libport::joinThread(thread);
 }
