@@ -42,10 +42,7 @@ if(PROJECT_VENDOR STREQUAL "")
 else(PROJECT_VENDOR STREQUAL "")
   set(CPACK_PACKAGE_VENDOR "${PROJECT_VENDOR}")
 endif(PROJECT_VENDOR STREQUAL "")
-# Do not prefix by vendor if it is already in the project's name.
-if(${CPACK_PACKAGE_NAME} MATCHES ${CPACK_PACKAGE_VENDOR})
-  set(CPACK_PACKAGE_VENDOR)
-endif(${CPACK_PACKAGE_NAME} MATCHES ${CPACK_PACKAGE_VENDOR})
+
 set(CPACK_PACKAGE_CONTACT "${PROJECT_BUGREPORT}")
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
@@ -75,21 +72,23 @@ set(CPACK_PACKAGE_FILE_NAME
   "${PROJECT_TARNAME}-${pkg_sys_name}${build_type}")
 
 # Installation directory.
-set(cpack_package_vendor_separator "")
-if(CPACK_PACKAGE_VENDOR)
-  if(WIN32)
-    set(cpack_package_vendor_separator " ")
-  else(WIN32)
-    set(cpack_package_vendor_separator "-")
-  endif(WIN32)
-endif(CPACK_PACKAGE_VENDOR)
+
 if(WIN32)
-  set(CPACK_PACKAGE_INSTALL_DIRECTORY
-    "${CPACK_PACKAGE_VENDOR}${cpack_package_vendor_separator}${PROJECT_NAME} ${PROJECT_VERSION}")
+  set(cpack_package_separator " ")
 else(WIN32)
-  set(CPACK_PACKAGE_INSTALL_DIRECTORY
-    "${CPACK_PACKAGE_VENDOR}${cpack_package_vendor_separator}${PROJECT_NAME}-${PROJECT_VERSION}")
+  set(cpack_package_separator "-")
 endif(WIN32)
+
+set(cpack_package_prefix "")
+if(CPACK_PACKAGE_VENDOR)
+  # Do not prefix by vendor if it is already in the project's name.
+  if(NOT ${CPACK_PACKAGE_NAME} MATCHES ${CPACK_PACKAGE_VENDOR})
+    set(cpack_package_prefix "${CPACK_PACKAGE_VENDOR}${cpack_package_separator}")
+  endif(NOT ${CPACK_PACKAGE_NAME} MATCHES ${CPACK_PACKAGE_VENDOR})
+endif(CPACK_PACKAGE_VENDOR)
+
+set(CPACK_PACKAGE_INSTALL_DIRECTORY
+  "${cpack_package_prefix}${PROJECT_NAME}${cpack_package_separator}${PROJECT_VERSION}")
 
 # Set generators
 if(NOT CPACK_GENERATOR)
