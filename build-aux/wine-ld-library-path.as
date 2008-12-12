@@ -83,20 +83,20 @@ create_wine_directory ()
   local winehome=$HOME/.wine
   cp -a $winehome/dosdevices $winehome/*.reg $winehome/config "$dir"
   # Symlink everything from the .wine directory just in case.
+  local f
   for f in $winehome/*
   do
-    if ! test -a "$dir/$bf"; then
+    test -a "$dir/$(basename $f)" ||
       ln -s $f "$dir"
-    fi
   done
 
   # Convert the directories into a format that windows like.
   local windirs=
-  local dir
-  for dir in $dirs
+  local d
+  for d in $dirs
   do
-    test ! -d "$dir" ||
-      windirs+=";$(winepath -w "$dir")"
+    test ! -d "$d" ||
+      windirs+=";$(winepath -w "$d")"
   done
 
   # Add all the added path to the Path variable in user.reg config
