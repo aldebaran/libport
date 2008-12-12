@@ -72,18 +72,21 @@ process_wrapper ()
   done
 }
 
+# create_wine_directory DIR
+# -------------------------
 create_wine_directory ()
 {
-  verbose "creating $WINEPREFIX"
-  rm -rf "$WINEPREFIX"
-  mkdir -p "$WINEPREFIX"
+  local dir=$1
+  verbose "creating $dir"
+  rm -rf "$dir"
+  mkdir -p "$dir"
   local winehome=$HOME/.wine
-  cp -a $winehome/dosdevices $winehome/*.reg $winehome/config "$WINEPREFIX"
+  cp -a $winehome/dosdevices $winehome/*.reg $winehome/config "$dir"
   # Symlink everything from the .wine directory just in case.
   for f in $winehome/*
   do
-    if ! test -a "$WINEPREFIX/$bf"; then
-      ln -s $f "$WINEPREFIX"
+    if ! test -a "$dir/$bf"; then
+      ln -s $f "$dir"
     fi
   done
 
@@ -104,7 +107,7 @@ create_wine_directory ()
   export windirs
   perl -pi                                                              \
     -e 'BEGIN { $dirs=$ENV{windirs}; $dirs =~ s/\\/\\\\/g; }'           \
-    -e 's/"Path"="(.*;.*)"/"Path"="\1$dirs"/' "$WINEPREFIX/user.reg"
+    -e 's/"Path"="(.*;.*)"/"Path"="\1$dirs"/' "$dir/user.reg"
 }
 
 # List of directories to add to the Path.
@@ -120,12 +123,12 @@ verbose "host: $host"
 # We used to check that we are not running Cygwin underneath.  Does
 # not seem to make any sense here, and MN does not remember why he
 # checked that.  So this check is removed.
-export WINEPREFIX=$where/wine
-if $force || test ! -d "$WINEPREFIX"; then
-  create_wine_directory
+wineprefix=$where/wine
+if $force || test ! -d "$wineprefix"; then
+  create_wine_directory "$wineprefix"
 fi
-verbose "WINEPREFIX='$WINEPREFIX'"
-echo "WINEPREFIX='$WINEPREFIX'"
+verbose "WINEPREFIX='$wineprefix'"
+echo "WINEPREFIX='$wineprefix'"
 
 exit 0
 ]
