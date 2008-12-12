@@ -1,6 +1,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <cassert>
+
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
@@ -69,9 +71,7 @@ put(const std::string& str, int fd)
 static void
 put(char c, int fd)
 {
-  std::string s;
-  s += c;
-  put(s, fd);
+  assert(write(fd, &c, 1) == 1);
 }
 
 static std::string
@@ -135,7 +135,7 @@ static void thread_write(int fd, int size)
   for (int i = 0; i < size; ++i)
     // This might fail if the pipe isn't large enough ...
     put(i % 256, fd);
-  BOOST_CHECK(!close(fd));
+  assert(!close(fd));
 }
 
 static void
