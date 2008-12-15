@@ -20,7 +20,7 @@ namespace libport
 
   protected:
     virtual int underflow();
-    virtual int overflow(int c = EOF );
+    virtual int overflow(int c = EOF);
     virtual int sync();
   private:
     unsigned write_, read_;

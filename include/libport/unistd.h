@@ -47,7 +47,16 @@
 
 # ifdef WIN32
 #  include <direct.h>
-#  define chdir _chdir
+
+extern "C"
+{
+  int
+  chdir(const char* path)
+  {
+    return _chdir(path);
+  }
+}
+
 # endif
 
 /*--------------.
@@ -91,10 +100,15 @@ namespace libport
 `--------------*/
 
 # if defined WIN32
-inline int getpagesize()
+extern "C"
 {
-  // FIXME: find the equivalent call.
-  return 4096;
+  inline
+  int
+  getpagesize()
+  {
+    // FIXME: find the equivalent call.
+    return 4096;
+  }
 }
 # endif
 
@@ -105,9 +119,12 @@ inline int getpagesize()
 # if defined WIN32
 #  include <process.h>
 typedef int pid_t;
-inline pid_t getpid()
+extern "C"
 {
-  return _getpid();
+  inline pid_t getpid()
+  {
+    return _getpid();
+  }
 }
 # endif
 
@@ -117,15 +134,34 @@ inline pid_t getpid()
 `--------*/
 
 # if defined WIN32
-inline
-unsigned int
-sleep(unsigned int seconds)
+extern "C"
 {
-  Sleep(seconds * 1000);
-  // Under Unix systems, sleep returns the number of second left to
-  // sleep if interrupted by a signal. The WIN32 Sleep always sleeps
-  // the requested time, thus 0 is the right answer.
-  return 0;
+  inline int pipe(int pipefd[2])
+  {
+    // fds, memory to reserve, mode
+    return _pipe(pipefd, BUFSIZ, _O_BINARY);
+  }
+}
+# endif
+
+
+/*--------.
+| sleep.  |
+`--------*/
+
+# if defined WIN32
+extern "C"
+{
+  inline
+  unsigned int
+  sleep(unsigned int seconds)
+  {
+    Sleep(seconds * 1000);
+    // Under Unix systems, sleep returns the number of second left to
+    // sleep if interrupted by a signal. The WIN32 Sleep always sleeps
+    // the requested time, thus 0 is the right answer.
+    return 0;
+  }
 }
 # endif
 
@@ -134,10 +170,13 @@ sleep(unsigned int seconds)
 `---------*/
 
 # if defined WIN32
-inline
-int unlink(const char* pathname)
+extern "C"
 {
-  return _unlink(pathname);
+  inline
+  int unlink(const char* pathname)
+  {
+    return _unlink(pathname);
+  }
 }
 # endif
 
@@ -154,12 +193,15 @@ typedef boost::uint32_t useconds_t;
 // Some libraries define usleep as a macro. In this case, do not redefine
 // it.
 #  ifndef usleep
-inline
-int
-usleep (useconds_t microseconds)
+extern "C"
 {
-  Sleep((microseconds + 999) / 1000);
-  return 0;
+  inline
+  int
+  usleep (useconds_t microseconds)
+  {
+    Sleep((microseconds + 999) / 1000);
+    return 0;
+  }
 }
 #  endif // !usleep
 # endif

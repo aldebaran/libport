@@ -43,12 +43,6 @@
 #  define STDOUT_FILENO _fileno(stdout)
 #  define STDERR_FILENO _fileno(stderr)
 
-inline int pipe(int pipefd[2])
-{
-  // fds, memory to reserve, mode
-  return _pipe(pipefd, BUFSIZ, _O_BINARY);
-}
-
 # endif // defined WIN32 || defined LIBPORT_WIN32
 
 #endif // !LIBPORT_WINDOWS_HH
