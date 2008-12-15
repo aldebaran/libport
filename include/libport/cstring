@@ -5,10 +5,12 @@
 
 # include <cstring>
 
-/// Whether the C string \a Lhs and \a Rhs are equal.
-# define STREQ(Lhs, Rhs) (!strcmp (Lhs, Rhs))
+namespace urbi
+{
+  /// Whether the C string \a Lhs and \a Rhs are equal.
+  inline bool streq(const char* lhs, const char* rhs);
+}
 
-/// Whether the C string \a Lhs and \a Rhs are equal up to N chars.
-# define STRNEQ(Lhs, Rhs, N) (!strncmp (Lhs, Rhs, N))
+# include <libport/cstring.hxx>
 
 #endif // !LIBPORT_CSTRING
