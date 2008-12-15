@@ -4,6 +4,8 @@
 #include <cstring>
 #include <iostream>
 
+#include <libport/unistd.h>
+
 #if defined LIBPORT_HAVE_SCHED_H
 # include <sched.h>
 #endif
