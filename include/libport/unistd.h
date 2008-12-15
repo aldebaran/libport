@@ -86,6 +86,18 @@ namespace libport
 #  endif
 # endif
 
+/*--------------.
+| getpagesize.  |
+`--------------*/
+
+# if defined WIN32
+inline int getpagesize()
+{
+  // FIXME: find the equivalent call.
+  return 4096;
+}
+# endif
+
 /*---------.
 | getpid.  |
 `---------*/

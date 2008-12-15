@@ -38,12 +38,6 @@
 #   undef LIBPORT_DEFINED_WINSOCKAPI_
 #  endif
 
-inline int getpagesize()
-{
-  // FIXME: find the equivalent call.
-  return 4096;
-}
-
 #  define isatty _isatty
 #  define STDIN_FILENO _fileno(stdin)
 #  define STDOUT_FILENO _fileno(stdout)
