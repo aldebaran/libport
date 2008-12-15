@@ -1,7 +1,6 @@
 #ifndef LIBPORT_WINDOWS_HH
 # define LIBPORT_WINDOWS_HH
 
-# include <boost/cstdint.hpp>
 # include <libport/detect-win32.h>
 # include <fcntl.h>
 
@@ -38,32 +37,6 @@
 #   undef _WINSOCKAPI_
 #   undef LIBPORT_DEFINED_WINSOCKAPI_
 #  endif
-
-// Based on the value I have on my G4 -- Akim.
-typedef boost::uint32_t useconds_t;
-
-// Some libraries define usleep as a macro. In this case, do not redefine
-// it.
-# ifndef usleep
-inline
-int
-usleep (useconds_t microseconds)
-{
-  Sleep((microseconds + 999) / 1000);
-  return 0;
-}
-# endif
-
-inline
-unsigned int
-sleep(unsigned int seconds)
-{
-  Sleep(seconds * 1000);
-  // Under Unix systems, sleep returns the number of second left to
-  // sleep if interrupted by a signal. The WIN32 Sleep always sleeps
-  // the requested time, thus 0 is the right answer.
-  return 0;
-}
 
 inline int getpagesize()
 {

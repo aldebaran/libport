@@ -86,9 +86,9 @@ namespace libport
 #  endif
 # endif
 
-/*-------.
-| getpid |
-`-------*/
+/*---------.
+| getpid.  |
+`---------*/
 
 # if defined WIN32
 #  include <process.h>
@@ -96,6 +96,24 @@ typedef int pid_t;
 inline pid_t getpid()
 {
   return _getpid();
+}
+# endif
+
+
+/*--------.
+| sleep.  |
+`--------*/
+
+# if defined WIN32
+inline
+unsigned int
+sleep(unsigned int seconds)
+{
+  Sleep(seconds * 1000);
+  // Under Unix systems, sleep returns the number of second left to
+  // sleep if interrupted by a signal. The WIN32 Sleep always sleeps
+  // the requested time, thus 0 is the right answer.
+  return 0;
 }
 # endif
 
@@ -109,6 +127,29 @@ int unlink(const char* pathname)
 {
   return _unlink(pathname);
 }
+# endif
+
+
+/*---------.
+| usleep.  |
+`---------*/
+
+# if defined WIN32
+#  include <boost/cstdint.hpp>
+// Based on the value I have on my G4 -- Akim.
+typedef boost::uint32_t useconds_t;
+
+// Some libraries define usleep as a macro. In this case, do not redefine
+// it.
+#  ifndef usleep
+inline
+int
+usleep (useconds_t microseconds)
+{
+  Sleep((microseconds + 999) / 1000);
+  return 0;
+}
+#  endif // !usleep
 # endif
 
 #endif // !LIBPORT_UNISTD_H
