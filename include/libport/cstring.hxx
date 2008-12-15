@@ -1,4 +1,4 @@
-namespace urbi
+namespace libport
 {
   /// Whether the C string \a Lhs and \a Rhs are equal.
   bool

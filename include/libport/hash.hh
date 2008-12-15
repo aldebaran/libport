@@ -57,7 +57,7 @@ namespace std
   {
     bool operator()(const char* s1, const char* s2) const
     {
-      return urbi::streq(s1, s2);
+      return libport::streq(s1, s2);
     }
   };
 
