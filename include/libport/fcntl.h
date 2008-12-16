@@ -10,4 +10,8 @@
 #  define O_LARGEFILE 0
 # endif
 
+# ifdef WIN32
+#  define O_BINARY _O_BINARY
+# endif
+
 #endif // !LIBPORT_FNCTL_H

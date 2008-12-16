@@ -10,7 +10,7 @@
 #include <libport/fd-stream.hh>
 #include <libport/thread.hh>
 #include <libport/unit-test.hh>
-#include <libport/windows.hh>
+#include <libport/unistd.h>
 
 
 using boost::bind;

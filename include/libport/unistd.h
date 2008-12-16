@@ -134,9 +134,10 @@ extern "C"
 
 
 # if defined WIN32
-#  define STDIN_FILENO _fileno(stdin)
-#  define STDOUT_FILENO _fileno(stdout)
-#  define STDERR_FILENO _fileno(stderr)
+#  include <libport/fcntl.h>
+#  define STDIN_FILENO  fileno(stdin)
+#  define STDOUT_FILENO fileno(stdout)
+#  define STDERR_FILENO fileno(stderr)
 
 extern "C"
 {
@@ -155,6 +156,7 @@ extern "C"
 
 # if defined WIN32
 #  include <libport/cstdio> // BUFSIZ
+#  include <libport/fcntl.h> // O_BINARY
 extern "C"
 {
   inline int pipe(int pipefd[2])

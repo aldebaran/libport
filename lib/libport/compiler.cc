@@ -16,7 +16,7 @@ namespace libport
     else
     {
       file_ = "...";
-      file_ += file.substr(std::max(0lu, file.size() - length));
+      file_ += file.substr(std::max<unsigned>(0u, file.size() - length));
     }
   }
 

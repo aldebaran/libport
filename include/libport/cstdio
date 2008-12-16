@@ -14,6 +14,16 @@
 #  include <io.h>
 #  define snprintf _snprintf
 #  define vsnprintf _vsnprintf
+
+extern "C"
+{
+  inline
+  int fileno(FILE* stream)
+  {
+    return _fileno(stream);
+  }
+}
+
 # endif
 
 namespace libport

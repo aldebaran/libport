@@ -1,13 +1,15 @@
+#include <cassert>
+#include <iostream>
+
 #include <libport/containers.hh>
 #include <libport/debug.hh>
 #include <libport/windows.hh>
+#include <libport/unistd.h>
 
 #ifndef WIN32
 # include <syslog.h>
 # include <pthread.h>
 #endif
-#include <cassert>
-#include <iostream>
 
 #ifndef NDEBUG
 
