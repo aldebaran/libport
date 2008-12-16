@@ -10,11 +10,11 @@
 # include <libport/export.hh>
 # include <libport/detect-win32.h>
 
-#ifdef WIN32
-# include <io.h>
-# define snprintf _snprintf
-# define vsnprintf _vsnprintf
-#endif
+# ifdef WIN32
+#  include <io.h>
+#  define snprintf _snprintf
+#  define vsnprintf _vsnprintf
+# endif
 
 namespace libport
 {

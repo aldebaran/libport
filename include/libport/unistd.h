@@ -48,6 +48,7 @@
 # ifdef WIN32
 #  include <direct.h>
 
+#  if 0
 extern "C"
 {
   int
@@ -56,7 +57,7 @@ extern "C"
     return _chdir(path);
   }
 }
-
+# endif
 # endif
 
 /*--------------.
@@ -134,6 +135,7 @@ extern "C"
 `--------*/
 
 # if defined WIN32
+#  include <libport/cstdio> // BUFSIZ
 extern "C"
 {
   inline int pipe(int pipefd[2])
