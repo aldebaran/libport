@@ -165,12 +165,15 @@ spawn_urbi_server ()
   local t=0
   local tmax=8
   local dt=.5
+  # 0 if we stop, 1 to continue sleeping.
+  local cont
   while children_alive server &&
           { test ! -f server.port ||
             test $(wc -l <server.port) = 0; };
   do
     # test/expr don't like floating points.
-    case $(echo "$t <= $tmax" | bc) in
+    cont=$(echo "$t <= $tmax" | bc)
+    case $cont in
       (1) sleep $dt
           t=$(echo "$t + $dt" | bc);;
       (0)
