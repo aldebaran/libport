@@ -29,23 +29,19 @@ help-first:
 	@echo "Some make targets:"
 
 
-## --------- ##
-## recheck.  ##
-## --------- ##
+## -------- ##
+## reconf.  ##
+## -------- ##
 
 # It is often helpful to rerun configure (well, config.status).
 # This is a convenient shorthand.
-.PHONY: recheck reconf recheck-help
-help: recheck-help
-recheck-help:
-	@echo "recheck:  rerun config.status"
-
-recheck:
-	cd $(top_builddir) && ./config.status --recheck
-	cd $(top_builddir) && ./config.status
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS)
+.PHONY: reconf reconf-help
+help: reconf-help
+reconf-help:
+	@echo "reconf:  rerun configure"
 
 reconf:
+	cd $(top_builddir) && ./config.status --recheck
 	cd $(top_builddir) && ./config.status
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS)
 
