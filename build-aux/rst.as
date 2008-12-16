@@ -86,9 +86,11 @@ rst_pre ()
 rst_expect ()
 {
   rst_subsubsection "$me: $[2]"
-  if ! diff -u --label="Expected $[1] ($[1].exp)" $[1].exp  \
-	       --label="Effective $[1] ($[2].eff)" $[2].eff \
-	       >$[2].diff; then
+  # --strip-trailing-cr helps to fight \r.
+  if ! diff --strip-trailing-cr -u                              \
+            --label="Expected $[1] ($[1].exp)"  $[1].exp        \
+	    --label="Effective $[1] ($[2].eff)" $[2].eff        \
+	    >$[2].diff; then
     rst_pre "Expected $[1] for $me"      $[1].exp
     rst_pre "Raw effective $[2] for $me" $[2].raw
     rst_pre "Effective $[2] for $me"     $[2].eff
