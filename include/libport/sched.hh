@@ -6,7 +6,7 @@
 namespace libport
 {
   LIBPORT_API int sched_estimate_granularity();
-  
+
   LIBPORT_API void sched_set_high_priority ();
 }
 
