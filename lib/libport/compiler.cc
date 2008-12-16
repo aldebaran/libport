@@ -1,0 +1,41 @@
+#include <algorithm>
+#include <iostream>
+#include <libport/unistd.h>
+#include <libport/compiler.hh>
+
+namespace libport
+{
+  EchoPrologue::EchoPrologue(const std::string& file, unsigned line,
+                             const std::string& function)
+    : file_()
+    , line_(line)
+    , function_(function)
+  {
+    if (file.size() < length)
+      file_ = file;
+    else
+    {
+      file_ = "...";
+      file_ += file.substr(std::max(0lu, file.size() - length));
+    }
+  }
+
+  std::ostream&
+  EchoPrologue::dump (std::ostream& o) const
+  {
+    return o << (colored() ? "\x1b\x5b\x33\x33\x6d" : "")
+             << file_ << ": "
+             << line_ << ": "
+             << function_ << ": "
+             << (colored() ? "\x1b\x5b\x6d" : "");
+  }
+
+  bool
+  EchoPrologue::colored()
+  {
+    // Hard coded hypothesis: we dump on stderr.
+    static bool res = !getenv("BUILDFARM") && isatty(2);
+    return res;
+  }
+
+}

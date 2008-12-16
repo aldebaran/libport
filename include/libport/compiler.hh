@@ -4,7 +4,9 @@
 #ifndef LIBPORT_COMPILER_HH
 # define LIBPORT_COMPILER_HH
 
+# include <string>
 # include <libport/config.h>
+# include <libport/export.hh>
 
 /*----------------.
 | __attribute__.  |
@@ -62,18 +64,42 @@
 | ECHO & PING.  |
 `--------------*/
 
-#  define LIBPORT_ECHO(Msg)					\
-  do {								\
-    if (!getenv("DISABLE_DEBUG_TRACES"))			\
-    {								\
-      bool colored = !getenv("BUILDFARM");			\
-      std::cerr << (colored ? "\x1b\x5b\x33\x33\x6d" : "")	\
-		<< __FILE__ ":" << __LINE__ << ": "		\
-		<< __PRETTY_FUNCTION__ << ": "			\
-		<< (colored ? "\x1b\x5b\x6d" : 0)		\
-		<< Msg << std::endl;				\
-      SLEEP(1);							\
-    }								\
+namespace libport
+{
+  struct LIBPORT_API EchoPrologue
+  {
+    // Maximum length of file name prefix.
+    enum { length = 30 };
+
+    EchoPrologue(const std::string& file, unsigned line,
+                 const std::string& function);
+
+    std::ostream& dump (std::ostream& o) const;
+    static bool colored();
+    std::string file_;
+    int line_;
+    std::string function_;
+  };
+
+  inline
+  std::ostream&
+  operator<<(std::ostream& o, const EchoPrologue& e)
+  {
+    return e.dump(o);
+  }
+}
+
+// We used to use __PRETTY_FUNCTION__, but this is really too verbose.
+#  define LIBPORT_ECHO(Msg)                                     \
+  do {                                                          \
+    bool debug = !getenv("DISABLE_DEBUG_TRACES");               \
+    if (debug)                                                  \
+    {                                                           \
+      std::cerr << libport::EchoPrologue(__FILE__, __LINE__,    \
+                                         __FUNCTION__)          \
+                << Msg << std::endl;                            \
+      SLEEP(1);                                                 \
+    }                                                           \
   } while (0)
 
 
