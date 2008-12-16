@@ -15,6 +15,7 @@ libport_include_HEADERS =			\
   $(include_libport)/cstdlib			\
   $(include_libport)/cstring			\
   $(include_libport)/cstring.hxx		\
+  $(include_libport)/fcntl.h			\
   $(include_libport)/unistd.h
 
 # arpa/ headers

@@ -6,6 +6,7 @@
 #include <libport/program-name.hh>
 #include <libport/unit-test.hh>
 #include <libport/unistd.h>
+#include <libport/fcntl.h>
 
 using libport::test_suite;
 

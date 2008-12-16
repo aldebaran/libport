@@ -1,13 +1,7 @@
 #ifndef LIBPORT_UNISTD_H
 # define LIBPORT_UNISTD_H
 
-/*-----------------------------------------------.
-| FIXME: #define is evil, use wrappers instead.  |
-`-----------------------------------------------*/
-
 # include <libport/detect-win32.h>
-# include <libport/windows.hh> // Get sleep wrapper
-
 # include <libport/config.h>
 
 // This is traditional Unix file.
@@ -15,16 +9,20 @@
 #  include <unistd.h>
 # endif
 
-// OSX does not have O_LARGEFILE.  No information was found whether
-// some equivalent flag is needed or not.  Other projects simply do as
-// follows.
-# ifndef O_LARGEFILE
-#  define O_LARGEFILE 0
-# endif
-
 // Several functions (e.g., close, read, write) are defined in io.h.
 // http://msdn2.microsoft.com/en-us/library/ms811896(d=printer).aspx#ucmgch09_topic7.
 # if defined WIN32 || defined LIBPORT_WIN32
+/* We don't want the min and max macros that conflict with std::min
+ * and std::max.  We might need some magic to bind _cpp_min and
+ * _cpp_max to min and max eventually.  See
+ * <http://raduking.homeip.net/raduking/forumwin/index.php?showtopic=270>.
+ *
+ * This must be done conditionnaly because MinGW already defines NOMINMAX in
+ * some headers.  */
+#  ifndef NOMINMAX
+#   define NOMINMAX 1
+#  endif
+
 #  include <io.h>
 # endif
 
@@ -128,6 +126,27 @@ extern "C"
   }
 }
 # endif
+
+
+/*---------.
+| isatty.  |
+`---------*/
+
+
+# if defined WIN32
+#  define STDIN_FILENO _fileno(stdin)
+#  define STDOUT_FILENO _fileno(stdout)
+#  define STDERR_FILENO _fileno(stderr)
+
+extern "C"
+{
+  inline int isatty(int fd)
+  {
+    return _isatty(fd);
+  }
+}
+# endif
+
 
 
 /*--------.

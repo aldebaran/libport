@@ -2,7 +2,6 @@
 # define LIBPORT_WINDOWS_HH
 
 # include <libport/detect-win32.h>
-# include <fcntl.h>
 
 # if defined WIN32 || defined LIBPORT_WIN32
 
@@ -37,11 +36,6 @@
 #   undef _WINSOCKAPI_
 #   undef LIBPORT_DEFINED_WINSOCKAPI_
 #  endif
-
-#  define isatty _isatty
-#  define STDIN_FILENO _fileno(stdin)
-#  define STDOUT_FILENO _fileno(stdout)
-#  define STDERR_FILENO _fileno(stderr)
 
 # endif // defined WIN32 || defined LIBPORT_WIN32
 
