@@ -20,8 +20,8 @@ static void
 check(const libport::Statistics<T, R>& s,
       size_t size, T min, T max, R mean, R variance)
 {
-  std::cerr << "Mean: " << s.mean() << std::endl;
-  std::cerr << "Variance: " << s.variance() << std::endl;
+  BOOST_TEST_MESSAGE("Mean: " << s.mean());
+  BOOST_TEST_MESSAGE("Variance: " << s.variance());
   BOOST_CHECK_EQUAL(size, s.size());
   BOOST_CHECK_EQUAL(min, s.min());
   BOOST_CHECK_EQUAL(max, s.max());
@@ -35,12 +35,14 @@ check1(size_t capacity, unsigned int size,
        unsigned int min, unsigned int max,
        R mean, R variance)
 {
-  libport::Statistics<unsigned int, R> s(capacity);
-  s.add_sample(2);
-  s.add_sample(2);
-  s.add_sample(3);
-  s.add_sample(4);
-  s.add_sample(7);
+  typedef libport::Statistics<unsigned int, R> stat_type;
+  BOOST_CHECK_NO_THROW(stat_type(capacity));
+  stat_type s(capacity);
+  BOOST_CHECK_NO_THROW(s.add_sample(2));
+  BOOST_CHECK_NO_THROW(s.add_sample(2));
+  BOOST_CHECK_NO_THROW(s.add_sample(3));
+  BOOST_CHECK_NO_THROW(s.add_sample(4));
+  BOOST_CHECK_NO_THROW(s.add_sample(7));
   check(s, size, min, max, mean, variance);
 }
 

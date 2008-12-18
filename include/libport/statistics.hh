@@ -15,7 +15,7 @@ namespace libport
   {
   public:
     Statistics(size_t capacity = 0);
-    void reserve(size_t capacity);
+    void resize(size_t capacity);
     size_t capacity() const;
     size_t size() const;
     bool empty() const;

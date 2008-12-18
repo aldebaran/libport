@@ -9,18 +9,18 @@ namespace libport
   template<typename T, typename R>
   Statistics<T, R>::Statistics(size_t capacity)
   {
-    reserve(capacity);
+    resize(capacity);
   }
 
   template<typename T, typename R>
   inline void
-  Statistics<T, R>::reserve(size_t capacity)
+  Statistics<T, R>::resize(size_t capacity)
   {
     capacity_ = capacity;
     count_ = index_ = 0;
     sum_ = sum2_ = 0;
     min_ok_ = max_ok_ = false;
-    samples_.reserve(capacity_);
+    samples_.resize(capacity_);
   }
 
   template<typename T, typename R>
@@ -74,7 +74,10 @@ namespace libport
       }
 
       // Store the sample.
-      samples_[index_] = value;
+      BOOST_TEST_MESSAGE("index: " << index_);
+      BOOST_TEST_MESSAGE("value: " << value);
+      BOOST_TEST_MESSAGE("samples_.capacity()" << samples_.capacity());
+      BOOST_CHECK_NO_THROW(samples_[index_] = value);
     }
     else  // Not running case.
     {
@@ -94,8 +97,8 @@ namespace libport
     }
 
     // Update sums.
-    sum_ += value;
-    sum2_ += value * value;
+    BOOST_CHECK_NO_THROW(sum_ += value);
+    BOOST_CHECK_NO_THROW(sum2_ += value * value);
   }
 
   template<typename T, typename R>
