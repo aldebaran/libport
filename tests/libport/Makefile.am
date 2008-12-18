@@ -102,13 +102,13 @@ visitor_SOURCES                   = visitor.cc
 
 EXTRA_DIST += ufloat-common.cc ufloat-config.h 666.txt
 
-WINEPREFIX_ENVIRONMENT =			\
+WINEPREFIX_ENVIRONMENT :=			\
   $(shell					\
      $(wine_ld_library_path)			\
      --force					\
      --to=$(abs_builddir)			\
-     --wrapper=$(<:$(EXEEXT)=)			\
-     $(abs_top_builddir)/lib/libport)
+     --ldflags="$(AM_LDFLAGS) $(LDADD)"		\
+     $(abs_builddir)/.libs)
 
 TESTS_ENVIRONMENT +=                                    \
   SRCDIR=$(srcdir)                                      \

@@ -20,7 +20,8 @@ esac
    (-h|--help)    usage;;
    (-t|--to)      shift; where=$1;;
    (-w|--wrapper) shift; process_wrapper "$1";;
-   (*)            dirs+=" $1";;
+   (-L|--ldflags) shift; process_ldflags "$1";;
+   (*)            windir "$1";;
 ])[
 
 # Print usage
@@ -46,10 +47,29 @@ Options:
                        in other words, make WINEPREFIX=DIR/wine
                        [$where]
   -w, --wrapper=FILE   also add the DIRs required to load the libraries
-                       used by the Libtool wrapper FILE
+                       used by the Libtool executable wrapper FILE
                        multiple invocations accumulate
+  -L, --ldflags=FLAGS  decode dependencies from FLAGS
+                       (typically \$(AM_LDFLAGS))
 EOF
     exit 0
+}
+
+
+# process_ldflags LDFLAGS
+# -----------------------
+process_ldflags ()
+{
+  local ldflags=$1
+  local i
+  for i in $ldflags
+  do
+    case $i in
+     (-L*)  windir "${i#-L}";;
+     (*.la) # FIXME: Get the dependencies in Libtool library wrappers.
+            windir "$(echo "$i" | sed -e 's,[^/]*$,.libs,')";;
+    esac
+  done
 }
 
 
@@ -61,18 +81,29 @@ process_wrapper ()
 {
   local wrapper=$1
   if test -f "$wrapper"; then
-    local path
-    path=$(sed -ne 's/^ *PATH=//p' "$wrapper")
     local save_IFS=$IFS
     IFS=:
-    for p in $path
-    do
-      IFS=$save_IFS
-      dirs+=" $p"
-    done
+    windir $(sed -ne 's/^ *PATH=//p' "$wrapper")
+    IFS=$save_IFS
   else
     verbose "no such file or directory: $wrapper"
   fi
+}
+
+
+# windir DIR...
+# -------------
+# Add DIR (converted into windows style) to $windirs.
+windir ()
+{
+  local i
+  for i
+  do
+    # Add all the directories, some might not yet exist (e.g. .libs)
+    # but will be created when running wine.  Nonexisting directories
+    # are not a problem anyway.
+    windirs+=";$(winepath -w "$i")"
+  done
 }
 
 # create_wine_directory DIR
@@ -93,18 +124,6 @@ create_wine_directory ()
       ln -s $f "$dir"
   done
 
-  # Convert the directories into a format that windows like.
-  local windirs=
-  local d
-  for d in $dirs
-  do
-    if test -d "$d"; then
-      windirs+=";$(winepath -w "$d")"
-    else
-      verbose "no such directory: $d"
-    fi
-  done
-
   # Add all the added path to the Path variable in user.reg config
   # file.  That idiotic file may have multiple "Path=".  Only one
   # will have ';'.
@@ -116,12 +135,13 @@ create_wine_directory ()
     -e 's/"Path"="(.*;.*)"/"Path"="\1$dirs"/' "$dir/user.reg"
 }
 
-# List of directories to add to the Path.
-dirs=
 # Be lazy.
 force=false
 # By default, installed this here (--to).
 where=$(pwd)
+# List of directories to add to the Path, in Windows format.
+# Each directory is preceded by a ';'.
+windirs=
 
 get_options $WINE_LD_LIBRARY_PATH_ARGS "$@"
 verbose "host: $host"
