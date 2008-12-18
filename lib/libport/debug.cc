@@ -45,6 +45,9 @@ namespace libport
       categories_[c] = true;
   }
 
+  Debug::~Debug()
+  {}
+
   void
   Debug::filter(unsigned lvl)
   {
@@ -316,6 +319,22 @@ namespace libport
     closelog();
   }
 
+  static
+  int type_to_prio(Debug::types::Type t)
+  {
+    switch (t)
+    {
+#define CASE(In, Out)                           \
+      case Debug::types::In: return Out; break
+      CASE(info,  LOG_INFO);
+      CASE(warn,  LOG_WARNING);
+      CASE(error, LOG_ERR);
+      // Pacify Gcc.
+    }
+    abort();
+#undef CASE
+  }
+
   void
   SyslogDebug::message(const std::string& msg,
                         types::Type type,
@@ -330,20 +349,7 @@ namespace libport
     s << msg;
     if (locations())
       s << "    (" << fun << ", " << file << ":" << line << ")";
-    int prio;
-    switch (type)
-    {
-      case types::info:
-        prio = LOG_INFO;
-        break;
-      case types::warn:
-        prio = LOG_WARNING;
-        break;
-      case types::error:
-        prio = LOG_ERR;
-        break;
-    }
-    prio |= LOG_DAEMON;
+    int prio = type_to_prio(type) | LOG_DAEMON;
     syslog(prio, s.str().c_str());
   }
 

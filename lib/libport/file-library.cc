@@ -65,7 +65,7 @@ namespace libport
     strings_type
     split(const std::string& lib, const char* sep)
     {
-      bool split_on_colon = strchr(sep, ':');
+      WIN32_IF(bool split_on_colon = strchr(sep, ':'), /* Nothing */);
       strings_type res;
       foreach (const std::string& s, make_tokenizer(lib, sep))
       {

@@ -10,7 +10,7 @@ static void test_semaphore()
   // them, of course.
   for (int i = 0; i < 11000; ++i)
     libport::Semaphore(1);
-  BOOST_CHECK_EQUAL(0, libport::Semaphore::instances());
+  BOOST_CHECK_EQUAL(0u, libport::Semaphore::instances());
 }
 
 test_suite*

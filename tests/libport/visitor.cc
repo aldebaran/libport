@@ -68,15 +68,15 @@ class MyVisitor: public libport::meta::Visitor
  libport::traits::ConstRef>     // I visit by const reference
 {
   public:
-    int visit(const Child1& x)
+    int visit(const Child1&)
     {
       return 1;
     }
-    int visit(const Child2& x)
+    int visit(const Child2&)
     {
       return 2;
     }
-    int visit(const Child4& x)
+    int visit(const Child4&)
     {
       return 4;
     }

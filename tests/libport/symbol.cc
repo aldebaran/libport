@@ -25,7 +25,7 @@ check_symbols()
   const Symbol toto2("toto");
   const Symbol titi1("titi");
 
-  BOOST_CHECK_EQUAL(Symbol::string_map_size (), 2);
+  BOOST_CHECK_EQUAL(Symbol::string_map_size (), 2u);
   BOOST_CHECK_EQUAL(toto1.name_get (), "toto");
 
   BOOST_CHECK_EQUAL(toto1, Symbol("toto"));

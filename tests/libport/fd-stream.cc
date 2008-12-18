@@ -58,14 +58,15 @@ static void
 fd_get()
 {
   FdStream s(42, 51);
-  BOOST_CHECK_EQUAL(s.fd_write(), 42);
-  BOOST_CHECK_EQUAL(s.fd_read(), 51);
+  BOOST_CHECK_EQUAL(s.fd_write(), 42u);
+  BOOST_CHECK_EQUAL(s.fd_read(), 51u);
 }
 
 static void
 put(const std::string& str, int fd)
 {
-  BOOST_CHECK_EQUAL(write(fd, str.c_str(), str.length()), str.length());
+  BOOST_CHECK_EQUAL(unsigned(write(fd, str.c_str(), str.length())),
+                    str.length());
 }
 
 static void
@@ -168,8 +169,7 @@ fd_write_jumbo(FdStream*& stream, int fd)
   static const int size = BUFSIZ * 3 / 2;
 
   stream->own_fd(true);
-  void* thread = libport::startThread
-    (boost::bind(thread_write_stream, stream, size));
+  libport::startThread(boost::bind(thread_write_stream, stream, size));
   stream = 0;
   char c;
   for (int i = 0; i < size; ++i)

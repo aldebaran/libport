@@ -121,8 +121,8 @@ namespace libport
 
         virtual ~Visitor() {}
 
-        void preVisit(typename Trait<Root>::res elt) {}
-        void postVisit(typename Trait<Root>::res elt) {}
+        void preVisit(typename Trait<Root>::res) {}
+        void postVisit(typename Trait<Root>::res) {}
     };
 
     class Visitable

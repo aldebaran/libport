@@ -1,4 +1,5 @@
-#include "libport/buffer-stream.hh"
+#include <libport/assert.hh>
+#include <libport/buffer-stream.hh>
 
 namespace libport
 {
@@ -16,10 +17,10 @@ namespace libport
         }
       virtual std::streampos seekoff(std::streamoff off,
                                      std::ios_base::seekdir way,
-                                     std::ios_base::openmode which)
+                                     std::ios_base::openmode)
         {
           char* cur = gptr();
-          switch(way)
+          switch (way)
           {
           case std::ios_base::beg:
             cur = eback() + off;
@@ -30,6 +31,10 @@ namespace libport
           case std::ios_base::end:
             cur = egptr() - off;
             break;
+          default:
+            // Catch other cases that should not exit.
+            // http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01194.html
+            pabort("invalid way: " << int(way));
           }
           if (cur < eback())
             cur = eback();

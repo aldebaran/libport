@@ -48,6 +48,7 @@ namespace libport
     };
 
     Debug();
+    virtual ~Debug();
     void debug(const std::string& msg,
                types::Type type,
                const std::string& fun = "",

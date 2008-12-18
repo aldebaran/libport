@@ -18,7 +18,7 @@ check ()
   } while (0)
 
   CHECK(int, 666);
-  CHECK(unsigned, 666);
+  CHECK(unsigned, 666u);
   CHECK(std::string, "666");
 }
 
