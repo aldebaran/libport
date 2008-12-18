@@ -36,12 +36,17 @@ namespace libport
   inline void
   Destructible::destroy()
   {
+    //Cant use BlockLock: must unlock before doDestroy.
+    threadLock_.lock();
     destructionPending_ = true;
     if (!count_ && !destructionEnacted_)
     {
-      doDestroy();
       destructionEnacted_ = true;
+      threadLock_.unlock();
+      doDestroy();
     }
+    else
+      threadLock_.unlock();
   }
 
   inline Destructible::~Destructible()
@@ -63,12 +68,23 @@ namespace libport
   inline void
   Destructible::release()
   {
+    // Cant use blocklock: we must unlock before calling doDestroy.
+    threadLock_.lock();
     count_--;
     if (!count_ && destructionPending_ && !destructionEnacted_)
     {
-      doDestroy();
       destructionEnacted_ = true;
+      threadLock_.unlock();
+      doDestroy();
     }
+    else
+      threadLock_.unlock();
+  }
+
+  inline void
+  Destructible::wasDestroyed()
+  {
+    destructionEnacted_ = true;
   }
 }
 

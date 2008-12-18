@@ -116,7 +116,8 @@ namespace libport
         */
       static Handle listenUDP(const std::string& host, const std::string& port,
                   boost::function3<void, const void*, int,
-                  boost::shared_ptr<UDPLink> > onRead);
+                  boost::shared_ptr<UDPLink> > onRead,
+                  boost::system::error_code& erc);
 
       /** Listen using TCP or UDP.
         *

@@ -11,6 +11,8 @@
 namespace libport {
 namespace netdetail {
   typedef ::libport::Socket::SocketFactory SocketFactory;
+  typedef  boost::asio::basic_datagram_socket<boost::asio::ip::udp,
+  boost::asio::datagram_socket_service<boost::asio::ip::udp> > udpsock;
   class SocketImplBase: public BaseSocket, protected libport::Lockable
   {
     public:
@@ -26,9 +28,13 @@ namespace netdetail {
       int current_;
       /// Second buffer has data to write.
       bool pending_;
-      friend class Socket;
+      friend class libport::Socket;
       template<class Stream> friend class SocketImpl;
   };
+  template<class Stream> class SocketImpl;
+  template<typename Stream, typename Lock> void
+  read_or_recv(SocketImpl<Stream>* s,
+               Lock lock);
   template<class Stream> class SocketImpl
     : public SocketImplBase
   {
@@ -50,14 +56,16 @@ namespace netdetail {
       void startReader();
     private:
       Stream* base_;
-      void continueWrite(DestructionLock lock, boost::system::error_code erc, size_t sz);
+      void continueWrite(DestructionLock lock, boost::system::error_code erc,
+                         size_t sz);
       void onReadDemux(DestructionLock lock, boost::system::error_code erc);
-      friend class Socket;
+
+      friend class libport::Socket;
       template<class T, class L> friend void read_or_recv(SocketImpl<T>*, L);
       template<class T> friend void send_bounce(SocketImpl<T>*,const void*,int);
-      friend void recv_bounce(SocketImpl<Stream>*,
-                              SocketImpl<Stream>::DestructionLock,
-                              boost::system::error_code, size_t);
+      friend void
+      recv_bounce(SocketImpl<udpsock>*s, AsioDestructible::DestructionLock lock,
+                  boost::system::error_code erc, size_t recv);
       std::vector<char> udpBuffer_;
     };
 
@@ -98,7 +106,7 @@ namespace netdetail {
       boost::array<char, 2000> recv_buffer_;
       boost::asio::ip::udp::endpoint remote_endpoint_;
       boost::asio::ip::udp::socket socket_;
-      friend class Socket;
+      friend class libport::Socket;
     };
     inline
     UDPSocket::UDPSocket()
@@ -116,7 +124,7 @@ namespace netdetail {
                     boost::asio::placeholders::bytes_transferred));
     }
     inline void
-    UDPSocket::handle_receive(const boost::system::error_code& error,
+    UDPSocket::handle_receive(const boost::system::error_code&,
                               size_t sz)
     {
       boost::shared_ptr<UDPLink> l(new UDPLinkImpl(socket_, remote_endpoint_,
@@ -149,7 +157,14 @@ namespace netdetail {
   template<typename Stream> void
   SocketImpl<Stream>::close()
   {
-    base_->lowest_layer().close();
+    Destructible::DestructionLock l = getDestructionLock();
+    if (base_->lowest_layer().is_open())
+    {
+      boost::system::error_code erc;
+      base_->lowest_layer().shutdown(Stream::lowest_layer_type::shutdown_both,
+                                     erc);
+      base_->lowest_layer().close(erc);
+    }
   }
 
   template<typename Stream> unsigned short
@@ -181,9 +196,6 @@ namespace netdetail {
   {
     return base_->lowest_layer().is_open();
   }
-
-  typedef  boost::asio::basic_datagram_socket<boost::asio::ip::udp,
-    boost::asio::datagram_socket_service<boost::asio::ip::udp> > udpsock;
 
   template<class T> void send_bounce(SocketImpl<T>* s,const void* buffer,
                                      int length)
@@ -448,13 +460,11 @@ template<class Proto, class BaseFactory> boost::system::error_code
 Socket::connectProto(const std::string& host, const std::string& port,
                      utime_t timeout, BaseFactory bf)
 {
-  std::cerr << "connect " << host <<" " << port << std::endl;
   using namespace netdetail;
   boost::system::error_code erc;
   typename Proto::endpoint ep = resolve<Proto>(host, port, erc);
   if (erc)
     return erc;
-  std::cerr <<"resolved " << std::endl;
   typename Proto::socket* s = new typename Proto::socket(get_io_service());
   if (!timeout)
     s->connect(ep, erc);
@@ -471,7 +481,6 @@ Socket::connectProto(const std::string& host, const std::string& port,
                                  _1, boost::ref(*s)));
     sem--;
   }
-  std::cerr <<"connected " << (!erc) << std::endl;
   if (erc)
     return erc;
   SocketImplBase* newS = dynamic_cast<SocketImplBase*>(bf(s));
@@ -530,18 +539,23 @@ Socket::listen(SocketFactory f, const std::string& host,
 inline Socket::Handle
 Socket::listenUDP(const std::string& host, const std::string& port,
                   boost::function3<void, const void*, int,
-                  boost::shared_ptr<UDPLink> > onRead)
+                  boost::shared_ptr<UDPLink> > onRead,
+                  boost::system::error_code& erc)
 {
   netdetail::UDPSocket*s = new netdetail::UDPSocket();
   s->onRead = onRead;
-  boost::system::error_code erc;
   boost::asio::ip::udp::endpoint ep =
     resolve<boost::asio::ip::udp>(host, port, erc);
+  if (erc)
+    return Handle();
   s->socket_.open(boost::asio::ip::udp::v4());
-  s->socket_.bind(ep);
+  s->socket_.bind(ep, erc);
+  if (erc)
+    return Handle();
   s->start_receive();
   return Handle();
 }
+
 #ifndef LIBPORT_NO_SSL
 inline Socket::Handle
 Socket::listenSSL(SocketFactory f, const std::string& host, const std::string&  port,
@@ -569,16 +583,23 @@ Socket::listenSSL(SocketFactory f, const std::string& host, const std::string&  
 inline
 Socket::~Socket()
 {
-  close();
-  base_->destroy();
-  base_->onReadFunc = 0;
-  base_->onErrorFunc = 0;
-  base_ = 0;
+  wasDestroyed();
+  if (base_)
+  {
+    base_->close();
+    base_->destroy();
+    base_->onReadFunc = 0;
+    base_->onErrorFunc = 0;
+    base_ = 0;
+  }
 }
 
 inline void
 Socket::destroy()
 {
+  // Lock in case the user calls destroy() in its error handler.
+  Destructible::DestructionLock l = getDestructionLock();
+  // It is safe to reach that point with an open socket.
   close();
   AsioDestructible::destroy();
 }
@@ -586,6 +607,7 @@ Socket::destroy()
 inline void
 AsioDestructible::doDestroy()
 {
+
   get_io_service().post(boost::bind(
 	netdetail::deletor<AsioDestructible>, this));
 }

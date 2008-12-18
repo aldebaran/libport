@@ -2,6 +2,7 @@
 # define LIBPORT_DESTRUCTIBLE_HH
 
 # include <libport/intrusive-ptr.hh>
+# include <libport/lockable.hh>
 
 namespace libport
 {
@@ -46,13 +47,16 @@ namespace libport
 
     protected:
 
+    /// Call this to warn Destructible that the destructor was called directly.
+    void wasDestroyed();
+
     /// Override this function to change the effective destruction behavior.
     virtual void doDestroy();
 
     private:
     inline void take();
     inline void release();
-
+    libport::Lockable threadLock_;
     bool destructionPending_;
     bool destructionEnacted_;
     int count_;
