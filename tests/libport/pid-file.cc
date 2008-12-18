@@ -1,7 +1,5 @@
 #include <fstream>
 
-#include <boost/format.hpp>
-
 #include <libport/pid-file.hh>
 #include <libport/program-name.hh>
 #include <libport/unit-test.hh>
@@ -52,7 +50,7 @@ void test_exists()
   static const std::string file = "exists.pid";
   // Create the file
   int fd;
-  BOOST_CHECK(fd = open(file.c_str(), O_CREAT) != -1);
+  BOOST_CHECK_NE(fd = open(file.c_str(), O_CREAT), -1);
   BOOST_CHECK(!close(fd));
 
   libport::PidFile f(file);

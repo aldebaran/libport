@@ -5,6 +5,8 @@ include $(top_srcdir)/build-aux/wine-ld-library-path.mk
 # No need to re-run the test if the sources have not changed.
 LAZY_TEST_SUITE = 1
 
+# This is for Boost Unit Test tests.  "all" is much more verbose.
+TESTSFLAGS = --log_level=test-suite
 # For some reason, this rule *must* be defined before loading
 # check.mk.
 #
@@ -12,7 +14,7 @@ LAZY_TEST_SUITE = 1
 # but this extension is required here, since the rules do mention the
 # EXEEXT.  So we have to remove the extension from $<.
 %.log: %$(EXEEXT)
-	@$(am__check_pre) ./$(<:$(EXEEXT)=) $(am__check_post)
+	@$(am__check_pre) ./$(<:$(EXEEXT)=) $(TESTSFLAGS) $(am__check_post)
 include $(top_srcdir)/build-aux/check.mk
 
 # Program to check:
