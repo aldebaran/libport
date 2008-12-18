@@ -25,6 +25,24 @@ namespace libport
 
   template<typename T, typename R>
   inline void
+  Statistics<T, R>::update_min_max(T value)
+  {
+    if (count_++)
+    {
+      if (value < min_)
+        min_ = value;
+      if (value > max_)
+        max_ = value;
+    }
+    else
+    {
+      min_ = max_ = value;
+      min_ok_ = max_ok_ = true;
+    }
+  }
+
+  template<typename T, typename R>
+  inline void
   Statistics<T, R>::add_sample(T value)
   {
     if (capacity_)  // Running
@@ -32,22 +50,8 @@ namespace libport
       // Do not increment the index for the first item.
       if (count_)
 	index_ = (index_ + 1) % capacity_;
-
-      // Update or invalidate min and max values.
       if (count_ < capacity_)
-      {
-	if (count_++) {
-	  if (value < min_)
-	    min_ = value;
-	  if (value > max_)
-	    max_ = value;
-	}
-	else
-	{
-	  min_ = max_ = value;
-	  min_ok_ = max_ok_ = true;
-	}
-      }
+        update_min_max(value);
       else
       {
 	if (min_ok_)
@@ -74,31 +78,14 @@ namespace libport
       }
 
       // Store the sample.
-      BOOST_TEST_MESSAGE("index: " << index_);
-      BOOST_TEST_MESSAGE("value: " << value);
-      BOOST_TEST_MESSAGE("samples_.capacity()" << samples_.capacity());
-      BOOST_CHECK_NO_THROW(samples_[index_] = value);
+      samples_[index_] = value;
     }
     else  // Not running case.
-    {
-      // Update min and max values.
-      if (count_++)
-      {
-	if (value < min_)
-	  min_ = value;
-	if (value > max_)
-	  max_ = value;
-      }
-      else
-      {
-	min_ = max_ = value;
-	min_ok_ = max_ok_ = true;
-      }
-    }
+      update_min_max(value);
 
     // Update sums.
-    BOOST_CHECK_NO_THROW(sum_ += value);
-    BOOST_CHECK_NO_THROW(sum2_ += value * value);
+    sum_ += value;
+    sum2_ += value * value;
   }
 
   template<typename T, typename R>

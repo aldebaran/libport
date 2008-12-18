@@ -27,6 +27,8 @@ namespace libport
     T min() const;
     T max() const;
   private:
+    /// Update or invalidate min and max values.
+    void update_min_max(T value);
     size_t capacity_;
     size_t count_;
     size_t index_;
