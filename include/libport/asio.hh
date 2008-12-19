@@ -124,13 +124,12 @@ namespace libport
         * \param f a socket factory. For each new connection the function will
         * be called and the resulting socket object bound to the new connection.
         */
-      static Handle listen(SocketFactory f, const std::string& host,
-	  const std::string& port, boost::system::error_code & erc,
-          bool udp = false);
+      boost::system::error_code listen(SocketFactory f, const std::string& host,
+	  const std::string& port, bool udp = false);
 #ifndef LIBPORT_NO_SSL
-      static Handle listenSSL(SocketFactory f, const std::string& host,
+      boost::system::error_code listenSSL(SocketFactory f,
+          const std::string& host,
 	  const std::string&  port,
-	  boost::system::error_code& erc,
 	  boost::asio::ssl::context_base::method ctx
 	    = boost::asio::ssl::context::sslv23_server,
 	  boost::asio::ssl::context::options options
@@ -145,7 +144,7 @@ namespace libport
       std::string buffer;
       BaseSocket* base_;
     private:
-    template<typename Proto, typename BaseFactory> static boost::system::error_code
+    template<typename Proto, typename BaseFactory> boost::system::error_code
       listenProto(SocketFactory f, const std::string& host,
 	  const std::string&port, BaseFactory bf);
     template<typename Proto, typename BaseFactory> boost::system::error_code

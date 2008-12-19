@@ -1,8 +1,10 @@
-//#define private public
 #define LIBPORT_NO_SSL
 #include <libport/asio.hh>
 #include <libport/utime.hh>
 #include <libport/assert.hh>
+#include <libport/unistd.h>
+
+bool abort_ctor = false;
 template<class T> void hold_for(T, libport::utime_t duration)
 {
   usleep(duration);
@@ -33,8 +35,8 @@ void echo(const void* d, int s, boost::shared_ptr<libport::UDPLink> l)
 class TestSocket: public libport::Socket
 {
   public:
-  TestSocket():nRead(0), echo(false), dump(false) {nInstance++;}
-  TestSocket(bool echo, bool dump) : nRead(0), echo(echo), dump(dump) {nInstance++;}
+  TestSocket():nRead(0), echo(false), dump(false) {assert(!abort_ctor); nInstance++;}
+  TestSocket(bool echo, bool dump) : nRead(0), echo(echo), dump(dump) {assert(!abort_ctor); nInstance++;}
   virtual ~TestSocket()
   {
     nInstance--;
@@ -88,7 +90,7 @@ void test_one(bool proto)
   TestSocket* client = new TestSocket(false, true);
   boost::system::error_code err;
   err = client->connect("localhost", S_AVAIL_PORT , proto);
-  passert(err, !err);
+  passert(err.message(), !err);
   client->send("coincoin\n");
   usleep(delay);
   passert(TestSocket::nInstance, TestSocket::nInstance == (proto?1:2));
@@ -119,11 +121,11 @@ int main()
   s->destroy();
   usleep(delay);
   libport::resolve<boost::asio::ip::tcp>("localhost", S_AVAIL_PORT, err);
-
-  libport::Socket::Handle h = libport::Socket::listen(
-      boost::bind(&TestSocket::factoryEx, true, true), "", S_AVAIL_PORT, err, false);
-  (void)h;
-  passert(err, !err);
+  libport::Socket* h = new libport::Socket();
+  err = h->listen(
+      boost::bind(&TestSocket::factoryEx, true, true), "", S_AVAIL_PORT, false);
+  passert(err.message(), !err);
+  passert(h->getLocalPort(), h->getLocalPort() == AVAIL_PORT);
   TestSocket* client;
 
   std::cerr << "##One client" << std::endl;
@@ -140,7 +142,7 @@ int main()
   {
     TestSocket s(false, true);
     err = s.connect("localhost", S_AVAIL_PORT, false);
-    passert(err, !err);
+    passert(err.message(), !err);
     s.send("coincoin\n");
     usleep(delay);
   }
@@ -154,7 +156,7 @@ int main()
   {
     TestSocket* client = new TestSocket(false, true);
     err = client->connect("localhost", S_AVAIL_PORT, false);
-    passert(err, !err);
+    passert(err.message(), !err);
     client->send("coincoin\n");
     clients.push_back(client);
   }
@@ -173,15 +175,15 @@ int main()
   client = new TestSocket();
   err = client->connect("auunsinsr.nosuch.hostaufisgiu.com.", "20000", false);
   std::cerr << err.message() << std::endl;
-  passert(err, err);
+  passert(err.message(), err);
 
   err = client->connect("localhost", "nosuchport", false);
   std::cerr << err.message() << std::endl;
-  passert(err, err);
+  passert(err.message(), err);
 
   // Try to reuse that wasted socket.
   err = client->connect("localhost", S_AVAIL_PORT, false);
-  passert(err, !err);
+  passert(err.message(), !err);
   // Destroy without closing.
   client->destroy();
   usleep(delay);
@@ -193,7 +195,7 @@ int main()
   client = new TestSocket();
   libport::utime_t start = libport::utime();
   err = client->connect("1.1.1.1", "10000", false, 1000000);
-  passert(err, err);
+  passert(err.message(), err);
   libport::utime_t timeout = libport::utime() - start;
   // Give it a good margin.
   passert(timeout, timeout < 1400000);
@@ -203,7 +205,7 @@ int main()
   std::cerr << "##Destruction locking" << std::endl;
   client = new TestSocket();
   err = client->connect("localhost", S_AVAIL_PORT, false);
-  passert(err, !err);
+  passert(err.message(), !err);
   usleep(delay);
   libport::startThread(boost::bind(&hold_for<libport::Destructible::DestructionLock>, client->getDestructionLock(), 1000000));
   client->destroy();
@@ -213,12 +215,25 @@ int main()
   usleep(500000+delay);
   passert(TestSocket::nInstance, !TestSocket::nInstance);
 
+  std::cerr << "Destroy listener" << std::endl;
+  h->close();
+  usleep(delay);
+  client = new TestSocket();
+  abort_ctor = true;
+  err = client->connect("localhost", S_AVAIL_PORT, false);
+  passert(err.message(), err);
+  std::cerr << err.message() << std::endl;
+  client->destroy();
+  h->destroy();
+  usleep(delay);
+  abort_ctor = false;
+
 
   std::cerr << "##UDP" << std::endl;
   libport::Socket::Handle hu = libport::Socket::listenUDP(
       "", S_AVAIL_PORT, &echo, err);
   (void)hu;
-  passert(err, !err);
+  passert(err.message(), !err);
   test_one(true);
   usleep(delay);
   test_one(true);
@@ -226,15 +241,15 @@ int main()
   client = new TestSocket();
   err = client->connect("auunsinsr.nosuch.hostaufisgiu.com.", "20000", true);
   std::cerr << err.message() << std::endl;
-  passert(err, err);
+  passert(err.message(), err);
 
   err = client->connect("localhost", "nosuchport", true);
   std::cerr << err.message() << std::endl;
-  passert(err, err);
+  passert(err.message(), err);
 
   // Try to reuse that wasted socket.
   err = client->connect("localhost", S_AVAIL_PORT, true);
-  passert(err, !err);
+  passert(err.message(), !err);
   // Destroy without closing.
   client->destroy();
   usleep(delay);
@@ -243,7 +258,7 @@ int main()
   // Check one-write-one-packet semantic
   client = new TestSocket(false, true);
   err = client->connect("localhost", S_AVAIL_PORT, true);
-  passert(err, !err);
+  passert(err.message(), !err);
   client->send("coin");
   client->send("pan");
   usleep(delay*2);
@@ -253,7 +268,7 @@ int main()
   enable_delay = true;
   client = new TestSocket(false, true);
   err = client->connect("localhost", S_AVAIL_PORT, true);
-  passert(err, !err);
+  passert(err.message(), !err);
   client->send("coin");
   usleep(500000+delay);
   passert(client->received, client->received == "hop hop\n");

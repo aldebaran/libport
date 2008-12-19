@@ -49,7 +49,8 @@ namespace netdetail {
       std::string getLocalHost();
       bool isConnected();
       template<typename Acceptor, typename BaseFactory> static void
-        onAccept(Stream* s, SocketFactory fact, Acceptor *a, BaseFactory bf);
+        onAccept(boost::system::error_code erc, Stream* s, SocketFactory fact,
+               Acceptor *a, BaseFactory bf);
       template<typename Acceptor, typename BaseFactory> static void
         acceptOne(SocketFactory fact, Acceptor *a, BaseFactory bf);
       static BaseSocket* create(Stream* base);
@@ -69,6 +70,56 @@ namespace netdetail {
       std::vector<char> udpBuffer_;
     };
 
+    // Acceptor implementation
+    #define ACCEPTOR_FAIL \
+      {throw std::runtime_error("Call not implemented for Acceptors");}
+    template<class Acceptor> class AcceptorImpl
+    :public BaseSocket
+    {
+      public:
+      AcceptorImpl(Acceptor* base);
+      ~AcceptorImpl();
+      void write(const void*, unsigned int) ACCEPTOR_FAIL
+      bool isConnected() {return false;}
+      void close();
+      unsigned short getRemotePort() ACCEPTOR_FAIL
+      std::string getRemoteHost() ACCEPTOR_FAIL
+      unsigned short getLocalPort();
+      std::string getLocalHost();
+      private:
+      Acceptor* base_;
+    };
+    #undef ACCEPTOR_FAIL
+
+    template<class Acceptor>
+    AcceptorImpl<Acceptor>::AcceptorImpl(Acceptor* base)
+    :base_(base)
+    {
+    }
+    template<class Acceptor>
+    AcceptorImpl<Acceptor>::~AcceptorImpl()
+    {
+      close();
+      delete base_;
+    }
+    template<class Acceptor> void
+    AcceptorImpl<Acceptor>::close()
+    {
+      boost::system::error_code erc;
+      if (base_)
+        base_->close(erc);
+      base_ = 0;
+    }
+    template<class Acceptor> unsigned short
+    AcceptorImpl<Acceptor>::getLocalPort()
+    {
+      return base_->local_endpoint().port();
+    }
+    template<class Acceptor> std::string
+    AcceptorImpl<Acceptor>::getLocalHost()
+    {
+      return base_->local_endpoint().address().to_string();
+    }
     inline void
     runIoService(boost::asio::io_service* io)
     {
@@ -306,8 +357,11 @@ namespace netdetail {
 
   template<typename Stream>
   template<typename Acceptor, typename BaseFactory> void
-  SocketImpl<Stream>::onAccept(Stream* s, SocketFactory fact, Acceptor *a, BaseFactory bf)
+  SocketImpl<Stream>::onAccept(boost::system::error_code erc,Stream* s,
+                               SocketFactory fact, Acceptor *a, BaseFactory bf)
   {
+    if (erc)
+      return;
     SocketImplBase* wrapper = dynamic_cast<SocketImplBase*>(bf(s));
     if (!wrapper)
     { // Failure.
@@ -331,7 +385,7 @@ namespace netdetail {
     Stream* s = new Stream(get_io_service());
     a->async_accept(*s,
 	boost::bind(&SocketImpl<Stream>::template onAccept<Acceptor, BaseFactory>
-	  , s, fact, a, bf));
+	  , _1, s, fact, a, bf));
   }
 
 
@@ -521,19 +575,22 @@ Socket::listenProto(SocketFactory f, const std::string& host,
   if (erc)
     return erc;
   typename Proto::acceptor* a = new typename Proto::acceptor(get_io_service(), ep);
+  BaseSocket* impl = new netdetail::AcceptorImpl<typename Proto::acceptor>(a);
+  setBase(impl);
   netdetail::SocketImpl<typename Proto::socket>::acceptOne(f, a, bf);
   return erc;
 }
 
-inline Socket::Handle
+inline boost::system::error_code
 Socket::listen(SocketFactory f, const std::string& host,
-    const std::string& port, boost::system::error_code & erc, bool udp)
+    const std::string& port, bool udp)
 {
   (void)udp;
   assert(!udp);
+  boost::system::error_code erc;
   erc = Socket::listenProto<boost::asio::ip::tcp>(f, host, port,
       &netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
-  return Handle();
+  return erc;
 }
 
 inline Socket::Handle
@@ -557,9 +614,9 @@ Socket::listenUDP(const std::string& host, const std::string& port,
 }
 
 #ifndef LIBPORT_NO_SSL
-inline Socket::Handle
-Socket::listenSSL(SocketFactory f, const std::string& host, const std::string&  port,
-    boost::system::error_code& erc,
+inline boost::system::error_code
+Socket::listenSSL(SocketFactory f, const std::string& host,
+    const std::string&  port,
     boost::asio::ssl::context_base::method ctx,
     boost::asio::ssl::context::options options,
     const std::string& privateKeyFile,
@@ -574,9 +631,10 @@ Socket::listenSSL(SocketFactory f, const std::string& host, const std::string&  
   settings.certChainFile = certChainFile;
   settings.tmpDHFile = tmpDHFile;
   settings.cipherList = cipherList;
-  erc = Socket::listenProto<boost::asio::ip::tcp>(f, host, port,
+  boost::system::error_code erc;
+  erc = listenProto<boost::asio::ip::tcp>(f, host, port,
       (boost::function1<BaseSocket*, boost::asio::ip::tcp::socket*>)boost::bind(&netdetail::SSLLayer<boost::asio::ip::tcp::socket>, settings, _1));
-  return Handle();
+  return erc;
 }
 #endif
 
