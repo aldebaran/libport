@@ -644,6 +644,7 @@ Socket::~Socket()
   wasDestroyed();
   if (base_)
   {
+    Destructible::DestructionLock l = base_->getDestructionLock();
     base_->close();
     base_->destroy();
     base_->onReadFunc = 0;
