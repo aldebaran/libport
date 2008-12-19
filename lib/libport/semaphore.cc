@@ -182,7 +182,7 @@ namespace libport
     get(0);
   }
 
-  inline bool
+  bool
   Semaphore::get(const int timeout)
   {
     int err;
