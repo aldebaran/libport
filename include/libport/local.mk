@@ -37,6 +37,7 @@ libport_include_HEADERS +=			\
   $(include_libport)/asio.hh			\
   $(include_libport)/asio.hxx			\
   $(include_libport)/assert.hh			\
+  $(include_libport)/base64.hh			\
   $(include_libport)/buffer-stream.hh           \
   $(include_libport)/cli.hh			\
   $(include_libport)/cli.hxx			\

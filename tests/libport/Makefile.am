@@ -16,7 +16,8 @@ TESTSFLAGS = --log_level=test-suite
 include $(top_srcdir)/build-aux/check.mk
 
 # Program to check:
-TESTS =                                        \
+TESTS =                                         \
+  base64.cc                                     \
   cli.cc                                        \
   cstdlib.cc                                    \
   deref.cc                                      \
@@ -74,6 +75,7 @@ LDADD +=                                        \
 #ufloat_float_tab_SOURCES         = ufloat-float-tab.cc
 #ufloat_floating_SOURCES          = ufloat-floating.cc
 #ufloat_floating_tab_SOURCES      = ufloat-floating-tab.cc
+base64_SOURCES                    = base64.cc
 cli_SOURCES                       = cli.cc
 cstdlib_SOURCES                   = cstdlib.cc
 deref_SOURCES                     = deref.cc

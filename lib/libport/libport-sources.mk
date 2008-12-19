@@ -15,6 +15,7 @@ libport_la = $(top_builddir)/lib/libport/libport.la
 
 # Sources to compile to use libport.
 libport_sources =				\
+  $(libport_srcdir)/base64.cc            	\
   $(libport_srcdir)/buffer-stream.cc            \
   $(libport_srcdir)/cli.cc			\
   $(libport_srcdir)/compiler.cc			\
