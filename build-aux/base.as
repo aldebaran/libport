@@ -343,6 +343,7 @@ esac
 
 # We can only check absolute dirs, since we may be called from other
 # directories than the ones we were created from.
+: ${EXEEXT='@EXEEXT@'}
 : ${abs_builddir='@abs_builddir@'}
 : ${abs_srcdir='@abs_srcdir@'}
 : ${abs_top_builddir='@abs_top_builddir@'}

@@ -22,6 +22,7 @@ m4sh_scripts =
 edit =									  \
  sed									  \
   -e 's|@PACKAGE_NAME[@]|$(PACKAGE_NAME)|g'				  \
+  -e 's|@EXEEXT[@]|$(EXEEXT)|g'                                                  \
   -e 's|@PACKAGE_TARNAME[@]|$(PACKAGE_TARNAME)|g'			  \
   -e 's|@PERL[@]|$(PERL)|g'						  \
   -e 's|@SHELL[@]|$(SHELL)|g'						  \
