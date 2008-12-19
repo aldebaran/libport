@@ -161,7 +161,9 @@ exit_status=$EXIT_SUCCESS
 # Make sure IFS has a sensible default
 lt_nl='
 '
-IFS="	$lt_nl"
+lt_sp=' '
+lt_tb='	'
+IFS="$lt_sp$lt_tb$lt_nl"
 
 dirname="s,/[^/]*$,,"
 basename="s,^.*/,,"
