@@ -20,6 +20,7 @@ AC_CONFIG_HEADERS([include/config.h])
 
 URBI_LTDL
 BOOST_TEST
+BOOST_SYSTEM
 
 # AutoTroll with Qt.
 # AT_WITH_QT

@@ -78,8 +78,8 @@ LDADD +=                                        \
 #ufloat_floating_tab_SOURCES      = ufloat-floating-tab.cc
 
 asio_SOURCES			  = asio.cc
-asio_LDADD = -lboost_system -lssl $(LDADD)
-asio_LDFLAGS = $(PTHREAD_LDFLAGS) $(AM_LDFLAGS)
+asio_LDADD = $(BOOST_SYSTEM_LIBS)  $(LDADD)
+asio_LDFLAGS = $(BOOST_SYSTEM_LDFLAGS) $(PTHREAD_LDFLAGS) $(AM_LDFLAGS)
 asio_CXXFLAGS = $(PTHREAD_CFLAGS) $(AM_CXXFLAGS)
 
 base64_SOURCES			  = base64.cc
