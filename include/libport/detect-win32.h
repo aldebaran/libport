@@ -21,8 +21,10 @@
 
 # ifdef WIN32
 #  define WIN32_IF(Then, Else) Then
+#  define EXEEXT ".exe"
 # else
 #  define WIN32_IF(Then, Else) Else
+#  define EXEEXT ""
 # endif
 
 #endif // !LIBPORT_DETECT_WIN32_H

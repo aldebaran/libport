@@ -1,9 +1,10 @@
+#include <libport/detect-windows.hh>
 #include <libport/dirent.h>
 #include <libport/unit-test.hh>
 
 using libport::test_suite;
 
-static const std::string myself = "dirent";
+static const std::string myself = "dirent" EXEEXT;
 
 static void test()
 {
@@ -22,7 +23,7 @@ static void test()
 test_suite*
 init_test_suite()
 {
-  test_suite* suite = BOOST_TEST_SUITE("libport's dirent.h test suite");
+  test_suite* suite = BOOST_TEST_SUITE("libport/dirent.h");
 
   suite->add(BOOST_TEST_CASE(test));
 
