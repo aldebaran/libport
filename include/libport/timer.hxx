@@ -22,7 +22,11 @@ namespace libport
 
   inline
   void
-  timer::pop(const std::string& task_name)
+  timer::pop(const std::string&
+# ifndef NDEBUG
+             task_name
+# endif
+    )
   {
     precondition(tasksmap[task_name] == tasks.top());
     pop();
