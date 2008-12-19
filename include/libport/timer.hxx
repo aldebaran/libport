@@ -14,57 +14,57 @@ namespace libport
 
   inline
   void
-  timer::push (int i)
+  timer::push(int i)
   {
-    precondition (this->intmap.find (i) != this->intmap.end ());
-    this->push (this->intmap[i]);
+    precondition(this->intmap.find(i) != this->intmap.end());
+    this->push(this->intmap[i]);
   }
 
   inline
   void
-  timer::pop (const std::string& task_name)
+  timer::pop(const std::string& task_name)
   {
-    precondition (this->tasksmap[task_name] == this->tasks.top ());
-    this->pop ();
+    precondition(this->tasksmap[task_name] == this->tasks.top());
+    this->pop();
   }
 
   inline
   void
-  timer::pop (const int i)
+  timer::pop(const int i)
   {
-    this->pop (this->intmap[i]);
+    this->pop(this->intmap[i]);
   }
 
 
   inline
   void
-  timer::dump_on_destruction (std::ostream& out)
+  timer::dump_on_destruction(std::ostream& out)
   {
     this->dump_stream = &out;
   }
 
   inline
   void
-  timer::start ()
+  timer::start()
   {
-    this->total.start ();
+    this->total.start();
   }
 
   inline
   void
-  timer::stop ()
+  timer::stop()
   {
-    this->total.stop ();
+    this->total.stop();
   }
 
   inline
-  timer::time::time () :
-    user (0), sys (0), wall (0)
+  timer::time::time() :
+    user(0), sys(0), wall(0)
   { }
 
   inline
   timer::time&
-  timer::time::operator += (const time& rhs)
+  timer::time::operator +=(const time& rhs)
   {
     this->wall += rhs.wall;
     this->user += rhs.user;

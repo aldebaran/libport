@@ -20,55 +20,55 @@ namespace libport
   class LIBPORT_API timer
   {
   public:
-    timer ();
-    timer (const timer& rhs);
-    ~timer ();
+    timer();
+    timer(const timer& rhs);
+    ~timer();
 
     /// Start a sub timer for a named task.
     /// \param name a constant string which is the task's name
-    void push (const std::string& name);
+    void push(const std::string& name);
 
     /// Start a sub timer with an integer which refers to a string.
-    /// \see push ()
-    /// \see name ()
-    void push (int i);
+    /// \see push()
+    /// \see name()
+    void push(int i);
 
     /// Stop the named task. Take a const string as parameter
     /// that make sure that what is popped is indeed what is on top.
-    void pop (const std::string& task_name);
+    void pop(const std::string& task_name);
 
-    /// \see pop ()
-    /// \see pop (const std::string& name)
-    void pop (const int i);
+    /// \see pop()
+    /// \see pop(const std::string& name)
+    void pop(const int i);
 
     /// Stop the current task's timer (the last task pushed).
-    void pop ();
+    void pop();
 
     /// Write results.
     /// \param out an ostream which defaults to cerr.
-    void dump (std::ostream& out);
+    void dump(std::ostream& out);
 
     /// Write results when the timer is destroyed.
     /// \param out an ostream which defaults to cerr.
-    void dump_on_destruction (std::ostream& out);
+    void dump_on_destruction(std::ostream& out);
 
     /// the name function links an int and a constant string.
-    void name (int, const std::string);
+    void name(int, const std::string);
 
     /// the start function must be called at the beginning of the program
     /// to get the total time spend in the whole program.
-    /// \see stop ()
-    void start ();
+    /// \see stop()
+    void start();
 
     /// the stop function must be called at the end of the program.
-    /// \see start ()
-    void stop ();
+    /// \see start()
+    void stop();
 
     /// \brief Import timer.
     ///
     /// Import tasks defined in \a rhs. There must be not stacked task.
     /// Total execution time of \a rhs is ignored.
-    timer& operator<< (const timer& rhs);
+    timer& operator<<(const timer& rhs);
 
   private:
     class time_var;
@@ -78,7 +78,7 @@ namespace libport
       friend class timer::time_var;
     public:
       time();
-      time & operator += (const time& rhs);
+      time & operator +=(const time& rhs);
 
     private :
       long user;
@@ -104,7 +104,7 @@ namespace libport
     };
 
     /// Format timing results.
-    void timeinfo (long, long, std::ostream&);
+    void timeinfo(long, long, std::ostream&);
 
     typedef std::map<const std::string, time_var*> task_map_type;
 
@@ -114,12 +114,12 @@ namespace libport
     /// tasks is a stack in which tasks are benched in order.
     std::stack<time_var*> tasks;
 
-    /// Map for int and string couples (to call push (int))
+    /// Map for int and string couples (to call push(int))
     std::map<int, std::string> intmap;
 
     /// Total time spend in the program
-    /// \see start ()
-    /// \see stop ()
+    /// \see start()
+    /// \see stop()
     time_var total;
 
     /** \brief A stream onto which the results are dumped when the
