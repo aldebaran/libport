@@ -7,7 +7,7 @@ URBI_PACKAGE_VERSION
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux])
 
-AM_INIT_AUTOMAKE([foreign -Wall])
+AM_INIT_AUTOMAKE([foreign -Wall nostdinc])
 
 ## -------------------- ##
 ## Tool/Compilers setup ##

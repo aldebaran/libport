@@ -1,6 +1,9 @@
-include $(top_srcdir)/flags.mk
+include $(top_srcdir)/build-aux/init.mk
 include $(top_srcdir)/build-aux/m4sh.mk
 include $(top_srcdir)/build-aux/wine-ld-library-path.mk
+
+AM_CPPFLAGS += $(LIBPORT_CPPFLAGS)
+AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 
 # No need to re-run the test if the sources have not changed.
 LAZY_TEST_SUITE = 1

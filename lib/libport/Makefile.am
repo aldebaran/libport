@@ -1,5 +1,8 @@
-include $(top_srcdir)/flags.mk
+include $(top_srcdir)/build-aux/init.mk
 include $(top_srcdir)/build-aux/fix-libtool-la.mk
+AM_CPPFLAGS += $(LIBPORT_CPPFLAGS)
+AM_CXXFLAGS += $(WARNING_CXXFLAGS)
+
 
 ## --------- ##
 ## libport.  ##
