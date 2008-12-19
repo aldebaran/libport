@@ -1,4 +1,5 @@
 //#define private public
+#define LIBPORT_NO_SSL
 #include <libport/asio.hh>
 #include <libport/utime.hh>
 #include <libport/assert.hh>
