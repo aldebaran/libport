@@ -1,6 +1,5 @@
 include $(top_srcdir)/build-aux/init.mk
 include $(top_srcdir)/build-aux/m4sh.mk
-include $(top_srcdir)/build-aux/wine-ld-library-path.mk
 
 AM_CPPFLAGS += $(LIBPORT_CPPFLAGS)
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
@@ -12,12 +11,8 @@ LAZY_TEST_SUITE = 1
 TESTSFLAGS = --log_level=test-suite
 # For some reason, this rule *must* be defined before loading
 # check.mk.
-#
-# This is really weird: libtool does not create a wrapper with EXEEXT,
-# but this extension is required here, since the rules do mention the
-# EXEEXT.  So we have to remove the extension from $<.
 %.log: %$(EXEEXT)
-	@$(am__check_pre) ./$(<:$(EXEEXT)=) $(TESTSFLAGS) $(am__check_post)
+	@$(am__check_pre) ./$< $(TESTSFLAGS) $(am__check_post)
 include $(top_srcdir)/build-aux/check.mk
 
 # Program to check:
@@ -107,16 +102,5 @@ visitor_SOURCES                   = visitor.cc
 
 EXTRA_DIST += ufloat-common.cc ufloat-config.h 666.txt
 
-WINEPREFIX_ENVIRONMENT :=			\
-  $(shell					\
-     $(wine_ld_library_path)			\
-     --force					\
-     --to=$(abs_builddir)			\
-     --ldflags="$(AM_LDFLAGS) $(LDADD)"		\
-     $(abs_builddir)/.libs)
-
 TESTS_ENVIRONMENT +=                                    \
-  SRCDIR=$(srcdir)                                      \
-  $(WINEPREFIX_ENVIRONMENT)
-
-CLEANFILES += $(EXTRA_PROGRAMS:$(EXEEXT)=)
+  SRCDIR=$(srcdir)
