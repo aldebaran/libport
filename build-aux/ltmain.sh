@@ -161,7 +161,7 @@ exit_status=$EXIT_SUCCESS
 # Make sure IFS has a sensible default
 lt_nl='
 '
-IFS=" 	$lt_nl"
+IFS="	$lt_nl"
 
 dirname="s,/[^/]*$,,"
 basename="s,^.*/,,"
@@ -3604,7 +3604,7 @@ EOF
 		cat <<"EOF"
   /* execv doesn't actually work on mingw as expected on unix */
   newargz = prepare_spawn (newargz);
-  rval = _spawnv (_P_WAIT, lt_argv_zero, (const char * const *) newargz);
+  rval = _spawnv (_P_WAIT, newargz[0], (const char * const *) newargz);
   if (rval == -1)
     {
       /* failed to start process */
@@ -8575,4 +8575,3 @@ build_old_libs=`case $build_libtool_libs in yes) echo no;; *) echo yes;; esac`
 # sh-indentation:2
 # End:
 # vi:sw=2
-
