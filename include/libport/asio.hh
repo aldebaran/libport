@@ -2,6 +2,10 @@
 #ifndef LIBPORT_ASIO_HH
 # define LIBPORT_ASIO_HH
 
+# include <libport/config.h>
+# include <libport/sys/socket.h>
+
+
 # include <iostream>
 # include <boost/asio.hpp>
 #ifndef LIBPORT_NO_SSL
