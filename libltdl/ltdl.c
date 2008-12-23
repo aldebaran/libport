@@ -81,7 +81,7 @@ static	const char	sys_dlsearch_path[]	= LT_DLSEARCH_PATH;
 
 
 
-
+
 /* --- DYNAMIC MODULE LOADING --- */
 
 
@@ -2056,12 +2056,14 @@ lt_dlsym (lt_dlhandle place, const char *symbol)
 const char *
 lt_dlerror (void)
 {
-  const char *error;
-
-  LT__GETERROR (error);
+  static const char* last_error = 0;
+  if (!lt__get_last_error())
+    return 0;
+  if (last_error)
+    free(last_error);
+  last_error = strdup(lt__get_last_error());
   LT__SETERRORSTR (0);
-
-  return error ? error : NULL;
+  return last_error;
 }
 
 static int

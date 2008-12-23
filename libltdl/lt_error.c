@@ -31,7 +31,8 @@ or obtained by writing to the Free Software Foundation, Inc.,
 #include "lt__private.h"
 #include "lt_error.h"
 
-static const char	*last_error	= 0;
+static int              last_error_allocated = 0;
+static char	        *last_error	     = 0;
 static const char	error_strings[LT_ERROR_MAX][LT_ERROR_LEN_MAX + 1] =
   {
 #define LT_ERROR(name, diagnostic)	diagnostic,
@@ -103,8 +104,31 @@ lt__get_last_error (void)
   return last_error;
 }
 
+const char*
+lt__set_last_error_code(int code)
+{
+  if (code == LT_ERROR_FILE_NOT_FOUND && last_error)
+    return last_error;
+  if (last_error_allocated)
+    free(last_error);
+  last_error = error_strings[code];
+  last_error_allocated = 0;
+}
+
 const char *
 lt__set_last_error (const char *errormsg)
 {
-  return last_error = errormsg;
+  if (last_error_allocated)
+    free(last_error);
+  if (!errormsg)
+  {
+    last_error = 0;
+    last_error_allocated = 0;
+  }
+  else
+  {
+    last_error_allocated = 1;
+    last_error = strdup(errormsg);
+  }
+  return last_error;
 }

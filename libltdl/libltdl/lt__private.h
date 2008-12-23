@@ -138,12 +138,12 @@ struct lt__advise {
 
 #define LT__GETERROR(lvalue)	      (lvalue) = lt__get_last_error()
 #define LT__SETERRORSTR(errormsg)     lt__set_last_error(errormsg)
-#define LT__SETERROR(errorcode)	      LT__SETERRORSTR(LT__STRERROR(errorcode))
+#define LT__SETERROR(name)     lt__set_last_error_code(LT_CONC(LT_ERROR_,name))
 
 LT_SCOPE const char *lt__error_string	(int errorcode);
 LT_SCOPE const char *lt__get_last_error	(void);
 LT_SCOPE const char *lt__set_last_error	(const char *errormsg);
-
+LT_SCOPE const char *lt__set_last_error_code (int code);
 LT_END_C_DECLS
 
 #endif /*!defined(LT__PRIVATE_H)*/
