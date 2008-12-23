@@ -16,11 +16,12 @@
 #  include <boost/function.hpp>
 #  include <boost/preprocessor/seq/for_each.hpp>
 
+#  include <libport/export.hh>
 #  include <libport/finally.hh>
 
 namespace libport
 {
-  class Debug
+  class LIBPORT_API Debug
   {
   public:
 
@@ -103,7 +104,7 @@ namespace libport
     unsigned filter_;
   };
 
-  class ConsoleDebug: public Debug
+  class LIBPORT_API ConsoleDebug: public Debug
   {
   public:
     ConsoleDebug();
@@ -125,7 +126,7 @@ namespace libport
   };
 
 #ifndef WIN32
-  class SyslogDebug: public Debug
+  class LIBPORT_API SyslogDebug: public Debug
   {
   public:
     SyslogDebug(const std::string& program);
@@ -145,8 +146,8 @@ namespace libport
   };
 #endif
 
-  extern boost::function0<Debug*> make_debugger;
-  Debug* debugger();
+  LIBPORT_API extern boost::function0<Debug*> make_debugger;
+  LIBPORT_API Debug* debugger();
 
   std::string gd_ihexdump(const unsigned char* data, unsigned size);
 
