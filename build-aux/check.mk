@@ -135,12 +135,12 @@ $(am__tty_colors);				\
 xfailed=PASS;					\
 for xfail in : $(XFAIL_TESTS); do		\
   case $< in					\
-    $$xfail | */$$xfail) xfailed=XFAIL; break;	\
+    $$xfail | */$$xfail) xfailed=XFAIL; break;;	\
   esac;						\
 done;						\
 for tfail in : $(TFAIL_TESTS); do		\
   case $< in					\
-    $$tfail | */$$tfail) xfailed=TFAIL; break;	\
+    $$tfail | */$$tfail) xfailed=TFAIL; break;;	\
   esac;						\
 done;						\
 case $$estatus:$$xfailed in			\
