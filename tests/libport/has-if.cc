@@ -1,4 +1,4 @@
-#include <cassert>
+#include <cstdlib>
 #include <vector>
 #include <boost/lambda/lambda.hpp>
 #include <libport/containers.hh>
@@ -8,9 +8,8 @@ static std::vector<int> v;
 static void
 check(int i, bool b)
 {
-  (void) i;
-  (void) b;
-  assert(b == libport::has_if(v, boost::lambda::_1 == i));
+  if (!(b == libport::has_if(v, boost::lambda::_1 == i)))
+    abort();
 }
 
 int main()
