@@ -72,6 +72,8 @@ put(const std::string& str, int fd)
 static void
 put(char c, int fd)
 {
+  (void) c;
+  (void) fd;
   assert(write(fd, &c, 1) == 1);
 }
 

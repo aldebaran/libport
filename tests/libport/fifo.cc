@@ -10,6 +10,8 @@ static libport::Fifo<char, '\0'> queue(8);
 static void
 csp(size_t sz, size_t cp)
 {
+  (void) sz;
+  (void) cp;
   assert(queue.size() == sz);
   assert(queue.capacity() == cp);
 }
