@@ -8,6 +8,8 @@ static std::vector<int> v;
 static void
 check(int i, bool b)
 {
+  (void) i;
+  (void) b;
   assert(b == libport::has_if(v, boost::lambda::_1 == i));
 }
 
