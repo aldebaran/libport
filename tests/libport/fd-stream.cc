@@ -1,6 +1,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <cstdlib>
+
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
@@ -14,6 +16,9 @@
 using boost::bind;
 using libport::FdStream;
 using libport::test_suite;
+
+// /!\ Boost check is not thread-safe, so it cannot be used everywhere.
+//     This is why we have some "abort()" remaining in this file.
 
 static void
 ctor(int write, int read)
@@ -70,7 +75,8 @@ put(const std::string& str, int fd)
 static void
 put(char c, int fd)
 {
-  BOOST_CHECK_EQUAL(write(fd, &c, 1), 1);
+  if (write(fd, &c, 1) != 1)
+    abort();
 }
 
 static std::string
@@ -134,7 +140,8 @@ static void thread_write(int fd, int size)
   for (int i = 0; i < size; ++i)
     // This might fail if the pipe isn't large enough ...
     put(i % 256, fd);
-  BOOST_CHECK(!close(fd));
+  if (close(fd))
+    abort();
 }
 
 static void
