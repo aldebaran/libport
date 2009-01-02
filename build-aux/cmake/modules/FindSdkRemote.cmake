@@ -80,9 +80,11 @@ package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbi liburbi
                FULLNAME "SDK Remote for debug"
                PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/mingw32/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-cygwin/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
-                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/mingw32/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 # Search for URBI release library
@@ -90,9 +92,11 @@ package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi liburbi
                FULLNAME "SDK Remote for release"
                PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/mingw32/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/Release/lib
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-cygwin/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
-                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/remote
+                     ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/mingw32/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 # Search for the associated jpeg library.
