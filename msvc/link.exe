@@ -279,7 +279,7 @@ get_options ()
     #   $(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $<
     (-MT) # -MT DEPENDENCY-TARGET.
           shift
-          deps_target=$(transform "$1");;
+          deps_target=$1;;
     (-MD) # -MD triggers the generation of the dependencies.
           # The documentation says that this goes to stderr.  This is
           # not accurate: it goes to stderr if stdout is used for
@@ -291,7 +291,7 @@ get_options ()
           deps_phony=true;;
     (-MF) # -MF DEPENDENCY-FILE.
           shift
-          deps_file=$(transform "$1");;
+          deps_file=$1;;
     (--convert-windows-path)
           cppoutput=cppoutput;;
 
@@ -314,11 +314,11 @@ get_options ()
       outargs $(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/');;
 
     # Sources.
-    (*.S)  outargs "/Tp$(transform $1)";;
-    (*.c|*.cc) outargs "$(transform $1)"; source=$1  ;;
-    (*.i) outargs "/Tc$(transform $1)"; source=$1  ;;
-    (*.ii) outargs "/Tp$(transform $1)"; source=$1  ;;
-    (*)  outargs $1;;
+    (*.S)      outargs "/Tp$(transform $1)";;
+    (*.c|*.cc) outargs "$(transform $1)"; source=$1;;
+    (*.i)      outargs "/Tc$(transform $1)"; source=$1;;
+    (*.ii)     outargs "/Tp$(transform $1)"; source=$1;;
+    (*)        outargs $1;;
     esac
     shift
   done
@@ -338,8 +338,10 @@ dos2unix ()
 dump_log ()
 {
   local file=$1
-  perl -e "my \$deps_target = '$deps_target';" \
-       -e "my \$deps_file = '$deps_file';" \
+  perl -e "my \$deps_file = '$deps_file';" \
+       -e "my \$deps_phony = '$deps_phony';" \
+       -e "my \$deps_target = '$deps_target';" \
+       -e "my \$source = '$source';" \
        -e '
 #! /usr/bin/perl
 
@@ -380,9 +382,20 @@ if ($deps_file)
   # Convert them to Linux format.
   @files = grep { chomp } `winepath -u @files`;
 
+  # Make does not like colon in file names, which is something
+  # that does happens when wrapper cl.exe
+  # (/home/build/.wine/dosdevices/c:/vcxx8/VC/include/stdio.h).
+  # Escape them.
+  @files = grep { s/:/\\:/g } @files;
+
   use IO::File;
   my $deps = new IO::File ">$deps_file" or die;
-  print $deps join ("\t\\\n  ", "$deps_target:", @files), "\n";
+  print $deps join ("\t\\\n  ", "$deps_target: $source", @files), "\n";
+
+  if ($deps_phony)
+  {
+    map { print $deps "$_:\n\n"; } @files;
+  }
 }
 ' < $file
 }
