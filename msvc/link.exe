@@ -10,9 +10,14 @@
 
 set -e
 
-case $VERBOSE in (x)
-  set -x;;
-esac
+trace ()
+{
+  case $VERBOSE in (x)
+    set -x;;
+  esac
+}
+
+trace
 
 me=$(basename "$0")
 
@@ -265,7 +270,31 @@ get_options ()
     (-l*)   linkargs $(handle_lib $1) ;;
     (*.lib) linkargs $(transform $1) ;;
     (*.a)   linkargs $(transform "$1" | sed -e 's/.a$/.lib/');;
+
+    # Preprocessor options.
     (-E)  mode=preprocess; outargs /E ;;
+
+    # Dependencies.
+    # Automake invocations look like:
+    #   $(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $<
+    (-MT) # -MT DEPENDENCY-TARGET.
+          shift
+          deps_target=$(transform "$1");;
+    (-MD) # -MD triggers the generation of the dependencies.
+          # The documentation says that this goes to stderr.  This is
+          # not accurate: it goes to stderr if stdout is used for
+          # actual output (e.g., -E without -o), otherwise it goes to
+          # stdout.
+          # FIXME: handle this case.
+          outargs /showIncludes;;
+    (-MP) # Add phony target for each dependency other than the main file.
+          deps_phony=true;;
+    (-MF) # -MF DEPENDENCY-FILE.
+          shift
+          deps_file=$(transform "$1");;
+    (--convert-windows-path)
+          cppoutput=cppoutput;;
+
     (-c)  mode=compile; outargs /c ;;
     (-o)  shift
          output=$1
@@ -277,10 +306,14 @@ get_options ()
         ;;
     (-Wno-unused-parameter) ;;
     (-g|-ggdb) ;; # outargs "/Zi";;
+
+    # Optimizations.
     (-O2|-O3) outargs /O2;;
     (-f*)  ;;
     (*.dll)
       outargs $(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/');;
+
+    # Sources.
     (*.S)  outargs "/Tp$(transform $1)";;
     (*.c|*.cc) outargs "$(transform $1)"; source=$1  ;;
     (*.i) outargs "/Tc$(transform $1)"; source=$1  ;;
@@ -297,6 +330,69 @@ dos2unix ()
   sed -e 's/\r//' "$@"
 }
 
+
+# dump_log FILE
+# -------------
+# Process the $FILE which is the output from cl.exe.  Process the
+# deps_file if requested.  Send to stderr what remains.
+dump_log ()
+{
+  local file=$1
+  perl -e "my \$deps_target = '$deps_target';" \
+       -e "my \$deps_file = '$deps_file';" \
+       -e '
+#! /usr/bin/perl
+
+use English;
+
+my %res;
+while (<>)
+{
+  chop;
+  s/\r$//;
+  if ($INPUT_LINE_NUMBER == 1 && $_ =~ /\.(cc|o)$/)
+  {
+     # For some (bad) reason, cl.exe dumps on STDOUT the name of the
+     # file being compiled.  This makes ccache believe something went
+     # wrong, in which case it does not cache.
+  }
+  # Note: including file: C:\\vcxx8\\VC\\INCLUDE\iostream
+  # Note: including file:  C:\\vcxx8\\VC\\INCLUDE\istream
+  elsif (s/Note: including file: *//)
+  {
+    $res{$_} = 1;
+  }
+  else
+  {
+    print STDERR "$_\n";
+  }
+}
+
+# Generate the dependency.
+if ($deps_file)
+{
+  # Sorted list of unique file names.
+  # For some reason, the outcome looks like "C:\\vcxx8\\VC\\INCLUDE\istream",
+  # with some backslashes escaped, and not others.  Winepath wants them all
+  # escaped, so escape lone backslashes.
+  my @files = map {s/(?<!\\)\\(?!\\)/\\\\/g;$_} (sort keys %res);
+
+  # Convert them to Linux format.
+  @files = grep { chomp } `winepath -u @files`;
+
+  use IO::File;
+  my $deps = new IO::File ">$deps_file" or die;
+  print $deps join ("\t\\\n  ", "$deps_target:", @files), "\n";
+}
+' < $file
+}
+
+
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
 # Make it easier use under a regular host.
 case $1 in
   (--help) usage;;
@@ -305,8 +401,11 @@ esac
 PROG=$me
 
 : ${TMPDIR=/tmp}
-tmp=$TMPDIR/$me/$$
-# trap "exit=\$?; rm -rf $tmp; exit \$exit" 0
+tmp=$TMPDIR/$me.dir/$$
+case $VERBOSE in
+  (x) ;;
+  (*) trap "exit=\$?; rm -rf $tmp; exit \$exit" 0;;
+esac
 mkdir -p $tmp
 stdout=$tmp/stdout
 stderr=$tmp/stderr
@@ -323,6 +422,15 @@ case $PROG in
   (cl.exe) outargs "/nologo" "/EHsc";;
 esac
 
+# The program/function used to dump the result of CPP.
+# cppoutput=cppoutput to convert #lines from Windows to Unix file
+# names (this is needed to depcomp).
+cppoutput=dos2unix
+# File containing the dependencies.
+deps_file=
+# Target of the dependencies (i.e., lhs in the make rule).
+deps_target=
+deps_phony=false
 linkargs=
 # mode=compile|link|preprocess
 mode=
@@ -358,25 +466,47 @@ fi
 
 verbose "mode: $mode"
 
-if eval "run \"$VCXX_BIN/$PROG\" $outargs $linkargs" >$stdout 2>$stderr; then
-  status=$?
-  # Clear the \r from stderr, they are a nuisance for buildbot and
-  # Emacs.
-  dos2unix $stderr >&2
+# Shell tracing must not be activate here, otherwise shell traces
+# will be included in stderr.
+cmd="\"$VCXX_BIN/$PROG\" $outargs $linkargs"
+verbose "Running: $cmd"
+set +x +e
+eval "$cmd" >$stdout 2>$stderr
+status=$?
+trace
+set -e
+
+case $status in
+  (0)
   # In cpp mode (/E), vc produces on stdout.  Honor -o.
+  # Beware that output is the output of the script, not of the compiler.
+  # When the compiler outputs to stdout, the logs are in stderr.
+  # Otherwise the logs are on stdout.  Put everything on stderr, this is
+  # more Unix-style.
   case $mode:$output in
-    (preprocess:)  cppoutput <$stdout;;
-    (preprocess:*) cppoutput <$stdout >$(transform $output);;
-    (*)            dos2unix $stdout;;
+    (preprocess:)
+       dump_log $stderr
+       $cppoutput <$stdout;;
+    (preprocess:*)
+       dump_log $stderr
+       $cppoutput <$stdout >$(transform $output);;
+    (*:)
+       dump_log $stderr
+       dos2unix $stdout >&2;;
+    (*:*)
+       dos2unix $stderr >&2
+       dump_log $stdout;;
   esac
-else
-  status=$?
+  ;;
+
+  (*)
   # Clear the \r from stderr, they are a nuisance for buildbot and
   # Emacs.
   dos2unix $stderr >&2
   dos2unix $stdout
   exit $status
-fi
+  ;;
+esac
 
 #embed manifest
 #if echo $output | egrep -q '(exe|dll)$'; then
@@ -389,7 +519,7 @@ fi
 # Following procedure described at:
 # http://msdn.microsoft.com/fr-fr/library/ms235591.aspx
 case $output in
-  (*exe|*dll)
+  (*.exe|*.dll)
   #$VCXX_BIN/mt.exe -manifest "$(transform $output).manifest" "-out:$(transform $output).auto.manifest"
   # Escape quotes
   sed -e 's/"/""/g' < "$output.manifest" > "$output.escaped.manifest"
@@ -411,3 +541,5 @@ case $output in
   fi
   ;;
 esac
+
+exit 0
