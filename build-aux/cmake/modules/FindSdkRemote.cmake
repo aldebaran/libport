@@ -87,6 +87,12 @@ package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbi liburbi
                      ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/mingw32/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
+# Search for the associated jpeg debug library.
+package_search(DEBUG LIBRARY ${PACKAGE_NAME}_JPEG_DEBUG_LIBRARY jpeg libjpeg
+               FULLNAME "SDK Remote's JPEG"
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
+                     ${${PACKAGE_NAME}_ROOT_DIR}/lib)
+
 # Search for URBI release library
 package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi liburbi
                FULLNAME "SDK Remote for release"
@@ -99,10 +105,10 @@ package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi liburbi
                      ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/mingw32/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
-# Search for the associated jpeg library.
-package_search(LIBRARY ${PACKAGE_NAME}_JPEG_LIBRARY jpeg libjpeg
+# Search for the associated jpeg release library.
+package_search(RELEASE LIBRARY ${PACKAGE_NAME}_JPEG_RELEASE_LIBRARY jpeg libjpeg
                FULLNAME "SDK Remote's JPEG"
-               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
+               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/lib
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 # Add platform specific libraries.
