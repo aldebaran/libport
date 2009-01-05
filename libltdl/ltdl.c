@@ -1,7 +1,7 @@
 /* ltdl.c -- system independent dlopen wrapper
 
    Copyright (C) 1998, 1999, 2000, 2004, 2005, 2006,
-		 2007, 2008 Free Software Foundation, Inc.
+		 2007, 2008, 2009 Free Software Foundation, Inc.
    Written by Thomas Tanner, 1998
 
    NOTE: The canonical source of this file is maintained with the
@@ -81,7 +81,7 @@ static	const char	sys_dlsearch_path[]	= LT_DLSEARCH_PATH;
 
 
 
-
+
 /* --- DYNAMIC MODULE LOADING --- */
 
 
@@ -2056,12 +2056,15 @@ lt_dlsym (lt_dlhandle place, const char *symbol)
 const char *
 lt_dlerror (void)
 {
-  const char *error;
-
-  LT__GETERROR (error);
+  /* Not declared const to avoid warning on free. */
+  static char *result = 0;
+  const char *last_error = lt__get_last_error();
+  if (result)
+    free (result);
+  result = last_error ? strdup (last_error) : 0;
   LT__SETERRORSTR (0);
-
-  return error ? error : NULL;
+  fprintf (stderr, "%s: %s\n", __func__, result);
+  return result;
 }
 
 static int

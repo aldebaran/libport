@@ -1,7 +1,7 @@
 /* loader-dlopen.c --  dynamic linking with dlopen/dlsym
 
    Copyright (C) 1998, 1999, 2000, 2004, 2006,
-                 2007, 2008 Free Software Foundation, Inc.
+                 2007, 2008, 2009 Free Software Foundation, Inc.
    Written by Thomas Tanner, 1998
 
    NOTE: The canonical source of this file is maintained with the
@@ -168,7 +168,6 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
 {
   int		module_flags = LT_LAZY_OR_NOW;
   lt_module	module;
-
   if (advise)
     {
 #ifdef RTLD_GLOBAL
@@ -192,9 +191,22 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
     }
 
   module = dlopen (filename, module_flags);
-
   if (!module)
     {
+      /* To provide more accurate error messages, try to see if dlopen
+         failed because the file does not exist.  We check this
+         *after* having tried dlopen to give a chance to the native
+         system walk its dlopen module path.  */
+      if (filename)
+        {
+          FILE *file = fopen (filename, LT_READTEXT_MODE);
+          if (!file)
+            {
+              LT__SETERROR (FILE_NOT_FOUND);
+              return 0;
+            }
+          fclose (file);
+        }
       DL__SETERROR (CANNOT_OPEN);
     }
 
