@@ -35,8 +35,18 @@ void echo(const void* d, int s, boost::shared_ptr<libport::UDPLink> l)
 class TestSocket: public libport::Socket
 {
   public:
-  TestSocket():nRead(0), echo(false), dump(false) {assert(!abort_ctor); nInstance++;}
-  TestSocket(bool echo, bool dump) : nRead(0), echo(echo), dump(dump) {assert(!abort_ctor); nInstance++;}
+  TestSocket()
+    : nRead(0), echo(false), dump(false)
+    {
+      assert(!abort_ctor);
+      nInstance++;
+    }
+  TestSocket(bool echo, bool dump)
+    : nRead(0), echo(echo), dump(dump)
+    {
+      assert(!abort_ctor);
+      nInstance++;
+    }
   virtual ~TestSocket()
   {
     nInstance--;
@@ -67,8 +77,14 @@ class TestSocket: public libport::Socket
   bool dump;
   std::string received;
   boost::system::error_code lastError;
-  static TestSocket* factory() { return lastInstance=new TestSocket();}
-  static TestSocket* factoryEx(bool echo, bool dump) {return lastInstance=new TestSocket(echo, dump);}
+  static TestSocket* factory()
+    {
+      return lastInstance = new TestSocket();
+    }
+  static TestSocket* factoryEx(bool echo, bool dump)
+    {
+      return lastInstance = new TestSocket(echo, dump);
+    }
   static int nInstance;
   // Last factory-created instance.
   static TestSocket* lastInstance;
