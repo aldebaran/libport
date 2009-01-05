@@ -145,24 +145,6 @@ AC_SUBST([umaindir], ['${branddir}/share/umain'])
 ])
 
 
-
-# These are obsolete, and should be replaced by their current value.
-
-# To be used by cores and engines.
-AU_DEFUN([URBI_CORE_DIRS],
-[URBI_PACKAGE_KIND([core])
-URBI_DIRS([$1])])
-
-# To be used by urbi-sdk and sdks.
-AU_DEFUN([URBI_SDK_DIRS],
-[URBI_PACKAGE_KIND([sdk])
-URBI_DIRS([$1])])
-
-# To be used by core developers for the kernels.
-AU_DEFUN([URBI_KERNEL_DIRS],
-[URBI_PACKAGE_KIND([kernel])
-URBI_DIRS([$1])])
-
 ## Local Variables:
 ## mode: autoconf
 ## End:
