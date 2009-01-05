@@ -168,7 +168,7 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
 {
   int		module_flags = LT_LAZY_OR_NOW;
   lt_module	module;
-  FILE *        file;
+
   if (advise)
     {
 #ifdef RTLD_GLOBAL
@@ -191,14 +191,6 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
 #endif
     }
 
-  /* Check if the file exists. */
-  file = fopen (filename, LT_READTEXT_MODE);
-  if (!file)
-  {
-    LT__SETERROR(FILE_NOT_FOUND);
-    return 0;
-  }
-  fclose(file);
   module = dlopen (filename, module_flags);
 
   if (!module)
