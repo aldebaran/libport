@@ -101,6 +101,7 @@ URBI_PACKAGE_KIND_SWITCH(
   [core],   [AC_SUBST([kbranddir], ['${URBI_KERNEL_PATH}/${PACKAGE_BRAND}'])],
   [kernel], [AC_SUBST([kbranddir], ['${branddir}'])])
 
+
 # UObject headers
 # ---------------
 # The kernel installs them in its kernelincludedir.  The other
@@ -124,6 +125,11 @@ URBI_PACKAGE_KIND_SWITCH([sdk], [],
 	[AC_SUBST([kerneldir],
 		  ['${kbranddir}/kernel/${URBI_HOST}/${URBI_ENV}'])])
 
+# Where we install standard uobjects.
+# /usr/local/gostai/core/$host/uobjects.
+AC_SUBST([uobjectsdir], ['${hostdir}/uobjects'])
+
+
 # Where we install, and expect to find, headers.
 URBI_PACKAGE_KIND_SWITCH([core\|sdk],
 	[AC_SUBST([sdkincludedir], ['${branddir}/core/include'])])
@@ -139,9 +145,9 @@ URBI_PACKAGE_KIND_SWITCH(
    [AC_SUBST([SDK_CPPFLAGS], ['-I${sdkincludedir} -I${kernelincludedir}'])
     AC_SUBST([SDK_LDFLAGS],  ['-L${envdir}'])])
 
+
 # Where we install umain.cc.  Used by umake.
 AC_SUBST([umaindir], ['${branddir}/share/umain'])
-
 ])
 
 
