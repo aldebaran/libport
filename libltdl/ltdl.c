@@ -2063,7 +2063,6 @@ lt_dlerror (void)
     free (result);
   result = last_error ? strdup (last_error) : 0;
   LT__SETERRORSTR (0);
-  fprintf (stderr, "%s: %s\n", __func__, result);
   return result;
 }
 
