@@ -10,6 +10,7 @@
 /config.h.in
 /configure
 /doc/Makefile.in
+/gui/Makefile.in
 /include/config.h.in
 /lib/libport/Makefile.in
 /sdk/config.h.in
