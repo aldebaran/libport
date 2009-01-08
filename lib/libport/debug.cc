@@ -11,7 +11,7 @@
 # include <pthread.h>
 #endif
 
-#ifndef NDEBUG
+#ifndef LIBPORT_DEBUG_DISABLE
 
 namespace libport
 {
