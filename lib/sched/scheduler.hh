@@ -15,8 +15,8 @@
 # include <boost/utility.hpp>
 # include <libport/utime.hh>
 
-# include <scheduler/coroutine.hh>
-# include <scheduler/fwd.hh>
+# include <sched/coroutine.hh>
+# include <sched/fwd.hh>
 
 namespace scheduler
 {
@@ -183,6 +183,6 @@ namespace scheduler
 
 } // namespace scheduler
 
-# include <scheduler/scheduler.hxx>
+# include <sched/scheduler.hxx>
 
 #endif // !SCHEDULER_SCHEDULER_HH

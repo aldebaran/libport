@@ -6,8 +6,8 @@
 #ifndef SCHEDULER_SCHEDULER_HXX
 # define SCHEDULER_SCHEDULER_HXX
 
-# include <scheduler/scheduler.hh>
-# include <scheduler/job.hh>
+# include <sched/scheduler.hh>
+# include <sched/job.hh>
 
 namespace scheduler
 {

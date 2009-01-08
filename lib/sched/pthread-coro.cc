@@ -1,4 +1,4 @@
-#include <scheduler/pthread-coro.hh>
+#include <sched/pthread-coro.hh>
 
 #if defined LIBPORT_SCHEDULER_CORO_OSTHREAD
 
@@ -11,7 +11,7 @@
 #  include <libport/thread.hh>
 
 #  include <kernel/kernconf.hh>
-#  include <scheduler/coroutine.hh>
+#  include <sched/coroutine.hh>
 
 /* Os-thread implementation of coroutines, using semaphores to ensure
    that only one coroutine is running at the same time.  */

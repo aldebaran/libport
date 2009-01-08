@@ -3,7 +3,7 @@
 
 # include <boost/bind.hpp>
 
-# include <scheduler/scheduler.hh>
+# include <sched/scheduler.hh>
 
 namespace scheduler
 {

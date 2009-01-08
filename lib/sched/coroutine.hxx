@@ -1,13 +1,16 @@
 #ifndef SCHEDULER_COROUTINE_HXX
 #define SCHEDULER_COROUTINE_HXX
 
-# include <kernel/kernconf.hh>
+# include <sched/configuration.hh>
 
 inline Coro*
 coroutine_new(size_t stack_size)
 {
   Coro* res = Coro_new();
-  Coro_setStackSize_(res, stack_size ? stack_size : kernconf.default_stack_size);
+  Coro_setStackSize_(res,
+                     (stack_size
+                      ? stack_size
+                      : sched::configuration.default_stack_size));
   return res;
 }
 
@@ -20,7 +23,7 @@ coroutine_free(Coro* coro)
 inline bool
 coroutine_stack_space_almost_gone(Coro* coro)
 {
-  return Coro_bytesLeftOnStack(coro) < kernconf.minimum_stack_size;
+  return Coro_bytesLeftOnStack(coro) < sched::configuration.minimum_stack_size;
 }
 
 inline void

@@ -10,8 +10,8 @@
 
 # include <boost/bind.hpp>
 
-# include <scheduler/scheduler.hh>
-# include <scheduler/coroutine.hh>
+# include <sched/scheduler.hh>
+# include <sched/coroutine.hh>
 
 namespace scheduler
 {

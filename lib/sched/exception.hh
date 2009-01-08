@@ -6,7 +6,7 @@
 # include <boost/optional.hpp>
 
 # include <libport/compiler.hh>
-# include <urbi/export.hh>
+# include <sched/export.hh>
 
 namespace scheduler
 {
@@ -52,6 +52,6 @@ private:							\
 
 } // namespace scheduler
 
-# include <scheduler/exception.hxx>
+# include <sched/exception.hxx>
 
 #endif // SCHEDULER_EXCEPTION_HH

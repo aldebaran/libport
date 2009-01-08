@@ -14,8 +14,8 @@
 #include <libport/contract.hh>
 #include <libport/foreach.hh>
 
-#include <scheduler/scheduler.hh>
-#include <scheduler/job.hh>
+#include <sched/scheduler.hh>
+#include <sched/job.hh>
 
 namespace scheduler
 {

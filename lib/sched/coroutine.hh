@@ -6,9 +6,9 @@
 // Define LIBPORT_SCHEDULER_CORO_OSTHREAD to use the os-thread implementation
 //  of coros.
 # ifdef LIBPORT_SCHEDULER_CORO_OSTHREAD
-#  include <scheduler/pthread-coro.hh>
+#  include <sched/pthread-coro.hh>
 # else
-#  include <scheduler/libcoroutine/Coro.h>
+#  include <sched/libcoroutine/Coro.h>
 # endif
 
 
@@ -50,6 +50,6 @@ bool coroutine_stack_space_almost_gone(Coro* coro);
 void coroutine_initialize_main(Coro* coro);
 
 # if !defined LIBPORT_SCHEDULER_CORO_OSTHREAD
-#  include <scheduler/coroutine.hxx>
+#  include <sched/coroutine.hxx>
 # endif
 #endif // SCHEDULER_COROUTINE_HH

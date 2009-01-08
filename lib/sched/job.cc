@@ -9,7 +9,7 @@
 #include <libport/containers.hh>
 #include <libport/foreach.hh>
 
-#include <scheduler/job.hh>
+#include <sched/job.hh>
 
 namespace scheduler
 {

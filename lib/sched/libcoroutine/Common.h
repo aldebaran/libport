@@ -68,7 +68,7 @@ typedef long long int64_t;
 #endif
 /*
 #ifndef _SYS_STDINT_H_
-#include <scheduler/libcoroutine/PortableStdint.h>
+#include <sched/libcoroutine/PortableStdint.h>
 #endif
  */
 

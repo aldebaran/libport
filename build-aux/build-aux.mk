@@ -11,10 +11,6 @@
 ##
 
 # This file is meant to be included only by the top-level Makefile.am.
-
-include $(top_srcdir)/build-aux/init.mk
-include $(top_srcdir)/build-aux/svn-externals.mk
-
 EXTRA_DIST += $(top_srcdir)/build-aux/install-sh-c
 
 
@@ -55,6 +51,7 @@ reconf:
 baux-up baux-ci baux-pin:
 	$(MAKE) $(AM_MAKEFLAGS) $$(echo "$@" | sed s/baux/build-aux/)
 
+include $(top_srcdir)/build-aux/svn-externals.mk
 SVN_EXTERNALS += build-aux
 
 ## -------- ##

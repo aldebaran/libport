@@ -1,7 +1,7 @@
 #include <cstdlib>
 
-#include <scheduler/scheduler.hh>
-#include <scheduler/tag.hh>
+#include <sched/scheduler.hh>
+#include <sched/tag.hh>
 
 namespace scheduler
 {

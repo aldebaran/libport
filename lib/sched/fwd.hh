@@ -10,7 +10,7 @@
 
 # include <libport/intrusive-ptr.hh>
 
-# include <scheduler/exception.hh>
+# include <sched/exception.hh>
 
 namespace scheduler
 {

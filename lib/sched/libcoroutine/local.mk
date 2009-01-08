@@ -1,13 +1,13 @@
 coroutines_sources +=				\
-  scheduler/libcoroutine/Base.h			\
-  scheduler/libcoroutine/Common.h		\
-  scheduler/libcoroutine/Coro.cc		\
-  scheduler/libcoroutine/Coro.h			\
-  scheduler/libcoroutine/PortableUContext.c	\
-  scheduler/libcoroutine/PortableUContext.h	\
-  scheduler/libcoroutine/PortableUContext386.h	\
-  scheduler/libcoroutine/PortableUContext_asm.S
+  lib/sched/libcoroutine/Base.h			\
+  lib/sched/libcoroutine/Common.h		\
+  lib/sched/libcoroutine/Coro.cc		\
+  lib/sched/libcoroutine/Coro.h			\
+  lib/sched/libcoroutine/PortableUContext.c	\
+  lib/sched/libcoroutine/PortableUContext.h	\
+  lib/sched/libcoroutine/PortableUContext386.h	\
+  lib/sched/libcoroutine/PortableUContext_asm.S
 
 # This is distributed, but not compiled directly: it is included by
 # Coro.cc.
-EXTRA_DIST += scheduler/libcoroutine/Coro.c
+EXTRA_DIST += lib/sched/libcoroutine/Coro.c

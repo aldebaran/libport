@@ -18,7 +18,7 @@ libport_la_LDFLAGS = -avoid-version -no-undefined
 AM_CPPFLAGS += $(LIBPORT_CPPFLAGS) -DBUILDING_LIBPORT $(BOOST_CPPFLAGS)
 
 
-# Make sure noone uses config.h instead of libport/config.h.
+# Make sure nobody uses config.h instead of libport/config.h.
 maintainer-check:
 	cd $(srcdir) && ! grep -E '[<"]config.h[">]' $(nobase_libport_HEADERS) $(libport_HEADERS)
 # GNU Make 3.80 does not recognize that `!' is a shell builtin, and

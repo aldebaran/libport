@@ -1,6 +1,6 @@
 #include <cassert>
 #include <iostream>
-#include <scheduler/coroutine.hh>
+#include <sched/coroutine.hh>
 
 Coro* mc;
 Coro* c1, *c2;

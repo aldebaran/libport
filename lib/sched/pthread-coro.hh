@@ -18,7 +18,7 @@ public:
   pthread_t thread_;
 };
 
-#  include <scheduler/pthread-coro.hxx>
+#  include <sched/pthread-coro.hxx>
 
 # endif // LIBPORT_SCHEDULER_CORO_OSTHREAD
 

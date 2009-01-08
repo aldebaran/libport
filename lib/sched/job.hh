@@ -15,9 +15,9 @@
 # include <libport/symbol.hh>
 # include <libport/utime.hh>
 
-# include <scheduler/coroutine.hh>
-# include <scheduler/fwd.hh>
-# include <scheduler/tag.hh>
+# include <sched/coroutine.hh>
+# include <sched/fwd.hh>
+# include <sched/tag.hh>
 
 namespace scheduler
 {
@@ -416,6 +416,6 @@ namespace scheduler
 
 } // namespace scheduler
 
-# include <scheduler/job.hxx>
+# include <sched/job.hxx>
 
 #endif // !SCHEDULER_JOB_HH

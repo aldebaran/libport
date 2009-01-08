@@ -1,15 +1,33 @@
+include build-aux/init.mk
 include build-aux/build-aux.mk
+include build-aux/fix-libtool-la.mk
 
 ACLOCAL_AMFLAGS = -I build-aux
 libtool: $(LIBTOOL_DEPS)
-	$(SHELL) ./config.status --recheck
+	$(SHELL) ./config.status $@
 
 SUBDIRS = lib/libport doc tests
 # SUBDIRS += gui
 EXTRA_DIST += bootstrap
 
+
+## -------------------- ##
+## Libport components.  ##
+## -------------------- ##
+
+AM_CPPFLAGS += $(LIBPORT_CPPFLAGS) -I$(srcdir)/lib
+AM_CXXFLAGS += $(WARNING_CXXFLAGS)
+
 include_libport = include/libport
 include include/libport/local.mk
+
+include include/sched/local.mk
+include lib/sched/local.mk
+
+
+## --------------- ##
+## Extra targets.  ##
+## --------------- ##
 
 .PHONY: doc html
 doc html:

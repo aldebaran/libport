@@ -16,6 +16,9 @@ AM_INIT_AUTOMAKE([foreign -Wall nostdinc])
 # Look for a C++ compiler.
 URBI_PROG_CXX
 
+# We have some assembly for coroutine support.
+AM_PROG_AS
+
 AC_CONFIG_HEADERS([include/config.h])
 
 URBI_LTDL

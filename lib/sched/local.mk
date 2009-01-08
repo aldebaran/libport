@@ -1,21 +1,29 @@
-dist_libuobject_la_SOURCES +=			\
-  $(coroutines_sources)				\
-  scheduler/exception.hh			\
-  scheduler/exception.hxx			\
-  scheduler/fwd.hh				\
-  scheduler/job.cc				\
-  scheduler/job.hh				\
-  scheduler/job.hxx				\
-  scheduler/pthread-coro.cc			\
-  scheduler/pthread-coro.hh			\
-  scheduler/pthread-coro.hxx			\
-  scheduler/scheduler.cc			\
-  scheduler/scheduler.hh			\
-  scheduler/scheduler.hxx			\
-  scheduler/tag.cc				\
-  scheduler/tag.hh				\
-  scheduler/tag.hxx
+lib_LTLIBRARIES += libsched.la
+dist_libsched_la_SOURCES = $(libsched_sources)
+libsched_la_LDFLAGS = -avoid-version -no-undefined
+AM_CPPFLAGS += $(LIBSCHED_CPPFLAGS) -DBUILDING_LIBSCHED $(BOOST_CPPFLAGS)
 
-coroutines_sources = 				\
-  scheduler/coroutine.hh			\
-  scheduler/coroutine.hxx
+dist_libsched_la_SOURCES +=			\
+  $(coroutines_sources)				\
+  lib/sched/configuration.cc			\
+  lib/sched/exception.hh			\
+  lib/sched/exception.hxx			\
+  lib/sched/fwd.hh				\
+  lib/sched/job.cc				\
+  lib/sched/job.hh				\
+  lib/sched/job.hxx				\
+  lib/sched/pthread-coro.cc			\
+  lib/sched/pthread-coro.hh			\
+  lib/sched/pthread-coro.hxx			\
+  lib/sched/scheduler.cc			\
+  lib/sched/scheduler.hh			\
+  lib/sched/scheduler.hxx			\
+  lib/sched/tag.cc				\
+  lib/sched/tag.hh				\
+  lib/sched/tag.hxx
+
+coroutines_sources =				\
+  lib/sched/coroutine.hh			\
+  lib/sched/coroutine.hxx
+
+include lib/sched/libcoroutine/local.mk

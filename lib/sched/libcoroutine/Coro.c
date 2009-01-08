@@ -32,13 +32,13 @@
 	before the setjmp occurs would be helpful also.
  */
 
-#include <scheduler/libcoroutine/Base.h>
-#include <scheduler/libcoroutine/Coro.h>
+#include <sched/libcoroutine/Base.h>
+#include <sched/libcoroutine/Coro.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>
-#include <scheduler/libcoroutine/PortableUContext.h>
+#include <sched/libcoroutine/PortableUContext.h>
 
 #ifdef USE_VALGRIND
 #include <valgrind/valgrind.h>

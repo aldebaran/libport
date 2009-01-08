@@ -6,7 +6,7 @@
 # include <libport/finally.hh>
 # include <libport/symbol.hh>
 
-# include <scheduler/fwd.hh>
+# include <sched/fwd.hh>
 
 namespace scheduler
 {
@@ -97,6 +97,6 @@ namespace scheduler
 
 } // namespace scheduler
 
-# include <scheduler/tag.hxx>
+# include <sched/tag.hxx>
 
 #endif // SCHEDULER_TAG_HH
