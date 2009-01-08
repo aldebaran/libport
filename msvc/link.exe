@@ -26,7 +26,7 @@ stderr ()
   local i
   for i
   do
-    echo >&2 "$me: $i"
+    echo >&2 "$me (wrapper): $i"
   done
 }
 
@@ -46,8 +46,8 @@ error ()
 
 verbose ()
 {
-  case " $VERBOSE " in
-    (*" cl.exe "*|*" link.exe "*|" x ")
+  case "$verbose: $VERBOSE " in
+    (true:* | *" cl.exe "* | *" link.exe "* | " x ")
       stderr "$@"
       ;;
   esac
@@ -264,6 +264,9 @@ get_options ()
     local opt=$1
     case $1 in
     (--help) usage;;
+    (-v) verbose=true;;
+
+    # Libraries.
     (-link) ;;
     (-dll)  linkargs "/DLL" ;;
     (-L*)   linkargs /LIBPATH:$(transform ${1#-L}) ;;
@@ -299,6 +302,7 @@ get_options ()
     (-o)  shift
          output=$1
          case $mode:$output in
+             (*:/dev/null) output=$tmp/discarded-output;;
              (:*.o|:*.obj) mode=compile;;
              (:*.i|:*.ii)  mode=preprocess;;
          esac
@@ -313,11 +317,22 @@ get_options ()
     (*.dll)
       outargs $(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/');;
 
+    # Language selection.
+    (-x) shift
+      case $1 in
+        (c) outargs "/TC";;
+        (c++) outargs "/TP";;
+      esac;;
+
     # Sources.
-    (*.S)      outargs "/Tp$(transform $1)";;
-    (*.c|*.cc) outargs "$(transform $1)"; source=$1;;
-    (*.i)      outargs "/Tc$(transform $1)"; source=$1;;
-    (*.ii)     outargs "/Tp$(transform $1)"; source=$1;;
+    (*.S)                  outargs "/Tp$(transform $source)";;
+    (*.c|*.cc)  source=$1; outargs    "$(transform $source)";;
+    (*.i)       source=$1; outargs "/Tc$(transform $source)";;
+    (*.ii)      source=$1; outargs "/Tp$(transform $source)";;
+    (/dev/null) source=$tmp/null-input
+                touch $source
+                outargs "$(transform $source)";;
+    # Unknown stuff.
     (*)        outargs $1;;
     esac
     shift
@@ -402,6 +417,46 @@ if ($deps_file)
 
 
 
+# Gcc -v dumps the following:
+#
+# Using built-in specs.
+# Target: i686-apple-darwin9
+# Configured with: /var/tmp/gcc/gcc-5484~1/src/configure --disable-checking -enable-werror --prefix=/usr --mandir=/share/man --enable-languages=c,objc,c++,obj-c++ --program-transform-name=/^[cg][^.-]*$/s/$/-4.0/ --with-gxx-include-dir=/include/c++/4.0.0 --with-slibdir=/usr/lib --build=i686-apple-darwin9 --with-arch=apple --with-tune=generic --host=i686-apple-darwin9 --target=i686-apple-darwin9
+# Thread model: posix
+# gcc version 4.0.1 (Apple Inc. build 5484)
+#  /usr/libexec/gcc/i686-apple-darwin9/4.0.1/cc1plus -quiet -v -D__DYNAMIC__ /dev/null -fPIC -quiet -dumpbase null -mmacosx-version-min=10.5.6 -mtune=generic -march=apple -auxbase-strip /dev/null -version -D__private_extern__=extern -o /var/folders/hy/hy4Qz3qs2RWPcU+8ZQWaqU+++TI/-Tmp-//cczPgOv5.s
+# ignoring nonexistent directory "/usr/lib/gcc/i686-apple-darwin9/4.0.1/../../../../i686-apple-darwin9/include"
+# #include "..." search starts here:
+# #include <...> search starts here:
+#  /usr/include/c++/4.0.0
+#  /usr/include/c++/4.0.0/i686-apple-darwin9
+#  /usr/include/c++/4.0.0/backward
+#  /usr/local/include
+#  /usr/lib/gcc/i686-apple-darwin9/4.0.1/include
+#  /usr/include
+#  /System/Library/Frameworks (framework directory)
+#  /Library/Frameworks (framework directory)
+# End of search list.
+# GNU C++ version 4.0.1 (Apple Inc. build 5484) (i686-apple-darwin9)
+#	compiled by GNU C version 4.0.1 (Apple Inc. build 5484).
+# GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+# Compiler executable checksum: 26a07d3b4fce49bea6ac55e876df1aa9
+#  /usr/libexec/gcc/i686-apple-darwin9/4.0.1/as -arch i386 -force_cpusubtype_ALL -o /dev/null /var/folders/hy/hy4Qz3qs2RWPcU+8ZQWaqU+++TI/-Tmp-//cczPgOv5.s
+compiler_verbose_message ()
+{
+  perl -e '
+    print "#include \"...\" search starts here:\n";
+    print "#include <...> search starts here:\n";
+    for my $d (split (";", $ENV{"INCLUDE"}))
+    {
+      print " " . `winepath -u $d`;
+    }
+    print "End of search list.\n";
+' >>$stderr
+}
+
+
+
 ## ------ ##
 ## Main.  ##
 ## ------ ##
@@ -422,6 +477,12 @@ esac
 mkdir -p $tmp
 stdout=$tmp/stdout
 stderr=$tmp/stderr
+
+test -n "$VCINSTALLDIR" ||
+{
+  . ~/share/wine/msvc_env.sh
+#  fatal "VCINSTALLDIR is not defined"
+}
 
 VCXX_PATH=$(winepath -u $VCINSTALLDIR)
 VCXX_BIN=$VCXX_PATH/bin
@@ -447,15 +508,17 @@ deps_phony=false
 linkargs=
 # mode=compile|link|preprocess
 mode=
-source=
 # Output file name.
 output=
+source=
+# Verbosity.
+verbose=false
 
 get_options "$@"
 
 case $mode in
   (compile)
-    # -c with -o.
+    # -c without -o.
     test -n "$output" ||
       output=$(basename "$source" | sed -re 's/\.[^.]+$/.obj/')
     outargs /Fo$(transform $output);;
@@ -488,6 +551,9 @@ eval "$cmd" >$stdout 2>$stderr
 status=$?
 trace
 set -e
+
+! $verbose ||
+  compiler_verbose_message
 
 case $status in
   (0)
