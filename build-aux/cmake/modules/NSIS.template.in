@@ -38,6 +38,7 @@
   SetCompressor @CPACK_NSIS_COMPRESSOR@
 
 @CPACK_NSIS_DEFINES@
+@CPACK_NSIS_GOSTAI_DEFINES@
 
   !include Sections.nsh
 
@@ -535,7 +536,19 @@ FunctionEnd
   !define MUI_FINISHPAGE_TITLE_3LINES
   !insertmacro MUI_PAGE_FINISH
 
+  ;------------------
+  ; Uninstaller pages
+
+  ; Automatically define CPACK_NSIS_HAS_UCOMPONENTS if some uninstall components
+  ; are to be included
+  !ifdef CPACK_NSIS_DEL_USER_SETTINGS
+    !define CPACK_NSIS_HAS_UCOMPONENTS
+  !endif
+
   !insertmacro MUI_UNPAGE_CONFIRM
+  !ifdef CPACK_NSIS_HAS_UCOMPONENTS
+    !insertmacro MUI_UNPAGE_COMPONENTS
+  !endif
   !insertmacro MUI_UNPAGE_INSTFILES
 
 ;--------------------------------
@@ -725,6 +738,10 @@ FunctionEnd
 ; determine admin versus local install
 Function un.onInit
 
+  !ifdef CPACK_NSIS_HAS_UCOMPONENTS
+    Call un.onInitComponents
+  !endif
+
   ClearErrors
   UserInfo::GetName
   IfErrors noLM
@@ -786,7 +803,8 @@ FunctionEnd
 ;--------------------------------
 ;Uninstaller Section
 
-Section "Uninstall"
+Section "Uninstall" SecUninstall
+
   ReadRegStr $START_MENU SHCTX \
    "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_INSTALL_DIRECTORY@" "StartMenu"
   ;MessageBox MB_OK "Start menu is in: $START_MENU"
@@ -873,6 +891,34 @@ Section "Uninstall"
   doNotRemoveFromPath:
 SectionEnd
 
+;Uninstaller section that removes the current user settings stored in
+;registries
+!ifdef CPACK_NSIS_DEL_USER_SETTINGS
+  ;Language strings
+  LangString DESC_DelUserSettings ${LANG_ENGLISH} \
+    "Uncheck this option if you wish to keep your personal settings so they \
+    can be restored the next time the program is installed."
+  LangString DESC_DelUserSettings ${LANG_FRENCH} \
+    "Décochez cette option si vous souhaitez conserver vos paramètres \
+    personnels pour que le programme les retrouve lors d'une prochaine \
+    installation."
+  LangString LABEL_DelUserSettings ${LANG_ENGLISH} \
+    "Personal settings"
+  LangString LABEL_DelUserSettings ${LANG_FRENCH} \
+    "Paramètres personnels"
+
+  Section "un.DelUserSettings" SecDelUserSettings
+    DeleteRegKey HKCU "Software\@CPACK_PACKAGE_VENDOR@\@CPACK_PACKAGE_NAME@ \
+      @CPACK_PACKAGE_VERSION@"
+  SectionEnd
+
+  ;Assign language strings to sections
+  !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN
+    !insertmacro MUI_DESCRIPTION_TEXT ${SecDelUserSettings} \
+      $(DESC_DelUserSettings)
+  !insertmacro MUI_UNFUNCTION_DESCRIPTION_END
+!endif
+
 ;--------------------------------
 ; determine admin versus local install
 ; Is install for "AllUsers" or "JustMe"?
@@ -919,4 +965,20 @@ Function .onInit
     !insertmacro MUI_INSTALLOPTIONS_EXTRACT "NSIS.InstallOptions.ini"
 
   noOptionsPage:
+FunctionEnd
+
+
+; At the end so we are sure all sections are already defined
+Function un.onInitComponents
+
+  ;Hide the Uninstall section by setting its associated text to an empty string
+  ;(strange but official way to do it - one can also name the section
+  ;"-un.<foo>" - but NOT "-Uninstall", since it is misinterpreted as an hidden
+  ;install section by NSIS)
+  SectionSetText ${SecUninstall} ""
+
+  !ifdef CPACK_NSIS_DEL_USER_SETTINGS
+    ;Localize the DelUserSettings section
+    SectionSetText ${SecDelUserSettings} $(LABEL_DelUserSettings)
+  !endif
 FunctionEnd
