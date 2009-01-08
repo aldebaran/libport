@@ -15,9 +15,41 @@
 
 namespace libport
 {
+
+  namespace debug
+  {
+    categories_type& get_categories()
+    {
+      static categories_type categories;
+      return categories;
+    }
+
+    int add_category(const std::string& name)
+    {
+      get_categories()[name] = true;
+      return 42;
+    }
+
+    int enable_category(const std::string& name)
+    {
+      get_categories()[name] = true;
+      return 42;
+    }
+
+    int disable_category(const std::string& name)
+    {
+      get_categories()[name] = false;
+      return 42;
+    }
+
+    bool test_category(const std::string& name)
+    {
+      return get_categories()[name];
+    }
+  }
+
   Debug::Debug()
-    : categories_()
-    , categories_stack_()
+    : categories_stack_()
     , level_stack_()
     , locations_(getenv("GD_LOC"))
     , timestamps_(getenv("GD_TIME"))
@@ -41,8 +73,6 @@ namespace libport
         // Don't use GD_ABORT here, we're in the debugger constructor!
         assert(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP)");
     }
-    foreach (const std::string& c, categories())
-      categories_[c] = true;
   }
 
   Debug::~Debug()
@@ -66,31 +96,9 @@ namespace libport
     message(msg, type, fun, file, line);
   }
 
-  std::list<std::string>&
-  Debug::categories()
-  {
-    static std::list<std::string> categories_;
-    return categories_;
-  }
-
-  int
-  Debug::add_category(const std::string& name)
-  {
-    categories().push_back(name);
-    return 42;
-  }
-
-  void
-  Debug::check_category(const std::string& category)
-  {
-    if (categories_.find(category) == categories_.end())
-      GD_FABORT("GD: invalid category: %s", (category));
-  }
-
   libport::Finally::action_type
   Debug::push_category(const std::string& category)
   {
-    check_category(category);
     categories_stack_.push_back(category);
     return boost::bind(&Debug::pop_category, this);
   }
@@ -105,7 +113,7 @@ namespace libport
   bool
   Debug::disabled()
   {
-    return !categories_[category()] || level_stack_.back() > filter_;
+    return !debug::test_category(category()) || level_stack_.back() > filter_;
   }
 
   static void noop()
@@ -121,20 +129,6 @@ namespace libport
       return noop;
     message_push(msg, fun, file, line);
     return boost::bind(&Debug::pop, this);
-  }
-
-  void
-  Debug::disable_category(const std::string& category)
-  {
-    check_category(category);
-    categories_[category] = false;
-  }
-
-  void
-  Debug::enable_category(const std::string& category)
-  {
-    check_category(category);
-    categories_[category] = true;
   }
 
   void

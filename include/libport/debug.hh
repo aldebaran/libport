@@ -21,6 +21,17 @@
 
 namespace libport
 {
+  namespace debug
+  {
+    typedef std::map<std::string, unsigned long long> categories_type;
+
+    categories_type& get_categories();
+    LIBPORT_API int add_category(const std::string& name);
+    LIBPORT_API int enable_category(const std::string& name);
+    LIBPORT_API int disable_category(const std::string& name);
+    bool test_category(const std::string& name);
+  }
+
   class LIBPORT_API Debug
   {
   public:
@@ -70,11 +81,7 @@ namespace libport
                               const std::string& file = "",
                               unsigned line = 0) = 0;
 
-    static std::list<std::string>& categories();
-    static int add_category(const std::string& name);
     libport::Finally::action_type push_category(const std::string& name);
-    void disable_category(const std::string& name);
-    void enable_category(const std::string& name);
 
     libport::Finally::action_type push_level(unsigned lvl);
 
@@ -95,8 +102,7 @@ namespace libport
   private:
     void pop_category();
     void pop_level();
-    void check_category(const std::string& category);
-    std::map<std::string, unsigned long long> categories_;
+
     std::list<std::string> categories_stack_;
     std::list<unsigned> level_stack_;
     bool locations_;
@@ -303,17 +309,19 @@ namespace libport
 
 #  define GD_ADD_CATEGORY(Name)                                         \
   static int _gd_category_##Name =                                      \
-    ::libport::Debug::add_category(#Name);                              \
+    ::libport::debug::add_category(#Name);                              \
 
 #  define GD_CATEGORY(Cat)                                              \
   libport::Finally _gd_pop_category_##Cat                               \
   (GD_DEBUGGER->push_category(#Cat));                                   \
 
 #  define GD_DISABLE_CATEGORY(Cat)                                      \
-  GD_DEBUGGER->disable_category(#Cat);                                  \
+  static int _gd_category_disable_##Cat =                               \
+  ::libport::debug::disable_category(#Cat);                             \
 
 #  define GD_ENABLE_CATEGORY(Cat)                \
-  GD_DEBUGGER->enable_category(#Cat);            \
+  static int _gd_category_enable_##Cat =         \
+  ::libport::debug::enable_category(#Cat);       \
                                                  \
 /*------.
 | Level |
