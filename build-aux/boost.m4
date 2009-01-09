@@ -42,15 +42,15 @@
 m4_pattern_forbid([^_?BOOST_])
 
 
-# _BOOST_EGREP_SED(SED-PROGRAM, PROGRAM,
-#                  [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
-# ----------------------------------------------------------
+# _BOOST_SED_CPP(SED-PROGRAM, PROGRAM,
+#                [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
+# --------------------------------------------------------
 # Same as AC_EGREP_CPP, but leave the result in conftest.i.
 # PATTERN is *not* overquoted, as in AC_EGREP_CPP.  It could be useful
 # to turn this into a macro which extracts the value of any macro.
-m4_define([_BOOST_EGREP_CPP],
+m4_define([_BOOST_SED_CPP],
 [AC_LANG_PREPROC_REQUIRE()dnl
-AC_REQUIRE([AC_PROG_EGREP])dnl
+AC_REQUIRE([AC_PROG_SED])dnl
 AC_LANG_CONFTEST([AC_LANG_SOURCE([[$2]])])
 AS_IF([dnl eval is necessary to expand ac_cpp.
 dnl Ultrix and Pyramid sh refuse to redirect output of eval, so use subshell.
@@ -169,8 +169,8 @@ AC_SUBST([BOOST_CPPFLAGS])dnl
   AC_CACHE_CHECK([for Boost's header version],
     [boost_cv_lib_version],
     [m4_pattern_allow([^BOOST_LIB_VERSION$])dnl
-     _BOOST_EGREP_CPP([/^boost-lib-version = /{s///;s/\"//g;p;g;}],
-                      [#include <boost/version.hpp>
+     _BOOST_SED_CPP([/^boost-lib-version = /{s///;s/\"//g;p;g;}],
+                    [#include <boost/version.hpp>
 boost-lib-version = BOOST_LIB_VERSION],
     [boost_cv_lib_version=`cat conftest.i`])])
     # e.g. "134" for 1_34_1 or "135" for 1_35
@@ -915,3 +915,7 @@ dnl as it would interfere with the next link command.
 rm -f core conftest.err conftest_ipa8_conftest.oo \
       conftest$ac_exeext m4_ifval([$1], [conftest.$ac_ext])[]dnl
 ])# _BOOST_AC_LINK_IFELSE
+
+# Local Variables:
+# mode: autoconf
+# End:
