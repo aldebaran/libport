@@ -61,17 +61,19 @@ namespace libport
   int FdBuf::overflow(int c)
   {
     obuf_[BUFSIZ - 1] = c;
-    setp(obuf_ + BUFSIZ, 0);
+    setp(obuf_ + BUFSIZ, obuf_ + BUFSIZ - 1);
     sync();
     return EOF + 1; // "A value different from EOF"
   }
 
   int FdBuf::sync()
   {
-    if (pptr() - obuf_)
+    char* data = obuf_;
+    while (data < pptr())
     {
-      write(write_, obuf_, pptr() - obuf_);
-      setp(obuf_, obuf_ + BUFSIZ - 1);
+      // FIXME: don't busy loop
+      unsigned n = write(write_, data, pptr() - data);
+      data += n;
     }
     return 0; // Success
   }
