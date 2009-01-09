@@ -1,6 +1,6 @@
 /* lt_dlloader.c -- dynamic library loader interface
 
-   Copyright (C) 2004, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2007, 2008, 2009 Free Software Foundation, Inc.
    Written by Gary V. Vaughan, 2004
 
    NOTE: The canonical source of this file is maintained with the
@@ -109,6 +109,8 @@ loader_dump_callback (SList *item, void *userdata)
 void
 lt_dlloader_dump (void)
 {
+  if (lt_program_name)
+    fprintf (stderr, "%s:", lt_program_name);
   fprintf (stderr, "loaders: ");
   if (!loaders)
     {

@@ -154,14 +154,33 @@ static	int		initialized	= 0;
 /* --- DEBUGGING --- */
 #if defined LT_DEBUG_LOADERS
 int lt_debug_level = 0;
-# define LT_DEBUGF(Args)                        \
-  do {                                          \
-    if (lt_debug_level)                         \
-      fprintf ARGS;                             \
+const char* lt_program_name = 0;
+
+# define LT_DEBUGF(Args)                                \
+  do {                                                  \
+    if (lt_debug_level)                                 \
+      {                                                 \
+        if (lt_program_name)                            \
+          fprintf (stderr, "%s: ", lt_program_name);    \
+        fprintf (stderr, "ltdl: ");                     \
+        fprintf Args;                                   \
+        fprintf (stderr, "\n");                         \
+      }                                                 \
   } while (0)
+
 #else
 # define LT_DEBUGF(Args)
 #endif
+
+#define LT_DEFAULT(Arg, Default)                \
+  (Arg ? Arg : Default)
+#define LT_NONNULL(Arg)                         \
+  LT_DEFAULT(Arg, "(null)")
+#define LT_DEBUGF1(Format, Arg1)                \
+  LT_DEBUGF((stderr, Format, Arg1))
+#define LT_DEBUGF2(Format, Arg1, Arg2)          \
+  LT_DEBUGF((stderr, Format, Arg1, Arg2))
+
 
 /* Our memory failure callback sets the error message to be passed back
    up to the client, so we must be careful to return from mallocation
@@ -374,9 +393,9 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
   const char *	saved_error	= 0;
   int		errors		= 0;
 
-  LT_DEBUGF ((stderr, "tryall_dlopen (%s, %s)\n",
-              filename ? filename : "(null)",
-              vtable ? vtable->name : "(ALL)"));
+  LT_DEBUGF2 ("tryall_dlopen (%s, %s)",
+              LT_NONNULL (filename),
+              LT_DEFAULT (vtable, "(ALL)"));
 
   LT__GETERROR (saved_error);
 
@@ -436,15 +455,15 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
 	else
 	  loader_vtable = lt_dlloader_get (loader);
 
-	LT_DEBUGF ((stderr, "Calling %s->module_open (%s)\n",
-                    ((loader_vtable && loader_vtable->name) 
+	LT_DEBUGF2 ("Calling %s->module_open (%s)",
+                    ((loader_vtable && loader_vtable->name)
                      ? loader_vtable->name : "(null)"),
-                    filename ? filename : "(null)"));
+                    LT_NONNULL (filename));
         handle->module =
           (*loader_vtable->module_open) (loader_vtable->dlloader_data,
                                          filename, advise);
-	LT_DEBUGF ((stderr, "  Result: %s\n",
-                    handle->module ? "Success" : "Failed"));
+	LT_DEBUGF1 ("  Result: %s",
+                    handle->module ? "Success" : "Failed");
 
 	if (handle->module != 0)
 	  {
@@ -808,6 +827,7 @@ static int
 load_deplibs (lt_dlhandle handle, char * LT__UNUSED deplibs)
 {
   handle->depcount = 0;
+  LT_DEBUGF1 ("load_deplibs(%s): not implemented", LT_NONNULL (deplibs));
   return 0;
 }
 
@@ -820,6 +840,8 @@ load_deplibs (lt_dlhandle handle, char *deplibs)
   int	i;
   char	**names = 0;
   int	errors = 0;
+
+  LT_DEBUGF1 ("load_deplibs(%s)", LT_NONNULL (deplibs));
 
   handle->depcount = 0;
 
@@ -917,6 +939,7 @@ load_deplibs (lt_dlhandle handle, char *deplibs)
 	      if (!name)
 		goto cleanup_names;
 
+              LT_DEBUGF1 ("found dependency %s", name);
 	      names[depcount++] = name;
 	      *end = save;
 	    }
@@ -1031,6 +1054,10 @@ parse_dotla_file(FILE *file, char **dlname, char **libdir, char **deplibs,
   size_t	line_len = LT_FILENAME_MAX;
   char *	line = MALLOC (char, line_len);
 
+#define LT_DEBUG_FIELD(Field)                   \
+  LT_DEBUGF1 ("*.la: " #Field ": %s", LT_NONNULL (*Field))
+
+
   if (!line)
     {
       LT__SETERROR (FILE_NOT_FOUND);
@@ -1074,6 +1101,7 @@ parse_dotla_file(FILE *file, char **dlname, char **libdir, char **deplibs,
       if (strncmp (line, STR_DLNAME, sizeof (STR_DLNAME) - 1) == 0)
 	{
 	  errors += trim (dlname, &line[sizeof (STR_DLNAME) - 1]);
+          LT_DEBUG_FIELD (dlname);
 	}
 
 #undef  STR_OLD_LIBRARY
@@ -1082,12 +1110,14 @@ parse_dotla_file(FILE *file, char **dlname, char **libdir, char **deplibs,
 	    sizeof (STR_OLD_LIBRARY) - 1) == 0)
 	{
 	  errors += trim (old_name, &line[sizeof (STR_OLD_LIBRARY) - 1]);
+          LT_DEBUG_FIELD (old_name);
 	}
 #undef  STR_LIBDIR
 #define STR_LIBDIR	"libdir="
       else if (strncmp (line, STR_LIBDIR, sizeof (STR_LIBDIR) - 1) == 0)
 	{
 	  errors += trim (libdir, &line[sizeof(STR_LIBDIR) - 1]);
+          LT_DEBUG_FIELD (libdir);
 	}
 
 #undef  STR_DL_DEPLIBS
@@ -1096,14 +1126,17 @@ parse_dotla_file(FILE *file, char **dlname, char **libdir, char **deplibs,
 	    sizeof (STR_DL_DEPLIBS) - 1) == 0)
 	{
 	  errors += trim (deplibs, &line[sizeof (STR_DL_DEPLIBS) - 1]);
+          LT_DEBUG_FIELD (deplibs);
 	}
       else if (streq (line, "installed=yes\n"))
 	{
 	  *installed = 1;
+          LT_DEBUGF1 ("*.la: installed: %d", *installed);
 	}
       else if (streq (line, "installed=no\n"))
 	{
 	  *installed = 0;
+          LT_DEBUGF1 ("*.la: installed: %d", *installed);
 	}
 
 #undef  STR_LIBRARY_NAMES
@@ -1125,11 +1158,14 @@ parse_dotla_file(FILE *file, char **dlname, char **libdir, char **deplibs,
 		}
 	      MEMREASSIGN (*dlname, last_libname);
 	    }
+          LT_DEBUG_FIELD (dlname);
 	}
 
       if (errors)
 	break;
     }
+#undef LT_DEBUG_FIELD
+
 cleanup:
   FREE (line);
   return errors;
@@ -1154,9 +1190,7 @@ try_dlopen (lt_dlhandle *phandle, const char *filename, const char *ext,
   assert (phandle);
   assert (*phandle == 0);
 
-  LT_DEBUGF ((stderr, "try_dlopen (%s, %s)\n",
-              filename ? filename : "(null)",
-              ext ? ext : "(null)"));
+  LT_DEBUGF2 ("try_dlopen (%s, %s)", LT_NONNULL (filename), LT_NONNULL (ext));
 
   LT__GETERROR (saved_error);
 
@@ -1366,9 +1400,13 @@ try_dlopen (lt_dlhandle *phandle, const char *filename, const char *ext,
 	}
 
       /* read the .la file */
+      LT_DEBUGF1 ("Parsing *.la file: %s", attempt);
       if (parse_dotla_file(file, &dlname, &libdir, &deplibs,
 	    &old_name, &installed) != 0)
-	++errors;
+        {
+          LT_DEBUGF1 ("Parsing *.la file failed: %s", attempt);
+          ++errors;
+        }
 
       fclose (file);
 
@@ -1607,6 +1645,7 @@ lt_dlopenext (const char *filename)
   lt_dlhandle	handle	= 0;
   lt_dladvise	advise;
 
+  LT_DEBUGF1 ("lt_dlopenext (%s)", LT_NONNULL (filename));
   if (!lt_dladvise_init (&advise) && !lt_dladvise_ext (&advise))
     handle = lt_dlopenadvise (filename, advise);
 
