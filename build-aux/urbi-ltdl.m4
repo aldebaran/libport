@@ -1,6 +1,6 @@
 #
 # urbi-tdl.m4: This file is part of build-aux.
-# Copyright (C) 2008, Gostai S.A.S.
+# Copyright (C) 2008, 2009, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -51,6 +51,9 @@ AC_SUBST([LIBTOOL_DEPS])
 AC_SUBST([LTDL_CPPFLAGS], ['$(LTDLINCL)'])
 AC_SUBST([LTDL_LIBS],     ['$(LIBLTDL)'])
 AC_SUBST([LTDL_DEPS],     ['$(LTDLDEPS)'])
+
+# We want the debug messages.
+CPPFLAGS+=" -DLT_DEBUG_LOADERS"
 
 URBI_LIBTOOL
 ])
