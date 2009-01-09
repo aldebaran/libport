@@ -17,10 +17,37 @@ AC_PREREQ([2.60])
 
 AC_DEFUN([URBI_COMPILATION_MODE],
 [
+# urbi_append_flag VAR FLAG...
+# ----------------------------
+# Append the FLAG... to $VAR, separated by spaces, unless it already
+# includes it.
+urbi_append_flag ()
+{
+  local var=$[1]
+  local var
+  eval "val=\$$var"
+  shift
+  local v
+  for v
+  do
+    case " $val " in
+      (*" $v "*) ;;
+      ("  ")    val=$v;;
+      (*)       val+=" $v";;
+    esac
+  done
+  eval "$var=\$val"
+}
+
 urbi_compiler_flags ()
 {
-  CFLAGS="$CFLAGS $[@]"
-  CXXFLAGS="$CXXFLAGS $[@]"
+  urbi_append_flag CFLAGS "$[@]"
+  urbi_append_flag CXXFLAGS "$[@]"
+}
+
+urbi_cpp_flags ()
+{
+  urbi_append_flag CPPFLAGS "$[@]"
 }
 
 # Compilation mode.
@@ -42,7 +69,7 @@ urbi_compilation_mode_set ()
       (debug)
         urbi_compiler_flags -O2 -ggdb
         # Not all the code includes config.h.
-        CPPFLAGS="$CPPFLAGS -DURBI_DEBUG -D_GLIBCXX_DEBUG"
+        urbi_cpp_flags -DURBI_DEBUG -D_GLIBCXX_DEBUG
         AC_DEFINE([URBI_DEBUG], [1],
                   [Define to enable Urbi debugging tools.])
         AC_DEFINE([_GLIBCXX_DEBUG], [1],
@@ -52,7 +79,7 @@ urbi_compilation_mode_set ()
         AC_SUBST([BISON_FLAGS], ["$BISON_FLAGS -Dassert"])
         # Define USE_VALGRIND only if valgrind/valgrind.h exists.
         AC_CHECK_HEADER([valgrind/valgrind.h],
-                        [CPPFLAGS="$CPPFLAGS -DUSE_VALGRIND"])
+                        [urbi_cpp_flags -DUSE_VALGRIND])
         stacksize=1024
         ;;
 
@@ -61,7 +88,7 @@ urbi_compilation_mode_set ()
         ;;
 
       (ndebug)
-        CPPFLAGS="$CPPFLAGS -DNDEBUG"
+        urbi_cpp_flags -DNDEBUG
         ;;
 
       (prof)
@@ -71,7 +98,7 @@ urbi_compilation_mode_set ()
       (space)
         urbi_compiler_flags -Os -fomit-frame-pointer \
                        -fdata-sections -ffunction-sections
-        LDFLAGS="$LDFLAGS --gc-sections"
+        urbi_append_flag LDFLAGS --gc-sections
         urbi_compilation_mode_set final
         ;;
 
