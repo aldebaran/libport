@@ -1,5 +1,5 @@
 # boost.m4: Locate Boost headers and libraries for autoconf-based projects.
-# Copyright (C) 2007, 2008  Benoit Sigoure <tsuna@lrde.epita.fr>
+# Copyright (C) 2007, 2008, 2009  Benoit Sigoure <tsuna@lrde.epita.fr>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,6 +40,28 @@
 # simply read the README, it will show you what to do step by step.
 
 m4_pattern_forbid([^_?BOOST_])
+
+
+# _BOOST_EGREP_SED(SED-PROGRAM, PROGRAM,
+#                  [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND])
+# ----------------------------------------------------------
+# Same as AC_EGREP_CPP, but leave the result in conftest.i.
+# PATTERN is *not* overquoted, as in AC_EGREP_CPP.  It could be useful
+# to turn this into a macro which extracts the value of any macro.
+m4_define([_BOOST_EGREP_CPP],
+[AC_LANG_PREPROC_REQUIRE()dnl
+AC_REQUIRE([AC_PROG_EGREP])dnl
+AC_LANG_CONFTEST([AC_LANG_SOURCE([[$2]])])
+AS_IF([dnl eval is necessary to expand ac_cpp.
+dnl Ultrix and Pyramid sh refuse to redirect output of eval, so use subshell.
+(eval "$ac_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD |
+  $SED -n -e "$1" >conftest.i 2>&1],
+  [$3],
+  [$4])dnl
+rm -f conftest*
+])# AC_EGREP_CPP
+
+
 
 # BOOST_REQUIRE([VERSION])
 # ------------------------
@@ -105,12 +127,6 @@ AC_LANG_PUSH([C++])dnl
     # I didn't indent this loop on purpose (to avoid over-indented code)
     for boost_inc in "$boost_dir" "$boost_dir"/boost-*
     do
-      # $boost_inc can often be a symlink, so keep -e here.
-      test -e "$boost_inc" || continue
-      # Ensure that version.hpp exists: we're going to read it.  Moreover,
-      # Boost could be reachable thanks to the default include path so we can
-      # mistakenly accept a wrong include path without this check.
-      test -e "$boost_inc/boost/version.hpp" || continue
       boost_save_CPPFLAGS=$CPPFLAGS
       test x"$boost_inc" != x && CPPFLAGS="$CPPFLAGS -I$boost_inc"
 m4_pattern_allow([^BOOST_VERSION$])dnl
@@ -153,15 +169,13 @@ AC_SUBST([BOOST_CPPFLAGS])dnl
   AC_CACHE_CHECK([for Boost's header version],
     [boost_cv_lib_version],
     [m4_pattern_allow([^BOOST_LIB_VERSION$])dnl
-    boost_cv_lib_version=unknown
-    boost_sed_version='/^.*BOOST_LIB_VERSION.*"\([[^"]]*\)".*$/!d;s//\1/'
-    boost_version_hpp="$boost_inc/boost/version.hpp"
-    test -e "$boost_version_hpp" \
-      && boost_cv_lib_version=`sed "$boost_sed_version" "$boost_version_hpp"`
-    ])
+     _BOOST_EGREP_CPP([/^boost-lib-version = /{s///;s/\"//g;p;g;}],
+                      [#include <boost/version.hpp>
+boost-lib-version = BOOST_LIB_VERSION],
+    [boost_cv_lib_version=`cat conftest.i`])])
     # e.g. "134" for 1_34_1 or "135" for 1_35
     boost_major_version=`echo "$boost_cv_lib_version" | sed 's/_//;s/_.*//'`
-    case $boost_major_version in
+    case $boost_major_version in #(
       '' | *[[^0-9]]*)
         AC_MSG_ERROR([Invalid value: boost_major_version=$boost_major_version])
         ;;
