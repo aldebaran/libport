@@ -17,7 +17,7 @@ AC_PREREQ([2.60])
 
 AC_DEFUN([URBI_COMPILATION_MODE],
 [
-compiler_flags ()
+urbi_compiler_flags ()
 {
   CFLAGS="$CFLAGS $[@]"
   CXXFLAGS="$CXXFLAGS $[@]"
@@ -32,15 +32,15 @@ urbi_compilation_mode_set ()
   do
     case $mode in
       (build)
-        compiler_flags -O0
+        urbi_compiler_flags -O0
         ;;
 
       (cov)
-        compiler_flags -fprofile-arcs -ftest-coverage
+        urbi_compiler_flags -fprofile-arcs -ftest-coverage
         ;;
 
       (debug)
-        compiler_flags -O2 -ggdb
+        urbi_compiler_flags -O2 -ggdb
         # Not all the code includes config.h.
         CPPFLAGS="$CPPFLAGS -DURBI_DEBUG -D_GLIBCXX_DEBUG"
         AC_DEFINE([URBI_DEBUG], [1],
@@ -65,18 +65,18 @@ urbi_compilation_mode_set ()
         ;;
 
       (prof)
-        compiler_flags -pg
+        urbi_compiler_flags -pg
         ;;
 
       (space)
-        compiler_flags -Os -fomit-frame-pointer \
+        urbi_compiler_flags -Os -fomit-frame-pointer \
                        -fdata-sections -ffunction-sections
         LDFLAGS="$LDFLAGS --gc-sections"
         urbi_compilation_mode_set final
         ;;
 
       (speed)
-        compiler_flags -O3
+        urbi_compiler_flags -O3
         AC_DEFINE([SPEED], [1],
                   [Define to optimize for speed the kernel at the detriment of compilation time.])
         urbi_compilation_mode_set final
