@@ -65,7 +65,11 @@ macro(gostai_add_executable name)
       set(${name}_ICON_RC_PATH ${CMAKE_CURRENT_BINARY_DIR}/${name}.rc)
       #FIXME: Make this macro a function to avoid cluttering the namespace
       # with the icon_path variable.
-      string(REPLACE "/" "\\\\" icon_path "${${name}_ICON_PATH}")
+      if(CMAKE_CROSSCOMPILING)
+	set(icon_path "${${name}_ICON_PATH}")
+      else(CMAKE_CROSSCOMPILNG)
+	string(REPLACE "/" "\\\\" icon_path "${${name}_ICON_PATH}")
+      endif(CMAKE_CROSSCOMPILING)
       #FIXME: Touching project resource template do not trigger resource file
       #       to be compiled by windres.
       configure_file(
