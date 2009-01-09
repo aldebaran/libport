@@ -15,6 +15,39 @@ m4_pattern_forbid([^TC_])dnl
 
 AC_PREREQ([2.60])
 
+# _URBI_PROG_CXX_FLAVOR(CACHE-VAR)
+# --------------------------------
+# Compute $urbi_cv_cxx_flavor = gcc, gcc-apple, msvc, unknown.
+m4_define([_URBI_PROG_CXX_FLAVOR],
+[$1=unknown
+case $GXX in
+  (yes)
+     case $($CXX --version | sed 1q) in
+       (*"Apple Inc."*) $1=gcc-apple;;
+       (*)              $1=gcc;;
+     esac
+  (no)
+AC_COMPILE_IFELSE([[
+#ifndef _MSC_VER
+# error This is not a Microsoft compiler
+#endif
+]],
+                  [$1=msvc])
+     ;;
+esac
+])
+
+
+# URBI_PROG_CXX_FLAVOR
+# ---------------------
+# Compute CXX_FLAVOR = gcc, gcc-apple, msvc, unknown.
+m4_define([URBI_PROG_CXX_FLAVOR],
+[AC_CACHE_CHECK([the flavor of $CXX], [urbi_cv_cxx_flavor],
+                [_URBI_PROG_CXX_FLAVOR([urbi_cv_cxx_flavor])])
+CXX_FLAVOR=$urbi_cv_cxx_flavor
+])
+
+
 # URBI_PROG_CXX
 # -------------
 # Look for a C++ compiler, and pass interesting warning options.
@@ -23,6 +56,9 @@ AC_DEFUN([URBI_PROG_CXX],
 # Look for a C++ compiler.
 AC_LANG_PUSH([C++])
 AC_PROG_CXX
+
+# Compute the flavor of this compiler.
+URBI_PROG_CXX_FLAVOR
 
 # Try to restrict the default visibility as much as possible.
 TC_COMPILER_OPTION_IF([-fvisibility=hidden],
@@ -110,24 +146,23 @@ TC_CXX_WARNINGS([[-Wall],
 #    static char yy_hold_char;
 #                ^
 #
-TC_CXX_WARNINGS([[[-wd111,193,279,383,444,522,654,810,981,1418]]])
+#
+# Apple's GCC accepts any garbage after "-w", which clutters our command
+# lines.
+case $CXX_FLAVOR in
+  (gcc-apple) ;;
+  (*) TC_CXX_WARNINGS([[[-wd111,193,279,383,444,522,654,810,981,1418]]]);;
+esac
+
 
 # ------- #
 # MS VC++ #
 # ------- #
 
 # If the compiler is MS VC++, define WIN32.
-AC_CACHE_CHECK([whether $CXX is Microsoft's compiler], [ac_cv_cxx_compiler_ms],
-[AC_COMPILE_IFELSE([[
-#ifndef _MSC_VER
-# error This is not a Microsoft compiler
-#endif
-]],
-   [ac_cv_cxx_compiler_ms=yes], [ac_cv_cxx_compiler_ms=no])
-])
-
-if test "$ac_cv_cxx_compiler_ms" = yes; then
-  AC_DEFINE([WIN32], [], [Whether we're on Windows])
+case $CXX_FLAVOR in
+  (msvc)
+  AC_DEFINE([WIN32], [], [Whether the host is Windows using VC++.])
   # http://social.msdn.microsoft.com/Forums/en-US/vcgeneral/thread/167fb6e5-ef74-4b03-83ee-f1de8f7ef291/
   # http://msdn.microsoft.com/en-us/library/ttcz0bys(VS.80).aspx
 
@@ -142,15 +177,23 @@ if test "$ac_cv_cxx_compiler_ms" = yes; then
   do
     CPPFLAGS+=" -D$ac_flag=1"
   done
-fi
+  ;;
+esac
+
+# -OPTION or /OPTION
+# ------------------
+# We use -OPTION instead of /OPTION because vc++ accepts both, and
+# the former is (i) easier to read for us Unix guys, and (ii) accepted
+# by distcc while /OPTION is interpreted as a file name.
 
 # There seems to be several models of exception handling with VC++.
 # There are weird warnings if we don't activate the C++ style exception
 # handling.  Let's play it safe and activate it.
 #
 # /EHsc: enable C++ exception handling + extern "C" defaults to nothrow.
-TC_COMPILER_OPTION_IF([[/EHsc]],
-		      [CXX="$CXX /EHsc"])
+case $CXX_FLAVOR in
+ (msvc) TC_COMPILER_OPTION_IF([[-EHsc]], [CXX="$CXX -EHsc"]);;
+esac
 
 # ----------------------------------------------- #
 # Remove MS Visual Compiler's spurious warnings.  #
@@ -222,21 +265,25 @@ TC_COMPILER_OPTION_IF([[/EHsc]],
 #
 # warning C4820: 'classname' : 'N' bytes padding added after data member 'foo'
 #
-TC_CXX_WARNINGS([[/wd4061],
-		 [/wd4099],
-		 [/wd4121],
-		 [/wd4127],
-		 [/wd4347],
-		 [/wd4512],
-		 [/wd4571],
-		 [/wd4619],
-		 [/wd4625],
-		 [/wd4626],
-		 [/wd4668],
-		 [/wd4710],
-		 [/wd4711],
-		 [/wd4800],
-		 [/wd4820]])
+case $CXX_FLAVOR in
+ (msvc)
+    TC_CXX_WARNINGS([[-wd4061],
+                     [-wd4099],
+                     [-wd4121],
+                     [-wd4127],
+                     [-wd4347],
+                     [-wd4512],
+                     [-wd4571],
+                     [-wd4619],
+                     [-wd4625],
+                     [-wd4626],
+                     [-wd4668],
+                     [-wd4710],
+                     [-wd4711],
+                     [-wd4800],
+                     [-wd4820]])
+   ;;
+esac
 
 
 # --------------------- #
@@ -249,8 +296,8 @@ TC_CXX_WARNINGS([[/wd4061],
 # Generally speaking, once there will be a decent version of GCC for MinGW,
 # we'll remove this.
 case $GXX:$host in
-  yes:cygwin* | yes:*mingw* | yes:mipsel-*linux-* | yes:*arm*) :;;
-  yes:*) # for other occurrences of G++, it's fine to use -Werror
+  ( yes:cygwin* | yes:*mingw* | yes:mipsel-*linux-* | yes:*arm*) :;;
+  ( yes:*) # for other occurrences of G++, it's fine to use -Werror.
     TC_CXX_WARNINGS([-Werror])
   ;;
   # no:*) # ignore (this would enable -Werror for VC++ where we have *way* too

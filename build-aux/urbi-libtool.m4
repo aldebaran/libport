@@ -15,12 +15,17 @@
 # this macro after the invocation to LT_INIT.
 AC_DEFUN([URBI_LIBTOOL],
 [
-case $ac_cv_cxx_compiler_ms in (yes)
-  # It is perfectly possible to link with static libraries when building dlls.
-  # Also for some reason archive_cmds ends up empty for C++ tag.
-  AC_CONFIG_COMMANDS([libtool-quirk],
-  [sed -i -r -e 's/^archive_cmds=""/#& /' \
-    -e 's/^deplibs_check_method=.*/#&\ndeplibs_check_method=pass_all/' libtool])
+case $CXX_FLAVOR in
+  ('')
+    AC_MSG_ERROR([CXX_FLAVOR undefined]);;
+  (msvc)
+    # It is perfectly possible to link with static libraries when building dlls.
+    # Also for some reason archive_cmds ends up empty for C++ tag.
+    AC_CONFIG_COMMANDS([libtool-quirk],
+    [sed -i -r \
+         -e 's/^archive_cmds=""/#& /' \
+         -e 's/^deplibs_check_method=.*/#&\ndeplibs_check_method=pass_all/' \
+         libtool])
  ;;
 esac
 ])
