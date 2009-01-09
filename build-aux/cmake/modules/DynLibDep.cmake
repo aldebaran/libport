@@ -242,6 +242,11 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
   # NOTE: _binary_ might be a target name.
   function(dldep_install binary)
 
+    if(CMAKE_CROSSCOMPILING)
+      echo("Cannot list dependent dynamic libraries when cross-compiling.")
+      return()
+    endif(CMAKE_CROSSCOMPILING)
+
     include(Dirs)
     if(TARGET ${binary})
       get_target_property(binary_loc ${binary} LOCATION_${CMAKE_BUILD_TYPE})

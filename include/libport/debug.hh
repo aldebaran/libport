@@ -4,7 +4,7 @@
 # include <libport/detect-win32.h>
 # include <libport/compiler.hh>
 
-# ifndef NDEBUG
+# ifndef LIBPORT_DEBUG_DISABLE
 
 #  include <signal.h>
 

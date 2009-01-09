@@ -46,6 +46,13 @@ if(NOT TOOLS_CMAKE_GUARD)
     ENDIF(NOT DEFINED "${var}")
   endmacro(SET_IF_NOT_SET var val)
 
+  # Set the variable with the given path if it exists.
+  function(set_if_exists var path)
+    if(EXISTS ${path})
+      set(${var} ${path} PARENT_SCOPE)
+    endif(EXISTS ${path})
+  endfunction(set_if_exists)
+
   # Check whether the given variables exists. Send an error message if it
   # doesn't.
   macro(CHECK_CMAKE_VARS_EXISTS)

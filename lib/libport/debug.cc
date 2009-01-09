@@ -11,7 +11,7 @@
 # include <pthread.h>
 #endif
 
-#ifndef NDEBUG
+#ifndef LIBPORT_DEBUG_DISABLE
 
 namespace libport
 {
@@ -304,7 +304,7 @@ namespace libport
     static boost::format format("Opening syslog session for '%s'");
 
     openlog(strdup(program.c_str()), LOG_PID, LOG_DAEMON);
-    syslog(LOG_INFO | LOG_DAEMON, (format % program).str().c_str());
+    syslog(LOG_INFO | LOG_DAEMON, "%s", (format % program).str().c_str());
   }
 
   SyslogDebug::~SyslogDebug()
@@ -344,7 +344,7 @@ namespace libport
     if (locations())
       s << "    (" << fun << ", " << file << ":" << line << ")";
     int prio = type_to_prio(type) | LOG_DAEMON;
-    syslog(prio, s.str().c_str());
+    syslog(prio, "%s", s.str().c_str());
   }
 
   void
