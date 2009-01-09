@@ -16,6 +16,7 @@
 # include <libport/utime.hh>
 
 # include <sched/coroutine.hh>
+# include <sched/export.hh>
 # include <sched/fwd.hh>
 # include <sched/tag.hh>
 
@@ -71,7 +72,7 @@ namespace scheduler
   ///         reference onto it, and that it gets deleted from another
   ///         coroutine, or from the main one.
 
-  class Job: public libport::RefCounted
+  class SCHED_API Job: public libport::RefCounted
   {
   public:
     /// Create a job from another one.
@@ -382,12 +383,13 @@ namespace scheduler
 
   };
 
+  SCHED_API
   std::ostream& operator<< (std::ostream&, const Job&);
 
   /// This exception will be raised to tell the job that it is currently
   /// stopped and must try to unwind tags from its tag stack until it
   /// is either dead or not stopped anymore.
-  struct StopException : public SchedulerException
+  struct SCHED_API StopException : public SchedulerException
   {
     StopException(unsigned int, boost::any);
     ADD_FIELD(unsigned int, depth)
@@ -396,7 +398,7 @@ namespace scheduler
   };
 
   /// This exception encapsulates another one, sent by a child job.
-  struct ChildException : public SchedulerException
+  struct SCHED_API ChildException : public SchedulerException
   {
     ChildException(exception_ptr);
     ChildException(const ChildException&);
@@ -409,9 +411,11 @@ namespace scheduler
   };
 
   /// State names to string, for debugging purpose.
+  SCHED_API
   const char* state_name(job_state);
 
   /// Terminate all jobs present in container and empty it.
+  SCHED_API
   void terminate_jobs(jobs_type& jobs);
 
 } // namespace scheduler

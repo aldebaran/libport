@@ -13,7 +13,7 @@ namespace scheduler
   class exception;
   typedef std::auto_ptr<exception> exception_ptr;
 
-  class exception
+  class SCHED_API exception
   {
   public:
     virtual ~exception();

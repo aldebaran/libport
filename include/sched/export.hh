@@ -4,7 +4,7 @@
 # include <libport/detect-win32.h>
 
 # ifdef WIN32
-#  ifdef BUILDING_SCHED
+#  ifdef BUILDING_LIBSCHED
 #   define SCHED_API __declspec(dllexport)
 #  else
 #   define SCHED_API __declspec(dllimport)

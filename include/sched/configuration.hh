@@ -2,19 +2,19 @@
 # define SCHED_CONFIGURATION_HH
 
 # include <cstdlib>
-// # include <libport/export.hh>
+# include <sched/export.hh>
 
 namespace sched
 {
-  struct Configuration
+  struct SCHED_API Configuration
   {
     /// Default and minimum stack size for jobs (in bytes)
     size_t default_stack_size;
     size_t minimum_stack_size;
   };
 
-  extern Configuration configuration;
-  // URBI_SDK_API
+  /// Default configuration.
+  extern SCHED_API Configuration configuration;
 }
 
 #endif // SCHED_CONFIGURATION_HH

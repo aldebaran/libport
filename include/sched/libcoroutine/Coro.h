@@ -17,19 +17,27 @@
 	#define CORO_STACK_SIZE_MIN 8192
 #endif
 
-/* We dont build libcoro as a separate library: comment this.
+// These changes are Gostai specific.  Because of cascades of
+// "inline", these functions need to be exported, we match
+#define GOSTAI
+#ifdef GOSTAI
+
+# include <sched/export.hh>
+# define CORO_API SCHED_API
+
+#else // !GOSTAI
+
 #if !defined(__MINGW32__) && defined(WIN32)
-#if defined(BUILDING_CORO_DLL) || defined(BUILDING_IOVMALL_DLL)
-#define CORO_API __declspec(dllexport)
+# if defined(BUILDING_CORO_DLL) || defined(BUILDING_IOVMALL_DLL)
+#  define CORO_API __declspec(dllexport)
+# else
+#  define CORO_API __declspec(dllimport)
+# endif
 #else
-#define CORO_API __declspec(dllimport)
+# define CORO_API
 #endif
 
-#else
-#define CORO_API
-#endif
-*/
-#define CORO_API
+#endif // !GOSTAI
 
 /*
 #if defined(__amd64__) && !defined(__x86_64__)

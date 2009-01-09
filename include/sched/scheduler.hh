@@ -16,6 +16,7 @@
 # include <libport/utime.hh>
 
 # include <sched/coroutine.hh>
+# include <sched/export.hh>
 # include <sched/fwd.hh>
 
 namespace scheduler
@@ -29,7 +30,7 @@ namespace scheduler
   typedef libport::Statistics<libport::utime_t, libport::ufloat>
     scheduler_stats_type;
 
-  class Scheduler : boost::noncopyable
+  class SCHED_API Scheduler : boost::noncopyable
   {
   public:
     /// Constructor.

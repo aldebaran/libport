@@ -6,6 +6,7 @@
 # include <libport/finally.hh>
 # include <libport/symbol.hh>
 
+# include <sched/export.hh>
 # include <sched/fwd.hh>
 
 namespace scheduler
@@ -50,7 +51,7 @@ namespace scheduler
   // when they resume execution, if they get the same tag again, they will
   // not act as if they were blocked again.
 
-  class Tag: public libport::RefCounted
+  class SCHED_API Tag: public libport::RefCounted
   {
   public:
     // Create a new tag.

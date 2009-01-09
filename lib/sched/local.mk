@@ -1,29 +1,25 @@
-lib_LTLIBRARIES += libsched.la
-dist_libsched_la_SOURCES = $(libsched_sources)
-libsched_la_LDFLAGS = -avoid-version -no-undefined
-AM_CPPFLAGS += $(LIBSCHED_CPPFLAGS) -DBUILDING_LIBSCHED $(BOOST_CPPFLAGS)
+lib_LTLIBRARIES += lib/sched/libsched.la
+dist_lib_sched_libsched_la_SOURCES = $(lib_sched_libsched_sources)
+lib_sched_libsched_la_LDFLAGS = -avoid-version -no-undefined
+lib_sched_libsched_la_CPPFLAGS =		\
+  $(AM_CPPFLAGS)				\
+  -I$(srcdir)/lib				\
+  -DBUILDING_LIBSCHED				\
+  $(BOOST_CPPFLAGS)
 
-dist_libsched_la_SOURCES +=			\
-  $(coroutines_sources)				\
+dist_lib_sched_libsched_la_SOURCES +=		\
   lib/sched/configuration.cc			\
-  lib/sched/exception.hh			\
-  lib/sched/exception.hxx			\
-  lib/sched/fwd.hh				\
   lib/sched/job.cc				\
-  lib/sched/job.hh				\
-  lib/sched/job.hxx				\
   lib/sched/pthread-coro.cc			\
   lib/sched/pthread-coro.hh			\
   lib/sched/pthread-coro.hxx			\
   lib/sched/scheduler.cc			\
-  lib/sched/scheduler.hh			\
-  lib/sched/scheduler.hxx			\
   lib/sched/tag.cc				\
-  lib/sched/tag.hh				\
-  lib/sched/tag.hxx
+  lib/sched/libcoroutine/Base.h			\
+  lib/sched/libcoroutine/Coro.cc		\
+  lib/sched/libcoroutine/PortableUContext.c	\
+  lib/sched/libcoroutine/PortableUContext_asm.S
 
-coroutines_sources =				\
-  lib/sched/coroutine.hh			\
-  lib/sched/coroutine.hxx
-
-include lib/sched/libcoroutine/local.mk
+# This is distributed, but not compiled directly: it is included by
+# Coro.cc.
+EXTRA_DIST += lib/sched/libcoroutine/Coro.c
