@@ -151,6 +151,18 @@ static	char	       *user_search_path= 0;
 static	lt_dlhandle	handles	= 0;
 static	int		initialized	= 0;
 
+/* --- DEBUGGING --- */
+#if defined LT_DEBUG_LOADERS
+int lt_debug_level = 0;
+# define LT_DEBUGF(Args)                        \
+  do {                                          \
+    if (lt_debug_level)                         \
+      fprintf ARGS;                             \
+  } while (0)
+#else
+# define LT_DEBUGF(Args)
+#endif
+
 /* Our memory failure callback sets the error message to be passed back
    up to the client, so we must be careful to return from mallocation
    callers if allocation fails (as this callback returns!!).  */
@@ -362,11 +374,9 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
   const char *	saved_error	= 0;
   int		errors		= 0;
 
-#ifdef LT_DEBUG_LOADERS
-  fprintf (stderr, "tryall_dlopen (%s, %s)\n",
-	   filename ? filename : "(null)",
-	   vtable ? vtable->name : "(ALL)");
-#endif
+  LT_DEBUGF ((stderr, "tryall_dlopen (%s, %s)\n",
+              filename ? filename : "(null)",
+              vtable ? vtable->name : "(ALL)"));
 
   LT__GETERROR (saved_error);
 
@@ -426,17 +436,15 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
 	else
 	  loader_vtable = lt_dlloader_get (loader);
 
-#ifdef LT_DEBUG_LOADERS
-	fprintf (stderr, "Calling %s->module_open (%s)\n",
-		 (loader_vtable && loader_vtable->name) ? loader_vtable->name : "(null)",
-		 filename ? filename : "(null)");
-#endif
-	handle->module = (*loader_vtable->module_open) (loader_vtable->dlloader_data,
-							filename, advise);
-#ifdef LT_DEBUG_LOADERS
-	fprintf (stderr, "  Result: %s\n",
-		 handle->module ? "Success" : "Failed");
-#endif
+	LT_DEBUGF ((stderr, "Calling %s->module_open (%s)\n",
+                    ((loader_vtable && loader_vtable->name) 
+                     ? loader_vtable->name : "(null)"),
+                    filename ? filename : "(null)"));
+        handle->module =
+          (*loader_vtable->module_open) (loader_vtable->dlloader_data,
+                                         filename, advise);
+	LT_DEBUGF ((stderr, "  Result: %s\n",
+                    handle->module ? "Success" : "Failed"));
 
 	if (handle->module != 0)
 	  {
@@ -1146,11 +1154,9 @@ try_dlopen (lt_dlhandle *phandle, const char *filename, const char *ext,
   assert (phandle);
   assert (*phandle == 0);
 
-#ifdef LT_DEBUG_LOADERS
-  fprintf (stderr, "try_dlopen (%s, %s)\n",
-	   filename ? filename : "(null)",
-	   ext ? ext : "(null)");
-#endif
+  LT_DEBUGF ((stderr, "try_dlopen (%s, %s)\n",
+              filename ? filename : "(null)",
+              ext ? ext : "(null)"));
 
   LT__GETERROR (saved_error);
 
