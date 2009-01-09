@@ -26,6 +26,7 @@ case $GXX in
        (*"Apple Inc."*) $1=gcc-apple;;
        (*)              $1=gcc;;
      esac
+     ;;
   (no)
 AC_COMPILE_IFELSE([[
 #ifndef _MSC_VER
