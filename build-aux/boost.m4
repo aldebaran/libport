@@ -117,9 +117,14 @@ AC_LANG_PUSH([C++])dnl
       && boost_subminor_chk="|| (B_V_MAJ == $boost_version_major \
 && B_V_MIN == $boost_version_minor \
 && B_V_SUB < $boost_version_subminor)"
-    for boost_dir in "$with_boost/include" '' \
-             /opt/local/include /usr/local/include /opt/include /usr/include \
-             "$with_boost" C:/Boost/include
+    # If the user provided a value to --with-boost, use it and only it.
+    case $with_boost in #(
+      ''|yes) set x '' /opt/local/include /usr/local/include /opt/include \
+                 /usr/include C:/Boost/include;; #(
+      *)      set x "$with_boost/include" "$with_boost";;
+    esac
+    shift
+    for boost_dir
     do
     # Without --layout=system, Boost (or at least some versions) installs
     # itself in <prefix>/include/boost-<version>.  This inner loop helps to
