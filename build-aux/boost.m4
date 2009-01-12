@@ -108,6 +108,7 @@ AC_ARG_WITH([boost],
                    [prefix of Boost]BOOST_VERSION_REQ[ @<:@guess@:>@])])dnl
 AC_SUBST([DISTCHECK_CONFIGURE_FLAGS],
          ["$DISTCHECK_CONFIGURE_FLAGS '--with-boost=$with_boost'"])
+boost_save_CPPFLAGS=$CPPFLAGS
   AC_CACHE_CHECK([for Boost headers[]BOOST_VERSION_REQ],
     [boost_cv_inc_path],
     [boost_cv_inc_path=no
@@ -132,7 +133,6 @@ AC_LANG_PUSH([C++])dnl
     # I didn't indent this loop on purpose (to avoid over-indented code)
     for boost_inc in "$boost_dir" "$boost_dir"/boost-*
     do
-      boost_save_CPPFLAGS=$CPPFLAGS
       test x"$boost_inc" != x && CPPFLAGS="$CPPFLAGS -I$boost_inc"
 m4_pattern_allow([^BOOST_VERSION$])dnl
       AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <boost/version.hpp>
