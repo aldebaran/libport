@@ -148,7 +148,6 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
 # error Boost headers version < $1
 #endif
 ]])], [boost_cv_inc_path=yes], [boost_cv_version=no])
-      CPPFLAGS=$boost_save_CPPFLAGS
       if test x"$boost_cv_inc_path" = xyes; then
         if test x"$boost_inc" != x; then
           boost_cv_inc_path=$boost_inc
@@ -160,17 +159,10 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
 AC_LANG_POP([C++])dnl
     ])
     case $boost_cv_inc_path in #(
-      no)
-        AC_MSG_ERROR([Could not find Boost headers[]BOOST_VERSION_REQ])
-        ;;#(
-      yes)
-        BOOST_CPPFLAGS=
-        ;;#(
-      *)
-        BOOST_CPPFLAGS="-I$boost_cv_inc_path"
-        ;;
+      no)   AC_MSG_ERROR([Could not find Boost headers[]BOOST_VERSION_REQ]);;#(
+      yes)  BOOST_CPPFLAGS=;;#(
+      *)    AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"]);;
     esac
-AC_SUBST([BOOST_CPPFLAGS])dnl
   AC_CACHE_CHECK([for Boost's header version],
     [boost_cv_lib_version],
     [m4_pattern_allow([^BOOST_LIB_VERSION$])dnl
@@ -185,6 +177,7 @@ boost-lib-version = BOOST_LIB_VERSION],
         AC_MSG_ERROR([Invalid value: boost_major_version=$boost_major_version])
         ;;
     esac
+CPPFLAGS=$boost_save_CPPFLAGS
 m4_popdef([BOOST_VERSION_REQ])dnl
 ])# BOOST_REQUIRE
 
