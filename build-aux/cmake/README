@@ -261,6 +261,10 @@ In order to cross-compile to MinGW from Darwin you have to make sure:
   i386-mingw32-libunicows @1.1.1_0 i386-mingw32-runtime \
   i386-mingw32-w32api
 
+For sdk-remote built from the BF we need to add
+--enable-sjlj-exceptions to the configure part in
+$(port dir i386-mingw32-gcc)/portfile
+
 2) Write a file named Toolchain-mingw32.cmake like this and put it in
 your tool chain directory:
 
