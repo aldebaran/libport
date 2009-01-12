@@ -54,6 +54,12 @@ function(GEN_LIB_LOADER binary)
     foreach(path ${CMAKE_PREFIX_PATH})
       list(APPEND cmake_prefix_path "${path}/bin" "${path}/lib")
     endforeach(path)
+    set(exec_cmd "exec")
+    if(CMAKE_CROSSCOMPILING)
+      if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+	set(exec_cmd "open")
+      endif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+    endif(CMAKE_CROSSCOMPILING)
     configure_file_with_native_paths(${input} ${output}
       OPTIONS ESCAPE_QUOTES @ONLY
       VARIABLES binary_path CMAKE_PROGRAM_PATH cmake_prefix_path)
@@ -63,7 +69,9 @@ function(GEN_LIB_LOADER binary)
       configure_file_with_native_paths(${input_sh} ${output_sh}
 	OPTIONS ESCAPE_QUOTES @ONLY
 	VARIABLES binary_path CMAKE_PROGRAM_PATH cmake_prefix_path)
-      dos2unix(${output_sh})
+      if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
+	dos2unix(${output_sh})
+      endif(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
     endif(MINGW)
   else(WIN32)
     configure_file(${input} ${output} ESCAPE_QUOTES @ONLY)
