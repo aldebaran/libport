@@ -253,6 +253,88 @@ can add more path to this list.
    -DCMAKE_TOOLCHAIN_FILE=<path/to/toolchain>/Toolchain-mingw32.cmake \
    -DCMAKE_INSTALL_PREFIX=<installdir>
 
+** Darwin/MinGW
+
+In order to cross-compile to MinGW from Darwin you have to make sure:
+
+1) sudo port install i386-mingw32-binutils i386-mingw32-gcc \
+  i386-mingw32-libunicows @1.1.1_0 i386-mingw32-runtime \
+  i386-mingw32-w32api
+
+2) Write a file named Toolchain-mingw32.cmake like this and put it in
+your tool chain directory:
+
+============
+# The name of the target operating system
+set(CMAKE_SYSTEM_NAME Windows)
+
+# Which compilers to use for C and C++
+set(CMAKE_C_COMPILER i386-mingw32-gcc)
+set(CMAKE_CXX_COMPILER i386-mingw32-c++)
+
+# here is the target environment located
+get_filename_component(toolchain_prefix "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(toolchain_qt_prefix ${toolchain_prefix}/qt-win-commercial-src-4.4.3)
+set(CMAKE_FIND_ROOT_PATH
+  /opt/local/i386-mingw32
+  ${toolchain_prefix}/sdk-remote-1.5-mingw
+  ${toolchain_prefix}/engine-generic-1.5-mingw
+  ${toolchain_prefix}/kernel-1.5-mingw
+  ${toolchain_prefix}/boost_1_34_1-gcc-mingw-3.4.5
+  ${toolchain_prefix}/openssl-0.9.8i
+  ${toolchain_qt_prefix}
+  )
+
+# Adjust the default behaviour of the FIND_XXX() commands:
+# search headers and libraries in the target environment, search
+# programs in the host environment.
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+# FindQt4.cmake queries qmake to get information, this doesn't work when
+# cross-compiling.
+# set(QT_BINARY_DIR   ${toolchain_prefix}/Qt-4.4.3-com/src/qt-copy/bin)
+
+include(Tools)
+
+set_if_exists(QT_PLUGINS_DIR ${toolchain_qt_prefix}/plugins)
+set_if_exists(QT_LIBRARY_DIR ${toolchain_qt_prefix}/lib)
+set_if_exists(QT_INCLUDE_DIR ${toolchain_qt_prefix}/include)
+set_if_exists(QT_DOC_DIR ${toolchain_qt_prefix}/doc)
+set_if_exists(QT_MKSPECS_DIR ${toolchain_qt_prefix}/mkspecs)
+set_if_exists(QT_TRANSLATIONS_DIR ${toolchain_qt_prefix}/translations)
+
+set(QT_MODULES
+  QtCore QtGui Qt3Support QtSvg QtScript QtTest QtUiTools
+  QtHelp QtWebKit QtXmlPatterns phonon QtMotif QtNetwork
+  QtNsPlugin QtOpenGL QtSql QtXml QtDesigner QtDBus)
+foreach(i ${QT_MODULES})
+  string(TOUPPER ${i} I)
+  set_if_exists(QT_${I}_LIBRARY_DEBUG ${toolchain_qt_prefix}/lib/lib${i}d4.a)
+  set_if_exists(QT_${I}_LIBRARY_RELEASE ${toolchain_qt_prefix}/lib/lib${i}4.a)
+  set_if_exists(QT_${I}_INCLUDE_DIR ${toolchain_qt_prefix}/include/${I})
+endforeach(i)
+set(I)
+set_if_exists(QT_ASSISTANTCLIENT_LIBRARY_DEBUG
+  ${toolchain_qt_prefix}/lib/libQtAssistantClientd4.a)
+set_if_exists(QT_ASSISTANTCLIENT_LIBRARY_RELEASE
+  ${toolchain_qt_prefix}/lib/libQtAssistantClient4.a)
+set_if_exists(QT_ASSISTANTCLIENT_INCLUDE_DIR
+  ${toolchain_qt_prefix}/include/QtAssistant)
+============
+
+3) cmake \
+    <builddir> \
+    -G "Unix Makefiles" \
+    -DCMAKE_INSTALL_PREFIX=<installdir> \
+    -DCMAKE_TOOLCHAIN_FILE=<toolchain-path>/Toolchain-mingw32.cmake" \
+    "$@"
+
+6) You can run the produced binary using a Virtual Windows. If the VM
+is running in Parallels, you can just enter 'open <binary-name>'. All
+DLLs must be in the path.
+
 * Directories
 
 ** modules
