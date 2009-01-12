@@ -218,6 +218,41 @@ export CXX="c:/MinGW/bin/g++.exe"
 
 6) You can use ccache.exe for windows:
 
+** Linux/mingw
+
+In order to cross-compile to MinGW from Linux you have to make sure:
+
+1) sudo apt-get install mingw32 mingw32-binutils mingw32-runtime
+
+2) Write a file named Toolchain-mingw32.cmake like this:
+
+=============
+# the name of the target operating system
+SET(CMAKE_SYSTEM_NAME Windows)
+
+# which compilers to use for C and C++
+SET(CMAKE_C_COMPILER i586-mingw32msvc-gcc)
+SET(CMAKE_CXX_COMPILER i586-mingw32msvc-g++)
+
+# here is the target environment located
+SET(CMAKE_FIND_ROOT_PATH /usr/i586-mingw32msvc $ENV{HOME}/mingw-install)
+
+# adjust the default behaviour of the FIND_XXX() commands:
+# search headers and libraries in the target environment, search
+# programs in the host environment
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+=============
+
+3) All the dependent libraries have to be present in one of the
+CMAKE_FIND_ROOT_PATH (preferably $ENV{HOME}/mingw-install). Note, you
+can add more path to this list.
+
+4) cmake <path/to/build-dir> \
+   -DCMAKE_TOOLCHAIN_FILE=<path/to/toolchain>/Toolchain-mingw32.cmake \
+   -DCMAKE_INSTALL_PREFIX=<installdir>
+
 * Directories
 
 ** modules
