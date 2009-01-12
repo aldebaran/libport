@@ -1,5 +1,5 @@
-#ifndef SCHEDULER_TAG_HH
-# define SCHEDULER_TAG_HH
+#ifndef SCHED_TAG_HH
+# define SCHED_TAG_HH
 
 # include <boost/any.hpp>
 
@@ -9,7 +9,7 @@
 # include <sched/export.hh>
 # include <sched/fwd.hh>
 
-namespace scheduler
+namespace sched
 {
   /// Tag priorities
   typedef unsigned int prio_type;
@@ -96,8 +96,8 @@ namespace scheduler
     bool flow_control_;
   };
 
-} // namespace scheduler
+} // namespace sched
 
 # include <sched/tag.hxx>
 
-#endif // SCHEDULER_TAG_HH
+#endif // SCHED_TAG_HH

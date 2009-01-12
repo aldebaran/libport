@@ -3,7 +3,7 @@
 #include <sched/scheduler.hh>
 #include <sched/tag.hh>
 
-namespace scheduler
+namespace sched
 {
   void
   Tag::stop(Scheduler& sched, const boost::any& payload) const
@@ -20,4 +20,4 @@ namespace scheduler
     pabort("!blocked");
   }
 
-} // namespace scheduler
+} // namespace sched

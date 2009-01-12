@@ -1,5 +1,5 @@
-#ifndef SCHEDULER_PTHREAD_CORO_HH
-# define SCHEDULER_PTHREAD_CORO_HH
+#ifndef SCHED_PTHREAD_CORO_HH
+# define SCHED_PTHREAD_CORO_HH
 
 # include <libport/config.h>
 
@@ -22,4 +22,4 @@ public:
 
 # endif // LIBPORT_SCHEDULER_CORO_OSTHREAD
 
-#endif // !SCHEDULER_PTHREAD_CORO_HH
+#endif // !SCHED_PTHREAD_CORO_HH

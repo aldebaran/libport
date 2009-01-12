@@ -1,10 +1,10 @@
 /**
  ** \file scheduler/scheduler.hh
- ** \brief Definition of scheduler::Scheduler.
+ ** \brief Definition of sched::Scheduler.
  */
 
-#ifndef SCHEDULER_SCHEDULER_HH
-# define SCHEDULER_SCHEDULER_HH
+#ifndef SCHED_SCHEDULER_HH
+# define SCHED_SCHEDULER_HH
 
 # include <iosfwd>
 
@@ -19,7 +19,7 @@
 # include <sched/export.hh>
 # include <sched/fwd.hh>
 
-namespace scheduler
+namespace sched
 {
 
   enum {
@@ -182,8 +182,8 @@ namespace scheduler
     bool real_time_behaviour_;
   };
 
-} // namespace scheduler
+} // namespace sched
 
 # include <sched/scheduler.hxx>
 
-#endif // !SCHEDULER_SCHEDULER_HH
+#endif // !SCHED_SCHEDULER_HH

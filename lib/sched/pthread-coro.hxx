@@ -1,5 +1,5 @@
-#ifndef SCHEDULER_PTHREAD_CORO_HXX
-# define SCHEDULER_PTHREAD_CORO_HXX
+#ifndef SCHED_PTHREAD_CORO_HXX
+# define SCHED_PTHREAD_CORO_HXX
 
 // Implemented in the *.cc.
 void
@@ -16,4 +16,4 @@ coroutine_start(Coro* self, Coro* other, void (*callback)(T*), T* context)
 }
 
 
-#endif // !SCHEDULER_PTHREAD_CORO_HH
+#endif // !SCHED_PTHREAD_CORO_HH

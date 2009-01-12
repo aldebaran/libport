@@ -1,10 +1,10 @@
-#ifndef SCHEDULER_EXCEPTION_HXX
-# define SCHEDULER_EXCEPTION_HXX
+#ifndef SCHED_EXCEPTION_HXX
+# define SCHED_EXCEPTION_HXX
 
 # include <cstdlib>
 # include <libport/assert.hh>
 
-namespace scheduler
+namespace sched
 {
 
   inline
@@ -27,6 +27,6 @@ namespace scheduler
     pabort("rethrow_ returned");
   }
 
-} // namespace scheduler
+} // namespace sched
 
-#endif // SCHEDULER_EXCEPTION_HXX
+#endif // SCHED_EXCEPTION_HXX

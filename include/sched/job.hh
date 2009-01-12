@@ -3,8 +3,8 @@
  ** \brief Definition of Job.
  */
 
-#ifndef SCHEDULER_JOB_HH
-# define SCHEDULER_JOB_HH
+#ifndef SCHED_JOB_HH
+# define SCHED_JOB_HH
 
 # include <iosfwd>
 # include <list>
@@ -20,7 +20,7 @@
 # include <sched/fwd.hh>
 # include <sched/tag.hh>
 
-namespace scheduler
+namespace sched
 {
 
   enum job_state
@@ -418,8 +418,8 @@ namespace scheduler
   SCHED_API
   void terminate_jobs(jobs_type& jobs);
 
-} // namespace scheduler
+} // namespace sched
 
 # include <sched/job.hxx>
 
-#endif // !SCHEDULER_JOB_HH
+#endif // !SCHED_JOB_HH

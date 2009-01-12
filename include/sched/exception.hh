@@ -1,5 +1,5 @@
-#ifndef SCHEDULER_EXCEPTION_HH
-# define SCHEDULER_EXCEPTION_HH
+#ifndef SCHED_EXCEPTION_HH
+# define SCHED_EXCEPTION_HH
 
 # include <string>
 
@@ -8,7 +8,7 @@
 # include <libport/compiler.hh>
 # include <sched/export.hh>
 
-namespace scheduler
+namespace sched
 {
   class exception;
   typedef std::auto_ptr<exception> exception_ptr;
@@ -36,9 +36,9 @@ namespace scheduler
 
 #define COMPLETE_EXCEPTION(Name)				\
  public:							\
- virtual ::scheduler::exception_ptr clone() const		\
+ virtual ::sched::exception_ptr clone() const		\
  {								\
-   return ::scheduler::exception_ptr(new Name(*this));		\
+   return ::sched::exception_ptr(new Name(*this));		\
  };								\
  virtual std::string what() const throw()			\
  {								\
@@ -50,8 +50,8 @@ private:							\
     throw *this;						\
   };
 
-} // namespace scheduler
+} // namespace sched
 
 # include <sched/exception.hxx>
 
-#endif // SCHEDULER_EXCEPTION_HH
+#endif // SCHED_EXCEPTION_HH

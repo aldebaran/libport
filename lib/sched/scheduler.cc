@@ -1,6 +1,6 @@
 /**
  ** \file scheduler/scheduler.cc
- ** \brief Implementation of scheduler::Scheduler.
+ ** \brief Implementation of sched::Scheduler.
  */
 
 //#define ENABLE_DEBUG_TRACES
@@ -17,7 +17,7 @@
 #include <sched/scheduler.hh>
 #include <sched/job.hh>
 
-namespace scheduler
+namespace sched
 {
 
   Scheduler::Scheduler(boost::function0<libport::utime_t> get_time)
@@ -404,4 +404,4 @@ namespace scheduler
     stats_.resize(0);
   }
 
-} // namespace scheduler
+} // namespace sched

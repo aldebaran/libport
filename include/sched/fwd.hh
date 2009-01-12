@@ -1,10 +1,10 @@
 /**
  ** \file scheduler/fwd.hh
- ** \brief Forward declarations for the namespace scheduler.
+ ** \brief Forward declarations for the namespace sched.
  */
 
-#ifndef SCHEDULER_FWD_HH
-# define SCHEDULER_FWD_HH
+#ifndef SCHED_FWD_HH
+# define SCHED_FWD_HH
 
 # include <list>
 
@@ -12,7 +12,7 @@
 
 # include <sched/exception.hh>
 
-namespace scheduler
+namespace sched
 {
 
   class Scheduler;
@@ -31,6 +31,6 @@ namespace scheduler
     COMPLETE_EXCEPTION(SchedulerException);
   };
 
-} // namespace scheduler
+} // namespace sched
 
-#endif // !SCHEDULER_FWD_HH
+#endif // !SCHED_FWD_HH

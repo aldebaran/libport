@@ -1,5 +1,5 @@
-#ifndef SCHEDULER_COROUTINE_HXX
-#define SCHEDULER_COROUTINE_HXX
+#ifndef SCHED_COROUTINE_HXX
+#define SCHED_COROUTINE_HXX
 
 # include <sched/configuration.hh>
 
@@ -46,4 +46,4 @@ coroutine_switch_to(Coro* self, Coro* next)
   Coro_switchTo_(self, next);
 }
 
-#endif // SCHEDULER_COROUTINE_HXX
+#endif // SCHED_COROUTINE_HXX

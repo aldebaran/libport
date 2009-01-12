@@ -3,8 +3,8 @@
  ** \brief Inline implementation of Job.
  */
 
-#ifndef SCHEDULER_JOB_HXX
-# define SCHEDULER_JOB_HXX
+#ifndef SCHED_JOB_HXX
+# define SCHED_JOB_HXX
 
 # include <cassert>
 
@@ -13,7 +13,7 @@
 # include <sched/scheduler.hh>
 # include <sched/coroutine.hh>
 
-namespace scheduler
+namespace sched
 {
 
   inline void
@@ -268,6 +268,6 @@ namespace scheduler
     child_exception_->rethrow();
   }
 
-} // namespace scheduler
+} // namespace sched
 
-#endif // !SCHEDULER_JOB_HXX
+#endif // !SCHED_JOB_HXX

@@ -1,11 +1,11 @@
-#ifndef SCHEDULER_TAG_HXX
-# define SCHEDULER_TAG_HXX
+#ifndef SCHED_TAG_HXX
+# define SCHED_TAG_HXX
 
 # include <boost/bind.hpp>
 
 # include <sched/scheduler.hh>
 
-namespace scheduler
+namespace sched
 {
 
   inline
@@ -102,6 +102,6 @@ namespace scheduler
     return flow_control_;
   }
 
-} // namespace scheduler
+} // namespace sched
 
-#endif // SCHEDULER_TAG_HXX
+#endif // SCHED_TAG_HXX

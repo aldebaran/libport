@@ -1,15 +1,15 @@
 /**
  ** \file scheduler/scheduler.hxx
- ** \brief Inline implementation of scheduler::Scheduler.
+ ** \brief Inline implementation of sched::Scheduler.
  */
 
-#ifndef SCHEDULER_SCHEDULER_HXX
-# define SCHEDULER_SCHEDULER_HXX
+#ifndef SCHED_SCHEDULER_HXX
+# define SCHED_SCHEDULER_HXX
 
 # include <sched/scheduler.hh>
 # include <sched/job.hh>
 
-namespace scheduler
+namespace sched
 {
   inline Job&
   Scheduler::current_job() const
@@ -54,6 +54,6 @@ namespace scheduler
     return real_time_behaviour_;
   }
 
-} // namespace scheduler
+} // namespace sched
 
-#endif // !SCHEDULER_SCHEDULER_HXX
+#endif // !SCHED_SCHEDULER_HXX

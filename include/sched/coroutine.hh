@@ -1,5 +1,5 @@
-#ifndef SCHEDULER_COROUTINE_HH
-# define SCHEDULER_COROUTINE_HH
+#ifndef SCHED_COROUTINE_HH
+# define SCHED_COROUTINE_HH
 
 # include <libport/config.h>
 
@@ -52,4 +52,4 @@ void coroutine_initialize_main(Coro* coro);
 # if !defined LIBPORT_SCHEDULER_CORO_OSTHREAD
 #  include <sched/coroutine.hxx>
 # endif
-#endif // SCHEDULER_COROUTINE_HH
+#endif // SCHED_COROUTINE_HH

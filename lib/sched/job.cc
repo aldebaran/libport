@@ -11,7 +11,7 @@
 
 #include <sched/job.hh>
 
-namespace scheduler
+namespace sched
 {
   unsigned int Job::alive_jobs_ = 0;
 
@@ -230,4 +230,4 @@ namespace scheduler
     jobs.clear();
   }
 
-} // namespace scheduler
+} // namespace sched
