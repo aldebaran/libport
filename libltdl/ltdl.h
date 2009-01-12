@@ -45,12 +45,10 @@ LT_BEGIN_C_DECLS
 
 
 /* --- DEBUGGING --- */
-#if defined LT_DEBUG_LOADERS
 /* Whether debugging messages are displayed. */
 extern int lt_debug_level;
 /* Prefix to debug messages. */
 extern const char* lt_program_name;
-#endif
 
 
 /* --- DYNAMIC MODULE LOADING API --- */

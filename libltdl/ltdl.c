@@ -152,10 +152,10 @@ static	lt_dlhandle	handles	= 0;
 static	int		initialized	= 0;
 
 /* --- DEBUGGING --- */
-#if defined LT_DEBUG_LOADERS
 int lt_debug_level = 0;
 const char* lt_program_name = 0;
 
+#if defined LT_DEBUG_LOADERS
 # define LT_DEBUGF(Args)                                \
   do {                                                  \
     if (lt_debug_level)                                 \
