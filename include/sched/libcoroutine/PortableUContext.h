@@ -113,16 +113,17 @@ void setmcontext(const mcontext_t*);
 
 #if defined(HAS_UCONTEXT) &&  defined(__arm__)
 #include <features.h>
-#if defined(__UCLIBC__)
 /* UClibc does not have ucontext. Use our implementation. */
-#include <sys/ucontext.h>
+#include <ucontext.h>
 # ifdef __cplusplus
 extern "C" {
 # endif
 int getmcontext(mcontext_t*);
 void setmcontext(const mcontext_t*);
-int		swapcontext(ucontext_t*, ucontext_t*);
+#if defined(__UCLIBC__)
+int		swapcontext(ucontext_t*, const ucontext_t*);
 void		makecontext(ucontext_t*, void(*)(), int, ...);
+#endif
 # ifdef __cplusplus
 }
 # endif
@@ -136,7 +137,6 @@ void		makecontext(ucontext_t*, void(*)(), int, ...);
    getmcontext((mcontext_t*)((char*)(&(u)->uc_mcontext) + 12))
 #define NEEDSWAPCONTEXT
 #define NEEDARMMAKECONTEXT
-#endif
 #endif
 
 #endif
