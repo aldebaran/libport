@@ -8,7 +8,7 @@ static const std::string myself = "dirent" EXEEXT;
 
 static void test()
 {
-  DIR* dir = opendir(".");
+  DIR* dir = opendir("libport");
   struct dirent* entry;
   bool found = false;
 
@@ -23,9 +23,7 @@ static void test()
 test_suite*
 init_test_suite()
 {
-  test_suite* suite = BOOST_TEST_SUITE("libport/dirent.h");
-
+  test_suite* suite = BOOST_TEST_SUITE("libport::dirent");
   suite->add(BOOST_TEST_CASE(test));
-
   return suite;
 }

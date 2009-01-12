@@ -11,7 +11,7 @@ void
 check ()
 {
   const std::string input =
-    std::string() + getenv("SRCDIR") + "libport/666.txt";
+    std::string() + getenv("SRCDIR") + "/libport/666.txt";
 # define CHECK(Type, Value)                             \
   do {                                                  \
     Type v = libport::file_contents_get<Type>(input);   \
