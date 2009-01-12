@@ -21,6 +21,10 @@ AM_PROG_AS
 
 AC_CONFIG_HEADERS([include/config.h])
 
+# Basically, the following lines states we install in prefix.
+URBI_PACKAGE_KIND([sdk])
+URBI_LIBPORT
+
 URBI_LTDL
 BOOST_TEST
 BOOST_SYSTEM
@@ -41,13 +45,6 @@ if test x$enable_boost_serialization = xyes; then
   BOOST_SERIALIZATION
 fi
 
-## -------------- ##
-## Sub packages.  ##
-## -------------- ##
-
-# Basically, the following lines states we install in prefix.
-URBI_PACKAGE_KIND([sdk])
-URBI_LIBPORT
 
 AC_CONFIG_FILES([
   Makefile
