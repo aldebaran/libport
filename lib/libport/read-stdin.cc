@@ -71,7 +71,7 @@ namespace libport
   std::string
   read_stdin()
   {
-    return 0;
+    return std::string();
   }
 
 #else
@@ -104,7 +104,7 @@ namespace libport
 	return std::string(buf, r);
     }
     else
-      return 0;
+      return std::string();
   }
 
 #endif
