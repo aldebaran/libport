@@ -36,7 +36,7 @@ Simulate the execution of \`git ls-files' using the files that are
 currently there instead of relying on the git repository if there is
 none.  Contrary to \`git ls-files', when a pattern fails to match,
 return the pattern itself instead of nothing.  This is useful when
-running `make check TESTS=no-yet-git-added.chk'.
+running \`make check TESTS=no-yet-git-added.chk'.
 
 Options:
   -h, --help         display this message and exit
