@@ -513,6 +513,21 @@ function(gostai_add_library name)
     target_link_libraries(${name} ${${name}_LIBRARIES})
   endif(${name}_LIBRARIES)
 
+  # =============== #
+  # Configure files #
+  # =============== #
+
+  configure_file(
+    ${CMAKE_MODULE_PATH}/project-info.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/project-info.h
+    ESCAPE_QUOTES
+    @ONLY)
+  configure_file(
+    ${CMAKE_MODULE_PATH}/gostai-info.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/gostai-info.h
+    ESCAPE_QUOTES
+    @ONLY)
+
   # ============= #
   # Install files #
   # ============= #
