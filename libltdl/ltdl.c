@@ -172,10 +172,8 @@ const char* lt_program_name = 0;
 # define LT_DEBUGF(Args)
 #endif
 
-#define LT_DEFAULT(Arg, Default)                \
-  (Arg ? Arg : Default)
 #define LT_NONNULL(Arg)                         \
-  LT_DEFAULT(Arg, "(null)")
+  (Arg ? Arg : "(null)")
 #define LT_DEBUGF1(Format, Arg1)                \
   LT_DEBUGF((stderr, Format, Arg1))
 #define LT_DEBUGF2(Format, Arg1, Arg2)          \
@@ -396,7 +394,7 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
 
   LT_DEBUGF2 ("tryall_dlopen (%s, %s)",
               LT_NONNULL (filename),
-              LT_DEFAULT (vtable, "(ALL)"));
+              vtable ? vtable->name : "(ALL)");
 
   LT__GETERROR (saved_error);
 
