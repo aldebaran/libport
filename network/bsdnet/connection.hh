@@ -14,7 +14,8 @@
 # include <network/bsdnet/network.hh>
 
 //! LinuxConnection implements an TCP/IP client connection.
-class URBI_SDK_API Connection : public UConnection, public Network::Pipe
+class URBI_SDK_API Connection
+  : public kernel::UConnection, public Network::Pipe
 {
 public:
   // Parameters used by the constructor.

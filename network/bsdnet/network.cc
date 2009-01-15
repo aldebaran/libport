@@ -1,4 +1,3 @@
-
 // Must be first to avoid inclusion of windows.h which will include winsock.h
 #include <network/bsdnet/network.hh>
 
@@ -199,7 +198,7 @@ namespace Network
       return;
     }
     Connection* c = new Connection(cfd);
-    ::urbiserver->connection_add(c);
+    kernel::urbiserver->connection_add(c);
     registerNetworkPipe(c);
   }
 

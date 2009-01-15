@@ -21,7 +21,7 @@
  to the LinuxConnection constructor.
  */
 Connection::Connection(int fd)
-  : UConnection(*::urbiserver, Connection::PACKETSIZE)
+  : UConnection(*kernel::urbiserver, Connection::PACKETSIZE)
   , fd(fd)
 {
   // Test the error from UConnection constructor.
