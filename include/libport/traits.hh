@@ -3,6 +3,8 @@
 
 # include <libport/intrusive-ptr.hh>
 
+/* FIXME: convert this to tr1 names. */
+
 namespace libport
 {
   namespace traits
@@ -31,6 +33,7 @@ namespace libport
       typedef T& res;
     };
 
+
     template <typename T>
     struct ConstPtr
     {
@@ -54,6 +57,24 @@ namespace libport
     {
       typedef typename meta::Compose<SharedPtr, Const>::Res<T>::res res;
     };
+
+
+    /*-------------------.
+    | Remove reference.  |
+    `-------------------*/
+
+    template <typename T>
+    struct remove_reference
+    {
+      typedef T type;
+    };
+
+    template <typename T>
+    struct remove_reference<T&>
+    {
+      typedef T type;
+    };
+
   }
 }
 
