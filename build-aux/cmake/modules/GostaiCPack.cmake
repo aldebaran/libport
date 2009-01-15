@@ -107,6 +107,8 @@ if(NOT CPACK_GENERATOR)
     set(CPACK_PACKAGE_FILE_NAME_EXTENSION ".exe")
   endif(UNIX)
 endif(NOT CPACK_GENERATOR)
+set(CPACK_PACKAGE_FULL_FILE_NAME
+  "${CPACK_PACKAGE_FILE_NAME}${CPACK_PACKAGE_FILE_NAME_EXTENSION}")
 
 # ============== #
 # NSIS generator #
@@ -174,18 +176,39 @@ endif(WIN32 AND NOT UNIX)
 # ========================= #
 
 # Upload on the buildfarm gate
-set(UPLOAD_PACKAGE_URL "'build@gate-bf:release/${CPACK_PACKAGE_NAME}'"
+set(GATE_UPLOAD_PACKAGE_URL "build@gate-bf:release/${CPACK_PACKAGE_NAME}"
   CACHE STRING "The URL where to upload the generated package.")
 add_custom_target(gate-upload-package
   COMMAND
   scp -q
-  "${CPACK_PACKAGE_FILE_NAME}${CPACK_PACKAGE_FILE_NAME_EXTENSION}"
-  "${UPLOAD_PACKAGE_URL}"
+  "${CPACK_PACKAGE_FULL_FILE_NAME}"
+  "${GATE_UPLOAD_PACKAGE_URL}"
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-  COMMENT "Uploading package to ${UPLOAD_PACKAGE_URL}")
+  COMMENT "Uploading package to ${GATE_UPLOAD_PACKAGE_URL}")
 configure_file(
   ${CMAKE_MODULE_PATH}/internal-release-mail.txt.in
   ${CMAKE_BINARY_DIR}/internal-release-mail.txt
+  @ONLY
+  )
+
+# Upload on the www.gostai.com
+set(WWW_UPLOAD_PACKAGE_URL
+  "downloads@www.gostai.com:${PROJECT_NAME}/${PROJECT_VENDOR}")
+configure_file(
+  ${CMAKE_MODULE_PATH}/www-upload-package.cmake.in
+  ${CMAKE_BINARY_DIR}/www-upload-package.cmake
+  )
+configure_file(
+  ${CMAKE_MODULE_PATH}/www-upload-package.index.html.php.in
+  ${CMAKE_BINARY_DIR}/www-upload-package.index.html.php
+  @ONLY
+  )
+add_custom_target(www-upload-package
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/www-upload-package.cmake
+  COMMENT "Uploading package to '${WWW_UPLOAD_PACKAGE_URL}'")
+configure_file(
+  ${CMAKE_MODULE_PATH}/www-release-mail.txt.in
+  ${CMAKE_BINARY_DIR}/www-release-mail.txt
   @ONLY
   )
 

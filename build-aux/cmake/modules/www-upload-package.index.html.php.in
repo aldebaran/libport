@@ -1,0 +1,5 @@
+<?php
+
+header('Location: @CPACK_PACKAGE_FULL_FILE_NAME@');
+
+?>
