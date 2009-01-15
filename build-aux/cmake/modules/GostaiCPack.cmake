@@ -1,7 +1,6 @@
 # This module setup the variables used by cpack. It uses many variables already
 # set for package information. Here the list:
 #
-#  PROJECT_LONGNAME
 #  PROJECT_VERSION_MAJOR
 #  PROJECT_VERSION_MINOR
 #  PROJECT_VERSION
@@ -30,6 +29,9 @@ check_cmake_vars_exists(
   PROJECT_BUGREPORT
   PROJECT_NAME
   PROJECT_TARNAME
+  PROJECT_VERSION_MAJOR
+  PROJECT_VERSION_MINOR
+  PROJECT_VERSION_PATCH
   )
 
 # ============= #
