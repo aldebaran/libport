@@ -67,15 +67,30 @@ find_prog ()
                        [echo "$as_dir/$[1]"; break])])
 }
 
+
+# cannot_find STATUS MESSAGE PATH
+# -------------------------------
+# Call error, but make the path nicer to read: split it on `:'.
+cannot_find ()
+{
+  local path="$[3]"
+  local save_IFS=$IFS
+  IFS=:
+  set "$[1]" "$[2]" $path
+  IFS=$save_IFS
+  error "$[@]"
+}
+
 # xfind_file PROG PATH
 # --------------------
 # Same as xfind_prog, but don't take "no" for an answer.
 xfind_file ()
 {
   local res
-  res=$(find_prog "$[1]" "$[2]")
+  local path="$[2]"
+  res=$(find_prog "$[1]" "$path")
   test -n "$res" ||
-    error OSFILE "cannot find $[1] in $[2]"
+    cannot_find OSFILE "cannot find $[1] in" "$[2]"
   echo "$res"
 }
 
@@ -104,7 +119,7 @@ xfind_prog ()
   local res
   res=$(find_prog "$[1]" "$path")
   test -n "$res" ||
-    error OSFILE "cannot find executable $[1] in $path"
+    cannot_find OSFILE "cannot find executable $[1] in" "$path"
   echo "$res"
 }
 

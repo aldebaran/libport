@@ -124,7 +124,7 @@ find_urbi_server ()
        # If we can't find it, then ucore-pc was probably not installed.
        # Skip.
        test x"$res" != x ||
-         error SKIP "cannot find $URBI_SERVER in $PATH"
+         cannot_find SKIP "cannot find $URBI_SERVER in" "$PATH"
        URBI_SERVER=$res
        ;;
   esac
