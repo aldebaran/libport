@@ -113,17 +113,22 @@ void setmcontext(const mcontext_t*);
 
 #if defined(HAS_UCONTEXT) &&  defined(__arm__)
 #include <features.h>
-/* UClibc does not have ucontext. Use our implementation. */
+/* UClibc does not have ucontext. Glibc has a dummy implementation.
+ * Use our own implementation of those functions. */
 #include <ucontext.h>
+/* In some dynamic library loading configurations, the libc implementation of
+ * swapcontext and makecontenxt takes precedence over ours. So rename those
+ * functions.
+ */
+#define swapcontext libcoro_swapcontext
+#define makecontext libcoro_makecontext
 # ifdef __cplusplus
 extern "C" {
 # endif
-int getmcontext(mcontext_t*);
-void setmcontext(const mcontext_t*);
-#if defined(__UCLIBC__)
-int		swapcontext(ucontext_t*, const ucontext_t*);
-void		makecontext(ucontext_t*, void(*)(), int, ...);
-#endif
+int             swapcontext(ucontext_t*, const ucontext_t*);
+void            makecontext(ucontext_t*, void(*)(), int, ...);
+int             getmcontext(mcontext_t*);
+void            setmcontext(const mcontext_t*);
 # ifdef __cplusplus
 }
 # endif
