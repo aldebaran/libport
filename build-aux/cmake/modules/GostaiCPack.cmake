@@ -171,9 +171,10 @@ endif(WIN32 AND NOT UNIX)
 # Add upload-package target #
 # ========================= #
 
+# Upload on the buildfarm gate
 set(UPLOAD_PACKAGE_URL "'build@gate-bf:release/${CPACK_PACKAGE_NAME}'"
   CACHE STRING "The URL where to upload the generated package.")
-add_custom_target(upload-package
+add_custom_target(gate-upload-package
   COMMAND
   scp -q
   "${CPACK_PACKAGE_FILE_NAME}${CPACK_PACKAGE_FILE_NAME_EXTENSION}"
