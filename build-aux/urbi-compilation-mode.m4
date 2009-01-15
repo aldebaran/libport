@@ -105,7 +105,8 @@ urbi_compilation_mode_set ()
       (speed)
         urbi_compiler_flags -O3
         AC_DEFINE([SPEED], [1],
-                  [Define to optimize for speed the kernel at the detriment of compilation time.])
+                  [Define to optimize for speed the kernel
+                   at the detriment of compilation time.])
         urbi_compilation_mode_set final
         ;;
 

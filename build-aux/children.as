@@ -132,13 +132,18 @@ pids_wait ()
     timeout=$(($timeout * 5))
   fi
 
+  : ${timeout_factor:=1}
+  timeout=$(($timeout * $timeout_factor))
+  local count_down=$timeout
+
   while pids_alive "$[@]"; do
-    if test $timeout -le 0; then
+    if test $count_down -le 0; then
+      echo "Timeout (${timeout}s) expired"
       pids_kill "$[@]"
       break
     fi
     sleep 1
-    timeout=$(($timeout - 1))
+    count_down=$(($count_down - 1))
   done
 }
 
