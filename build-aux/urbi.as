@@ -163,7 +163,7 @@ spawn_urbi_server ()
   # Wait for the port file to be completed: it must have one full line
   # (with \n to be sure it is complete).
   local t=0
-  local tmax=8
+  local tmax=20
   local dt=.5
   # 0 if we stop, 1 to continue sleeping.
   local cont
