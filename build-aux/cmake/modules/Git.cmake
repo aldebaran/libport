@@ -45,8 +45,7 @@ if(NOT GIT_CMAKE_GUARD)
       )
 
     if(res)
-      message(SEND_ERROR
-	"failed to git describe '${treeish}':\nstatus=${res}\nerror=${err}")
+      echo("failed to git describe '${treeish}':\nstatus=${res}\nerror=${err}")
       set(${out} NOTFOUND PARENT_SCOPE)
     else(res)
       set(${out} ${gitout} PARENT_SCOPE)
