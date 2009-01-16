@@ -1,6 +1,8 @@
 #include <iostream>
-#include <libport/fd-stream.hh>
+#include <libport/unistd.h>
 #include <libport/cstdio>
+
+#include <libport/fd-stream.hh>
 
 namespace libport
 {

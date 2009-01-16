@@ -150,9 +150,9 @@ extern "C"
 
 
 
-/*--------.
-| sleep.  |
-`--------*/
+/*-------.
+| pipe.  |
+`-------*/
 
 # if defined WIN32
 #  include <libport/cstdio> // BUFSIZ
@@ -165,6 +165,15 @@ extern "C"
     return _pipe(pipefd, BUFSIZ, _O_BINARY);
   }
 }
+# endif
+
+
+/*----------.
+| ssize_t.  |
+`----------*/
+
+# if defined WIN32
+typedef int ssize_t;
 # endif
 
 
