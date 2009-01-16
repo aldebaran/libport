@@ -1,6 +1,6 @@
 ##
-## FindSdkEngine.cmake: This file is part of cmake-aux.
-## Copyright (C) Gostai S.A.S., 2006-2008.
+## FindUrbiOpenSSL.cmake: This file is part of libport.
+## Copyright (C) Gostai S.A.S., 2006-2009.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -10,8 +10,8 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 ##-----------------------------------------------------------------
-## CMake PACKAGE - URBI SDK Engine
-## Find URBI Sdk Engine libraries and paths.
+## CMake PACKAGE - Urbi Open SSL
+## Find Urbi Engine Generic libraries and paths.
 #
 # Current FindOpenSSL module provided by CMake is laking:
 #    * support for choosing between static/shared library to search for
@@ -83,12 +83,12 @@ if(UNIX)
 
     # Search for the associated crypto library.
     package_search(LIBRARY ${PACKAGE_NAME}_CRYPTO_LIBRARY crypto
-                   FULLNAME "SDK Engine's Cryptography"
+                   FULLNAME "Urbi OpenSSL's Cryptography"
                    STATIC)
 
     # Search for the associated dl library.
     package_search(LIBRARY ${PACKAGE_NAME}_DL_LIBRARY dl
-                   FULLNAME "SDK Engine's dl"
+                   FULLNAME "Urbi OpenSSL's dl"
                    SHARED)
 endif(UNIX)
 
@@ -106,36 +106,36 @@ if(WIN32)
 
     package_search(LIBRARY ${PACKAGE_NAME}_EAY32_LIBRARY eay32 libeay32
                    FULLNAME "OpenSSL Crypto for Windows"
-                   INSTALL "URBI SDK Engine"
-                   PATHS ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
-                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
-                         ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
-                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
-                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
-                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
-                         ${SDK_ENGINE_ROOT_DIR}/lib)
+                   INSTALL "Urbi Engine Generic"
+                   PATHS ${URBI_ENGINE_GENERIC_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/lib)
 
     package_search(LIBRARY ${PACKAGE_NAME}_SSLEAY32_LIBRARY ssleay32
                    FULLNAME "OpenSSL for Windows"
-                   INSTALL "URBI SDK Engine"
-                   PATHS ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
-                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
-                         ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
-                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
-                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
-                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
-                         ${SDK_ENGINE_ROOT_DIR}/lib)
+                   INSTALL "URBI Engine Generic"
+                   PATHS ${URBI_ENGINE_GENERIC_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/lib)
 
     package_search(LIBRARY ${PACKAGE_NAME}_IPHLPAPI_LIBRARY iphlpapi
                    FULLNAME "OpenSSL IPHLPAPI for Windows"
-                   INSTALL "URBI SDK Engine"
-                   PATHS ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
-                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
-                         ${SDK_ENGINE_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
-                         ${SDK_ENGINE_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
-                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
-                         ${SDK_ENGINE_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
-                         ${SDK_ENGINE_ROOT_DIR}/lib)
+                   INSTALL "Urbi Engine Generic"
+                   PATHS ${URBI_ENGINE_GENERIC_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/lib)
 
 endif(WIN32)
 

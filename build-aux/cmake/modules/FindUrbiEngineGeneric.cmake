@@ -1,5 +1,5 @@
 ##
-## FindSdkEngine.cmake: This file is part of cmake-aux.
+## FindUrbiEngineGeneric.cmake: This file is part of cmake-aux.
 ## Copyright (C) Gostai S.A.S., 2006-2008.
 ##
 ## This software is provided "as is" without warranty of any kind,
@@ -11,7 +11,7 @@
 ##
 ##-----------------------------------------------------------------
 ## CMake PACKAGE - URBI SDK Engine
-## Find URBI Sdk Engine libraries and paths.
+## Find Urbi Engine Generic libraries and paths.
 #
 # Current FindOpenSSL module provided by CMake is laking:
 #    * support for choosing between static/shared library to search for
@@ -24,7 +24,7 @@
 # Dependencies
 find_package(UrbiOpenSSL REQUIRED)
 
-set(PACKAGE_FULLNAME "URBI SDK Engine")
+set(PACKAGE_FULLNAME "Urbi Engine Generic")
 
 ##-----------------------------------------------------------------
 # This package tries to respect CMake guidelines to be easily
@@ -67,17 +67,17 @@ set(PACKAGE_FULLNAME "URBI SDK Engine")
 #
 
 # Here is the current XXX_YY list :
-# SDK_ENGINE_URBI_LIBRARY
-# SDK_ENGINE_INCLUDE
-# SDK_ENGINE_UMAIN_DIR
-# SDK_ENGINE_THREAD_BOOST_LIBRARY
+# URBI_ENGINE_GENERIC_URBI_LIBRARY
+# URBI_ENGINE_GENERIC_INCLUDE
+# URBI_ENGINE_GENERIC_UMAIN_DIR
+# URBI_ENGINE_GENERIC_THREAD_BOOST_LIBRARY
 #
 ##-----------------------------------------------------------------
 
 include(Package-toolbox)
 package_header(${CMAKE_CURRENT_LIST_FILE})
 
-# Add dependencies to the SDK engine
+# Add dependencies to the Urbi Engine Generic
 list(APPEND ${PACKAGE_NAME}_LIBRARIES ${URBI_OPEN_SSL_LIBRARIES})
 list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${URBI_OPEN_SSL_INCLUDE_DIRS})
 
@@ -105,19 +105,19 @@ list(APPEND ${PACKAGE_NAME}_ADDITIONAL_RELEASE_PATHS
 # Search for the include directory
 # Includes are packaged with UrbiKernel and SdkRemote, but not with Engine
 #package_search(PATH ${PACKAGE_NAME}_INCLUDE uobject.h
-#               FULLNAME "SDK Engine INCLUDE"
+#               FULLNAME "Urbi Engine Generic INCLUDE"
 #               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/include
 #                     ${${PACKAGE_NAME}_ROOT_DIR}/Debug/include
 #                     ${${PACKAGE_NAME}_ROOT_DIR}/include)
 
 # Search for URBI debug library
 package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbicore liburbicore
-               FULLNAME "Engine Generic for debug"
+               FULLNAME "${PACKAGE_FULLNAME} for debug"
                PATHS ${${PACKAGE_NAME}_ADDITIONAL_DEBUG_PATHS})
 
 # Search for URBI release library
 package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbicore liburbicore
-               FULLNAME "Engine Generic for release"
+               FULLNAME "${PACKAGE_FULLNAME} for release"
                PATHS ${${PACKAGE_NAME}_ADDITIONAL_RELEASE_PATHS})
 
 # Search for the thread part of the boost library

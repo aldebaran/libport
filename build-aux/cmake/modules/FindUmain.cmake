@@ -88,13 +88,13 @@ endif(NOT ${PACKAGE_FILENAME}_FIND_QUIETLY)
 # Search for umain.cc file
 package_search(PATH ${PACKAGE_NAME}_CC_DIR umain.cc
                FULLNAME "SDK Umain"
-               PATHS ${SDK_ENGINE_ROOT_DIR}/Release/share/umain
-                     ${SDK_ENGINE_ROOT_DIR}/Debug/share/umain
-                     ${SDK_REMOTE_ROOT_DIR}/Release/share/umain
-                     ${SDK_REMOTE_ROOT_DIR}/Debug/share/umain
-                     ${SDK_ENGINE_ROOT_DIR}/share/umain
-                     ${SDK_REMOTE_ROOT_DIR}/share/umain
-                     ${SDK_ENGINE_INCLUDE}/../share/umain
-                     ${SDK_REMOTE_INCLUDE}/../share/umain)
+               PATHS ${URBI_ENGINE_GENERIC_ROOT_DIR}/Release/share/umain
+                     ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/share/umain
+                     ${URBI_REMOTE_GENERIC_ROOT_DIR}/Release/share/umain
+                     ${URBI_REMOTE_GENERIC_ROOT_DIR}/Debug/share/umain
+                     ${URBI_ENGINE_GENERIC_ROOT_DIR}/share/umain
+                     ${URBI_REMOTE_GENERIC_ROOT_DIR}/share/umain
+                     ${URBI_ENGINE_GENERIC_INCLUDE}/../share/umain
+                     ${URBI_REMOTE_GENERIC_INCLUDE}/../share/umain)
 
 package_foot(${${PACKAGE_NAME}_PARTS_LIST})
