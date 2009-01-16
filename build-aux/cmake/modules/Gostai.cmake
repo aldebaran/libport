@@ -23,7 +23,7 @@ macro(gostai_add_executable name)
   parse_arguments(
     ${name}
     "SOURCES;MOCS;UIS;CPPFLAGS;INCLUDE_DIRS;LIBRARIES;RESOURCES"
-    "NO_CONSOLE"
+    "NO_CONSOLE;INSTALL_NO_DEPS"
     ${ARGN})
 
   # =================== #
@@ -180,8 +180,10 @@ macro(gostai_add_executable name)
   # Deploy dependent libraries #
   # ========================== #
 
-  gen_lib_loader(${name})
-  dldep_install(${name})
+  if(NOT ${name}_INSTALL_NO_DEPS)
+    gen_lib_loader(${name})
+    dldep_install(${name})
+  endif(NOT ${name}_INSTALL_NO_DEPS)
 
 endmacro(gostai_add_executable)
 
