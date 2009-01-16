@@ -241,28 +241,29 @@ ex_to_string ()
 # Decode the CODE and return the corresponding int.
 ex_to_int ()
 {
-  case $[1] in
-    (OK         |EX_OK)          echo 0;;
-    (USAGE      |EX_USAGE)       echo 64;;
-    (DATAERR    |EX_DATAERR)     echo 65;;
-    (NOINPUT    |EX_NOINPUT)     echo 66;;
-    (NOUSER     |EX_NOUSER)      echo 67;;
-    (NOHOST     |EX_NOHOST)      echo 68;;
-    (UNAVAILABLE|EX_UNAVAILABLE) echo 69;;
-    (SOFTWARE   |EX_SOFTWARE)    echo 70;;
-    (OSERR      |EX_OSERR)       echo 71;;
-    (OSFILE     |EX_OSFILE)      echo 72;;
-    (CANTCREAT  |EX_CANTCREAT)   echo 73;;
-    (IOERR      |EX_IOERR)       echo 74;;
-    (TEMPFAIL   |EX_TEMPFAIL)    echo 75;;
-    (PROTOCOL   |EX_PROTOCOL)    echo 76;;
-    (NOPERM     |EX_NOPERM)      echo 77;;
-    (CONFIG     |EX_CONFIG)      echo 78;;
+  local code=$[1]
+  case ${code#EX_} in
+    (OK)          echo 0;;
+    (USAGE)       echo 64;;
+    (DATAERR)     echo 65;;
+    (NOINPUT)     echo 66;;
+    (NOUSER)      echo 67;;
+    (NOHOST)      echo 68;;
+    (UNAVAILABLE) echo 69;;
+    (SOFTWARE)    echo 70;;
+    (OSERR)       echo 71;;
+    (OSFILE)      echo 72;;
+    (CANTCREAT)   echo 73;;
+    (IOERR)       echo 74;;
+    (TEMPFAIL)    echo 75;;
+    (PROTOCOL)    echo 76;;
+    (NOPERM)      echo 77;;
+    (CONFIG)      echo 78;;
 
-    (SKIP       |EX_SKIP)        echo 176;;
-    (HARD       |EX_HARD)        echo 177;;
+    (SKIP)        echo 176;;
+    (HARD)        echo 177;;
 
-    (*)                          echo $[1];;
+    (*)           echo $code;;
   esac
 }
 

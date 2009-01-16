@@ -1,6 +1,6 @@
 ##
 ## m4sh.mk: This file is part of build-aux.
-## Copyright (C) 2006-2008, Gostai S.A.S.
+## Copyright (C) 2006-2009, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -22,7 +22,7 @@ m4sh_scripts =
 edit =									  \
  sed									  \
   -e 's|@PACKAGE_NAME[@]|$(PACKAGE_NAME)|g'				  \
-  -e 's|@EXEEXT[@]|$(EXEEXT)|g'                                                  \
+  -e 's|@EXEEXT[@]|$(EXEEXT)|g'                                           \
   -e 's|@PACKAGE_TARNAME[@]|$(PACKAGE_TARNAME)|g'			  \
   -e 's|@PERL[@]|$(PERL)|g'						  \
   -e 's|@SHELL[@]|$(SHELL)|g'						  \
@@ -43,15 +43,19 @@ edit =									  \
 
 # Scripts written in M4sh.
 m4sh_dependencies =				\
-  $(build_aux_dir)/base.as			\
-  $(build_aux_dir)/rst.as			\
-  $(build_aux_dir)/instrument.as		\
-  $(build_aux_dir)/children.as			\
-  $(build_aux_dir)/urbi.as
+  $(build_aux_dir)/base.m4sh			\
+  $(build_aux_dir)/rst.m4sh			\
+  $(build_aux_dir)/instrument.m4sh		\
+  $(build_aux_dir)/children.m4sh		\
+  $(build_aux_dir)/urbi.m4sh
 
 EXTRA_DIST += $(m4sh_dependencies)
 
 %.in: %.as $(m4sh_dependencies)
+	$(MKDIR_P) $(dir $@)
+	autom4te --language M4sh $(m4sh_dependencies) $< -o $@
+
+%.in: %.m4sh $(m4sh_dependencies)
 	$(MKDIR_P) $(dir $@)
 	autom4te --language M4sh $(m4sh_dependencies) $< -o $@
 
