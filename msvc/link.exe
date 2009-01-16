@@ -256,6 +256,19 @@ EOF
   exit 0
 }
 
+# This is mostly to please configure.
+version ()
+{
+  cat <<EOF
+MS VC++ wrapper.
+
+EOF
+  # Simply don't pass /nologo.
+  $VCXX_BIN/cl.exe
+  exit 0
+}
+
+
 get_options ()
 {
   verbose "arguments: $*"
@@ -264,6 +277,7 @@ get_options ()
     local opt=$1
     case $1 in
     (--help) usage;;
+    (--version) version;;
     (-v) verbose=true;;
 
     # Libraries.
@@ -367,11 +381,13 @@ while (<>)
 {
   chop;
   s/\r$//;
-  if ($INPUT_LINE_NUMBER == 1 && $_ =~ /\.(cc|o)$/)
+  if ($INPUT_LINE_NUMBER == 1)
   {
      # For some (bad) reason, cl.exe dumps on STDOUT the name of the
      # file being compiled.  This makes ccache believe something went
      # wrong, in which case it does not cache.
+     print STDERR "Unexpected output: $_\n"
+       unless m/\.(cc|c|S|o)$/;
   }
   # Note: including file: C:\\vcxx8\\VC\\INCLUDE\iostream
   # Note: including file:  C:\\vcxx8\\VC\\INCLUDE\istream
@@ -480,16 +496,17 @@ stderr=$tmp/stderr
 
 test -n "$VCINSTALLDIR" ||
 {
+  # Skip if we can't run it.
+  test -f ~/share/wine/msvc_env.sh ||
+    error 176 "cannot load msvc_env.sh"
   . ~/share/wine/msvc_env.sh
-#  fatal "VCINSTALLDIR is not defined"
 }
 
 VCXX_PATH=$(winepath -u $VCINSTALLDIR)
 VCXX_BIN=$VCXX_PATH/bin
 
-if ! test -x $VCXX_BIN/cl.exe; then
+test -x $VCXX_BIN/cl.exe ||
   fatal "cl.exe not found in $VCXX_BIN"
-fi
 
 outargs=/MD
 case $PROG in
