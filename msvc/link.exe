@@ -279,7 +279,8 @@ get_options ()
     case $1 in
     (--help) usage;;
     (--version) version;;
-    (-v) verbose=true;;
+    (--verbose) verbose=true;;
+    (-v) compiler_verbose=true;;
 
     # Libraries.
     (-link) ;;
@@ -433,7 +434,9 @@ if ($deps_file)
 }
 
 
-
+# The plan here is to help distcc-pump.  It relies on -v to get
+# the list of the include directories.
+#
 # Gcc -v dumps the following:
 #
 # Using built-in specs.
@@ -514,6 +517,8 @@ case $PROG in
   (cl.exe) outargs "/nologo" "/EHsc";;
 esac
 
+# Compiler verbosity (-v).
+compiler_verbose=false
 # The program/function used to dump the result of CPP.
 # cppoutput=cppoutput to convert #lines from Windows to Unix file
 # names (this is needed to depcomp).
@@ -529,7 +534,7 @@ mode=
 # Output file name.
 output=
 source=
-# Verbosity.
+# Wrapper verbosity.
 verbose=false
 
 get_options "$@"
@@ -570,40 +575,31 @@ status=$?
 trace
 set -e
 
-! $verbose ||
+! $compiler_verbose ||
   compiler_verbose_message
 
-case $status in
-  (0)
-  # In cpp mode (/E), vc produces on stdout.  Honor -o.
-  # Beware that output is the output of the script, not of the compiler.
-  # When the compiler outputs to stdout, the logs are in stderr.
-  # Otherwise the logs are on stdout.  Put everything on stderr, this is
-  # more Unix-style.
-  case $mode:$output in
-    (preprocess:)
-       dump_log $stderr
-       $cppoutput <$stdout;;
-    (preprocess:*)
-       dump_log $stderr
-       $cppoutput <$stdout >$(transform $output);;
-    (*:)
-       dump_log $stderr
-       dos2unix $stdout >&2;;
-    (*:*)
-       dos2unix $stderr >&2
-       dump_log $stdout;;
-  esac
-  ;;
-
-  (*)
-  # Clear the \r from stderr, they are a nuisance for buildbot and
-  # Emacs.
-  dos2unix $stderr >&2
-  dos2unix $stdout
-  exit $status
-  ;;
+# In cpp mode (/E), vc produces on stdout.  Honor -o.  Beware that
+# output is the output of the script, not of the compiler.  When the
+# compiler outputs to stdout, the logs are in stderr.  Otherwise the
+# logs are on stdout.  Put everything on stderr, this is more
+# Unix-style.
+case $mode:$output in
+  (preprocess:)
+     dump_log $stderr
+     $cppoutput <$stdout;;
+  (preprocess:*)
+     dump_log $stderr
+     $cppoutput <$stdout >$(transform $output);;
+  (*:)
+     dump_log $stderr
+     dos2unix $stdout >&2;;
+  (*:*)
+     dos2unix $stderr >&2
+     dump_log $stdout;;
 esac
+
+test $status != 0 ||
+  exit $status
 
 #embed manifest
 #if echo $output | egrep -q '(exe|dll)$'; then
