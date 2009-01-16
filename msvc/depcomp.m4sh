@@ -5,19 +5,23 @@ me=$as_me
 medir=$(absolute "$0").dir
 mkcd $medir
 
-export PATH=$abs_top_srcdir:build-aux:$abs_srcdir/msvc:$PATH
+export PATH=$abs_srcdir/msvc:$PATH
 set -x
 run "--version" cl.exe --version ||
   error $? "cannot run cl.exe"
 
-msg='Hello world'
-
-SHELL='/bin/sh -x'
+SHELL='/bin/sh'
 depcc=cl.exe
 depmode=gcc3
 am__include=include
 am__quote=
+cp $abs_top_srcdir/build-aux/depcomp .
 mkdir sub
+
+# The following is largely based on the contents of depend.m4, with
+# a few changes, unfortunately.
+
+# ----------------------------------------------------------------------
 
 # Setup a source with many dependencies, because some compilers
 # like to wrap large dependency lists on column 80 (with \), and
@@ -42,7 +46,7 @@ echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
 if depmode=$depmode \
    source=sub/conftest.c object=sub/conftest.${OBJEXT-o} \
    depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
-   $SHELL $abs_top_srcdir/build-aux/depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
+   $SHELL ./depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
      >/dev/null 2>conftest.err &&
    grep sub/conftst1.h sub/conftest.Po > /dev/null 2>&1 &&
    grep sub/conftst6.h sub/conftest.Po > /dev/null 2>&1 &&
@@ -61,6 +65,8 @@ if depmode=$depmode \
     break
   fi
 fi
+
+# ----------------------------------------------------------------------
 
 test "$dependencies_compiler_type" = gcc3
 
