@@ -344,7 +344,8 @@ get_options ()
     (*.S)                  outargs "/Tp$(transform $source)";;
     (*.c|*.cc)  source=$1; outargs    "$(transform $source)";;
     (*.i)       source=$1; outargs "/Tc$(transform $source)";;
-    (*.ii)      source=$1; outargs "/Tp$(transform $source)";;
+    (*.ii)      source=$1; outargs "/Tp$(transform $source)"
+                preprocessed=true;;
     (/dev/null) source=$tmp/null-input
                 touch $source
                 outargs "$(transform $source)";;
@@ -389,7 +390,7 @@ while (<>)
      # file being compiled.  This makes ccache believe something went
      # wrong, in which case it does not cache.
      print STDERR "Unexpected output: $_\n"
-       unless m/\.(cc|c|S|o)$/;
+       unless m/\.(cc|c|ii|i|S|o)$/;
   }
   # Note: including file: C:\\vcxx8\\VC\\INCLUDE\iostream
   # Note: including file:  C:\\vcxx8\\VC\\INCLUDE\istream
@@ -533,6 +534,8 @@ linkargs=
 mode=
 # Output file name.
 output=
+# Whether the source was already preprocessed (i.e., *.i or *.ii).
+preprocessed=false
 source=
 # Wrapper verbosity.
 verbose=false
@@ -577,6 +580,13 @@ set -e
 
 ! $compiler_verbose ||
   compiler_verbose_message
+
+# If we are fed with a preprocessed input, do not generate the
+# deps_file.  This is needed by ccache, and anyway, this is just
+# logical: it is the preprocessor that knows the #includes, the
+# compiler knows nothing.
+! $preprocessed ||
+  deps_file=
 
 # In cpp mode (/E), vc produces on stdout.  Honor -o.  Beware that
 # output is the output of the script, not of the compiler.  When the
