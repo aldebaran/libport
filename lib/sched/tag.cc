@@ -14,10 +14,8 @@ namespace sched
   const boost::any&
   Tag::payload_get() const
   {
-    if (blocked_)
-      return payload_;
-    // This is an internal error and can never happen.
-    pabort("!blocked");
+    assert(blocked_);
+    return payload_;
   }
 
 } // namespace sched

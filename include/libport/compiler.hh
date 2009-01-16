@@ -77,7 +77,7 @@ namespace libport
     std::ostream& dump (std::ostream& o) const;
     static bool colored();
     std::string file_;
-    int line_;
+    unsigned line_;
     std::string function_;
   };
 
