@@ -264,7 +264,8 @@ MS VC++ wrapper.
 
 EOF
   # Simply don't pass /nologo.
-  $VCXX_BIN/cl.exe
+  # The version info is on stderr.
+  $VCXX_BIN/cl.exe 2>&1 >/dev/null
   exit 0
 }
 
