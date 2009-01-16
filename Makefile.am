@@ -1,6 +1,9 @@
 include build-aux/init.mk
 include build-aux/build-aux.mk
 include build-aux/fix-libtool-la.mk
+include build-aux/check.mk
+TESTS =
+SKIP_STATUS = 176
 
 ACLOCAL_AMFLAGS = -I build-aux
 libtool: $(LIBTOOL_DEPS)
@@ -23,6 +26,14 @@ include include/libport/local.mk
 
 include include/sched/local.mk
 include lib/sched/local.mk
+include msvc/local.mk
+
+
+## ------- ##
+## Tests.  ##
+## ------- ##
+
+TEST_LOGS = $(addsuffix .log,$(basename $(TESTS)))
 
 
 ## --------------- ##

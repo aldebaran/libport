@@ -1,0 +1,43 @@
+                                                        -*- shell-script -*-
+URBI_INIT
+
+me=$as_me
+medir=$(absolute "$0").dir
+mkcd $medir
+
+set -x
+
+export PATH=$abs_srcdir/msvc:$PATH
+
+run "--version" cl.exe --version ||
+  error $? "cannot run cl.exe"
+
+msg='Hello world'
+
+for ext in c cc
+do
+  rm -f
+
+  cat >test.c <<EOF
+  #include <stdio.h>
+  int
+  main ()
+  {
+    printf("$msg\n");
+    return 0;
+  }
+EOF
+
+  cl.exe -c test.c
+  test -f test.obj
+
+  cl.exe -c test.c -o test.o
+  test -f test.o
+
+  cl.exe -o test.exe test.obj
+  test -f test.exe
+  test -x test.exe
+  ./test.exe >test.out 2>test.err
+  test "$(test.out)" "$msg"
+  test ! -s test.err
+done
