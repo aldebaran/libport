@@ -88,13 +88,13 @@ if(QT_EXT_FOUND)
   # library that are not built by itself (e.g. sdk-remote and qscintilla2).
   set(QT_EXT_LIBRARIES
     ${QT_EXT_LIBRARY}
-    ${SDK_REMOTE_LIBRARY}
+    ${URBI_SDK_REMOTE_LIBRARY}
     ${QSCINTILLA2_LIBRARY}
     )
 
   set(QT_EXT_INCLUDES
     ${QT_EXT_INCLUDE_DIR}
-    ${SDK_REMOTE_INCLUDE_DIR}
+    ${URBI_SDK_REMOTE_INCLUDE_DIR}
     ${QSCINTILLA2_INCLUDE_DIR}
     )
 endif(QT_EXT_FOUND)

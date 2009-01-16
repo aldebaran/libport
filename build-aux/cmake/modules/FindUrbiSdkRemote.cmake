@@ -1,5 +1,5 @@
 ##
-## FindSdkRemote.cmake: This file is part of cmake-aux.
+## FindUrbiSdkRemote.cmake: This file is part of cmake-aux.
 ## Copyright (C) Gostai S.A.S., 2006-2008.
 ##
 ## This software is provided "as is" without warranty of any kind,
@@ -10,11 +10,11 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 ##-----------------------------------------------------------------
-## CMake PACKAGE - URBI SDK Remote
-## Find URBI Sdk Remote libraries and paths.
+## CMake PACKAGE - Urbi SDK Remote
+## Find Urbi Sdk Remote libraries and paths.
 ##-----------------------------------------------------------------
 
-set(PACKAGE_FULLNAME "URBI SDK Remote")
+set(PACKAGE_FULLNAME "Urbi SDK Remote")
 
 ##-----------------------------------------------------------------
 # This package tries to respect CMake guidelines to be easily
@@ -57,10 +57,10 @@ set(PACKAGE_FULLNAME "URBI SDK Remote")
 #
 
 # Here is the XXX_YY list:
-# SDK_REMOTE_URBI_LIBRARY
-# SDK_REMOTE_JPEG_LIBRARY
-# SDK_REMOTE_INCLUDE
-# SDK_REMOTE_UMAIN_DIR
+# URBI_SDK_REMOTE_URBI_LIBRARY
+# URBI_SDK_REMOTE_JPEG_LIBRARY
+# URBI_SDK_REMOTE_INCLUDE
+# URBI_SDK_REMOTE_UMAIN_DIR
 #
 ##-----------------------------------------------------------------
 
@@ -89,13 +89,13 @@ package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbi liburbi
 
 # Search for the associated jpeg debug library.
 package_search(DEBUG LIBRARY ${PACKAGE_NAME}_JPEG_DEBUG_LIBRARY jpeg libjpeg
-               FULLNAME "SDK Remote's JPEG"
+               FULLNAME "${PACKAGE_FULLNAME}'s JPEG"
                PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 # Search for URBI release library
 package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi liburbi
-               FULLNAME "SDK Remote for release"
+               FULLNAME "${PACKAGE_FULLNAME} for release"
                PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/remote
                      ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/mingw32/remote
@@ -107,7 +107,7 @@ package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbi liburbi
 
 # Search for the associated jpeg release library.
 package_search(RELEASE LIBRARY ${PACKAGE_NAME}_JPEG_RELEASE_LIBRARY jpeg libjpeg
-               FULLNAME "SDK Remote's JPEG"
+               FULLNAME "${PACKAGE_FULLNAME}'s JPEG"
                PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/lib
                      ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
