@@ -341,7 +341,7 @@ get_options ()
       esac;;
 
     # Sources.
-    (*.S)                  outargs "/Tp$(transform $source)";;
+    (*.S)                  outargs "/Tp$(transform $1)";;
     (*.c|*.cc)  source=$1; outargs    "$(transform $source)";;
     (*.i)       source=$1; outargs "/Tc$(transform $source)";;
     (*.ii)      source=$1; outargs "/Tp$(transform $source)"
