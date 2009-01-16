@@ -11,7 +11,8 @@ namespace libport
   class LIBPORT_API FdBuf: public std::streambuf
   {
   public:
-    FdBuf(unsigned write, unsigned read);
+    typedef int fd_type;
+    FdBuf(fd_type write, fd_type read);
     ~FdBuf();
     void own_fd(bool v);
     bool own_fd() const;
@@ -23,7 +24,7 @@ namespace libport
     virtual int overflow(int c = EOF);
     virtual int sync();
   private:
-    unsigned write_, read_;
+    fd_type write_, read_;
     bool own_;
     char ibuf_[BUFSIZ];
     char obuf_[BUFSIZ];
@@ -33,8 +34,9 @@ namespace libport
   class LIBPORT_API FdStream: public std::iostream
   {
   public:
+    typedef int fd_type;
     /// Create a FdStream that writes to fd \a write and reads from fd \a read
-    FdStream(unsigned write, unsigned read);
+    FdStream(fd_type write, fd_type read);
     /// Destroy a FdStream
     virtual ~FdStream();
     /// Set whether the FdStream should close the fds upon destruction

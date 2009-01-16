@@ -4,7 +4,7 @@
 
 namespace libport
 {
-  FdStream::FdStream(unsigned write, unsigned read)
+  FdStream::FdStream(fd_type write, fd_type read)
     : std::iostream(buf_ = new FdBuf(write, read))
   {
     rdbuf(buf_);
@@ -27,7 +27,7 @@ namespace libport
     return buf_->own_fd();
   }
 
-  FdBuf::FdBuf(unsigned write, unsigned read)
+  FdBuf::FdBuf(fd_type write, fd_type read)
     : write_(write)
     , read_(read)
     , own_(false)
@@ -48,7 +48,7 @@ namespace libport
 
   int FdBuf::underflow()
   {
-    int c = read(read_, ibuf_, BUFSIZ);
+    ssize_t c = read(read_, ibuf_, BUFSIZ);
     if (c == 0)
     {
       setg(ibuf_, ibuf_, ibuf_);
@@ -72,7 +72,7 @@ namespace libport
     while (data < pptr())
     {
       // FIXME: don't busy loop
-      unsigned n = write(write_, data, pptr() - data);
+      ssize_t n = write(write_, data, pptr() - data);
       data += n;
     }
     return 0; // Success
