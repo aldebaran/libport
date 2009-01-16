@@ -581,7 +581,7 @@ ENDMACRO(add_wrapper_test)
 
 MACRO(link_remote_libraries UOBJECT_NAME)
 
-    find_package(SdkRemote REQUIRED)
+    find_package(UrbiSdkRemote REQUIRED)
 
     # Keeps only required libs
     if(WIN32)
@@ -590,10 +590,10 @@ MACRO(link_remote_libraries UOBJECT_NAME)
     endif(WIN32)
 
     # Link
-    include_directories(${SDK_REMOTE_INCLUDE_DIRS})
-    target_link_libraries(${UOBJECT_NAME} ${SDK_REMOTE_LIBRARIES})
+    include_directories(${URBI_SDK_REMOTE_INCLUDE_DIRS})
+    target_link_libraries(${UOBJECT_NAME} ${URBI_SDK_REMOTE_LIBRARIES})
     list(APPEND ${UMODULE_DIR}_REMOTE_SHARED_LIBRARIES
-                ${SDK_REMOTE_SHARED_LIBRARIES})
+                ${URBI_SDK_REMOTE_SHARED_LIBRARIES})
 
 ENDMACRO(link_remote_libraries)
 
@@ -607,13 +607,13 @@ ENDMACRO(link_remote_libraries)
 
 MACRO(link_engine_libraries UOBJECT_NAME)
 
-    find_package(SdkEngine REQUIRED)
+    find_package(UrbiEngineGeneric REQUIRED)
 
     # Link
-    include_directories(${SDK_ENGINE_INCLUDE_DIRS})
-    target_link_libraries(${UOBJECT_NAME} ${SDK_ENGINE_LIBRARIES})
+    include_directories(${URBI_ENGINE_GENERIC_INCLUDE_DIRS})
+    target_link_libraries(${UOBJECT_NAME} ${URBI_ENGINE_GENERIC_LIBRARIES})
     list(APPEND ${UMODULE_DIR}_ENGINE_SHARED_LIBRARIES
-                ${SDK_ENGINE_SHARED_LIBRARIES})
+                ${URBI_ENGINE_GENERIC_SHARED_LIBRARIES})
 
 ENDMACRO(link_engine_libraries)
 

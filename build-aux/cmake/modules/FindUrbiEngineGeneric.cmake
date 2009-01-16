@@ -1,5 +1,5 @@
 ##
-## FindSdkEngine.cmake: This file is part of cmake-aux.
+## FindUrbiEngineGeneric.cmake: This file is part of cmake-aux.
 ## Copyright (C) Gostai S.A.S., 2006-2008.
 ##
 ## This software is provided "as is" without warranty of any kind,
@@ -11,7 +11,7 @@
 ##
 ##-----------------------------------------------------------------
 ## CMake PACKAGE - URBI SDK Engine
-## Find URBI Sdk Engine libraries and paths.
+## Find Urbi Engine Generic libraries and paths.
 #
 # Current FindOpenSSL module provided by CMake is laking:
 #    * support for choosing between static/shared library to search for
@@ -24,7 +24,7 @@
 # Dependencies
 find_package(UrbiOpenSSL REQUIRED)
 
-set(PACKAGE_FULLNAME "URBI SDK Engine")
+set(PACKAGE_FULLNAME "Urbi Engine Generic")
 
 ##-----------------------------------------------------------------
 # This package tries to respect CMake guidelines to be easily
@@ -67,17 +67,17 @@ set(PACKAGE_FULLNAME "URBI SDK Engine")
 #
 
 # Here is the current XXX_YY list :
-# SDK_ENGINE_URBI_LIBRARY
-# SDK_ENGINE_INCLUDE
-# SDK_ENGINE_UMAIN_DIR
-# SDK_ENGINE_THREAD_BOOST_LIBRARY
+# URBI_ENGINE_GENERIC_URBI_LIBRARY
+# URBI_ENGINE_GENERIC_INCLUDE
+# URBI_ENGINE_GENERIC_UMAIN_DIR
+# URBI_ENGINE_GENERIC_THREAD_BOOST_LIBRARY
 #
 ##-----------------------------------------------------------------
 
 include(Package-toolbox)
 package_header(${CMAKE_CURRENT_LIST_FILE})
 
-# Add dependencies to the SDK engine
+# Add dependencies to the Urbi Engine Generic
 list(APPEND ${PACKAGE_NAME}_LIBRARIES ${URBI_OPEN_SSL_LIBRARIES})
 list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${URBI_OPEN_SSL_INCLUDE_DIRS})
 
@@ -85,49 +85,43 @@ list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${URBI_OPEN_SSL_INCLUDE_DIRS})
 list(APPEND ${PACKAGE_NAME}_ADDITIONAL_DEBUG_PATHS
             ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-cygwin/engine
             ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
+            ${${PACKAGE_NAME}_ROOT_DIR}/Debug/gostai/core/mingw32/engine
             ${${PACKAGE_NAME}_ROOT_DIR}/Debug/lib
+            ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
             ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
-            ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
+            ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/mingw32/engine
             ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 list(APPEND ${PACKAGE_NAME}_ADDITIONAL_RELEASE_PATHS
             ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-cygwin/engine
             ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/i686-pc-linux-gnu/engine
+            ${${PACKAGE_NAME}_ROOT_DIR}/Release/gostai/core/mingw32/engine
             ${${PACKAGE_NAME}_ROOT_DIR}/Release/lib
+            ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
             ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
-            ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
+            ${${PACKAGE_NAME}_ROOT_DIR}/gostai/core/mingw32/engine
             ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
-# Search for the include directory.
-package_search(PATH ${PACKAGE_NAME}_INCLUDE uobject.h
-               FULLNAME "SDK Engine INCLUDE"
-               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/include
-                     ${${PACKAGE_NAME}_ROOT_DIR}/Debug/include
-                     ${${PACKAGE_NAME}_ROOT_DIR}/include)
+# Search for the include directory
+# Includes are packaged with UrbiKernel and SdkRemote, but not with Engine
+#package_search(PATH ${PACKAGE_NAME}_INCLUDE uobject.h
+#               FULLNAME "Urbi Engine Generic INCLUDE"
+#               PATHS ${${PACKAGE_NAME}_ROOT_DIR}/Release/include
+#                     ${${PACKAGE_NAME}_ROOT_DIR}/Debug/include
+#                     ${${PACKAGE_NAME}_ROOT_DIR}/include)
 
 # Search for URBI debug library
-package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbicore
-               FULLNAME "SDK Engine for debug"
+package_search(DEBUG LIBRARY ${PACKAGE_NAME}_URBI_DEBUG_LIBRARY urbicore liburbicore
+               FULLNAME "${PACKAGE_FULLNAME} for debug"
                PATHS ${${PACKAGE_NAME}_ADDITIONAL_DEBUG_PATHS})
 
 # Search for URBI release library
-package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbicore
-               FULLNAME "SDK Engine for release"
+package_search(RELEASE LIBRARY ${PACKAGE_NAME}_URBI_RELEASE_LIBRARY urbicore liburbicore
+               FULLNAME "${PACKAGE_FULLNAME} for release"
                PATHS ${${PACKAGE_NAME}_ADDITIONAL_RELEASE_PATHS})
 
 # Search for the thread part of the boost library
-if(UNIX)
-  package_search(LIBRARY ${PACKAGE_NAME}_THREAD_BOOST_LIBRARY boost_thread-gcc41-mt-1_34_1
-                 INSTALL "Boost version 1.34.1 (thread part)"
-                 PATHS ${${PACKAGE_NAME}_ADDITIONAL_DEBUG_PATHS}
-                       ${${PACKAGE_NAME}_ADDITIONAL_RELEASE_PATHS})
-endif(UNIX)
-if(WIN32)
-  package_search(LIBRARY ${PACKAGE_NAME}_THREAD_BOOST_LIBRARY boost_thread-vc80-mt-1_34_1
-                 INSTALL "Boost version 1.34.1 (thread part)"
-                 PATHS ${${PACKAGE_NAME}_ADDITIONAL_RELEASE_PATHS}
-                       ${${PACKAGE_NAME}_ADDITIONAL_DEBUG_PATHS})
-endif(WIN32)
+find_package(Boost 1.34.1 COMPONENTS thread EXACT REQUIRED)
 
 # Additionnal libraries for windows platform.
 if(WIN32)

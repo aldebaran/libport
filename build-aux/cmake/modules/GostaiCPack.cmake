@@ -213,3 +213,15 @@ configure_file(
   )
 
 endif(NOT DEFINED CPACK_INFO_CMAKE)
+
+# Append nsis_define to the variable CPACK_NSIS_GOSTAI_DEFINES in the NSIS
+# style
+macro(gostai_add_nsis_define nsis_define)
+  if(CPACK_NSIS_GOSTAI_DEFINES)
+    set(CPACK_NSIS_GOSTAI_DEFINES
+      "${CPACK_NSIS_GOSTAI_DEFINES}
+!define ${nsis_define}") # !!!Keep this on a new line
+  else(CPACK_NSIS_GOSTAI_DEFINES)
+    set(CPACK_NSIS_GOSTAI_DEFINES "!define ${nsis_define}")
+  endif(CPACK_NSIS_GOSTAI_DEFINES)
+endmacro(gostai_add_nsis_define)
