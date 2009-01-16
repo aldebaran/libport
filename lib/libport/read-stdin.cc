@@ -61,6 +61,7 @@ namespace libport
     std::string res = data.first;
     data.first.clear();
     return res;
+  }
 
 #elif defined LIBPORT_URBI_ENV_AIBO
 
