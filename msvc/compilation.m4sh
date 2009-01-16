@@ -5,10 +5,18 @@ me=$as_me
 medir=$(absolute "$0").dir
 mkcd $medir
 
-export PATH=$abs_srcdir/msvc:$PATH
+case $host in
+  (*mingw32) export PATH=$abs_srcdir/msvc:$PATH
+             cc=cl.exe
+             exeext=.exe
+             objext=.obj;;
+  (*)        cc=g++
+             exeext=
+             objext=.o;;
+esac
 
-run "--version" cl.exe --version ||
-  error $? "cannot run cl.exe"
+run "--version" $cc --version ||
+  error $? "cannot run $cc"
 
 set -x
 
@@ -29,17 +37,17 @@ do
   }
 EOF
 
-  cl.exe -c test.$ext
-  test -f test.obj
+  $cc -c test.$ext
+  test -f test$objext
 
-  cl.exe -c test.$ext -o test.o
+  $cc -c test.$ext -o test.o
   test -f test.o
 
-  cl.exe -o test.exe test.obj
-  test -f test.exe
-  test -x test.exe
-  ./test.exe >test.out 2>test.err
-  test "$(sed -e 's/\r//' test.out)" = "$msg"
+  $cc -o test$exeext test$objext
+  test -f test$exeext
+  test -x test$exeext
+  ./test$exeext >test.out 2>test.err
+  test "$(tr -d '\r' <test.out)" = "$msg"
   test ! -s test.err
 done
 
@@ -47,8 +55,8 @@ done
 cat >test.c <<EOF
 #error aaaaaaaaaaaarg
 EOF
-! cl.exe test.c
-! cl.exe -E test.c
+! $cc test.c
+! $cc -E test.c
 
 # Check several compilation units.
 for ext in c cc
@@ -73,12 +81,40 @@ EOF
   }
 EOF
 
-  cl.exe test.$ext -c -o test.o
-  cl.exe foo.$ext -c -o foo.o
-  cl.exe foo.o test.o -o test
-  ./test.exe >test.out 2>test.err
-  test "$(sed -e 's/\r//' test.out)" = "$msg"
+  $cc test.$ext -c -o test.o
+  $cc foo.$ext -c -o foo.o
+  $cc foo.o test.o -o test
+  ./test$exeext >test.out 2>test.err
+  test "$(tr -d '\r' <test.out)" = "$msg"
   test ! -s test.err
 done
+
+# Check that we can make and use libraries.
+for ext in c cc
+do
+  rm -f test.*
+  cat >test.$ext <<EOF
+  extern void foo ();
+  int
+  main ()
+  {
+    foo();
+    return 0;
+  }
+EOF
+
+  cat >foo.$ext <<EOF
+  #include <stdio.h>
+  void
+  foo ()
+  {
+    printf ("$msg\n");
+  }
+EOF
+
+  $cc foo.$ext -c -o foo.o
+#  $cc foo.o -o foo.a
+done
+
 
 exit 0
