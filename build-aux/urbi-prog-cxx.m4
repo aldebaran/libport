@@ -27,7 +27,7 @@ case $GXX in
        (*)              $1=gcc;;
      esac
      ;;
-  (no)
+  (*)
 AC_COMPILE_IFELSE([[
 #ifndef _MSC_VER
 # error This is not a Microsoft compiler
@@ -268,21 +268,21 @@ esac
 #
 case $CXX_FLAVOR in
  (msvc)
-    TC_CXX_WARNINGS([[-wd4061],
-                     [-wd4099],
-                     [-wd4121],
-                     [-wd4127],
-                     [-wd4347],
-                     [-wd4512],
-                     [-wd4571],
-                     [-wd4619],
-                     [-wd4625],
-                     [-wd4626],
-                     [-wd4668],
-                     [-wd4710],
-                     [-wd4711],
-                     [-wd4800],
-                     [-wd4820]])
+    TC_CXX_WARNINGS([m4_do([-wd4061],
+                           [ -wd4099],
+                           [ -wd4121],
+                           [ -wd4127],
+                           [ -wd4347],
+                           [ -wd4512],
+                           [ -wd4571],
+                           [ -wd4619],
+                           [ -wd4625],
+                           [ -wd4626],
+                           [ -wd4668],
+                           [ -wd4710],
+                           [ -wd4711],
+                           [ -wd4800],
+                           [ -wd4820])])
    ;;
 esac
 
