@@ -52,6 +52,7 @@ EOF
 
 # Check several compilation units.
 for ext in c cc
+do
   rm -f test.*
   cat >test.$ext <<EOF
   extern void foo ();
