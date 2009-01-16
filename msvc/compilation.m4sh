@@ -14,6 +14,7 @@ set -x
 
 msg='Hello world'
 
+# Check compilation of single compilation unit.
 for ext in c cc
 do
   rm -f test.*
@@ -48,5 +49,35 @@ cat >test.c <<EOF
 EOF
 ! cl.exe test.c
 ! cl.exe -E test.c
+
+# Check several compilation units.
+for ext in c cc
+  rm -f test.*
+  cat >test.$ext <<EOF
+  extern void foo ();
+  int
+  main ()
+  {
+    foo();
+    return 0;
+  }
+EOF
+
+  cat >foo.$ext <<EOF
+  #include <stdio.h>
+  void
+  foo ()
+  {
+    printf ("$msg\n");
+  }
+EOF
+
+  cl.exe test.$ext -c -o test.o
+  cl.exe foo.$ext -c -o foo.o
+  cl.exe foo.o test.o -o test
+  ./test.exe >test.out 2>test.err
+  test "$(sed -e 's/\r//' test.out)" = "$msg"
+  test ! -s test.err
+done
 
 exit 0
