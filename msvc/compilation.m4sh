@@ -42,4 +42,11 @@ EOF
   test ! -s test.err
 done
 
+# Make sure we do have failures on invalid input.
+cat >test.c <<EOF
+#error aaaaaaaaaaaarg
+EOF
+! cl.exe test.c
+! cl.exe -E test.c
+
 exit 0

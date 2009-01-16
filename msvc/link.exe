@@ -608,7 +608,7 @@ case $mode:$output in
      dump_log $stdout;;
 esac
 
-test $status != 0 ||
+test $status = 0 ||
   exit $status
 
 #embed manifest
