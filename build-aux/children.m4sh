@@ -121,6 +121,20 @@ pids_kill ()
 }
 
 
+# timeout_factor FACTOR...
+# ------------------------
+# Change the current timeout factor.
+timeout_factor=1
+timeout_factor ()
+{
+  local i
+  for i
+  do
+    timeout_factor=$(($timeout_factor * $i))
+  done
+}
+
+
 # pids_wait TIMEOUT PIDS
 # ----------------------
 pids_wait ()
@@ -132,7 +146,6 @@ pids_wait ()
     timeout=$(($timeout * 5))
   fi
 
-  : ${timeout_factor:=1}
   timeout=$(($timeout * $timeout_factor))
   local count_down=$timeout
 
