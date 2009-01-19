@@ -200,6 +200,11 @@ esac
 # Remove MS Visual Compiler's spurious warnings.  #
 # ----------------------------------------------- #
 
+# warning C4003: not enough actual parameters for macro
+#
+# When calling FOO() or even FOO(/* Something */).
+#
+#
 # warning C4061: enumerator 'destroy_functor_tag' in switch of enum
 #    'boost::detail::function::functor_manager_operation_type' is not
 #    explicitly handled by a case label
@@ -227,6 +232,15 @@ esac
 # template function, the compiler incorrectly treated the nontemplate function
 # as a specialization of the template function.".  So this is basically a
 # backward compatibility warning that we can ignore.
+#
+#
+#
+# warning C4355: 'this' : used in base member initializer list
+#
+# For instance: UVar::UVar() : rangemin(*this, ...)
+#                                       ^^^^^^
+#
+#
 #
 # warning C4512: 'classname' : assignment operator could not be generated
 #
@@ -268,11 +282,13 @@ esac
 #
 case $CXX_FLAVOR in
  (msvc)
-    TC_CXX_WARNINGS([m4_do([-wd4061],
+    TC_CXX_WARNINGS([m4_do([-wd4003],
+                           [ -wd4061],
                            [ -wd4099],
                            [ -wd4121],
                            [ -wd4127],
                            [ -wd4347],
+                           [ -wd4355],
                            [ -wd4512],
                            [ -wd4571],
                            [ -wd4619],
