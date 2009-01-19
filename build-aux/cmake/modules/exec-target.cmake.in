@@ -26,7 +26,7 @@ set(GOSTAI_HINT_DIRS_FILENAME "@GOSTAI_HINT_DIRS_FILENAME@")
 
 # Include modules.
 include(Tools)
-include(Gostai)
+include(GostaiHintDirs)
 
 # Setup the environment.
 set(PATH $ENV{PATH})

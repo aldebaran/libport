@@ -24,6 +24,7 @@ set(BUILDFARM $ENV{BUILDFARM})
 include(GenLibLoader)
 include(GostaiInfo)
 include(Gostai)
+include(GostaiHintDirs)
 gostai_init_hint_dirs()
 
 # Add clean-install target
