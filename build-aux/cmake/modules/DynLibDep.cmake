@@ -109,23 +109,23 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
   # It uses 'cygcheck.exe' to gather the list of dependencies.
   function(dldep_cygcheck binary lib_names lib_dirs)
 
-    find_program(cygcheck_executable cygcheck.exe)
-    if(cygcheck_executable)
-      dldep_info("use '${cygcheck_executable}' to list dependent dynamic "
+    find_package(Cygcheck REQUIRED)
+    if(CYGCHECK_EXECUTABLE)
+      dldep_info("use '${CYGCHECK_EXECUTABLE}' to list dependent dynamic "
 	"libraries.")
-    else(cygcheck_executable)
-      dldep_error("cannot find an executable called '${cygcheck_executable'")
-    endif(cygcheck_executable)
+    else(CYGCHECK_EXECUTABLE)
+      dldep_error("cannot find an executable called '${CYGCHECK_EXECUTABLE}'")
+    endif(CYGCHECK_EXECUTABLE)
 
     execute_process(
-      COMMAND ${cygcheck_executable} ${binary}
+      COMMAND ${CYGCHECK_EXECUTABLE} ${binary}
       OUTPUT_VARIABLE out
       ERROR_VARIABLE err
       OUTPUT_STRIP_TRAILING_WHITESPACE
       )
 
     if(err)
-      dldep_info("${cygcheck_executable} prints some error: '${error}'")
+      dldep_info("${CYGCHECK_EXECUTABLE} prints some error: '${error}'")
     endif(err)
 
     set(_lib_names "")
