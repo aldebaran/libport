@@ -322,11 +322,11 @@ if(NOT PROJECT_INFO_CMAKE)
     set(vendor_prefix "${PROJECT_VENDOR}")
   endif(PROJECT_VENDOR STREQUAL "")
   # Do not prefix by vendor if it is already in the project's name.
-  if(${PROJECT_NAME} MATCHES ${vendor_prefix})
+  if(${PROJECT_NAME} MATCHES "${vendor_prefix}")
     set(vendor_prefix)
-  else(${PROJECT_NAME} MATCHES ${vendor_prefix})
+  else(${PROJECT_NAME} MATCHES "${vendor_prefix}")
     set(vendor_prefix "${vendor_prefix}-")
-  endif(${PROJECT_NAME} MATCHES ${vendor_prefix})
+  endif(${PROJECT_NAME} MATCHES "${vendor_prefix}")
   set(PROJECT_TARNAME "${vendor_prefix}${PROJECT_NAME}-${PROJECT_VERSION}")
 
   # ========================== #
