@@ -1,6 +1,6 @@
 ## Makefile.inc -- includable Makefile.am snippet
 ##
-##   Copyright (C) 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
+##   Copyright (C) 2003, 2004, 2005, 2007, 2009 Free Software Foundation, Inc.
 ##   Written by Gary V. Vaughan, 2003
 ##
 ##   NOTE: The canonical source of this file is maintained with the
@@ -54,6 +54,7 @@ noinst_LTLIBRARIES     += libltdl/libltdlc.la
 endif
 
 libltdl_libltdl_la_SOURCES = libltdl/libltdl/lt__alloc.h \
+			  libltdl/libltdl/lt__debug.h \
 			  libltdl/libltdl/lt__dirent.h \
 			  libltdl/libltdl/lt__glibc.h \
 			  libltdl/libltdl/lt__private.h \
@@ -64,6 +65,7 @@ libltdl_libltdl_la_SOURCES = libltdl/libltdl/lt__alloc.h \
 			  libltdl/libltdl/slist.h \
 			  libltdl/loaders/preopen.c \
 			  libltdl/lt__alloc.c \
+			  libltdl/lt__debug.c \
 			  libltdl/lt_dlloader.c \
 			  libltdl/lt_error.c \
 			  libltdl/ltdl.c \

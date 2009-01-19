@@ -1,6 +1,6 @@
 /* lt_system.h -- system portability abstraction layer
 
-   Copyright (C) 2004, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2007, 2009 Free Software Foundation, Inc.
    Written by Gary V. Vaughan, 2004
 
    NOTE: The canonical source of this file is maintained with the
@@ -31,6 +31,7 @@ or obtained by writing to the Free Software Foundation, Inc.,
 #if !defined(LT_SYSTEM_H)
 #define LT_SYSTEM_H 1
 
+#include <stdarg.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <sys/types.h>

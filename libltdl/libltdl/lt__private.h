@@ -1,6 +1,6 @@
 /* lt__private.h -- internal apis for libltdl
 
-   Copyright (C) 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
    Written by Gary V. Vaughan, 2004
 
    NOTE: The canonical source of this file is maintained with the
@@ -49,6 +49,7 @@ or obtained by writing to the Free Software Foundation, Inc.,
 
 /* Import internal interfaces...  */
 #include "lt__alloc.h"
+#include "lt__debug.h"
 #include "lt__dirent.h"
 #include "lt__strl.h"
 #include "lt__glibc.h"
@@ -128,6 +129,16 @@ struct lt__advise {
 				   locally. */
   unsigned int	try_preload_only:1;/* only preloaded modules will be tried. */
 };
+
+/* --- DEBUGGING --- */
+
+/* A linked list of pairs of a log function and its associated data. */
+typedef struct lt__log_list {
+  lt_dllog_function   *function;
+  void                *data;
+  struct lt__log_list *next;
+} lt__log_list;
+
 
 /* --- ERROR HANDLING --- */
 

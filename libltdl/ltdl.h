@@ -45,11 +45,21 @@ LT_BEGIN_C_DECLS
 
 
 /* --- DEBUGGING --- */
-/* Whether debugging messages are displayed. */
-extern int lt_debug_level;
-/* Prefix to debug messages. */
-extern const char* lt_program_name;
 
+/* A log function. DATA is opaque user data registered with the log
+   function.  LEVEL defines the verbosity of the message (the higher,
+   the least important).  FORMAT and ARGS are printf-like arguments.
+   Returns 0 iff no error.
+   */
+typedef int (lt_dllog_function) (void* data, unsigned level,
+                                 const char* format, va_list args);
+
+/* Register a log function and its associated data.
+   Return 0 iff no error. */
+LT_SCOPE int lt_dladd_log_function (lt_dllog_function *fun, void *data);
+/* Unregister a log function.  Its associated data is unregistered too.
+   Return 0 iff no error. */
+LT_SCOPE int lt_dlremove_log_function (lt_dllog_function *fun);
 
 /* --- DYNAMIC MODULE LOADING API --- */
 

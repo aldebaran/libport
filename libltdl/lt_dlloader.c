@@ -102,28 +102,21 @@ static void *
 loader_dump_callback (SList *item, void *userdata)
 {
   const lt_dlvtable *vtable = (const lt_dlvtable *) item->userdata;
-  fprintf (stderr, ", %s", (vtable && vtable->name) ? vtable->name : "(null)");
+  LT_LOG1 (1, "loaders: %s\n", LT_NAME (vtable));
   return 0;
 }
 
 void
 lt_dlloader_dump (void)
 {
-  if (lt_program_name)
-    fprintf (stderr, "%s:", lt_program_name);
-  fprintf (stderr, "loaders: ");
-  if (!loaders)
+  if (loaders)
     {
-      fprintf (stderr, "(empty)");
+      slist_foreach (loaders, loader_dump_callback, NULL);
     }
   else
     {
-      const lt_dlvtable *head = (const lt_dlvtable *) loaders->userdata;
-      fprintf (stderr, "%s", (head && head->name) ? head->name : "(null)");
-      if (slist_tail (loaders))
-	slist_foreach (slist_tail (loaders), loader_dump_callback, NULL);
+      LT_LOG0 (1, "loaders: (empty)\n");
     }
-  fprintf (stderr, "\n");
 }
 #endif
 
