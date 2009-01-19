@@ -26,6 +26,10 @@ include include/libport/local.mk
 
 include include/sched/local.mk
 include lib/sched/local.mk
+
+include include/tinyxml/local.mk
+include lib/tinyxml/local.mk
+
 include msvc/local.mk
 
 
