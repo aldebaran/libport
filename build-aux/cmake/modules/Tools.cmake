@@ -23,6 +23,13 @@ if(NOT TOOLS_CMAKE_GUARD)
     message(STATUS ${ARGV})
   endfunction(ECHO)
 
+  # Print the list names _l_.
+  function(print_list l)
+    foreach(i ${${l}})
+      message("${l}: ${i}")
+    endforeach(i)
+  endfunction(print_list)
+
   # Find the hostname of machine running cmake.
   # outvar: the name of the variable where to store the result.
   macro(HOSTNAME outvar)
