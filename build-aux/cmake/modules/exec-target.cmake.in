@@ -76,6 +76,9 @@ if("$ENV{VERBOSE}" EQUAL 1)
 endif("$ENV{VERBOSE}" EQUAL 1)
 
 # Execute the executable target.
+if("$ENV{VERBOSE}" EQUAL 1)
+  echo("Execute `@binary_loc@'...")
+endif("$ENV{VERBOSE}" EQUAL 1)
 execute_process(
   COMMAND @binary_loc@
   WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
