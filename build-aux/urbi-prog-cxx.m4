@@ -232,18 +232,23 @@ esac
 # template function, the compiler incorrectly treated the nontemplate function
 # as a specialization of the template function.".  So this is basically a
 # backward compatibility warning that we can ignore.
-#
-#
-#
+
+
 # warning C4355: 'this' : used in base member initializer list
 #
 # For instance: UVar::UVar() : rangemin(*this, ...)
 #                                       ^^^^^^
+
+
+# warning C4251: 'urbi::UList::array' : class 'std::vector<_Ty>' needs
+# to have dll-interface to be used by clients of class 'urbi::UList'
 #
-#
-#
+# In practice, I (Akim) have not seen any problems with this.
+
+
 # warning C4512: 'classname' : assignment operator could not be generated
-#
+
+
 # warning C4571: Informational: catch(...) semantics changed since Visual
 #                C++ 7.1; structured exceptions (SEH) are no longer caught.
 # http://msdn2.microsoft.com/en-us/library/55s8esw4.aspx:
@@ -286,6 +291,7 @@ case $CXX_FLAVOR in
                            [ -wd4061],
                            [ -wd4099],
                            [ -wd4121],
+                           [ -wd4251],
                            [ -wd4127],
                            [ -wd4347],
                            [ -wd4355],
