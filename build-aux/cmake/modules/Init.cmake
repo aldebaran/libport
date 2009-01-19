@@ -22,6 +22,8 @@ hostname(BUILDER_HOSTNAME)
 set(BUILDFARM $ENV{BUILDFARM})
 include(GenLibLoader)
 include(GostaiInfo)
+include(Gostai)
+gostai_init_hint_dirs()
 
 # Add clean-install target
 configure_file(
