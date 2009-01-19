@@ -259,4 +259,28 @@ if(NOT TOOLS_CMAKE_GUARD)
     endif(DOS2UNIX_EXECUTABLE)
   endfunction(dos2unix)
 
+  # Add an exec target for the given target named _target_.
+  function(add_exec_target target)
+
+    if(NOT TARGET ${target})
+      message(FATAL_ERROR "add_exec_target: `${target}' is not a target")
+    endif(NOT TARGET ${target})
+
+    find_package(Cygcheck REQUIRED)
+    find_package(Env REQUIRED)
+
+    get_target_property(binary_loc ${target} LOCATION_${CMAKE_BUILD_TYPE})
+
+    configure_file(
+      ${CMAKE_MODULE_PATH}/exec-target.cmake.in
+      ${CMAKE_CURRENT_BINARY_DIR}/exec-${target}-target.cmake
+      @ONLY
+      )
+    add_custom_target(exec-${target}
+      COMMAND ${CMAKE_COMMAND} -P
+              ${CMAKE_CURRENT_BINARY_DIR}/exec-${target}-target.cmake
+      COMMENT "Executing ${target}..."
+      )
+  endfunction(add_exec_target)
+
 endif(NOT TOOLS_CMAKE_GUARD)

@@ -1,0 +1,89 @@
+##
+## exec-target.cmake.in: This file is part of libport.
+## Copyright (C) Gostai S.A.S., 2006-2009.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+## For comments, bug reports and feedback: http://www.urbiforge.com
+##
+
+# Script executed when the target exec-foo is built (where foo is an
+# executable target).
+
+# Set CMAKE environment variables.
+set(CMAKE_MODULE_PATH "@CMAKE_MODULE_PATH@")
+set(CMAKE_INCLUDE_PATH "@CMAKE_INCLUDE_PATH@")
+set(CMAKE_LIBRARY_PATH "@CMAKE_LIBRARY_PATH@")
+set(CMAKE_PROGRAM_PATH "@CMAKE_PROGRAM_PATH@")
+set(CMAKE_PREFIX_PATH "@CMAKE_PREFIX_PATH@")
+set(CMAKE_FIND_LIBRARY_PREFIXES "@CMAKE_FIND_LIBRARY_PREFIXES@")
+set(CMAKE_FIND_LIBRARY_SUFFIXES "@CMAKE_FIND_LIBRARY_SUFFIXES@")
+set(CYGCHECK_EXECUTABLE "@CYGCHECK_EXECUTABLE@")
+set(GOSTAI_HINT_DIRS_FILENAME "@GOSTAI_HINT_DIRS_FILENAME@")
+
+# Include modules.
+include(Tools)
+include(Gostai)
+
+# Setup the environment.
+set(PATH $ENV{PATH})
+gostai_read_hint_dirs(GOSTAI_HINT_DIRS)
+foreach(i ${CMAKE_LIBRARY_PATH} ${CMAKE_PROGRAM_PATH} ${GOSTAI_HINT_DIRS})
+  file(TO_NATIVE_PATH ${i} i_native)
+  list(APPEND PATH ${i_native})
+  set(i_native)
+endforeach(i)
+foreach(i ${CMAKE_PREFIX_PATH})
+  list(APPEND PATH ${i}/bin ${i}/sbin ${i}/lib)
+endforeach(i)
+set(ENV{PATH} "${PATH}")
+
+# Print debug information
+if("$ENV{VERBOSE}" EQUAL 1)
+  message("Environment:")
+  print_list(PATH)
+
+  if(CYGCHECK_EXECUTABLE)
+    message("\nCygcheck:")
+    execute_process(
+      COMMAND ${CYGCHECK_EXECUTABLE} @binary_loc@
+      WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
+      RESULT_VARIABLE status
+      OUTPUT_VARIABLE out
+      ERROR_VARIABLE err
+      )
+    message("Cygcheck exits with status '${status}'.")
+    message("Cygcheck output channel:\n${out}")
+    message("Cygcheck error channel:\n${err}")
+  endif(CYGCHECK_EXECUTABLE)
+
+  if(ENV_EXECUTABLE)
+    message("\nEnv:")
+    execute_process(
+      COMMAND ${ENV_EXECUTABLE}
+      WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
+      RESULT_VARIABLE status
+      OUTPUT_VARIABLE out
+      ERROR_VARIABLE err
+      )
+    message("Env exits with status '${status}'.")
+    message("Env output channel:\n${out}")
+    message("Env error channel:\n${err}")
+  endif(ENV_EXECUTABLE)
+endif("$ENV{VERBOSE}" EQUAL 1)
+
+# Execute the executable target.
+execute_process(
+  COMMAND @binary_loc@
+  WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
+  RESULT_VARIABLE status
+  )
+echo("Program @target@ exited with status '${status}'")
+
+# Local Variables:
+# mode: cmake
+# mode: flyspell
+# End:

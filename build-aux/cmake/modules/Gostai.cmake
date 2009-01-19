@@ -185,6 +185,12 @@ macro(gostai_add_executable name)
     dldep_install(${name})
   endif(NOT ${name}_INSTALL_NO_DEPS)
 
+  # ================== #
+  # Add custom targets #
+  # ================== #
+
+  add_exec_target(${name})
+
 endmacro(gostai_add_executable)
 
 
