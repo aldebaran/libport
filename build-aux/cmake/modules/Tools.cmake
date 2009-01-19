@@ -19,9 +19,9 @@ if(NOT TOOLS_CMAKE_GUARD)
   endfunction(PRINT_CMAKE_VARS)
 
   # Shorthand for message(STATUS "blabla")
-  macro(ECHO)
+  function(ECHO)
     message(STATUS ${ARGV})
-  endmacro(ECHO)
+  endfunction(ECHO)
 
   # Find the hostname of machine running cmake.
   # outvar: the name of the variable where to store the result.
