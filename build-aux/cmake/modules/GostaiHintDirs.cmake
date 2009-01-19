@@ -23,10 +23,12 @@ macro(gostai_init_hint_dirs)
   file(REMOVE ${GOSTAI_HINT_DIRS_FILENAME})
 endmacro(gostai_init_hint_dirs)
 
+# Add a directory _dir_ to the list of Gostai hint directories.
 function(gostai_add_hint_dir dir)
   file(APPEND ${GOSTAI_HINT_DIRS_FILENAME} "${dir}\n")
 endfunction(gostai_add_hint_dir)
 
+# Read the list of Gostai hint directories and store it in the variable _dirs_.
 function(gostai_read_hint_dirs dirs)
   file(STRINGS ${GOSTAI_HINT_DIRS_FILENAME} l)
   list(REMOVE_DUPLICATES l)
