@@ -9,7 +9,7 @@ ACLOCAL_AMFLAGS = -I build-aux
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status $@
 
-SUBDIRS = lib/libport doc tests
+SUBDIRS = doc tests
 # SUBDIRS += gui
 EXTRA_DIST += bootstrap
 
@@ -23,6 +23,7 @@ AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 
 include_libport = include/libport
 include include/libport/local.mk
+include lib/libport/local.mk
 
 libport_la = lib/libport/libport.la
 include include/serialize/local.mk

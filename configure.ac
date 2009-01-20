@@ -48,7 +48,6 @@ fi
 
 AC_CONFIG_FILES([
   Makefile
-      lib/libport/Makefile
     tests/Makefile
     doc/Makefile
 ])
