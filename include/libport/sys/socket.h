@@ -85,7 +85,7 @@ namespace libport
   {
     return ::setsockopt(s, level,
                         optname,
-                        WIN32_IF(static_cast<char*>(optval), optval),
+                        WIN32_IF(static_cast<const char*>(optval), optval),
                         optlen);
   }
 
