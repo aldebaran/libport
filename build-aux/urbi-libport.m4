@@ -26,7 +26,7 @@ AC_REQUIRE([URBI_FLOAT_CHECK])dnl
 AC_CHECK_HEADERS([sched.h sys/resource.h sys/mman.h sys/times.h sys/param.h direct.h])
 AC_CHECK_FUNCS([sched_setscheduler setpriority mlockall times getcwd _getcwd])
 # Check for Boost headers
-BOOST_REQUIRE([1.34])
+BOOST_REQUIRE([1.35])
 # Check for Boost.Thread
 if test x$with_boost_thread_static = xyes; then
   boost_threads_flag=s
