@@ -45,11 +45,15 @@ typedef uint32_t in_addr_t;
 #  define SHUT_RD   SD_RECEIVE
 #  define SHUT_WR   SD_SEND
 
-/* The 4th argument is usually a const void* on UNIX and a const char* on
- * Windows.  */
+/* The 4th argument is usually a const void* on UNIX and a const char*
+   on Windows.
+
+   But let's leave with that, since Boost.Asio is overloading
+   setsockopt, and, of course, our #define breaks everything.  */
+#if 0
 #  define setsockopt(Fd, Lvl, Optname, Optval, Optlen) \
   setsockopt((Fd), (Lvl), (Optname), (const char*) (Optval), (Optlen))
-
+#endif
 
 # else // !WIN32: Assume UNIX-style headers.
 
