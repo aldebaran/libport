@@ -8,8 +8,8 @@ namespace libport
 {
   namespace serialize
   {
-    template <typename T>
-    void Serializer::serialize(const std::string& name, std::vector<T>& collection)
+    template <template <typename, typename> class C, typename T, typename A>
+    void Serializer::serialize(const std::string& name, C<T, A>& collection)
     {
       action_type a = serialize_collection(name);
       if (input_)

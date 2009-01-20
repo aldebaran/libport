@@ -19,8 +19,8 @@ namespace libport
 
       Serializer(bool input);
 
-      template <typename T>
-      void serialize(const std::string& name, std::vector<T>& collection);
+      template <template <typename, typename> class C, typename T, typename A>
+      void serialize(const std::string& name, C<T, A>& collection);
       template <typename T>
       void serialize(const std::string& name, boost::optional<T>& option);
 
