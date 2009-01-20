@@ -4,7 +4,7 @@
 # Written by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
-# 2006, 2007, 2008 Free Software Foundation, Inc.
+# 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
 # This is free software; see the source for copying conditions.  There is NO
 # warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -3615,7 +3615,7 @@ EOF
 		cat <<"EOF"
   /* execv doesn't actually work on mingw as expected on unix */
   newargz = prepare_spawn (newargz);
-  rval = _spawnv (_P_WAIT, lt_argv_zero, (const char * const *) newargz);
+  rval = _spawnv (_P_WAIT, newargz[0], (const char * const *) newargz);
   if (rval == -1)
     {
       /* failed to start process */
