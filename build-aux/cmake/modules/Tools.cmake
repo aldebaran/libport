@@ -23,12 +23,19 @@ if(NOT TOOLS_CMAKE_GUARD)
     message(STATUS ${ARGV})
   endfunction(ECHO)
 
-  # Print the list names _l_.
+  # Print the list named _l_ with one item per line.
   function(print_list l)
     foreach(i ${${l}})
       message("${l}: ${i}")
     endforeach(i)
   endfunction(print_list)
+
+  # Pretty print a list named _l_ using the given separator _sep_ and store the
+  # result string in _out_
+  function(pp_list l sep out)
+    string(REPLACE ";" "${sep}" _out "${l}")
+    set("${out}" "${_out}" PARENT_SCOPE)
+  endfunction(pp_list)
 
   # Find the hostname of machine running cmake.
   # outvar: the name of the variable where to store the result.
