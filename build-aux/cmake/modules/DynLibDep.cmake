@@ -217,20 +217,33 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
   function(dldep binary outlist)
 
     if(UNIX)
-      dldep_ldd(${binary} lib_names lib_dirs)
-      dldep_filter(
-	"${lib_names}"
-	"${lib_dirs}"
-	"${DLDEP_UNIX_EXCLUSION_LIST}"
-	outlist_)
+      if(APPLE)
+
+	# Macosx/Darwin
+	echo("WARNING: dldep does not support apple yet !")
+
+      else(APPLE)
+
+	# Linux/Unix
+	dldep_ldd(${binary} lib_names lib_dirs)
+	dldep_filter(
+	  "${lib_names}"
+	  "${lib_dirs}"
+	  "${DLDEP_UNIX_EXCLUSION_LIST}"
+	  outlist_)
+
+      endif(APPLE)
     else(UNIX)
       if(WIN32)
+
+	# Windows
 	dldep_cygcheck(${binary} lib_names lib_dirs)
 	dldep_filter(
 	  "${lib_names}"
 	  "${lib_dirs}"
 	  "${DLDEP_WIN32_EXCLUSION_LIST}"
 	  outlist_)
+
       endif(WIN32)
     endif(UNIX)
 
