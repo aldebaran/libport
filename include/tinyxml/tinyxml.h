@@ -1,6 +1,6 @@
 /*
 www.sourceforge.net/projects/tinyxml
-Original code (2.0 and earlier )copyright (c) 2000-2006 Lee Thomason (www.grinninglizard.com)
+Original code (2.0 and earlier )copyright (c) 2000-2006, 2009 Lee Thomason (www.grinninglizard.com)
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any
@@ -27,7 +27,7 @@ distribution.
 #define TINYXML_INCLUDED
 
 #define TIXML_USE_STL
-#include <libport/export.hh>
+#include <tinyxml/export.hh>
 
 #ifdef _MSC_VER
 #pragma warning( push )
@@ -48,7 +48,7 @@ distribution.
 
 #ifdef TIXML_USE_STL
 	#include <string>
- 	#include <iostream>
+	#include <iostream>
 	#include <sstream>
 	#define TIXML_STRING		std::string
 #else
@@ -102,7 +102,7 @@ const int TIXML_PATCH_VERSION = 3;
 /*	Internal structure for tracking location of items
 	in the XML file.
 */
-struct LIBPORT_API TiXmlCursor
+struct TINYXML_API TiXmlCursor
 {
 	TiXmlCursor()		{ Clear(); }
 	void Clear()		{ row = col = -1; }
@@ -130,7 +130,7 @@ struct LIBPORT_API TiXmlCursor
 
 	@sa TiXmlNode::Accept()
 */
-class LIBPORT_API TiXmlVisitor
+class TINYXML_API TiXmlVisitor
 {
 public:
 	virtual ~TiXmlVisitor() {}
@@ -196,7 +196,7 @@ const TiXmlEncoding TIXML_DEFAULT_ENCODING = TIXML_ENCODING_UNKNOWN;
 	A Decleration contains: Attributes (not on tree)
 	@endverbatim
 */
-class LIBPORT_API TiXmlBase
+class TINYXML_API TiXmlBase
 {
 	friend class TiXmlNode;
 	friend class TiXmlElement;
@@ -251,7 +251,7 @@ public:
 
 	void  SetUserData( void* user )			{ userData = user; }	///< Set a pointer to arbitrary user data.
 	void* GetUserData()						{ return userData; }	///< Get a pointer to arbitrary user data.
-	const void* GetUserData() const 		{ return userData; }	///< Get a pointer to arbitrary user data.
+	const void* GetUserData() const		{ return userData; }	///< Get a pointer to arbitrary user data.
 
 	// Table that returs, for a given lead byte, the total number of bytes
 	// in the UTF-8 sequence.
@@ -425,7 +425,7 @@ private:
 	in a document, or stand on its own. The type of a TiXmlNode
 	can be queried, and it can be cast to its more defined type.
 */
-class LIBPORT_API TiXmlNode : public TiXmlBase
+class TINYXML_API TiXmlNode : public TiXmlBase
 {
 	friend class TiXmlDocument;
 	friend class TiXmlElement;
@@ -627,9 +627,9 @@ public:
 
     #ifdef TIXML_USE_STL
 	const TiXmlNode* PreviousSibling( const std::string& _value ) const	{	return PreviousSibling (_value.c_str ());	}	///< STL std::string form.
-	TiXmlNode* PreviousSibling( const std::string& _value ) 			{	return PreviousSibling (_value.c_str ());	}	///< STL std::string form.
+	TiXmlNode* PreviousSibling( const std::string& _value )			{	return PreviousSibling (_value.c_str ());	}	///< STL std::string form.
 	const TiXmlNode* NextSibling( const std::string& _value) const		{	return NextSibling (_value.c_str ());	}	///< STL std::string form.
-	TiXmlNode* NextSibling( const std::string& _value) 					{	return NextSibling (_value.c_str ());	}	///< STL std::string form.
+	TiXmlNode* NextSibling( const std::string& _value)					{	return NextSibling (_value.c_str ());	}	///< STL std::string form.
 	#endif
 
 	/// Navigate to a sibling node.
@@ -781,7 +781,7 @@ private:
 		  part of the tinyXML document object model. There are other
 		  suggested ways to look at this problem.
 */
-class LIBPORT_API TiXmlAttribute : public TiXmlBase
+class TINYXML_API TiXmlAttribute : public TiXmlBase
 {
 	friend class TiXmlAttributeSet;
 
@@ -905,7 +905,7 @@ private:
 		- I like circular lists
 		- it demonstrates some independence from the (typical) doubly linked list.
 */
-class LIBPORT_API TiXmlAttributeSet
+class TINYXML_API TiXmlAttributeSet
 {
 public:
 	TiXmlAttributeSet();
@@ -945,7 +945,7 @@ private:
 	and can contain other elements, text, comments, and unknowns.
 	Elements also contain an arbitrary number of attributes.
 */
-class LIBPORT_API TiXmlElement : public TiXmlNode
+class TINYXML_API TiXmlElement : public TiXmlNode
 {
 public:
 	/// Construct an element.
@@ -1077,8 +1077,8 @@ public:
 	#endif
 
 	const TiXmlAttribute* FirstAttribute() const	{ return attributeSet.First(); }		///< Access the first attribute in this element.
-	TiXmlAttribute* FirstAttribute() 				{ return attributeSet.First(); }
-	const TiXmlAttribute* LastAttribute()	const 	{ return attributeSet.Last(); }		///< Access the last attribute in this element.
+	TiXmlAttribute* FirstAttribute()				{ return attributeSet.First(); }
+	const TiXmlAttribute* LastAttribute()	const	{ return attributeSet.Last(); }		///< Access the last attribute in this element.
 	TiXmlAttribute* LastAttribute()					{ return attributeSet.Last(); }
 
 	/** Convenience function for easy access to the text inside an element. Although easy
@@ -1155,7 +1155,7 @@ private:
 
 /**	An XML comment.
 */
-class LIBPORT_API TiXmlComment : public TiXmlNode
+class TINYXML_API TiXmlComment : public TiXmlNode
 {
 public:
 	/// Constructs an empty comment.
@@ -1205,7 +1205,7 @@ private:
 	you generally want to leave it alone, but you can change the output mode with
 	SetCDATA() and query it with CDATA().
 */
-class LIBPORT_API TiXmlText : public TiXmlNode
+class TINYXML_API TiXmlText : public TiXmlNode
 {
 	friend class TiXmlElement;
 public:
@@ -1230,7 +1230,7 @@ public:
 	#endif
 
 	TiXmlText( const TiXmlText& copy ) : TiXmlNode( TiXmlNode::TEXT )	{ copy.CopyTo( this ); }
-	void operator=( const TiXmlText& base )							 	{ base.CopyTo( this ); }
+	void operator=( const TiXmlText& base )								{ base.CopyTo( this ); }
 
 	// Write this text object to a FILE stream.
 	virtual void Print( FILE* cfile, int depth ) const;
@@ -1278,7 +1278,7 @@ private:
 	handled as special cases, not generic attributes, simply
 	because there can only be at most 3 and they are always the same.
 */
-class LIBPORT_API TiXmlDeclaration : public TiXmlNode
+class TINYXML_API TiXmlDeclaration : public TiXmlNode
 {
 public:
 	/// Construct an empty declaration.
@@ -1347,7 +1347,7 @@ private:
 
 	DTD tags get thrown into TiXmlUnknowns.
 */
-class LIBPORT_API TiXmlUnknown : public TiXmlNode
+class TINYXML_API TiXmlUnknown : public TiXmlNode
 {
 public:
 	TiXmlUnknown() : TiXmlNode( TiXmlNode::UNKNOWN )	{}
@@ -1386,7 +1386,7 @@ private:
 	XML pieces. It can be saved, loaded, and printed to the screen.
 	The 'value' of a document node is the xml file name.
 */
-class LIBPORT_API TiXmlDocument : public TiXmlNode
+class TINYXML_API TiXmlDocument : public TiXmlNode
 {
 public:
 	/// Create an empty document, that has no name.
@@ -1635,7 +1635,7 @@ private:
 	}
 	@endverbatim
 */
-class LIBPORT_API TiXmlHandle
+class TINYXML_API TiXmlHandle
 {
 public:
 	/// Create a handle from any node (at any depth of the tree.) This can be a null pointer.
@@ -1734,7 +1734,7 @@ private:
 	fprintf( stdout, "%s", printer.CStr() );
 	@endverbatim
 */
-class LIBPORT_API TiXmlPrinter : public TiXmlVisitor
+class TINYXML_API TiXmlPrinter : public TiXmlVisitor
 {
 public:
 	TiXmlPrinter() : depth( 0 ), simpleTextPrint( false ),
@@ -1803,4 +1803,3 @@ private:
 #endif
 
 #endif
-

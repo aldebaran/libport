@@ -1,7 +1,7 @@
 #include <boost/bind.hpp>
 
-#include <libport/serialize/serializable.hh>
-#include <libport/serialize/xml-o-serializer.hh>
+#include <serialize/serializable.hh>
+#include <serialize/xml-o-serializer.hh>
 
 namespace libport
 {

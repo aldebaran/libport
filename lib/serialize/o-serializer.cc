@@ -1,4 +1,4 @@
-#include <libport/serialize/o-serializer.hh>
+#include <serialize/o-serializer.hh>
 
 namespace libport
 {
@@ -10,4 +10,3 @@ namespace libport
     {}
   }
 }
-

@@ -1,7 +1,7 @@
 #ifndef LIBPORT_SERIALIZE_XML_I_SERIALIZER_HH
 # define LIBPORT_SERIALIZE_XML_I_SERIALIZER_HH
 
-# include <libport/serialize/i-serializer.hh>
+# include <serialize/i-serializer.hh>
 
 # include <tinyxml/tinyxml.h>
 
@@ -9,7 +9,7 @@ namespace libport
 {
   namespace serialize
   {
-    class LIBPORT_API XmlISerializer: public ISerializer
+    class SERIALIZE_API XmlISerializer: public ISerializer
     {
     public:
 

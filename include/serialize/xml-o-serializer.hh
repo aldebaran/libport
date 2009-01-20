@@ -3,13 +3,13 @@
 
 # include <fstream>
 
-# include <libport/serialize/o-serializer.hh>
+# include <serialize/o-serializer.hh>
 
 namespace libport
 {
   namespace serialize
   {
-    class LIBPORT_API XmlOSerializer: public OSerializer
+    class SERIALIZE_API XmlOSerializer: public OSerializer
     {
     public:
 

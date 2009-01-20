@@ -6,14 +6,14 @@
 # include <boost/function.hpp>
 # include <boost/optional.hpp>
 
-# include <libport/export.hh>
-# include <libport/serialize/fwd.hh>
+# include <serialize/export.hh>
+# include <serialize/fwd.hh>
 
 namespace libport
 {
   namespace serialize
   {
-    class LIBPORT_API Serializer
+    class SERIALIZE_API Serializer
     {
     public:
 
@@ -36,6 +36,6 @@ namespace libport
   }
 }
 
-#include <libport/serialize/serializer.hxx>
+#include <serialize/serializer.hxx>
 
 #endif

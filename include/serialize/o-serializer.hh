@@ -1,13 +1,13 @@
 #ifndef LIBPORT_SERIALIZE_O_SERIALIZER_HH
 # define LIBPORT_SERIALIZE_O_SERIALIZER_HH
 
-# include <libport/serialize/serializer.hh>
+# include <serialize/serializer.hh>
 
 namespace libport
 {
   namespace serialize
   {
-    class LIBPORT_API OSerializer: public Serializer
+    class SERIALIZE_API OSerializer: public Serializer
     {
     public:
       // FIXME: This should be an ostream. See ISerialier::ISerialier comment.

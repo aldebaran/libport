@@ -32,19 +32,6 @@ sys_libport_include_HEADERS =			\
   $(include_libport)/sys/stat.h			\
   $(include_libport)/sys/time.h
 
-# serialize/ headers
-serialize_libport_includedir = $(libport_includedir)/serialize
-serialize_libport_include_HEADERS =			\
-  $(include_libport)/serialize/exception.hh		\
-  $(include_libport)/serialize/fwd.hh			\
-  $(include_libport)/serialize/i-serializer.hh		\
-  $(include_libport)/serialize/o-serializer.hh		\
-  $(include_libport)/serialize/serializable.hh		\
-  $(include_libport)/serialize/serializer.hh		\
-  $(include_libport)/serialize/serializer.hxx		\
-  $(include_libport)/serialize/xml-i-serializer.hh	\
-  $(include_libport)/serialize/xml-o-serializer.hh
-
 # C++ headers.
 libport_include_HEADERS +=			\
   $(include_libport)/asio.hh			\

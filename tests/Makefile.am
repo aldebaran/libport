@@ -5,6 +5,10 @@ include libport/local.mk
 include sched/local.mk
 include $(top_srcdir)/build-aux/check.mk
 
+check-clean-local:
+	rm -rf $(TEST_LOGS:.log=.dir)
+
+
 # We disable this framework because it is not usable yet.
 # It has interesting code, this is why it is not thrown away.
 #

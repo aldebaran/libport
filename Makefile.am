@@ -24,6 +24,9 @@ AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 include_libport = include/libport
 include include/libport/local.mk
 
+include include/serialize/local.mk
+include lib/serialize/local.mk
+
 include include/sched/local.mk
 include lib/sched/local.mk
 
@@ -38,6 +41,8 @@ include msvc/local.mk
 ## ------- ##
 
 TEST_LOGS = $(addsuffix .log,$(basename $(TESTS)))
+check-clean-local:
+	rm -rf $(TEST_LOGS:.log=.dir)
 
 
 ## --------------- ##

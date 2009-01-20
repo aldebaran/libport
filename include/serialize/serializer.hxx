@@ -2,7 +2,7 @@
 # define LIBPORT_SERIALIZE_SERIALIZER_HXX
 
 # include <libport/foreach.hh>
-# include <libport/serialize/exception.hh>
+# include <serialize/exception.hh>
 
 namespace libport
 {
