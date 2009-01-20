@@ -559,6 +559,92 @@ function(gostai_add_library name)
 
 endfunction(gostai_add_library name)
 
+
+# Add a Gostai test executable target named test-_name_.
+# Arguments:
+#  SOURCES	- the list of sources of the executable
+#  MOCS		- the list of sources of the executable that need to be moc'ed
+#  UIS		- the list of UI files used by the executable
+#  CPPFLAGS	- the list of CPPFLAGS to add
+#  INCLUDE_DIRS - the list of include directories to search in.
+#  LIBRARIES	- the list of libraries to link with.
+#  RESOURCES	- the list of resources files.
+function(gostai_add_test name)
+
+  set(prefix "test-${name}")
+  parse_arguments(
+    "${prefix}"
+    "SOURCES;MOCS;UIS;CPPFLAGS;INCLUDE_DIRS;LIBRARIES;RESOURCES"
+    "NO_CONSOLE;INSTALL_NO_DEPS"
+    ${ARGN})
+
+  # Ensure test is enabled
+  enable_testing()
+
+  # =================== #
+  # Include directories #
+  # =================== #
+  if(${prefix}_INCLUDE_DIRS)
+    include_directories(${${prefix}_INCLUDE_DIRS})
+  endif(${prefix}_INCLUDE_DIRS)
+
+  # =================== #
+  # Prepare the sources #
+  # =================== #
+  qt4_wrap_ui(${prefix}_UI_SOURCES ${${prefix}_UIS})
+  qt4_add_resources(${prefix}_RES_SOURCES ${${prefix}_RESOURCES})
+
+  set(${prefix}_MOC_OPTIONS "")
+  if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    list(APPEND ${prefix}_MOC_OPTIONS "-DQT_NO_DEBUG")
+    list(APPEND ${prefix}_MOC_OPTIONS "-DNDEBUG")
+  endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+  qt4_wrap_cpp(${prefix}_MOC_SOURCES ${${prefix}_MOCS}
+    OPTIONS ${${prefix}_MOC_OPTIONS})
+
+  set(${prefix}_ALL_SOURCES
+    ${${prefix}_SOURCES}
+    ${${prefix}_MOC_SOURCES}
+    ${${prefix}_RES_SOURCES}
+    ${${prefix}_UI_SOURCES}
+    )
+
+  if(NOT ${prefix}_ALL_SOURCES)
+    message(FATAL_ERROR "No sources provided for test '${name}'")
+  endif(NOT ${prefix}_ALL_SOURCES)
+
+  add_executable(${prefix} ${${prefix}_ALL_SOURCES})
+
+  if(${prefix}_CPPFLAGS)
+    set_target_properties(${prefix} PROPERTIES
+      COMPILE_DEFINITIONS "${${prefix}_CPPFLAGS}")
+  endif(${prefix}_CPPFLAGS)
+
+  # ===================== #
+  # Prepare the libraries #
+  # ===================== #
+  if(WIN32)
+    list(APPEND ${prefix}_LIBRARIES ${QT_QTMAIN_LIBRARY})
+  endif(WIN32)
+
+  if(${prefix}_LIBRARIES)
+    target_link_libraries(${prefix} ${${prefix}_LIBRARIES})
+  endif(${prefix}_LIBRARIES)
+
+  # ================= #
+  # Register the test #
+  # ================= #
+
+  add_test(${prefix} ${prefix})
+
+  # ================== #
+  # Add custom targets #
+  # ================== #
+
+  add_exec_target(${prefix})
+
+endfunction(gostai_add_test)
+
 endif(NOT GOSTAI_CMAKE_GUARD)
 
 # LocalWords:  docbook
