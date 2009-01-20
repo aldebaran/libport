@@ -57,6 +57,14 @@ typedef uint32_t in_addr_t;
 # endif //! WIN32
 
 
+// Mac OSX does not have MSG_NOSIGNAL, used by send and recv to ask
+// for events to become errno rather than signals.  But it supports
+// the socket option SO_NOSIGPIPE.
+#if !defined MSG_NOSIGNAL
+# define MSG_NOSIGNAL 0
+#endif
+
+
 /* The 4th argument is usually a const void* on UNIX (which makes it
    possible to pass a pointer to int) and a const char* on Windows (in
    which case passing an int* is an error).

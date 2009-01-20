@@ -107,7 +107,7 @@ namespace Network
     // Set the REUSEADDR option to 1 to allow imediate reuse of the port.
     // set the REUSEADDR option to 1 to allow imediate reuse of the port
     int yes = 1;
-    if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes))
+    if (libport::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes))
     {
       perror ("setsockopt failed");
       return false;
@@ -116,7 +116,7 @@ namespace Network
     // Do not send a SIGPIPE, rather return EPIPE.  See the comment
     // for MSG_NOSIGNAL in connection.cc.
 #if defined SO_NOSIGPIPE
-    if (setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof yes))
+    if (libport::setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof yes))
     {
       perror ("setsockopt failed");
       return false;
