@@ -266,8 +266,10 @@ if(NOT TOOLS_CMAKE_GUARD)
       message(FATAL_ERROR "add_exec_target: `${target}' is not a target")
     endif(NOT TARGET ${target})
 
-    find_package(Cygcheck REQUIRED)
-    find_package(Env REQUIRED)
+    if(WIN32)
+      find_package(Cygcheck REQUIRED)
+      find_package(Env REQUIRED)
+    endif(WIN32)
 
     get_target_location(${target} binary_loc)
 
