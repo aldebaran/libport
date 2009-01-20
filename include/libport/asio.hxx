@@ -4,15 +4,20 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/construct.hpp>
 
+// #define LIBPORT_ECHO(S) std::cerr << __FILE__ ":" <<  __LINE__ << ": " #S ": " << S << std::endl
+
 #include <libport/thread.hh>
 #include <libport/lockable.hh>
 #include <libport/semaphore.hh>
 
 namespace libport {
 namespace netdetail {
+
   typedef ::libport::Socket::SocketFactory SocketFactory;
-  typedef  boost::asio::basic_datagram_socket<boost::asio::ip::udp,
+
+  typedef boost::asio::basic_datagram_socket<boost::asio::ip::udp,
   boost::asio::datagram_socket_service<boost::asio::ip::udp> > udpsock;
+
   class SocketImplBase: public BaseSocket, protected libport::Lockable
   {
     public:
@@ -93,16 +98,19 @@ namespace netdetail {
 
     template<class Acceptor>
     AcceptorImpl<Acceptor>::AcceptorImpl(Acceptor* base)
-    :base_(base)
+      : base_(base)
     {
     }
+
     template<class Acceptor>
     AcceptorImpl<Acceptor>::~AcceptorImpl()
     {
       close();
       delete base_;
     }
-    template<class Acceptor> void
+
+    template<class Acceptor>
+    void
     AcceptorImpl<Acceptor>::close()
     {
       boost::system::error_code erc;
@@ -149,8 +157,9 @@ namespace netdetail {
     {
       public:
       UDPSocket();
-      boost::function3<void, const void*, int,
-                  boost::shared_ptr<UDPLink> > onRead;
+      typedef boost::function3<void, const void*, int,
+                               boost::shared_ptr<UDPLink> > onread_type;
+      onread_type onRead;
       void start_receive();
       void handle_receive(const boost::system::error_code& error, size_t sz);
       private:
@@ -440,7 +449,7 @@ namespace netdetail {
     CHECK_CALL(settings.tmpDHFile, context.use_tmp_dh_file, );
     CHECK_CALL(settings.certChainFile, context.use_certificate_chain_file, );
     CHECK_CALL(settings.privateKeyFile, context.use_private_key_file,
-       	ssl::context_base::pem comma);
+	ssl::context_base::pem comma);
 #undef CHECK_CALL
 
     // Create a SSL stream taking its underlying stream by ref.
@@ -581,9 +590,10 @@ Socket::listenProto(SocketFactory f, const std::string& host,
   return erc;
 }
 
-inline boost::system::error_code
+inline
+boost::system::error_code
 Socket::listen(SocketFactory f, const std::string& host,
-    const std::string& port, bool udp)
+               const std::string& port, bool udp)
 {
   (void)udp;
   assert(!udp);
@@ -593,13 +603,13 @@ Socket::listen(SocketFactory f, const std::string& host,
   return erc;
 }
 
-inline Socket::Handle
+inline
+Socket::Handle
 Socket::listenUDP(const std::string& host, const std::string& port,
-                  boost::function3<void, const void*, int,
-                  boost::shared_ptr<UDPLink> > onRead,
+                  netdetail::UDPSocket::onread_type onRead,
                   boost::system::error_code& erc)
 {
-  netdetail::UDPSocket*s = new netdetail::UDPSocket();
+  netdetail::UDPSocket* s = new netdetail::UDPSocket();
   s->onRead = onRead;
   boost::asio::ip::udp::endpoint ep =
     resolve<boost::asio::ip::udp>(host, port, erc);

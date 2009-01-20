@@ -114,7 +114,7 @@ void test_one(bool proto)
 {
   TestSocket* client = new TestSocket(false, true);
   boost::system::error_code err;
-  err = client->connect("localhost", S_AVAIL_PORT , proto);
+  err = client->connect("localhost", S_AVAIL_PORT, proto);
   BOOST_CHECK_MESSAGE(!err, err.message());
   client->send("coincoin\n");
   usleep(delay);
@@ -233,7 +233,10 @@ test()
   err = client->connect("localhost", S_AVAIL_PORT, false);
   BOOST_CHECK_MESSAGE(!err, err.message());
   usleep(delay);
-  libport::startThread(boost::bind(&hold_for<libport::Destructible::DestructionLock>, client->getDestructionLock(), 1000000));
+  libport::startThread(
+    boost::bind(&hold_for<libport::Destructible::DestructionLock>,
+                client->getDestructionLock(),
+                1000000));
   client->destroy();
   usleep(500000);
   // There can be 1 or 2 sockets at this point. Client must be still alive because of the lock, but server might have died.
