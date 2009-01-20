@@ -1,6 +1,6 @@
 #
 # urbi-libport.m4: This file is part of build-aux.
-# Copyright (C) Gostai S.A.S., 2006-2008.
+# Copyright (C) 2006-2009, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -10,22 +10,21 @@
 # For comments, bug reports and feedback: http://www.urbiforge.com
 #
 
-# _URBI_LIBPORT_COMMON
-# --------------------
-# Code common to the use of an installed or shipped libport.
-AC_DEFUN([_URBI_LIBPORT_COMMON],
-[
-AC_ARG_WITH([boost-thread-static],
-	[AC_HELP_STRING([--with-boost-thread-static]
-			[link with the static version of boost thread library])]
-	[], [with_boost_thread_static=yes])
 
-AC_REQUIRE([URBI_PTHREAD])dnl
-AC_REQUIRE([URBI_FLOAT_CHECK])dnl
-
-AC_CHECK_HEADERS([sched.h sys/resource.h sys/mman.h sys/times.h sys/param.h direct.h])
+# _URBI_LIBPORT_SCHED
+# -------------------
+# Check for what we need to use lib/sched.
+AC_DEFUN([_URBI_LIBPORT_SCHED],
+[AC_CHECK_HEADERS([sched.h sys/resource.h sys/mman.h sys/times.h sys/param.h direct.h])
 AC_CHECK_FUNCS([sched_setscheduler setpriority mlockall times getcwd _getcwd])
-# Check for Boost headers
+])
+
+
+# _URBI_LIBPORT_BOOST
+# -------------------
+# Check for libport dependencies on Boost.
+AC_DEFUN([_URBI_LIBPORT_BOOST],
+[# Check for Boost headers
 BOOST_REQUIRE([1.35])
 # Check for Boost.Thread
 if test x$with_boost_thread_static = xyes; then
@@ -40,6 +39,25 @@ if test x$enable_boost_threads = xyes; then
 	    [Define to enable boost::thread support.])
   BOOST_THREADS([$boost_threads_flag])
 fi
+])
+
+
+
+
+# _URBI_LIBPORT_COMMON
+# --------------------
+# Code common to the use of an installed or shipped libport.
+AC_DEFUN([_URBI_LIBPORT_COMMON],
+[
+AC_ARG_WITH([boost-thread-static],
+	[AC_HELP_STRING([--with-boost-thread-static]
+			[link with the static version of boost thread library])]
+	[], [with_boost_thread_static=yes])
+
+AC_REQUIRE([URBI_PTHREAD])dnl
+AC_REQUIRE([URBI_FLOAT_CHECK])dnl
+AC_REQUIRE([_URBI_LIBPORT_BOOST])dnl
+AC_REQUIRE([_URBI_LIBPORT_SCHED])dnl
 ])
 
 
