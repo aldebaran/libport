@@ -8,6 +8,8 @@ using libport::test_suite;
 
 bool abort_ctor = false;
 
+const char* msg = "coincoin\n";
+
 template<class T>
 void
 hold_for(T, libport::utime_t duration)
@@ -116,13 +118,13 @@ void test_one(bool proto)
   boost::system::error_code err;
   err = client->connect("localhost", S_AVAIL_PORT, proto);
   BOOST_CHECK_MESSAGE(!err, err.message());
-  client->send("coincoin\n");
+  client->send(msg);
   usleep(delay);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, proto ? 1 : 2);
-  BOOST_CHECK_EQUAL(client->received, "coincoin\n");
+  BOOST_CHECK_EQUAL(client->received, msg);
   if (!proto)
     BOOST_CHECK_EQUAL(TestSocket::lastInstance->received,
-                      "coincoin\n");
+                      msg);
   BOOST_CHECK_EQUAL(client->getRemotePort(), AVAIL_PORT);
   if (!proto)
     BOOST_CHECK_EQUAL(TestSocket::lastInstance->getLocalPort(),
@@ -171,7 +173,7 @@ test()
     TestSocket s(false, true);
     err = s.connect("localhost", S_AVAIL_PORT, false);
     BOOST_CHECK_MESSAGE(!err, err.message());
-    s.send("coincoin\n");
+    s.send(msg);
     usleep(delay);
   }
   usleep(delay*2);
@@ -185,14 +187,14 @@ test()
     TestSocket* client = new TestSocket(false, true);
     err = client->connect("localhost", S_AVAIL_PORT, false);
     BOOST_CHECK_MESSAGE(!err, err.message());
-    client->send("coincoin\n");
+    client->send(msg);
     clients.push_back(client);
   }
   usleep(delay*3);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 20);
   foreach(TestSocket* s, clients)
   {
-    BOOST_CHECK_EQUAL(s->received, "coincoin\n");
+    BOOST_CHECK_EQUAL(s->received, msg);
     s->close();
   }
   usleep(delay*3);
