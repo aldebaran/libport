@@ -18,6 +18,7 @@ namespace libport
     public:
 
       Serializer(bool input);
+      virtual ~Serializer();
 
       template <template <typename, typename> class C, typename T, typename A>
       void serialize(const std::string& name, C<T, A>& collection);

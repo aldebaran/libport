@@ -7,5 +7,8 @@ namespace libport
     Serializer::Serializer(bool input)
       : input_(input)
     {}
+
+    Serializer::~Serializer()
+    {}
   }
 }

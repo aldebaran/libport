@@ -12,6 +12,7 @@ namespace libport
     {
     public:
       virtual void serialize(Serializer& s) = 0;
+      virtual ~Serializable() {}
     };
   }
 }
