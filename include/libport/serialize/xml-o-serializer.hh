@@ -9,7 +9,7 @@ namespace libport
 {
   namespace serialize
   {
-    class XmlOSerializer: public OSerializer
+    class LIBPORT_API XmlOSerializer: public OSerializer
     {
     public:
 

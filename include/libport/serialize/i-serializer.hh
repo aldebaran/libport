@@ -7,7 +7,7 @@ namespace libport
 {
   namespace serialize
   {
-    class ISerializer: public Serializer
+    class LIBPORT_API ISerializer: public Serializer
     {
     public:
       // FIXME: This should be an istream. However, tinyxml can only parse files ...

@@ -7,7 +7,7 @@ namespace libport
 {
   namespace serialize
   {
-    class OSerializer: public Serializer
+    class LIBPORT_API OSerializer: public Serializer
     {
     public:
       // FIXME: This should be an ostream. See ISerialier::ISerialier comment.

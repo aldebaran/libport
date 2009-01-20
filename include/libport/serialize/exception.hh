@@ -3,11 +3,13 @@
 
 # include <stdexcept>
 
+# include <libport/export.hh>
+
 namespace libport
 {
   namespace serialize
   {
-    class Exception: public std::runtime_error
+    class LIBPORT_API Exception: public std::runtime_error
     {
     public:
       Exception(const std::string& msg);
