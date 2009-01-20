@@ -3,7 +3,6 @@ dist_lib_tinyxml_libtinyxml_la_SOURCES = $(lib_tinyxml_libtinyxml_sources)
 lib_tinyxml_libtinyxml_la_LDFLAGS =
 lib_tinyxml_libtinyxml_la_CPPFLAGS =		\
   $(AM_CPPFLAGS)				\
-  -DTIXML_USE_STL				\
   -I$(srcdir)/include/tinyxml
 
 dist_lib_tinyxml_libtinyxml_la_SOURCES +=	\
