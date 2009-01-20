@@ -454,6 +454,35 @@ Here the example of an history as shown by gitk --all:
  |/
  * tag: 1.0; Add foo.
 
+* Execution of built target from the build directory.
+
+Most of the executable target `foo' built with CMake comes with an
+`exec-foo' target that execute the built binary. This is very useful
+on platform with no support for RPATH. A set of environment variable
+allow you to control the command line arguments passed to the program.
+
+** Environment variables
+
+*** ARGV
+
+List of the arguments passed to the program. This is a CMake list, not
+a shell script list, so item are separated by a semi-colon not a white
+space.
+
+*** PREFIX_TOOL
+
+The name of tool that take your program as first argument such as: gdb,
+valgrind, ldd, etc...
+
+*** VERBOSE
+
+If set to `1' more information are printed on the standard output. It
+eases debugging.
+
+** Example
+
+$ make -C ~/build/qt-ext/master/d -j2 exec-log-viewer VERBOSE=1 ARGV='1;2;3' PREFIX_TOOL='gdb'
+
 * End of this document.
 
 Local Variables:
