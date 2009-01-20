@@ -615,7 +615,8 @@ Socket::listenUDP(const std::string& host, const std::string& port,
     resolve<boost::asio::ip::udp>(host, port, erc);
   if (erc)
     return Handle();
-  s->socket_.open(boost::asio::ip::udp::v4());
+  // Careful to use the protocol reported by the endpoint.
+  s->socket_.open(ep.protocol());
   s->socket_.bind(ep, erc);
   if (erc)
     return Handle();
