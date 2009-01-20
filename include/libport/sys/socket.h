@@ -27,8 +27,9 @@
 
 // Define POSIX types if compiling with Visual C++.
 
-// This ought to be something like an uint32_t but it won't work (VC++, GCC).
+// http://msdn.microsoft.com/en-us/library/ms740476(VS.85).aspx
 typedef int socklen_t;
+
 #  ifdef _MSC_VER
 /* In reality, the MS API says this is a `u_long' although it does not define
  * this type.  See: http://msdn2.microsoft.com/en-us/library/ms738571.aspx  */
@@ -45,16 +46,6 @@ typedef uint32_t in_addr_t;
 #  define SHUT_RD   SD_RECEIVE
 #  define SHUT_WR   SD_SEND
 
-/* The 4th argument is usually a const void* on UNIX and a const char*
-   on Windows.
-
-   But let's leave with that, since Boost.Asio is overloading
-   setsockopt, and, of course, our #define breaks everything.  */
-#if 0
-#  define setsockopt(Fd, Lvl, Optname, Optval, Optlen) \
-  setsockopt((Fd), (Lvl), (Optname), (const char*) (Optval), (Optlen))
-#endif
-
 # else // !WIN32: Assume UNIX-style headers.
 
 /*---------.
@@ -63,8 +54,42 @@ typedef uint32_t in_addr_t;
 
 #  include <sys/socket.h>
 
-
 # endif //! WIN32
+
+
+/* The 4th argument is usually a const void* on UNIX (which makes it
+   possible to pass a pointer to int) and a const char* on Windows (in
+   which case passing an int* is an error).
+
+   Since we often pass an int*, we really want this wrapper.
+
+   Don't make a macro though, since Boost also defines a setsockopt,
+   in which case a macro would break everything.  */
+namespace libport
+{
+  inline
+  int
+  getsockopt(int s, int level,
+             int optname, void* optval, socklen_t* optlen)
+  {
+    return ::getsockopt(s, level,
+                        optname,
+                        WIN32_IF(static_cast<char*>(optval), optval),
+                        optlen);
+  }
+
+  inline
+  int
+  setsockopt(int s, int level,
+             int optname, const void* optval, socklen_t optlen)
+  {
+    return ::setsockopt(s, level,
+                        optname,
+                        WIN32_IF(static_cast<char*>(optval), optval),
+                        optlen);
+  }
+
+}
 
 
 #endif // !LIBPORT_SYS_SOCKET_H
