@@ -33,7 +33,7 @@ function(GEN_LIB_LOADER binary)
   endif(UNIX)
   # Output script file name.
   if(TARGET ${binary})
-    get_target_property(binary_loc ${binary} LOCATION_${CMAKE_BUILD_TYPE})
+    get_target_location(${binary} binary_loc)
     if(WIN32)
       set(binary_name ${binary}.exe)
     else(WIN32)

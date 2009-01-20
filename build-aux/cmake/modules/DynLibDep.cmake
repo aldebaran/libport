@@ -249,7 +249,7 @@ if(NOT DYN_LIB_DEP_CMAKE_GUARD)
 
     include(Dirs)
     if(TARGET ${binary})
-      get_target_property(binary_loc ${binary} LOCATION_${CMAKE_BUILD_TYPE})
+      get_target_location(${binary} binary_loc)
       set(binary_name ${binary})
       get_filename_component(binary_path ${binary_loc} PATH)
     else(TARGET ${binary})

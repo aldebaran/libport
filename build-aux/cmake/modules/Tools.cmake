@@ -269,7 +269,7 @@ if(NOT TOOLS_CMAKE_GUARD)
     find_package(Cygcheck REQUIRED)
     find_package(Env REQUIRED)
 
-    get_target_property(binary_loc ${target} LOCATION_${CMAKE_BUILD_TYPE})
+    get_target_location(${target} binary_loc)
 
     configure_file(
       ${CMAKE_MODULE_PATH}/exec-target.cmake.in
@@ -282,5 +282,25 @@ if(NOT TOOLS_CMAKE_GUARD)
       COMMENT "Executing ${target}..."
       )
   endfunction(add_exec_target)
+
+  # Put in _out_ the location of built file for the target _target_.
+  #
+  # The LOCATION_<CONFIG> property is not in enough since it does not returns
+  # the right location when MACOSX_BUNDLE is set (see: reported issue
+  # http://public.kitware.com/Bug/view.php?id=8406)
+  function(get_target_location target out)
+
+    get_target_property(binary_loc ${target} LOCATION_${CMAKE_BUILD_TYPE})
+
+    if(APPLE)
+      get_target_property(is_bundle ${target} MACOSX_BUNDLE)
+      if(is_bundle)
+	include(BundleUtilities)
+	get_bundle_main_executable("${binary_loc}.app" binary_loc)
+      endif(is_bundle)
+    endif(APPLE)
+
+    set(${out} ${binary_loc} PARENT_SCOPE)
+  endfunction(get_target_location)
 
 endif(NOT TOOLS_CMAKE_GUARD)
