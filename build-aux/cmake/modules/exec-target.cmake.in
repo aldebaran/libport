@@ -77,12 +77,23 @@ if(WIN32)
   endif("$ENV{VERBOSE}" EQUAL 1)
 endif(WIN32)
 
+# Compute command line to execute.
+set(cmd "")
+if(NOT "$ENV{PREFIX_TOOL}" STREQUAL "")
+  set(cmd "$ENV{PREFIX_TOOL};")
+endif()
+set(cmd "${cmd}@binary_loc@")
+if(NOT "$ENV{ARGV}" STREQUAL "")
+  set(cmd "${cmd};$ENV{ARGV}")
+endif()
+
 # Execute the executable target.
 if("$ENV{VERBOSE}" EQUAL 1)
-  echo("Execute `@binary_loc@'...")
+  pp_list("${cmd}" " " pp_cmd)
+  echo("Execute `${pp_cmd}'...")
 endif("$ENV{VERBOSE}" EQUAL 1)
 execute_process(
-  COMMAND @binary_loc@
+  COMMAND ${cmd}
   WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
   RESULT_VARIABLE status
   )
