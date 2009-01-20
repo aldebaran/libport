@@ -1,5 +1,4 @@
 lib_LTLIBRARIES += lib/sched/libsched.la
-dist_lib_sched_libsched_la_SOURCES = $(lib_sched_libsched_sources)
 lib_sched_libsched_la_LDFLAGS = -avoid-version -no-undefined
 lib_sched_libsched_la_LIBADD = $(LIBADD) $(libport_la)
 lib_sched_libsched_la_CPPFLAGS =		\
@@ -8,7 +7,7 @@ lib_sched_libsched_la_CPPFLAGS =		\
   -DBUILDING_LIBSCHED				\
   $(BOOST_CPPFLAGS)
 
-dist_lib_sched_libsched_la_SOURCES +=		\
+dist_lib_sched_libsched_la_SOURCES =		\
   lib/sched/configuration.cc			\
   lib/sched/job.cc				\
   lib/sched/pthread-coro.cc			\
