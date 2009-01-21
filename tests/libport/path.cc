@@ -57,6 +57,13 @@ void exist(const path& p, bool expected = true)
   BOOST_CHECK_EQUAL(p.exists(), expected);
 }
 
+void create(const path& p)
+{
+  exist(p, false);
+  p.create();
+  exist(p, true);
+}
+
 void equal(const path& lhs, const path& rhs)
 {
   BOOST_CHECK_EQUAL(lhs, rhs);
@@ -165,6 +172,13 @@ init_test_suite()
   exist_suite->add(BOOST_TEST_CASE(bind(exist, path, res)));
   def("/", true);
   def("/this/directory/does/not/exist", false);
+#undef def
+
+  test_suite* create_suite = BOOST_TEST_SUITE("File creation test suite");
+  suite->add(create_suite);
+#define def(path)                                          \
+  create_suite->add(BOOST_TEST_CASE(bind(create, path)));
+  def("./creation_test");
 #undef def
 
   return suite;

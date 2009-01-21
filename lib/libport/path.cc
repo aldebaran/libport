@@ -3,8 +3,10 @@
  ** \brief path: implements file libport/path.hh
  */
 
+#include <fcntl.h>
 #include <iostream>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <cctype>
 
 #include <libport/detect-win32.h>
@@ -245,6 +247,15 @@ namespace libport
   {
     struct stat buf;
     return 0 == stat (to_string().c_str(), &buf);
+  }
+
+  bool path::create () const
+  {
+    int fd = open(to_string().c_str(), O_WRONLY | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+    if (fd == -1)
+      return false;
+    close(fd);
+    return true;
   }
 
   const path::path_type& path::components() const

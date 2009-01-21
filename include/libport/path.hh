@@ -67,7 +67,7 @@ namespace libport
     void volume_set(const std::string& v);
     path dirname() const;
     bool exists() const;
-
+    bool create() const;
     /// \}
 
     /// \name Printing and converting.
