@@ -3,6 +3,7 @@ AUTOMAKE_OPTIONS += subdir-objects
 TESTS =
 include libport/local.mk
 include sched/local.mk
+include serialize/local.mk
 include $(top_srcdir)/build-aux/check.mk
 
 check-clean-local:
