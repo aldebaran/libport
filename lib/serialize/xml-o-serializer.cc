@@ -11,47 +11,45 @@ namespace libport
     XmlOSerializer::XmlOSerializer(const std::string& path)
       : OSerializer(path)
       , stream_(path.c_str())
-      , indent_(0)
-    {}
+    {
+      current_ = &doc_;
+    }
+
+    XmlOSerializer::~XmlOSerializer()
+    {
+      doc_.SaveFile(path_.c_str());
+    }
 
     void XmlOSerializer::serialize(const std::string& name, Serializable& s)
     {
-      indent();
-      stream_ << "<" << name << ">" << std::endl;
-      ++indent_;
+      TiXmlNode* node = current_;
+
+      current_ = new TiXmlElement(name);
+      node->LinkEndChild(current_);
       s.serialize(*this);
-      --indent_;
-      indent();
-      stream_ << "</" << name << ">" << std::endl;
+      current_ = node;
     }
 
     void XmlOSerializer::serialize(const std::string& name, std::string& s)
     {
-      indent();
-      stream_ << "<" << name << ">";
-      stream_ << s;
-      stream_ << "</" << name << ">" << std::endl;
+      TiXmlElement* elt = new TiXmlElement(name);
+      current_->LinkEndChild(elt);
+
+      TiXmlText* txt = new TiXmlText(s);
+      elt->LinkEndChild(txt);
     }
 
-    void XmlOSerializer::serialize_collection_end(const std::string& name)
+    void XmlOSerializer::serialize_collection_end(TiXmlNode* node)
     {
-      --indent_;
-      indent();
-      stream_ << "</" << name << ">" << std::endl;
+      current_ = node;
     }
 
     XmlOSerializer::action_type XmlOSerializer::serialize_collection(const std::string& name)
     {
-      indent();
-      stream_ << "<" << name << ">" << std::endl;
-      ++indent_;
-      return boost::bind(&XmlOSerializer::serialize_collection_end, this, name);
-    }
+      TiXmlNode* node = current_;
+      current_ = new TiXmlElement(name);
 
-    void XmlOSerializer::indent()
-    {
-      for (int i = 0; i < indent_; ++i)
-        stream_ << "  ";
+      return boost::bind(&XmlOSerializer::serialize_collection_end, this, node);
     }
 
   }

@@ -3,6 +3,8 @@
 
 # include <fstream>
 
+# include <tinyxml/tinyxml.h>
+
 # include <serialize/o-serializer.hh>
 
 namespace libport
@@ -14,17 +16,18 @@ namespace libport
     public:
 
       XmlOSerializer(const std::string& stream);
+      ~XmlOSerializer();
 
       void serialize(const std::string& name, Serializable& s);
       void serialize(const std::string& name, std::string& s);
 
     private:
       action_type serialize_collection(const std::string& name);
-      void serialize_collection_end(const std::string& name);
+      void serialize_collection_end(TiXmlNode* node);
 
-      void indent();
       std::ofstream stream_;
-      int indent_;
+      TiXmlDocument doc_;
+      TiXmlNode* current_;
     };
   }
 }
