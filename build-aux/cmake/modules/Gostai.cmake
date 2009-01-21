@@ -635,9 +635,6 @@ function(gostai_add_test name)
   # ===================== #
   # Prepare the libraries #
   # ===================== #
-  if(WIN32)
-    list(APPEND ${prefix}_LIBRARIES ${QT_QTMAIN_LIBRARY})
-  endif(WIN32)
 
   if(${prefix}_LIBRARIES)
     target_link_libraries(${prefix} ${${prefix}_LIBRARIES})
