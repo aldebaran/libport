@@ -536,6 +536,16 @@ function(gostai_add_library name)
     ${CMAKE_CURRENT_BINARY_DIR}/gostai-info.h
     ESCAPE_QUOTES
     @ONLY)
+  configure_file(
+    ${CMAKE_MODULE_PATH}/qt-info.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/qt-info.h
+    ESCAPE_QUOTES
+    @ONLY)
+  configure_file(
+    ${CMAKE_MODULE_PATH}/system-info.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/system-info.h
+    ESCAPE_QUOTES
+    @ONLY)
 
   # ============= #
   # Install files #
