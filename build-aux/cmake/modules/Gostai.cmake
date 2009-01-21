@@ -493,10 +493,7 @@ function(gostai_add_library name)
   else(${name}_QTPLUGIN)
     set(TYPE SHARED)
   endif(${name}_QTPLUGIN)
-  add_library(${name} ${TYPE}
-    ${${name}_SOURCES}
-    ${${name}_MOC_SOURCES}
-    )
+  add_library(${name} ${TYPE} ${${name}_ALL_SOURCES})
   gostai_add_hint_dir(${CMAKE_CURRENT_BINARY_DIR})
 
   if(NOT ${name}_CPPFLAGS)
