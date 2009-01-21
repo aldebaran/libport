@@ -3,8 +3,8 @@
  ** \brief path: implements file libport/path.hh
  */
 
-#include <fcntl.h>
 #include <iostream>
+#include <libport/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cctype>
