@@ -511,9 +511,6 @@ function(gostai_add_library name)
   # ===================== #
   # Prepare the libraries #
   # ===================== #
-  if(WIN32)
-    list(APPEND ${name}_LIBRARIES ${QT_QTMAIN_LIBRARY})
-  endif(WIN32)
 
   if(${name}_LIBRARIES)
     target_link_libraries(${name} ${${name}_LIBRARIES})
