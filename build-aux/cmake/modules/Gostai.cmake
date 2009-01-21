@@ -19,11 +19,13 @@ include(GostaiHintDirs)
 #  INCLUDE_DIRS - the list of include directories to search in.
 #  LIBRARIES	- the list of libraries to link with.
 #  RESOURCES	- the list of resources files.
+#  TRANSLATIONS - the list of translation files to build. (by default it
+#                 searches a .ts file named _name_.)
 macro(gostai_add_executable name)
 
   parse_arguments(
     ${name}
-    "SOURCES;MOCS;UIS;CPPFLAGS;INCLUDE_DIRS;LIBRARIES;RESOURCES"
+    "SOURCES;MOCS;UIS;CPPFLAGS;INCLUDE_DIRS;LIBRARIES;RESOURCES;TRANSLATIONS"
     "NO_CONSOLE;INSTALL_NO_DEPS"
     ${ARGN})
 
@@ -47,12 +49,14 @@ macro(gostai_add_executable name)
   endif(CMAKE_BUILD_TYPE STREQUAL "Release")
   qt4_wrap_cpp(${name}_MOC_SOURCES ${${name}_MOCS}
     OPTIONS ${${name}_MOC_OPTIONS})
+  gostai_add_translations(${name})
 
   set(${name}_ALL_SOURCES
     ${${name}_SOURCES}
     ${${name}_MOC_SOURCES}
     ${${name}_RES_SOURCES}
     ${${name}_UI_SOURCES}
+    ${${name}_QM_SOURCES}
     )
 
   if(NOT ${name}_ALL_SOURCES)
@@ -176,6 +180,7 @@ macro(gostai_add_executable name)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt.conf.install
     DESTINATION ${BINARIES_DIR}
     RENAME qt.conf)
+  install(FILES ${${name}_QM_SOURCES} DESTINATION ${TRANSLATIONS_DIR})
 
   # ========================== #
   # Deploy dependent libraries #
@@ -473,12 +478,14 @@ function(gostai_add_library name)
   qt4_add_resources(${name}_SOURCES ${${name}_RESOURCES})
   qt4_wrap_cpp(${name}_MOC_SOURCES ${${name}_MOCS}
     OPTIONS ${${name}_MOC_OPTS})
+  gostai_add_translations(${name})
 
   set(${name}_ALL_SOURCES
     ${${name}_SOURCES}
     ${${name}_MOC_SOURCES}
     ${${name}_RES_SOURCES}
     ${${name}_UI_SOURCES}
+    ${${name}_QM_SOURCES}
     )
 
   if(NOT ${name}_ALL_SOURCES)
@@ -551,6 +558,7 @@ function(gostai_add_library name)
     else(${name}_QTPLUGIN)
       install(TARGETS ${name} DESTINATION ${LIBRARIES_DIR})
     endif(${name}_QTPLUGIN)
+    install(FILES ${${name}_QM_SOURCES} DESTINATION ${TRANSLATIONS_DIR})
   endif(NOT ${name}_NO_INSTALL)
 
   # ========================== #
@@ -648,6 +656,17 @@ function(gostai_add_test name)
   add_exec_target(${prefix})
 
 endfunction(gostai_add_test)
+
+# Add translation to the target named _name_. It is intended to be called by
+# gostai_add_executable and gostai_add_library.
+macro(gostai_add_translations name)
+  file(GLOB _ts_files "${name}_*.ts")
+  if(_ts_files)
+    list(APPEND ${name}_TRANSLATIONS ${_ts_files})
+  endif(_ts_files)
+  set(_ts_files)
+  qt4_add_translation(${name}_QM_SOURCES ${${name}_TRANSLATIONS})
+endmacro(gostai_add_translations)
 
 endif(NOT GOSTAI_CMAKE_GUARD)
 
