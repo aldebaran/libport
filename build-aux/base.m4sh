@@ -323,7 +323,10 @@ m4_defun([_URBI_PREPARE],
 mkcd ()
 {
   local dir=$[1]
-  rm -rf "$dir"
+  if test -d "$dir"; then
+    chmod -R 700 "$dir"
+    rm -rf "$dir"
+  fi
   mkdir -p "$dir"
   cd "$dir"
 }
