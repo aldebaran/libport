@@ -21,7 +21,7 @@ namespace libport
       void check_element(const std::string& name);
 
     private:
-      action_type serialize_collection(const std::string& name);
+      action_type serialize_collection(const std::string& name, int& size);
       void serialize_collection_end(TiXmlNode* n);
 
       TiXmlDocument root_;

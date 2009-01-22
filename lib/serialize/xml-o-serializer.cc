@@ -10,7 +10,6 @@ namespace libport
 
     XmlOSerializer::XmlOSerializer(const std::string& path)
       : OSerializer(path)
-      , stream_(path.c_str())
     {
       current_ = &doc_;
     }
@@ -44,10 +43,12 @@ namespace libport
       current_ = node;
     }
 
-    XmlOSerializer::action_type XmlOSerializer::serialize_collection(const std::string& name)
+    XmlOSerializer::action_type
+    XmlOSerializer::serialize_collection(const std::string& name, int&)
     {
       TiXmlNode* node = current_;
       current_ = new TiXmlElement(name);
+      node->LinkEndChild(current_);
 
       return boost::bind(&XmlOSerializer::serialize_collection_end, this, node);
     }

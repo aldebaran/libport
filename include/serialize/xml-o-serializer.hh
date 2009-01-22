@@ -22,10 +22,9 @@ namespace libport
       void serialize(const std::string& name, std::string& s);
 
     private:
-      action_type serialize_collection(const std::string& name);
+      action_type serialize_collection(const std::string& name, int&);
       void serialize_collection_end(TiXmlNode* node);
 
-      std::ofstream stream_;
       TiXmlDocument doc_;
       TiXmlNode* current_;
     };

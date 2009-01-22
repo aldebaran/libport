@@ -30,7 +30,8 @@ namespace libport
 
     protected:
       typedef boost::function0<void> action_type;
-      virtual action_type serialize_collection(const std::string& name) = 0;
+      virtual action_type serialize_collection(const std::string& name,
+                                               int& size) = 0;
       bool input_;
     };
   }

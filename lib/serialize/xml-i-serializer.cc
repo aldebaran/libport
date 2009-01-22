@@ -47,7 +47,7 @@ namespace libport
     }
 
     XmlISerializer::action_type
-    XmlISerializer::serialize_collection(const std::string& name)
+    XmlISerializer::serialize_collection(const std::string& name, int&)
     {
       check_element(name);
       TiXmlNode* node = current_->NextSiblingElement();
