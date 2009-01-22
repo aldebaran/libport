@@ -8,6 +8,8 @@ lib_serialize_libserialize_la_CPPFLAGS =	\
   $(BOOST_CPPFLAGS)
 
 dist_lib_serialize_libserialize_la_SOURCES =	\
+  lib/serialize/binary-i-serializer.cc		\
+  lib/serialize/binary-o-serializer.cc		\
   lib/serialize/exception.cc			\
   lib/serialize/i-serializer.cc			\
   lib/serialize/o-serializer.cc			\
