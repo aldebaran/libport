@@ -52,6 +52,21 @@ absolute ()
   esac
   echo "$res"
 }
+
+# canonicalize FILE
+# -----------------
+# "Simplifiy" all the "foo/.." bits.  This is fragile when there are
+# symlinks, use with care.
+canonicalize ()
+{
+  local tmp=$[1]
+  local res
+  while test x"$tmp" != x"$res"; do
+    res=$tmp
+    tmp=$(echo "$res" | sed -e 's,/[^/]*/\.\.,,')
+  done
+  echo "$res"
+}
 ])
 
 
