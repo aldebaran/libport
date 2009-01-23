@@ -609,17 +609,32 @@ Socket::listenUDP(const std::string& host, const std::string& port,
                   netdetail::UDPSocket::onread_type onRead,
                   boost::system::error_code& erc)
 {
+  using namespace boost::asio::ip;
   netdetail::UDPSocket* s = new netdetail::UDPSocket();
   s->onRead = onRead;
-  boost::asio::ip::udp::endpoint ep =
-    resolve<boost::asio::ip::udp>(host, port, erc);
+  /* On some configurations, the resolver will resolve an ipv6 address even
+  * if this protocol is not supported by the system. So try to bind using all
+  * the endopints until one succeeds, and not just the first. */
+  udp::resolver::query query(host, port);
+  udp::resolver resolver(get_io_service());
+  udp::resolver::iterator iter = resolver.resolve(query, erc);
   if (erc)
     return Handle();
   // Careful to use the protocol reported by the endpoint.
-  s->socket_.open(ep.protocol());
-  s->socket_.bind(ep, erc);
-  if (erc)
-    return Handle();
+  while (iter != udp::resolver::iterator())
+  {
+   s->socket_.open(iter->endpoint().protocol(), erc);
+    if (!erc)
+      s->socket_.bind(iter->endpoint(), erc);
+    if (!erc)
+      goto ok;
+    iter++;
+  }
+  if (!erc)
+    erc.assign(boost::system::posix_error::bad_address,
+               boost::system::get_posix_category());
+  return Handle();
+ok:
   s->start_receive();
   return Handle();
 }
