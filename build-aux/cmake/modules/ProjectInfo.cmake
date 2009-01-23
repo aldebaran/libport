@@ -114,7 +114,7 @@ if(NOT PROJECT_INFO_CMAKE)
 
       message(STATUS "Project on a Gostai bug fix branch.")
       if(PROJECT_VENDOR)
-	message(SEND_ERROR
+	message(FATAL_ERROR
 	  "project_describe_info: mismatch project vendor '${PROJECT_VENDOR}' on branch '${branch}'")
 	return()
       endif(PROJECT_VENDOR)
