@@ -631,8 +631,13 @@ Socket::listenUDP(const std::string& host, const std::string& port,
     iter++;
   }
   if (!erc)
+#if BOOST_VERSION >= 103600
+    erc = boost::system::errc::make_error_code(
+            boost::system::errc::bad_address);
+#else
     erc.assign(boost::system::posix_error::bad_address,
                boost::system::get_posix_category());
+#endif
   return Handle();
 ok:
   s->start_receive();
