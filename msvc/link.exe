@@ -438,6 +438,8 @@ if ($deps_file)
   }
 }
 ' < $file
+  ! $compiler_verbose ||
+    compiler_verbose_message >&2
 }
 
 
@@ -479,7 +481,7 @@ compiler_verbose_message ()
       print " " . `winepath -u $d`;
     }
     print "End of search list.\n";
-' >>$stderr
+'
 }
 
 
@@ -583,9 +585,6 @@ eval "$cmd" >$stdout 2>$stderr
 status=$?
 trace
 set -e
-
-! $compiler_verbose ||
-  compiler_verbose_message
 
 # If we are fed with a preprocessed input, do not generate the
 # deps_file.  This is needed by ccache, and anyway, this is just
