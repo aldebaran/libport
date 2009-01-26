@@ -3,58 +3,6 @@
 #include <libport/unistd.h>
 #include <libport/config.h>
 
-
-/*--------.
-| chdir.  |
-`--------*/
-
-#ifdef WIN32
-# if 0
-extern "C"
-{
-  int
-  chdir(const char* path)
-  {
-    return _chdir(path);
-  }
-}
-# endif
-#endif
-
-
-/*---------.
-| getpid.  |
-`---------*/
-
-#if defined WIN32
-extern "C"
-{
-  pid_t
-  getpid()
-  {
-    return _getpid();
-  }
-}
-#endif
-
-
-/*---------.
-| isatty.  |
-`---------*/
-
-
-#if defined WIN32
-
-extern "C"
-{
-  int
-  isatty(int fd)
-  {
-    return _isatty(fd);
-  }
-}
-#endif
-
 /*-------.
 | pipe.  |
 `-------*/

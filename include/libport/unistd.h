@@ -94,11 +94,6 @@ extern "C"
 
 # if defined WIN32
 #  include <process.h>
-extern "C"
-{
-  typedef int pid_t;
-  LIBPORT_API pid_t getpid();
-}
 # endif
 
 
@@ -112,11 +107,6 @@ extern "C"
 #  define STDIN_FILENO  fileno(stdin)
 #  define STDOUT_FILENO fileno(stdout)
 #  define STDERR_FILENO fileno(stderr)
-
-extern "C"
-{
-  LIBPORT_API int isatty(int fd);
-}
 # endif
 
 
