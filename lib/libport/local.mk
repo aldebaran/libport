@@ -21,6 +21,7 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/deref.cc				\
   lib/libport/dirent.cc				\
   lib/libport/escape.cc				\
+  lib/libport/fcntl.cc				\
   lib/libport/fd-stream.cc			\
   lib/libport/path.cc				\
   lib/libport/file-library.cc			\
