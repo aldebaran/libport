@@ -575,7 +575,6 @@ function(gostai_add_library name)
 
 endfunction(gostai_add_library name)
 
-
 # Add a Gostai test executable target named test-_name_ intended to be run.
 # Arguments:
 #  SOURCES	- the list of sources of the executable
@@ -587,9 +586,11 @@ endfunction(gostai_add_library name)
 #  RESOURCES	- the list of resources files.
 macro(gostai_add_run_test name)
 
-  gostai_add_executable(test-${name} ${ARGN}
-    NO_INSTALL)
-  add_test(${name} test-${name})
+  if(BUILD_TESTING)
+    gostai_add_executable(test-${name} ${ARGN}
+      NO_INSTALL)
+    add_test(${name} test-${name})
+  endif(BUILD_TESTING)
 
 endmacro(gostai_add_run_test)
 

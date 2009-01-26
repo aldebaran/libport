@@ -16,7 +16,7 @@ if(NOT DEFINED INIT_CMAKE)
 set(INIT_CMAKE TRUE)
 
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
-enable_testing()
+include(CTest)
 include(Tools)
 include(ProjectInfo)
 hostname(BUILDER_HOSTNAME)
