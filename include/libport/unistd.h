@@ -167,17 +167,6 @@ extern "C"
 }
 # endif
 
-/*---------.
-| unlink.  |
-`---------*/
-
-# if defined WIN32
-extern "C"
-{
-  int unlink(const char* pathname);
-}
-# endif
-
 
 /*---------.
 | usleep.  |

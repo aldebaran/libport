@@ -5,7 +5,7 @@
 
 // Wrap ::open
 inline int
-open(const char *filename, int oflag, int pmode = 0)
+open(const char *filename, int oflag, int pmode)
 {
   return ::_open(filename, oflag, pmode);
 }

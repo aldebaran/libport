@@ -39,18 +39,3 @@ extern "C"
   }
 }
 #endif
-
-/*---------.
-| unlink.  |
-`---------*/
-
-#if defined WIN32
-extern "C"
-{
-  int
-  unlink(const char* p)
-  {
-    return _unlink(p);
-  }
-}
-#endif
