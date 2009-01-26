@@ -2,6 +2,7 @@
 # define LIBPORT_UNISTD_H
 
 # include <libport/detect-win32.h>
+# include <libport/export.hh>
 # include <libport/config.h>
 
 // This is traditional Unix file.
@@ -93,13 +94,10 @@ extern "C"
 
 # if defined WIN32
 #  include <process.h>
-typedef int pid_t;
 extern "C"
 {
-  inline pid_t getpid()
-  {
-    return _getpid();
-  }
+  typedef int pid_t;
+  LIBPORT_API pid_t getpid();
 }
 # endif
 
@@ -117,10 +115,7 @@ extern "C"
 
 extern "C"
 {
-  inline int isatty(int fd)
-  {
-    return _isatty(fd);
-  }
+  LIBPORT_API int isatty(int fd);
 }
 # endif
 
@@ -133,7 +128,7 @@ extern "C"
 # if defined WIN32
 extern "C"
 {
-  int pipe(int pipefd[2]);
+  LIBPORT_API int pipe(int pipefd[2]);
 }
 # endif
 
@@ -143,7 +138,10 @@ extern "C"
 `----------*/
 
 # if defined WIN32
-typedef int ssize_t;
+extern "C"
+{
+  typedef int ssize_t;
+}
 # endif
 
 
@@ -174,8 +172,11 @@ extern "C"
 
 # if defined WIN32
 #  include <boost/cstdint.hpp>
-// Based on the value I have on my G4 -- Akim.
-typedef boost::uint32_t useconds_t;
+extern "C"
+{
+  // Based on the value I have on my G4 -- Akim.
+  typedef boost::uint32_t useconds_t;
+}
 
 // Some libraries define usleep as a macro. In this case, do not redefine
 // it.
@@ -184,7 +185,7 @@ extern "C"
 {
   inline
   int
-  usleep (useconds_t microseconds)
+  usleep(useconds_t microseconds)
   {
     Sleep((microseconds + 999) / 1000);
     return 0;

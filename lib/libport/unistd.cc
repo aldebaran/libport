@@ -22,6 +22,39 @@ extern "C"
 #endif
 
 
+/*---------.
+| getpid.  |
+`---------*/
+
+#if defined WIN32
+extern "C"
+{
+  pid_t
+  getpid()
+  {
+    return _getpid();
+  }
+}
+#endif
+
+
+/*---------.
+| isatty.  |
+`---------*/
+
+
+#if defined WIN32
+
+extern "C"
+{
+  int
+  isatty(int fd)
+  {
+    return _isatty(fd);
+  }
+}
+#endif
+
 /*-------.
 | pipe.  |
 `-------*/
