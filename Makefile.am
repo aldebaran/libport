@@ -9,7 +9,8 @@ ACLOCAL_AMFLAGS = -I build-aux
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status $@
 
-SUBDIRS = doc tests
+# The libraries are in ".".
+SUBDIRS = . doc tests
 # SUBDIRS += gui
 EXTRA_DIST += bootstrap
 
