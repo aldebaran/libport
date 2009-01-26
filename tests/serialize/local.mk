@@ -14,3 +14,7 @@ TESTS +=					\
 
 serialize_serialize_SOURCES = serialize/serialize.cc
 serialize_serialize_LDFLAGS = $(top_builddir)/lib/serialize/libserialize.la $(AM_LDFLAGS)
+
+CHECK_CLEANFILES +=				\
+  serialize/test.bin				\
+  serialize/test.xml

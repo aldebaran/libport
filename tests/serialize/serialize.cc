@@ -15,6 +15,9 @@
 using namespace libport::serialize;
 using libport::test_suite;
 
+// The test file base name.
+const std::string basename = "serialize/test";
+
 struct Data: public Serializable
 {
   Data(const std::string& d1 = "",
@@ -80,14 +83,14 @@ void test()
 
   // Export them as XML
   {
-    XmlOSerializer os("test.xml");
+    XmlOSerializer os(basename + ".xml");
     os.serialize("test", o);
   }
   // Import them as XML
   {
     Datas i("");
     {
-      XmlISerializer is("test.xml");
+      XmlISerializer is(basename + ".xml");
       is.serialize("test", i);
     }
     BOOST_CHECK(i == o);
@@ -95,14 +98,14 @@ void test()
 
   // Export them as binary
   {
-    BinaryOSerializer os("test.bin");
+    BinaryOSerializer os(basename + ".bin");
     os.serialize("test", o);
   }
   // Import them as binary
   {
     Datas i("");
     {
-      BinaryISerializer is("test.bin");
+      BinaryISerializer is(basename + ".bin");
       is.serialize("test", i);
     }
     std::cerr << i.name << std::endl;
