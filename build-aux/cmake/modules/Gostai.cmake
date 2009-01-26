@@ -26,7 +26,7 @@ macro(gostai_add_executable name)
   parse_arguments(
     ${name}
     "SOURCES;MOCS;UIS;CPPFLAGS;INCLUDE_DIRS;LIBRARIES;RESOURCES;TRANSLATIONS"
-    "NO_CONSOLE;INSTALL_NO_DEPS"
+    "NO_CONSOLE;INSTALL_NO_DEPS;NO_INSTALL"
     ${ARGN})
 
   # =================== #
@@ -175,21 +175,25 @@ macro(gostai_add_executable name)
   # Install files #
   # ============= #
 
-  install(TARGETS ${name} DESTINATION ${BINARIES_DIR})
-  install_qt_plugins(${PLUGINS_DIR})
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt.conf.install
-    DESTINATION ${BINARIES_DIR}
-    RENAME qt.conf)
-  install(FILES ${${name}_QM_SOURCES} DESTINATION ${TRANSLATIONS_DIR})
+  if(NOT ${name}_NO_INSTALL)
+    install(TARGETS ${name} DESTINATION ${BINARIES_DIR})
+    install_qt_plugins(${PLUGINS_DIR})
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt.conf.install
+      DESTINATION ${BINARIES_DIR}
+      RENAME qt.conf)
+    install(FILES ${${name}_QM_SOURCES} DESTINATION ${TRANSLATIONS_DIR})
+  endif(NOT ${name}_NO_INSTALL)
 
   # ========================== #
   # Deploy dependent libraries #
   # ========================== #
 
-  if(NOT ${name}_INSTALL_NO_DEPS)
-    gen_lib_loader(${name})
-    dldep_install(${name})
-  endif(NOT ${name}_INSTALL_NO_DEPS)
+  if(NOT ${name}_NO_INSTALL)
+    if(NOT ${name}_INSTALL_NO_DEPS)
+      gen_lib_loader(${name})
+      dldep_install(${name})
+    endif(NOT ${name}_INSTALL_NO_DEPS)
+  endif(NOT ${name}_NO_INSTALL)
 
   # ================== #
   # Add custom targets #
