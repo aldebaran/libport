@@ -97,7 +97,14 @@ execute_process(
   WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
   RESULT_VARIABLE status
   )
-echo("Program @target@ exited with status '${status}'")
+if(status EQUAL 0)
+  set(msg_type STATUS)
+else(status EQUAL 0)
+  set(msg_type FATAL_ERROR)
+endif(status EQUAL 0)
+message(${msg_type} "Program @target@ exited with status '${status}'")
+
+# End of this file.
 
 # Local Variables:
 # mode: cmake
