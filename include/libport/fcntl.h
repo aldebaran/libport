@@ -4,12 +4,9 @@
 # include <fcntl.h>
 
 # include <libport/detect-win32.h>
-# include <libport/export.hh>
 
 # ifdef WIN32
 #  include <io.h>
-
-LIBPORT_API int open(const char *filename, int oflag, int pmode = 0);
 
 // Try to give sense to Unix permission flags under WIN32
 #  define S_IRWXU _S_IREAD | _S_IWRITE
