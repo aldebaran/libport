@@ -584,12 +584,16 @@ endfunction(gostai_add_library name)
 #  INCLUDE_DIRS - the list of include directories to search in.
 #  LIBRARIES	- the list of libraries to link with.
 #  RESOURCES	- the list of resources files.
+#  ARGS         - the arguments passed to the test program
 macro(gostai_add_run_test name)
 
   if(BUILD_TESTING)
     gostai_add_executable(test-${name} ${ARGN}
       NO_INSTALL)
-    add_test(${name} test-${name})
+    add_test(${name}
+      ${CMAKE_COMMAND}
+      -DARGS=${test-${name}_ARGS}
+      -P exec-test-${name}-target.cmake)
   endif(BUILD_TESTING)
 
 endmacro(gostai_add_run_test)
