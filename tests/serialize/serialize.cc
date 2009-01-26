@@ -113,7 +113,7 @@ void test()
   }
 }
 
-LIBPORT_API test_suite*
+test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("serialization test suite");
