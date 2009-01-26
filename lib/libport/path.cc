@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <libport/fcntl.h>
+#include <libport/unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cctype>
@@ -243,19 +244,25 @@ namespace libport
     return res;
   }
 
-  bool path::exists () const
+  bool path::exists() const
   {
     struct stat buf;
-    return 0 == stat (to_string().c_str(), &buf);
+    return 0 == stat(to_string().c_str(), &buf);
   }
 
-  bool path::create () const
+  bool path::create() const
   {
-    int fd = open(to_string().c_str(), O_WRONLY | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+    int fd = open(to_string().c_str(),
+                  O_WRONLY | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
     if (fd == -1)
       return false;
     close(fd);
     return true;
+  }
+
+  bool path::remove() const
+  {
+    return !unlink(to_string().c_str());
   }
 
   const path::path_type& path::components() const

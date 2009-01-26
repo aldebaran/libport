@@ -59,9 +59,13 @@ void exist(const path& p, bool expected = true)
 
 void create(const path& p)
 {
+  // If the file exists, remove it.
+  if (p.exists())
+    BOOST_CHECK(p.remove());
   exist(p, false);
   p.create();
   exist(p, true);
+  BOOST_CHECK(p.remove());
 }
 
 void equal(const path& lhs, const path& rhs)

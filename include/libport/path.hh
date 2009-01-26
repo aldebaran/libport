@@ -67,6 +67,9 @@ namespace libport
     void volume_set(const std::string& v);
     path dirname() const;
     bool exists() const;
+    /// Remove the file.
+    /// \return true iff no error.
+    bool remove() const;
     bool create() const;
     /// \}
 
