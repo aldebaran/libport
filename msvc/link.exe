@@ -380,6 +380,26 @@ dump_log ()
 
 use English;
 
+# Convert a path from Windows to linux.
+my %converted_path;
+sub convert_path ($)
+{
+  my ($path) = @_;
+  if (! defined $converted_path{$path})
+  {
+    # For some reason, the outcome looks like
+    # "C:\\vcxx8\\VC\\INCLUDE\istream", with some backslashes escaped,
+    # and not others.  Winepath wants them all escaped, so escape lone
+    # backslashes.
+    (my $p = $path) =~ s/(?<!\\)\\(?!\\)/\\\\/g;
+
+    # Convert them to Linux format.
+    $converted_path{$path} = `winepath -u $p`;
+    chomp $converted_path{$path};
+  }
+  return $converted_path{$path};
+}
+
 my %res;
 while (<>)
 {
@@ -413,14 +433,7 @@ while (<>)
 # Generate the dependency.
 if ($deps_file)
 {
-  # Sorted list of unique file names.
-  # For some reason, the outcome looks like "C:\\vcxx8\\VC\\INCLUDE\istream",
-  # with some backslashes escaped, and not others.  Winepath wants them all
-  # escaped, so escape lone backslashes.
-  my @files = map {s/(?<!\\)\\(?!\\)/\\\\/g;$_} (sort keys %res);
-
-  # Convert them to Linux format.
-  @files = grep { chomp } `winepath -u @files`;
+  my @files = map { convert_path($_) } sort keys %res;
 
   # Make does not like colon in file names, which is something
   # that does happens when wrapper cl.exe
