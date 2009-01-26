@@ -31,7 +31,7 @@ namespace libport
 
   inline bool lockTryLock(Lock& l)
   {
-    return TryEnterCriticalSection(&l);
+    return TryEnterCriticalSection(&l) == TRUE;
   }
 } // namespace libport
 
