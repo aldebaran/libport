@@ -576,7 +576,7 @@ function(gostai_add_library name)
 endfunction(gostai_add_library name)
 
 
-# Add a Gostai test executable target named test-_name_.
+# Add a Gostai test executable target named test-_name_ intended to be run.
 # Arguments:
 #  SOURCES	- the list of sources of the executable
 #  MOCS		- the list of sources of the executable that need to be moc'ed
@@ -585,13 +585,13 @@ endfunction(gostai_add_library name)
 #  INCLUDE_DIRS - the list of include directories to search in.
 #  LIBRARIES	- the list of libraries to link with.
 #  RESOURCES	- the list of resources files.
-macro(gostai_add_test name)
+macro(gostai_add_run_test name)
 
   gostai_add_executable(test-${name} ${ARGN}
     NO_INSTALL)
   add_test(${name} test-${name})
 
-endmacro(gostai_add_test)
+endmacro(gostai_add_run_test)
 
 # Add translation to the target named _name_. It is intended to be called by
 # gostai_add_executable and gostai_add_library.
