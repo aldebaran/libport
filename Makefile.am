@@ -22,7 +22,6 @@ EXTRA_DIST += bootstrap
 AM_CPPFLAGS += $(LIBPORT_CPPFLAGS) -I$(srcdir)/lib
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 
-include_libport = include/libport
 include include/libport/local.mk
 include lib/libport/local.mk
 

@@ -1,155 +1,147 @@
-## Define include_libport to the path from the Makefile.am that
-## includes this file, to this file.  E.g., if TOP/include/Makefile.am
-## does
-##
-##   include $(top_srcdir)/include/libport/local.mk
-##
-## then define include_libport = libport
-
 # C headers.
 libport_includedir = $(libport_include_basedir)/libport
 libport_include_HEADERS =			\
-  $(include_libport)/cmath			\
-  $(include_libport)/csignal			\
-  $(include_libport)/cstdio			\
-  $(include_libport)/cstdlib			\
-  $(include_libport)/cstring			\
-  $(include_libport)/cstring.hxx		\
-  $(include_libport)/fcntl.h			\
-  $(include_libport)/unistd.h
+  include/libport/cmath				\
+  include/libport/csignal			\
+  include/libport/cstdio			\
+  include/libport/cstdlib			\
+  include/libport/cstring			\
+  include/libport/cstring.hxx			\
+  include/libport/fcntl.h			\
+  include/libport/unistd.h
 
 # arpa/ headers
 arpa_libport_includedir = $(libport_includedir)/arpa
 arpa_libport_include_HEADERS =			\
-  $(include_libport)/arpa/inet.h
+  include/libport/arpa/inet.h
 
 # sys/ headers
 sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
-  $(include_libport)/sys/param.h		\
-  $(include_libport)/sys/select.h		\
-  $(include_libport)/sys/socket.h		\
-  $(include_libport)/sys/stat.h			\
-  $(include_libport)/sys/time.h
+  include/libport/sys/param.h			\
+  include/libport/sys/select.h			\
+  include/libport/sys/socket.h			\
+  include/libport/sys/stat.h			\
+  include/libport/sys/time.h
 
 # C++ headers.
 libport_include_HEADERS +=			\
-  $(include_libport)/asio.hh			\
-  $(include_libport)/asio.hxx			\
-  $(include_libport)/assert.hh			\
-  $(include_libport)/base64.hh			\
-  $(include_libport)/buffer-stream.hh           \
-  $(include_libport)/cli.hh			\
-  $(include_libport)/cli.hxx			\
-  $(include_libport)/compilation.hh		\
-  $(include_libport)/compiler.hh		\
-  $(include_libport)/containers.hh		\
-  $(include_libport)/containers.hxx		\
-  $(include_libport)/contract.hh		\
-  $(include_libport)/debug.hh			\
-  $(include_libport)/deref.hh			\
-  $(include_libport)/deref.hxx			\
-  $(include_libport)/destructible.hh		\
-  $(include_libport)/destructible.hxx		\
-  $(include_libport)/detect-win32.h		\
-  $(include_libport)/dirent.h			\
-  $(include_libport)/errors.hh			\
-  $(include_libport)/escape.hh			\
-  $(include_libport)/escape.hxx			\
-  $(include_libport)/exception.hh		\
-  $(include_libport)/exception.hxx		\
-  $(include_libport)/export.hh			\
-  $(include_libport)/fd-stream.hh		\
-  $(include_libport)/fifo.hh			\
-  $(include_libport)/fifo.hxx			\
-  $(include_libport)/file-library.hh		\
-  $(include_libport)/file-library.hxx		\
-  $(include_libport)/file-system.hh		\
-  $(include_libport)/finally.hh			\
-  $(include_libport)/finally.hxx		\
-  $(include_libport)/foreach.hh			\
-  $(include_libport)/fwd.hh			\
-  $(include_libport)/hash.hh			\
-  $(include_libport)/indent.hh			\
-  $(include_libport)/instance-tracker.hh	\
-  $(include_libport)/instance-tracker.hxx	\
-  $(include_libport)/intrusive-ptr.hh		\
-  $(include_libport)/intrusive-ptr.hxx		\
-  $(include_libport)/lexical-cast.hh		\
-  $(include_libport)/lockable.hh		\
-  $(include_libport)/lockable.hxx		\
-  $(include_libport)/netdb.h			\
-  $(include_libport)/network.h			\
-  $(include_libport)/map.hh			\
-  $(include_libport)/map.hxx			\
-  $(include_libport)/meta.hh			\
-  $(include_libport)/package-info.hh		\
-  $(include_libport)/pair.hh			\
-  $(include_libport)/pair.hxx			\
-  $(include_libport)/path.hh			\
-  $(include_libport)/path.hxx			\
-  $(include_libport)/pid-file.hh		\
-  $(include_libport)/pod-cast.hh		\
-  $(include_libport)/pod-cast.hxx		\
-  $(include_libport)/program-name.hh		\
-  $(include_libport)/range.hh			\
-  $(include_libport)/range.hxx			\
-  $(include_libport)/read-stdin.hh		\
-  $(include_libport)/ref-counted.hh		\
-  $(include_libport)/ref-counted.hxx		\
-  $(include_libport)/ref-pt.hh			\
-  $(include_libport)/sched.hh			\
-  $(include_libport)/select-const.hh		\
-  $(include_libport)/select-ref.hh		\
-  $(include_libport)/semaphore.hh		\
-  $(include_libport)/semaphore.hxx		\
-  $(include_libport)/separator.hh		\
-  $(include_libport)/separator.hxx		\
-  $(include_libport)/singleton-ptr.hh		\
-  $(include_libport)/singleton-ptr.hxx		\
-  $(include_libport)/statistics.hh		\
-  $(include_libport)/statistics.hxx		\
-  $(include_libport)/symbol.hh			\
-  $(include_libport)/symbol.hxx			\
-  $(include_libport)/sysexits.hh		\
-  $(include_libport)/thread.hh			\
-  $(include_libport)/thread.hxx			\
-  $(include_libport)/throw-exception.hh		\
-  $(include_libport)/timer.hh			\
-  $(include_libport)/timer.hxx			\
-  $(include_libport)/tokenizer.hh		\
-  $(include_libport)/traits.hh			\
-  $(include_libport)/typelist.hh		\
-  $(include_libport)/uffloat.hh			\
-  $(include_libport)/ufloat.h			\
-  $(include_libport)/ufloat.hh			\
-  $(include_libport)/ufloat.hxx			\
-  $(include_libport)/ull-fixed-point.hh		\
-  $(include_libport)/unique-pointer.hh		\
-  $(include_libport)/unique-pointer.hxx		\
-  $(include_libport)/unit-test.hh		\
-  $(include_libport)/ulong-fixed-point.hh	\
-  $(include_libport)/utime.hh			\
-  $(include_libport)/visitor.hh			\
-  $(include_libport)/warning-push.hh		\
-  $(include_libport)/warning-pop.hh		\
-  $(include_libport)/weak-ptr.hh		\
-  $(include_libport)/weak-ptr.hxx		\
-  $(include_libport)/windows.hh
+  include/libport/asio.hh			\
+  include/libport/asio.hxx			\
+  include/libport/assert.hh			\
+  include/libport/base64.hh			\
+  include/libport/buffer-stream.hh		\
+  include/libport/cli.hh			\
+  include/libport/cli.hxx			\
+  include/libport/compilation.hh		\
+  include/libport/compiler.hh			\
+  include/libport/containers.hh			\
+  include/libport/containers.hxx		\
+  include/libport/contract.hh			\
+  include/libport/debug.hh			\
+  include/libport/deref.hh			\
+  include/libport/deref.hxx			\
+  include/libport/destructible.hh		\
+  include/libport/destructible.hxx		\
+  include/libport/detect-win32.h		\
+  include/libport/dirent.h			\
+  include/libport/errors.hh			\
+  include/libport/escape.hh			\
+  include/libport/escape.hxx			\
+  include/libport/exception.hh			\
+  include/libport/exception.hxx			\
+  include/libport/export.hh			\
+  include/libport/fd-stream.hh			\
+  include/libport/fifo.hh			\
+  include/libport/fifo.hxx			\
+  include/libport/file-library.hh		\
+  include/libport/file-library.hxx		\
+  include/libport/file-system.hh		\
+  include/libport/finally.hh			\
+  include/libport/finally.hxx			\
+  include/libport/foreach.hh			\
+  include/libport/fwd.hh			\
+  include/libport/hash.hh			\
+  include/libport/indent.hh			\
+  include/libport/instance-tracker.hh		\
+  include/libport/instance-tracker.hxx		\
+  include/libport/intrusive-ptr.hh		\
+  include/libport/intrusive-ptr.hxx		\
+  include/libport/lexical-cast.hh		\
+  include/libport/lockable.hh			\
+  include/libport/lockable.hxx			\
+  include/libport/netdb.h			\
+  include/libport/network.h			\
+  include/libport/map.hh			\
+  include/libport/map.hxx			\
+  include/libport/meta.hh			\
+  include/libport/package-info.hh		\
+  include/libport/pair.hh			\
+  include/libport/pair.hxx			\
+  include/libport/path.hh			\
+  include/libport/path.hxx			\
+  include/libport/pid-file.hh			\
+  include/libport/pod-cast.hh			\
+  include/libport/pod-cast.hxx			\
+  include/libport/program-name.hh		\
+  include/libport/range.hh			\
+  include/libport/range.hxx			\
+  include/libport/read-stdin.hh			\
+  include/libport/ref-counted.hh		\
+  include/libport/ref-counted.hxx		\
+  include/libport/ref-pt.hh			\
+  include/libport/sched.hh			\
+  include/libport/select-const.hh		\
+  include/libport/select-ref.hh			\
+  include/libport/semaphore.hh			\
+  include/libport/semaphore.hxx			\
+  include/libport/separator.hh			\
+  include/libport/separator.hxx			\
+  include/libport/singleton-ptr.hh		\
+  include/libport/singleton-ptr.hxx		\
+  include/libport/statistics.hh			\
+  include/libport/statistics.hxx		\
+  include/libport/symbol.hh			\
+  include/libport/symbol.hxx			\
+  include/libport/sysexits.hh			\
+  include/libport/thread.hh			\
+  include/libport/thread.hxx			\
+  include/libport/throw-exception.hh		\
+  include/libport/timer.hh			\
+  include/libport/timer.hxx			\
+  include/libport/tokenizer.hh			\
+  include/libport/traits.hh			\
+  include/libport/typelist.hh			\
+  include/libport/uffloat.hh			\
+  include/libport/ufloat.h			\
+  include/libport/ufloat.hh			\
+  include/libport/ufloat.hxx			\
+  include/libport/ull-fixed-point.hh		\
+  include/libport/unique-pointer.hh		\
+  include/libport/unique-pointer.hxx		\
+  include/libport/unit-test.hh			\
+  include/libport/ulong-fixed-point.hh		\
+  include/libport/utime.hh			\
+  include/libport/visitor.hh			\
+  include/libport/warning-push.hh		\
+  include/libport/warning-pop.hh		\
+  include/libport/weak-ptr.hh			\
+  include/libport/weak-ptr.hxx			\
+  include/libport/windows.hh
 
 ## ---------- ##
 ## config.h.  ##
 ## ---------- ##
 nodist_libport_include_HEADERS =		\
-  $(include_libport)/config.h
+  include/libport/config.h
 
 generate_libport_config_h = \
-  $(srcdir)/$(include_libport)/generate-libport-config-h
+  $(srcdir)/include/libport/generate-libport-config-h
 EXTRA_DIST += $(generate_libport_config_h)
 # There is no point in maintaining a stamp file, Automake already does
 # this for config.h.  Arguably, we could use _configs.sed, but it is
 # not documented.
-$(include_libport)/config.h: $(CONFIG_HEADER) $(generate_libport_config_h)
+include/libport/config.h: $(CONFIG_HEADER) $(generate_libport_config_h)
 	rm -f $@ $@.tmp
 	test -d $(include_libport) || $(mkdir_p) $(include_libport)
 	$(generate_libport_config_h) $< $@.tmp
