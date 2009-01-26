@@ -77,6 +77,7 @@ libport_include_HEADERS +=			\
   $(include_libport)/intrusive-ptr.hxx		\
   $(include_libport)/lexical-cast.hh		\
   $(include_libport)/lockable.hh		\
+  $(include_libport)/lockable.hxx		\
   $(include_libport)/netdb.h			\
   $(include_libport)/network.h			\
   $(include_libport)/map.hh			\
