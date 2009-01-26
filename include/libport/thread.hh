@@ -2,12 +2,10 @@
 # define LIBPORT_THREAD_HH
 
 # include <libport/config.h>
+# include <libport/detect-win32.h>
 # include <boost/function.hpp>
 # include <boost/bind.hpp>
 # include <boost/optional.hpp>
-# ifdef LIBPORT_WIN32
-#  define WIN32
-# endif
 
 # if defined WIN32
 #  include <libport/windows.hh>
