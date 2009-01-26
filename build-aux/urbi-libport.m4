@@ -16,7 +16,7 @@
 # Check for what we need to use lib/sched.
 AC_DEFUN([_URBI_LIBPORT_SCHED],
 [AC_CHECK_HEADERS([sched.h sys/resource.h sys/mman.h sys/times.h sys/param.h direct.h])
-AC_CHECK_FUNCS([sched_setscheduler setpriority mlockall times getcwd _getcwd])
+AC_CHECK_FUNCS([sched_setscheduler setpriority mlockall times])
 ])
 
 

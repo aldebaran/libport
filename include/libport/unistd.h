@@ -69,19 +69,6 @@ namespace libport
 
 }
 
-/*---------.
-| getcwd.  |
-`---------*/
-
-# if !defined LIBPORT_HAVE_GETCWD
-#  if defined LIBPORT_HAVE__GETCWD
-#   define getcwd _getcwd
-#  elif defined LIBPORT_URBI_ENV_AIBO
-    // Will be defined in libport/unistd.cc.
-#  else
-#   error I need either getcwd() or _getcwd()
-#  endif
-# endif
 
 /*--------------.
 | getpagesize.  |
