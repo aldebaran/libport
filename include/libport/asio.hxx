@@ -3,6 +3,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/construct.hpp>
+#include <boost/version.hpp>
 
 // #define LIBPORT_ECHO(S) std::cerr << __FILE__ ":" <<  __LINE__ << ": " #S ": " << S << std::endl
 
