@@ -112,6 +112,7 @@ libport_include_HEADERS +=			\
   $(include_libport)/symbol.hxx			\
   $(include_libport)/sysexits.hh		\
   $(include_libport)/thread.hh			\
+  $(include_libport)/thread.hxx			\
   $(include_libport)/throw-exception.hh		\
   $(include_libport)/timer.hh			\
   $(include_libport)/timer.hxx			\
