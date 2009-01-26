@@ -1,6 +1,6 @@
 #
 # urbi-prog-cxx.m4: This file is part of build-aux.
-# Copyright (C) Gostai S.A.S., 2006-2008.
+# Copyright (C) 2006-2008, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -16,41 +16,7 @@ m4_pattern_forbid([^TC_])
 AC_PREREQ([2.60])
 
 AC_DEFUN([URBI_COMPILATION_MODE],
-[
-# urbi_append_flag VAR FLAG...
-# ----------------------------
-# Append the FLAG... to $VAR, separated by spaces, unless it already
-# includes it.
-urbi_append_flag ()
-{
-  local var=$[1]
-  local var
-  eval "val=\$$var"
-  shift
-  local v
-  for v
-  do
-    case " $val " in
-      (*" $v "*) ;;
-      ("  ")    val=$v;;
-      (*)       val+=" $v";;
-    esac
-  done
-  eval "$var=\$val"
-}
-
-urbi_compiler_flags ()
-{
-  urbi_append_flag CFLAGS "$[@]"
-  urbi_append_flag CXXFLAGS "$[@]"
-}
-
-urbi_cpp_flags ()
-{
-  urbi_append_flag CPPFLAGS "$[@]"
-}
-
-# Compilation mode.
+[# Compilation mode.
 urbi_compilation_mode_set ()
 {
   local stacksize=128
@@ -59,17 +25,17 @@ urbi_compilation_mode_set ()
   do
     case $mode in
       (build)
-        urbi_compiler_flags -O0
+        URBI_APPEND_COMPILERFLAGS([-O0])
         ;;
 
       (cov)
-        urbi_compiler_flags -fprofile-arcs -ftest-coverage
+        URBI_APPEND_COMPILERFLAGS([-fprofile-arcs -ftest-coverage])
         ;;
 
       (debug)
-        urbi_compiler_flags -O2 -ggdb
+        URBI_APPEND_COMPILERFLAGS([-O2 -ggdb])
         # Not all the code includes config.h.
-        urbi_cpp_flags -DURBI_DEBUG -D_GLIBCXX_DEBUG
+        URBI_APPEND_CPPFLAGS([-DURBI_DEBUG -D_GLIBCXX_DEBUG])
         AC_DEFINE([URBI_DEBUG], [1],
                   [Define to enable Urbi debugging tools.])
         AC_DEFINE([_GLIBCXX_DEBUG], [1],
@@ -79,7 +45,7 @@ urbi_compilation_mode_set ()
         AC_SUBST([BISON_FLAGS], ["$BISON_FLAGS -Dassert"])
         # Define USE_VALGRIND only if valgrind/valgrind.h exists.
         AC_CHECK_HEADER([valgrind/valgrind.h],
-                        [urbi_cpp_flags -DUSE_VALGRIND])
+                        [URBI_APPEND_CPPFLAGS([-DUSE_VALGRIND])])
         stacksize=1024
         ;;
 
@@ -88,22 +54,22 @@ urbi_compilation_mode_set ()
         ;;
 
       (ndebug)
-        urbi_cpp_flags -DNDEBUG
+        URBI_APPEND_CPPFLAGS([-DNDEBUG])
         ;;
 
       (prof)
-        urbi_compiler_flags -pg
+        URBI_APPEND_COMPILERFLAGS([-pg])
         ;;
 
       (space)
-        urbi_compiler_flags -Os -fomit-frame-pointer \
-                       -fdata-sections -ffunction-sections
-        urbi_append_flag LDFLAGS --gc-sections
+        URBI_APPEND_COMPILERFLAGS([-Os -fomit-frame-pointer \
+                                   -fdata-sections -ffunction-sections])
+        URBI_APPEND_FLAGS([LDFLAGS], [--gc-sections])
         urbi_compilation_mode_set final
         ;;
 
       (speed)
-        urbi_compiler_flags -O3
+        URBI_APPEND_COMPILERFLAGS([-O3])
         AC_DEFINE([SPEED], [1],
                   [Define to optimize for speed the kernel
                    at the detriment of compilation time.])
@@ -111,7 +77,7 @@ urbi_compilation_mode_set ()
         ;;
 
       (symbols)
-        AC_DEFINE([SYMBOLS_PRECOMPILED], 1,
+        AC_DEFINE([SYMBOLS_PRECOMPILED], [1],
                   [Define if Urbi symbols should be precompiled])
         ;;
 
