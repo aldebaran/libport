@@ -10,6 +10,32 @@
 
 namespace libport
 {
+
+  /*---------------------.
+  | Path::invalid_path.  |
+  `---------------------*/
+
+  inline
+  path::invalid_path::invalid_path(const std::string& msg)
+    : msg_(msg)
+  {}
+
+  inline
+  const char*
+  path::invalid_path::what() const throw ()
+  {
+    return msg_.c_str();
+  }
+
+  inline
+  path::invalid_path::~invalid_path() throw ()
+  {}
+
+
+  /*-------.
+  | path.  |
+  `-------*/
+
   inline std::ostream&
   operator<< (std::ostream& o, const path& p)
   {

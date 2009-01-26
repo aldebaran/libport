@@ -66,6 +66,7 @@ void create(const path& p)
   p.create();
   exist(p, true);
   BOOST_CHECK(p.remove());
+  exist(p, false);
 }
 
 void equal(const path& lhs, const path& rhs)
@@ -182,7 +183,7 @@ init_test_suite()
   suite->add(create_suite);
 #define def(path)                                          \
   create_suite->add(BOOST_TEST_CASE(bind(create, path)));
-  def("./creation_test");
+  def("libport/creation_test");
 #undef def
 
   return suite;

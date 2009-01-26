@@ -21,16 +21,11 @@ namespace libport
     class LIBPORT_API invalid_path : public std::exception
     {
     public:
-      invalid_path(const std::string& msg)
-        : _msg(msg)
-      {}
-      const char* what() const throw ()
-      {
-        return _msg.c_str();
-      }
-      virtual ~invalid_path() throw () {};
+      invalid_path(const std::string& msg);
+      const char* what() const throw ();
+      virtual ~invalid_path() throw ();
     private:
-      std::string _msg;
+      std::string msg_;
     };
 
     /// \name Constructors.
