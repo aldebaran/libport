@@ -426,6 +426,9 @@ while (<>)
   }
   else
   {
+    # Convert paths to ease debugging under Unix.
+    s{^(\s*)([:\-\w\\\\/.]+)\((\d+)\) :}
+     {$1 . convert_path ($2) . ":$3:"}e;
     print STDERR "$_\n";
   }
 }
