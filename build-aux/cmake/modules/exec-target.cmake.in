@@ -83,8 +83,8 @@ if(NOT "$ENV{PREFIX_TOOL}" STREQUAL "")
   set(cmd "$ENV{PREFIX_TOOL};")
 endif()
 set(cmd "${cmd}@binary_loc@")
-if(NOT "$ENV{ARGV}" STREQUAL "")
-  set(cmd "${cmd};$ENV{ARGV}")
+if(NOT "$ENV{ARGS}" STREQUAL "")
+  set(cmd "${cmd};$ENV{ARGS}")
 endif()
 
 # Execute the executable target.
