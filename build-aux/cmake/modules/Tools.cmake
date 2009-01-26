@@ -23,6 +23,16 @@ if(NOT TOOLS_CMAKE_GUARD)
     message(STATUS ${ARGV})
   endfunction(ECHO)
 
+  # Shorthand for message(FATAL_ERROR "blabla")
+  function(fatal)
+    message(FATAL_ERROR ${ARGV})
+  endfunction(fatal)
+
+  # Shorthand for message(SEND_ERROR "blabla")
+  function(error)
+    message(SEND_ERROR ${ARGV})
+  endfunction(error)
+
   # Print the list named _l_ with one item per line.
   function(print_list l)
     foreach(i ${${l}})
