@@ -63,9 +63,9 @@ URBI_PROG_CXX_FLAVOR
 
 # Try to restrict the default visibility as much as possible.
 TC_COMPILER_OPTION_IF([-fvisibility=hidden],
-                      [CXXFLAGS="$CXXFLAGS -fvisibility=hidden"])
+                      [URBI_APPEND_CXXFLAGS([-fvisibility=hidden])])
 TC_COMPILER_OPTION_IF([-fvisibility-inlines-hidden],
-                      [CXXFLAGS="$CXXFLAGS -fvisibility-inlines-hidden"])
+                      [URBI_APPEND_CXXFLAGS([-fvisibility-inlines-hidden])])
 
 # Warn about violations of some of the style guidelines from Scott
 # Meyers' "Effective C++" and "More Effective C++" books.
@@ -176,7 +176,7 @@ case $CXX_FLAVOR in
      _AFX_SECURE_NO_WARNINGS                    \
      _ATL_SECURE_NO_WARNINGS
   do
-    CPPFLAGS+=" -D$ac_flag=1"
+    URBI_APPEND_CPPFLAGS([-D$ac_flag=1])
   done
   ;;
 esac
@@ -193,7 +193,8 @@ esac
 #
 # /EHsc: enable C++ exception handling + extern "C" defaults to nothrow.
 case $CXX_FLAVOR in
- (msvc) TC_COMPILER_OPTION_IF([[-EHsc]], [CXX="$CXX -EHsc"]);;
+ (msvc) TC_COMPILER_OPTION_IF([[-EHsc]],
+                              [URBI_APPEND_CXXFLAGS([-EHsc])]);;
 esac
 
 # ----------------------------------------------- #
