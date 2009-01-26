@@ -300,6 +300,7 @@ if(NOT TOOLS_CMAKE_GUARD)
               ${CMAKE_CURRENT_BINARY_DIR}/exec-${target}-target.cmake
       COMMENT "Executing ${target}..."
       )
+    add_dependencies(exec-${target} ${target})
   endfunction(add_exec_target)
 
   # Put in _out_ the location of built file for the target _target_.
