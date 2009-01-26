@@ -45,17 +45,6 @@
 
 # ifdef WIN32
 #  include <direct.h>
-
-#  if 0
-extern "C"
-{
-  int
-  chdir(const char* path)
-  {
-    return _chdir(path);
-  }
-}
-# endif
 # endif
 
 /*--------------.
@@ -155,15 +144,9 @@ extern "C"
 `-------*/
 
 # if defined WIN32
-#  include <libport/cstdio> // BUFSIZ
-#  include <libport/fcntl.h> // O_BINARY
 extern "C"
 {
-  inline int pipe(int pipefd[2])
-  {
-    // fds, memory to reserve, mode
-    return _pipe(pipefd, BUFSIZ, _O_BINARY);
-  }
+  int pipe(int pipefd[2]);
 }
 # endif
 
@@ -204,11 +187,7 @@ extern "C"
 # if defined WIN32
 extern "C"
 {
-  inline
-  int unlink(const char* pathname)
-  {
-    return _unlink(pathname);
-  }
+  int unlink(const char* pathname);
 }
 # endif
 
