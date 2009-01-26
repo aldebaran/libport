@@ -37,10 +37,6 @@ if(NOT PROJECT_INFO_CMAKE)
 
     git_current_branch(branch)
     message(STATUS "Project branch: ${branch}")
-    if(branch STREQUAL "(no branch)")
-      message(SEND_ERROR "project_describe_info: cannot extract information from no branch.")
-      return()
-    endif(branch STREQUAL "(no branch)")
     git_describe(HEAD desc --match "[0-9]*")
     if(desc STREQUAL NOTFOUND)
       set(desc "0.0")
@@ -74,9 +70,11 @@ if(NOT PROJECT_INFO_CMAKE)
     set(patch -1 PARENT_SCOPE)
 
     # Are we are on master branch?
+    # For now suppose no branch is a master branch
     if(branch MATCHES "^master$"
 	OR branch MATCHES "^candidates/.*$"
-	OR branch MATCHES "^perso/.*$")
+	OR branch MATCHES "^perso/.*$"
+        OR branch MATCHES "(no branch)")
       message(STATUS "Project on the master branch.")
       set(ver1_rx "^${ver_base_rx}$")
       set(ver2_rx "^${ver_base_rx}-(.*)-([0-9]+)$")
