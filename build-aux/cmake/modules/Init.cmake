@@ -45,4 +45,11 @@ add_custom_target(re-install
   COMMENT "Re-install")
 add_dependencies(re-install clean-install)
 
+# Add check target
+add_custom_target(check
+  COMMAND ${CMAKE_CTEST_COMMAND} --build-and-test
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Checking the project..."
+  )
+
 endif(NOT DEFINED INIT_CMAKE)
