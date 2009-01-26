@@ -15,9 +15,6 @@
 using namespace libport::serialize;
 using libport::test_suite;
 
-// The test file base name.
-const std::string basename = "serialize/test";
-
 struct Data: public Serializable
 {
   Data(const std::string& d1 = "",
@@ -76,6 +73,9 @@ struct Datas: public Serializable
 
 void test()
 {
+  // The test file base name.
+  const std::string basename = "serialize/test";
+
   // Test datas
   Datas o("name");
   o << Data("foo&", "<bar>");
