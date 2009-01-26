@@ -30,6 +30,29 @@ endif(WIN32)
 
 
 #------------------------------------------------------------------------------
+#                            _cache_list_append MACRO
+#------------------------------------------------------------------------------
+# Append a value to a CACHE string. The list populated with this macro must
+# not be populated elsewhere. This is used to set a global variable, created
+# in a subdirectory and used in a parent/sibling directory.
+# It does the same thing as command "list(append ...)" does, but on a CACHE
+# variable value.
+# A _cache_list_append_FIRST variable is used to clear the list the first
+# time it is accessed by this macro: it is a cache value, so it is savec in
+# the cache... and we don't want that.
+macro(_cache_list_append VAR VALUE)
+  if(${VAR} AND _cache_list_append_FIRST)
+    # Append value to the already existing list
+    set(${VAR} "${${VAR}};${VALUE}" CACHE STRING "" FORCE)
+  else(${VAR} AND _cache_list_append_FIRST)
+    # Init list
+    set(_cache_list_append_FIRST 1)
+    set(${VAR} "${VALUE}" CACHE STRING "" FORCE)
+  endif(${VAR} AND _cache_list_append_FIRST)
+endmacro(_cache_list_append)
+
+
+#------------------------------------------------------------------------------
 #                                 Search macro
 #------------------------------------------------------------------------------
 # Call find_library/find_path command. If the library/path still cannot be
@@ -71,18 +94,18 @@ MACRO(_search_update_package_vars)
             # Look if the library has to be linked in a
             # special build configuration only.
             if(ELEMENT_RELEASE)
-                list(APPEND ${PACKAGE_NAME}_LIBRARIES "optimized")
+                _cache_list_append(${PACKAGE_NAME}_LIBRARIES "optimized")
             endif(ELEMENT_RELEASE)
             if(ELEMENT_DEBUG)
-                list(APPEND ${PACKAGE_NAME}_LIBRARIES "debug")
+                _cache_list_append(${PACKAGE_NAME}_LIBRARIES "debug")
             endif(ELEMENT_DEBUG)
 
             # Add the result
-            list(APPEND ${PACKAGE_NAME}_LIBRARIES ${${ELEMENT_RESULT}})
+            _cache_list_append(${PACKAGE_NAME}_LIBRARIES ${${ELEMENT_RESULT}})
             get_filename_component(ELEMENT_TEMP0 ${${ELEMENT_RESULT}} PATH)
-            list(APPEND ${PACKAGE_NAME}_LIBRARY_DIRS ${ELEMENT_TEMP0})
+            _cache_list_append(${PACKAGE_NAME}_LIBRARY_DIRS ${ELEMENT_TEMP0})
         else(ELEMENT_LIBRARY)
-            list(APPEND ${PACKAGE_NAME}_INCLUDE_DIRS ${${ELEMENT_RESULT}})
+            _cache_list_append(${PACKAGE_NAME}_INCLUDE_DIRS ${${ELEMENT_RESULT}})
         endif(ELEMENT_LIBRARY)
     endif(ELEMENT_PACKAGE_MODE)
 
@@ -195,7 +218,7 @@ MACRO(search)
     endif(NOT EXISTS ${${ELEMENT_RESULT}})
 
     if(ELEMENT_PACKAGE_MODE)
-        list(APPEND ${PACKAGE_NAME}_PARTS_LIST ${ELEMENT_RESULT})
+        _cache_list_append(${PACKAGE_NAME}_PARTS_LIST ${ELEMENT_RESULT})
     endif(ELEMENT_PACKAGE_MODE)
 
 ENDMACRO(search)
