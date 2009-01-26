@@ -387,15 +387,24 @@ sub convert_path ($)
   my ($path) = @_;
   if (! defined $converted_path{$path})
   {
-    # For some reason, the outcome looks like
-    # "C:\\vcxx8\\VC\\INCLUDE\istream", with some backslashes escaped,
-    # and not others.  Winepath wants them all escaped, so escape lone
-    # backslashes.
-    (my $p = $path) =~ s/(?<!\\)\\(?!\\)/\\\\/g;
+    # Do not convert files that do not need to be converted,
+    # as it makes them longer (from relative to absolute).
+    if ($path =~ /\\/)
+    {
+      # For some reason, the outcome looks like
+      # "C:\\vcxx8\\VC\\INCLUDE\istream", with some backslashes escaped,
+      # and not others.  Winepath wants them all escaped, so escape lone
+      # backslashes.
+      (my $p = $path) =~ s/(?<!\\)\\(?!\\)/\\\\/g;
 
-    # Convert them to Linux format.
-    $converted_path{$path} = `winepath -u $p`;
-    chomp $converted_path{$path};
+      # Convert them to Linux format.
+      $converted_path{$path} = `winepath -u $p`;
+      chomp $converted_path{$path};
+    }
+    else
+    {
+      $converted_path{$path} = $path;
+    }
   }
   return $converted_path{$path};
 }
