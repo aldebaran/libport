@@ -143,7 +143,7 @@ EXTRA_DIST += $(generate_libport_config_h)
 # not documented.
 include/libport/config.h: $(CONFIG_HEADER) $(generate_libport_config_h)
 	rm -f $@ $@.tmp
-	test -d $(include_libport) || $(mkdir_p) $(include_libport)
+	test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
 	$(generate_libport_config_h) $< $@.tmp
 	mv $@.tmp $@
 
