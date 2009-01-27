@@ -42,8 +42,9 @@ TESTS +=					\
   libport/ufloat-double.cc			\
   libport/visitor.cc
 
-# This test has been commented out as we do not support ufloat /= double.
-# ufloat-float.cc
+# ufloat-float.cc is commented out as we do not support ufloat /=
+# double (it would require that we recompile the library with another
+# definition of ufloat).
 
 if WITH_BOOST_SERIALIZATION
 TESTS += libport/intrusive-ptr-serialize.cc
@@ -69,11 +70,6 @@ LDADD +=                                        \
   $(BOOST_SERIALIZATION_LIBS)                   \
   $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
-#ufloat_double_tab_SOURCES        = ufloat-double-tab.cc
-#ufloat_float_SOURCES             = ufloat-float.cc
-#ufloat_float_tab_SOURCES         = ufloat-float-tab.cc
-#ufloat_floating_SOURCES          = ufloat-floating.cc
-#ufloat_floating_tab_SOURCES      = ufloat-floating-tab.cc
 
 libport_asio_SOURCES			  = libport/asio.cc
 libport_asio_LDADD = $(BOOST_SYSTEM_LIBS)  $(LDADD)

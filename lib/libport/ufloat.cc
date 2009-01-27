@@ -43,7 +43,7 @@ namespace libport
 
   void buildSinusTable(int powersize)
   {
-    int size = 1<<powersize;
+    size_t size = 1<<powersize;
     tableShift = powersize;
     //don't use a step-based generation or errors will accumulate
     delete [] sinTable;
@@ -53,15 +53,15 @@ namespace libport
     asinTable = new ufloat[size];
 
     tableSize = size;
-    for (int i=0;i<size;i++)
-      {
-	double idx = (double)i*(M_PI/2.0)/(double)size;
-	float val = ::sin(idx);
-	sinTable[i]=val;
+    for (size_t i=0;i<size;i++)
+    {
+      double idx = (double)i*(M_PI/2.0)/(double)size;
+      float val = ::sin(idx);
+      sinTable[i]=val;
 
-	double idx2 = (double)i/(double)size;
-	asinTable[i] = ::asin(idx2);
-      }
+      double idx2 = (double)i/(double)size;
+      asinTable[i] = ::asin(idx2);
+    }
   }
 
 #endif
@@ -82,11 +82,8 @@ namespace libport
       idx = (tableSize-idx-1); //sin(pi/2+x) = sin(pi/2-x)
     ufloat interp = sinTable(idx)*(1.0-rem)+sinTable[(idx+1)%tableSize]*rem;
 
-    if (fmod(val, M_PI*2) > M_PI)
-      return -interp;
-    else
-      return interp;
-  };
+    return fmod(val, M_PI*2) > M_PI ? -interp : interp;
+  }
 
   ufloat tabulatedCos(ufloat val)
   {
@@ -101,11 +98,8 @@ namespace libport
 
     ufloat interp = sinTable(idx)*(1.0-rem)+sinTable[(idx+1)%tableSize]*rem;
 
-    if (fmod(val, M_PI*2) > M_PI)
-      return -interp;
-    else
-      return interp;
-  };
+    return fmod(val, M_PI*2) > M_PI ? -interp : interp;
+  }
 
 
   ufloat tabulatedASin(ufloat val)
@@ -116,10 +110,7 @@ namespace libport
     idx = idx & (tableSize-1);
     ufloat interp = asinTable(idx)*(1.0-rem)+asinTable[(idx+1)%tableSize]*rem;
 
-    if (val < 0.0)
-      return -interp;
-    else
-      return interp;
+    return val < 0.0 ? -interp : interp;
   }
 
 #endif
