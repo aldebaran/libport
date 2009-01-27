@@ -540,6 +540,9 @@ test -n "$VCINSTALLDIR" ||
   . ~/share/wine/msvc_env.sh
 }
 
+winepath --version >/dev/null 2>&1 ||
+  error 176 "cannot run winepath"
+
 VCXX_PATH=$(winepath -u $VCINSTALLDIR)
 VCXX_BIN=$VCXX_PATH/bin
 
