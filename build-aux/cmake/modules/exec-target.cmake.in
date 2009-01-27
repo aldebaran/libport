@@ -30,7 +30,8 @@ include(GostaiHintDirs)
 
 if(WIN32)
   # Setup the environment.
-  set(PATH $ENV{PATH})
+  set(OLD_PATH $ENV{PATH})
+  set(PATH "")
   gostai_read_hint_dirs(GOSTAI_HINT_DIRS)
   foreach(i ${CMAKE_LIBRARY_PATH} ${CMAKE_PROGRAM_PATH} ${GOSTAI_HINT_DIRS})
     file(TO_NATIVE_PATH ${i} i_native)
@@ -40,6 +41,7 @@ if(WIN32)
   foreach(i ${CMAKE_PREFIX_PATH})
     list(APPEND PATH ${i}/bin ${i}/sbin ${i}/lib)
   endforeach(i)
+  set(PATH ${PATH} ${OLD_PATH})
   set(ENV{PATH} "${PATH}")
 
   # Print debug information
@@ -50,12 +52,12 @@ if(WIN32)
     if(CYGCHECK_EXECUTABLE)
       message("\nCygcheck:")
       execute_process(
-	COMMAND ${CYGCHECK_EXECUTABLE} @binary_loc@
-	WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
-	RESULT_VARIABLE status
-	OUTPUT_VARIABLE out
-	ERROR_VARIABLE err
-	)
+        COMMAND ${CYGCHECK_EXECUTABLE} @binary_loc@
+        WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
+        RESULT_VARIABLE status
+        OUTPUT_VARIABLE out
+        ERROR_VARIABLE err
+        )
       message("Cygcheck exits with status '${status}'.")
       message("Cygcheck output channel:\n${out}")
       message("Cygcheck error channel:\n${err}")
@@ -64,12 +66,12 @@ if(WIN32)
     if(ENV_EXECUTABLE)
       message("\nEnv:")
       execute_process(
-	COMMAND ${ENV_EXECUTABLE}
-	WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
-	RESULT_VARIABLE status
-	OUTPUT_VARIABLE out
-	ERROR_VARIABLE err
-	)
+        COMMAND ${ENV_EXECUTABLE}
+        WORKING_DIRECTORY @CMAKE_CURRENT_BINARY_DIR@
+        RESULT_VARIABLE status
+        OUTPUT_VARIABLE out
+        ERROR_VARIABLE err
+        )
       message("Env exits with status '${status}'.")
       message("Env output channel:\n${out}")
       message("Env error channel:\n${err}")
