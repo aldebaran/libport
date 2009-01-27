@@ -80,7 +80,8 @@ namespace libport
   getsockopt(int s, int level,
              int optname, void* optval, socklen_t* optlen)
   {
-    return ::getsockopt(s, level,
+    return ::getsockopt(WIN32_IF(static_cast<SOCKET>(s), s),
+                        level,
                         optname,
                         WIN32_IF(static_cast<char*>(optval), optval),
                         optlen);
@@ -91,7 +92,8 @@ namespace libport
   setsockopt(int s, int level,
              int optname, const void* optval, socklen_t optlen)
   {
-    return ::setsockopt(s, level,
+    return ::setsockopt(WIN32_IF(static_cast<SOCKET>(s), s),
+                        level,
                         optname,
                         WIN32_IF(static_cast<const char*>(optval), optval),
                         optlen);
