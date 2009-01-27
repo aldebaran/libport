@@ -18,9 +18,6 @@
 namespace libport
 {
   typedef float ufloat;
-#  define UFLT_EPSILON FLT_EPSILON
-
-  inline long long to_long_long (ufloat u);
 }
 # endif
 
@@ -29,8 +26,6 @@ namespace libport
 {
   typedef double ufloat;
 #  define UFLT_EPSILON DBL_EPSILON
-
-  inline long long to_long_long (ufloat u);
 }
 # endif
 
@@ -116,11 +111,12 @@ namespace libport
 {
   struct LIBPORT_API bad_numeric_cast : public std::exception {};
 
-  /// Convert a libport::ufloat to a int. Raise
+  /// Convert a libport::ufloat to T. Raise
   /// libport::bad_numeric_cast if the provided argument is not
-  /// directly convertible to an integer.
-  LIBPORT_API int ufloat_to_int(ufloat val);
-  LIBPORT_API long long ufloat_to_long_long(ufloat val);
+  /// directly convertible to a T.
+  template <typename T>
+  LIBPORT_API
+  T numeric_cast(ufloat v) throw (bad_numeric_cast);
 
 } // namespace libport
 

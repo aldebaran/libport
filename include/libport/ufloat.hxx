@@ -6,32 +6,6 @@
 
 # include <libport/ufloat.hh>
 
-/*-----------------.
-| Ufloat support.  |
-`-----------------*/
-
-# ifdef LIBPORT_URBI_UFLOAT_FLOAT
-namespace libport
-{
-  inline
-  long long to_long_long (ufloat u)
-  {
-    return static_cast <long long> (u);
-  }
-}
-# endif
-
-# ifdef LIBPORT_URBI_UFLOAT_DOUBLE
-namespace libport
-{
-  inline
-  long long to_long_long (ufloat u)
-  {
-    return static_cast <long long> (u);
-  }
-}
-# endif
-
 
 /*-------------------.
 | Ufloat tabulated.  |

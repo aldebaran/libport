@@ -138,9 +138,8 @@ namespace libport
 
 
   template <typename T>
-  inline
   T
-  ufloat_cast(ufloat val)
+  numeric_cast(ufloat val) throw (bad_numeric_cast)
   {
     try
     {
@@ -159,14 +158,16 @@ namespace libport
     }
   }
 
-  int ufloat_to_int(ufloat val)
-  {
-    return ufloat_cast<int>(val);
-  }
+# define CAST(Type)                             \
+  template Type numeric_cast<Type>(ufloat v);
 
-  long long ufloat_to_long_long(ufloat val)
-  {
-    return ufloat_cast<long long>(val);
-  }
+  CAST(int);
+  CAST(unsigned int);
+  CAST(long);
+  CAST(unsigned long);
+  CAST(long long);
+  CAST(unsigned long long);
+
+#undef CAST
 
 } // namespace libport
