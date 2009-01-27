@@ -7,8 +7,8 @@ using libport::test_suite;
 
 static void test_comparison()
 {
-  ufloat f = 1.0;
-  ufloat g = 10.0;
+  ufloat f = 1;
+  ufloat g = 10;
 
   BOOST_CHECK_LT(f, g);
   BOOST_CHECK_GT(g, f);
@@ -47,17 +47,17 @@ static void test_unsigned_range()
 {
   CHECK_LIMIT(epsilon);
   CHECK_LIMIT(min);
-  CHECK_TO_AND_FRO(0.0);
-  CHECK_TO_AND_FRO(1.0);
-  CHECK_TO_AND_FRO(10000.0);
+  CHECK_TO_AND_FRO(0);
+  CHECK_TO_AND_FRO(1);
+  CHECK_TO_AND_FRO(10000);
 }
 
 template <typename T>
 static void test_signed_range()
 {
   test_unsigned_range<T>();
-  CHECK_TO_AND_FRO(-1.0);
-  CHECK_TO_AND_FRO(-10000.0);
+  CHECK_TO_AND_FRO(-1);
+  CHECK_TO_AND_FRO(-10000);
 }
 
 
