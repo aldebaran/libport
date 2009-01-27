@@ -590,6 +590,7 @@ macro(gostai_add_run_test name)
   if(BUILD_TESTING)
     gostai_add_executable(test-${name} ${ARGN}
       NO_INSTALL)
+    add_dependencies(check test-${name})
     add_test(${name}
       ${CMAKE_COMMAND}
       -DARGS=${test-${name}_ARGS}

@@ -47,7 +47,7 @@ add_dependencies(re-install clean-install)
 
 # Add check target
 add_custom_target(check
-  COMMAND ${CMAKE_CTEST_COMMAND} --build-and-test
+  COMMAND ${CMAKE_CTEST_COMMAND} --force-new-ctest-process
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
   COMMENT "Checking the project..."
   )
