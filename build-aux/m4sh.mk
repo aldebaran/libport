@@ -51,13 +51,11 @@ m4sh_dependencies =				\
 
 EXTRA_DIST += $(m4sh_dependencies)
 
-%.in: %.as $(m4sh_dependencies)
-	$(MKDIR_P) $(dir $@)
-	autom4te --language M4sh $(m4sh_dependencies) $< -o $@
-
+AUTOM4TE = autom4te
+M4SH = $(AUTOM4TE) --language M4sh
 %.in: %.m4sh $(m4sh_dependencies)
 	$(MKDIR_P) $(dir $@)
-	autom4te --language M4sh $(m4sh_dependencies) $< -o $@
+	$(M4SH) $(M4SHFLAGS) $(m4sh_dependencies) $< -o $@
 
 ## All the scripts depend on Makefile so that they are rebuilt when the
 ## prefix etc. changes.  It took quite a while to have the rule correct,
