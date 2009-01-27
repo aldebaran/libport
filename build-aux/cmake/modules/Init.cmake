@@ -52,4 +52,11 @@ add_custom_target(check
   COMMENT "Checking the project..."
   )
 
+# Add bf-test target
+add_custom_target(bf-test
+  COMMAND ${CMAKE_CTEST_COMMAND} --force-new-ctest-process -VV
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Checking the project on the buildfarm slave..."
+  )
+
 endif(NOT DEFINED INIT_CMAKE)
