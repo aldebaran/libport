@@ -329,7 +329,7 @@ get_options ()
     # Optimizations.
     (-O2) outargs $1;;
     (-O3) outargs -Ox;;
-    (-f*) ;;
+
     (*.dll)
       outargs $(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/');;
 
