@@ -544,7 +544,7 @@ VCXX_PATH=$(winepath -u $VCINSTALLDIR)
 VCXX_BIN=$VCXX_PATH/bin
 
 test -x $VCXX_BIN/cl.exe ||
-  fatal "cl.exe not found in $VCXX_BIN"
+  error 176 "cl.exe not found in $VCXX_BIN"
 
 outargs=-MD
 case $PROG in
