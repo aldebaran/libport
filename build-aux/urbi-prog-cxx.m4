@@ -224,7 +224,10 @@ esac
 # ----------------------------------------------- #
 
 # We use to put lots of -wd options here, but it is simpler to have
-# the compiler load a file with lots of pragmas instead.
+# the compiler load a file with lots of pragmas instead.  Expect for
+# C4668, which is about the preprocessor, and it seems that the
+# warnings for the preprocessor cannot be addressed by #pragma (see
+# warning-push.hh for a description of this warning).
 #
 # We don't check for support of "-include libport/warning-push.hh",
 # because we know it supports it, but will fail as the -I needed
@@ -234,7 +237,8 @@ esac
 # Check for this in last resort, as it does break the use of
 # WARNING_CXXFLAGS without paths to libport headers.
 case $CXX_FLAVOR in
- (msvc) URBI_APPEND_FLAGS([WARNING_CXXFLAGS],
+ (msvc) TC_CXX_WARNINGS([-wd4668])
+        URBI_APPEND_FLAGS([WARNING_CXXFLAGS],
                           [-include libport/warning-push.hh]);;
 esac
 
