@@ -80,7 +80,8 @@
 // "An assignment operator was not accessible in a base class and was therefore
 //  not generated for a derived class."
 
-// C4668: 'MACRO' is not defined as a preprocessor macro, replacing
+// C4668, level 4: http://msdn.microsoft.com/en-us/library/4dt9kyhy(VS.80).aspx
+//        'MACRO' is not defined as a preprocessor macro, replacing
 //                 with '0' for '#if/#elif'
 
 // C4710: 'method_inline' : function not inlined

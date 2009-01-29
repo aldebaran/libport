@@ -62,10 +62,16 @@ AC_PROG_CXX
 URBI_PROG_CXX_FLAVOR
 
 # Try to restrict the default visibility as much as possible.
-TC_COMPILER_OPTION_IF([-fvisibility=hidden],
-                      [URBI_APPEND_CXXFLAGS([-fvisibility=hidden])])
-TC_COMPILER_OPTION_IF([-fvisibility-inlines-hidden],
-                      [URBI_APPEND_CXXFLAGS([-fvisibility-inlines-hidden])])
+case $CXX_FLAVOR in
+  (msvc) # It accepts the option, but complains about it.
+     ;;
+  (*)
+  TC_COMPILER_OPTION_IF([-fvisibility=hidden],
+                        [URBI_APPEND_CXXFLAGS([-fvisibility=hidden])])
+  TC_COMPILER_OPTION_IF([-fvisibility-inlines-hidden],
+                        [URBI_APPEND_CXXFLAGS([-fvisibility-inlines-hidden])])
+  ;;
+esac
 
 # Warn about violations of some of the style guidelines from Scott
 # Meyers' "Effective C++" and "More Effective C++" books.

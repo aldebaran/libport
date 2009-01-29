@@ -1,11 +1,3 @@
-include $(top_srcdir)/build-aux/m4sh.mk
-
-AM_CPPFLAGS += $(LIBPORT_CPPFLAGS)
-AM_CXXFLAGS += $(WARNING_CXXFLAGS)
-
-# No need to re-run the test if the sources have not changed.
-LAZY_TEST_SUITE = 1
-
 # This is for Boost Unit Test tests.  "all" is much more verbose.
 TESTSFLAGS = --log_level=test-suite
 # For some reason, this rule *must* be defined before loading
