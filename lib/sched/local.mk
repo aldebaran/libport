@@ -3,9 +3,7 @@ lib_sched_libsched_la_LDFLAGS = -avoid-version -no-undefined
 lib_sched_libsched_la_LIBADD = $(LIBADD) $(libport_la)
 lib_sched_libsched_la_CPPFLAGS =		\
   $(AM_CPPFLAGS)				\
-  -I$(srcdir)/lib				\
-  -DBUILDING_LIBSCHED				\
-  $(BOOST_CPPFLAGS)
+  -DBUILDING_LIBSCHED
 
 dist_lib_sched_libsched_la_SOURCES =		\
   lib/sched/configuration.cc			\

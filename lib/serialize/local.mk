@@ -3,9 +3,7 @@ lib_serialize_libserialize_la_LDFLAGS = -avoid-version -no-undefined
 lib_serialize_libserialize_la_LIBADD = $(LIBADD) lib/tinyxml/libtinyxml.la
 lib_serialize_libserialize_la_CPPFLAGS =	\
   $(AM_CPPFLAGS)				\
-  -I$(srcdir)/lib				\
-  -DBUILDING_SERIALIZE				\
-  $(BOOST_CPPFLAGS)
+  -DBUILDING_SERIALIZE
 
 dist_lib_serialize_libserialize_la_SOURCES =	\
   lib/serialize/binary-i-serializer.cc		\

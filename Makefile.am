@@ -19,7 +19,7 @@ EXTRA_DIST += bootstrap
 ## Libport components.  ##
 ## -------------------- ##
 
-AM_CPPFLAGS += $(LIBPORT_CPPFLAGS) -I$(srcdir)/lib
+AM_CPPFLAGS += $(LIBPORT_CPPFLAGS) -I$(srcdir)/lib $(BOOST_CPPFLAGS)
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 
 include include/libport/local.mk
