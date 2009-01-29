@@ -225,9 +225,10 @@ esac
 
 # We use to put lots of -wd options here, but it is simpler to have
 # the compiler load a file with lots of pragmas instead.  Expect for
-# C4668, which is about the preprocessor, and it seems that the
-# warnings for the preprocessor cannot be addressed by #pragma (see
-# warning-push.hh for a description of this warning).
+# C4668, which is about the preprocessor: the warnings in preprocessor
+# mode (-E) are not affected by #pragma (see warning-push.hh for a
+# description of this warning).  It does matter to us, since we use
+# ccache, which uses -E first.
 #
 # We don't check for support of "-include libport/warning-push.hh",
 # because we know it supports it, but will fail as the -I needed
