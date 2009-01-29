@@ -1,5 +1,5 @@
 ## Vaucanson, a generic library for finite state machines.
-## Copyright (C) 2006, 2007, 2008 The Vaucanson Group.
+## Copyright (C) 2006, 2007, 2008, 2009 The Vaucanson Group.
 ##
 ## This program is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License
@@ -291,10 +291,12 @@ check-html:
 
 # Get the list of tests that failed.
 recheck_rx = \
-  perl -ne '/^(?:FAIL|XPASS): ([^()]*)(?: \(.*\)?)/ && print "$$1\n"'
+  perl -ne 'END { print "@res\n" if @res; };				\
+            /^(?:FAIL|XPASS): ([^()]*)(?: \(.*\)?)/ && push @res, $$1;'
+
 .PHONY: recheck recheck-html
 recheck recheck-html:
-	target=$$(echo $@ | sed -e 's/^re//');			\
+	@target=$$(echo $@ | sed -e 's/^re//');			\
 	if test -f $(TEST_SUITE_LOG); then			\
 	  TESTS=$$($(recheck_rx) $(TEST_SUITE_LOG));		\
 	  $(MAKE) $(AM_MAKEFLAGS) $$target TESTS="$$TESTS";	\
