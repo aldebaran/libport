@@ -245,9 +245,8 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 
 # Run all the tests.
 check-TESTS:
-	@if test -z '$(LAZY_TEST_SUITE)'; then	\
-	  rm -f $(TEST_SUITE_LOG) $(TEST_LOGS);	\
-	fi
+	@test -n '$(LAZY_TEST_SUITE)' || rm -f $(TEST_LOGS)
+	@rm -f $(TEST_SUITE_LOG)
 	@$(MAKE) $(TEST_SUITE_LOG)
 
 
