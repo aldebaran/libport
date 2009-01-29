@@ -301,7 +301,7 @@ recheck recheck-html:
 	  TESTS=$$($(recheck_rx) $(TEST_SUITE_LOG));		\
 	  $(MAKE) $(AM_MAKEFLAGS) $$target TESTS="$$TESTS";	\
 	else							\
-	 $(MAKE) $(AM_MAKEFLAGS) $$target;			\
+	  $(MAKE) $(AM_MAKEFLAGS) $$target;			\
 	fi
 
 ## ------- ##
