@@ -158,8 +158,10 @@ namespace libport
     }
   }
 
-# define CAST(Type)                             \
-  template Type numeric_cast<Type>(ufloat v);
+# define CAST(Type)                                             \
+  template                                                      \
+  Type                                                          \
+  numeric_cast<Type>(ufloat v) throw (bad_numeric_cast);
 
   CAST(int);
   CAST(unsigned int);

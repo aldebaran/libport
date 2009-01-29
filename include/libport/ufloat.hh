@@ -111,12 +111,52 @@ namespace libport
 {
   struct LIBPORT_API bad_numeric_cast : public std::exception {};
 
+  // numeric_cast must be hidden in the library as it uses Boost.
+  //
+  // Exporting template specializations does not seem to work the same
+  // way bw MSVC and GCC.  With GCC it suffices to export the template
+  // itself.  With MSVC we need to export explicitly all the
+  // instantiations, but not the template.  Weirdly enough MSVC does
+  // not see an explicit instantiation in this case, but truly a
+  // declaration (adding extern does not seem to be useful).  But GCC
+  // sees an explicit instantiation in this case, which is logical,
+  // but of course fails (the true instantiation is in ufloat.cc, and
+  // anyway the template definition is there too).
+  //
+  // So I could not find something to please both.
+# ifdef _MSC_VER
+
   /// Convert a libport::ufloat to T. Raise
   /// libport::bad_numeric_cast if the provided argument is not
   /// directly convertible to a T.
   template <typename T>
-  LIBPORT_API
   T numeric_cast(ufloat v) throw (bad_numeric_cast);
+
+#  define CAST(Type)                                             \
+  template                                                      \
+  Type                                                          \
+  LIBPORT_API                                                   \
+  numeric_cast<Type>(ufloat v) throw (bad_numeric_cast);
+
+  CAST(int);
+  CAST(unsigned int);
+  CAST(long);
+  CAST(unsigned long);
+  CAST(long long);
+  CAST(unsigned long long);
+
+#  undef CAST
+
+# else // ! _MSC_VER
+
+  /// Convert a libport::ufloat to T. Raise
+  /// libport::bad_numeric_cast if the provided argument is not
+  /// directly convertible to a T.
+  template <typename T>                                         \
+  LIBPORT_API                                                   \
+  T numeric_cast(ufloat v) throw (bad_numeric_cast);
+
+# endif
 
 } // namespace libport
 
