@@ -1,6 +1,6 @@
 # Finding valid warning flags for the C Compiler.           -*-Autoconf-*-
 #
-# Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006, 2007, 2009 Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ AS_VAR_PUSHDEF([ac_Option],
 AC_CACHE_CHECK([whether _AC_LANG compiler accepts $1],
 	       [ac_Option],
 [ac_save_[]TC_COMPILER_FLAGS_NAME=$TC_COMPILER_FLAGS_NAME
-TC_COMPILER_FLAGS_NAME="$TC_COMPILER_FLAGS_NAME $1"
+URBI_APPEND_FLAGS([TC_COMPILER_FLAGS_NAME], [$1])
 ac_Option=no
 AC_COMPILE_STDERR_IFELSE([AC_LANG_PROGRAM],
   [if ($EGREP 'm4_do([ignoring option],
@@ -100,8 +100,7 @@ AC_DEFUN([TC_CXX_WARNINGS],
 ac_save_compiler_flags=$TC_COMPILER_FLAGS_NAME
 m4_foreach([AC_Option], [$1],
     [TC_COMPILER_OPTION_IF(AC_Option,
-	   [WARNING_CXXFLAGS="$WARNING_CXXFLAGS AC_Option"
-	    TC_COMPILER_FLAGS_NAME="$ac_save_compiler_flags $WARNING_FLAGS"])])
+	   [URBI_APPEND_FLAGS([WARNING_CXXFLAGS], ["AC_Option"])])])
 TC_COMPILER_FLAGS_NAME=$ac_save_compiler_flags
 AC_SUBST([WARNING_CXXFLAGS])
 AC_LANG_POP([C++])

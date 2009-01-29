@@ -197,17 +197,6 @@ case $CXX_FLAVOR in
                               [URBI_APPEND_CXXFLAGS([-EHsc])]);;
 esac
 
-# ----------------------------------------------- #
-# Remove MS Visual Compiler's spurious warnings.  #
-# ----------------------------------------------- #
-
-# We use to put lots of -wd options here, but it is simpler to have
-# the compiler load a file with lots of pragmas instead.
-case $CXX_FLAVOR in
- (msvc) TC_CXX_WARNINGS([-include libport/warning-push.hh]);;
-esac
-
-
 # --------------------- #
 # Warnings are errors.  #
 # --------------------- #
@@ -222,8 +211,25 @@ case $GXX:$host in
   ( yes:*) # for other occurrences of G++, it's fine to use -Werror.
     TC_CXX_WARNINGS([-Werror])
   ;;
-  # no:*) # ignore (this would enable -Werror for VC++ where we have *way* too
-	  #         many warnings to deal with first).
+esac
+
+# ----------------------------------------------- #
+# Remove MS Visual Compiler's spurious warnings.  #
+# ----------------------------------------------- #
+
+# We use to put lots of -wd options here, but it is simpler to have
+# the compiler load a file with lots of pragmas instead.
+#
+# We don't check for support of "-include libport/warning-push.hh",
+# because we know it supports it, but will fail as the -I needed
+# to find the file are not set yet.  They will be given in the
+# Makefiles.
+#
+# Check for this in last resort, as it does break the use of
+# WARNING_CXXFLAGS without paths to libport headers.
+case $CXX_FLAVOR in
+ (msvc) URBI_APPEND_FLAGS([WARNING_CXXFLAGS],
+                          [-include libport/warning-push.hh]);;
 esac
 
 AC_LANG_POP([C++])
