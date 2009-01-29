@@ -10,7 +10,7 @@
 #  include <libport/semaphore.hh>
 #  include <libport/thread.hh>
 
-#  include <kernel/kernconf.hh>
+#  include <sched/configuration.hh>
 #  include <sched/coroutine.hh>
 
 /* Os-thread implementation of coroutines, using semaphores to ensure
@@ -60,7 +60,8 @@ coroutine_start(Coro* self, Coro* other,
     if (pthread_attr_init(&attr))
       errabort("pthread_attr_init");
 
-    if (pthread_attr_setstacksize(&attr, kernconf.default_stack_size))
+    if (pthread_attr_setstacksize(&attr,
+                                  sched::configuration.default_stack_size))
       errabort("pthread_attr_setstacksize");
   }
 
