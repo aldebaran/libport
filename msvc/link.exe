@@ -341,6 +341,7 @@ get_options ()
       esac;;
 
     # Sources.
+    (-include)  shift; outargs "-FI$(transform $1)";;
     (*.S)       source=$1; outargs "-Tp$(transform $source)";;
     (*.c|*.cc)  source=$1; outargs    "$(transform $source)";;
     (*.i)       source=$1; outargs "-Tc$(transform $source)"
