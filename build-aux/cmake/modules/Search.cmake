@@ -41,14 +41,14 @@ endif(WIN32)
 # time it is accessed by this macro: it is a cache value, so it is savec in
 # the cache... and we don't want that.
 macro(_cache_list_append VAR VALUE)
-  if(${VAR} AND _cache_list_append_FIRST)
+  if(${VAR} AND _cache_list_append_${VAR}_FIRST)
     # Append value to the already existing list
     set(${VAR} "${${VAR}};${VALUE}" CACHE STRING "" FORCE)
   else(${VAR} AND _cache_list_append_FIRST)
     # Init list
-    set(_cache_list_append_FIRST 1)
+    set(_cache_list_append_${VAR}_FIRST 1)
     set(${VAR} "${VALUE}" CACHE STRING "" FORCE)
-  endif(${VAR} AND _cache_list_append_FIRST)
+  endif(${VAR} AND _cache_list_append_${VAR}_FIRST)
 endmacro(_cache_list_append)
 
 
