@@ -142,10 +142,7 @@ pids_wait ()
   local timeout=$[1]
   shift
 
-  if $INSTRUMENT; then
-    timeout=$(($timeout * 5))
-  fi
-
+  : ${timeout_factor:=1}
   timeout=$(($timeout * $timeout_factor))
   local count_down=$timeout
 
@@ -345,7 +342,7 @@ children_status ()
 # children_wait TIMEOUT [CHILDREN]
 # --------------------------------
 # Wait for the registered children, and passed TIMEOUT, kill the remaining
-# ones.  TIMEOUT is increased by 5 if instrumenting.
+# ones.
 children_wait ()
 {
   local timeout=$[1]
