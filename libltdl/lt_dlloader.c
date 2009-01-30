@@ -99,24 +99,40 @@ lt_dlloader_add (const lt_dlvtable *vtable)
 
 #ifdef LT_DEBUG_LOADERS
 static void *
-loader_dump_callback (SList *item, void *userdata)
+loader_length_callback (SList *item, void *userdata)
 {
   const lt_dlvtable *vtable = (const lt_dlvtable *) item->userdata;
-  LT_LOG1 (1, "loaders: %s\n", LT_NAME (vtable));
+  size_t *len = (size_t *) userdata;
+  // We use ' ' as separator.
+  *len += 1 + LT_STRLEN (LT_NAME (vtable));
+  return 0;
+}
+
+static void *
+loader_strcat_callback (SList *item, void *userdata)
+{
+  const lt_dlvtable *vtable = (const lt_dlvtable *) item->userdata;
+  char *cp = (char *) userdata;
+  strcat (cp, " ");
+  strcat (cp, LT_NAME (vtable));
   return 0;
 }
 
 void
 lt_dlloader_dump (void)
 {
+  char *cp = 0;
+  const char *loader_names = " (empty)";
   if (loaders)
     {
-      slist_foreach (loaders, loader_dump_callback, NULL);
+      size_t len = 0;
+      slist_foreach (loaders, loader_length_callback, &len);
+      cp = MALLOC (char, len + 1);
+      slist_foreach (loaders, loader_strcat_callback, cp);
+      loader_names = cp;
     }
-  else
-    {
-      LT_LOG0 (1, "loaders: (empty)\n");
-    }
+  LT_LOG1 (1, "loaders:%s\n", loader_names);
+  FREE(cp);
 }
 #endif
 

@@ -1,10 +1,10 @@
 # Generated from ltmain.m4sh.
 
-# libtool (GNU libtool 1.3051 2008-12-19) 2.2.7a
+# libtool (GNU libtool 1.3071 2009-01-29) 2.2.7a
 # Written by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 
-# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006,
+# 2007, 2008, 2009 Free Software Foundation, Inc.
 # This is free software; see the source for copying conditions.  There is NO
 # warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -58,7 +58,8 @@
 #         link               create a library or an executable
 #         uninstall          remove libraries from an installed directory
 #
-# MODE-ARGS vary depending on the MODE.
+# MODE-ARGS vary depending on the MODE.  When passed as first option,
+# `--mode=MODE' may be abbreviated as `MODE' or a unique abbreviation of that.
 # Try `$progname --help --mode=MODE' for a more detailed description of MODE.
 #
 # When reporting a bug, please describe a test case to reproduce it and
@@ -69,7 +70,7 @@
 #         compiler:		$LTCC
 #         compiler flags:		$LTCFLAGS
 #         linker:		$LD (gnu? $with_gnu_ld)
-#         $progname:	(GNU libtool 1.3051 2008-12-19) 2.2.7a
+#         $progname:	(GNU libtool 1.3071 2009-01-29) 2.2.7a
 #         automake:	$automake_version
 #         autoconf:	$autoconf_version
 #
@@ -78,8 +79,8 @@
 PROGRAM=libtool
 PACKAGE=libtool
 VERSION=2.2.7a
-TIMESTAMP=" 1.3051 2008-12-19"
-package_revision=1.3051
+TIMESTAMP=" 1.3071 2009-01-29"
+package_revision=1.3071
 
 # Be Bourne compatible
 if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
@@ -516,7 +517,15 @@ func_show_eval_locale ()
 # Echo version message to standard output and exit.
 func_version ()
 {
-    $SED -n '/^# '$PROGRAM' (GNU /,/# warranty; / {
+    $SED -n '/(C)/!b go
+	:more
+	/\./! {
+	  N
+	  s/\n# //
+	  b more
+	}
+	:go
+	/^# '$PROGRAM' (GNU /,/# warranty; / {
         s/^# //
 	s/^# *$//
         s/\((C)\)[ 0-9,-]*\( [1-9][0-9]*\)/\1\2/
@@ -1558,7 +1567,7 @@ either the \`install' or \`cp' program.
 
 The following components of INSTALL-COMMAND are treated specially:
 
-  -inst-prefix PREFIX-DIR  Use PREFIX-DIR as a staging area for installation
+  -inst-prefix-dir PREFIX-DIR  Use PREFIX-DIR as a staging area for installation
 
 The rest of the components are interpreted as arguments to that command (only
 BSD-compatible install options are recognized)."
@@ -2438,7 +2447,7 @@ extern \"C\" {
 	      eval '$GREP -f "$output_objdir/$outputname.exp" < "$nlist" > "$nlist"T'
 	      eval '$MV "$nlist"T "$nlist"'
 	      case $host in
-	        *cygwin | *mingw* | *cegcc* )
+	        *cygwin* | *mingw* | *cegcc* )
 	          eval "echo EXPORTS "'> "$output_objdir/$outputname.def"'
 	          eval 'cat "$nlist" >> "$output_objdir/$outputname.def"'
 	          ;;
@@ -2759,15 +2768,23 @@ func_extract_archives ()
 }
 
 
-
-# func_emit_wrapper_part1 [arg=no]
+# func_emit_wrapper [arg=no]
 #
-# Emit the first part of a libtool wrapper script on stdout.
-# For more information, see the description associated with
-# func_emit_wrapper(), below.
-func_emit_wrapper_part1 ()
+# Emit a libtool wrapper script on stdout.
+# Don't directly open a file because we may want to
+# incorporate the script contents within a cygwin/mingw
+# wrapper executable.  Must ONLY be called from within
+# func_mode_link because it depends on a number of variables
+# set therein.
+#
+# ARG is the value that the WRAPPER_SCRIPT_BELONGS_IN_OBJDIR
+# variable will take.  If 'yes', then the emitted script
+# will assume that the directory in which it is stored is
+# the $objdir directory.  This is a cygwin/mingw-specific
+# behavior.
+func_emit_wrapper ()
 {
-	func_emit_wrapper_part1_arg1=${1-no}
+	func_emit_wrapper_arg1=${1-no}
 
 	$ECHO "\
 #! $SHELL
@@ -2848,24 +2865,10 @@ _LTECHO_EOF'
     file=\`\$ECHO \"\$file\" | $SED 's%^.*/%%'\`
     file=\`ls -ld \"\$thisdir/\$file\" | $SED -n 's/.*-> //p'\`
   done
-"
-}
-# end: func_emit_wrapper_part1
-
-# func_emit_wrapper_part2 [arg=no]
-#
-# Emit the second part of a libtool wrapper script on stdout.
-# For more information, see the description associated with
-# func_emit_wrapper(), below.
-func_emit_wrapper_part2 ()
-{
-    func_emit_wrapper_part2_arg1=${1-no}
-
-	$ECHO "\
 
   # Usually 'no', except on cygwin/mingw when embedded into
   # the cwrapper.
-  WRAPPER_SCRIPT_BELONGS_IN_OBJDIR=$func_emit_wrapper_part2_arg1
+  WRAPPER_SCRIPT_BELONGS_IN_OBJDIR=$func_emit_wrapper_arg1
   if test \"\$WRAPPER_SCRIPT_BELONGS_IN_OBJDIR\" = \"yes\"; then
     # special case for '.'
     if test \"\$thisdir\" = \".\"; then
@@ -2981,30 +2984,6 @@ func_emit_wrapper_part2 ()
   fi
 fi\
 "
-}
-# end: func_emit_wrapper_part2
-
-
-# func_emit_wrapper [arg=no]
-#
-# Emit a libtool wrapper script on stdout.
-# Don't directly open a file because we may want to
-# incorporate the script contents within a cygwin/mingw
-# wrapper executable.  Must ONLY be called from within
-# func_mode_link because it depends on a number of variables
-# set therein.
-#
-# ARG is the value that the WRAPPER_SCRIPT_BELONGS_IN_OBJDIR
-# variable will take.  If 'yes', then the emitted script
-# will assume that the directory in which it is stored is
-# the $objdir directory.  This is a cygwin/mingw-specific
-# behavior.
-func_emit_wrapper ()
-{
-	# split this up so that func_emit_cwrapperexe_src
-	# can call each part independently.
-	func_emit_wrapper_part1 ${1-no}
-	func_emit_wrapper_part2 ${1-no}
 }
 
 
@@ -3211,12 +3190,6 @@ EOF
 # include <stdint.h>
 # ifdef __CYGWIN__
 #  include <io.h>
-#  define HAVE_SETENV
-#  ifdef __STRICT_ANSI__
-char *realpath (const char *, char *);
-int putenv (char *);
-int setenv (const char *, const char *, int);
-#  endif
 # endif
 #endif
 #include <malloc.h>
@@ -3229,6 +3202,44 @@ int setenv (const char *, const char *, int);
 #endif
 #include <fcntl.h>
 #include <sys/stat.h>
+
+/* declarations of non-ANSI functions */
+#if defined(__MINGW32__)
+# ifdef __STRICT_ANSI__
+int _putenv (const char *);
+# endif
+#elif defined(__CYGWIN__)
+# ifdef __STRICT_ANSI__
+char *realpath (const char *, char *);
+int putenv (char *);
+int setenv (const char *, const char *, int);
+# endif
+/* #elif defined (other platforms) ... */
+#endif
+
+/* portability defines, excluding path handling macros */
+#if defined(_MSC_VER)
+# define setmode _setmode
+# define stat    _stat
+# define chmod   _chmod
+# define getcwd  _getcwd
+# define putenv  _putenv
+# define S_IXUSR _S_IEXEC
+# ifndef _INTPTR_T_DEFINED
+#  define _INTPTR_T_DEFINED
+#  define intptr_t int
+# endif
+#elif defined(__MINGW32__) && !defined(__MINGW32CE__)
+# define setmode _setmode
+# define stat    _stat
+# define chmod   _chmod
+# define getcwd  _getcwd
+# define putenv  _putenv
+#elif defined(__CYGWIN__)
+# define HAVE_SETENV
+# define FOPEN_WB "wb"
+/* #elif defined (other platforms) ... */
+#endif
 
 #if defined(PATH_MAX)
 # define LT_PATHMAX PATH_MAX
@@ -3245,14 +3256,7 @@ int setenv (const char *, const char *, int);
 # define S_IXGRP 0
 #endif
 
-#ifdef _MSC_VER
-# define S_IXUSR _S_IEXEC
-# define stat _stat
-# ifndef _INTPTR_T_DEFINED
-#  define intptr_t int
-# endif
-#endif
-
+/* path handling portability macros */
 #ifndef DIR_SEPARATOR
 # define DIR_SEPARATOR '/'
 # define PATH_SEPARATOR ':'
@@ -3283,10 +3287,6 @@ int setenv (const char *, const char *, int);
 # define IS_PATH_SEPARATOR(ch) ((ch) == PATH_SEPARATOR_2)
 #endif /* PATH_SEPARATOR_2 */
 
-#ifdef __CYGWIN__
-# define FOPEN_WB "wb"
-#endif
-
 #ifndef FOPEN_WB
 # define FOPEN_WB "w"
 #endif
@@ -3300,7 +3300,7 @@ int setenv (const char *, const char *, int);
 } while (0)
 
 #undef LTWRAPPER_DEBUGPRINTF
-#if defined DEBUGWRAPPER
+#if defined LT_DEBUGWRAPPER
 # define LTWRAPPER_DEBUGPRINTF(args) ltwrapper_debugprintf args
 static void
 ltwrapper_debugprintf (const char *fmt, ...)
@@ -3334,22 +3334,8 @@ int lt_split_name_value (const char *arg, char** name, char** value);
 void lt_update_exe_path (const char *name, const char *value);
 void lt_update_lib_path (const char *name, const char *value);
 char **prepare_spawn (char **argv);
-
-static const char *script_text_part1 =
+void lt_dump_script (FILE *f);
 EOF
-
-	    func_emit_wrapper_part1 yes |
-	        $SED -e 's/\([\\"]\)/\\\1/g' \
-	             -e 's/^/  "/' -e 's/$/\\n"/'
-	    echo ";"
-	    cat <<EOF
-
-static const char *script_text_part2 =
-EOF
-	    func_emit_wrapper_part2 yes |
-	        $SED -e 's/\([\\"]\)/\\\1/g' \
-	             -e 's/^/  "/' -e 's/$/\\n"/'
-	    echo ";"
 
 	    cat <<EOF
 const char * MAGIC_EXE = "$magic_exe";
@@ -3445,8 +3431,7 @@ EOF
 	      esac
 
 	    cat <<"EOF"
-	  printf ("%s", script_text_part1);
-	  printf ("%s", script_text_part2);
+	  lt_dump_script (stdout);
 	  return 0;
 	}
     }
@@ -4206,6 +4191,18 @@ prepare_spawn (char **argv)
 EOF
 		;;
 	    esac
+
+            cat <<"EOF"
+void lt_dump_script (FILE* f)
+{
+EOF
+	    func_emit_wrapper yes |
+              $SED -e 's/\([\\"]\)/\\\1/g' \
+	           -e 's/^/  fputs ("/' -e 's/$/\\n", f);/'
+
+            cat <<"EOF"
+}
+EOF
 }
 # end: func_emit_cwrapperexe_src
 
