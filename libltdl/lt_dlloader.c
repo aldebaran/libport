@@ -119,7 +119,7 @@ loader_strcat_callback (SList *item, void *userdata)
 }
 
 void
-lt_dlloader_dump (void)
+lt_dlloader_log (void)
 {
   char *cp = 0;
   const char *loader_names = " (empty)";

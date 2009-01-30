@@ -246,7 +246,7 @@ lt_dlinit (void)
     }
 
 #ifdef LT_DEBUG_LOADERS
-  lt_dlloader_dump ();
+  lt_dlloader_log ();
 #endif
 
   return errors;

@@ -1,6 +1,6 @@
 /* lt_dlloader.h -- dynamic library loader interface
 
-   Copyright (C) 2004, 2007, 2008 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2007, 2008, 2009 Free Software Foundation, Inc.
    Written by Gary V. Vaughan, 2004
 
    NOTE: The canonical source of this file is maintained with the
@@ -82,7 +82,7 @@ LT_SCOPE const lt_dlvtable *lt_dlloader_get	(lt_dlloader loader);
 typedef  const lt_dlvtable *lt_get_vtable	(lt_user_data data);
 
 #ifdef LT_DEBUG_LOADERS
-LT_SCOPE void		lt_dlloader_dump	(void);
+LT_SCOPE void		lt_dlloader_log	(void);
 #endif
 
 LT_END_C_DECLS
