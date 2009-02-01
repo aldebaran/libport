@@ -113,7 +113,8 @@ if(WIN32)
                          ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
                          ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
                          ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
-                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/lib)
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/lib
+                         ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
     package_search(LIBRARY ${PACKAGE_NAME}_SSLEAY32_LIBRARY ssleay32
                    FULLNAME "OpenSSL for Windows"
@@ -124,7 +125,8 @@ if(WIN32)
                          ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
                          ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
                          ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
-                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/lib)
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/lib
+                         ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
     package_search(LIBRARY ${PACKAGE_NAME}_IPHLPAPI_LIBRARY iphlpapi
                    FULLNAME "OpenSSL IPHLPAPI for Windows"
@@ -135,7 +137,8 @@ if(WIN32)
                          ${URBI_ENGINE_GENERIC_ROOT_DIR}/Debug/gostai/core/i686-pc-linux-gnu/engine
                          ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-cygwin/engine
                          ${URBI_ENGINE_GENERIC_ROOT_DIR}/gostai/core/i686-pc-linux-gnu/engine
-                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/lib)
+                         ${URBI_ENGINE_GENERIC_ROOT_DIR}/lib
+                         ${${PACKAGE_NAME}_ROOT_DIR}/lib)
 
 endif(WIN32)
 
