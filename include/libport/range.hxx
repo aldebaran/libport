@@ -20,6 +20,15 @@ namespace libport
     return boost::make_iterator_range(boost::const_rbegin(r), boost::const_rend(r));
   }
 
+  template< class ForwardRange >
+  boost::iterator_range<typename boost::range_iterator<ForwardRange>::type>
+  skip_first( ForwardRange& r)
+  {
+    typename boost::range_iterator<ForwardRange>::type i = boost::begin(r);
+    typename boost::range_iterator<ForwardRange>::type end = boost::end(r);
+    if (i != end)
+      ++i;
+    return  boost::make_iterator_range(i, end);
+  }
 }
-
 #endif // !LIBPORT_RANGE_HXX
