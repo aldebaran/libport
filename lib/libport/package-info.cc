@@ -21,12 +21,17 @@ namespace libport
   PackageInfo::signature() const
   {
     return (
-      get ("name")
-      + " version " + get ("version")
-      + " rev. "    + get ("revision")
-      + " (C) "     + get ("copyright-years")
+      name_version_revision() + "\n"
+      + "Copyright (C) " + get ("copyright-years")
       + " "         + get ("copyright-holder")
+      + "."
       );
+  }
+
+  PackageInfo::data_type
+  PackageInfo::report_bugs() const
+  {
+    return "Report bugs to <" + get("bug-report") + ">.";
   }
 
   PackageInfo::data_type&
@@ -45,7 +50,7 @@ namespace libport
   PackageInfo::dump(std::ostream& o) const
   {
     bool tail = false;
-    foreach(value_type p, map_)
+    foreach (value_type p, map_)
       o << (tail++ ? ", " : "") << p.first << " = " << p.second;
     return o;
   }

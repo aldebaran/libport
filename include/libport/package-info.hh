@@ -28,7 +28,10 @@ namespace libport
 
     /// NAME version VERSION rev. REVISION.
     data_type name_version_revision() const;
+    /// name_version_revision + "\n" + "Copyright (C) YEAR OWNER."
     data_type signature() const;
+    /// "Report bugs to <BUGREPORT>.".
+    data_type report_bugs() const;
 
     /// Report this on \a o.
     std::ostream& dump(std::ostream& o = std::cerr) const;
