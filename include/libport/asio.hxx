@@ -567,6 +567,7 @@ inline boost::system::error_code
 Socket::connect(const std::string& host, const std::string& port, bool udp,
                 utime_t timeout)
 {
+  assert(timeout >= 0);
   if (udp)
     return connectProto<boost::asio::ip::udp>(host, port, timeout,
 	&netdetail::SocketImpl<boost::asio::ip::udp::socket>::create);
