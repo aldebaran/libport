@@ -194,7 +194,7 @@ namespace libport
   ConsoleDebug::color(int color, bool bold)
   {
     static bool tty = isatty(STDOUT_FILENO);
-    static boost::format format("[33;0%s;%sm");
+    boost::format format("[33;0%s;%sm");
     if (tty)
       std::cerr << str(format % (bold ? 1 : 0) % color);
   }
@@ -286,7 +286,7 @@ namespace libport
         first = false;
       else
         res += " ";
-      static boost::format format("0x%x");
+      boost::format format("0x%x");
       // This is sick, but we have to cast to int, or boost::format
       // will print the character.
       res += str(format % static_cast<unsigned int>(data[i]));
@@ -301,7 +301,7 @@ namespace libport
 
   SyslogDebug::SyslogDebug(const std::string& program)
   {
-    static boost::format format("Opening syslog session for '%s'");
+    boost::format format("Opening syslog session for '%s'");
 
     openlog(strdup(program.c_str()), LOG_PID, LOG_DAEMON);
     syslog(LOG_INFO | LOG_DAEMON, "%s", (format % program).str().c_str());
