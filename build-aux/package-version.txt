@@ -16,8 +16,8 @@ version (UNDEFINED), and use a GNUmakefile.
 
 URBI_PACKAGE_VERSION is used by configure load the actual version
 string from the file .version.  It will change $VERSION to get the
-actual value (either obtained by git describe or by .version), and it
-will also change the value of VERSION used in the Makefiles to be
+actual value (either obtained by `git describe' or by `.version'), and
+it will also change the value of VERSION used in the Makefiles to be
 dynamic (i.e., computed each time "make" is run).  In other words, we
 no longer have to recreate configure and the Makefiles each time a
 version changes.

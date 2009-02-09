@@ -1,7 +1,7 @@
-## Create the .version and .tarball-version files.
+## Create the .version file.
 ##
-## This file is not meant to processed by Automake, which dislikes
-## that we play tricks with VERSION and so forth.  So include it in a
+## This Makefile is not meant to processed by Automake, which dislikes
+## the tricks we play with VERSION and so forth.  So include it in a
 ## GNUmakefile.  Which also explains why we have to ship it
 ## "manually".
 EXTRA_DIST +=					\
@@ -25,7 +25,13 @@ VERSION = $(shell cat $(VERSION_FILE))
 # Declare it "PHONY" to force a systematic update.
 VERSION_FILE = $(top_srcdir)/.version
 .PHONY: $(VERSION_FILE)
+
+# This is not an Automake file, so don't use BUILT_SOURCES, "all" will
+# do.
 all: $(VERSION_FILE)
+
+# Ship it, so that when we are detached from a repository, we still
+# have it available.
 EXTRA_DIST += $(VERSION_FILE)
 $(VERSION_FILE):
 	$(build_aux_dir)/git-version-gen --srcdir=$(srcdir) --file --output=$@
