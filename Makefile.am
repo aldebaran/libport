@@ -3,7 +3,6 @@ include build-aux/build-aux.mk
 include build-aux/fix-libtool-la.mk
 include build-aux/check.mk
 TESTS =
-SKIP_STATUS = 176
 
 ACLOCAL_AMFLAGS = -I build-aux
 libtool: $(LIBTOOL_DEPS)

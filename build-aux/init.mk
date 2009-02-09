@@ -45,6 +45,10 @@ nodist_check_SCRIPTS =
 nodist_noinst_SCRIPTS =
 noinst_LTLIBRARIES =
 
+# Because we use sysexists, which uses 77, we can't use the
+# traditional 77 to mean SKIP tests.  Rather, use 176 consistently.
+SKIP_STATUS = 176
+
 # Visual Studio Debugger PDB Files (C++).
 # http://msdn2.microsoft.com/en-us/library/yd4f8bd1.aspx.
 CLEANFILES += vc80.pdb
