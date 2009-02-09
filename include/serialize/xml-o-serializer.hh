@@ -20,6 +20,7 @@ namespace libport
 
       void serialize(const std::string& name, Serializable& s);
       void serialize(const std::string& name, std::string& s);
+      void serialize(const std::string& name, int& i);
 
     private:
       action_type serialize_collection(const std::string& name, int&);

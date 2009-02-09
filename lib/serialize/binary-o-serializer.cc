@@ -36,6 +36,12 @@ namespace libport
       stream_.write(s.c_str(), size);
     }
 
+    void
+    BinaryOSerializer::serialize(const std::string&, int& i)
+    {
+      put_int(stream_, i);
+    }
+
     BinaryOSerializer::action_type
     BinaryOSerializer::serialize_collection(const std::string&, int& size)
     {

@@ -17,6 +17,7 @@ namespace libport
 
       void serialize(const std::string& name, Serializable& s);
       void serialize(const std::string& name, std::string& s);
+      void serialize(const std::string& name, int& i);
 
       void check_element(const std::string& name);
 

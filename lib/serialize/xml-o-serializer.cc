@@ -1,4 +1,5 @@
 #include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <serialize/serializable.hh>
 #include <serialize/xml-o-serializer.hh>
@@ -35,6 +36,15 @@ namespace libport
       current_->LinkEndChild(elt);
 
       TiXmlText* txt = new TiXmlText(s);
+      elt->LinkEndChild(txt);
+    }
+
+    void XmlOSerializer::serialize(const std::string& name, int& i)
+    {
+      TiXmlElement* elt = new TiXmlElement(name);
+      current_->LinkEndChild(elt);
+
+      TiXmlText* txt = new TiXmlText(boost::lexical_cast<std::string>(i));
       elt->LinkEndChild(txt);
     }
 

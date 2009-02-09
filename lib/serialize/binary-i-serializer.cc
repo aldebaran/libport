@@ -40,6 +40,12 @@ namespace libport
       s = buf;
     }
 
+    void
+    BinaryISerializer::serialize(const std::string&, int& i)
+    {
+      i = get_int(stream_);
+    }
+
     BinaryISerializer::action_type
     BinaryISerializer::serialize_collection(const std::string&, int& size)
     {

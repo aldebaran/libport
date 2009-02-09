@@ -1,5 +1,6 @@
 #include <boost/bind.hpp>
 #include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <serialize/xml-i-serializer.hh>
 #include <serialize/serializable.hh>
@@ -38,6 +39,19 @@ namespace libport
       if (node->Type() != TiXmlNode::TEXT || node->NextSiblingElement())
         throw Exception(str(boost::format("Expected text only in `%s' element") % name));
       s = node->Value();
+      current_ = current_->NextSiblingElement();
+    }
+
+    void XmlISerializer::serialize(const std::string& name, int& i)
+    {
+      check_element(name);
+      TiXmlNode* node = current_->FirstChild();
+
+      if (!node)
+        throw Exception(str(boost::format("Missing integer in `%s' element") % name));
+      if (node->Type() != TiXmlNode::TEXT || node->NextSiblingElement())
+        throw Exception(str(boost::format("Expected integer only in `%s' element") % name));
+      i = boost::lexical_cast<int>(node->Value());
       current_ = current_->NextSiblingElement();
     }
 
