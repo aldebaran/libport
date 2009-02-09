@@ -47,6 +47,3 @@ check-clean-local:
 
 #$(top_builddir)/build-aux/test.sh: $(top_srcdir)/build-aux/test.sh.in
 #	cd $(top_builddir) && ./config.status build-aux/test.sh
-
-# List the tests that are expected to fail:
-# XFAIL_TESTS =
