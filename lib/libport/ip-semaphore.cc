@@ -1,11 +1,13 @@
 #include <libport/config.h>
 #ifdef LIBPORT_HAVE_SEMGET
 
+# include <stdio.h>
 # include <sys/types.h>
 # include <sys/ipc.h>
 # include <sys/sem.h>
 
 # include <cassert>
+# include <cstdlib>
 
 # include <libport/ip-semaphore.hh>
 
@@ -15,6 +17,11 @@ namespace libport
   {
     // Create a set of 1 semaphore, with permisions rwx------
     id_ = semget(IPC_PRIVATE, 1, 0700);
+    if (id_ == -1)
+    {
+      perror("Unable to create an inter-process semaphore");
+      std::abort();
+    }
 
     // The man specifies that this union must be defined by the
     // caller. C's ways are past finding out.
@@ -29,7 +36,11 @@ namespace libport
     // Initialize its value to count
     semun arg;
     arg.val = count;
-    semctl(id_, 0, SETVAL, arg);
+    if (semctl(id_, 0, SETVAL, arg) == -1)
+    {
+      perror("Unable to set the inter-process semaphore value");
+      std::abort();
+    }
   }
 
   // Add \a val to semaphore \a id
@@ -43,7 +54,11 @@ namespace libport
     // several processes if a process segv before it releases the
     // semaphore, for instance.
     sops[0].sem_flg = SEM_UNDO;
-    semop(id, sops, 1);
+    if (semop(id, sops, 1) == -1)
+    {
+      perror("Unable to increment/decrement the inter-process semaphore");
+      std::abort();
+    }
   }
 
   void
