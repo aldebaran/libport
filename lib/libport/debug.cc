@@ -3,6 +3,7 @@
 
 #include <libport/containers.hh>
 #include <libport/debug.hh>
+#include <libport/ip-semaphore.hh>
 #include <libport/windows.hh>
 #include <libport/unistd.h>
 
@@ -84,6 +85,8 @@ namespace libport
     filter_ = lvl;
   }
 
+  static IPSemaphore lock(1);
+
   void
   Debug::debug(const std::string& msg,
                types::Type type,
@@ -93,7 +96,10 @@ namespace libport
   {
     if (disabled())
       return;
+
+    --lock;
     message(msg, type, fun, file, line);
+    ++lock;
   }
 
   libport::Finally::action_type
