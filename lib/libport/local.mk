@@ -49,16 +49,9 @@ dist_lib_libport_libport_la_SOURCES = 		\
 # Create the file git-config.hh with accurate revision information.
 #
 # We depend on .version to avoid frequent regeneration of this file.
-BUILT_SOURCES += lib/libport/revision.hh
-lib/libport/revision.hh: $(top_srcdir)/.version $(build_aux_dir)/git-version-gen
-	$(build_aux_dir)/git-version-gen	\
-		--cache=$<			\
-		--prefix=LIBPORT_PACKAGE_	\
-		--srcdir=$(top_srcdir)		\
-		--header --output=$@
-
-CLEANFILES += lib/libport/revision.hh
-
+REVISION_FILE = lib/libport/revision.hh
+REVISION_PREFIX = LIBPORT_PACKAGE_
+include $(top_srcdir)/build-aux/revision.mk
 
 # Make sure nobody uses config.h instead of libport/config.h.
 #maintainer-check:

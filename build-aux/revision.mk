@@ -16,7 +16,7 @@
 ## avoid useless re-compilations.
 
 REVISION = $(build_aux_dir)/git-version-gen
-
+REVISION_PREFIX ?= PACKAGE_
 BUILT_SOURCES += $(REVISION_FILE)
 REVISION_FILE_STAMP = $(REVISION_FILE).stamp
 
@@ -25,10 +25,11 @@ CLEANFILES += $(REVISION_FILE) $(REVISION_FILE_STAMP)
 
 $(REVISION_FILE_STAMP): $(REVISION) $(build_aux_dir)/revision.mk
 	@rm -f $@.tmp
+	@$(mkdir_p) $(dir $@)
 	@touch $@.tmp
 	$(REVISION)					\
 		--cache=$(top_srcdir)/.version		\
-		--prefix=PACKAGE_			\
+		--prefix=$(REVISION_PREFIX)		\
 		--srcdir=$(top_srcdir)			\
 		--header --output=$(REVISION_FILE).tmp
 	$(move_if_change) $(REVISION_FILE).tmp $(REVISION_FILE)
