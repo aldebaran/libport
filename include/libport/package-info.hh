@@ -2,6 +2,7 @@
 # define PACKAGE_INFO_HH
 
 # include <iostream>
+# include <set>
 # include <string>
 
 # include <libport/export.hh>
@@ -23,12 +24,16 @@ namespace libport
 
     PackageInfo();
 
+    /// Register a dependency (the package info of a sub library).
+    void dependency_add(const PackageInfo& p);
+
     data_type& operator[](const key_type& k);
     const data_type& get(const key_type& k) const;
 
     /// NAME version VERSION rev. REVISION.
     data_type name_version_revision() const;
     /// name_version_revision + "\n" + "Copyright (C) YEAR OWNER."
+    /// Also includes that of the dependencies.
     data_type signature() const;
     /// "Report bugs to <BUGREPORT>.".
     data_type report_bugs() const;
@@ -38,6 +43,9 @@ namespace libport
 
   private:
     map_type map_;
+    /// Sub packages (Dependencies).
+    typedef std::set<const PackageInfo*> dependency_type;
+    dependency_type dependencies_;
   };
 
   /// Report \a p on \a o.

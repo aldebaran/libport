@@ -9,6 +9,12 @@ namespace libport
   {
   }
 
+  void
+  PackageInfo::dependency_add(const PackageInfo& p)
+  {
+    dependencies_.insert(&p);
+  }
+
   PackageInfo::data_type
   PackageInfo::name_version_revision() const
   {
@@ -20,12 +26,19 @@ namespace libport
   PackageInfo::data_type
   PackageInfo::signature() const
   {
-    return (
+    data_type res;
+    res =
       name_version_revision() + "\n"
       + "Copyright (C) " + get ("copyright-years")
       + " "         + get ("copyright-holder")
       + "."
-      );
+      ;
+
+    foreach (const PackageInfo *p, dependencies_)
+      res += "\n\n"
+      + p->signature();
+
+    return res;
   }
 
   PackageInfo::data_type
