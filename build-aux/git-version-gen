@@ -11,6 +11,8 @@ use IO::File;
 
 =head1 OPTIONS
 
+General options:
+
 =over 4
 
 =item B<-h>, B<--help>
@@ -21,16 +23,25 @@ display this message and exit.
 
 do not output the trailing newline.
 
-=item B<-o>, B<--output=FILE>
+=item B<-o>, B<--output>=I<file>
 
 file to create.  Defaults to stdout.
 
-=item B<-s>, B<--srcdir=DIR>
+=item B<-p>, B<--prefix>=I<id>
+
+Prefix to use for the CPP guards.  For instance I<LIBPORT_>.  Defaults
+to I<PACKAGE_>.
+
+=item B<-s>, B<--srcdir>=I<dir>
 
 location of the top srcdir.
 Used to locate the Git repository if in use.
 
-Output formats:
+=back
+
+Output Formats:
+
+=over 4
 
 =item B<-f>, B<--file>
 
@@ -51,25 +62,26 @@ See build-aux/package-version.txt for more information.
 
 =cut
 
-# This script is inspired from the GNU Lib's script "git-version-gen".
-# But we are not GPL, so we have to reimplement it.  More
-# documentation is available there.  See also "package-version.txt".
 
-my $verbose = 1;
-# Whether we strip the trailing \n (to please m4_syscmd which does not
-# strip it).
-my $no_eol = 0;
+# The file that maintains a copy of the current version.
+my $cache;
 
 # Output format.
 my $format = 'raw';
 
-# Where the git repo is (if it exists).
-my $srcdir = '.';
+# Whether we strip the trailing \n (to please m4_syscmd which does not
+# strip it).
+my $no_eol = 0;
 
 my $output;
 
-# The file that maintains a copy of the current version.
-my $cache;
+# CPP guard prefix.
+my $prefix = 'PACKAGE_';
+
+# Where the git repo is (if it exists).
+my $srcdir = '.';
+
+my $verbose = 1;
 
 =head1 FUNCTIONS
 
@@ -113,6 +125,7 @@ sub getopt ()
     "h|help"        => sub { help ($verbose) },
     "n|no-eol"      => sub { $no_eol = 1 },
     "o|output=s"    => \$output,
+    "p|prefix=s"    => \$prefix,
     "q|quiet"       => sub { --$verbose },
     "r|raw"         => sub { $format = 'raw' },
     "s|srcdir=s"    => \$srcdir,
@@ -136,8 +149,7 @@ sub git
 sub save ($$)
 {
   my ($file, $contents) = @_;
-  my $current = `cat $file`;
-  if ($current ne $contents)
+  if (! -f $file || `cat $file` ne $contents)
     {
       verbose 1, "Updating $file\n";
       my $out = new IO::File ">$file" or die;
@@ -151,7 +163,7 @@ sub save ($$)
 
 ######################################################################
 
-sub fetch_revision ()
+sub fetch_keywords ()
 {
   # Date -> $date and so forth.
   my %res;
@@ -206,27 +218,37 @@ sub fetch_revision ()
 getopt;
 $cache = "$srcdir/.version"
   unless $cache;
-my %revision = fetch_revision;
+my %keyword = fetch_keywords;
 
-my $res = $revision{Rev};
-
-# Should not happen.
-$res = 'UNKNOWN'
-    unless $res;
-
+my $res;
 if ($format eq 'file')
 {
-    $res =~ s,/,-,g;
+  $res = $keyword{Rev};
+  $res =~ s,/,-,g;
 }
 elsif ($format eq 'header')
 {
-    $res = <<EOF;
-#ifndef GIT_VERSION_HH
-# define GIT_VERSION_HH
+  my $guard = uc $output;
+  $guard =~ s/\W/_/g;
+  $res = <<EOF;
+#ifndef $guard
+# define $guard
 
-# define GIT_VERSION "$res"
+// The SCM revision string.
+#define ${prefix}REVISION "$keyword{Rev}"
 
-#endif
+// The SCM identification string.
+#define ${prefix}ID \\
+  "$keyword{Id}"
+
+// The SCM date string.
+#define ${prefix}DATE "$keyword{Date}"
+
+// Version and revision together.
+#define ${prefix}VERSION_REV \\
+  "version " ${prefix}VERSION " rev. " ${prefix}REVISION
+
+#endif // !$guard
 EOF
 }
 

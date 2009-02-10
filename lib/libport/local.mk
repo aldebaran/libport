@@ -36,12 +36,26 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/ufloat.cc				\
   lib/libport/unique-pointer.cc			\
   lib/libport/unistd.cc				\
-  lib/libport/utime.cc
+  lib/libport/utime.cc				\
+  lib/libport/version.cc
 
 # These are broken and someone will have to fix them...
 # libport_sources += 				\
 #   $(libport_srcdir)/uffloat.cc		\
 #   $(libport_srcdir)/ull-fixed-point.cc
+
+# Create the file git-config.hh with accurate revision information.
+#
+# We depend on .version to avoid frequent regeneration of this file.
+BUILT_SOURCES += lib/libport/revision.hh
+lib/libport/revision.hh: $(top_srcdir)/.version $(build_aux_dir)/git-version-gen
+	$(build_aux_dir)/git-version-gen	\
+		--cache=$<			\
+		--prefix=LIBPORT_PACKAGE_	\
+		--srcdir=$(top_srcdir)		\
+		--header --output=$@
+
+CLEANFILES += lib/libport/revision.hh
 
 
 # Make sure nobody uses config.h instead of libport/config.h.
