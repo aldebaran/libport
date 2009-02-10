@@ -85,7 +85,7 @@ namespace libport
     filter_ = lvl;
   }
 
-  static IPSemaphore lock(1);
+  static IPSemaphore sem(1);
 
   void
   Debug::debug(const std::string& msg,
@@ -97,9 +97,10 @@ namespace libport
     if (disabled())
       return;
 
-    --lock;
-    message(msg, type, fun, file, line);
-    ++lock;
+    {
+      IPSemaphore::Lock lock(sem);
+      message(msg, type, fun, file, line);
+    }
   }
 
   libport::Finally::action_type
