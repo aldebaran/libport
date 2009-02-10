@@ -10,5 +10,15 @@ namespace libport
 
     Serializer::~Serializer()
     {}
+
+    bool
+    Serializer::optional_get(const std::string&)
+    {
+      return false;
+    }
+
+    void
+    Serializer::optional_put(const std::string&, bool)
+    {}
   }
 }

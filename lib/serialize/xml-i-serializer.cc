@@ -61,11 +61,17 @@ namespace libport
     }
 
     XmlISerializer::action_type
-    XmlISerializer::serialize_collection(const std::string& name, int&)
+    XmlISerializer::serialize_collection(const std::string& name, int& size)
     {
       check_element(name);
       TiXmlNode* node = current_->NextSiblingElement();
       current_ = current_->FirstChild();
+
+      size = 0;
+      TiXmlNode* iter = current_;
+      for (; iter; iter = iter->NextSiblingElement())
+        ++size;
+
       return boost::bind(&XmlISerializer::serialize_collection_end, this, node);
     }
 
@@ -79,6 +85,19 @@ namespace libport
       if (value != name)
         throw Exception(str(boost::format("Expected `%s' element, got `%s'")
                             % name % value));
+    }
+
+    bool XmlISerializer::optional_get(const std::string& name)
+    {
+      try
+      {
+        check_element(name);
+        return true;
+      }
+      catch (Exception&)
+      {
+        return false;
+      }
     }
   }
 }

@@ -17,27 +17,13 @@ namespace libport
       {
         int size = -1;
         a = serialize_collection(name, size);
-        if (size > 0)
-          for (int i = 0; i < size; ++i)
-          {
-            T item;
-            serialize("item", item);
-            collection.push_back(item);
-          }
-        else
-          while (true)
-          {
-            try
-            {
-              T item;
-              serialize("item", item);
-              collection.push_back(item);
-            }
-            catch (Exception&)
-            {
-              break;
-            }
-          }
+        assert(size >= 0);
+        for (int i = 0; i < size; ++i)
+        {
+          T item;
+          serialize("item", item);
+          collection.push_back(item);
+        }
       }
       else
       {
@@ -57,18 +43,19 @@ namespace libport
     {
       if (input_)
       {
-        T res;
-        try
+        if (optional_get(name))
         {
+          T res;
           serialize(name, res);
           option = res;
         }
-        catch (Exception&)
-        { /* nothing */ }
       }
       else
+      {
+        optional_put(name, option);
         if (option)
           serialize(name, option.get());
+      }
     }
   }
 }

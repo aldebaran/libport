@@ -25,6 +25,9 @@ namespace libport
       template <typename T>
       void serialize(const std::string& name, boost::optional<T>& option);
 
+      virtual bool optional_get(const std::string& name);
+      virtual void optional_put(const std::string& name, bool state);
+
       virtual void serialize(const std::string& name, Serializable& s)  = 0;
       virtual void serialize(const std::string& name, std::string& s)   = 0;
       virtual void serialize(const std::string& name, int& i)           = 0;
