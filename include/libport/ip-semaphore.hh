@@ -17,6 +17,15 @@ namespace libport
     void operator++();
     void operator--();
 
+    class Lock
+    {
+    public:
+      Lock(IPSemaphore& sem);
+      ~Lock();
+    private:
+      IPSemaphore& sem_;
+    };
+
   private:
     int id_;
   };

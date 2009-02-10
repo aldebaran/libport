@@ -57,6 +57,17 @@ namespace libport
   {
     alter_sem(id_, -1);
   }
+
+  IPSemaphore::Lock::Lock(IPSemaphore& sem)
+    : sem_(sem)
+  {
+    --sem_;
+  }
+
+  IPSemaphore::Lock::~Lock()
+  {
+    ++sem_;
+  }
 }
 
 #endif
