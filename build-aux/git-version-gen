@@ -1,119 +1,157 @@
-#! /bin/sh
+#! /usr/bin/perl -w
 
-set -e
+use strict;
+
+=head1 NAME
+
+=head1 SYNOPSIS
+
+  git-version-gen [OPTIONS...]
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-h>, B<--help>
+
+display this message and exit.
+
+=item B<-n>, B<--no-eol>
+
+do not output the trailing newline.
+
+=item B<-o>, B<--output=FILE>
+
+file to create.  Defaults to stdout.
+
+=item B<-s>, B<--srcdir=DIR>
+
+location of the top srcdir.
+Used to locate the Git repository if in use.
+
+Output formats:
+
+=item B<-f>, B<--file>
+
+output a string suitable as a file name.
+Converts slashes to dashes.
+
+=item B<-r>, B<--raw>
+
+output the raw result [default].
+
+=item B<-H>, B<--header>
+
+output as a header file suitable for C/C++.
+
+=back
+
+See build-aux/package-version.txt for more information.
+
+=cut
 
 # This script is inspired from the GNU Lib's script "git-version-gen".
 # But we are not GPL, so we have to reimplement it.  More
 # documentation is available there.  See also "package-version.txt".
 
-me=$(basename "$0")
-medir=$(dirname "$0")
-: ${TMPDIR=/tmp}
-tmp=$TMPDIR/$me.$$
+my $verbose = 1;
+# Whether we strip the trailing \n (to please m4_syscmd which does not
+# strip it).
+my $no_eol = 0;
 
-trap 'exit' 1 2 13 15
-trap 'res=$?; rm -f "$tmp" 2>/dev/null; exit $res' 0
+# Output format.
+my $format = 'raw';
 
-stderr ()
+my $srcdir = '.';
+
+my $output;
+
+
+=head1 FUNCTIONS
+
+=over 4
+
+=item C<verbose($level, $message)>
+
+Report the C<$message> is C<$level> E<lt>= C<$verbose>.
+
+=cut
+
+sub verbose($$)
 {
-  local i
-  for i
-  do
-    echo >&2 "$me: $i"
-  done
+  my ($level, $message) = @_;
+  print STDERR $message
+    if $level <= $verbose;
 }
 
-fatal ()
+
+sub help ($)
 {
-  stderr "$@"
-  exit 1
+  my ($verbose) = @_;
+  use Pod::Usage;
+  # See <URL:http://perldoc.perl.org/pod2man.html#NOTES>.
+  pod2usage( { -message => "Bench Bison parsers",
+               -exitval => 0,
+               -verbose => $verbose,
+               -output  => \*STDOUT });
 }
 
-usage ()
+
+######################################################################
+
+sub getopt ()
 {
-  cat <<EOF
-Usage: $0 [OPTIONS...]
-
-Options:
-  -h, --help         display this message and exit
-  -n, --no-eol       do not output the trailing newline
-  -o, --output=FILE  file to create
-                     defaults to stdout
-  -s, --srcdir=DIR   location of the top srcdir
-                     used to locate the Git repository if in use
-
-Output formats:
-  -f, --file     output a string suitable as a file name
-                 (convert slashes to dashes)
-  -r, --raw      output the raw result [default]
-  -H, --header   output as a header file suitable for C/C++
-
-See build-aux/package-version.txt for more information.
-EOF
-  exit 0
+  use Getopt::Long;
+  my %option = (
+    "H|header"      => sub { $format = 'header' },
+    "h|help"        => sub { help ($verbose) },
+    "f|file"        => sub { $format = 'file' },
+    "n|no-eol"      => sub { $no_eol = 1 },
+    "o|output=s"    => \$output,
+    "q|quiet"       => sub { --$verbose },
+    "r|raw"         => sub { $format = 'raw' },
+    "s|srcdir=s"    => \$srcdir,
+    "v|verbose"     => sub { ++$verbose },
+    );
+  Getopt::Long::Configure ("bundling", "pass_through");
+  GetOptions (%option)
+    or exit 1;
 }
 
-getopt ()
-{
-  while test $# -ne 0; do
-    case $1 in
-       (--*=*)
-	    opt=$(echo "$1" | sed -e 's/=.*//')
-	    val=$(echo "$1" | sed -e 's/[^=]*=//')
-	    shift
-	    set dummy "$opt" "$val" ${1+"$@"};
-	    shift
-	    ;;
-    esac
-
-    case $1 in
-      (-h | --help)   usage;;
-      (-H | --header) format=header;;
-      (-f | --file)   format=file;;
-      (-n | --no-eol) # m4_esyscmd does not strip the ending \n.
-                      prune_eol="tr -d '\012'";;
-      (-r | --raw)    format=raw;;
-      (-o | --output) output=$2; shift;;
-      (-s | --srcdir) srcdir=$2; shift;;
-      (*)  fatal "unexpected argument: $1";;
-    esac
-    shift
-  done
-}
+######################################################################
 
 ## ------ ##
 ## Main.  ##
 ## ------ ##
 
-# A command to kill the eol.
-prune_eol=cat
-# Output format
-format=raw
-srcdir=.
-output=
-
-getopt "$@"
+getopt;
 
 # Are we in a git repository?  If we are, there should be files here.
-if (cd $srcdir && git ls-files | grep .) >/dev/null 2>&1; then
-  # In a repo.  Compute the most up to date answer.
-  res=$(cd $srcdir && git describe)
+my $files = `cd $srcdir && git ls-files`
+    or die "cannot run git";
+my $res;
+if ($files)
+{
+    # In a repo.  Compute the most up to date answer.
+    $res = `cd $srcdir && git describe`;
+}
 else
-  # Not in a repo.  We *need* .version to exist.
-  res=$(cat $srcdir/.version)
-fi
+{
+    # Not in a repo.  We *need* .version to exist.
+    $res = `cat $srcdir/.version`;
+}
 
 # Should not happen.
-test -n "$res" ||
-  res=UNKNOWN
+$res = 'UNKNOWN\n'
+    unless $res;
 
-case $format in
-  (raw)
-     echo "$res" | $prune_eol;;
-  (file)
-     echo "$res" | sed 's,/,-,g' | $prune_eol;;
-  (header)
-    cat <<EOF
+if ($format eq 'file')
+{
+    $res =~ s,/,-,g;
+}
+elsif ($format eq 'header')
+{
+    $res = <<EOF;
 #ifndef GIT_VERSION_HH
 # define GIT_VERSION_HH
 
@@ -121,14 +159,44 @@ case $format in
 
 #endif
 EOF
-    ;;
-esac >$tmp
+}
 
-case $output in
-  ('')
-    cat $tmp
-    ;;
-  (*)
-    $medir/move-if-change $tmp $output
-    ;;
-esac
+chomp ($res)
+    if $no_eol;
+
+if ($output)
+{
+    my $current = `cat $output`;
+    if ($current ne $res)
+    {
+        verbose 1, "Updating $output\n";
+        use IO::File;
+        my $out = new IO::File ">$output" or die;
+        print $out $res;
+    }
+    else
+    {
+        verbose 1, "$output is unchanged\n";
+    }
+}
+else
+{
+    print $res;
+}
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:
