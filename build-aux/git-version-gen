@@ -43,6 +43,10 @@ Output Formats:
 
 =over 4
 
+=item B<-H>, B<--header>
+
+output as a header file suitable for C/C++.
+
 =item B<-f>, B<--file>
 
 output a string suitable as a file name.
@@ -52,9 +56,9 @@ Converts slashes to dashes.
 
 output the raw result [default].
 
-=item B<-H>, B<--header>
+=item B<-u>, B<--urbi>
 
-output as a header file suitable for C/C++.
+output as an Urbi file.
 
 =back
 
@@ -129,6 +133,7 @@ sub getopt ()
     "q|quiet"       => sub { --$verbose },
     "r|raw"         => sub { $format = 'raw' },
     "s|srcdir=s"    => \$srcdir,
+    "u|urbi"        => sub { $format = 'urbi' },
     "v|verbose"     => sub { ++$verbose },
     );
   Getopt::Long::Configure ("bundling", "pass_through");
@@ -249,6 +254,31 @@ elsif ($format eq 'header')
   "version " ${prefix}VERSION " rev. " ${prefix}REVISION
 
 #endif // !$guard
+EOF
+}
+elsif ($format eq 'urbi')
+{
+  $res = <<EOF;
+class System.PackageInfo
+{
+  // The SCM version string.
+  var version = "$keyword{Version}";
+
+  // The SCM revision string.
+  var revision = "$keyword{Rev}";
+
+  // The SCM identification string.
+  var id = "$keyword{Id}";
+
+  // The SCM date string.
+  var date = "$keyword{Date}";
+
+  // Version and revision together.
+  function version_rev
+  {
+    "version " + version + " rev. " + revision
+  };
+};
 EOF
 }
 
