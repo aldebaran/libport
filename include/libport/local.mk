@@ -63,6 +63,7 @@ libport_include_HEADERS +=			\
   include/libport/fwd.hh			\
   include/libport/hash.hh			\
   include/libport/indent.hh			\
+  include/libport/ip-semaphore.hh		\
   include/libport/instance-tracker.hh		\
   include/libport/instance-tracker.hxx		\
   include/libport/intrusive-ptr.hh		\
