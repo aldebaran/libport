@@ -69,19 +69,16 @@ namespace libport
   } while (0)
 
 /// Define \a Var using information from config.h and version.hh.
-# define LIBPORT_PACKAGE_INFO_INIT(Var)                                 \
+# define LIBPORT_PACKAGE_INFO_INIT(Var)         \
   LIBPORT_PACKAGE_INFO_INIT_(PACKAGE_, Var)
 
 /// Define a static variable name \a Var.
 # define LIBPORT_PACKAGE_INFO_STATIC_VAR_(Prefix, Var)	\
   static libport::PackageInfo Var;                      \
   do {                                                  \
-    static bool first = true;                           \
-    if (first)                                          \
-    {                                                   \
-      first = false;                                    \
+    static bool tail = false;                           \
+    if (!tail++)                                        \
       LIBPORT_PACKAGE_INFO_INIT_(Prefix, Var);          \
-    }                                                   \
   } while (0)
 
 /// Define a static variable name \a Var.
