@@ -2,6 +2,7 @@ lib_LTLIBRARIES += lib/libport/libport.la
 lib_libport_libport_la_LDFLAGS = -avoid-version -no-undefined
 lib_libport_libport_la_CPPFLAGS =		\
   $(AM_CPPFLAGS)				\
+  -Ilib						\
   -DBUILDING_LIBPORT
 
 # Sources to compile to use libport.

@@ -21,7 +21,6 @@ EXTRA_DIST += bootstrap
 AM_CPPFLAGS +=					\
   $(LIBPORT_CPPFLAGS)				\
   -I$(srcdir)/lib				\
-  -Ilib						\
   $(BOOST_CPPFLAGS)
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 
