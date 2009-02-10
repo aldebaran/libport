@@ -31,8 +31,7 @@ $(REVISION_FILE_STAMP): $(REVISION) $(build_aux_dir)/revision.mk
 		--cache=$(top_srcdir)/.version		\
 		--prefix=$(REVISION_PREFIX)		\
 		--srcdir=$(top_srcdir)			\
-		--header --output=$(REVISION_FILE).tmp
-	$(move_if_change) $(REVISION_FILE).tmp $(REVISION_FILE)
+		--header --output=$(REVISION_FILE)
 	@mv -f $@.tmp $@
 
 $(REVISION_FILE): $(REVISION_FILE_STAMP)
