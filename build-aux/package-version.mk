@@ -9,7 +9,7 @@ EXTRA_DIST +=					\
   build-aux/move-if-change			\
   build-aux/package-version.mk
 
-VERSION = $(shell cat $(VERSION_FILE))
+VERSION = $(shell sed -n '/^TarballVersion: /{s///;p;q;}' $(VERSION_FILE))
 
 ## ----------------------------------------------------------- ##
 ## When rolling a tarball, update the current version string.  ##
@@ -34,4 +34,8 @@ all: $(VERSION_FILE)
 # have it available.
 EXTRA_DIST += $(VERSION_FILE)
 $(VERSION_FILE):
-	$(build_aux_dir)/git-version-gen --srcdir=$(srcdir) --file --output=$@
+	$(build_aux_dir)/git-version-gen --srcdir=$(top_srcdir) --cache=$@
+
+debug: debug-revision
+debug-revision:
+	@echo "$$\(VERSION) = $(VERSION)"

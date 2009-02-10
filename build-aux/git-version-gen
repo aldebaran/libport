@@ -1,6 +1,7 @@
 #! /usr/bin/perl -w
 
 use strict;
+use IO::File;
 
 =head1 NAME
 
@@ -62,25 +63,28 @@ my $no_eol = 0;
 # Output format.
 my $format = 'raw';
 
+# Where the git repo is (if it exists).
 my $srcdir = '.';
 
 my $output;
 
+# The file that maintains a copy of the current version.
+my $cache;
 
 =head1 FUNCTIONS
 
 =over 4
 
-=item C<verbose($level, $message)>
+=item C<verbose($level, @message)>
 
-Report the C<$message> is C<$level> E<lt>= C<$verbose>.
+Report the C<@message> is C<$level> E<lt>= C<$verbose>.
 
 =cut
 
-sub verbose($$)
+sub verbose($@)
 {
-  my ($level, $message) = @_;
-  print STDERR $message
+  my ($level, @message) = @_;
+  print STDERR "$0: ", @message
     if $level <= $verbose;
 }
 
@@ -103,9 +107,10 @@ sub getopt ()
 {
   use Getopt::Long;
   my %option = (
+    "c|cache=s"     => \$cache,
+    "f|file"        => sub { $format = 'file' },
     "H|header"      => sub { $format = 'header' },
     "h|help"        => sub { help ($verbose) },
-    "f|file"        => sub { $format = 'file' },
     "n|no-eol"      => sub { $no_eol = 1 },
     "o|output=s"    => \$output,
     "q|quiet"       => sub { --$verbose },
@@ -120,29 +125,93 @@ sub getopt ()
 
 ######################################################################
 
+sub git
+{
+  my $res = `git --git-dir=$srcdir/.git @_`
+    or die "cannot run git";
+  chomp $res;
+  return $res;
+}
+
+sub save ($$)
+{
+  my ($file, $contents) = @_;
+  my $current = `cat $file`;
+  if ($current ne $contents)
+    {
+      verbose 1, "Updating $file\n";
+      my $out = new IO::File ">$file" or die;
+      print $out $contents;
+    }
+  else
+    {
+      verbose 1, "$file is unchanged\n";
+    }
+}
+
+######################################################################
+
+sub fetch_revision ()
+{
+  # Date -> $date and so forth.
+  my %res;
+  # Are we in a git repository?
+  if (-d "$srcdir/.git")
+    {
+      verbose 2, "in a git repository\n";
+
+      # Date, Rev, and Id.
+      my $log = git 'log', '-1',
+      '--pretty="format:Date: %ai%nId: %h (%ai %ae: %s)%nRev: %h%n"';
+
+      # Description, Version, TarballVersion.
+      $log =~ s{^(\w+):\s*(.*)$}{ $res{$1} = $2; ''; }emg;
+      $res{Description} = git 'describe';
+      ($res{Version} = $res{Description}) =~ s/-[^-]*$//;
+      ($res{TarballVersion} = $res{Description}) =~ s,/,-,g;
+
+      # Cache the result, only if needed.
+      my $cached = '';
+      for my $k (sort keys %res)
+        {
+          $cached .= "$k: $res{$k}\n";
+        }
+      save $cache, $cached;
+    }
+  else
+    {
+      verbose 2, "not in a git repository: no $srcdir/.git\n";
+      my $in = new IO::File $cache or die "cannot open $cache: $!";
+      while ($_ = $in->getline)
+        {
+          s{(\w+):\s*(.*)}{ $res{$1} = $2; ''; }e;
+        }
+    }
+  if (3 <= $verbose)
+    {
+      for my $k (sort keys %res)
+        {
+          print STDERR "$0: $k: $res{$k}\n";
+        }
+    }
+  return %res;
+}
+
+######################################################################
+
 ## ------ ##
 ## Main.  ##
 ## ------ ##
 
 getopt;
+$cache = "$srcdir/.version"
+  unless $cache;
+my %revision = fetch_revision;
 
-# Are we in a git repository?  If we are, there should be files here.
-my $files = `cd $srcdir && git ls-files`
-    or die "cannot run git";
-my $res;
-if ($files)
-{
-    # In a repo.  Compute the most up to date answer.
-    $res = `cd $srcdir && git describe`;
-}
-else
-{
-    # Not in a repo.  We *need* .version to exist.
-    $res = `cat $srcdir/.version`;
-}
+my $res = $revision{Rev};
 
 # Should not happen.
-$res = 'UNKNOWN\n'
+$res = 'UNKNOWN'
     unless $res;
 
 if ($format eq 'file')
@@ -161,27 +230,16 @@ elsif ($format eq 'header')
 EOF
 }
 
-chomp ($res)
-    if $no_eol;
+$res .= "\n"
+    unless $no_eol;
 
 if ($output)
 {
-    my $current = `cat $output`;
-    if ($current ne $res)
-    {
-        verbose 1, "Updating $output\n";
-        use IO::File;
-        my $out = new IO::File ">$output" or die;
-        print $out $res;
-    }
-    else
-    {
-        verbose 1, "$output is unchanged\n";
-    }
+  save $output, $res;
 }
 else
 {
-    print $res;
+  print $res;
 }
 
 ### Setup "GNU" style for perl-mode and cperl-mode.
