@@ -24,10 +24,18 @@ namespace libport
       static categories_type categories;
       return categories;
     }
+    int& categories_largest()
+    {
+      static int res = 0;
+      return res;
+    }
 
     int add_category(const std::string& name)
     {
       get_categories()[name] = true;
+      int size = name.size();
+      if (size > categories_largest())
+        categories_largest() = size;
       return 42;
     }
 
@@ -128,7 +136,8 @@ namespace libport
   bool
   Debug::disabled()
   {
-    return !debug::test_category(category()) || level_stack_.back() > filter_;
+    return !debug::test_category(categories_stack_.back())
+      || level_stack_.back() > filter_;
   }
 
   static void noop()
@@ -162,7 +171,18 @@ namespace libport
   Debug::category()
   {
     assert(!categories_stack_.empty());
-    return categories_stack_.back();
+    std::string res = categories_stack_.back();
+    int size = res.size();
+    int largest = debug::categories_largest();
+    if (size < largest)
+    {
+      int diff = largest - size;
+      res = std::string(diff / 2, ' ')
+        + res
+        + std::string(diff / 2 + diff % 2, ' ');
+    }
+
+    return res;
   }
 
 #define ATTRIBUTE(Name)                         \
