@@ -4,6 +4,7 @@
 # include <libport/config.h>
 
 # ifdef LIBPORT_HAVE_SEMGET
+# define LIBPORT_HAVE_IP_SEMAPHORE
 
 namespace libport
 {

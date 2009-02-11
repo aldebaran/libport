@@ -85,7 +85,9 @@ namespace libport
     filter_ = lvl;
   }
 
+# ifdef LIBPORT_HAVE_IP_SEMAPHORE
   static IPSemaphore sem(1);
+# endif
 
   void
   Debug::debug(const std::string& msg,
@@ -98,7 +100,9 @@ namespace libport
       return;
 
     {
+# ifdef LIBPORT_HAVE_IP_SEMAPHORE
       IPSemaphore::Lock lock(sem);
+# endif
       message(msg, type, fun, file, line);
     }
   }
