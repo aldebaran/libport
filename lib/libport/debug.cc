@@ -86,7 +86,11 @@ namespace libport
   }
 
 # ifdef LIBPORT_HAVE_IP_SEMAPHORE
-  static IPSemaphore sem(1);
+  static IPSemaphore& sem()
+  {
+    static IPSemaphore res(1);
+    return res;
+  }
 # endif
 
   void
@@ -101,7 +105,7 @@ namespace libport
 
     {
 # ifdef LIBPORT_HAVE_IP_SEMAPHORE
-      IPSemaphore::Lock lock(sem);
+      IPSemaphore::Lock lock(sem());
 # endif
       message(msg, type, fun, file, line);
     }
