@@ -14,6 +14,8 @@
 namespace libport
 {
   IPSemaphore::IPSemaphore(int count)
+    : id_(-1)
+    , owner_pid_(getpid())
   {
     // Create a set of 1 semaphore, with permisions rwx------
     id_ = semget(IPC_PRIVATE, 1, 0700);
@@ -41,6 +43,16 @@ namespace libport
       perror("Unable to set the inter-process semaphore value");
       std::abort();
     }
+  }
+
+  IPSemaphore::~IPSemaphore()
+  {
+    if (getpid() == owner_pid_)
+      if (semctl(id_, 0, IPC_RMID) == -1)
+      {
+        perror("Unable to set the inter-process semaphore value");
+        std::abort();
+      }
   }
 
   // Add \a val to semaphore \a id

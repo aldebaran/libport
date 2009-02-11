@@ -1,6 +1,9 @@
 #ifndef IP_SEMAPHORE_HH
 # define IP_SEMAPHORE_HH
 
+# include <sys/types.h>
+# include <unistd.h>
+
 # include <libport/config.h>
 
 # ifdef LIBPORT_HAVE_SEMGET
@@ -15,6 +18,7 @@ namespace libport
   {
   public:
     IPSemaphore(int count = 0);
+    ~IPSemaphore();
     void operator++();
     void operator--();
 
@@ -29,6 +33,7 @@ namespace libport
 
   private:
     int id_;
+    pid_t owner_pid_;
   };
 }
 
