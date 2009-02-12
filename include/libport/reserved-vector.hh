@@ -31,4 +31,6 @@ namespace libport
   void push_front(T& v, const U& e);
 }
 
+# include <libport/reserved-vector.hxx>
+
 #endif

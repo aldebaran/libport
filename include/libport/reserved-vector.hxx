@@ -1,22 +1,20 @@
-#include <libport/reserved-vector.hh>
-
 namespace libport
 {
-  template<typename I>
   template<class T, int R>
-  ReservedVector::ReservedVector(I b, I e)
-    :std::vector<T>(b, e)
-  {}
-
-  template<class T, int R>
-  ReservedVector::ReservedVector()
+  ReservedVector<T, R>::ReservedVector()
   {
     this->reserve(R);
   }
 
-  template<int R2>
   template<class T, int R>
-  ReservedVector::ReservedVector(const ReservedVector<T, R2>& b)
+  template<typename I>
+  ReservedVector<T, R>::ReservedVector(I b, I e)
+    : std::vector<T>(b, e)
+  {}
+
+  template<class T, int R>
+  template<int R2>
+  ReservedVector<T, R>::ReservedVector(const ReservedVector<T, R2>& b)
     : std::vector<T>(b)
   {}
 
@@ -36,5 +34,3 @@ namespace libport
     v = v2;
   }
 }
-
-#endif
