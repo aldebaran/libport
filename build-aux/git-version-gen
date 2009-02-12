@@ -230,6 +230,8 @@ if ($format eq 'file')
 {
   $res = $keyword{Rev};
   $res =~ s,/,-,g;
+  $res .= "\n"
+    unless $no_eol;
 }
 elsif ($format eq 'header')
 {
@@ -281,9 +283,6 @@ class System.PackageInfo
 };
 EOF
 }
-
-$res .= "\n"
-    unless $no_eol;
 
 if ($output)
 {
