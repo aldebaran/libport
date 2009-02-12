@@ -13,25 +13,26 @@ TESTS +=					\
   libport/cstdlib.cc				\
   libport/deref.cc				\
   libport/dirent.cc				\
-  libport/fd-stream.cc				\
-  libport/foreach.cc				\
-  libport/path.cc				\
-  libport/singleton-ptr.cc			\
-  libport/symbol.cc				\
   libport/erase-if.cc				\
   libport/escape.cc				\
+  libport/fd-stream.cc				\
   libport/fifo.cc				\
   libport/finally.cc				\
+  libport/foreach.cc				\
   libport/has-if.cc				\
   libport/indent.cc				\
   libport/intrusive-ptr.cc			\
+  libport/path.cc				\
+  libport/pid-file.cc				\
   libport/semaphore.cc				\
   libport/separator.cc				\
-  libport/pid-file.cc				\
+  libport/singleton-ptr.cc			\
   libport/statistics.cc				\
+  libport/symbol.cc				\
   libport/timer.cc				\
-  libport/unescape.cc				\
+  libport/tokenizer.cc				\
   libport/ufloat-double.cc			\
+  libport/unescape.cc				\
   libport/visitor.cc
 
 # ufloat-float.cc is commented out as we do not support ufloat /=
@@ -91,6 +92,7 @@ libport_singleton_ptr_SOURCES             = libport/singleton-ptr.cc
 libport_statistics_SOURCES                = libport/statistics.cc
 libport_symbol_SOURCES                    = libport/symbol.cc
 libport_timer_SOURCES                     = libport/timer.cc
+libport_tokenizer_SOURCES                 = libport/tokenizer.cc
 libport_ufloat_double_SOURCES             = libport/ufloat-double.cc
 libport_unescape_SOURCES                  = libport/unescape.cc
 libport_visitor_SOURCES                   = libport/visitor.cc

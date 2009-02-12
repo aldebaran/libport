@@ -10,7 +10,7 @@ namespace libport
 {
   LIBPORT_API
   boost::tokenizer< boost::char_separator<char> >
-  make_tokenizer (const std::string& str, const char* sep);
+  make_tokenizer(const std::string& str, const char* sep);
 
 }
 
