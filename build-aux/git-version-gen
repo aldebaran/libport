@@ -15,6 +15,10 @@ General options:
 
 =over 4
 
+=item B<-d>, B<--directory>
+
+Create the directory of the output file if needed.
+
 =item B<-h>, B<--help>
 
 display this message and exit.
@@ -73,6 +77,9 @@ my $cache;
 # Output format.
 my $format = 'raw';
 
+# Whether we make the directory first.
+my $directory_p = 0;
+
 # Whether we strip the trailing \n (to please m4_syscmd which does not
 # strip it).
 my $no_eol = 0;
@@ -117,6 +124,29 @@ sub help ($)
 }
 
 
+=item C<ensure_parent_dir($filename)>
+
+If I<$directory_p>, create, it needed, the directory that will contain
+I<$filename>.
+
+=cut
+
+sub ensure_parent_dir ($)
+{
+  my ($file) = @_;
+  if ($directory_p)
+    {
+      use File::Basename;
+      my $dir = dirname $file;
+      if (! -d $dir)
+        {
+          use File::Path;
+          mkpath ($dir, { verbose => $verbose, })
+            or die "cannot create $dir: $!";
+        }
+    }
+}
+
 ######################################################################
 
 sub getopt ()
@@ -124,6 +154,7 @@ sub getopt ()
   use Getopt::Long;
   my %option = (
     "c|cache=s"     => \$cache,
+    "d|directory"   => sub { $directory_p = 1 },
     "f|file"        => sub { $format = 'file' },
     "H|header"      => sub { $format = 'header' },
     "h|help"        => sub { help ($verbose) },
@@ -157,6 +188,7 @@ sub save ($$)
   if (! -f $file || `cat $file` ne $contents)
     {
       verbose 1, "Updating $file\n";
+      ensure_parent_dir $file;
       my $out = new IO::File ">$file" or die;
       print $out $contents;
     }
@@ -223,8 +255,11 @@ sub fetch_keywords ()
 getopt;
 $cache = "$srcdir/.version"
   unless $cache;
+
+# Looks for the SCM keywords.
 my %keyword = fetch_keywords;
 
+# Compute the main result.
 my $res;
 if ($format eq 'file')
 {
@@ -284,13 +319,17 @@ class System.PackageInfo
 EOF
 }
 
-if ($output)
+# Save the result.
+if ($res)
 {
-  save $output, $res;
-}
-else
-{
-  print $res;
+  if ($output)
+    {
+      save $output, $res;
+    }
+  else
+    {
+      print $res;
+    }
 }
 
 ### Setup "GNU" style for perl-mode and cperl-mode.
