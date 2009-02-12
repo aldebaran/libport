@@ -70,7 +70,7 @@ namespace libport
   {
     // Cant use blocklock: we must unlock before calling doDestroy.
     threadLock_.lock();
-    count_--;
+    LIBPORT_COND_UPDATE(canDestroy_, count_--, !count_);
     if (!count_ && destructionPending_ && !destructionEnacted_)
     {
       destructionEnacted_ = true;
@@ -85,6 +85,30 @@ namespace libport
   Destructible::wasDestroyed()
   {
     destructionEnacted_ = true;
+  }
+
+  inline bool
+  Destructible::checkDestructionPermission()
+  {
+    return !count_;
+  }
+
+  inline void
+  Destructible::waitForDestructionPermission()
+  {
+    LIBPORT_COND_WAIT(canDestroy_, !count_);
+  }
+
+  inline void
+  Destructible::link(DestructionLock l)
+  {
+    links_.push_back(l);
+  }
+
+  inline void
+  Destructible::unlinkAll()
+  {
+    links_.clear();
   }
 }
 

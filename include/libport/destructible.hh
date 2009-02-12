@@ -3,6 +3,7 @@
 
 # include <libport/intrusive-ptr.hh>
 # include <libport/lockable.hh>
+# include <libport/condition.hh>
 
 namespace libport
 {
@@ -16,6 +17,15 @@ namespace libport
    * if not overriden calls the delete operator.
    * Classes inheriting from Destructible should put their destructor private
    * to avoid accidental overriding of the destroy() mechanism.
+   *
+   * If your class allows direct access to its delete operator, you must in
+   * your destructor:
+   *  - Call wasDestroyed()
+   *  - Ensure no new destruction lock can be aquired
+   *  - Call waitForDestructionPermission, or call checkDestructionPermission
+   *    until it returns true.
+   * This tasks must be performed also by all inherited classes to be safe in
+   * case virtual methods are used.
    */
   class Destructible
   {
@@ -47,19 +57,37 @@ namespace libport
 
     protected:
 
-    /// Call this to warn Destructible that the destructor was called directly.
+    /** Call this to warn Destructible that the destructor was called.
+      * Only required if your object's destructor can be directly called.
+      */
     void wasDestroyed();
+
+    /** Block until no more destruction locks are acquired.
+      * For this to make sense, it is your responsibility to ensure
+      * no new destruction lock can be acquired from this point on.
+      */
+    void waitForDestructionPermission();
+
+    /// Returns true if no destruction locks are acquired.
+    bool checkDestructionPermission();
 
     /// Override this function to change the effective destruction behavior.
     virtual void doDestroy();
 
+    /// Hold destruction lock \b l until destroyed.
+    void link(DestructionLock l);
+
+    /// Release all held destruction locks
+    void unlinkAll();
     private:
     inline void take();
     inline void release();
+    Condition canDestroy_;
     libport::Lockable threadLock_;
     bool destructionPending_;
     bool destructionEnacted_;
     int count_;
+    std::vector<DestructionLock> links_;
     friend class Lock;
   };
 }
