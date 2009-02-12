@@ -27,8 +27,17 @@ VERSION =								\
 
 GIT_VERSION_GEN = $(build_aux_dir)/git-version-gen
 
-# Update .version.stamp.
-.version.stamp: $(GIT_VERSION_GEN)
+# Update $(VERSION_FILE).stamp.
+#
+# We have a nasty problem here: it seems that GNU Make does not behave
+# the same way on all hosts (especially GNU/Linux vs. OSX).  As a rule
+# of thumb, files once qualified with $(top_srcdir) should as be.  But
+# in my case (Akim), VPATH is ../.., and it turns out I also have a
+# package in ../../$(top_srcdir), so it actually looks in ../../../..
+# and finds a .version.stamp there :(  I don't know what to do.
+#
+# The BF seems to prefer the solution below.
+$(VERSION_FILE).stamp: $(GIT_VERSION_GEN)
 	@rm -f $@.tmp
 	@$(mkdir_p) $(dir $@)
 	@touch $@.tmp
@@ -40,7 +49,7 @@ GIT_VERSION_GEN = $(build_aux_dir)/git-version-gen
 	fi
 	@mv -f $@.tmp $@
 
-$(VERSION_FILE): .version.stamp
+$(VERSION_FILE): $(VERSION_FILE).stamp
 	@if test -f $(VERSION_FILE); then :; else	\
 	  rm -f $(VERSION_FILE_STAMP);			\
 	  $(MAKE) $(AM_MAKEFLAGS) $<;			\
