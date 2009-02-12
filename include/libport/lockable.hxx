@@ -1,6 +1,8 @@
 #ifndef LIBPORT_LOCKABLE_HXX
 # define LIBPORT_LOCKABLE_HXX
 
+#include <libport/assert.hh>
+
 /*--------------------------.
 | Implementation: Windows.  |
 `--------------------------*/
@@ -11,27 +13,34 @@ namespace libport
 {
   inline void initLock(Lock& l)
   {
-    InitializeCriticalSection(&l);
+    l = CreateMutex(0, false, 0);
+    if (!l)
+      errabort("CreateMutex");
   }
 
   inline void lockLock(Lock& l)
   {
-    EnterCriticalSection(&l);
+    if (WaitForSingleObject(l, INFINITE) ==  WAIT_FAILED)
+      errabort("WaitForSingleObject");
   }
 
   inline void lockUnlock(Lock& l)
   {
-    LeaveCriticalSection(&l);
+    if (!ReleaseMutex(l))
+      errabort("ReleaseMutex");
   }
 
   inline void deleteLock(Lock& l)
   {
-    DeleteCriticalSection(&l);
+    CloseHandle(l);
   }
 
   inline bool lockTryLock(Lock& l)
   {
-    return TryEnterCriticalSection(&l) == TRUE;
+    DWORD ret = WaitForSingleObject(l, 0);
+    if (ret == WAIT_FAILED)
+      errabort("WaitForSingleObject");
+    return ret != WAIT_TIMEOUT;
   }
 } // namespace libport
 

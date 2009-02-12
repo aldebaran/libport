@@ -10,6 +10,7 @@ TESTS +=					\
   libport/asio.cc				\
   libport/base64.cc				\
   libport/cli.cc				\
+  libport/condition.cc				\
   libport/cstdlib.cc				\
   libport/deref.cc				\
   libport/dirent.cc				\
@@ -71,6 +72,7 @@ libport_asio_CXXFLAGS = $(PTHREAD_CFLAGS) $(AM_CXXFLAGS)
 
 libport_base64_SOURCES                    = libport/base64.cc
 libport_cli_SOURCES                       = libport/cli.cc
+libport_condition_SOURCES                 = libport/condition.cc
 libport_cstdlib_SOURCES                   = libport/cstdlib.cc
 libport_deref_SOURCES                     = libport/deref.cc
 libport_dirent_SOURCES                    = libport/dirent.cc

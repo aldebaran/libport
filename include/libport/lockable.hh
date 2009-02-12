@@ -13,7 +13,7 @@
 #  include <libport/windows.hh>
 namespace libport
 {
-  typedef CRITICAL_SECTION Lock;
+  typedef HANDLE Lock;
 }
 # elif defined LIBPORT_URBI_ENV_AIBO && LIBPORT_URBI_ENV_AIBO
 namespace libport
@@ -34,7 +34,7 @@ namespace libport
 
 namespace libport
 {
-
+  class Condition;
   /*-----------.
   | Lockable.  |
   `-----------*/
@@ -49,6 +49,7 @@ namespace libport
     bool tryLock();
   private:
     Lock lock_;
+    friend class Condition;
   };
 
 

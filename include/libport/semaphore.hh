@@ -31,6 +31,7 @@ namespace libport
 
 namespace libport
 {
+  class Condition;
   class LIBPORT_API Semaphore
   {
   public:
@@ -57,6 +58,7 @@ namespace libport
     std::string name_;
 # endif
     static size_t instances_;
+    friend class Condition;
   };
 
 } // namespace libport
