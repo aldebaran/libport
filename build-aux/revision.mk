@@ -40,31 +40,18 @@
 ## it is not in the same Makefile (Makefile vs. src/Makefile).
 
 REVISION = $(build_aux_dir)/git-version-gen
+REVISIONFLAGS ?= --header
 REVISION_PREFIX ?= PACKAGE_
 BUILT_SOURCES += $(REVISION_FILE)
-REVISION_FILE_STAMP = $(REVISION_FILE).stamp
 
-EXTRA_DIST += $(REVISION) $(move_if_change)
+EXTRA_DIST += $(REVISION)
 CLEANFILES += $(REVISION_FILE) $(REVISION_FILE_STAMP)
 
-$(REVISION_FILE_STAMP): $(REVISION) $(build_aux_dir)/revision.mk
-	@rm -f $@.tmp
-	@$(mkdir_p) $(dir $@)
-	@touch $@.tmp
-	$(REVISION)					\
-		--cache=$(top_srcdir)/.version		\
+$(REVISION_FILE): $(top_srcdir)/.version $(REVISION) $(build_aux_dir)/revision.mk
+	$(REVISION) $(REVISIONFLAGS)			\
+		--cache=$<				\
 		--prefix=$(REVISION_PREFIX)		\
 		--srcdir=$(top_srcdir)			\
-		--header --output=$(REVISION_FILE)
-	@mv -f $@.tmp $@
-
-$(REVISION_FILE): $(REVISION_FILE_STAMP)
-	@if test -f $(REVISION_FILE); then :; else \
-	  rm -f $(REVISION_FILE_STAMP); \
-	  $(MAKE) $(AM_MAKEFLAGS) $(REVISION_FILE_STAMP); \
-	fi
-
-.PHONY: update-revision
-update-revision:
-	rm -f $(REVISION_FILE)
-	$(MAKE) $(REVISION_FILE)
+		--directory				\
+		--output=$@
+	touch $@

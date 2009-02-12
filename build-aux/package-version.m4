@@ -29,9 +29,6 @@ test -n "$VERSION" ||
   AC_MSG_ERROR([cannot get version information])
 AC_MSG_RESULT([$VERSION])
 
-# We need a GNUmakefile.in for our tricks to work.
-AC_CONFIG_FILES([GNUmakefile])
-
 # Change the definition of VERSION and PACKAGE_VERSION in the
 # Makefiles.  This is run before creating config.status.
 AC_CONFIG_COMMANDS_PRE([

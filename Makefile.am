@@ -1,5 +1,6 @@
 include build-aux/init.mk
 include build-aux/build-aux.mk
+include build-aux/package-version.mk
 include build-aux/fix-libtool-la.mk
 include build-aux/check.mk
 TESTS =
