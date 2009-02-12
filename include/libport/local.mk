@@ -91,6 +91,8 @@ libport_include_HEADERS +=			\
   include/libport/ref-counted.hh		\
   include/libport/ref-counted.hxx		\
   include/libport/ref-pt.hh			\
+  include/libport/reserved-vector.hh		\
+  include/libport/reserved-vector.hxx		\
   include/libport/sched.hh			\
   include/libport/select-const.hh		\
   include/libport/select-ref.hh			\
