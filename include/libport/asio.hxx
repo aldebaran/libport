@@ -13,7 +13,12 @@
 
 namespace libport {
 namespace netdetail {
-
+  namespace errorcodes =
+  #if BOOST_VERSION >= 103600
+  boost::system::erc;
+  #else
+  boost::system::posix_error;
+  #endif
   typedef ::libport::Socket::SocketFactory SocketFactory;
 
   typedef boost::asio::basic_datagram_socket<boost::asio::ip::udp,
@@ -46,7 +51,12 @@ namespace netdetail {
   {
     public:
       SocketImpl():base_(0) {}
-      ~SocketImpl() { delete base_;}
+      ~SocketImpl()
+      {
+        wasDestroyed();
+        waitForDestructionPermission();
+        delete base_;
+      }
       void write(const void* data, unsigned int length);
       void close();
       unsigned short getRemotePort();
@@ -215,6 +225,20 @@ namespace netdetail {
     delete ptr;
   }
 
+  // Bind the Socket, the SocketImpl, and the boost socket together.
+  template<class Sock, class Factory> SocketImplBase*
+  bind_or_delete(Socket* sock, Factory f, Sock* s)
+  {
+    SocketImplBase* base =  dynamic_cast<SocketImplBase*>(f(s));
+    if (!base)
+    {
+      delete s;
+      return 0;
+    }
+    sock->setBase(base);
+    return base;
+  }
+
   template<typename Stream> void
   SocketImpl<Stream>::close()
   {
@@ -343,11 +367,14 @@ namespace netdetail {
   template<typename Stream> void
   SocketImpl<Stream>::onReadDemux(DestructionLock lock, boost::system::error_code erc)
   {
+    BlockLock bl(callbackLock);
     if (erc)
     {
       if (onErrorFunc)
 	onErrorFunc(erc);
       close();
+      // We no longuer need our owner socket to stay alive, we wont call it.
+      unlinkAll();
     }
     else
     {
@@ -408,12 +435,15 @@ namespace netdetail {
   }
 
   template<class Socket> inline void
-  onTimer(boost::system::error_code erc, Socket& s)
+  onTimer(boost::system::error_code erc, Socket& s,
+          libport::Semaphore& sem,
+          Destructible::DestructionLock)
   {
     // If timer reached the end, connection timeout, interrupt.
     if (!erc)
       s.close();
     // Else we got aborted, do nothing
+    sem++;
   }
 
   inline void onConnect(boost::system::error_code erc,
@@ -475,6 +505,7 @@ inline void
 Socket::setBase(BaseSocket* b)
 {
   base_ = b;
+  BlockLock bl(base_->callbackLock);
   base_-> onReadFunc = boost::bind(&Socket::onRead_, this, _1);
   base_->onErrorFunc = boost::bind(&Socket::onError, this, _1);
 
@@ -484,6 +515,7 @@ Socket::setBase(BaseSocket* b)
 inline bool
 Socket::onRead_(boost::asio::streambuf& buf)
 {
+  DestructionLock lock = getDestructionLock();
   // Dump the stream in our linear buffer
   std::istream is(&buf);
   static const int blockSize = 1024;
@@ -530,36 +562,47 @@ Socket::connectProto(const std::string& host, const std::string& port,
   if (erc)
     return erc;
   typename Proto::socket* s = new typename Proto::socket(get_io_service());
+  SocketImplBase* newS = 0;
   if (!timeout)
+  {
     s->connect(ep, erc);
+    if (erc)
+    {
+      delete s;
+      return erc;
+    }
+    newS = bind_or_delete(this, bf, s);
+    if (!newS)
+      return errorcodes::make_error_code(errorcodes::operation_canceled);
+  }
   else
   {
+    newS = bind_or_delete(this, bf, s);
+    if (!newS)
+      return errorcodes::make_error_code(errorcodes::operation_canceled);
     boost::asio::deadline_timer timer(get_io_service());
     libport::Semaphore sem;
+    timer.expires_from_now(boost::posix_time::microseconds(timeout));
+    timer.async_wait(boost::bind(&netdetail::onTimer<typename Proto::socket>,
+                                 _1, boost::ref(*s),
+                                 boost::ref(sem),
+                                 newS->getDestructionLock()));
     s->async_connect(ep, boost::bind(&netdetail::onConnect, _1,
                                      boost::ref(timer),
                                      boost::ref(sem),
                                      boost::ref(erc)));
-    timer.expires_from_now(boost::posix_time::microseconds(timeout));
-    timer.async_wait(boost::bind(&netdetail::onTimer<typename Proto::socket>,
-                                 _1, boost::ref(*s)));
     sem--;
+    sem--;
+    if (erc) // Failure, but everything is bound and will get nicely destroyed
+      return erc;
   }
-  if (erc)
-    return erc;
-  SocketImplBase* newS = dynamic_cast<SocketImplBase*>(bf(s));
-  if (!newS)
-  {
-    delete s;
-#if BOOST_VERSION >= 103600
-    return boost::system::errc::make_error_code(boost::system::errc::operation_canceled);
-#else
-    return boost::system::posix_error::make_error_code(boost::system::posix_error::operation_canceled);
-#endif
-}
-  setBase(newS);
   // Start reading.
-  newS->startReader();
+  if (newS->isConnected())
+  {
+    // Do not die until newS is gone, since it will call our virtual functions.
+    newS->link(getDestructionLock());
+    newS->startReader();
+  }
   return erc;
 }
 
@@ -633,13 +676,8 @@ Socket::listenUDP(const std::string& host, const std::string& port,
     iter++;
   }
   if (!erc)
-#if BOOST_VERSION >= 103600
-    erc = boost::system::errc::make_error_code(
-            boost::system::errc::bad_address);
-#else
-    erc.assign(boost::system::posix_error::bad_address,
-               boost::system::get_posix_category());
-#endif
+  erc =
+    netdetail::errorcodes::make_error_code(netdetail::errorcodes::bad_address);
   return Handle();
 ok:
   s->start_receive();
@@ -674,16 +712,26 @@ Socket::listenSSL(SocketFactory f, const std::string& host,
 inline
 Socket::~Socket()
 {
+  /* FIXME: ensure no false positive before activating
+  if (!checkDestructionPermission())
+    std::cerr <<"WARNING, attempting to delete a Socket that is still in use."
+       << "\n\tThis is likely a bug if you overrided onRead or onError"
+       << "\n\tSee Socket documentation for more informations."
+       << std::endl;
+  */
   wasDestroyed();
   if (base_)
   {
     Destructible::DestructionLock l = base_->getDestructionLock();
     base_->close();
     base_->destroy();
+    BlockLock bl(base_->callbackLock);
     base_->onReadFunc = 0;
     base_->onErrorFunc = 0;
     base_ = 0;
   }
+  // FIXME: this line asserts that another thread is running io_services.
+  waitForDestructionPermission();
 }
 
 inline void

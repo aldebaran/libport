@@ -41,7 +41,7 @@ namespace libport
       inline void disconnect() {close();}
       /// Return if the socket is connected to a remote host.
       virtual bool isConnected() = 0;
-      /// Disconnect the socket from the remote host.
+      /// Disconnect the socket from the remote host, calls onError.
       virtual void close() = 0;
       /// Get port of remote endpoint
       virtual unsigned short getRemotePort() = 0;
@@ -55,6 +55,8 @@ namespace libport
       boost::function1<bool, boost::asio::streambuf&> onReadFunc;
       /// Callback function called in case of error on the socket.
       boost::function1<void, boost::system::error_code> onErrorFunc;
+      /// Mutex to protect access to the above callbacks.
+      Lockable callbackLock;
   };
   /// Endpoint on an UDP socket.
   class UDPLink
@@ -66,6 +68,13 @@ namespace libport
   };
   /** Socket class with a higher API.
    *
+   * It is recommended that you always asynchronously destroy Socket instances
+   * by calling the destroy() method. If you want to put instances in the stack,
+   * or explicitly call delete for whatever reason, you must in your destructor:
+   * - call close()
+   * - call wasDestroyed()
+   * - call waitForDestructionPermission(), if the io_service is running in
+   *   another thread(the default behavior).
    */
   class Socket: public AsioDestructible
   {
