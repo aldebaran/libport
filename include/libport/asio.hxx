@@ -14,11 +14,11 @@
 namespace libport {
 namespace netdetail {
   namespace errorcodes =
-  #if BOOST_VERSION >= 103600
-  boost::system::erc;
-  #else
-  boost::system::posix_error;
-  #endif
+# if 103600 <= BOOST_VERSION
+    boost::system::errc;
+# else
+    boost::system::posix_error;
+# endif
   typedef ::libport::Socket::SocketFactory SocketFactory;
 
   typedef boost::asio::basic_datagram_socket<boost::asio::ip::udp,
@@ -302,9 +302,11 @@ namespace netdetail {
       std::cerr <<"Socket error: " << erc.message() << std::endl;
     delete buf;
   }
-  template<> inline void
+
+  template<>
+  inline void
   send_bounce(SocketImpl<udpsock>* s, const void* buffer,
-                              int length)
+              int length)
   {
     std::string* buf = new std::string(static_cast<const char*>(buffer),
                                        length);
@@ -312,14 +314,18 @@ namespace netdetail {
                          boost::bind(&delete_check, _1, buf));
   }
 
-  template<typename Stream> void
+  template<typename Stream>
+  void
   SocketImpl<Stream>::write(const void* buffer, unsigned int length)
   {
     send_bounce(this, buffer, length);
   }
 
-  template<typename Stream> void
-  SocketImpl<Stream>::continueWrite(DestructionLock lock, boost::system::error_code er, size_t)
+  template<typename Stream>
+  void
+  SocketImpl<Stream>::continueWrite(DestructionLock lock,
+                                    boost::system::error_code er,
+                                    size_t)
   {
     if (er)
     {
@@ -474,8 +480,15 @@ namespace netdetail {
     }
 
 #define comma ,
-#define CHECK_CALL(param, call, args)  do \
-    if (!param.empty()) { call(param, args erc); if (erc) throw erc;} while(0)
+#define CHECK_CALL(param, call, args)           \
+    do {                                        \
+      if (!param.empty())                       \
+      {                                         \
+        call(param, args erc);                  \
+        if (erc)                                \
+          throw erc;                            \
+      }                                         \
+    } while(0)
 
     CHECK_CALL(settings.tmpDHFile, context.use_tmp_dh_file, );
     CHECK_CALL(settings.certChainFile, context.use_certificate_chain_file, );
@@ -687,13 +700,13 @@ ok:
 #ifndef LIBPORT_NO_SSL
 inline boost::system::error_code
 Socket::listenSSL(SocketFactory f, const std::string& host,
-    const std::string&  port,
-    boost::asio::ssl::context_base::method ctx,
-    boost::asio::ssl::context::options options,
-    const std::string& privateKeyFile,
-    const std::string& certChainFile,
-    const std::string& tmpDHFile,
-    const std::string& cipherList)
+                  const std::string&  port,
+                  boost::asio::ssl::context_base::method ctx,
+                  boost::asio::ssl::context::options options,
+                  const std::string& privateKeyFile,
+                  const std::string& certChainFile,
+                  const std::string& tmpDHFile,
+                  const std::string& cipherList)
 {
   netdetail::SSLSettings settings;
   settings.context = ctx;
@@ -747,9 +760,8 @@ Socket::destroy()
 inline void
 AsioDestructible::doDestroy()
 {
-
-  get_io_service().post(boost::bind(
-	netdetail::deletor<AsioDestructible>, this));
+  get_io_service().post(boost::bind(netdetail::deletor<AsioDestructible>,
+                                    this));
 }
 
 
