@@ -293,7 +293,7 @@ elsif ($format eq 'header')
 // Overrides that from config.h.
 # ifdef ${prefix}VERSION
 #  undef ${prefix}VERSION
-# endif ${prefix}VERSION
+# endif
 # define ${prefix}VERSION "$keyword{Version}"
 
 // The SCM revision string.
