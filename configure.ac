@@ -8,7 +8,7 @@ URBI_PACKAGE_COPYRIGHT([Gostai SAS], [2005-2009])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux])
 
-AM_INIT_AUTOMAKE([foreign -Wall nostdinc])
+AM_INIT_AUTOMAKE([foreign -Wall nostdinc subdir-objects])
 
 ## -------------------- ##
 ## Tool/Compilers setup ##

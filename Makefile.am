@@ -25,19 +25,27 @@ AM_CPPFLAGS +=					\
   $(BOOST_CPPFLAGS)
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 
+# libport.
 include include/libport/local.mk
 include lib/libport/local.mk
-
 libport_la = lib/libport/libport.la
+
+# libserialize.
 include include/serialize/local.mk
 include lib/serialize/local.mk
 
+# libsched.
 include include/sched/local.mk
 include lib/sched/local.mk
 
+# libtinyxml.
 include include/tinyxml/local.mk
 include lib/tinyxml/local.mk
 
+# libltdl.
+include libltdl/Makefile.inc
+
+# cl.exe wrappers.
 include msvc/local.mk
 
 
