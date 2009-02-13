@@ -3,6 +3,19 @@
 use strict;
 use IO::File;
 
+# TODO.
+#
+# This file has gone through many different approaches, and there are
+# remains that need to be cleaned.
+#
+# 1. Clearly have two run modes: one to create/update .version from
+# git, if possible.  Should be lazy: don't update if no changes.
+#
+# 2. One that creates the output files, only from .version, and not
+# even trying to run git.  Don't be lazy, always override, to avoid
+# having to deal with time stamp files.  It is simple to use make to
+# update output files from .version, which is lazy.
+
 =head1 NAME
 
 =head1 SYNOPSIS
@@ -276,18 +289,25 @@ elsif ($format eq 'header')
 #ifndef $guard
 # define $guard
 
+// The SCM version string.
+// Overrides that from config.h.
+# ifdef ${prefix}VERSION
+#  undef ${prefix}VERSION
+# endif ${prefix}VERSION
+# define ${prefix}VERSION "$keyword{Version}"
+
 // The SCM revision string.
-#define ${prefix}REVISION "$keyword{Rev}"
+# define ${prefix}REVISION "$keyword{Rev}"
 
 // The SCM identification string.
-#define ${prefix}ID \\
+# define ${prefix}ID \\
   "$keyword{Id}"
 
 // The SCM date string.
-#define ${prefix}DATE "$keyword{Date}"
+# define ${prefix}DATE "$keyword{Date}"
 
 // Version and revision together.
-#define ${prefix}VERSION_REV \\
+# define ${prefix}VERSION_REV \\
   "version " ${prefix}VERSION " rev. " ${prefix}REVISION
 
 #endif // !$guard
