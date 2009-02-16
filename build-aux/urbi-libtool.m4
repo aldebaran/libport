@@ -14,7 +14,11 @@
 # control the order in which AC_CONFIG_COMMANDS are run, so just call
 # this macro after the invocation to LT_INIT.
 AC_DEFUN([URBI_LIBTOOL],
-[
+[# If you need to create a library, use libtool.
+LT_PREREQ([2.2.6])
+LT_INIT([pic-only shared disable-static dlopen win32-dll])
+AC_SUBST([LIBTOOL_DEPS])
+
 case $CXX_FLAVOR in
   ('')
     AC_MSG_ERROR([CXX_FLAVOR undefined]);;

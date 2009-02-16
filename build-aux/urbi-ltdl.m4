@@ -40,22 +40,13 @@ AC_DEFUN([URBI_LTDL], [m4_fatal([aie])])
 # if libltdl changes, no relinking will be done.  It is better to
 # define LTDL_LIBS in the Makefile.am.
 m4_define([URBI_LTDL],
-[# If you need to create a library, use libtool.
-LT_PREREQ([2.2.6])
-# Name of the subdirectory that contains libltdl sources.
+[# Name of the subdirectory that contains libltdl sources.
 LT_CONFIG_LTDL_DIR([libltdl])
-LT_INIT([pic-only shared disable-static dlopen win32-dll])
 LTDL_INIT([nonrecursive])
-AC_SUBST([LIBTOOL_DEPS])
 
 AC_SUBST([LTDL_CPPFLAGS], ['$(LTDLINCL)'])
 AC_SUBST([LTDL_LIBS],     ['$(LIBLTDL)'])
 AC_SUBST([LTDL_DEPS],     ['$(LTDLDEPS)'])
-
-# We want the debug messages.
-CPPFLAGS+=" -DLT_DEBUG_LOADERS"
-
-URBI_LIBTOOL
 ])
 
 ## Local Variables:

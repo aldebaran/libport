@@ -101,7 +101,7 @@ AC_SUBST([LIBPORT_LIBS],
 AC_SUBST([LTDL_CPPFLAGS],
          ['-I$(top_srcdir)$1'])
 AC_SUBST([LTDL_LIBS],
-         [$(top_builddir)$1/libltdl/libltdlc.la])
+         ['$(top_builddir)$1/libltdl/libltdlc.la'])
 
 AC_SUBST([SCHED_CPPFLAGS],
 	 ['$(LIBPORT_CPPFLAGS)'])

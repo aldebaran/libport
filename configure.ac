@@ -20,6 +20,8 @@ URBI_PROG_CXX
 # We have some assembly for coroutine support.
 AM_PROG_AS
 
+URBI_LIBTOOL
+
 AC_CONFIG_HEADERS([include/config.h])
 
 # Basically, the following lines states we install in prefix.
