@@ -60,7 +60,7 @@ AM_LDFLAGS +=                                   \
   $(BOOST_SERIALIZATION_LDFLAGS)                \
   $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
 LDADD +=                                        \
-  $(top_builddir)/lib/libport/libport.la        \
+  $(LIBPORT_LIBS)				\
   $(BOOST_SERIALIZATION_LIBS)                   \
   $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 

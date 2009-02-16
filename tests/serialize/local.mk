@@ -6,14 +6,14 @@ AM_LDFLAGS +=                                   \
   $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
 
 LDADD +=                                        \
-  $(top_builddir)/lib/libport/libport.la        \
+  $(LIBPORT_LIBS)			        \
   $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
 TESTS +=					\
   serialize/serialize.cc
 
 serialize_serialize_SOURCES = serialize/serialize.cc
-serialize_serialize_LDFLAGS = $(top_builddir)/lib/serialize/libserialize.la $(AM_LDFLAGS)
+serialize_serialize_LDFLAGS = $(SERIALIZE_LIBS) $(AM_LDFLAGS)
 
 CHECK_CLEANFILES +=				\
   serialize/test.bin				\

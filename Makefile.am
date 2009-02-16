@@ -28,7 +28,6 @@ AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 # libport.
 include include/libport/local.mk
 include lib/libport/local.mk
-libport_la = lib/libport/libport.la
 
 # libserialize.
 include include/serialize/local.mk

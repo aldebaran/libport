@@ -81,17 +81,55 @@ if test ! -f $libport_config_h; then
 fi
 ])
 
-# URBI_LIBPORT
-# ------------
-# Invoke the macros needed by a shipped URBI_LIBPORT (i.e., a non-installed
-# copy in this source tree).
+
+# _URBI_LIBPORT_SUBST(PREFIX)
+# ---------------------------
+# Define Make macros to find the various libport componenents.
+# Prefix must be empty, or start with a /.
+#
+# We avoid useless "./" in file names.  This is not only nicer, it is
+# also needed for Make to match properly libraries being build, and
+# libraries being used.  Without that, builds may fail, as the
+# dependencies are incorrect.
+m4_define([_URBI_LIBPORT_SUBST],
+[# $(top_srcdir) to find sources, $(top_builddir) to find libport/config.h.
+AC_SUBST([LIBPORT_CPPFLAGS],
+	 ['-I$(top_srcdir)$1/include -I$(top_builddir)$1/include'])
+AC_SUBST([LIBPORT_LIBS],
+         ['$(top_builddir)$1/lib/libport/libport.la'])
+
+AC_SUBST([LTDL_CPPFLAGS],
+         ['-I$(top_srcdir)$1'])
+AC_SUBST([LTDL_LIBS],
+         [$(top_builddir)$1/libltdl/libltdlc.la])
+
+AC_SUBST([SCHED_CPPFLAGS],
+	 ['$(LIBPORT_CPPFLAGS)'])
+AC_SUBST([SCHED_LIBS],
+         ['$(top_builddir)$1/lib/sched/libsched.la'])
+
+AC_SUBST([SERIALIZE_CPPFLAGS],
+	 ['$(LIBPORT_CPPFLAGS)'])
+AC_SUBST([SERIALIZE_LIBS],
+         ['$(top_builddir)$1/lib/serialize/libserialize.la'])
+
+AC_SUBST([TINYXML_CPPFLAGS],
+	 ['$(LIBPORT_CPPFLAGS)'])
+AC_SUBST([TINYXML_LIBS],
+         ['$(top_builddir)$1/lib/tinyxml/libtinyxml.la'])
+
+])
+
+# URBI_LIBPORT(DIRECTORY)
+# -----------------------
+# Invoke the macros needed by a Libport shipped in the DIRECTORY
+# (i.e., a non-installed copy in this source tree).  Define
+# convenience variables to find its various components.
 AC_DEFUN([URBI_LIBPORT],
 [AC_REQUIRE([_URBI_LIBPORT_COMMON])dnl
 AC_REQUIRE([URBI_UFLOAT])dnl
 
-# $(top_srcdir) to find sources, $(top_builddir) to find libport/config.h.
-AC_SUBST([LIBPORT_CPPFLAGS],
-	 ['-I$(top_srcdir)/include -I$(top_builddir)/include'])
+_URBI_LIBPORT_SUBST(m4_if([$1], [], [], [$1/]))
 
 # Where we install the libport files (not including the /libport suffix).
 URBI_PACKAGE_KIND_SWITCH(
