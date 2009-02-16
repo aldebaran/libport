@@ -21,6 +21,9 @@ URBI_PROG_CXX
 AM_PROG_AS
 
 URBI_LIBTOOL
+# Name of the subdirectory that contains libltdl sources.
+LT_CONFIG_LTDL_DIR([libltdl])
+LTDL_INIT([nonrecursive])
 
 AC_CONFIG_HEADERS([include/config.h])
 
@@ -28,7 +31,6 @@ AC_CONFIG_HEADERS([include/config.h])
 URBI_PACKAGE_KIND([sdk])
 URBI_LIBPORT
 
-URBI_LTDL
 BOOST_TEST
 BOOST_SYSTEM
 
