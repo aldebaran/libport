@@ -129,7 +129,7 @@ AC_DEFUN([URBI_LIBPORT],
 [AC_REQUIRE([_URBI_LIBPORT_COMMON])dnl
 AC_REQUIRE([URBI_UFLOAT])dnl
 
-_URBI_LIBPORT_SUBST(m4_if([$1], [], [], [$1/]))
+_URBI_LIBPORT_SUBST(m4_if([$1], [], [], [/$1]))
 
 # Where we install the libport files (not including the /libport suffix).
 URBI_PACKAGE_KIND_SWITCH(
