@@ -319,6 +319,7 @@ link_hard ()
 
 # link_copy FROM TO
 # -----------------
+# FROM must bounce to TO, in otherwise FROM is DST and TO is src.
 link_copy ()
 {
   stderr \
@@ -327,7 +328,7 @@ link_copy ()
   "## developpers.  This mode should be used by the buildfarm only, ##" \
   "## or on Windows.  See boostrap --help.                          ##" \
   "## ------------------------------------------------------------- ##"
-  if test -e "$2"; then
+  if test -e "$1"; then
     stderr "${red}Not copying $2 on $1: $1 exists."
   else
     run cp -pr "$2" "$1"
