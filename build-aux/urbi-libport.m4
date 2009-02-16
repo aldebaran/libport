@@ -82,43 +82,33 @@ fi
 ])
 
 
-# _URBI_LIBPORT_SUBST(PREFIX)
-# ---------------------------
+# _URBI_LIBPORT_SUBST(SRC_PREFIX, BUILD_PREFIX)
+# ---------------------------------------------
 # Define Make macros to find the various libport componenents.
-# Prefix must be empty, or start with a /.
+# BUILD_PREFIX must be empty, or end with a /.
 #
-# We avoid useless "./" in file names.  This is not only nicer, it is
+# Avoid useless "./" in file names.  This is not only nicer, it is
 # also needed for Make to match properly libraries being build, and
 # libraries being used.  Without that, builds may fail, as the
 # dependencies are incorrect.
 m4_define([_URBI_LIBPORT_SUBST],
 [# $(top_srcdir) to find sources, $(top_builddir) to find libport/config.h.
-AC_SUBST([LIBPORT_CPPFLAGS],
-	 ['-I$(top_srcdir)$1/include -I$(top_builddir)$1/include'])
-AC_SUBST([LIBPORT_LIBS],
-         ['$(top_builddir)$1/lib/libport/libport.la'])
+AC_SUBST([LIBPORT_CPPFLAGS], ['-I$1/include -I$2include'])
+AC_SUBST([LIBPORT_LIBS],     ['$2lib/libport/libport.la'])
 
-AC_SUBST([LTDL_CPPFLAGS],
-         ['-I$(top_srcdir)$1'])
-AC_SUBST([LTDL_LIBS],
-         ['$(top_builddir)$1/libltdl/libltdlc.la'])
+AC_SUBST([LTDL_CPPFLAGS], ['-I$1 -I$1/libltdl'])
+AC_SUBST([LTDL_LIBS],     ['$2libltdl/libltdlc.la'])
 
-AC_SUBST([SCHED_CPPFLAGS],
-	 ['$(LIBPORT_CPPFLAGS)'])
-AC_SUBST([SCHED_LIBS],
-         ['$(top_builddir)$1/lib/sched/libsched.la'])
+AC_SUBST([SCHED_CPPFLAGS], ['$(LIBPORT_CPPFLAGS)'])
+AC_SUBST([SCHED_LIBS],     ['$2lib/sched/libsched.la'])
 
-AC_SUBST([SERIALIZE_CPPFLAGS],
-	 ['$(LIBPORT_CPPFLAGS)'])
-AC_SUBST([SERIALIZE_LIBS],
-         ['$(top_builddir)$1/lib/serialize/libserialize.la'])
+AC_SUBST([SERIALIZE_CPPFLAGS], ['$(LIBPORT_CPPFLAGS)'])
+AC_SUBST([SERIALIZE_LIBS],     ['$2lib/serialize/libserialize.la'])
 
-AC_SUBST([TINYXML_CPPFLAGS],
-	 ['$(LIBPORT_CPPFLAGS)'])
-AC_SUBST([TINYXML_LIBS],
-         ['$(top_builddir)$1/lib/tinyxml/libtinyxml.la'])
-
+AC_SUBST([TINYXML_CPPFLAGS], ['$(LIBPORT_CPPFLAGS)'])
+AC_SUBST([TINYXML_LIBS],     ['$2lib/tinyxml/libtinyxml.la'])
 ])
+
 
 # URBI_LIBPORT(DIRECTORY)
 # -----------------------
@@ -129,7 +119,8 @@ AC_DEFUN([URBI_LIBPORT],
 [AC_REQUIRE([_URBI_LIBPORT_COMMON])dnl
 AC_REQUIRE([URBI_UFLOAT])dnl
 
-_URBI_LIBPORT_SUBST(m4_if([$1], [], [], [/$1]))
+_URBI_LIBPORT_SUBST(m4_if([$1], [], [$(top_srcdir)], [$(top_srcdir)/$1]),
+                    m4_if([$1], [], [],              [$(top_builddir)/$1/]))
 
 # Where we install the libport files (not including the /libport suffix).
 URBI_PACKAGE_KIND_SWITCH(
