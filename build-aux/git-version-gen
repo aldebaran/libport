@@ -259,6 +259,15 @@ sub fetch_keywords ()
   return %res;
 }
 
+sub escape (\%)
+{
+  my ($hash) = @_;
+  for (values %$hash)
+    {
+      s/[\\\"]/\\$&/g;
+    }
+}
+
 ######################################################################
 
 ## ------ ##
@@ -285,6 +294,7 @@ elsif ($format eq 'header')
 {
   my $guard = uc $output;
   $guard =~ s/\W/_/g;
+  escape %keyword;
   $res = <<EOF;
 #ifndef $guard
 # define $guard
@@ -315,6 +325,7 @@ EOF
 }
 elsif ($format eq 'urbi')
 {
+  escape %keyword;
   $res = <<EOF;
 class System.PackageInfo
 {
