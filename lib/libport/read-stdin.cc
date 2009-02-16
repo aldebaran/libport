@@ -10,7 +10,7 @@
 # include <libport/lockable.hh>
 # include <iostream>
 #else
-# if not defined LIBPORT_URBI_ENV_AIBO
+# if ! defined LIBPORT_URBI_ENV_AIBO
 #  include <sys/select.h>
 # endif
 # include <errno.h>
