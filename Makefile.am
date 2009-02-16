@@ -19,10 +19,11 @@ EXTRA_DIST += bootstrap
 ## Libport components.  ##
 ## -------------------- ##
 
+# Change these last, since some of the include files add paths to
+# AM_CPPFLAGS, and
 AM_CPPFLAGS +=					\
   $(LIBPORT_CPPFLAGS)				\
-  -I$(srcdir)/lib				\
-  $(BOOST_CPPFLAGS)
+  -I$(srcdir)/lib
 AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 
 # libport.
@@ -46,6 +47,11 @@ include libltdl/Makefile.inc
 
 # cl.exe wrappers.
 include msvc/local.mk
+
+# We don't want to have -I that go into /usr/local too soon:
+# /opt/local headers would take precedence over ours (e.g., in the
+# case of an installed libltdl).
+AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 
 
 ## ------- ##
