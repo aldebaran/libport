@@ -319,7 +319,8 @@ link_hard ()
 
 # link_copy FROM TO
 # -----------------
-# FROM must bounce to TO, in otherwise FROM is DST and TO is src.
+# FROM must bounce to TO, in other words FROM is the destination and
+# TO is the source.
 link_copy ()
 {
   stderr \
