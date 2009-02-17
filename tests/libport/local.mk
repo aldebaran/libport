@@ -52,8 +52,6 @@ endif
 EXTRA_PROGRAMS = $(TESTS_BINARIES:.cc=)
 CLEANFILES += $(EXTRA_PROGRAMS)
 
-AM_CPPFLAGS +=                                  \
-  $(BOOST_CPPFLAGS)
 AM_LDFLAGS +=                                   \
   $(BOOST_SERIALIZATION_LDFLAGS)                \
   $(BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS)
