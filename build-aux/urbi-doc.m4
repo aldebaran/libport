@@ -22,22 +22,22 @@ AC_DEFUN([URBI_ARG_ENABLE_DOC],
                   [Turn on documentation (default is NO)]),
      [case $enable_doc in
        (yes|true|"")
-            doc_output=doc
-            doc_install=doc-install
-            doc_uninstall=doc-uninstall;;
+            DOC_OUTPUT=doc
+            DOC_INSTALL=doc-install
+            DOC_UNINSTALL=doc-uninstall;;
        (no|false)
-            doc_output=
-            doc_install=
-            doc_uninstall=;;
+            DOC_OUTPUT=
+            DOC_INSTALL=
+            DOC_UNINSTALL=;;
        (*) AC_MSG_ERROR([bad value $enable_doc for --enable-doc]) ;;
      esac],
-  [doc_output=
-   doc_install=
-   doc_uninstall=])
+  [DOC_OUTPUT=
+   DOC_INSTALL=
+   DOC_UNINSTALL=])
 #AM_CONDITIONAL([COND_DOC_OUTPUT], [test x$doc_output = xtrue])
-AC_SUBST([COND_DOC_OUTPUT], [$doc_output])
-AC_SUBST([COND_DOC_INSTALL], [$doc_install])
-AC_SUBST([COND_DOC_UNINSTALL], [$doc_uninstall])
+AC_SUBST([DOC_OUTPUT])
+AC_SUBST([DOC_INSTALL])
+AC_SUBST([DOC_UNINSTALL])
 ])
 
 
@@ -52,7 +52,7 @@ AC_DEFUN([URBI_DOC],
 URBI_ARG_PROGS([doxygen], [the Doxygen documentation generation program])
 # Name of the directory where the Doxygen documentation is created.
 AC_SUBST([DOCDIR], [srcdoc])
-
+AC_SUBST([DOXYGEN], [doxygen])
 AC_CONFIG_FILES([doc/Makefile
 		 doc/Doxyfile:build-aux/Doxyfile.in])
 

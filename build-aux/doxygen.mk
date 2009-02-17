@@ -1,6 +1,6 @@
 ##
 ## doxygen.mk: This file is part of build-aux.
-## Copyright (C) Gostai S.A.S., 2006-2008.
+## Copyright (C) 2006-2009, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -19,7 +19,7 @@
 
 .PHONY: doc internal-doc user-doc
 
-all-local: $(COND_DOC_OUTPUT)
+all-local: $(DOC_OUTPUT)
 
 doc: internal-doc
 
@@ -50,7 +50,7 @@ doc-builder: $(top_srcdir)/build-aux/Doxyfile.in
 maintainer-clean-local:
 	rm -rf $(DOCDIR).tmp $(builddir)/$(DOCDIR)
 
-install-data-local: $(COND_DOC_INSTALL)
+install-data-local: $(DOC_INSTALL)
 
 doc-install: internal-doc-install
 
@@ -62,7 +62,7 @@ internal-doc-install:
 	$(mkdir_p) $(DESTDIR)$(htmldir)
 	cp -r $(builddir)/$(DOCDIR) $(DESTDIR)$(htmldir)
 
-uninstall-local: $(COND_DOC_UNINSTALL)
+uninstall-local: $(DOC_UNINSTALL)
 
 doc-uninstall: internal-doc-uninstall
 
