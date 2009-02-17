@@ -70,14 +70,23 @@ move_if_change = $(build_aux_dir)/move-if-change
 ## The following uses GNU Make.
 AUTOMAKE_OPTIONS += -Wno-portability
 
-# ls_files GLOBBING-PATTERNS
-# --------------------------
+# ls_files_in_dir DIR GLOBBING-PATTERNS
+# -------------------------------------
+# The files in DIR that match the GLOBBING-PATTERNS.
+#
 # The GLOBBING-PATTERNS are put in single quotes to avoid being
 # caught by the shell.
-ls_files =								    \
-  $(or									    \
-    $(shell $(build_aux_dir)/ls-files -s $(srcdir) $(patsubst %,'%',$(1))), \
-    $(error ls-files returned nothing for: $(1)))
+ls_files_in_dir =							\
+  $(or									\
+    $(shell $(build_aux_dir)/ls-files -s $(1) $(patsubst %,'%',$(2))),	\
+    $(error ls-files returned nothing for: $(2)))
+
+# ls_files GLOBBING-PATTERNS
+# --------------------------
+# The files in $(srcdir) that match the GLOBBING-PATTERNS.
+ls_files =					\
+  $(call ls_files_in_dir $(srcdir),$(1))
+
 EXTRA_DIST += $(build_aux_dir)/ls-files
 
 
