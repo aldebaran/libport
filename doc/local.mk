@@ -14,14 +14,14 @@ DOXYGEN = doxygen
 
 doc: html
 
-html-local: Doxyfile
+html-local: doc/Doxyfile
 	$(DOXYGEN)
 
-Doxyfile: doxygen.sh
-	./doxygen.sh
+doc/Doxyfile: doc/doxygen.sh
+	$< doc
 
 clean-local:
-	rm -rf html latex
+	rm -rf doc/html doc/latex
 
-EXTRA_DIST = doxygen.sh.in
-CLEANFILES = Doxyfile doxygen.sh
+EXTRA_DIST += doc/doxygen.sh.in
+CLEANFILES += doc/Doxyfile doc/doxygen.sh

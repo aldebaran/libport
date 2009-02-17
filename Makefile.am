@@ -10,10 +10,11 @@ libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status $@
 
 # The libraries are in ".".
-SUBDIRS = . doc tests
+SUBDIRS = . tests
 # SUBDIRS += gui
 EXTRA_DIST += bootstrap
 
+include doc/local.mk
 
 ## -------------------- ##
 ## Libport components.  ##

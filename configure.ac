@@ -54,7 +54,6 @@ fi
 AC_CONFIG_FILES([
   Makefile
     tests/Makefile
-    doc/Makefile
 ])
 
 AC_CONFIG_FILES([doc/doxygen.sh],    [chmod a=rx doc/doxygen.sh])
