@@ -1,5 +1,3 @@
-TESTS =
-
 # No need to re-run the test if the sources have not changed.
 LAZY_TEST_SUITE = 1
 

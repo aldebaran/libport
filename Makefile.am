@@ -2,6 +2,8 @@ include build-aux/init.mk
 include build-aux/build-aux.mk
 include build-aux/package-version.mk
 include build-aux/fix-libtool-la.mk
+
+TESTS =
 include build-aux/check.mk
 
 ACLOCAL_AMFLAGS = -I build-aux
@@ -57,6 +59,8 @@ AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 ## ------- ##
 
 TEST_LOGS = $(addsuffix .log,$(basename $(TESTS)))
+check-clean-local:
+	rm -rf $(TEST_LOGS:.log=.dir)
 
 
 ## --------------- ##
