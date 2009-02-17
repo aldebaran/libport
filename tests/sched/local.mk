@@ -1,5 +1,5 @@
-TESTS +=					\
-  sched/sched.cc
+TESTS_BINARIES +=				\
+  tests/sched/sched.cc
 
-sched_sched_SOURCES = sched/sched.cc
-sched_sched_LDFLAGS = $(SCHED_LIBS) $(AM_LDFLAGS)
+tests_sched_sched_SOURCES = tests/sched/sched.cc
+tests_sched_sched_LDFLAGS = $(SCHED_LIBS) $(AM_LDFLAGS)

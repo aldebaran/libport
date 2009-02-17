@@ -3,18 +3,15 @@ include build-aux/build-aux.mk
 include build-aux/package-version.mk
 include build-aux/fix-libtool-la.mk
 include build-aux/check.mk
-TESTS =
 
 ACLOCAL_AMFLAGS = -I build-aux
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status $@
 
-# The libraries are in ".".
-SUBDIRS = . tests
-# SUBDIRS += gui
 EXTRA_DIST += bootstrap
 
 include doc/local.mk
+include tests/local.mk
 
 ## -------------------- ##
 ## Libport components.  ##
@@ -60,17 +57,11 @@ AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 ## ------- ##
 
 TEST_LOGS = $(addsuffix .log,$(basename $(TESTS)))
-check-clean-local:
-	rm -rf $(TEST_LOGS:.log=.dir)
 
 
 ## --------------- ##
 ## Extra targets.  ##
 ## --------------- ##
-
-.PHONY: doc html
-doc html:
-	$(MAKE) $(AM_MAKEFLAGS) -C doc $@
 
 # The target run by the buildfarm.
 CHECK_BUILDFARM_FLAGS = -j4 AM_COLOR_TESTS=no VERBOSE=1 INSTRUMENT=1

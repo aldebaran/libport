@@ -8,7 +8,7 @@ static const std::string myself = "dirent" EXEEXT;
 
 static void test()
 {
-  DIR* dir = opendir("libport");
+  DIR* dir = opendir("tests/libport");
   struct dirent* entry;
   bool found = false;
 

@@ -183,7 +183,7 @@ init_test_suite()
   suite->add(create_suite);
 #define def(path)                                          \
   create_suite->add(BOOST_TEST_CASE(bind(create, path)));
-  def("libport/creation_test");
+  def("tests/libport/creation_test");
 #undef def
 
   return suite;

@@ -6,42 +6,42 @@ TESTSFLAGS = --log_level=test-suite
 	@$(am__check_pre) ./$< $(TESTSFLAGS) $(am__check_post)
 
 # Program to check:
-TESTS +=					\
-  libport/asio.cc				\
-  libport/base64.cc				\
-  libport/cli.cc				\
-  libport/condition.cc				\
-  libport/cstdlib.cc				\
-  libport/deref.cc				\
-  libport/dirent.cc				\
-  libport/erase-if.cc				\
-  libport/escape.cc				\
-  libport/fd-stream.cc				\
-  libport/fifo.cc				\
-  libport/finally.cc				\
-  libport/foreach.cc				\
-  libport/has-if.cc				\
-  libport/indent.cc				\
-  libport/intrusive-ptr.cc			\
-  libport/path.cc				\
-  libport/pid-file.cc				\
-  libport/semaphore.cc				\
-  libport/separator.cc				\
-  libport/singleton-ptr.cc			\
-  libport/statistics.cc				\
-  libport/symbol.cc				\
-  libport/timer.cc				\
-  libport/tokenizer.cc				\
-  libport/ufloat-double.cc			\
-  libport/unescape.cc				\
-  libport/visitor.cc
+TESTS_BINARIES =				\
+  tests/libport/asio.cc				\
+  tests/libport/base64.cc			\
+  tests/libport/cli.cc				\
+  tests/libport/condition.cc			\
+  tests/libport/cstdlib.cc			\
+  tests/libport/deref.cc			\
+  tests/libport/dirent.cc			\
+  tests/libport/erase-if.cc			\
+  tests/libport/escape.cc			\
+  tests/libport/fd-stream.cc			\
+  tests/libport/fifo.cc				\
+  tests/libport/finally.cc			\
+  tests/libport/foreach.cc			\
+  tests/libport/has-if.cc			\
+  tests/libport/indent.cc			\
+  tests/libport/intrusive-ptr.cc		\
+  tests/libport/path.cc				\
+  tests/libport/pid-file.cc			\
+  tests/libport/semaphore.cc			\
+  tests/libport/separator.cc			\
+  tests/libport/singleton-ptr.cc		\
+  tests/libport/statistics.cc			\
+  tests/libport/symbol.cc			\
+  tests/libport/timer.cc			\
+  tests/libport/tokenizer.cc			\
+  tests/libport/ufloat-double.cc		\
+  tests/libport/unescape.cc			\
+  tests/libport/visitor.cc
 
 # ufloat-float.cc is commented out as we do not support ufloat /=
 # double (it would require that we recompile the library with another
 # definition of ufloat).
 
 if WITH_BOOST_SERIALIZATION
-TESTS += libport/intrusive-ptr-serialize.cc
+TESTS_BINARIES += tests/libport/intrusive-ptr-serialize.cc
 endif
 # Tabulation does not seem to work: doesn't even compile.
 #ufloat-float-tab.cc                            \
@@ -49,9 +49,7 @@ endif
 #ufloat-floating-tab.cc
 #ufloat-floating.cc
 
-TEST_LOGS = $(TESTS:.cc=.log)
-
-EXTRA_PROGRAMS = $(TESTS:.cc=)
+EXTRA_PROGRAMS = $(TESTS_BINARIES:.cc=)
 CLEANFILES += $(EXTRA_PROGRAMS)
 
 AM_CPPFLAGS +=                                  \
@@ -65,41 +63,44 @@ LDADD +=                                        \
   $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
 
-libport_asio_SOURCES			  = libport/asio.cc
-libport_asio_LDADD = $(BOOST_SYSTEM_LIBS)  $(LDADD)
-libport_asio_LDFLAGS = $(BOOST_SYSTEM_LDFLAGS) $(PTHREAD_LDFLAGS) $(AM_LDFLAGS)
-libport_asio_CXXFLAGS = $(PTHREAD_CFLAGS) $(AM_CXXFLAGS)
+tests_libport_asio_SOURCES			  = tests/libport/asio.cc
+tests_libport_asio_LDADD = $(BOOST_SYSTEM_LIBS)  $(LDADD)
+tests_libport_asio_LDFLAGS = $(BOOST_SYSTEM_LDFLAGS) $(PTHREAD_LDFLAGS) $(AM_LDFLAGS)
+tests_libport_asio_CXXFLAGS = $(PTHREAD_CFLAGS) $(AM_CXXFLAGS)
 
-libport_base64_SOURCES                    = libport/base64.cc
-libport_cli_SOURCES                       = libport/cli.cc
-libport_condition_SOURCES                 = libport/condition.cc
-libport_cstdlib_SOURCES                   = libport/cstdlib.cc
-libport_deref_SOURCES                     = libport/deref.cc
-libport_dirent_SOURCES                    = libport/dirent.cc
-libport_erase_if_SOURCES                  = libport/erase-if.cc
-libport_escape_SOURCES                    = libport/escape.cc
-libport_fd_stream_SOURCES                 = libport/fd-stream.cc
-libport_fifo_SOURCES                      = libport/fifo.cc
-libport_finally_SOURCES                   = libport/finally.cc
-libport_foreach_SOURCES                   = libport/foreach.cc
-libport_has_if_SOURCES                    = libport/has-if.cc
-libport_indent_SOURCES                    = libport/indent.cc
-libport_intrusive_ptr_SOURCES             = libport/intrusive-ptr.cc
-libport_intrusive_ptr_serialize_SOURCES   = libport/intrusive-ptr-serialize.cc
-libport_path_SOURCES                      = libport/path.cc
-libport_pid_file_SOURCES                  = libport/pid-file.cc
-libport_semaphore_SOURCES                 = libport/semaphore.cc
-libport_separator_SOURCES                 = libport/separator.cc
-libport_singleton_ptr_SOURCES             = libport/singleton-ptr.cc
-libport_statistics_SOURCES                = libport/statistics.cc
-libport_symbol_SOURCES                    = libport/symbol.cc
-libport_timer_SOURCES                     = libport/timer.cc
-libport_tokenizer_SOURCES                 = libport/tokenizer.cc
-libport_ufloat_double_SOURCES             = libport/ufloat-double.cc
-libport_unescape_SOURCES                  = libport/unescape.cc
-libport_visitor_SOURCES                   = libport/visitor.cc
+tests_libport_base64_SOURCES                    = tests/libport/base64.cc
+tests_libport_cli_SOURCES                       = tests/libport/cli.cc
+tests_libport_condition_SOURCES                 = tests/libport/condition.cc
+tests_libport_cstdlib_SOURCES                   = tests/libport/cstdlib.cc
+tests_libport_deref_SOURCES                     = tests/libport/deref.cc
+tests_libport_dirent_SOURCES                    = tests/libport/dirent.cc
+tests_libport_erase_if_SOURCES                  = tests/libport/erase-if.cc
+tests_libport_escape_SOURCES                    = tests/libport/escape.cc
+tests_libport_fd_stream_SOURCES                 = tests/libport/fd-stream.cc
+tests_libport_fifo_SOURCES                      = tests/libport/fifo.cc
+tests_libport_finally_SOURCES                   = tests/libport/finally.cc
+tests_libport_foreach_SOURCES                   = tests/libport/foreach.cc
+tests_libport_has_if_SOURCES                    = tests/libport/has-if.cc
+tests_libport_indent_SOURCES                    = tests/libport/indent.cc
+tests_libport_intrusive_ptr_SOURCES             = tests/libport/intrusive-ptr.cc
+tests_libport_intrusive_ptr_serialize_SOURCES   = tests/libport/intrusive-ptr-serialize.cc
+tests_libport_path_SOURCES                      = tests/libport/path.cc
+tests_libport_pid_file_SOURCES                  = tests/libport/pid-file.cc
+tests_libport_semaphore_SOURCES                 = tests/libport/semaphore.cc
+tests_libport_separator_SOURCES                 = tests/libport/separator.cc
+tests_libport_singleton_ptr_SOURCES             = tests/libport/singleton-ptr.cc
+tests_libport_statistics_SOURCES                = tests/libport/statistics.cc
+tests_libport_symbol_SOURCES                    = tests/libport/symbol.cc
+tests_libport_timer_SOURCES                     = tests/libport/timer.cc
+tests_libport_tokenizer_SOURCES                 = tests/libport/tokenizer.cc
+tests_libport_ufloat_double_SOURCES             = tests/libport/ufloat-double.cc
+tests_libport_unescape_SOURCES                  = tests/libport/unescape.cc
+tests_libport_visitor_SOURCES                   = tests/libport/visitor.cc
 
-EXTRA_DIST += libport/ufloat-common.cc libport/ufloat-config.h libport/666.txt
+EXTRA_DIST +=					\
+  tests/libport/ufloat-common.cc		\
+  tests/libport/ufloat-config.h			\
+  tests/libport/666.txt
 
 TESTS_ENVIRONMENT +=				\
   SRCDIR=$(srcdir)

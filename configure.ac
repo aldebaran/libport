@@ -51,10 +51,7 @@ if test x$enable_boost_serialization = xyes; then
 fi
 
 
-AC_CONFIG_FILES([
-  Makefile
-    tests/Makefile
-])
+AC_CONFIG_FILES([Makefile])
 
 AC_CONFIG_FILES([doc/doxygen.sh],    [chmod a=rx doc/doxygen.sh])
 AC_CONFIG_FILES([build-aux/test.sh], [chmod a=rx build-aux/test.sh])

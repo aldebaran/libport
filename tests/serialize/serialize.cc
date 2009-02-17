@@ -74,7 +74,7 @@ struct Datas: public Serializable
 void test()
 {
   // The test file base name.
-  const std::string basename = "serialize/test";
+  const std::string basename = "tests/serialize/test";
 
   // Test datas
   Datas o("name");

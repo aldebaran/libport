@@ -1,22 +1,14 @@
-include $(top_srcdir)/build-aux/init.mk
-include $(top_srcdir)/build-aux/m4sh.mk
-AUTOMAKE_OPTIONS += subdir-objects
-
 TESTS =
-
-AM_CPPFLAGS += $(LIBPORT_CPPFLAGS)
-AM_CXXFLAGS += $(WARNING_CXXFLAGS)
 
 # No need to re-run the test if the sources have not changed.
 LAZY_TEST_SUITE = 1
 
-include libport/local.mk
-include sched/local.mk
-include serialize/local.mk
-include $(top_srcdir)/build-aux/check.mk
+# Program to check:
+TESTS += $(TESTS_BINARIES)
 
-check-clean-local:
-	rm -rf $(TEST_LOGS:.log=.dir)
+include tests/libport/local.mk
+include tests/sched/local.mk
+include tests/serialize/local.mk
 
 # We disable this framework because it is not usable yet.
 # It has interesting code, this is why it is not thrown away.
