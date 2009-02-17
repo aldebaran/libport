@@ -2,17 +2,6 @@
 #include <iostream>
 #include <iterator>
 
-namespace std {
-static ostream&
-operator<<(ostream& o,
-    const std::vector<int>& ms)
-{
-  std::copy(ms.begin(), ms.end(),
-      std::ostream_iterator<int>(o, " "));
-  return o;
-}
-}
-
 #include <libport/condition.hh>
 #include <libport/foreach.hh>
 #include <libport/unit-test.hh>
@@ -27,6 +16,16 @@ static const int NITER = 20;
 std::vector<int> nCall;
 static int targetId = 0;
 libport::Condition cond;
+
+namespace std
+{
+  static ostream&
+  operator<<(ostream& o, const vector<int>& ms)
+  {
+    std::copy(ms.begin(), ms.end(), ostream_iterator<int>(o, " "));
+    return o;
+  }
+}
 
 static void cond_thread(int idx)
 {
@@ -71,7 +70,7 @@ static void test_condition()
   clear();
   BOOST_TEST_MESSAGE("singlethread signal without specific target");
   targetId = -1;
-  for (int i = 0; i<NITER * NTHREAD; i++)
+  for (int i = 0; i<NITER * NTHREAD; ++i)
   {
     cond.signal();
     usleep(100000);
@@ -117,4 +116,3 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(test_condition));
   return suite;
 }
-

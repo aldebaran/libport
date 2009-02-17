@@ -1,9 +1,11 @@
 #ifndef WIN32
-#include <sys/time.h>
-#include <errno.h>
+# include <sys/time.h>
+# include <errno.h>
 #endif
+
 #include <libport/assert.hh>
 #include <libport/exception.hh>
+
 namespace libport
 {
 #ifndef WIN32
@@ -19,7 +21,7 @@ namespace libport
   {
     int res;
     while ((res = pthread_cond_wait(&cond_, &lock_) == EINTR))
-      ;
+      continue;
     if (res)
       errabort("pthread_cond_wait");
   }
@@ -35,8 +37,8 @@ namespace libport
     timeout.tv_sec += timeout.tv_nsec / 1000000000;
     timeout.tv_nsec %= 1000000000;
     int res;
-    while ( (res = pthread_cond_timedwait(&cond_, &lock_, &timeout)) == EINTR)
-      ;
+    while ((res = pthread_cond_timedwait(&cond_, &lock_, &timeout)) == EINTR)
+      continue;
     if (res && res != ETIMEDOUT)
       errabort("pthread_cond_timedwait");
     return !res;
@@ -55,10 +57,12 @@ namespace libport
     if (pthread_cond_broadcast(&cond_))
       errabort("pthread_cond_broadcast");
   }
-#else
+
+#else  // WIN32.
+
   inline
   Condition::Condition()
-  : readers_count_(0)
+    : readers_count_(0)
   {
 
   }
@@ -72,6 +76,7 @@ namespace libport
     if (readers_count_)
       sem_++;
   }
+
   inline void
   Condition::broadcast()
   {
@@ -81,6 +86,7 @@ namespace libport
     for (int i=0; i<readers_count_; i++)
       sem_++;
   }
+
   inline void
   Condition::wait()
   {
@@ -93,6 +99,7 @@ namespace libport
     lock();
     --readers_count_;
   }
+
   inline bool
   Condition::tryWait(utime_t duration)
   {

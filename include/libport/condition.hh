@@ -1,8 +1,10 @@
 #ifndef LIBPORT_CONDITION_HH
 # define LIBPORT_CONDITION_HH
-#include <libport/lockable.hh>
-#include <libport/semaphore.hh>
-#include <libport/utime.hh>
+
+# include <libport/lockable.hh>
+# include <libport/semaphore.hh>
+# include <libport/utime.hh>
+
 namespace libport
 {
   /** Portable condition. Permits safe and low-cost wait until a condition
@@ -46,27 +48,27 @@ namespace libport
     /// Number of threads locked on the semaphore.
     size_t readers_count_;
     /// Semaphore on which threads wait on the condition.
-    Semaphore  sem_;
+    Semaphore sem_;
 # endif
   };
 
   /// Safely wait until expr becomes true.
-  #define LIBPORT_COND_WAIT(cond, expr)   \
+  #define LIBPORT_COND_WAIT(Cond, Expr)   \
    do {                                   \
-     BlockLock bl(cond);                  \
-     if (!expr)                           \
-       cond.wait();                       \
-   } while(false)
+     BlockLock bl(Cond);                  \
+     if (!Expr)                           \
+       Cond.wait();                       \
+   } while (false)
 
   /// Safely execute updateCmd, notify waiters if checkExpr is true
-  #define LIBPORT_COND_UPDATE(cond, updateCmd, checkExpr)  \
+  #define LIBPORT_COND_UPDATE(Cond, UpdateCmd, CheckExpr)  \
    do {                                                    \
-     BlockLock bl(cond);                                   \
-     bool was_true = checkExpr;                            \
-     updateCmd;                                            \
-     if (!was_true && checkExpr)                           \
-       cond.signal();                                      \
-   } while(false)
+     BlockLock bl(Cond);                                   \
+     bool was_true = CheckExpr;                            \
+     UpdateCmd;                                            \
+     if (!was_true && CheckExpr)                           \
+       Cond.signal();                                      \
+   } while (false)
 }
 
 #include <libport/condition.hxx>
