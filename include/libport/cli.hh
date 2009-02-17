@@ -5,15 +5,13 @@
 # include <string>
 # include <libport/compiler.hh>
 # include <libport/export.hh>
+# include <libport/program-name.hh>
 
 // Hopefully some day we will use Boost.ProgramOptions and get rid of
 // this junk.  Yet, better share the junk than duplicate it.
 
 namespace libport
 {
-  /// Command line arguments.
-  typedef std::vector<std::string> cli_args_type;
-
   LIBPORT_API ATTRIBUTE_NORETURN
   void usage_error(const std::string& opt, const std::string& err);
 

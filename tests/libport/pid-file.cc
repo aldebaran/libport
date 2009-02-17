@@ -67,7 +67,7 @@ void test_unable_create()
 test_suite*
 init_test_suite()
 {
-  libport::program_name = "pid-file";
+  libport::program_initialize("pid-file");
   test_suite* suite = BOOST_TEST_SUITE("libport::PidFile test suite");
 
   suite->add(BOOST_TEST_CASE(test));

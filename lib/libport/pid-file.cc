@@ -60,7 +60,7 @@ namespace libport
 
   bool check_program_name()
   {
-    if (libport::program_name == "")
+    if (libport::program_name() == "")
       pabort("You forgot to set libport::program_name");
     return true;
   }
@@ -70,7 +70,7 @@ namespace libport
     static boost::format fmt("/var/run/%s.pid");
     static std::string res =
       (check_program_name(),
-       str(fmt % libport::path(program_name).basename()));
+       str(fmt % libport::path(program_name()).basename()));
     return res;
   }
 }

@@ -71,7 +71,7 @@ namespace libport
   {
     std::ifstream i(s.c_str());
     if (i.bad())
-      std::cerr << program_name << ": cannot open `"
+      std::cerr << program_name() << ": cannot open `"
                 << s << "' for reading: " << strerror(errno) << std::endl
                 << libport::exit(EX_NOINPUT);
     // FIXME: The call to boost::get() below can be omitted when Boost 1.36.0
@@ -79,7 +79,7 @@ namespace libport
     boost::value_initialized<T> res;
     i >> boost::get(res);
     if (i.bad())
-      std::cerr << program_name << ": cannot read expected contents from `"
+      std::cerr << program_name() << ": cannot read expected contents from `"
                 << s << "': " << strerror(errno) << std::endl
                 << libport::exit(EX_DATAERR);
 

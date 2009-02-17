@@ -11,9 +11,9 @@ namespace libport
   usage_error (const std::string& opt, const std::string& err)
   {
     std::cerr
-      << program_name << ": " << opt << ": " << err
+      << program_name() << ": " << opt << ": " << err
       << std::endl
-      << "Try `" << program_name << " --help' for more information."
+      << "Try `" << program_name() << " --help' for more information."
       << std::endl
       << libport::exit (EX_USAGE);
   }
