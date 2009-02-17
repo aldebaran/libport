@@ -32,6 +32,9 @@ if test "X$TERM" != Xdumb                       \
   std=$(tput sgr0)
 fi
 
+config_files="$HOME/.libport/bootstrap.cfg externals/bootstrap.cfg
+               .bootstrap.cfg .externals"
+
 usage ()
 {
   cat <<EOF
@@ -41,9 +44,9 @@ Bootstrap the GNU Build system using autoreconf.
 
 See also <URL:https://core.gostai.com/projects/common/wiki/LibPort>.
 
-This file and git-my-update use \`~/.libport/bootstrap.cfg' and
-\`externals/bootstrap.cfg' to describe what's to be done.  For
-backward compatibility, \`.externals' is also supported.
+This file and git-my-update use \`~/.libport/bootstrap.cfg',
+\`externals/bootstrap.cfg' and \`.bootstrap.cfg' to describe what's to
+do.  For backward compatibility, \`.externals' is also supported.
 
 The syntax is dummy and made to be easily sed-parsable.  It supports
 the following directives (which must be in column 0, anything else is
@@ -246,16 +249,12 @@ require ()
 }
 
 
+# attributes TAG
+# --------------
 # Return the set of attributes corresponding to TAG in .externals.
 attributes ()
 {
-  local f
-  for f in $HOME/.libport/bootstrap.cfg externals/bootstrap.cfg .externals
-  do
-    if test -f "$f"; then
-      perl -ne "s/^$1:\\s*// && print" "$f"
-    fi
-  done
+  perl -ne "s/^$1:\\s*// && print" $config_files 2>/dev/null
 }
 
 
