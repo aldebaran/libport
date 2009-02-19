@@ -327,9 +327,9 @@ namespace libport
 | Level |
 `------*/
 
-#  define GD_LEVEL(Lvl)                                                 \
-  libport::Finally _gd_pop_level_##Lvl                                  \
-  (GD_DEBUGGER->push_level(Lvl));                                        \
+#  define GD_LEVEL(Lvl)                         \
+  libport::Finally _gd_pop_level_##Lvl          \
+  (GD_DEBUGGER->push_level(Lvl));
 
 #  define GD_LOG()                              \
   GD_LEVEL(1);                                  \
@@ -343,8 +343,8 @@ namespace libport
 #  define GD_DUMP()                             \
   GD_LEVEL(4);                                  \
 
-#  define GD_FILTER(Lvl)                                                \
-  GD_DEBUGGER->filter(Lvl);                                              \
+#  define GD_FILTER(Lvl)                        \
+  GD_DEBUGGER->filter(Lvl);
 
 #  define GD_FILTER_NONE()                       \
   GD_FILTER(0);                                  \
