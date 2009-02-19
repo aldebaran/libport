@@ -37,7 +37,7 @@ namespace libport
     /// Write data asynchronously to the socket.
     virtual void write(const void* data, unsigned int length) = 0;
     /// Alias on write() for API compatibility.
-    inline void send(void* addr, int len) {write((const void*)addr, len);}
+    inline void send(void* addr, size_t len) {write((const void*)addr, len);}
     /// Alias on close() for API compatibility.
     inline void disconnect() {close();}
     /// Return if the socket is connected to a remote host.
@@ -65,7 +65,7 @@ namespace libport
   {
   public:
     virtual ~UDPLink() {}
-    virtual void reply(const void* data, int length) = 0;
+    virtual void reply(const void* data, size_t length) = 0;
     inline void reply(const std::string& s) {reply(s.c_str(), s.length());}
   };
 
@@ -93,7 +93,7 @@ namespace libport
      *   be passed again to this function as soon as at least an extra byte
      *   is available.
      */
-    virtual int onRead(const void*, int length){return length;}
+    virtual int onRead(const void*, size_t length){return length;}
 
     /** Called in case of error on the socket.
      */
@@ -105,7 +105,7 @@ namespace libport
     inline void write(const void* data, unsigned int length)
       { base_->write(data, length);}
     /// Alias on write() for API compatibility.
-    inline void send(void* addr, int len) {write((const void*)addr, len);}
+    inline void send(void* addr, size_t len) {write((const void*)addr, len);}
     inline void send(const std::string& s) {write(s.c_str(), s.length());}
     inline void close() {if (base_) base_->close();}
     inline unsigned short getRemotePort() { return base_->getRemotePort();}

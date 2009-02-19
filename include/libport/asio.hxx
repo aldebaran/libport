@@ -80,7 +80,7 @@ namespace netdetail {
 
     friend class libport::Socket;
     template<class T, class L> friend void read_or_recv(SocketImpl<T>*, L);
-    template<class T> friend void send_bounce(SocketImpl<T>*,const void*,int);
+    template<class T> friend void send_bounce(SocketImpl<T>*,const void*, size_t);
     friend void
     recv_bounce(SocketImpl<udpsock>*s, AsioDestructible::DestructionLock lock,
                 boost::system::error_code erc, size_t recv);
@@ -158,7 +158,7 @@ namespace netdetail {
       , endpoint_(endpoint)
       , destructionLock_(destructionLock)
       {}
-    virtual void reply(const void* data, int length);
+    virtual void reply(const void* data, size_t length);
   private:
     boost::asio::ip::udp::socket& socket_;
     boost::asio::ip::udp::endpoint endpoint_;
@@ -216,7 +216,7 @@ namespace netdetail {
   };
 #endif
   inline void
-  UDPLinkImpl::reply(const void* data, int length)
+  UDPLinkImpl::reply(const void* data, size_t length)
   {
     socket_.send_to(boost::asio::buffer(data, length), endpoint_);
   }
@@ -283,8 +283,9 @@ namespace netdetail {
     return base_->lowest_layer().is_open();
   }
 
-  template<class T> void send_bounce(SocketImpl<T>* s,const void* buffer,
-                                     int length)
+  template<class T>
+  void send_bounce(SocketImpl<T>* s,const void* buffer,
+                   size_t length)
   {
     libport::BlockLock bl(s);
     std::ostream stream(&s->buffers_[s->current_==-1 ? 0:1-s->current_]);
@@ -307,7 +308,7 @@ namespace netdetail {
   template<>
   inline void
   send_bounce(SocketImpl<udpsock>* s, const void* buffer,
-              int length)
+              size_t length)
   {
     std::string* buf = new std::string(static_cast<const char*>(buffer),
                                        length);
@@ -348,14 +349,19 @@ namespace netdetail {
   }
 
 
-  template<typename Stream, typename Lock> void
+  template<typename Stream, typename Lock>
+  void
   read_or_recv(SocketImpl<Stream>* s,
                Lock lock)
   {
-    boost::asio::async_read(*s->base_, s->readBuffer_,  boost::asio::transfer_at_least(1),
-                            boost::bind(&SocketImpl<Stream>::onReadDemux, s, lock, _1));
+    boost::asio::async_read(*s->base_, s->readBuffer_,
+                            boost::asio::transfer_at_least(1),
+                            boost::bind(&SocketImpl<Stream>::onReadDemux,
+                                        s, lock, _1));
   }
-  inline void
+
+  inline
+  void
   recv_bounce(SocketImpl<udpsock>*s, SocketImpl<udpsock>::DestructionLock lock,
               boost::system::error_code erc, size_t recv)
   {
@@ -532,7 +538,7 @@ namespace netdetail {
     static const int blockSize = 1024;
     while (is.good())
     {
-      int oldBufferLength = buffer.length();
+      size_t oldBufferLength = buffer.length();
       buffer.resize(oldBufferLength + blockSize);
       is.read(&buffer[0] + oldBufferLength, blockSize);
       long len = is.gcount();
