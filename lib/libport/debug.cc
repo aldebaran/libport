@@ -1,6 +1,7 @@
 #include <cassert>
 #include <iostream>
 
+#include <libport/assert.hh>
 #include <libport/containers.hh>
 #include <libport/debug.hh>
 #include <libport/ip-semaphore.hh>
@@ -205,8 +206,7 @@ namespace libport
   void Debug::abort(const std::string& msg)
   {
     GD_ERROR(msg);
-    std::abort();
-    throw 0;
+    libport::abort();
   }
 
   ConsoleDebug::ConsoleDebug()
@@ -360,7 +360,7 @@ namespace libport
       CASE(error, LOG_ERR);
       // Pacify Gcc.
     }
-    abort();
+    libport::abort();
 #undef CASE
   }
 

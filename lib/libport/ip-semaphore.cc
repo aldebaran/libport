@@ -20,10 +20,7 @@ namespace libport
     // Create a set of 1 semaphore, with permisions rwx------
     id_ = semget(IPC_PRIVATE, 1, 0700);
     if (id_ == -1)
-    {
-      perror("Unable to create an inter-process semaphore");
-      std::abort();
-    }
+      errabort("Unable to create an inter-process semaphore");
 
     // The man specifies that this union must be defined by the
     // caller. C's ways are past finding out.
@@ -39,20 +36,14 @@ namespace libport
     semun arg;
     arg.val = count;
     if (semctl(id_, 0, SETVAL, arg) == -1)
-    {
-      perror("Unable to set the inter-process semaphore value");
-      std::abort();
-    }
+      errabort("Unable to set the inter-process semaphore value");
   }
 
   IPSemaphore::~IPSemaphore()
   {
-    if (getpid() == owner_pid_)
-      if (semctl(id_, 0, IPC_RMID) == -1)
-      {
-        perror("Unable to set the inter-process semaphore value");
-        std::abort();
-      }
+    if (getpid() == owner_pid_
+        && semctl(id_, 0, IPC_RMID) == -1)
+      errabort("Unable to set the inter-process semaphore value");
   }
 
   // Add \a val to semaphore \a id
@@ -67,10 +58,7 @@ namespace libport
     // semaphore, for instance.
     sops[0].sem_flg = SEM_UNDO;
     if (semop(id, sops, 1) == -1)
-    {
-      perror("Unable to increment/decrement the inter-process semaphore");
-      std::abort();
-    }
+      errabort("Unable to increment/decrement the inter-process semaphore");
   }
 
   void
