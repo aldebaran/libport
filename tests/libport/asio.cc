@@ -123,7 +123,7 @@ void test_one(bool proto)
   boost::system::error_code err;
   err = client->connect("localhost", S_AVAIL_PORT, proto);
   BOOST_CHECK_MESSAGE(!err, err.message());
-  BOOST_CHECK(client->send(msg));
+  BOOST_CHECK_NO_THROW(client->send(msg));
   usleep(delay);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, proto ? 1 : 2);
   BOOST_CHECK_EQUAL(client->received, msg);
@@ -161,7 +161,6 @@ test()
       boost::bind(&TestSocket::factoryEx, true, true), "", S_AVAIL_PORT, false);
   BOOST_CHECK_MESSAGE(!err, err.message());
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
-  TestSocket* client;
 
   BOOST_TEST_MESSAGE("##One client");
   libport::resolve<boost::asio::ip::tcp>("localhost", S_AVAIL_PORT, err);
@@ -205,106 +204,113 @@ test()
   usleep(delay*3);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
 
-
   BOOST_TEST_MESSAGE("##Failing connections");
-  client = new TestSocket();
-  err = client->connect("auunsinsr.nosuch.hostaufisgiu.com.", "20000", false);
-  BOOST_CHECK_MESSAGE(err, err.message());
+  {
+    TestSocket* client = new TestSocket();
+    err = client->connect("auunsinsr.nosuch.hostaufisgiu.com.", "20000", false);
+    BOOST_CHECK_MESSAGE(err, err.message());
 
-  err = client->connect("localhost", "nosuchport", false);
-  BOOST_CHECK_MESSAGE(err, err.message());
+    err = client->connect("localhost", "nosuchport", false);
+    BOOST_CHECK_MESSAGE(err, err.message());
 
-  // Try to reuse that wasted socket.
-  err = client->connect("localhost", S_AVAIL_PORT, false);
-  BOOST_CHECK_MESSAGE(!err, err.message());
-  // Destroy without closing.
-  client->destroy();
-  usleep(delay);
-  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
-
+    // Try to reuse that wasted socket.
+    err = client->connect("localhost", S_AVAIL_PORT, false);
+    BOOST_CHECK_MESSAGE(!err, err.message());
+    // Destroy without closing.
+    client->destroy();
+    usleep(delay);
+    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+  }
 
   // Timeout
   BOOST_TEST_MESSAGE("##Timeout connect");
-  client = new TestSocket();
-  libport::utime_t start = libport::utime();
-  err = client->connect("1.1.1.1", "10000", false, 1000000);
-  BOOST_CHECK_MESSAGE(err, err.message());
-  libport::utime_t timeout = libport::utime() - start;
-  // Give it a good margin.
-  BOOST_CHECK_LT(timeout, 1400000);
-  client->destroy();
-
+  {
+    TestSocket* client = new TestSocket();
+    libport::utime_t start = libport::utime();
+    err = client->connect("1.1.1.1", "10000", false, 1000000);
+    BOOST_CHECK_MESSAGE(err, err.message());
+    libport::utime_t timeout = libport::utime() - start;
+    // Give it a good margin.
+    BOOST_CHECK_LT(timeout, 1400000);
+    client->destroy();
+  }
 
   BOOST_TEST_MESSAGE("##Destruction locking");
-  client = new TestSocket();
-  err = client->connect("localhost", S_AVAIL_PORT, false);
-  BOOST_CHECK_MESSAGE(!err, err.message());
-  usleep(delay);
-  libport::startThread(
-    boost::bind(&hold_for<libport::Destructible::DestructionLock>,
-                client->getDestructionLock(),
-                1000000));
-  client->destroy();
-  usleep(500000);
-  // There can be 1 or 2 sockets at this point. Client must be still alive because of the lock, but server might have died.
-  BOOST_CHECK_MESSAGE(TestSocket::nInstance, TestSocket::nInstance);
-  usleep(500000+delay);
-  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+  {
+    TestSocket* client = new TestSocket();
+    err = client->connect("localhost", S_AVAIL_PORT, false);
+    BOOST_CHECK_MESSAGE(!err, err.message());
+    usleep(delay);
+    libport::startThread(
+      boost::bind(&hold_for<libport::Destructible::DestructionLock>,
+                  client->getDestructionLock(),
+                  1000000));
+    client->destroy();
+    usleep(500000);
+    // There can be 1 or 2 sockets at this point. Client must be still alive because of the lock, but server might have died.
+    BOOST_CHECK_MESSAGE(TestSocket::nInstance, TestSocket::nInstance);
+    usleep(500000+delay);
+    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+  }
 
   BOOST_TEST_MESSAGE("Destroy listener");
-  h->close();
-  usleep(delay);
-  client = new TestSocket();
-  abort_ctor = true;
-  err = client->connect("localhost", S_AVAIL_PORT, false);
-  BOOST_CHECK_MESSAGE(err, err.message());
-  client->destroy();
-  h->destroy();
-  usleep(delay);
-  abort_ctor = false;
+  {
+    h->close();
+    usleep(delay);
+    TestSocket* client = new TestSocket();
+    abort_ctor = true;
+    err = client->connect("localhost", S_AVAIL_PORT, false);
+    BOOST_CHECK_MESSAGE(err, err.message());
+    client->destroy();
+    h->destroy();
+    usleep(delay);
+    abort_ctor = false;
+  }
 
 
   BOOST_TEST_MESSAGE("##UDP");
-  libport::Socket::Handle hu =
-    libport::Socket::listenUDP("", S_AVAIL_PORT, &echo, err);
-  (void)hu;
-  BOOST_CHECK_MESSAGE(!err, err.message());
-  test_one(true);
-  usleep(delay);
-  test_one(true);
+  {
+    libport::Socket::Handle hu =
+      libport::Socket::listenUDP("", S_AVAIL_PORT, &echo, err);
+    (void)hu;
+    BOOST_CHECK_MESSAGE(!err, err.message());
+    test_one(true);
+    usleep(delay);
+    test_one(true);
 
-  client = new TestSocket();
-  err = client->connect("auunsinsr.nosuch.hostaufisgiu.com.", "20000", true);
-  BOOST_CHECK_MESSAGE(err, err.message());
+    TestSocket* client = new TestSocket();
+    err = client->connect("auunsinsr.nosuch.hostaufisgiu.com.", "20000", true);
+    BOOST_CHECK_MESSAGE(err, err.message());
 
-  err = client->connect("localhost", "nosuchport", true);
-  BOOST_CHECK_MESSAGE(err, err.message());
+    err = client->connect("localhost", "nosuchport", true);
+    BOOST_CHECK_MESSAGE(err, err.message());
 
-  // Try to reuse that wasted socket.
-  err = client->connect("localhost", S_AVAIL_PORT, true);
-  BOOST_CHECK_MESSAGE(!err, err.message());
-  // Destroy without closing.
-  client->destroy();
-  usleep(delay);
-  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+    // Try to reuse that wasted socket.
+    err = client->connect("localhost", S_AVAIL_PORT, true);
+    BOOST_CHECK_MESSAGE(!err, err.message());
+    // Destroy without closing.
+    client->destroy();
+    usleep(delay);
+    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
 
-  // Check one-write-one-packet semantic
-  client = new TestSocket(false, true);
-  err = client->connect("localhost", S_AVAIL_PORT, true);
-  BOOST_CHECK_MESSAGE(!err, err.message());
-  client->send("coin");
-  client->send("pan");
-  usleep(delay*2);
-  BOOST_CHECK_EQUAL(client->received, "coinpan");
-  BOOST_CHECK_EQUAL(client->nRead, 2);
+    // Check one-write-one-packet semantic
+    client = new TestSocket(false, true);
+    err = client->connect("localhost", S_AVAIL_PORT, true);
+    BOOST_CHECK_MESSAGE(!err, err.message());
+    client->send("coin");
+    client->send("pan");
+    usleep(delay*2);
+    BOOST_CHECK_EQUAL(client->received, "coinpan");
+    BOOST_CHECK_EQUAL(client->nRead, 2);
 
-  enable_delay = true;
-  client = new TestSocket(false, true);
-  err = client->connect("localhost", S_AVAIL_PORT, true);
-  BOOST_CHECK_MESSAGE(!err, err.message());
-  client->send("coin");
-  usleep(500000+delay);
-  BOOST_CHECK_EQUAL(client->received, "hop hop\n");
+    enable_delay = true;
+    client = new TestSocket(false, true);
+    err = client->connect("localhost", S_AVAIL_PORT, true);
+    BOOST_CHECK_MESSAGE(!err, err.message());
+    client->send("coin");
+    usleep(500000+delay);
+    BOOST_CHECK_EQUAL(client->received, "hop hop\n");
+  }
 }
 
 test_suite*
