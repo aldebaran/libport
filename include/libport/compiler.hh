@@ -108,16 +108,15 @@ namespace libport
 #  undef ENABLE_DEBUG_TRACES
 # endif
 
+# undef ECHO
 # ifdef ENABLE_DEBUG_TRACES
-
 #  include <iostream>
-
 #  define ECHO(Msg) LIBPORT_ECHO(Msg)
-
 # else
 #  define ECHO(Msg) (void) 0
 # endif
 
+# undef ECHO_CMD
 # define ECHO_CMD(Cmd)						\
   do {								\
     ECHO("Running " << #Cmd << "..." << std::endl);		\
@@ -125,6 +124,7 @@ namespace libport
     ECHO("Running " << #Cmd << "... done" << std::endl);	\
   } while (0)
 
+# undef PING
 # define PING()  ECHO("ping")
 
 #endif // !LIBPORT_COMPILER_HH

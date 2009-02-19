@@ -1,14 +1,14 @@
 #include <libport/config.h>
 #ifdef LIBPORT_HAVE_SEMGET
 
-# include <stdio.h>
-# include <sys/types.h>
+# include <cerrno>
+# include <cstdio>
+# include <cstdlib>
 # include <sys/ipc.h>
 # include <sys/sem.h>
+# include <sys/types.h>
 
-# include <cassert>
-# include <cstdlib>
-
+# include <libport/assert.hh>
 # include <libport/ip-semaphore.hh>
 
 namespace libport
