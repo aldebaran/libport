@@ -20,6 +20,20 @@
 #  include <libport/cstdio> // libport::strerror.
 # endif
 
+# include <libport/compiler.hh>
+
+namespace libport
+{
+  /// A wrapper to std::abort to ensure that it is declared as
+  /// noreturn (which is not the case of std::abort with MSVC).
+  ATTRIBUTE_NORETURN
+  inline
+  void abort()
+  {
+    std::abort();
+  }
+}
+
 /*---------------------------.
 | passert -- Pretty assert.  |
 `---------------------------*/
@@ -41,7 +55,7 @@
      << Loc << ": failed assertion: " << #Assertion << std::endl	\
      << Loc << ": with "						\
      << #Subject << " = " << Subject << std::endl,			\
-   std::abort(),                                                        \
+   libport::abort(),                                                    \
    0)
 
 # endif // LIBPORT_ASSERT_VERBOSE
@@ -60,7 +74,7 @@
 /// on the invocation side.
 
 # if ! LIBPORT_ASSERT_VERBOSE
-#  define pabort(Msg)       abort()
+#  define pabort(Msg)       libport::abort()
 # else
 
 #  define pabort(Msg)					\
@@ -68,7 +82,7 @@
 
 #  define __pabort(Loc, Msg)						\
   (std::cerr << Loc << ": abort: " << Msg << std::endl,			\
-   std::abort())
+   libport::abort())
 
 # endif // LIBPORT_ASSERT_VERBOSE
 
@@ -104,7 +118,7 @@ namespace libport
     {
       std::cerr
 	<< file << ": " << line << ": failed assertion: " << msg << std::endl;
-      std::abort();
+      libport::abort();
     }
     return t;
   }
