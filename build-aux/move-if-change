@@ -1,7 +1,7 @@
 #!/bin/sh
 ##
 ## move-if-change: This file is part of build-aux.
-## Copyright (C) Gostai S.A.S., 2006-2008.
+## Copyright (C) 2006-2009, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -14,13 +14,29 @@
 # Like mv $1 $2, but if the files are the same, just delete $1.
 # Status is 0 if $2 is changed, 1 otherwise.
 
-if test -r "$2"; then
-    if cmp -s "$1" "$2"; then
-	echo >&2 "$2 is unchanged"
-	rm -f "$1"
-    else
-	mv -f "$1" "$2"
-    fi
+diff="diff -q"
+
+while test $# != 0
+do
+    case $1 in
+        (-I|--ignore)
+        shift
+        diff+=" -I $1";;
+
+        (*)
+        if test -z "$from"; then
+            from=$1
+        else
+            to=$1
+        fi
+        ;;
+    esac
+    shift
+done
+
+if test -r "$to" && $diff "$from" "$to"; then
+    echo >&2 "$to is unchanged"
+    rm -f "$from"
 else
-    mv -f "$1" "$2"
+    mv -f "$from" "$to"
 fi
