@@ -4,7 +4,12 @@
 # Autotools.
 
 # TODO:
+#
+# - This does not support concurrency, at least I fear it does not
+#   because ndbm does not.
+#
 # - a test suite :(  Many bugs were regularly introduced.
+#
 # - support link.exe -dump -symbols
 #   currenty we do junk
 
@@ -372,6 +377,7 @@ dos2unix ()
 dump_log ()
 {
   local file=$1
+  verbose "processing log file $file"
   perl -e "my \$deps_file = '$deps_file';" \
        -e "my \$deps_phony = '$deps_phony';" \
        -e "my \$deps_target = '$deps_target';" \
@@ -380,32 +386,47 @@ dump_log ()
 #! /usr/bin/perl
 
 use English;
+use Fcntl;   # For O_RDWR, O_CREAT, etc.
+use NDBM_File;
 
-# Convert a path from Windows to linux.
 my %converted_path;
+tie(%converted_path, "NDBM_File", "winepath.cache", O_RDWR|O_CREAT, 0666)
+    or die "cannot tie NDBM file winepath.cache: $!; aborting";
+
+# Convert a set of paths from Windows to linux.
 sub convert_path ($)
 {
   my ($path) = @_;
   if (! defined $converted_path{$path})
   {
-    # Do not convert files that do not need to be converted,
-    # as it makes them longer (from relative to absolute).
-    if ($path =~ /\\/)
-    {
-      # For some reason, the outcome looks like
-      # "C:\\vcxx8\\VC\\INCLUDE\istream", with some backslashes escaped,
-      # and not others.  Winepath wants them all escaped, so escape lone
-      # backslashes.
-      (my $p = $path) =~ s/(?<!\\)\\(?!\\)/\\\\/g;
+    # Do not convert files that do not need it, as it makes them
+    # longer (from relative to absolute).
+    #
+    # Two different kinds of changes are needed.
+    #
+    # Absolute paths need to be handled by winepath.  Relative paths
+    # should be kept relative so that Make can track dependencies
+    # properly (Make does not like files addressed under different
+    # names, such as absolute vs. relative).
+    #
+    # Unfortunately MSVC sometimes mixes forward- and backward-
+    # slashes (if for instance you use forward slash in -Ifoo/bar, it
+    # will use a backslash and result in "foo/bar\baz.h").  Since
+    # apparently there is no problem with using slashes instead of
+    # backslashes, let us first use only slashes.
 
-      # Convert them to Linux format.
-      $converted_path{$path} = `winepath -u $p`;
-      chomp $converted_path{$path};
-    }
-    else
+    my $res = $path;
+    # For some reason, the outcome looks like
+    # "C:\\vcxx8\\VC\\INCLUDE\istream", with some backslashes escaped,
+    # and not others.
+    $res =~ s,\\\\?,/,g;
+    if ($res =~ /^\w:/)
     {
-      $converted_path{$path} = $path;
+      # Convert them to Linux format.
+      $res = `winepath -u $res`;
+      chomp $res;
     }
+    $converted_path{$path} = $res;
   }
   return $converted_path{$path};
 }
@@ -448,11 +469,11 @@ if ($deps_file)
 {
   my @files = map { convert_path($_) } sort keys %res;
 
-  # Make does not like colon in file names, which is something
-  # that does happens when wrapper cl.exe
+  # Make does not like colons in file names, which is something that
+  # does happen with cl.exe
   # (/home/build/.wine/dosdevices/c:/vcxx8/VC/include/stdio.h).
   # Escape them.
-  @files = grep { s/:/\\:/g } @files;
+  @files = map { s/:/\\:/g; $_ } @files;
 
   use IO::File;
   my $deps = new IO::File ">$deps_file" or die;
@@ -463,6 +484,8 @@ if ($deps_file)
     map { print $deps "$_:\n\n"; } @files;
   }
 }
+
+untie(%converted_path);
 ' < $file
   ! $compiler_verbose ||
     compiler_verbose_message >&2
