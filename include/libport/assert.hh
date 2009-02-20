@@ -9,11 +9,11 @@
 
 // We have mysterious random aborts on OSX which is compiled with
 // NDEBUG.  Temporarily disable NDEBUG to have verbose paborts.
-//# if defined NDEBUG
-//#  define LIBPORT_ASSERT_VERBOSE 0
-//# else
+# if defined NDEBUG
+#  define LIBPORT_ASSERT_VERBOSE 0
+# else
 #  define LIBPORT_ASSERT_VERBOSE 1
-//# endif
+# endif
 
 # if LIBPORT_ASSERT_VERBOSE
 #  include <iostream> // std::cerr
