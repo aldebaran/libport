@@ -36,6 +36,13 @@ BOOST_SYSTEM
 
 URBI_COMPILATION_MODE
 
+# For some reason, coroutine don't work properly on OSX PPC.  The test
+# suite seems ok though, so maybe we could make it work.  Meanwhile,
+# let's work with threads.
+case $host in
+  (powerpc-apple-darwin*) AC_DEFINE([SCHEDULER_CORO_OSTHREAD], [1]);;
+esac
+
 # AutoTroll with Qt.
 # AT_WITH_QT
 # AC_CONFIG_FILES([gui/Makefile])
