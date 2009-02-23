@@ -181,6 +181,6 @@ spawn_urbi_server ()
     esac
   done
   test -f server.port ||
-    fatal "$URBI_SERVER failed before creating server.por"
+    fatal "$URBI_SERVER failed before creating server.port"
 }
 ])
