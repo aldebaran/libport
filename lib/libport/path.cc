@@ -21,18 +21,18 @@
 
 namespace libport
 {
-  path::path (const std::string& p)
+  path::path(const std::string& p)
   {
     init(p);
   }
 
-  path::path (const char* p)
+  path::path(const char* p)
   {
     init(p);
   }
 
   void
-  path::test_absolute (std::string& p)
+  path::test_absolute(std::string& p)
   {
 #if defined WIN32
     // Under Win32, absolute paths start with a letter followed by
@@ -75,7 +75,7 @@ namespace libport
   }
 
   void
-  path::init (std::string p)
+  path::init(std::string p)
   {
     static std::string sep =
 #ifdef WIN32
@@ -96,13 +96,13 @@ namespace libport
 	 pos = p.find_first_of(sep))
     {
       this->append_dir(p.substr(0, pos));
-      p.erase (0, pos + 1);
+      p.erase(0, pos + 1);
     }
     this->append_dir(p);
   }
 
   path&
-  path::operator= (const path& rhs)
+  path::operator=(const path& rhs)
   {
     absolute_ = rhs.absolute_;
     path_ = rhs.path_;
@@ -113,7 +113,7 @@ namespace libport
   }
 
   path&
-  path::operator/= (const path& rhs)
+  path::operator/=(const path& rhs)
   {
     if (rhs.absolute_get())
       throw invalid_path(
@@ -123,22 +123,22 @@ namespace libport
       throw invalid_path("concatenation of path with volume: " +
 			 rhs.to_string());
 #endif
-    for (path_type::const_iterator dir = rhs.path_.begin ();
-	 dir != rhs.path_.end ();
+    for (path_type::const_iterator dir = rhs.path_.begin();
+	 dir != rhs.path_.end();
 	 ++dir)
-      this->append_dir (*dir);
+      this->append_dir(*dir);
 
     return *this;
   }
 
   path
-  path::operator/ (const path& rhs) const
+  path::operator/(const path& rhs) const
   {
     path res = *this;
     return res /= rhs;
   }
 
-  path::operator std::string () const
+  path::operator std::string() const
   {
     return to_string();
   }
@@ -168,8 +168,8 @@ namespace libport
       return ".";
 
     bool first = true;
-    for (path_type::const_iterator dir = path_.begin ();
-	 dir != path_.end ();
+    for (path_type::const_iterator dir = path_.begin();
+	 dir != path_.end();
 	 ++dir)
     {
       if (first)
@@ -183,41 +183,42 @@ namespace libport
   }
 
   bool
-  path::operator== (const path& rhs) const
+  path::operator==(const path& rhs) const
   {
     return path_ == rhs.path_;
   }
 
   std::ostream&
-  path::dump (std::ostream& ostr) const
+  path::dump(std::ostream& ostr) const
   {
-    ostr << this->operator std::string ();
+    ostr << this->operator std::string();
     return ostr;
   }
 
   void
-  path::append_dir (const std::string& dir)
+  path::append_dir(const std::string& dir)
   {
-    precondition(dir.find (separator_) == std::string::npos);
-
+    precondition(dir.find(separator_) == std::string::npos);
 
     if (dir != "" && dir != ".")
     {
-      if (dir == "..")
-      {
-	if (path_.empty () || *path_.rbegin () == "..")
-	  path_.push_back ("..");
-	else
-	  path_.pop_back ();
-      }
+      // The following does not work properly with symlinks.  One
+      // cannot expect that removing "foo/../" inside a valid path
+      // results in the same path.  We should check whether "foo" is
+      // *not* a symlink before playing this kind of trick.
+#if 0
+      if (dir == ".."
+          && !path_.empty() && *path_.rbegin() != "..")
+        path_.pop_back();
       else
-	path_.push_back (dir);
+#endif
+	path_.push_back(dir);
     }
   }
 
 
   std::string
-  path::basename () const
+  path::basename() const
   {
     // basename of / is /, basename of . is .
     if (path_.empty())
@@ -227,7 +228,7 @@ namespace libport
   }
 
   path
-  path::dirname () const
+  path::dirname() const
   {
     // dirname of / is /, dirname of . is .
     if (path_.empty())
