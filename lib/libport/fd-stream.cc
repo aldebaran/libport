@@ -57,7 +57,7 @@ namespace libport
       return EOF;
     }
     setg(ibuf_, ibuf_, ibuf_ + c);
-    return ibuf_[0];
+    return static_cast<unsigned char>(ibuf_[0]);
   }
 
   int FdBuf::overflow(int c)
