@@ -1,6 +1,7 @@
 lib_LTLIBRARIES += lib/sched/libsched.la
 lib_sched_libsched_la_LDFLAGS = -avoid-version -no-undefined
 lib_sched_libsched_la_LIBADD = $(LIBADD) $(LIBPORT_LIBS)
+lib_sched_libsched_la_DEPENDENCIES = $(LIBADD) $(LIBPORT_LIBS)
 lib_sched_libsched_la_CPPFLAGS =		\
   $(AM_CPPFLAGS)				\
   -DBUILDING_LIBSCHED
