@@ -50,6 +50,8 @@ static void test_condition()
   nCall.resize(NTHREAD, 0);
   for (int i = 0; i<NTHREAD; i++)
     libport::startThread(boost::bind(&cond_thread, i));
+  // Give time to those threads to reach the waiting-on-cond state
+  usleep(200000);
   BOOST_TEST_MESSAGE("Singlethread broadcast with specific target");
   for (int i = 0; i<NITER; i++)
   {
