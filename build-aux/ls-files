@@ -71,7 +71,10 @@ getopt ()
       (-h | --help)   usage;;
       (-s | --srcdir) srcdir=$2; shift;;
       (-*)  fatal "unexpected option: $1";;
-      (*)   args="$args '$1'";;
+      (.)  # Since git is recursive, "git ls-files ." returns
+           # everything, which is what "find -name '*'" does.
+           args+=" '*'";;
+      (*)  args+=" '$1'";;
     esac
     shift
   done
@@ -83,11 +86,16 @@ tmp=${TMPDIR}/$me.$$
 trap 'exit_status=$? && rm -f $tmp && exit $exit_status' 0
 trap 'exit 1' 1 2 13 15
 
+# The patterns.
 args=
 srcdir=.
 getopt "$@"
-# $args contains the patterns.
-eval "set x $args"
+
+# git ls-files with no args returns everything.
+case $args in
+  ('') set x '*';;
+  (*)  eval "set x $args";;
+esac
 shift
 
 verbose "cd $srcdir"
@@ -104,8 +112,8 @@ else
   # Cannot use git, let's use shell globbing.  But it must be "deep":
   # "git ls-files *.c" and "git ls-files foo/*.c" can return
   # foo/bar/baz.c.
-  find=
-  sep="find ."
+  sep=
+  find_args=
   for pattern
   do
     # `find . -path foo/bar' does not find foo/bar because its full
@@ -115,10 +123,17 @@ else
     # catch 1.-/uob/*.chk).  So prefix with "./".  There should not be
     # absolute path given as argument, so prepend "./" should be
     # harmless.
-    find="$find$sep -path './$pattern'"
-    sep=" -or"
+    find_args+="$sep-path './$pattern'"
+    sep=" -or "
   done
 
+  # Git is file-only, dirs don't exist per se.
+  find_args="'(' $find_args ')' -and -not -type d"
+
+  # And of course it does not list .git.
+  find_args+=" -and -not -path './.git/*'"
+
+  find="${FIND:-find} . $find_args"
   stderr "running $find"
   # Git does not prefix by "./".
   # It sorts, and does not issue duplicates.
