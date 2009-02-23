@@ -1,7 +1,13 @@
 #! /bin/sh
 
 set -e
-case $VERBOSE in (x) set -x;; esac
+
+# When verbose, report git's stderr.  Otherwise, discard.
+case $VERBOSE in
+  (x) set -x
+      exec 5>&2;;
+  (*) exec 5>/dev/null;;
+esac
 
 me=$(basename "$0")
 
@@ -92,7 +98,7 @@ cd "$srcdir"
 # if we are in a repo by checking that there are files in the repo
 # here via "ls-files".
 if test "${FORCE_FIND+set}" != set \
-    && git ls-files | grep . >/dev/null 2>&1; then
+    && git ls-files 2>&5 | grep . >/dev/null 2>&1; then
   git ls-files "$@" >$tmp
 else
   # Cannot use git, let's use shell globbing.  But it must be "deep":
