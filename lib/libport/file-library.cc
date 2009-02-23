@@ -25,38 +25,38 @@ namespace libport
 {
 
   void
-  file_library::push_cwd ()
+  file_library::push_cwd()
   {
-    push_current_directory (get_current_directory());
+    push_current_directory(get_current_directory());
   }
 
 
-  file_library::file_library ()
+  file_library::file_library()
   {
-    push_cwd ();
+    push_cwd();
   }
 
-  file_library::file_library (const path& p)
+  file_library::file_library(const path& p)
   {
-    push_cwd ();
+    push_cwd();
     // Then only process given path.
-    push_back (p);
+    push_back(p);
   }
 
 
   file_library::file_library(const std::string& lib, const char* sep)
   {
-    push_cwd ();
+    push_cwd();
     push_back(lib, sep);
   }
 
   path
-  file_library::ensure_absolute_path (const path& p) const
+  file_library::ensure_absolute_path(const path& p) const
   {
-    if (p.absolute_get ())
+    if (p.absolute_get())
       return p;
     else
-      return current_directory_get () / p;
+      return current_directory_get() / p;
   }
 
   namespace
@@ -112,7 +112,7 @@ namespace libport
   }
 
   void
-  file_library::push_current_directory (const path& p)
+  file_library::push_current_directory(const path& p)
   {
     // Ensure that path is absolute.
     current_directory_.push_front (p.absolute_get()
@@ -121,7 +121,7 @@ namespace libport
   }
 
   void
-  file_library::pop_current_directory ()
+  file_library::pop_current_directory()
   {
     precondition (!current_directory_.empty ());
 
@@ -129,7 +129,7 @@ namespace libport
   }
 
   path
-  file_library::current_directory_get () const
+  file_library::current_directory_get() const
   {
     precondition (!current_directory_.empty ());
 
@@ -143,7 +143,7 @@ namespace libport
     // Split file in two components, basename and basedir.
     path directory = file.dirname();
 
-    if (directory.absolute_get ())
+    if (directory.absolute_get())
       {
 	// If file is absolute, just check that it exists.
 	if (!file.exists())
@@ -162,15 +162,15 @@ namespace libport
   }
 
   bool
-  file_library::find_in_directory (const path& dir,
-				   const std::string& file) const
+  file_library::find_in_directory(const path& dir,
+                                  const std::string& file) const
   {
     return (dir / file).exists();
   }
 
   path
-  file_library::find_in_search_path (const path& relative_path,
-				     const std::string& filename) const
+  file_library::find_in_search_path(const path& relative_path,
+                                    const std::string& filename) const
   {
     // Otherwise start scanning the search path.
     foreach (const path& p, search_path_)
@@ -186,13 +186,11 @@ namespace libport
   }
 
   std::ostream&
-  file_library::dump (std::ostream& ostr) const
+  file_library::dump(std::ostream& ostr) const
   {
     ostr << ".";
-
     foreach (const path& p,  search_path_)
       ostr << ":" << p;
-
     return ostr;
   }
 }

@@ -9,13 +9,13 @@
 namespace libport
 {
   inline void
-  file_library::append (const path& p)
+  file_library::append(const path& p)
   {
     push_back(p);
   }
 
   inline void
-  file_library::prepend (const path& p)
+  file_library::prepend(const path& p)
   {
     push_front(p);
   }
@@ -29,7 +29,7 @@ namespace libport
   inline std::ostream&
   operator<< (std::ostream& ostr, const file_library& l)
   {
-    return l.dump (ostr);
+    return l.dump(ostr);
   }
 }
 
