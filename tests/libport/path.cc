@@ -126,7 +126,10 @@ init_test_suite()
   def("foo/bar/baz/quux", "foo/bar/baz/quux");
   def("/foo/bar/baz/quux", "/foo/bar/baz/quux");
   def("just/stay", "./just/././stay/./");
-  def("in/is/fun", "in/and/out/../../is/fun/too/..");
+//  def("in/is/fun",
+//      "in/and/out/../../is/fun/too/..");
+  def("in/and/out/../../is/fun/too/..",
+      "in/and/out/../../is/fun/too/..");
 #undef def
 
   // Test basename/dirname
@@ -151,7 +154,8 @@ init_test_suite()
   def("foo", "bar", "foo/bar");
   def("foo/bar", "baz/quux", "foo/bar/baz/quux");
   def("foo/bar", ".", "foo/bar");
-  def("foo/bar", "../..", ".");
+//  def("foo/bar", "../..", ".");
+  def("foo/bar", "../..", "foo/bar/../..");
   def("/foo", "bar", "/foo/bar");
   def("/", "foo", "/foo");
   def("/", ".", "/");
