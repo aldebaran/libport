@@ -175,7 +175,7 @@ rm $@-t
 #	@$(am__check_pre) $${dir}$< $(am__check_post)
 
 TEST_LOGS ?= $(TESTS:.test=.log)
-TEST_SUITE_LOG = test-suite.log
+TEST_SUITE_LOG ?= test-suite.log
 
 check_programs =							\
   $(nodist_check_SCRIPTS)  $(dist_check_SCRIPTS)  $(check_SCRIPTS)	\
