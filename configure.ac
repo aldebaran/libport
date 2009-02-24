@@ -42,9 +42,9 @@ URBI_COMPILATION_MODE
 # let's work with threads.
 case $host in
   (powerpc-apple-darwin*)
-     SCHED_CORO_OSTHREAD=false
+     SCHED_CORO_OSTHREAD=true
      AC_DEFINE([SCHED_CORO_OSTHREAD], [1]);;
-  (*) SCHED_CORO_OSTHREAD=true;;
+  (*) SCHED_CORO_OSTHREAD=false;;
 esac
 AM_CONDITIONAL([SCHED_CORO_OSTHREAD], [$SCHED_CORO_OSTHREAD])
 
