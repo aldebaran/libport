@@ -67,21 +67,26 @@ init_test_suite()
   test_suite* suite = BOOST_TEST_SUITE("libport::ufloat");
   suite->add(BOOST_TEST_CASE(test_comparison));
 
-  suite->add(BOOST_TEST_CASE(test_signed_range<int>));
-  suite->add(BOOST_TEST_CASE(test_max<int>));
+  // The following use of "&" are required to please MSVC.  Otherwise
+  // at runtime it just dies:
+  //
+  // unknown location(0): fatal error in "test_signed_range<int>":
+  // memory access violation
+  suite->add(BOOST_TEST_CASE(&test_signed_range<int>));
+  suite->add(BOOST_TEST_CASE(&test_max<int>));
 
-  suite->add(BOOST_TEST_CASE(test_unsigned_range<unsigned int>));
-  suite->add(BOOST_TEST_CASE(test_max<unsigned int>));
+  suite->add(BOOST_TEST_CASE(&test_unsigned_range<unsigned int>));
+  suite->add(BOOST_TEST_CASE(&test_max<unsigned int>));
 
-  suite->add(BOOST_TEST_CASE(test_signed_range<long>));
-  suite->add(BOOST_TEST_CASE(test_max<long>));
+  suite->add(BOOST_TEST_CASE(&test_signed_range<long>));
+  suite->add(BOOST_TEST_CASE(&test_max<long>));
 
-  suite->add(BOOST_TEST_CASE(test_unsigned_range<unsigned long>));
-  suite->add(BOOST_TEST_CASE(test_max<unsigned long>));
+  suite->add(BOOST_TEST_CASE(&test_unsigned_range<unsigned long>));
+  suite->add(BOOST_TEST_CASE(&test_max<unsigned long>));
 
-  suite->add(BOOST_TEST_CASE(test_signed_range<long long>));
+  suite->add(BOOST_TEST_CASE(&test_signed_range<long long>));
 
-  suite->add(BOOST_TEST_CASE(test_unsigned_range<unsigned long long>));
+  suite->add(BOOST_TEST_CASE(&test_unsigned_range<unsigned long long>));
 
   // We can't represent these values in doubles.
   // suite->add(BOOST_TEST_CASE(test_max<long long>));
