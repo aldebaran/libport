@@ -1,4 +1,5 @@
 #include <libport/unit-test.hh>
+#include <libport/sysexits.hh>
 using libport::test_suite;
 
 
@@ -120,8 +121,8 @@ static const std::string S_AVAIL_PORT = "7890";
 void test_one(bool proto)
 {
   TestSocket* client = new TestSocket(false, true);
-  boost::system::error_code err;
-  err = client->connect("localhost", S_AVAIL_PORT, proto);
+  boost::system::error_code err
+    = client->connect("localhost", S_AVAIL_PORT, proto);
   BOOST_CHECK_MESSAGE(!err, err.message());
   BOOST_CHECK_NO_THROW(client->send(msg));
   usleep(delay);
@@ -316,6 +317,14 @@ test()
 test_suite*
 init_test_suite()
 {
+  // This test cannot run properly with current versions of WineHQ,
+  // because they only provide a stub for acceptex.
+  const char* running_wine = getenv("RUNNING_WINE");
+  if (running_wine && *running_wine)
+    std::cerr << "running under Wine, skipping this test"
+              << std::endl
+              << libport::exit(EX_SKIP);
+
   test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
   suite->add(BOOST_TEST_CASE(test));
   return suite;
