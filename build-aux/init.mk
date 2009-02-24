@@ -52,8 +52,15 @@ SKIP_STATUS = 176
 # Visual Studio Debugger PDB Files (C++).
 # http://msdn2.microsoft.com/en-us/library/yd4f8bd1.aspx.
 CLEANFILES += vc80.pdb
-# Files created by MSC++.
-CLEANFILES += *.exe.manifest *.exe.intermediate.manifest
+# Files created by MSVC++ and our cl.exe.
+CLEANFILES +=								 \
+  *.exe.{auto.{RES,manifest,rc},{escaped,intermediate}.manifest}	 \
+  *.exe.manifest
+# Our winepath caches.
+CLEANFILES +=					\
+  winepath.cache.*
+
+
 # Files which are not shipped should be cleaned.
 CLEANFILES += $(nodist_check_SCRIPTS) $(nodist_noinst_SCRIPTS)
 

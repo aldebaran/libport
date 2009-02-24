@@ -14,8 +14,6 @@ test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::base64 test suite");
-
   suite->add(BOOST_TEST_CASE(test));
-
   return suite;
 }

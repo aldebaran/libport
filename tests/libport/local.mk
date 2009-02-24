@@ -103,3 +103,5 @@ EXTRA_DIST +=					\
 TESTS_ENVIRONMENT +=							     \
   SRCDIR=$(srcdir)							     \
   RUNNING_WINE=$(shell case $$(hostname) in (bf-linux-[36]) echo yes;; esac)
+
+CLEANFILES += tests/libport/exists.pid

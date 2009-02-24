@@ -47,7 +47,7 @@ void test_options()
 
 void test_exists()
 {
-  static const std::string file = "exists.pid";
+  static const std::string file = "tests/libport/exists.pid";
   // Create the file
   int fd;
   BOOST_CHECK_NE(fd = open(file.c_str(), O_CREAT), -1);
