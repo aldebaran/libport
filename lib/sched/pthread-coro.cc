@@ -1,6 +1,6 @@
 #include <sched/pthread-coro.hh>
 
-#if defined LIBPORT_SCHEDULER_CORO_OSTHREAD
+#if defined LIBPORT_SCHED_CORO_OSTHREAD
 
 #  include <cerrno>
 
@@ -96,4 +96,4 @@ coroutine_initialize_main(Coro*)
 {
 }
 
-#endif //! LIBPORT_SCHEDULER_CORO_OSTHREAD
+#endif //! LIBPORT_SCHED_CORO_OSTHREAD

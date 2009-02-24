@@ -4,9 +4,9 @@
 # include <libport/config.h>
 # include <sched/export.hh>
 
-// Define LIBPORT_SCHEDULER_CORO_OSTHREAD to use the os-thread implementation
+// Define LIBPORT_SCHED_CORO_OSTHREAD to use the os-thread implementation
 //  of coros.
-# ifdef LIBPORT_SCHEDULER_CORO_OSTHREAD
+# ifdef LIBPORT_SCHED_CORO_OSTHREAD
 #  include <sched/pthread-coro.hh>
 // In the pthread implementation, these functions are compiled in
 // the library, otherwise they are inlined.
@@ -59,7 +59,7 @@ bool coroutine_stack_space_almost_gone(Coro* coro);
 SCHED_CORO_API
 void coroutine_initialize_main(Coro* coro);
 
-# if !defined LIBPORT_SCHEDULER_CORO_OSTHREAD
+# if !defined LIBPORT_SCHED_CORO_OSTHREAD
 #  include <sched/coroutine.hxx>
 # endif
 #endif // SCHED_COROUTINE_HH

@@ -1,6 +1,6 @@
 #
 # urbi-prog-cxx.m4: This file is part of build-aux.
-# Copyright (C) 2006-2008, Gostai S.A.S.
+# Copyright (C) 2006-2009, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -82,7 +82,7 @@ urbi_compilation_mode_set ()
         ;;
 
       (threads)
-        AC_DEFINE([SCHEDULER_CORO_OSTHREAD], [1],
+        AC_DEFINE([SCHED_CORO_OSTHREAD], [1],
                   [Define to use the OS-thread implementation of coroutines])
         ;;
 

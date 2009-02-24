@@ -40,8 +40,12 @@ URBI_COMPILATION_MODE
 # suite seems ok though, so maybe we could make it work.  Meanwhile,
 # let's work with threads.
 case $host in
-  (powerpc-apple-darwin*) AC_DEFINE([SCHEDULER_CORO_OSTHREAD], [1]);;
+  (powerpc-apple-darwin*)
+     SCHED_CORO_OSTHREAD=false
+     AC_DEFINE([SCHED_CORO_OSTHREAD], [1]);;
+  (*) SCHED_CORO_OSTHREAD=true;;
 esac
+AM_CONDITIONAL([SCHED_CORO_OSTHREAD], [$SCHED_CORO_OSTHREAD])
 
 # AutoTroll with Qt.
 # AT_WITH_QT
