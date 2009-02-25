@@ -8,7 +8,7 @@ namespace libport
 {
 
   void
-  usage_error (const std::string& opt, const std::string& err)
+  usage_error(const std::string& opt, const std::string& err)
   {
     std::cerr
       << program_name() << ": " << opt << ": " << err
@@ -19,27 +19,27 @@ namespace libport
   }
 
   void
-  required_argument (const std::string& opt)
+  required_argument(const std::string& opt)
   {
     usage_error (opt, "requires an argument");
   }
 
   void
-  missing_argument (const std::string& opt)
+  missing_argument(const std::string& opt)
   {
-    usage_error (opt, "missing argument");
+    usage_error(opt, "missing argument");
   }
 
   void
-  invalid_option (const std::string& opt)
+  invalid_option(const std::string& opt)
   {
-    usage_error (opt, "invalid option");
+    usage_error(opt, "invalid option");
   }
 
   void
-  invalid_option_val (const std::string& opt, const std::string& arg)
+  invalid_option_val(const std::string& opt, const std::string& arg)
   {
-    usage_error (opt, "invalid argument: " + arg);
+    usage_error(opt, "invalid argument: " + arg);
   }
 
 }
