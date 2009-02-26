@@ -1,5 +1,5 @@
 lib_LTLIBRARIES += lib/tinyxml/libtinyxml.la
-lib_tinyxml_libtinyxml_la_LDFLAGS =
+lib_tinyxml_libtinyxml_la_LDFLAGS = -avoid-version -no-undefined
 lib_tinyxml_libtinyxml_la_CPPFLAGS =		\
   $(AM_CPPFLAGS)				\
   -DBUILDING_TINYXML				\

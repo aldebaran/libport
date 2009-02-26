@@ -1,5 +1,5 @@
-# include <libport/detect-win32.h>
-#if defined WIN32
+#include <libport/detect-win32.h>
+# ifdef MSVC
 
 # include <string>
 # include <libport/cstdlib>

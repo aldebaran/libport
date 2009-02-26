@@ -102,7 +102,7 @@ extern "C"
 `---------*/
 
 
-# if defined WIN32
+# if defined MSVC
 #  include <libport/fcntl.h>
 #  define STDIN_FILENO  fileno(stdin)
 #  define STDOUT_FILENO fileno(stdout)
@@ -127,7 +127,7 @@ extern "C"
 | ssize_t.  |
 `----------*/
 
-# if defined WIN32
+# if defined MSVC
 extern "C"
 {
   typedef int ssize_t;

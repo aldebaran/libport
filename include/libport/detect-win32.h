@@ -21,4 +21,10 @@
 #  define EXEEXT ""
 # endif
 
+# ifndef MSVC
+#  ifdef _MSC_VER
+#   define MSVC
+#  endif
+# endif /* !MSVC */
+
 #endif // !LIBPORT_DETECT_WIN32_H
