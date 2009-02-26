@@ -74,11 +74,14 @@ coroutine_start(Coro* self, Coro* other,
 }
 
 void*
-coroutine_stack_addr(Coro* self)
+coroutine_stack_addr(Coro*)
 {
   void* res = 0;
+  pthread_attr_t attr;
+  if (pthread_attr_init(&attr))
+    errabort("pthread_attr_init");
   if (pthread_attr_getstackaddr(&attr, &res))
-      errabort("pthread_attr_getstackaddr");
+    errabort("pthread_attr_getstackaddr");
   return res;
 }
 
@@ -103,18 +106,15 @@ coroutine_current_stack_pointer(Coro*)
 }
 
 size_t
-coroutine_stack_size(Coro* self)
+coroutine_stack_size(Coro*)
 {
   size_t res = 0;
-  if (pthread_attr_getstackaddr(&attr, &res))
-    errabort("pthread_attr_getstackaddr");
+  pthread_attr_t attr;
+  if (pthread_attr_init(&attr))
+    errabort("pthread_attr_init");
+  if (pthread_attr_getstacksize(&attr, &res))
+    errabort("pthread_attr_getstacksizeaddr");
   return res;
-}
-
-bool
-coroutine_stack_space_almost_gone(Coro*)
-{
-  return false;
 }
 
 void

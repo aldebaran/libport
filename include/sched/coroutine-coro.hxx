@@ -1,8 +1,6 @@
 #ifndef SCHED_COROUTINE_CORO_HXX
 # define SCHED_COROUTINE_CORO_HXX
 
-# include <sched/configuration.hh>
-
 inline Coro*
 coroutine_new(size_t stack_size)
 {

@@ -1,6 +1,8 @@
 #ifndef SCHED_COROUTINE_HXX
 # define SCHED_COROUTINE_HXX
 
+# include <sched/configuration.hh>
+
 // Implementation based on libcoroutine.
 # if !defined LIBPORT_SCHED_CORO_OSTHREAD
 #  include <sched/coroutine-coro.hxx>
