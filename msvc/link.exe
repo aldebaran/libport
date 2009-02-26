@@ -689,7 +689,7 @@ case $output in
 EOF
   run $VCXX_BIN/rc.exe -r "$(transform $output).auto.rc"
   eval run "$VCXX_BIN/$PROG $outargs $linkargs \"$(transform $output).auto.RES\""
-  rm -f "$output".{auto.{manifest,RES},{escaped,intermediate}.manifest,manifest}
+  rm -f "$output".{auto.{manifest,rc,RES},{escaped,intermediate}.manifest,manifest}
   ;;
 esac
 
