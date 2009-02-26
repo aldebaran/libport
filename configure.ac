@@ -23,6 +23,8 @@ URBI_PROG_CXX
 # We have some assembly for coroutine support.
 AM_PROG_AS
 
+URBI_WIN32
+URBI_SOCKETS
 URBI_LIBTOOL
 # Name of the subdirectory that contains libltdl sources.
 LT_CONFIG_LTDL_DIR([libltdl])
