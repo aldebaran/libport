@@ -1,49 +1,37 @@
 #ifndef SCHED_COROUTINE_HXX
-#define SCHED_COROUTINE_HXX
+# define SCHED_COROUTINE_HXX
 
-# include <sched/configuration.hh>
+// Implementation based on libcoroutine.
+# if !defined LIBPORT_SCHED_CORO_OSTHREAD
+#  include <sched/coroutine-coro.hxx>
+# endif
 
-inline Coro*
-coroutine_new(size_t stack_size)
+// Implementation independendant routines.
+
+inline size_t
+coroutine_bytes_left_on_stack(Coro* self)
 {
-  Coro* res = Coro_new();
-  Coro_setStackSize_(res,
-                     (stack_size
-                      ? stack_size
-                      : sched::configuration.default_stack_size));
-  return res;
-}
+  char dummy;
+  char* p1 = &dummy;
+  char* p2 = (char*) coroutine_current_stack_pointer(self);
+  bool stack_moves_up = p2 > p1;
+  char* start = (char*) coroutine_stack_addr(self);
 
-inline void
-coroutine_free(Coro* coro)
-{
-  Coro_free(coro);
+  // FIXME: Use Autoconf instead?
+  if (stack_moves_up) // like PPC
+  {
+    char* end = start + coroutine_stack_size(self);
+    return end - p1;
+  }
+  else // like x86
+    return p1 - start;
 }
 
 inline bool
 coroutine_stack_space_almost_gone(Coro* coro)
 {
-  return Coro_bytesLeftOnStack(coro) < sched::configuration.minimum_stack_size;
-}
-
-inline void
-coroutine_initialize_main(Coro* coro)
-{
-  Coro_initializeMainCoro(coro);
-}
-
-template<typename T>
-inline void
-coroutine_start(Coro* self, Coro* other, void (*callback)(T*), T* context)
-{
-  Coro_startCoro_(self, other, context,
-		  reinterpret_cast<CoroStartCallback*>(callback));
-}
-
-inline void
-coroutine_switch_to(Coro* self, Coro* next)
-{
-  Coro_switchTo_(self, next);
+  return (coroutine_bytes_left_on_stack(coro)
+          < sched::configuration.minimum_stack_size);
 }
 
 #endif // SCHED_COROUTINE_HXX

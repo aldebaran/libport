@@ -73,6 +73,15 @@ coroutine_start(Coro* self, Coro* other,
   self->sem_--;
 }
 
+void*
+coroutine_stack_addr(Coro* self)
+{
+  void* res = 0;
+  if (pthread_attr_getstackaddr(&attr, &res))
+      errabort("pthread_attr_getstackaddr");
+  return res;
+}
+
 void
 coroutine_switch_to(Coro* self, Coro* next)
 {
@@ -83,6 +92,23 @@ coroutine_switch_to(Coro* self, Coro* next)
     delete self;
     pthread_exit(0);
   }
+}
+
+void*
+coroutine_current_stack_pointer(Coro*)
+{
+  uint8_t a;
+  uint8_t *b = &a; // to avoid compiler warning about unused variables
+  return b;
+}
+
+size_t
+coroutine_stack_size(Coro* self)
+{
+  size_t res = 0;
+  if (pthread_attr_getstackaddr(&attr, &res))
+    errabort("pthread_attr_getstackaddr");
+  return res;
 }
 
 bool

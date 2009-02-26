@@ -47,6 +47,18 @@ void coroutine_start(Coro* self, Coro* other, void (*callback)(T*), T* context);
 SCHED_CORO_API
 void coroutine_switch_to(Coro* self, Coro* next);
 
+/// The base stack address.
+SCHED_API
+void* coroutine_stack_addr(Coro* self);
+
+/// The current stack address.
+SCHED_API
+void* coroutine_current_stack_pointer(Coro* self);
+
+/// Stack size.
+SCHED_CORO_API
+size_t coroutine_stack_size(Coro* self);
+
 /// Check whether the stack space is sufficient or near exhaustion.
 /// \param coro The coroutine to check, can either be the current one
 ///        or any other coroutine.
@@ -59,7 +71,6 @@ bool coroutine_stack_space_almost_gone(Coro* coro);
 SCHED_CORO_API
 void coroutine_initialize_main(Coro* coro);
 
-# if !defined LIBPORT_SCHED_CORO_OSTHREAD
-#  include <sched/coroutine.hxx>
-# endif
+# include <sched/coroutine.hxx>
+
 #endif // SCHED_COROUTINE_HH

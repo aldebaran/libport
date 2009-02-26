@@ -3,6 +3,7 @@ sched_include_HEADERS =					\
   include/sched/configuration.hh			\
   include/sched/coroutine.hh				\
   include/sched/coroutine.hxx				\
+  include/sched/coroutine-coro.hxx			\
   include/sched/exception.hh				\
   include/sched/exception.hxx				\
   include/sched/export.hh				\
