@@ -53,9 +53,7 @@ SKIP_STATUS = 176
 # http://msdn2.microsoft.com/en-us/library/yd4f8bd1.aspx.
 CLEANFILES += vc80.pdb
 # Files created by MSVC++ and our cl.exe.
-CLEANFILES +=								 \
-  *.exe.{auto.{RES,manifest,rc},{escaped,intermediate}.manifest}	 \
-  *.exe.manifest
+CLEANFILES += $(PROGRAMS:=.auto.*) $(EXTRA_PROGRAMS:=.auto.*)
 # Our winepath caches.
 CLEANFILES +=					\
   winepath.cache.*
