@@ -375,7 +375,7 @@ case $VERBOSE in
   (x) set -x;;
 esac
 
-: ${host='@host'}
+: ${host='@host@'}
 : ${EXEEXT='@EXEEXT@'}
 
 # Directories.
