@@ -58,6 +58,12 @@ CLEANFILES += $(PROGRAMS:=.auto.*) $(EXTRA_PROGRAMS:=.auto.*)
 CLEANFILES +=					\
   winepath.cache.*
 
+## FIXME: I don't understand how come these files are created.  It
+## might be an incompability between our cl.exe wrapper and libtool:
+## the files are created in buiddir instead of .libs/.  It does not
+## even include the subdir/ component in subdir-objects.
+CLEANFILES += lt-*.obj
+
 
 # Files which are not shipped should be cleaned.
 CLEANFILES += $(nodist_check_SCRIPTS) $(nodist_noinst_SCRIPTS)
