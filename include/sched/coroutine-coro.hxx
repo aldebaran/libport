@@ -21,7 +21,6 @@ coroutine_free(Coro* coro)
 inline void*
 coroutine_current_stack_pointer(Coro*)
 {
-  uint8_t *Coro_CurrentStackPointer(void);
   return Coro_CurrentStackPointer();
 }
 

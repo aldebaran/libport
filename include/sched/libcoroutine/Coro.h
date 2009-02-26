@@ -113,6 +113,12 @@ CORO_API void Coro_free(Coro *self);
 
 CORO_API void *Coro_stack(Coro *self);
 CORO_API size_t Coro_stackSize(Coro *self);
+CORO_API size_t Coro_stackSize(Coro *self);
+CORO_API uint8_t *Coro_CurrentStackPointer(void)
+#if __GNUC__ == 4
+  __attribute__ ((noinline))
+#endif
+  ;
 CORO_API void Coro_setStackSize_(Coro *self, size_t sizeInBytes);
 CORO_API size_t Coro_bytesLeftOnStack(Coro *self);
 CORO_API int Coro_stackSpaceAlmostGone(Coro *self);
