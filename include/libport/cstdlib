@@ -5,23 +5,30 @@
 # include <cstdlib>
 
 # include <libport/detect-win32.h>
+# include <libport/export.hh>
 
-# if defined WIN32
-#  include <libport/export.hh>
+# if defined MSVC || defined __MINGW32__
 
 extern "C"
 {
-
   LIBPORT_API
   int setenv(const char* key, const char* value, int overwrite);
 
   LIBPORT_API
   int unsetenv(const char* key);
+}
 
+# endif
+
+# if defined MSVC
+
+extern "C"
+{
   LIBPORT_API
   long long strtoll(const char* nptr, char** endptr, int base);
 
 }
+
 # endif // WIN32
 
 #endif // ! LIBPORT_CSTDLIB
