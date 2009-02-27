@@ -16,7 +16,7 @@
 AC_DEFUN([URBI_SOCKETS],
 [AC_REQUIRE([URBI_WIN32])
 if $windows; then
-  AC_SUBST([SOCKETS_LIBS], ['-lws2_32 -lMsWSock'])
+  AC_SUBST([SOCKETS_LIBS], ['-lws2_32 -lmswsock'])
 fi
 
 SDK_LIBS+=" $SOCKETS_LIBS"
