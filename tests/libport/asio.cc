@@ -320,7 +320,8 @@ init_test_suite()
   // This test cannot run properly with current versions of WineHQ,
   // because they only provide a stub for acceptex.
   const char* running_wine = getenv("RUNNING_WINE");
-  if (running_wine && *running_wine)
+  const char* running_qemu = getenv("RUNNING_QEMU");
+  if ((running_wine && *running_wine) || (running_qemu && *running_qemu))
     std::cerr << "running under Wine, skipping this test"
               << std::endl
               << libport::exit(EX_SKIP);
