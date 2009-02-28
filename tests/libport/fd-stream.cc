@@ -157,7 +157,11 @@ fd_read_jumbo(FdStream*& stream, int fd)
     BOOST_CHECK_EQUAL(c, (char)(count % 256));
   BOOST_CHECK(stream->eof());
   BOOST_CHECK_EQUAL(count, size);
-  libport::joinThread(thread);
+// This join hangs forever with QEmu, altough the thread _has_ finished.
+// Either a problem with libport::thread, either a QEmu pthread implementation
+// bug. Joining the thread is not an absolute necessity anyway.
+//  libport::joinThread(thread);
+  (void) thread;
 }
 
 static void
