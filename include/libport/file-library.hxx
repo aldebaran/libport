@@ -27,7 +27,7 @@ namespace libport
   }
 
   inline std::ostream&
-  operator<< (std::ostream& ostr, const file_library& l)
+  operator<<(std::ostream& ostr, const file_library& l)
   {
     return l.dump(ostr);
   }

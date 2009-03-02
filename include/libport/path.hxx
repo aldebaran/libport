@@ -1,6 +1,6 @@
 /**
  ** \file libport/path.hxx
- ** \brief Path: implements inline function of libport/path.hh
+ ** \brief Inline implementation of libport::path.
  */
 
 #ifndef LIBPORT_PATH_HXX
@@ -37,7 +37,7 @@ namespace libport
   `-------*/
 
   inline std::ostream&
-  operator<< (std::ostream& o, const path& p)
+  operator<<(std::ostream& o, const path& p)
   {
     return p.dump(o);
   }

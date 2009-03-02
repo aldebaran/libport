@@ -79,7 +79,10 @@ namespace libport
 	  res.back() += ':' + s;
 	else
 #endif
+        {
+          std::cerr << "Pushing: " << s << std::endl;
 	  res.push_back(s);
+        }
       }
       return res;
     }
@@ -115,7 +118,7 @@ namespace libport
   file_library::push_current_directory(const path& p)
   {
     // Ensure that path is absolute.
-    current_directory_.push_front (p.absolute_get()
+    current_directory_.push_front(p.absolute_get()
 				   ? p
 				   : current_directory_get() / p);
   }
@@ -123,22 +126,22 @@ namespace libport
   void
   file_library::pop_current_directory()
   {
-    precondition (!current_directory_.empty ());
+    precondition(!current_directory_.empty());
 
-    current_directory_.pop_front ();
+    current_directory_.pop_front();
   }
 
   path
   file_library::current_directory_get() const
   {
-    precondition (!current_directory_.empty ());
+    precondition(!current_directory_.empty());
 
-    return *current_directory_.begin ();
+    return *current_directory_.begin();
   }
 
 
   path
-  file_library::find_file (const path& file)
+  file_library::find_file(const path& file)
   {
     // Split file in two components, basename and basedir.
     path directory = file.dirname();
@@ -154,10 +157,10 @@ namespace libport
     else
       {
 	// Does the file can be found in current directory?
-	if (find_in_directory (current_directory_get (), file))
-	  return (current_directory_get () / file).dirname();
+	if (find_in_directory(current_directory_get(), file))
+	  return (current_directory_get() / file).dirname();
 	else
-	  return find_in_search_path (directory, file.basename());
+	  return find_in_search_path(directory, file.basename());
       }
   }
 
@@ -177,7 +180,7 @@ namespace libport
     {
       path checked_dir = p.absolute_get() ? p : current_directory_get() / p;
       checked_dir /= relative_path;
-      if (find_in_directory (checked_dir, filename))
+      if (find_in_directory(checked_dir, filename))
         return checked_dir;
     }
 
