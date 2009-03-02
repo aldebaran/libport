@@ -76,13 +76,8 @@ coroutine_start(Coro* self, Coro* other,
 void*
 coroutine_stack_addr(Coro*)
 {
-  void* res = 0;
-  pthread_attr_t attr;
-  if (pthread_attr_init(&attr))
-    errabort("pthread_attr_init");
-  if (pthread_attr_getstackaddr(&attr, &res))
-    errabort("pthread_attr_getstackaddr");
-  return res;
+  // Undocumented, but works on OS X 10.5.
+  return pthread_get_stackaddr_np(pthread_self());
 }
 
 void
@@ -108,13 +103,8 @@ coroutine_current_stack_pointer(Coro*)
 size_t
 coroutine_stack_size(Coro*)
 {
-  size_t res = 0;
-  pthread_attr_t attr;
-  if (pthread_attr_init(&attr))
-    errabort("pthread_attr_init");
-  if (pthread_attr_getstacksize(&attr, &res))
-    errabort("pthread_attr_getstacksizeaddr");
-  return res;
+  // Undocumented, but works on OS X 10.5.
+  return pthread_get_stacksize_np(pthread_self());
 }
 
 void
