@@ -78,12 +78,12 @@ urbi_compilation_mode_set ()
 
       (symbols)
         AC_DEFINE([SYMBOLS_PRECOMPILED], [1],
-                  [Define if Urbi symbols should be precompiled])
+                  [Define if Urbi symbols should be precompiled.])
         ;;
 
       (threads)
         AC_DEFINE([SCHED_CORO_OSTHREAD], [1],
-                  [Define to use the OS-thread implementation of coroutines])
+                  [Define to use the OS-thread implementation of coroutines.])
         ;;
 
       (*)
@@ -92,7 +92,7 @@ urbi_compilation_mode_set ()
     esac
   done
   AC_DEFINE_UNQUOTED([URBI_KERNEL_STACK_SIZE], [$stacksize],
-                     [Default coroutine stack size in kB])
+                     [Default coroutine stack size in kB.])
 }
 
 URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
