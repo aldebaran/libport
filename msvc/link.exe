@@ -82,14 +82,22 @@ handle_lib ()
     local lib_dirs="$HOME/.wine/winroot/boost_1_35_0/lib"
     lib_dirs+=" $VCXX_PATH/lib"
     lib_dirs+=" $VCXX_PATH/PlatformSDK/Lib"
+
     # On one line to make it easier to read set -x.
     systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' |
+                  # We tried to keep the original case, but it was a
+                  # PITA, since, at least in our environment, some
+                  # libraries (ws2_32) as two different cases: WS2_32
+                  # for Visual, and ws2_32 for mingw.  Keep it stupid
+                  # simple.
+                    tr A-Z a-z |
                     sort -u |
                     tr -d '\r' |
                     tr '\n' ' ')
+    verbose "systemlibs=$systemlibs"
   }
 
-  local base=${1#-l}.lib
+  local base=$(echo "${1#-l}.lib" | tr A-Z a-z)
   local res
   # If $base is not in $systemlibs, prepend "lib".
   case " $systemlibs " in
