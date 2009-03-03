@@ -67,6 +67,8 @@ case $enable_host:$host_alias in
 esac
 AC_MSG_RESULT([$URBI_HOST])
 AC_SUBST([URBI_HOST])
+AC_DEFINE_UNQUOTED([URBI_HOST], ["$URBI_HOST"],
+                   [Define as the Urbi host architecture name.])
 
 # URBI_ENV
 AC_ARG_ENABLE([env],
@@ -93,6 +95,10 @@ case $URBI_ENV in
      AC_MSG_NOTICE([[unknown environment type: $URBI_ENV]]);;
 esac
 AC_SUBST([URBI_ENV])
+
+# URBI_ROOT.
+AC_DEFINE_UNQUOTED([URBI_ROOT], ["$prefix"],
+                   [Define as the install prefix.])
 
 # Everything is installed in $URBI_KERNEL_PATH/gostai.
 AC_SUBST([PACKAGE_BRAND], [gostai])
