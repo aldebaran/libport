@@ -100,6 +100,12 @@ AC_SUBST([URBI_ENV])
 AC_DEFINE_UNQUOTED([URBI_ROOT], ["$prefix"],
                    [Define as the install prefix.])
 
+# If we target windows, dealing with paths to dlls is a problem.
+# Everything is much simpler if we just put the dlls in the bindir.
+case $host in
+   (*mingw*) libdir='${bindir}';;
+esac
+
 # Everything is installed in $URBI_KERNEL_PATH/gostai.
 AC_SUBST([PACKAGE_BRAND], [gostai])
 AC_SUBST([branddir], ['${prefix}/${PACKAGE_BRAND}'])
@@ -126,7 +132,7 @@ URBI_PACKAGE_KIND_SWITCH(
 # /usr/local/gostai/core/$host/$env.
 # Could have been named sdklibdir too.
 AC_SUBST([envdir], ['${hostdir}/${URBI_ENV}'])
-# Possibly an alias: /usr/local/gostai/kernel/powerpc-apple-darwin8.7.0/engine
+# Possibly an alias: /usr/local/gostai/kernel/i386-apple-darwin9.6.0/engine
 URBI_PACKAGE_KIND_SWITCH([sdk], [],
 	[AC_SUBST([kerneldir],
 		  ['${kbranddir}/kernel/${URBI_HOST}/${URBI_ENV}'])])
