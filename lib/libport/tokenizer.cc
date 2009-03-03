@@ -3,12 +3,14 @@
 namespace libport
 {
 
-  boost::tokenizer< boost::char_separator<char> >
-  make_tokenizer(const std::string& str, const char* sep)
+  tokenizer_type
+  make_tokenizer(const std::string& str,
+                 const char* dropped_delims,
+                 const char* kept_delims,
+                 boost::empty_token_policy empty_tokens)
   {
-    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-    boost::char_separator<char> s(sep);
-    return tokenizer(str, s);
+    boost::char_separator<char> s(dropped_delims, kept_delims, empty_tokens);
+    return tokenizer_type(str, s);
   }
 
 }
