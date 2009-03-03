@@ -84,7 +84,6 @@ handle_lib ()
     lib_dirs+=" $VCXX_PATH/PlatformSDK/Lib"
     # On one line to make it easier to read set -x.
     systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' |
-                    tr A-Z a-z |
                     sort -u |
                     tr -d '\r' |
                     tr '\n' ' ')
@@ -615,7 +614,7 @@ case $mode in
       (link.exe) outargs -OUT:$(transform $output);;
       (*)        outargs -Fe$(transform $output);;
     esac
-    linkargs "-SUBSYSTEM:console" "-MANIFEST" "kernel32.lib"
+    linkargs "-SUBSYSTEM:console" "-MANIFEST" "Kernel32.Lib"
     ;;
 esac
 
