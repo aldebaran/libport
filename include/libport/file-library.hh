@@ -36,6 +36,14 @@ namespace libport
     file_library(const path& p);
     /// Init the library with a string to split at \a separator.
     file_library(const std::string& library, const char* separator);
+    /// Handle a list of search-paths.
+    /// \param r  the collection of search-paths.
+    ///           each occurrence of an additional colon marks the
+    ///           place where the following search-paths will be inserted.
+    ///           If there is none, the remaining components are ignored.
+    /// \param sep  the separator to split search-paths (typically colon).
+    template <class ForwardRange>
+      file_library(const ForwardRange& r, const char* sep);
     /// \}
 
     /// \name Managing inclusion paths.
@@ -43,6 +51,16 @@ namespace libport
     void push_back(const path& p);
     /// Split \a library on \a separator and put at the end of path list.
     void push_back(const std::string& library, const char* separator);
+
+    /// Handle a list of search-paths.
+    /// \param r  the collection of search-paths.
+    ///           each occurrence of an additional colon marks the
+    ///           place where the following search-paths will be inserted.
+    ///           If there is none, the remaining components are ignored.
+    /// \param sep  the separator to split search-paths (typically colon).
+    template <class ForwardRange>
+      void push_back(const ForwardRange& r, const char* sep);
+
     void append(const path& p);
 
     void push_front(const path& p);
@@ -60,7 +78,17 @@ namespace libport
     path current_directory_get() const;
     /// \}
 
-    /// \name Findind file
+
+    typedef std::list<std::string> strings_type;
+    /// Split \a lib at each occurrence of \a sep, return the list
+    /// of components.
+    /// Behaves especially on Windows when splitting on ":", in
+    /// order to preserve drive prefixes (i.e., "c:foo:d:bar" is
+    /// split in "c:foo", "d:bar").
+    static strings_type split(const std::string& lib, const char* sep);
+
+
+    /// \name Finding files.
     /// \{
     /** \brief Search a file.
 

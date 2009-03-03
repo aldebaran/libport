@@ -18,6 +18,7 @@ TESTS_BINARIES =				\
   tests/libport/escape.cc			\
   tests/libport/fd-stream.cc			\
   tests/libport/fifo.cc				\
+  tests/libport/file-library.cc			\
   tests/libport/finally.cc			\
   tests/libport/foreach.cc			\
   tests/libport/has-if.cc			\
@@ -76,6 +77,7 @@ tests_libport_erase_if_SOURCES                  = tests/libport/erase-if.cc
 tests_libport_escape_SOURCES                    = tests/libport/escape.cc
 tests_libport_fd_stream_SOURCES                 = tests/libport/fd-stream.cc
 tests_libport_fifo_SOURCES                      = tests/libport/fifo.cc
+tests_libport_file_library_SOURCES              = tests/libport/file-library.cc
 tests_libport_finally_SOURCES                   = tests/libport/finally.cc
 tests_libport_foreach_SOURCES                   = tests/libport/foreach.cc
 tests_libport_has_if_SOURCES                    = tests/libport/has-if.cc

@@ -59,33 +59,28 @@ namespace libport
       return current_directory_get() / p;
   }
 
-  namespace
+
+  file_library::strings_type
+  file_library::split(const std::string& lib, const char* sep)
   {
-    typedef std::list<std::string> strings_type;
-    strings_type
-    split(const std::string& lib, const char* sep)
+    WIN32_IF(bool split_on_colon = strchr(sep, ':'), /* Nothing */);
+    strings_type res;
+    foreach (const std::string& s, make_tokenizer(lib, sep, "",
+                                                  boost::keep_empty_tokens))
     {
-      WIN32_IF(bool split_on_colon = strchr(sep, ':'), /* Nothing */);
-      strings_type res;
-      foreach (const std::string& s, make_tokenizer(lib, sep))
-      {
 #ifdef WIN32
-        // In case we split "c:\foo" into "c" and "\foo", glue them
-        // together again.
-	if (split_on_colon
-            && s[0] == '\\'
-            && !res.empty()
-            && res.back().length() == 1)
-	  res.back() += ':' + s;
-	else
+      // In case we split "c:\foo" into "c" and "\foo", glue them
+      // together again.
+      if (split_on_colon
+          && s[0] == '\\'
+          && !res.empty()
+          && res.back().length() == 1)
+        res.back() += ':' + s;
+      else
 #endif
-        {
-          std::cerr << "Pushing: " << s << std::endl;
-	  res.push_back(s);
-        }
-      }
-      return res;
+        res.push_back(s);
     }
+    return res;
   }
 
   void
@@ -98,7 +93,8 @@ namespace libport
   file_library::push_back(const std::string& lib, const char* sep)
   {
     foreach (const std::string& s, split(lib, sep))
-      push_back(s);
+      if (!s.empty())
+        push_back(s);
   }
 
   void
@@ -111,7 +107,8 @@ namespace libport
   file_library::push_front(const std::string& lib, const char* sep)
   {
     foreach (const std::string& s, split(lib, sep))
-      push_front(s);
+      if (!s.empty())
+        push_front(s);
   }
 
   void
@@ -127,7 +124,6 @@ namespace libport
   file_library::pop_current_directory()
   {
     precondition(!current_directory_.empty());
-
     current_directory_.pop_front();
   }
 
@@ -135,7 +131,6 @@ namespace libport
   file_library::current_directory_get() const
   {
     precondition(!current_directory_.empty());
-
     return *current_directory_.begin();
   }
 

@@ -6,8 +6,40 @@
 #ifndef LIBPORT_FILE_LIBRARY_HXX
 # define LIBPORT_FILE_LIBRARY_HXX
 
+# include <libport/foreach.hh>
+# include <libport/range.hh>
+
 namespace libport
 {
+
+  template <class ForwardRange>
+  file_library::file_library(const ForwardRange& r, const char* sep)
+  {
+    push_cwd();
+    push_back(r, sep);
+  }
+
+  template <class ForwardRange>
+  void
+  file_library::push_back(const ForwardRange& r, const char* sep)
+  {
+    bool inserted = false;
+    typename boost::range_iterator<const ForwardRange>::type
+      first = boost::const_begin(r);
+    if (first != boost::const_end(r))
+      foreach (const std::string& s, split(*first, sep))
+      {
+        if (!s.empty())
+          push_back(s);
+        else if (!inserted)
+        {
+          // Insert the following search path component.
+          push_back(skip_first(r), sep);
+          inserted = true;
+        }
+      }
+  }
+
   inline void
   file_library::append(const path& p)
   {
