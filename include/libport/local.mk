@@ -31,6 +31,7 @@ libport_include_HEADERS +=			\
   include/libport/assert.hh			\
   include/libport/base64.hh			\
   include/libport/buffer-stream.hh		\
+  include/libport/backtrace.hh			\
   include/libport/cli.hh			\
   include/libport/cli.hxx			\
   include/libport/compilation.hh		\

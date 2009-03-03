@@ -36,6 +36,9 @@ AC_CONFIG_HEADERS([include/config.h])
 URBI_PACKAGE_KIND([sdk])
 URBI_LIBPORT
 
+# libport/backtrace.
+AC_CHECK_HEADERS(execinfo.h)
+
 BOOST_TEST
 BOOST_SYSTEM
 
