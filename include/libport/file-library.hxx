@@ -27,17 +27,23 @@ namespace libport
     typename boost::range_iterator<const ForwardRange>::type
       first = boost::const_begin(r);
     if (first != boost::const_end(r))
-      foreach (const std::string& s, split(*first, sep))
-      {
-        if (!s.empty())
-          push_back(s);
-        else if (!inserted)
+    {
+      if (first->empty())
+        // Insert the following search path component.
+        push_back(skip_first(r), sep);
+      else
+        foreach (const std::string& s, split(*first, sep))
         {
-          // Insert the following search path component.
-          push_back(skip_first(r), sep);
-          inserted = true;
+          if (!s.empty())
+            push_back(s);
+          else if (!inserted)
+          {
+            // Insert the following search path component.
+            push_back(skip_first(r), sep);
+            inserted = true;
+          }
         }
-      }
+    }
   }
 
   inline void

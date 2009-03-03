@@ -42,8 +42,11 @@ init_test_suite()
   ctor_suite->add(BOOST_TEST_CASE(bind(ctor<strings_type>,              \
                                        list_of Path, Sep, Expected)))
 
+  // First component overrides everything.
   def(("/outer1:/outer2")("/inner1:/inner2"), ":",
       ".:/outer1:/outer2");
+
+  // First component enhances.
   def(("/outer1::/outer2")("/inner1:/inner2"), ":",
       ".:/outer1:/inner1:/inner2:/outer2");
   def((":/outer1:/outer2")("/inner1:/inner2"), ":",
@@ -51,14 +54,23 @@ init_test_suite()
   def(("/outer1:/outer2:")("/inner1:/inner2"), ":",
       ".:/outer1:/outer2:/inner1:/inner2");
 
+  // First component enhances with superfluous colons.
   def((":/outer1::/outer2::")("/inner1:/inner2"), ":",
       ".:/inner1:/inner2:/outer1:/outer2");
 
+  // Superfluous colons.
   def((":/outer1::/outer2::"), ":",
       ".:/outer1:/outer2");
 
+  // Three components.
   def(("/outer1:/outer2:")("/inner1::/inner2")("/inmost1::/inmost2"), ":",
       ".:/outer1:/outer2:/inner1:/inmost1:/inmost2:/inner2");
+
+  // First are empty.
+  def(("")("")("/inmost1::/inmost2"), ":",
+      ".:/inmost1:/inmost2");
+  def(("")("")(""), ":",
+      ".");
 #undef def
 
   return suite;
