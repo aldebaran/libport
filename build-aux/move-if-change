@@ -16,27 +16,49 @@
 
 diff="diff -q"
 
+usage ()
+{
+  cat <<EOF
+usage: $0 [OPTION...] SOURCE DESTINATION
+
+Rename SOURCE as DESTINATION, but preserve the timestamps of
+DESTINATION if SOURCE and DESTINATION have equal contents.
+
+Options:
+  -h, --help        display this message and exit
+  -I, --ignore-matching-lines REGEXP
+                    ignore differences in lines matching REGEXP
+EOF
+  exit 0
+}
+
 while test $# != 0
 do
-    case $1 in
-        (-I|--ignore)
-        shift
-        diff+=" -I $1";;
+  case $1 in
+    (-h|--help)
+      usage ;;
 
-        (*)
-        if test -z "$from"; then
-            from=$1
-        else
-            to=$1
-        fi
-        ;;
-    esac
-    shift
+    (-I|--ignore-matching-lines)
+      shift
+      diff+=" -I $1";;
+
+    (*)
+      if test -z "$from"; then
+        from=$1
+      else
+        to=$1
+      fi
+      ;;
+  esac
+  shift
 done
 
 if test -r "$to" && $diff "$from" "$to"; then
-    echo >&2 "$to is unchanged"
-    rm -f "$from"
-else
-    mv -f "$from" "$to"
+  echo >&2 "$to is unchanged"
+  # The file might have actually changed, but changes that are
+  # ignored.  In that case, we want the latest contents, but the
+  # oldest time stamp.  Since mv preserves time stamps, just set the
+  # time stamps of the new one to that of the old one.
+  touch -r "$to" "$from"
 fi
+mv -f "$from" "$to"
