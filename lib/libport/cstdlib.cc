@@ -2,7 +2,7 @@
 #include <string>
 #include <libport/cstdlib>
 
-#if defined MSVC || defined __MINGW32__
+#if defined _MSC_VER || defined __MINGW32__
 
 extern "C"
 {
@@ -29,7 +29,7 @@ extern "C"
 
 #endif
 
-#ifdef MSVC
+#ifdef _MSC_VER
 
 extern "C"
 {

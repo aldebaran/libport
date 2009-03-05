@@ -10,7 +10,7 @@
 # include <libport/export.hh>
 # include <libport/detect-win32.h>
 
-# ifdef MSVC
+# ifdef _MSC_VER
 #  include <io.h>
 #  define snprintf _snprintf
 #  define vsnprintf _vsnprintf
