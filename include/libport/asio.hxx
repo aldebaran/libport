@@ -298,10 +298,16 @@ namespace netdetail {
     }
   }
   inline void
-  delete_check(boost::system::error_code erc, std::string* buf)
+  delete_check(boost::system::error_code erc, SocketImpl<udpsock>*s,
+      Destructible::DestructionLock, std::string* buf)
   {
     if (erc)
+    {
       std::cerr <<"Socket error: " << erc.message() << std::endl;
+      BlockLock bl(s->callbackLock);
+      if (s->onErrorFunc)
+	s->onErrorFunc(erc);
+    }
     delete buf;
   }
 
@@ -313,7 +319,7 @@ namespace netdetail {
     std::string* buf = new std::string(static_cast<const char*>(buffer),
                                        length);
     s->base_->async_send(boost::asio::buffer(*buf),
-                         boost::bind(&delete_check, _1, buf));
+                         boost::bind(&delete_check, _1, s, s->getDestructionLock(), buf));
   }
 
   template<typename Stream>
