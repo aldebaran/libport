@@ -24,6 +24,9 @@
 ## Sometimes this helps catching errors earlier (you don't have to
 ## wait for all the tests to be compiled).
 ##
+## If some of the tests are not lazy, define STRICT_TEST_LOGS as the
+## set of TEST_LOGS that must be cleaned before rerunning the tests.
+##
 ## Define TEST_SUITE_LOG to be the name of the global log to create.
 ## Define TEST_LOGS to the set of logs to include in it.  It defaults
 ## to $(TESTS:.test=.log).
@@ -245,7 +248,11 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 
 # Run all the tests.
 check-TESTS:
-	@test -n '$(LAZY_TEST_SUITE)' || rm -f $(TEST_LOGS)
+	@if test -n '$(LAZY_TEST_SUITE)'; then	\
+	  rm -f $(STRICT_TEST_LOGS);		\
+	else					\
+	  rm -f $(TEST_LOGS);			\
+	fi
 	@rm -f $(TEST_SUITE_LOG)
 	@$(MAKE) $(TEST_SUITE_LOG)
 

@@ -1,5 +1,7 @@
 # No need to re-run the test if the sources have not changed.
 LAZY_TEST_SUITE = 1
+STRICT_TEST_LOGS =							   \
+  $(shell $(AWK) '(FNR == 1 && $$1 == "FAIL:" ) { print $$2 }' $(TEST_LOGS))
 
 # Program to check:
 TESTS += $(TESTS_BINARIES)
