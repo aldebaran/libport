@@ -10,35 +10,33 @@
 #include <libport/separator.hh>
 #include <libport/pair.hh>
 
-int main ()
+#include <libport/unit-test.hh>
+
+using libport::test_suite;
+
+void
+check()
 {
-  {
-    std::vector<int> v (4);
-    std::fill (v.begin (), v.end (), 51);
-
-    std::ostringstream s;
-    s << libport::separate (v, ", ");
-    assertion (s.str () == "51, 51, 51, 51");
+# define CHECK(Type, Num, Separator)				\
+  {								\
+    std::vector<Type> v (4);					\
+    std::fill (v.begin (), v.end (), Num);			\
+    std::ostringstream s;					\
+    s << libport::separate (v, Separator);			\
+    BOOST_CHECK_EQUAL(s.str (), "51, 51, 51, 51");		\
   }
 
-  {
-    std::vector<int> v (4);
-    std::fill (v.begin (), v.end (), 51);
+  CHECK(int, 51, ", ");
+  CHECK(int, 51, libport::make_pair (",", " "));
 
-    std::ostringstream s;
-    s << libport::separate (v, libport::make_pair (",", " "));
-    assertion (s.str () == "51, 51, 51, 51");
-  }
+  int p = 51;
+  CHECK(int*, &p, ", ");
+}
 
-  {
-    int p = 51;
-    std::vector<int*> v (4);
-    std::fill (v.begin (), v.end (), &p);
-
-    std::ostringstream s;
-    s << libport::separate (v, ", ");
-    assertion (s.str () == "51, 51, 51, 51");
-  }
-
-  return 0;
+test_suite*
+init_test_suite()
+{
+  test_suite* suite = BOOST_TEST_SUITE("libport::cli");
+  suite->add(BOOST_TEST_CASE(check));
+  return suite;
 }

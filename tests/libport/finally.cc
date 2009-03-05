@@ -1,20 +1,32 @@
 #include <cassert>
 #include <libport/finally.hh>
 
-int main()
+#include <libport/unit-test.hh>
+
+using libport::test_suite;
+
+void
+check()
 {
   int var = 1;
   {
     libport::Finally finally(libport::restore(var));
-    assert(var == 1);
+    BOOST_CHECK_EQUAL(var, 1);
     var = 2;
-    assert(var == 2);
+    BOOST_CHECK_EQUAL(var, 2);
   }
-  assert(var == 1);
+  BOOST_CHECK_EQUAL(var, 1);
   {
     libport::Finally finally(libport::scoped_set(var, 2));
-    assert(var == 2);
+    BOOST_CHECK_EQUAL(var, 2);
   }
-  assert(var == 1);
-  return 0;
+  BOOST_CHECK_EQUAL(var, 1);
+}
+
+test_suite*
+init_test_suite()
+{
+  test_suite* suite = BOOST_TEST_SUITE("libport::finally");
+  suite->add(BOOST_TEST_CASE(check));
+  return suite;
 }

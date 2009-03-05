@@ -12,6 +12,10 @@
 #include <libport/ref-counted.hh>
 #include <libport/intrusive-ptr.hh>
 
+#include <libport/unit-test.hh>
+
+using libport::test_suite;
+
 static int ninstances;
 
 struct Counted : libport::RefCounted
@@ -29,38 +33,47 @@ struct Counted : libport::RefCounted
 typedef libport::intrusive_ptr<Counted> rCounted;
 BOOST_CLASS_TRACKING(rCounted, boost::serialization::track_never)
 
-int
-main()
+void
+check()
 {
-  rCounted a = new Counted(42);
+# define CHECK(N)						\
+  BOOST_CHECK_EQUAL(ninstances, N)
+
+ rCounted a = new Counted(42);
   std::stringstream s;
 
-  assert(ninstances == 1);
+  CHECK(1);
 
   boost::archive::text_oarchive oa(s);
   oa << a << a;
 
-  assert(ninstances == 1);
+  CHECK(1);
 
   boost::archive::text_iarchive ia(s);
   rCounted b1, b2;
   ia >> b1 >> b2;
 
-  assert(ninstances == 2);
-  assert(b1.get() != a.get());
+  CHECK(2);
+  BOOST_CHECK(b1.get() != a.get());
   a = 0;
 
-  assert(ninstances == 1);
+  CHECK(1);
 
-  assert(b1->val == 42);
-  assert(b2->val == 42);
-  assert(b1.get() == b2.get());
+  BOOST_CHECK_EQUAL(b1->val, 42);
+  BOOST_CHECK_EQUAL(b2->val, 42);
+  BOOST_CHECK_EQUAL(b1.get(), b2.get());
 
   b1 = 0;
-  assert(ninstances == 1);
+  CHECK(1);
 
   b2 = 0;
-  assert(ninstances == 0);
+  CHECK(0);
+}
 
-  return 0;
+test_suite*
+init_test_suite()
+{
+  test_suite* suite = BOOST_TEST_SUITE("libport::intrusive-ptr-serialize");
+  suite->add(BOOST_TEST_CASE(check));
+  return suite;
 }

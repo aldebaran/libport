@@ -7,11 +7,16 @@
 #include <libport/contract.hh>
 #include <libport/indent.hh>
 
+#include <libport/unit-test.hh>
+
 using libport::iendl;
 using libport::incendl;
 using libport::decendl;
 
-int main ()
+using libport::test_suite;
+
+void
+check ()
 {
   std::ostringstream s;
 
@@ -35,7 +40,14 @@ int main ()
   3\n\
 }\n\
 ";
-  assertion (s.str () == expected);
 
-  return 0;
+  BOOST_CHECK_EQUAL(s.str (), expected);
+}
+
+test_suite*
+init_test_suite()
+{
+  test_suite* suite = BOOST_TEST_SUITE("libport::indent");
+  suite->add(BOOST_TEST_CASE(check));
+  return suite;
 }

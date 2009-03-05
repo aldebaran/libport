@@ -5,7 +5,9 @@
 #include <libport/ref-counted.hh>
 #include <libport/intrusive-ptr.hh>
 
-#define INSTANCES(N) assert(Counted::instances == N)
+#include <libport/unit-test.hh>
+
+using libport::test_suite;
 
 using libport::intrusive_ptr;
 
@@ -25,33 +27,44 @@ unsigned Counted::instances;
 typedef intrusive_ptr<Counted> rCounted;
 typedef intrusive_ptr<SubCounted> rSubCounted;
 
-int
-main ()
+void
+check()
 {
+# define CHECK(N)						\
+  BOOST_CHECK_EQUAL(Counted::instances, unsigned(N))
+
   {
     SubCounted* subcounted = new SubCounted;
     rSubCounted r1 (subcounted);
     {
-      INSTANCES(1);
+      CHECK(1);
       rCounted r2;
-      INSTANCES(1);
+      CHECK(1);
       r2 = r1;
-      INSTANCES(1);
+      CHECK(1);
       rSubCounted r3 = r2.cast<SubCounted>();
-      INSTANCES(1);
+      CHECK(1);
       rCounted r4 = new Counted;
-      INSTANCES(2);
+      CHECK(2);
       r4 = r3;
-      INSTANCES(1);
+      CHECK(1);
     }
-    INSTANCES(1);
+    CHECK(1);
   }
-  INSTANCES(0);
+  CHECK(0);
 
   {
     rSubCounted p = new SubCounted();
     p = p;
-    INSTANCES(1);
+    CHECK(1);
   }
-  INSTANCES(0);
+  CHECK(0);
+}
+
+test_suite*
+init_test_suite()
+{
+  test_suite* suite = BOOST_TEST_SUITE("libport::cli");
+  suite->add(BOOST_TEST_CASE(check));
+  return suite;
 }
