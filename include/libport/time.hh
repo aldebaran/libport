@@ -1,6 +1,9 @@
 #ifndef LIBPORT_TIME_HH
 # define LIBPORT_TIME_HH
 
+# include <libport/unistd.h> // Leave unistd.h here because it must be included
+                             // before windows.h, and thus before
+                             // boost/date_time/*.
 # include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace libport
