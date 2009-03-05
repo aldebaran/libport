@@ -1,3 +1,5 @@
+#include <cstdlib>
+
 #include <libport/backtrace.hh>
 #include <libport/config.h>
 
