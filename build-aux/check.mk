@@ -296,15 +296,15 @@ check-html:
 ## --------- ##
 
 # Get the list of tests that failed.
-recheck_rx = \
-  perl -ne 'END { print "@res\n" if @res; };				\
-            /^(?:FAIL|XPASS): ([^()]*)(?: \(.*\)?)/ && push @res, $$1;'
-
+LIST_FAILED_TEST_LOGS =							\
+  perl -e 'print join " ",						\
+                 grep {open(_) && <_> =~ /^(FAIL|XPASS): /} (@ARGV);'	\
+       -- $(TEST_LOGS)
 .PHONY: recheck recheck-html
 recheck recheck-html:
 	@target=$$(echo $@ | sed -e 's/^re//');			\
 	if test -f $(TEST_SUITE_LOG); then			\
-	  TESTS=$$($(recheck_rx) $(TEST_SUITE_LOG));		\
+	  TESTS=$$($(LIST_FAILED_TEST_LOGS));			\
 	  $(MAKE) $(AM_MAKEFLAGS) $$target TESTS="$$TESTS";	\
 	else							\
 	  $(MAKE) $(AM_MAKEFLAGS) $$target;			\
