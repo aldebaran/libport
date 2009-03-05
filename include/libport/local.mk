@@ -113,6 +113,8 @@ libport_include_HEADERS +=			\
   include/libport/thread.hh			\
   include/libport/thread.hxx			\
   include/libport/throw-exception.hh		\
+  include/libport/time.hh			\
+  include/libport/time.hxx			\
   include/libport/timer.hh			\
   include/libport/timer.hxx			\
   include/libport/tokenizer.hh			\

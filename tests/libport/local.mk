@@ -31,6 +31,7 @@ TESTS_BINARIES =				\
   tests/libport/singleton-ptr.cc		\
   tests/libport/statistics.cc			\
   tests/libport/symbol.cc			\
+  tests/libport/time.cc			\
   tests/libport/timer.cc			\
   tests/libport/tokenizer.cc			\
   tests/libport/ufloat-double.cc		\
@@ -91,6 +92,7 @@ tests_libport_separator_SOURCES                 = tests/libport/separator.cc
 tests_libport_singleton_ptr_SOURCES             = tests/libport/singleton-ptr.cc
 tests_libport_statistics_SOURCES                = tests/libport/statistics.cc
 tests_libport_symbol_SOURCES                    = tests/libport/symbol.cc
+tests_libport_time_SOURCES                      = tests/libport/time.cc
 tests_libport_timer_SOURCES                     = tests/libport/timer.cc
 tests_libport_tokenizer_SOURCES                 = tests/libport/tokenizer.cc
 tests_libport_ufloat_double_SOURCES             = tests/libport/ufloat-double.cc
