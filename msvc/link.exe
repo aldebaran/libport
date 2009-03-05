@@ -398,7 +398,7 @@ use NDBM_File;
 
 my %converted_path;
 tie(%converted_path, "NDBM_File", "winepath.cache", O_RDWR|O_CREAT, 0666)
-    or die "cannot tie NDBM file winepath.cache: $!; aborting";
+    or warn "cannot tie NDBM file winepath.cache: $!; aborting";
 
 # Convert a set of paths from Windows to linux.
 sub convert_path ($)
