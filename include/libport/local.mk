@@ -107,6 +107,7 @@ libport_include_HEADERS +=			\
   include/libport/singleton-ptr.hxx		\
   include/libport/statistics.hh			\
   include/libport/statistics.hxx		\
+  include/libport/io-stream.hh			\
   include/libport/symbol.hh			\
   include/libport/symbol.hxx			\
   include/libport/sysexits.hh			\

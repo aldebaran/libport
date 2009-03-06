@@ -32,6 +32,7 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/read-stdin.cc			\
   lib/libport/sched.cc				\
   lib/libport/semaphore.cc			\
+  lib/libport/io-stream.cc			\
   lib/libport/symbol.cc				\
   lib/libport/sysexits.cc			\
   lib/libport/timer.cc				\
