@@ -22,9 +22,7 @@ check ()
     std::stringstream o;			 \
     Foreach (int i, v)				 \
       o << i << ',';				 \
-    ECHO("Expected  :" << Expect);		 \
-    ECHO("Effective :" << o.str());		 \
-    assert(o.str() == Expect);			 \
+    BOOST_CHECK_EQUAL(o.str(), Expect);		 \
   } while (0)
 
   CHECK(      std::vector,  foreach, "1,2,3,4,");

@@ -17,7 +17,7 @@ check ()
 
 # define CHECK(Num, Bool)						\
   do {									\
-    BOOST_CHECK(Bool == libport::has_if(v, boost::lambda::_1 == Num));	\
+    BOOST_CHECK_EQUAL(Bool, libport::has_if(v, boost::lambda::_1 == Num));	\
   } while (0)
 
   CHECK(1, true);

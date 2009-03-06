@@ -54,7 +54,7 @@ check()
   ia >> b1 >> b2;
 
   CHECK(2);
-  BOOST_CHECK(b1.get() != a.get());
+  BOOST_CHECK_NE(b1.get(), a.get());
   a = 0;
 
   CHECK(1);
