@@ -1,6 +1,8 @@
 #include <libport/assert.hh>
 #include <libport/exception.hh>
+#include <libport/program-name.hh>
 #include <libport/semaphore.hh>
+#include <libport/sysexits.hh>
 
 namespace libport
 {
@@ -104,7 +106,13 @@ namespace libport
     }
 
     if (sem_ == SEM_FAILED)
-      errabort("sem_open(" << name_ << ')');
+      // Certainly dying because we don't have enough semaphores
+      // available.  Report we should be skipped.
+      std::cerr << program_name()
+                << ": cannot sem_open(" << name_ << "): "
+                << strerror(errno)
+                << std::endl
+                << exit(EX_SKIP);
 # else
     sem_ = new sem_t;
     if (sem_init(sem_, 0, cnt))
