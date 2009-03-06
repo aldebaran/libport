@@ -388,17 +388,38 @@ dump_log ()
   perl -e "my \$deps_file = '$deps_file';" \
        -e "my \$deps_phony = '$deps_phony';" \
        -e "my \$deps_target = '$deps_target';" \
+       -e "my \$medir = '$medir';" \
        -e "my \$source = '$source';" \
        -e '
 #! /usr/bin/perl
 
+use Cwd (getcwd);
 use English;
 use Fcntl;   # For O_RDWR, O_CREAT, etc.
+use File::Path (mkpath);
 use NDBM_File;
 
+# A hash table that saves from repeated calls to winepath.
+# A significant improvement.
 my %converted_path;
-tie(%converted_path, "NDBM_File", "winepath.cache", O_RDWR|O_CREAT, 0666)
-    or warn "cannot tie NDBM file winepath.cache: $!; aborting";
+
+# A file into which we store the hash table.  Because NDBM does not
+# support concurrent changes, it is pointless to use a single global
+# cache.  Would be nice though.  Yet we do not leave this file in
+# the current directory, as it results trailing files that all our
+# "clean" rules should be educated to handle (including foreign
+# packages such as libjpeg).  A useless burden.
+my $cache_dir = "$medir/" . getcwd;
+my $cache_file = "$cache_dir/winepath.cache";
+
+if (! -d $cache_dir)
+{
+  mkpath $cache_dir
+    or warn "cannot create $cache_dir";
+}
+
+tie(%converted_path, "NDBM_File", $cache_file, O_RDWR|O_CREAT, 0666)
+  or warn "cannot tie NDBM file $cache_file: $!; aborting";
 
 # Convert a set of paths from Windows to linux.
 sub convert_path ($)
@@ -554,7 +575,8 @@ esac
 PROG=$me
 
 : ${TMPDIR=/tmp}
-tmp=$TMPDIR/$me.dir/$$
+medir=$TMPDIR/$me.dir
+tmp=$medir/$$
 case $VERBOSE in
   (x) ;;
   (*) trap "exit=\$?; rm -rf $tmp; exit \$exit" 0;;

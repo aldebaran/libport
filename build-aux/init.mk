@@ -54,9 +54,6 @@ SKIP_STATUS = 176
 CLEANFILES += vc80.pdb
 # Files created by MSVC++ and our cl.exe.
 CLEANFILES += $(PROGRAMS:=.auto.*) $(EXTRA_PROGRAMS:=.auto.*)
-# Our winepath caches.
-CLEANFILES +=					\
-  winepath.cache.*
 
 ## FIXME: I don't understand how come these files are created.  It
 ## might be an incompability between our cl.exe wrapper and libtool:
