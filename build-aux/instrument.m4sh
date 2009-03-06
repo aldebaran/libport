@@ -1,6 +1,6 @@
 ##                                                        -*- shell-script -*-
 ## instrument.as: This file is part of build-aux.
-## Copyright (C) 2006-2008, Gostai S.A.S.
+## Copyright (C) 2006-2009, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -83,6 +83,13 @@ instrument ()
 
 # FIXME: This should be issued farther in the code, not with the functions.
 normalize_boolean INSTRUMENT
+
+# Under some circumstances, instead of 2s until "server.port", I have
+# 156s when running Valgrind...  But factor 100 is really a lot, see
+# if we can do with 50.
+if $INSTRUMENT; then
+  timeout_factor 50
+fi
 ])
 
 

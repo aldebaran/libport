@@ -163,8 +163,9 @@ spawn_urbi_server ()
   # Wait for the port file to be completed: it must have one full line
   # (with \n to be sure it is complete).
   local t=0
-  local tmax=20
-  local dt=.5
+  : ${timeout_factor:=1}
+  local tmax=$((10 * $timeout_factor))
+  local dt=$(echo "0.5 * $timeout_factor" | bc)
   # 0 if we stop, 1 to continue sleeping.
   local cont
   while children_alive server &&
