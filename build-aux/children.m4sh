@@ -12,7 +12,7 @@
 ##
 
 
-m4_defun([URBI_CHILDREN_PREPARE],
+m4_defun([_URBI_CHILDREN_PREPARE],
 [
 
 # run TITLE COMMAND...
@@ -353,3 +353,7 @@ children_wait ()
 }
 
 ])
+
+
+m4_defun([URBI_CHILDREN_PREPARE],
+[m4_divert_text([M4SH-INIT], [_URBI_CHILDREN_PREPARE])])
