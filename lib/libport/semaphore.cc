@@ -64,7 +64,7 @@ namespace libport
 } // namespace libport
 
 /* Darwin doesn't implement sem_init/sem_close (although the functions exists
- * and is defined, in fact it just returns ENOSYS). That's why need to use
+ * and is defined, in fact it just returns ENOSYS). That's why we need to use
  * named semaphores (with sem_open) instead.
  * See:
  * http://lists.apple.com/archives/darwin-development/2004/May/msg00077.html
@@ -92,7 +92,7 @@ namespace libport
     name_ = s.str();
 
     sem_ = sem_open(name_.c_str(), O_CREAT | O_EXCL, 0777, cnt);
-
+    int sem_open_errno = errno;
     {
       // Save the semaphore name if we can, in order to provide the
       // user with a means to reclaim them.  Don't check for success,
@@ -103,18 +103,23 @@ namespace libport
       std::ofstream o("/tmp/urbi-semaphores.log", std::ios_base::app);
       o << name_;
       if (sem_ == SEM_FAILED)
-        o << ": " << strerror(errno);
+        o << ": " << strerror(sem_open_errno);
       o << std::endl;
     }
 
     if (sem_ == SEM_FAILED)
+    {
+      std::string error = strerror(sem_open_errno);
+      if (sem_open_errno == ENOSPC)
+        error += " (i.e., used all the semaphores, run semaphore-clean)";
       // Certainly dying because we don't have enough semaphores
       // available.  Report we should be skipped.
       std::cerr << program_name()
                 << ": cannot sem_open(" << name_ << "): "
-                << strerror(errno)
+                << strerror(sem_open_errno)
                 << std::endl
                 << exit(EX_SKIP);
+    }
 # else
     sem_ = new sem_t;
     if (sem_init(sem_, 0, cnt))
