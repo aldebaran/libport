@@ -5,6 +5,7 @@
 
 #if LIBPORT_HAVE_EXECINFO_H
 # include <execinfo.h>
+# include <cstdlib>
 
 namespace libport
 {
@@ -34,6 +35,7 @@ namespace libport
   {
     std::vector<const char*> res;
     res.push_back("(no avaible backtrace)");
+    return res;
   }
 }
 
