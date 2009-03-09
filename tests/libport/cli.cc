@@ -2,10 +2,14 @@
  ** Test command line interface tools.
  */
 
+#include <sstream>
+
 #include <libport/cli.hh>
+#include <libport/option-parser.hh>
 #include <libport/unit-test.hh>
 
 using libport::test_suite;
+using namespace libport;
 
 void
 check ()
@@ -23,10 +27,167 @@ check ()
   CHECK(std::string, "666");
 }
 
+void
+check_option_flag()
+{
+  OptionFlag flag("whether to flag", "flag", 'f');
+
+  OptionParser p;
+  p << flag;
+
+  // Test long version
+  {
+    args_type args;
+    args.push_back("--flag");
+
+    p(args);
+    BOOST_CHECK(flag.get());
+  }
+
+  // Test absence
+  {
+    args_type args;
+    args.push_back("junk");
+    args.push_back("junk");
+    args.push_back("junk");
+
+    p(args);
+    BOOST_CHECK(!flag.get());
+  }
+
+  // Test short version
+  {
+    args_type args;
+    args.push_back("junk");
+    args.push_back("-f");
+    args.push_back("junk");
+
+    p(args);
+    BOOST_CHECK(flag.get());
+  }
+}
+
+void
+check_option_combined()
+{
+  OptionFlag f1("", "flag1", '1');
+  OptionFlag f2("", "flag2", '2');
+  OptionFlag f3("", "flag3", '3');
+  OptionFlag f4("", "flag4", '4');
+  OptionFlag f5("", "flag5", '5');
+
+  OptionParser p;
+  p << f1 << f2 << f3 << f4 << f5;
+
+  args_type args;
+  args.push_back("-135");
+  args.push_back("-4");
+  p(args);
+
+  BOOST_CHECK(f1.get());
+  BOOST_CHECK(!f2.get());
+  BOOST_CHECK(f3.get());
+  BOOST_CHECK(f4.get());
+  BOOST_CHECK(f5.get());
+}
+
+void
+check_option_value()
+{
+  OptionValue val("set the value", "value", 'v');
+
+  OptionParser p;
+  p << val;
+
+  // Test presence
+  {
+    args_type args;
+    args.push_back("junk");
+    args.push_back("--value");
+    args.push_back("42");
+    args.push_back("junk");
+
+    p(args);
+    BOOST_CHECK(val.filled());
+    BOOST_CHECK_EQUAL(val.value(), "42");
+  }
+
+  // Test presence with equal
+  {
+    args_type args;
+    args.push_back("junk");
+    args.push_back("--value=51");
+    args.push_back("junk");
+
+    p(args);
+    BOOST_CHECK(val.filled());
+    BOOST_CHECK_EQUAL(val.value(), "51");
+  }
+
+  // Test absence
+  {
+    args_type args;
+    args.push_back("junk");
+    args.push_back("junk");
+
+    p(args);
+    BOOST_CHECK(!val.filled());
+  }
+
+  // Test parse error
+  {
+    args_type args;
+    args.push_back("junk");
+    args.push_back("--value");
+
+    try
+    {
+      p(args);
+      BOOST_ERROR("Invalid arguments accepted");
+    }
+    catch (libport::Error& e)
+    {
+      BOOST_CHECK_EQUAL(e.errors().size(), 1);
+      BOOST_CHECK_EQUAL(e.errors()[0], "--value takes one argument");
+    }
+  }
+}
+
+void
+check_usage()
+{
+  OptionFlag  flag("whether to flag", "flag", 'f');
+  OptionValue val("set the value",        "value", 'v');
+  val.formal_name_set("val");
+
+  OptionParser p;
+  p << flag << val;
+
+  {
+    std::stringstream s;
+    p.usage(s);
+    BOOST_CHECK_EQUAL(s.str(),
+                      "test_suite [--flag] [--value=val]");
+  }
+
+  {
+    std::stringstream s;
+    p.options_doc(s);
+    BOOST_CHECK_EQUAL(s.str(),
+                      "-f, --flag      whether to flag\n"
+                      "-v, --value=val set the value\n");
+  }
+}
+
 test_suite*
 init_test_suite()
 {
+  libport::program_initialize("test_suite");
   test_suite* suite = BOOST_TEST_SUITE("libport::cli");
   suite->add(BOOST_TEST_CASE(check));
+  suite->add(BOOST_TEST_CASE(check_option_flag));
+  suite->add(BOOST_TEST_CASE(check_option_value));
+  suite->add(BOOST_TEST_CASE(check_usage));
+  suite->add(BOOST_TEST_CASE(check_option_combined));
   return suite;
 }

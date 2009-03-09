@@ -27,6 +27,7 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/indent.cc				\
   lib/libport/ip-semaphore.cc			\
   lib/libport/markup-ostream.cc			\
+  lib/libport/option-parser.cc			\
   lib/libport/package-info.cc			\
   lib/libport/pid-file.cc			\
   lib/libport/program-name.cc			\

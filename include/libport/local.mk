@@ -80,6 +80,8 @@ libport_include_HEADERS +=			\
   include/libport/map.hxx			\
   include/libport/markup-ostream.hh		\
   include/libport/meta.hh			\
+  include/libport/option-parser.hh		\
+  include/libport/option-parser.hxx		\
   include/libport/package-info.hh		\
   include/libport/pair.hh			\
   include/libport/pair.hxx			\
