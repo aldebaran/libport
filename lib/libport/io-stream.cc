@@ -1,6 +1,7 @@
 #include <streambuf>
 
 #include <libport/io-stream.hh>
+#include <libport/unistd.h>
 
 namespace libport
 {
