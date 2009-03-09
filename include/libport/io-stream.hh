@@ -10,7 +10,7 @@ namespace libport
   class StreamBuffer;
 
   template<typename Buffer>
-  class LIBPORT_API IOStream: public std::iostream
+  class IOStream: public std::iostream
   {
   public:
     IOStream();
