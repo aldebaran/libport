@@ -88,6 +88,7 @@ tests_libport_indent_SOURCES                    = tests/libport/indent.cc
 tests_libport_intrusive_ptr_SOURCES             = tests/libport/intrusive-ptr.cc
 tests_libport_intrusive_ptr_serialize_SOURCES   = tests/libport/intrusive-ptr-serialize.cc
 tests_libport_io_stream_SOURCES                 = tests/libport/io-stream.cc
+tests_libport_markup_ostream_SOURCES		= tests/libport/markup-ostream.cc
 tests_libport_path_SOURCES                      = tests/libport/path.cc
 tests_libport_pid_file_SOURCES                  = tests/libport/pid-file.cc
 tests_libport_semaphore_SOURCES                 = tests/libport/semaphore.cc

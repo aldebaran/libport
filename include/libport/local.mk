@@ -29,6 +29,7 @@ libport_include_HEADERS +=			\
   include/libport/asio.hh			\
   include/libport/asio.hxx			\
   include/libport/assert.hh			\
+  include/libport/attributes.hh			\
   include/libport/base64.hh			\
   include/libport/buffer-stream.hh		\
   include/libport/backtrace.hh			\
@@ -111,6 +112,7 @@ libport_include_HEADERS +=			\
   include/libport/statistics.hh			\
   include/libport/statistics.hxx		\
   include/libport/io-stream.hh			\
+  include/libport/io-stream.hxx			\
   include/libport/symbol.hh			\
   include/libport/symbol.hxx			\
   include/libport/sysexits.hh			\
