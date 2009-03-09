@@ -100,7 +100,9 @@ namespace libport
       //
       // If you change this file name, update
       // build-aux/semaphores-clean.sh.
-      std::ofstream o("/tmp/urbi-semaphores.log", std::ios_base::app);
+      std::stringstream f;
+      f << "/tmp/urbi-semaphore/" << getpid();
+	std::ofstream o(f.str().c_str(), std::ios_base::app);
       o << name_;
       if (sem_ == SEM_FAILED)
         o << ": " << strerror(sem_open_errno);
