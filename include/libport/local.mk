@@ -78,6 +78,7 @@ libport_include_HEADERS +=			\
   include/libport/network.h			\
   include/libport/map.hh			\
   include/libport/map.hxx			\
+  include/libport/markup-ostream.hh		\
   include/libport/meta.hh			\
   include/libport/package-info.hh		\
   include/libport/pair.hh			\

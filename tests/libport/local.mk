@@ -25,6 +25,7 @@ TESTS_BINARIES =				\
   tests/libport/indent.cc			\
   tests/libport/intrusive-ptr.cc		\
   tests/libport/io-stream.cc			\
+  tests/libport/markup-ostream.cc		\
   tests/libport/path.cc				\
   tests/libport/pid-file.cc			\
   tests/libport/semaphore.cc			\
