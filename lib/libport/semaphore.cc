@@ -76,6 +76,7 @@ namespace libport
 # ifdef __APPLE__
 #  include <fstream>
 #  include <sstream>
+#  include <sys/stat.h>
 # endif
 
 # include <cerrno>
@@ -100,9 +101,10 @@ namespace libport
       //
       // If you change this file name, update
       // build-aux/semaphores-clean.sh.
+      mkdir("/tmp/urbi-semaphores", 0777);
       std::stringstream f;
-      f << "/tmp/urbi-semaphore/" << getpid();
-	std::ofstream o(f.str().c_str(), std::ios_base::app);
+      f << "/tmp/urbi-semaphores/" << getpid();
+      std::ofstream o(f.str().c_str(), std::ios_base::app);
       o << name_;
       if (sem_ == SEM_FAILED)
         o << ": " << strerror(sem_open_errno);
