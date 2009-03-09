@@ -88,12 +88,18 @@ namespace libport
   {
 # ifdef __APPLE__
     static unsigned int counter = 0;
-    std::stringstream s;
-    s << "sema/" << getpid() << "/" << counter++;
-    name_ = s.str();
+    int sem_open_errno;
 
-    sem_ = sem_open(name_.c_str(), O_CREAT | O_EXCL, 0777, cnt);
-    int sem_open_errno = errno;
+    do
+    {
+      std::stringstream s;
+      errno = 0;
+      s << "sema/" << getpid() << "/" << counter++;
+      name_ = s.str();
+      sem_ = sem_open(name_.c_str(), O_CREAT | O_EXCL, 0777, cnt);
+      sem_open_errno = errno;
+    } while (sem_ == SEM_FAILED && errno == EEXIST);
+
     {
       // Save the semaphore name if we can, in order to provide the
       // user with a means to reclaim them.  Don't check for success,
