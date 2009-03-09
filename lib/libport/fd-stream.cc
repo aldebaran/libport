@@ -7,106 +7,60 @@
 namespace libport
 {
   FdStream::FdStream(fd_type write, fd_type read)
-    : std::iostream(buf_ = new FdBuf(write, read))
-  {
-    rdbuf(buf_);
-  }
+    : libport::IOStream<FdBuf>(buf_ = new FdBuf(write, read))
+  {}
 
   FdStream::~FdStream()
-  {
-    delete buf_;
-  }
+  {}
 
   void
   FdStream::own_fd(bool v)
   {
-    buf_->own_fd(v);
+    buf_->own_fd_set(v);
   }
 
   bool
   FdStream::own_fd() const
   {
-    return buf_->own_fd();
-  }
-
-  FdBuf::FdBuf(fd_type write, fd_type read)
-    : write_(write)
-    , read_(read)
-    , own_(false)
-  {
-    setg(ibuf_, ibuf_, ibuf_);
-    setp(obuf_, obuf_ + BUFSIZ - 1);
-  }
-
-  FdBuf::~FdBuf()
-  {
-    sync();
-    if (own_)
-    {
-      close(write_);
-      close(read_);
-    }
-  }
-
-  int FdBuf::underflow()
-  {
-    ssize_t c = read(read_, ibuf_, BUFSIZ);
-    if (c == 0)
-    {
-      setg(ibuf_, ibuf_, ibuf_);
-      return EOF;
-    }
-    setg(ibuf_, ibuf_, ibuf_ + c);
-    return static_cast<unsigned char>(ibuf_[0]);
-  }
-
-  int FdBuf::overflow(int c)
-  {
-    obuf_[BUFSIZ - 1] = c;
-    setp(obuf_ + BUFSIZ, 0);
-    sync();
-    return EOF + 1; // "A value different from EOF"
-  }
-
-  int FdBuf::sync()
-  {
-    if (pptr() - obuf_)
-    {
-      write(write_, obuf_, pptr() - obuf_);
-      setp(obuf_, obuf_ + BUFSIZ - 1);
-    }
-    return 0; // Success
-  }
-
-  void
-  FdBuf::own_fd(bool v)
-  {
-    own_ = v;
-  }
-
-  bool
-  FdBuf::own_fd() const
-  {
-    return own_;
+    return buf_->own_fd_get();
   }
 
   unsigned FdStream::fd_read()
   {
-    return buf_->fd_read();
+    return buf_->fd_read_get();
   }
 
   unsigned FdStream::fd_write()
   {
-    return buf_->fd_write();
+    return buf_->fd_write_get();
   }
 
-  unsigned FdBuf::fd_read()
+  /*------.
+  | FdBuf |
+  `------*/
+
+  FdBuf::FdBuf(fd_type write, fd_type read)
+    : fd_write_(write)
+    , fd_read_(read)
+    , own_fd_(false)
+  {}
+
+  FdBuf::~FdBuf()
   {
-    return read_;
+    if (own_fd_)
+    {
+      close(fd_write_);
+      close(fd_read_);
+    }
   }
 
-  unsigned FdBuf::fd_write()
+  size_t FdBuf::read(char* buffer, size_t max)
   {
-    return write_;
+    return ::read(fd_read_, buffer, max);
+  }
+
+  void FdBuf::write(char* buffer, size_t size)
+  {
+    ::write(fd_write_, buffer, size);
   }
 }

@@ -4,34 +4,30 @@
 # include <iostream>
 # include <streambuf>
 
+# include <libport/attributes.hh>
 # include <libport/export.hh>
+# include <libport/io-stream.hh>
 
 namespace libport
 {
-  class LIBPORT_API FdBuf: public std::streambuf
+  class LIBPORT_API FdBuf: public libport::StreamBuffer
   {
   public:
     typedef int fd_type;
     FdBuf(fd_type write, fd_type read);
     ~FdBuf();
-    void own_fd(bool v);
-    bool own_fd() const;
-    unsigned fd_write();
-    unsigned fd_read();
+
+    ATTRIBUTE_R (fd_type, fd_write);
+    ATTRIBUTE_R (fd_type, fd_read);
+    ATTRIBUTE_RW(bool,    own_fd);
 
   protected:
-    virtual int underflow();
-    virtual int overflow(int c = EOF);
-    virtual int sync();
-  private:
-    fd_type write_, read_;
-    bool own_;
-    char ibuf_[BUFSIZ];
-    char obuf_[BUFSIZ];
+    virtual size_t read(char* buffer, size_t max);
+    virtual void write(char* buffer, size_t size);
   };
 
   /// Standard stream that reads from and writes to file descriptors.
-  class LIBPORT_API FdStream: public std::iostream
+  class LIBPORT_API FdStream: public libport::IOStream<FdBuf>
   {
   public:
     typedef int fd_type;
