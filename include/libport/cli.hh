@@ -1,7 +1,6 @@
 #ifndef LIBPORT_CLI_HH
 # define LIBPORT_CLI_HH
 
-# include <vector>
 # include <string>
 # include <libport/compiler.hh>
 # include <libport/export.hh>
