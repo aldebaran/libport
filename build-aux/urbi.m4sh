@@ -11,6 +11,7 @@
 ##
 
 m4_pattern_allow([^URBI_SERVER$])
+m4_pattern_allow([^URBI_SERVER_ARGS$])
 
 m4_divert_text([URBI-INIT],
 [
@@ -105,6 +106,12 @@ find_top_builddir ()
 # Set URBI_SERVER to the location of urbi-server.
 find_urbi_server ()
 {
+  # Handle the case where URBI_SERVER contains flags.
+  set x $URBI_SERVER
+  shift
+  URBI_SERVER=$1
+  shift
+  URBI_SERVER_ARGS="$@"
   case $URBI_SERVER in
     ('')
        # If URBI_SERVER is not defined, try to find one.  If we are in
@@ -137,8 +144,13 @@ find_urbi_server ()
     fatal "cannot find urbi-server, please check \$URBI_SERVER: $URBI_SERVER"
   fi
 
+  # Now, append the arguments.
+  if test -n "$URBI_SERVER_ARGS"; then
+    URBI_SERVER+=" $URBI_SERVER_ARGS"
+  fi
+
   # Check its version.
-  if ! run "Server version" "$URBI_SERVER" --version >&3; then
+  if ! run "Server version" $URBI_SERVER --version >&3; then
     fatal "cannot run $URBI_SERVER --version"
   fi
 }
@@ -165,7 +177,7 @@ spawn_urbi_server ()
   local t=0
   : ${timeout_factor:=1}
   local tmax=$((10 * $timeout_factor))
-  local dt=$(echo "0.5 * $timeout_factor" | bc)
+  local dt=0.5
   # 0 if we stop, 1 to continue sleeping.
   local cont
   while children_alive server &&
