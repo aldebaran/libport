@@ -7,28 +7,51 @@
 # include <libport/detect-win32.h>
 # include <libport/export.hh>
 
-# if defined _MSC_VER || defined __MINGW32__
+/*---------.
+| setenv.  |
+`---------*/
 
+# if defined _MSC_VER || defined __MINGW32__
 extern "C"
 {
   LIBPORT_API
   int setenv(const char* key, const char* value, int overwrite);
-
-  LIBPORT_API
-  int unsetenv(const char* key);
 }
-
 # endif
 
-# if defined _MSC_VER
+/*----------.
+| strtoll.  |
+`----------*/
 
+# if defined _MSC_VER
 extern "C"
 {
   LIBPORT_API
   long long strtoll(const char* nptr, char** endptr, int base);
-
 }
-
 # endif // WIN32
+
+/*-----------.
+| unsetenv.  |
+`-----------*/
+
+# if defined _MSC_VER || defined __MINGW32__
+extern "C"
+{
+  LIBPORT_API
+  int unsetenv(const char* key);
+}
+# endif
+
+/*----------.
+| xgetenv.  |
+`----------*/
+
+namespace libport
+{
+  /// Return getenv(c) if defined, \a deflt otherwise.
+  LIBPORT_API
+  const char* xgetenv(const char* c, const char* deflt = "");
+}
 
 #endif // ! LIBPORT_CSTDLIB

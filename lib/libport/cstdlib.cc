@@ -17,14 +17,6 @@ extern "C"
     return _putenv_s(key, value);
 #endif
   }
-
-  int
-  unsetenv(const char* key)
-  {
-    // Windows refuses 0 as a value.  But passing "" actually unsets
-    // the envvar.
-    return setenv(key, "", 1);
-  }
 }
 
 #endif
@@ -39,5 +31,34 @@ extern "C"
     return _strtoi64(nptr, endptr, base);
   }
 }
+#endif
+
+
+#if defined _MSC_VER || defined __MINGW32__
+
+extern "C"
+{
+  int
+  unsetenv(const char* key)
+  {
+    // Windows refuses 0 as a value.  But passing "" actually unsets
+    // the envvar.
+    return setenv(key, "", 1);
+  }
+}
 
 #endif
+
+/*----------.
+| xgetenv.  |
+`----------*/
+
+namespace libport
+{
+  const char*
+  xgetenv(const char* c, const char* deflt)
+  {
+    const char* res = getenv(c);
+    return res ? res : deflt;
+  }
+}
