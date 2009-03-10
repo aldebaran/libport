@@ -31,6 +31,9 @@ URBI_LIBTOOL
 # Name of the subdirectory that contains libltdl sources.
 LT_CONFIG_LTDL_DIR([libltdl])
 LTDL_INIT([nonrecursive])
+# We want the debug messages.
+AC_DEFINE([LT_DEBUG_LOADERS], [1],
+          [Define to have libltdl support log messages.])
 
 AC_CONFIG_HEADERS([include/config.h])
 

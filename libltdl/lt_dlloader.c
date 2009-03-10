@@ -128,6 +128,7 @@ lt_dlloader_log (void)
       size_t len = 0;
       slist_foreach (loaders, loader_length_callback, &len);
       cp = MALLOC (char, len + 1);
+      cp[0] = 0;
       slist_foreach (loaders, loader_strcat_callback, cp);
       loader_names = cp;
     }

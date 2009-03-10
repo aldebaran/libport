@@ -82,7 +82,7 @@ LT_SCOPE const lt_dlvtable *lt_dlloader_get	(lt_dlloader loader);
 typedef  const lt_dlvtable *lt_get_vtable	(lt_user_data data);
 
 #ifdef LT_DEBUG_LOADERS
-LT_SCOPE void		lt_dlloader_log	(void);
+LT_SCOPE void           lt_dlloader_log         (void);
 #endif
 
 LT_END_C_DECLS
