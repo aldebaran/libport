@@ -55,6 +55,25 @@ EOF
   g++ -Wall $me.cc -o $me
 }
 
+# Backward compatibility: a single file with all the semaphore names.
+if test -f $tmp.log; then
+  mv $tmp.log $tmp.log.$$
+  mkdir -p $tmp
+  perl -p \
+     -e "BEGIN { my \$tmp = \"$tmp\" };" \
+     -e '
+    if (m,^sema/(\d+)/\d+,)
+    {
+      if ($pid != $1)
+      {
+        $pid = $1;
+        open ($fh, ">>", "$tmp/$pid");
+      }
+      print $fh "$_";
+    }' $tmp.log.$$
+  rm $tmp.log.$$
+fi
+
 if test -d $tmp; then
   # Put in all.$$ the list of all the semaphores that do not belong
   # to a running process.  Because OS X does not use sequential pids,
@@ -70,6 +89,7 @@ if test -d $tmp; then
       rm  $tmp/$f.$$
     fi
   done
+
   if test -e $tmp/all.$$; then
     generate_semaphore_clean
     /tmp/$me $tmp/all.$$
