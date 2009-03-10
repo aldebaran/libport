@@ -95,6 +95,31 @@ check_option_combined()
 }
 
 void
+check_option_end()
+{
+  OptionsEnd end;
+
+  OptionParser p;
+  p << end;
+
+  args_type args;
+  args.push_back("1");
+  args.push_back("2");
+  args.push_back("--");
+  args.push_back("3");
+  args.push_back("4");
+  args = p(args);
+
+  BOOST_CHECK_EQUAL(args.size(), 2u);
+  BOOST_CHECK_EQUAL(args[0], "1");
+  BOOST_CHECK_EQUAL(args[1], "2");
+
+  BOOST_CHECK_EQUAL(end.get().size(), 2u);
+  BOOST_CHECK_EQUAL(end.get()[0], "3");
+  BOOST_CHECK_EQUAL(end.get()[1], "4");
+}
+
+void
 check_option_value()
 {
   OptionValue val("set the value", "value", 'v');
@@ -203,5 +228,6 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(check_option_value));
   suite->add(BOOST_TEST_CASE(check_usage));
   suite->add(BOOST_TEST_CASE(check_option_combined));
+  suite->add(BOOST_TEST_CASE(check_option_end));
   return suite;
 }

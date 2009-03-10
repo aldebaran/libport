@@ -160,6 +160,25 @@ namespace libport
     values_type values_;
   };
 
+  /*-----------.
+  | OptionsEnd |
+  `-----------*/
+
+  class LIBPORT_API OptionsEnd: public Option
+  {
+  public:
+    typedef std::vector<std::string> values_type;
+    OptionsEnd();
+    virtual bool test(cli_args_type& args);
+    virtual void init();
+    const values_type& get() const;
+    virtual void usage_(std::ostream& output) const;
+    virtual void doc_(std::ostream& output) const;
+
+  private:
+    values_type values_;
+  };
+
 
   /*-------------.
   | OptionParser |

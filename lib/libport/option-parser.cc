@@ -349,6 +349,42 @@ namespace libport
     stream << libport::etable;
   }
 
+  /*-----------.
+  | OptionsEnd |
+  `-----------*/
+
+  OptionsEnd::OptionsEnd()
+    : Option("")
+  {}
+
+  bool
+  OptionsEnd::test(cli_args_type& args)
+  {
+    if (args[0] != "--")
+      return false;
+
+    values_.insert(values_.end(), args.begin() + 1, args.end());
+    args.clear();
+    return true;
+  }
+
+  void
+  OptionsEnd::init()
+  {
+    values_.clear();
+  }
+
+  const OptionsEnd::values_type&
+  OptionsEnd::get() const
+  {
+    return values_;
+  }
+
+  void OptionsEnd::usage_(std::ostream&) const
+  {}
+
+  void OptionsEnd::doc_(std::ostream&) const
+  {}
 
   /*------.
   | Error |
