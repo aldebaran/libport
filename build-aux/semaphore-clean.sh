@@ -47,16 +47,17 @@ EOF
 }
 
 if test -d $log; then
-  cp -r $log $log.$$
   generate_semaphore_clean
-  for f in $(ls $log.$$)
+  for f in $(ls $log)
   do
       if ps -p $f >> /dev/null ; then
           echo ">>> Process $f is running..."
       else
-          /tmp/$me $log.$$/$f
-          rm $log/$f
+	  mv $log/$f $log/$f.$$
+	  cat $log/$f.$$ >> $log/all.$$
+          rm $log/$f.$$
       fi
   done
-  rm -Rf $log.$$
+  /tmp/$me $log/all.$$
+  rm $log/all.$$
 fi
