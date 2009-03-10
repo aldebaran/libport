@@ -26,7 +26,7 @@ namespace libport
 
     static void box(std::ostream& tgt, const std::string& data, size_t size)
     {
-      assert(data.size() < size);
+      assert(data.size() <= size);
       tgt << data;
       for (size_t i = data.size(); i < size; ++i)
         tgt << ' ';
