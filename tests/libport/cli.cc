@@ -5,17 +5,20 @@
 #include <sstream>
 
 #include <libport/cli.hh>
+#include <libport/cstdlib>
 #include <libport/option-parser.hh>
+#include <libport/sysexits.hh>
 #include <libport/unit-test.hh>
 
 using libport::test_suite;
 using namespace libport;
 
+std::string srcdir = libport::xgetenv("SRCDIR");
+
 void
-check ()
+check_file_contents_get()
 {
-  const std::string input =
-    std::string() + getenv("SRCDIR") + "/tests/libport/666.txt";
+  const std::string input = srcdir + "/tests/libport/666.txt";
 # define CHECK(Type, Value)                             \
   do {                                                  \
     Type v = libport::file_contents_get<Type>(input);   \
@@ -154,10 +157,16 @@ check_option_value()
 }
 
 void
+check_program_name()
+{
+  BOOST_CHECK_EQUAL(libport::program_name(), "test_suite");
+}
+
+void
 check_usage()
 {
   OptionFlag  flag("whether to flag", "flag", 'f');
-  OptionValue val("set the value",        "value", 'v');
+  OptionValue val ("set the value",   "value", 'v');
   val.formal_name_set("val");
 
   OptionParser p;
@@ -182,9 +191,14 @@ check_usage()
 test_suite*
 init_test_suite()
 {
+  if (srcdir.empty())
+    std::cerr << "SRCDIR is not defined" << std::endl
+              << libport::exit(EX_USAGE);
+
   libport::program_initialize("test_suite");
   test_suite* suite = BOOST_TEST_SUITE("libport::cli");
-  suite->add(BOOST_TEST_CASE(check));
+  suite->add(BOOST_TEST_CASE(check_program_name));
+  suite->add(BOOST_TEST_CASE(check_file_contents_get));
   suite->add(BOOST_TEST_CASE(check_option_flag));
   suite->add(BOOST_TEST_CASE(check_option_value));
   suite->add(BOOST_TEST_CASE(check_usage));
