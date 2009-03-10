@@ -72,6 +72,10 @@ namespace libport
     char name_short_;
   };
 
+  /*-----------.
+  | OptionFlag |
+  `-----------*/
+
   class LIBPORT_API OptionFlag: public OptionNamed
   {
   public:
@@ -90,9 +94,9 @@ namespace libport
     bool value_;
   };
 
-  /*------------.
+  /*-------------.
   | OptionValued |
-  `------------*/
+  `-------------*/
 
   class LIBPORT_API OptionValued: public OptionNamed
   {
