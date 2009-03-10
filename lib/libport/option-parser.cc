@@ -420,4 +420,15 @@ namespace libport
     return res.c_str();
   }
 
+  namespace opts
+  {
+    libport::OptionValues files  ("load file",                                  "file",    'f');
+    libport::OptionFlag   help   ("display this message and exit successfully", "help",    'h');
+    libport::OptionValue  host   ("address to connect to",                      "host",    'H');
+    libport::OptionValue  port   ("port to connect to",                         "port",    'P');
+    libport::OptionValue  host_l ("address to listen on",                       "host",    'H');
+    libport::OptionValue  port_l ("port to listen on",                          "port",    'P');
+    libport::OptionFlag   verbose("be more verbose",                            "verbose", 'v');
+    libport::OptionFlag   version("display version information",                "version");
+  }
 }
