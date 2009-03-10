@@ -9,12 +9,10 @@ namespace libport
 {
   class StreamBuffer;
 
-  template<typename Buffer>
-  class IOStream: public std::iostream
+  class LIBPORT_API IOStream: public std::iostream
   {
   public:
-    IOStream();
-    IOStream(Buffer* buffer);
+    IOStream(StreamBuffer* buffer);
     ~IOStream();
 
   protected:
@@ -32,7 +30,6 @@ namespace libport
     ~StreamBuffer();
 
   protected:
-    template <typename Buffer>
     friend class IOStream;
     virtual size_t read(char* buffer, size_t size) = 0;
     virtual void write(char* buffer, size_t size) = 0;
@@ -47,7 +44,5 @@ namespace libport
   };
 
 }
-
-# include <libport/io-stream.hxx>
 
 #endif

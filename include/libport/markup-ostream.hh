@@ -10,10 +10,10 @@ namespace libport
 {
   class MarkupStreamBuffer;
 
-  class LIBPORT_API MarkupOStream: public libport::IOStream<MarkupStreamBuffer>
+  class LIBPORT_API MarkupOStream: public libport::IOStream
   {
   public:
-    typedef libport::IOStream<MarkupStreamBuffer> super_type;
+    typedef libport::IOStream super_type;
     MarkupOStream(std::ostream& output);
 
     void col();

@@ -27,7 +27,7 @@ namespace libport
   };
 
   /// Standard stream that reads from and writes to file descriptors.
-  class LIBPORT_API FdStream: public libport::IOStream<FdBuf>
+  class LIBPORT_API FdStream: public libport::IOStream
   {
   public:
     typedef int fd_type;

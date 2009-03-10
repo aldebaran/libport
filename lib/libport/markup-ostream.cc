@@ -119,7 +119,7 @@ namespace libport
   };
 
   MarkupOStream::MarkupOStream(std::ostream& output)
-    : libport::IOStream<MarkupStreamBuffer>(buffer_ = new MarkupStreamBuffer(output))
+    : libport::IOStream(buffer_ = new MarkupStreamBuffer(output))
   {}
 
 #define MOD(Name)                                                       \

@@ -5,6 +5,15 @@
 
 namespace libport
 {
+  IOStream::IOStream(StreamBuffer* buffer)
+    : std::iostream(buffer_ = buffer)
+  {}
+
+  IOStream::~IOStream()
+  {
+    buffer_->sync();
+    delete buffer_;
+  }
 
   StreamBuffer::StreamBuffer()
     : ibuf_()

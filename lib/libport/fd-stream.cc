@@ -7,7 +7,7 @@
 namespace libport
 {
   FdStream::FdStream(fd_type write, fd_type read)
-    : libport::IOStream<FdBuf>(buf_ = new FdBuf(write, read))
+    : libport::IOStream(buf_ = new FdBuf(write, read))
   {}
 
   FdStream::~FdStream()

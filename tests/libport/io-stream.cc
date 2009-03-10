@@ -30,7 +30,7 @@ class TestBuffer: public libport::StreamBuffer
 static void test()
 {
   {
-    libport::IOStream<TestBuffer> s;
+    libport::IOStream s(new TestBuffer);
 
     for (unsigned int i = 0; i < 9; ++i)
     {
