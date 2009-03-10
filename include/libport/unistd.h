@@ -62,7 +62,7 @@ namespace libport
   closeSocket(int socket)
   {
 # if defined WIN32
-    return closesocket(socket);
+    return closesocket(static_cast<SOCKET>(socket));
 # else
     return close(socket);
 # endif

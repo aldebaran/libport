@@ -38,10 +38,10 @@ namespace libport
     /// Set whether the FdStream should close the fds upon destruction
     void own_fd(bool v);
     bool own_fd() const;
-    /// Get write fd
-    unsigned fd_write();
-    /// Get read fd
-    unsigned fd_read();
+    /// Get write fd.
+    fd_type fd_write() const;
+    /// Get read fd.
+    fd_type fd_read() const;
 
   private:
     FdBuf* buf_;

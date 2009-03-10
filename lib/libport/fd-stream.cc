@@ -25,12 +25,12 @@ namespace libport
     return buf_->own_fd_get();
   }
 
-  unsigned FdStream::fd_read()
+  FdStream::fd_type FdStream::fd_read() const
   {
     return buf_->fd_read_get();
   }
 
-  unsigned FdStream::fd_write()
+  FdStream::fd_type FdStream::fd_write() const
   {
     return buf_->fd_write_get();
   }
