@@ -61,8 +61,8 @@ static void
 fd_get()
 {
   FdStream s(42, 51);
-  BOOST_CHECK_EQUAL(s.fd_write(), 42u);
-  BOOST_CHECK_EQUAL(s.fd_read(), 51u);
+  BOOST_CHECK_EQUAL(s.fd_write(), 42);
+  BOOST_CHECK_EQUAL(s.fd_read(), 51);
 }
 
 static void
