@@ -3,7 +3,16 @@
 set -ex
 me=$(basename $0 '.sh')
 
-log=/tmp/urbi-semaphores
+stderr ()
+{
+  local i
+  for i
+  do
+    echo >&2 "$me: $i"
+  done
+}
+
+tmp=/tmp/urbi-semaphores
 generate_semaphore_clean ()
 {
    cd /tmp
@@ -46,18 +55,24 @@ EOF
   g++ -Wall $me.cc -o $me
 }
 
-if test -d $log; then
-  generate_semaphore_clean
-  for f in $(ls $log)
+if test -d $tmp; then
+  # Put in all.$$ the list of all the semaphores that do not belong
+  # to a running process.  Because OS X does not use sequential pids,
+  # use "mv" to have the smallest possible window during which several
+  # processes may access concurrently to it.
+  for f in $(ls $tmp)
   do
-      if ps -p $f >> /dev/null ; then
-          echo ">>> Process $f is running..."
-      else
-	  mv $log/$f $log/$f.$$
-	  cat $log/$f.$$ >> $log/all.$$
-          rm $log/$f.$$
-      fi
+    if ps -p $f >/dev/null; then
+      stderr "process $f is running"
+    else
+      mv  $tmp/$f $tmp/$f.$$
+      cat $tmp/$f.$$ >>$tmp/all.$$
+      rm  $tmp/$f.$$
+    fi
   done
-  /tmp/$me $log/all.$$
-  rm $log/all.$$
+  if test -e $tmp/all.$$; then
+    generate_semaphore_clean
+    /tmp/$me $tmp/all.$$
+  fi
+  rm $tmp/all.$$
 fi
