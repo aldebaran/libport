@@ -102,7 +102,7 @@ AC_DEFINE_UNQUOTED([URBI_ROOT], ["$prefix"],
 
 # If we target windows, dealing with paths to dlls is a problem.
 # Everything is much simpler if we just put the dlls in the bindir.
-case $UBRI_HOST in
+case $URBI_HOST in
    (*mingw*) libdir='${bindir}';;
 esac
 
