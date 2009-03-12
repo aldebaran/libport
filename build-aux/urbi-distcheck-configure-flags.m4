@@ -30,7 +30,12 @@ distcheck_configure_flags ()
     # Skip quotes.
     case $i in
       (--prefix=*|-C|--cache-file=*|--srcdir=*) ;;
-               (*) ac_cv_distcheck_configure_flags+=" '$i'";;
+      (*) # Remember that this will go into the Makefile, so we
+          # must escape properly according to Makefile rules.  In
+          # particular, escape $ as $$.
+          #
+          # FIXME: Currently we are unsafe wrt shell metacharacters.
+          ac_cv_distcheck_configure_flags+=" '${i//\$/\$\$}'";;
     esac
   done
 }
