@@ -60,13 +60,18 @@ DISTCHECK_INSTALLCHECK_FLAGS ?= VERBOSE=1
 
 
 # Remove the dists and distdirs that we made.
+#
 # Don't remove the current one, $(distdir).
+#
+# Don't use xargs when there might not be arguments, on GNU/Linux it
+# runs the command anyway, without arguments, which results in useless
+# noise on stderr.
 .PHONY: dists-clean
 dists-clean:
 	for i in $(PACKAGE)-*;					\
 	do							\
 	  case $$i$$(test ! -d $$i || echo /) in		\
-	    ($(distdir));;					\
+	    ($(distdir)*);;					\
 	    (*.tar.gz | *.zip) remove+=" $$i";;			\
 	    (*/) test ! -f $$i/configure || remove+=" $$i";;	\
 	  esac;							\
@@ -75,7 +80,7 @@ dists-clean:
 	for i in $$remove;					\
 	do							\
 	  echo "... $$i";					\
-	  find $$i -type d ! -perm -200 | xargs chmod u+w;	\
+	  find $$i -type d ! -perm -200 -exec chmod u+w {} ';';	\
 	  rm -rf $$i;						\
 	done;							\
 	echo "... done"
