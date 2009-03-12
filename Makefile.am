@@ -3,6 +3,7 @@ include build-aux/build-aux.mk
 include build-aux/package-version.mk
 include build-aux/fix-libtool-la.mk
 include build-aux/libport.mk
+include build-aux/build-farm.mk
 
 TESTS =
 include build-aux/check.mk

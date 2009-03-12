@@ -130,7 +130,7 @@ sub help ($)
   my ($verbose) = @_;
   use Pod::Usage;
   # See <URL:http://perldoc.perl.org/pod2man.html#NOTES>.
-  pod2usage( { -message => "Bench Bison parsers",
+  pod2usage( { -message => "Generate and cache git describe data",
                -exitval => 0,
                -verbose => $verbose,
                -output  => \*STDOUT });
