@@ -1,11 +1,15 @@
 # See fix-libtool-la for more documentation.  Basically, just include
 # this file where Libtool libraries are defined.
 
+# We find automatically all the libtool libraries around here.  But we
+# might have to fix others, say in subpackages.
+LTLIBRARIES_TO_FIX = $(LTLIBRARIES)
+
 %.la.stamp: %.la
 	$(build_aux_dir)/fix-libtool-la $< $@
 
-LTLIBRARIES_STAMPS = $(LTLIBRARIES:=.stamp)
-CLEANFILES += $(LTLIBRARIES_STAMPS) $(LTLIBRARIES:=.bak)
+LTLIBRARIES_STAMPS = $(LTLIBRARIES_TO_FIX:=.stamp)
+CLEANFILES += $(LTLIBRARIES_STAMPS) $(LTLIBRARIES_TO_FIX:=.bak)
 EXTRA_DIST += $(build_aux_dir)/fix-libtool-la
 all-local: $(LTLIBRARIES_STAMPS)
 
@@ -42,11 +46,18 @@ all-local: $(LTLIBRARIES_STAMPS)
 #
 # libdir is empty for convenience libraries, which we don't have
 # to process.
-install-exec-hook:
-	-case "$(URBI_HOST):$(LTLIBRARIES)" in		\
-	  (*:) ;;					\
+#
+# Of course it makes more sense to run this target with "install-exec",
+# not "install-data", but "install-exec" (and its hook) is run before
+# "install-data", and because we have libraries that are installed in
+# the data-subtree (they should actually be in libexec), we would "fix"
+# *.la files that are not installed yet.  So hook install-data, however
+# stupid it sounds.
+install-data-hook:
+	-case "$(URBI_HOST):$(LTLIBRARIES_TO_FIX)" in	\
+	  (*:|*:' ') ;;					\
 	  (*mingw*:*)					\
-	    for lib in $(LTLIBRARIES); do		\
+	    for lib in $(LTLIBRARIES_TO_FIX); do	\
 	      libdir=$$(source $$lib && echo $$libdir);	\
 	      test -n "$$libdir" || continue;		\
 	      perl -pi -e "s{^dlname='.*/}{dlname='}g"	\
