@@ -61,7 +61,10 @@ rst_subsubsection ()
 # -----------------------
 rst_tab ()
 {
-  sed -e 's/^/	/' "$[@]"
+  # We use "cat -v" so that we don't miss hidden characters, but
+  # also so Windows runs don't display with an empty line between
+  # one line.  They now display as "LINE^M".
+  cat -v "$[@]" | sed -e 's/^/	/'
   echo
 }
 
