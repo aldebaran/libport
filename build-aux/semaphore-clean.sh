@@ -75,24 +75,25 @@ if test -f $tmp.log; then
 fi
 
 if test -d $tmp; then
+  cd $tmp
   # Put in all.$$ the list of all the semaphores that do not belong
   # to a running process.  Because OS X does not use sequential pids,
   # use "mv" to have the smallest possible window during which several
   # processes may access concurrently to it.
-  for f in $(ls $tmp)
+  for f in *
   do
     if ps -p $f >/dev/null; then
       stderr "process $f is running"
     else
-      mv  $tmp/$f $tmp/$f.$$
-      cat $tmp/$f.$$ >>$tmp/all.$$
-      rm  $tmp/$f.$$
+      mv -f $f $f.$$
+      cat $f.$$ >>all.$$
+      rm -f $f.$$
     fi
   done
 
-  if test -e $tmp/all.$$; then
+  if test -e all.$$; then
     generate_semaphore_clean
-    /tmp/$me $tmp/all.$$
+    /tmp/$me all.$$
+    rm -f all.$$
   fi
-  rm $tmp/all.$$
 fi
