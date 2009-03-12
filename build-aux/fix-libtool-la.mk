@@ -39,13 +39,17 @@ all-local: $(LTLIBRARIES_STAMPS)
 # libdir='/usr/local/bin'
 #
 # which is what we need.  Don't forget DESTDIR though.
+#
+# libdir is empty for convenience libraries, which we don't have
+# to process.
 install-exec-hook:
 	-case "$(URBI_HOST):$(LTLIBRARIES)" in		\
 	  (*:) ;;					\
 	  (*mingw*:*)					\
 	    for lib in $(LTLIBRARIES); do		\
 	      libdir=$$(source $$lib && echo $$libdir);	\
+	      test -n "$$libdir" || continue;		\
 	      perl -pi -e "s{^dlname='.*/}{dlname='}g"	\
-	        $(DESTDIR)$$libdir/$$(basename $$lib);;	\
-	    done;					\
+	        $(DESTDIR)$$libdir/$$(basename $$lib);	\
+	    done;;					\
 	esac
