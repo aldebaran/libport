@@ -57,3 +57,30 @@ distcheck-buildfarm: dist
 	  sed -e 1h -e 1s/./=/g -e 1p -e 1x -e '$$p' -e '$$x'
 
 DISTCHECK_INSTALLCHECK_FLAGS ?= VERBOSE=1
+
+
+# Remove the dists and distdirs that we made.
+# Don't remove the current one, $(distdir).
+.PHONY: dists-clean
+dists-clean:
+	for i in $(PACKAGE)-*;					\
+	do							\
+	  case $$i$$(test ! -d $$i || echo /) in		\
+	    ($(distdir));;					\
+	    (*.tar.gz | *.zip) remove+=" $$i";;			\
+	    (*/) test ! -f $$i/configure || remove+=" $$i";;	\
+	  esac;							\
+	done;							\
+	echo "Removing former distributions...";		\
+	for i in $$remove;					\
+	do							\
+	  echo "... $$i";					\
+	  find $$i -type d ! -perm -200 | xargs chmod u+w;	\
+	  rm -rf $$i;						\
+	done;							\
+	echo "... done"
+
+# Always clean beforehand, because since our VERSION changes
+# frequently, we leave bazillions of distdirs and dists.
+distcheck-buildfarm: dists-clean
+
