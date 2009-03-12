@@ -150,9 +150,16 @@ find_urbi_server ()
   fi
 
   # Check its version.
-  if ! run "Server version" $URBI_SERVER --version >&3; then
-    fatal "cannot run $URBI_SERVER --version"
-  fi
+  run "Server version" $URBI_SERVER --version >&3 ||
+  {
+    case $? in
+      (72) # We did not find libuobject, which is the case for instance
+           # when we run tests from a standalone SDK-Remote build tree
+           # and no Kernel was installed.
+           error SKIP "urbi-launch cannot find libuobject";;
+      (*)  fatal "cannot run $URBI_SERVER --version";;
+    esac
+  }
 }
 
 
