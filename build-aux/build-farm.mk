@@ -56,7 +56,7 @@ distcheck-buildfarm: dist
 	  list='$(DIST_ARCHIVES)'; for i in $$list; do echo $$i; done) | \
 	  sed -e 1h -e 1s/./=/g -e 1p -e 1x -e '$$p' -e '$$x'
 
-DISTCHECK_INSTALLCHECK_FLAGS ?= VERBOSE=1
+DISTCHECK_INSTALLCHECK_FLAGS ?= VERBOSE=1 AM_COLOR_TESTS=no
 
 
 # Remove the dists and distdirs that we made.
