@@ -376,7 +376,7 @@ namespace sched
 
   protected:
     /// Exception used to terminate a job.
-    struct TerminateException : public SchedulerException
+    struct SCHED_API TerminateException : public SchedulerException
     {
       COMPLETE_EXCEPTION(TerminateException)
     };
