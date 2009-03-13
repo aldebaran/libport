@@ -1,6 +1,6 @@
 #! /bin/sh
 
-set -ex
+set -e
 me=$(basename $0 '.sh')
 
 stderr ()
