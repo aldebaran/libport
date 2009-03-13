@@ -15,9 +15,8 @@ stderr ()
 tmp=/tmp/urbi-semaphores
 generate_semaphore_clean ()
 {
-   cd /tmp
-   rm -f $me $me.cc
-   cat >$me.cc <<EOF
+   rm -f /tmp/$me /tmp/$me.cc
+   cat >/tmp/$me.cc <<EOF
 #include <semaphore.h>
 #include <cerrno>
 #include <fstream>
@@ -52,7 +51,7 @@ main (int argc, const char* argv[])
   return 0;
 }
 EOF
-  g++ -Wall $me.cc -o $me
+  g++ -Wall /tmp/$me.cc -o /tmp/$me
 }
 
 # Backward compatibility: a single file with all the semaphore names.
