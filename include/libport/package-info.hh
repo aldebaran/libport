@@ -33,12 +33,14 @@ namespace libport
     /// NAME version VERSION rev. REVISION.
     data_type name_version_revision() const;
     /// name_version_revision + "\n" + "Copyright (C) YEAR OWNER."
-    /// Also includes that of the dependencies.
+    /// Also includes that of the dependencies.  Does not end with eol.
     data_type signature() const;
     /// "Report bugs to <BUGREPORT>.".
     data_type report_bugs() const;
 
     /// Report this on \a o.
+    /// Does not end with a std::endl.
+    /// For debugging.
     std::ostream& dump(std::ostream& o = std::cerr) const;
 
   private:
@@ -48,7 +50,7 @@ namespace libport
     dependency_type dependencies_;
   };
 
-  /// Report \a p on \a o.
+  /// Report the signature of \a p on \a o.
   LIBPORT_API std::ostream& operator<<(std::ostream& o, const PackageInfo& p);
 }
 
