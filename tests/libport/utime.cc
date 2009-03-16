@@ -4,8 +4,9 @@
 
 #include <sstream>
 
-#include <libport/utime.hh>
+#include <libport/unistd.hh>
 #include <libport/unit-test.hh>
+#include <libport/utime.hh>
 
 using libport::test_suite;
 using namespace libport;
