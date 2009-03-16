@@ -1,7 +1,7 @@
 /* loader-loadlibrary.c --  dynamic linking for Win32
 
    Copyright (C) 1998, 1999, 2000, 2004, 2005, 2006,
-                 2007, 2008 Free Software Foundation, Inc.
+                 2007, 2008, 2009 Free Software Foundation, Inc.
    Written by Thomas Tanner, 1998
 
    NOTE: The canonical source of this file is maintained with the
@@ -177,6 +177,22 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
     SetErrorMode(errormode | SEM_FAILCRITICALERRORS);
 
     module = LoadLibrary (wpath);
+
+#if LT_DEBUG_LOADERS
+    {
+      static char res[1024];
+      if (module)
+        strcat (res, "success");
+      else
+        FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM
+                       | FORMAT_MESSAGE_IGNORE_INSERTS,
+                       0, GetLastError (), 0,
+                       (LPTSTR)res, sizeof res,
+                       0);
+      LT_LOG1 (2, "LoadLibrary (%s): %s\n", wpath, res);
+    }
+#endif
+
 
     /* Restore the error mode. */
     SetErrorMode(errormode);
