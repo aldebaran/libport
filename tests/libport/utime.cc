@@ -4,7 +4,7 @@
 
 #include <sstream>
 
-#include <libport/unistd.hh>
+#include <libport/unistd.h>
 #include <libport/unit-test.hh>
 #include <libport/utime.hh>
 
