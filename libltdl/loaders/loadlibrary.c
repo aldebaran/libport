@@ -189,7 +189,7 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
                        0, GetLastError (), 0,
                        (LPTSTR)res, sizeof res,
                        0);
-      LT_LOG1 (2, "LoadLibrary (%s): %s\n", wpath, res);
+      LT_LOG2 (2, "LoadLibrary (%s): %s\n", wpath, res);
     }
 #endif
 
