@@ -179,20 +179,21 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
     module = LoadLibrary (wpath);
 
 #if LT_DEBUG_LOADERS
+    if (module)
+      LT_LOG1 (1, "LoadLibrary (%s): sucess\n", wpath);
+    else
     {
-      static char res[1024];
-      if (module)
-        strcat (res, "success");
-      else
-        FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM
-                       | FORMAT_MESSAGE_IGNORE_INSERTS,
-                       0, GetLastError (), 0,
-                       (LPTSTR)res, sizeof res,
-                       0);
-      LT_LOG2 (2, "LoadLibrary (%s): %s\n", wpath, res);
+      static char buf[1024];
+      DWORD last_error = GetLastError ();
+      FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM
+                     | FORMAT_MESSAGE_IGNORE_INSERTS,
+                     0, last_error, 0,
+                     buf, sizeof buf,
+                     0);
+      LT_LOG3 (2, "LoadLibrary (%s): failed with error %d: %s\n",
+               wpath, last_error, buf);
     }
 #endif
-
 
     /* Restore the error mode. */
     SetErrorMode(errormode);
