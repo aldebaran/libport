@@ -48,14 +48,14 @@ static void test_condition()
 {
   std::vector<int> expect;
   nCall.resize(NTHREAD, 0);
-  for (int i = 0; i<NTHREAD; i++)
+  for (int i = 0; i < NTHREAD; i++)
     libport::startThread(boost::bind(&cond_thread, i));
+
   // Give time to those threads to reach the waiting-on-cond state
   usleep(200000);
   BOOST_TEST_MESSAGE("Singlethread broadcast with specific target");
-  for (int i = 0; i<NITER; i++)
-  {
-    for (int j=0; j<NTHREAD;j++)
+  for (int i = 0; i < NITER; i++)
+    for (int j = 0; j < NTHREAD; j++)
     {
       {
 	BlockLock bl(cond);
@@ -65,14 +65,14 @@ static void test_condition()
       // Give time to all threads to execute and wait.
       usleep(100000);
     }
-  }
   usleep(200000);
+
   expect.resize(NTHREAD, NITER);
   BOOST_CHECK_EQUAL(nCall, expect);
   clear();
   BOOST_TEST_MESSAGE("singlethread signal without specific target");
   targetId = -1;
-  for (int i = 0; i<NITER * NTHREAD; ++i)
+  for (int i = 0; i < NITER * NTHREAD; ++i)
   {
     cond.signal();
     usleep(100000);
@@ -85,7 +85,7 @@ static void test_condition()
   clear();
   BOOST_TEST_MESSAGE("Singlethread broadcast without specific target");
   targetId = -1;
-  for (int i = 0; i<NITER; i++)
+  for (int i = 0; i < NITER; i++)
   {
     {
       BlockLock bl(cond);
