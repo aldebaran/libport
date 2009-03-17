@@ -49,10 +49,18 @@ file to create.  Defaults to stdout.
 Prefix to use for the CPP guards.  For instance I<LIBPORT_>.  Defaults
 to I<PACKAGE_>.
 
+=item B<-q>, B<--quiet>
+
+Be less verbose.  Accumulates.
+
 =item B<-s>, B<--srcdir>=I<dir>
 
 location of the top srcdir.
 Used to locate the Git repository if in use.
+
+=item B<-v>, B<--verbose>
+
+Be more verbose.  Accumulates.
 
 =back
 
