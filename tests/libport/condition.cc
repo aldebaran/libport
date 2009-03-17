@@ -44,10 +44,10 @@ static inline void clear()
   nCall.resize(NTHREAD, 0);
 }
 
-static void test_condition()
+static void test_condition_broadcast_one()
 {
   std::vector<int> expect;
-  nCall.resize(NTHREAD, 0);
+  clear();
   for (int i = 0; i < NTHREAD; i++)
     libport::startThread(boost::bind(&cond_thread, i));
 
@@ -69,21 +69,12 @@ static void test_condition()
 
   expect.resize(NTHREAD, NITER);
   BOOST_CHECK_EQUAL(nCall, expect);
-  clear();
-  BOOST_TEST_MESSAGE("singlethread signal without specific target");
-  targetId = -1;
-  for (int i = 0; i < NITER * NTHREAD; ++i)
-  {
-    cond.signal();
-    usleep(100000);
-  }
-  int sumHit = 0;
-  foreach(int i, nCall)
-    sumHit += i;
-  BOOST_TEST_MESSAGE("Distribution: " << nCall);
-  BOOST_CHECK_EQUAL(sumHit, NITER * NTHREAD);
-  clear();
+}
+
+static void test_condition_broadcast_all()
+{
   BOOST_TEST_MESSAGE("Singlethread broadcast without specific target");
+  clear();
   targetId = -1;
   for (int i = 0; i < NITER; i++)
   {
@@ -96,25 +87,38 @@ static void test_condition()
     usleep(100000);
   }
   usleep(200000);
-  sumHit = 0;
+  int sumHit = 0;
   foreach(int i, nCall)
     sumHit += i;
   BOOST_TEST_MESSAGE("Distribution: " << nCall);
   BOOST_CHECK_EQUAL(sumHit, NITER * NTHREAD);
+}
+
+static void test_condition_signal()
+{
+  BOOST_TEST_MESSAGE("singlethread signal without specific target");
   clear();
-  // FIXME: test signal/broadcast coming from multiple threads
-  // Note: it makes no sense to test multithread broadcast with target: the
-  // Cond does not guarantee that our targetId variables stays the same between
-  // the signal and the moment the waiting thread is woken up.
-  // Cleanup a bit.
-  die = true;
-  cond.broadcast();
+  targetId = -1;
+  for (int i = 0; i < NITER * NTHREAD; ++i)
+  {
+    cond.signal();
+    usleep(100000);
+  }
+  int sumHit = 0;
+  foreach(int i, nCall)
+    sumHit += i;
+  BOOST_TEST_MESSAGE("Distribution: " << nCall);
+  BOOST_CHECK_EQUAL(sumHit, NITER * NTHREAD);
 }
 
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::condition");
-  suite->add(BOOST_TEST_CASE(test_condition));
+  suite->add(BOOST_TEST_CASE(test_condition_broadcast_one));
+  suite->add(BOOST_TEST_CASE(test_condition_broadcast_all));
+  suite->add(BOOST_TEST_CASE(test_condition_signal));
+  die = true;
+  cond.broadcast();
   return suite;
 }
