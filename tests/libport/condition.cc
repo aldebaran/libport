@@ -10,12 +10,9 @@
 
 using namespace libport;
 
-static bool die = false;
-static const int NTHREAD = 10;
-static const int NITER = 20;
-std::vector<int> nCall;
-static int targetId = 0;
-libport::Condition cond;
+static const int NTHREAD = 3;
+static const int NITER = 3;
+bool die = false;
 
 namespace std
 {
@@ -27,88 +24,118 @@ namespace std
   }
 }
 
-static void cond_thread(int idx)
+static void cond_thread(int idx,
+                        std::vector<int>& output,
+                        int& targetId,
+                        libport::Condition& cond,
+                        libport::Semaphore& sem)
 {
-  while (!die)
+  BlockLock bl(cond);
+  while (true)
   {
-    BlockLock bl(cond);
     cond.wait();
     if (targetId == idx || targetId == -1)
-      nCall[idx]++;
+      output[idx]++;
+    if (die)
+    {
+      sem++;
+      break;
+    }
+    sem++;
   }
 }
 
-static inline void clear()
+static void start_threads(std::vector<int>& output,
+                          int& targetId,
+                          libport::Condition& cond,
+                          libport::Semaphore& sem)
 {
-  nCall.clear();
-  nCall.resize(NTHREAD, 0);
+  for (int i = 0; i < NTHREAD; i++)
+    libport::startThread(boost::bind(&cond_thread, i,
+                                     boost::ref(output),
+                                     boost::ref(targetId),
+                                     boost::ref(cond),
+                                     boost::ref(sem)));
+}
+
+static void clear(libport::Condition& cond,
+                  libport::Semaphore& sem)
+{
+  die = true;
+  cond.broadcast();
+  sem -= NTHREAD;
+  die = false;
 }
 
 static void test_condition_broadcast_one()
 {
-  std::vector<int> expect;
-  clear();
-  for (int i = 0; i < NTHREAD; i++)
-    libport::startThread(boost::bind(&cond_thread, i));
+  libport::Condition cond;
+  libport::Semaphore sem;
+  std::vector<int> output(NTHREAD, 0);
+  int tgt = 0;
+  start_threads(output, tgt, cond, sem);
 
-  // Give time to those threads to reach the waiting-on-cond state
-  usleep(200000);
-  BOOST_TEST_MESSAGE("Singlethread broadcast with specific target");
   for (int i = 0; i < NITER; i++)
     for (int j = 0; j < NTHREAD; j++)
     {
       {
-	BlockLock bl(cond);
-	targetId = j;
-	cond.broadcast();
+        BlockLock bl(cond);
+        tgt = j;
+        cond.broadcast();
       }
-      // Give time to all threads to execute and wait.
-      usleep(100000);
+      sem -= NTHREAD;
     }
-  usleep(200000);
 
-  expect.resize(NTHREAD, NITER);
-  BOOST_CHECK_EQUAL(nCall, expect);
+  std::vector<int> expect(NTHREAD, NITER);
+  BOOST_CHECK_EQUAL(output, expect);
+  clear(cond, sem);
 }
 
 static void test_condition_broadcast_all()
 {
-  BOOST_TEST_MESSAGE("Singlethread broadcast without specific target");
-  clear();
-  targetId = -1;
+  libport::Condition cond;
+  libport::Semaphore sem;
+  std::vector<int> output(NTHREAD, 0);
+  int tgt = -1;
+  start_threads(output, tgt, cond, sem);
+
   for (int i = 0; i < NITER; i++)
   {
     {
       BlockLock bl(cond);
       cond.broadcast();
     }
-    //FIXME: a bit bogus, we have no waranty that all listener threads
-    // will be back in the wait state, however this is what we test.
-    usleep(100000);
+    sem -= NTHREAD;
   }
-  usleep(200000);
+
   int sumHit = 0;
-  foreach(int i, nCall)
+  foreach(int i, output)
     sumHit += i;
-  BOOST_TEST_MESSAGE("Distribution: " << nCall);
+  BOOST_TEST_MESSAGE("Distribution: " << output);
   BOOST_CHECK_EQUAL(sumHit, NITER * NTHREAD);
+  clear(cond, sem);
 }
 
 static void test_condition_signal()
 {
-  BOOST_TEST_MESSAGE("singlethread signal without specific target");
-  clear();
-  targetId = -1;
+  libport::Condition cond;
+  libport::Semaphore sem;
+  std::vector<int> output(NTHREAD, 0);
+  int tgt = -1;
+  start_threads(output, tgt, cond, sem);
+
   for (int i = 0; i < NITER * NTHREAD; ++i)
   {
     cond.signal();
-    usleep(100000);
+    sem--;
   }
+
   int sumHit = 0;
-  foreach(int i, nCall)
+  foreach(int i, output)
     sumHit += i;
-  BOOST_TEST_MESSAGE("Distribution: " << nCall);
+  BOOST_TEST_MESSAGE("Distribution: " << output);
   BOOST_CHECK_EQUAL(sumHit, NITER * NTHREAD);
+  clear(cond, sem);
 }
 
 test_suite*
@@ -118,7 +145,5 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(test_condition_broadcast_one));
   suite->add(BOOST_TEST_CASE(test_condition_broadcast_all));
   suite->add(BOOST_TEST_CASE(test_condition_signal));
-  die = true;
-  cond.broadcast();
   return suite;
 }
