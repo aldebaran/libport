@@ -207,6 +207,20 @@ namespace libport
     get(0);
   }
 
+  Semaphore& Semaphore::operator -= (unsigned c)
+  {
+    for (unsigned i = 0; i < c; ++i)
+      --(*this);
+    return *this;
+  }
+
+  Semaphore& Semaphore::operator += (unsigned c)
+  {
+    for (unsigned i = 0; i < c; ++i)
+      ++(*this);
+    return *this;
+  }
+
   bool
   Semaphore::get(const int timeout)
   {

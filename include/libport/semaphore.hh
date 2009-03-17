@@ -41,6 +41,10 @@ namespace libport
     void operator-- (int);
     void operator++ ();
     void operator-- ();
+
+    Semaphore& operator -= (unsigned c);
+    Semaphore& operator += (unsigned c);
+
     operator int ();
 
     /** Get semaphore with a limit of \b timeout in second.
