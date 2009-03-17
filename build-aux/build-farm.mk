@@ -56,8 +56,15 @@ distcheck-buildfarm: dist
 	  list='$(DIST_ARCHIVES)'; for i in $$list; do echo $$i; done) | \
 	  sed -e 1h -e 1s/./=/g -e 1p -e 1x -e '$$p' -e '$$x'
 
-DISTCHECK_INSTALLCHECK_FLAGS ?= VERBOSE=1 AM_COLOR_TESTS=no
-
+# The buildfarm should not try to render colors in the output, it
+# should instrument the tests (that's the best moment to do that since
+# we no longer run wrappers, but really the programs themselves), and
+# it should report the logs, as otherwise it just display a big fat
+# silent failure.
+DISTCHECK_INSTALLCHECK_FLAGS ?=			\
+  AM_COLOR_TESTS=no				\
+  INSTRUMENT=1					\
+  VERBOSE=1
 
 # Remove the dists and distdirs that we made.
 #
@@ -88,4 +95,3 @@ dists-clean:
 # Always clean beforehand, because since our VERSION changes
 # frequently, we leave bazillions of distdirs and dists.
 distcheck-buildfarm: dists-clean
-
