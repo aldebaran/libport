@@ -1,0 +1,239 @@
+#! /usr/bin/perl -w
+
+use strict;
+use English;
+
+=head1 NAME
+
+=head1 SYNOPSIS
+
+  instrument [OPTIONS...] [--] PROGRAM [ARGUMENTS...]
+
+=head1 OPTIONS
+
+General options:
+
+=over 4
+
+=item B<-h>, B<--help>
+
+Display this message and exit.
+
+=item B<-m>, B<--mode>=I<mode>.
+
+Specify the instrumentation mode:
+
+=over 4
+
+=item I<auto>
+
+Chose the most appropriate mode.  Default.
+
+=item I<none>
+
+No instrumentation.
+
+=item I<osx>
+
+Use Mac OS X special malloc related environment variables.
+
+=item I<valgrind>
+
+Use valgrind (memcheck).
+
+=back
+
+=item B<-n>, B<--dry-run>
+
+Don't actually run any command; just print them.
+
+=item B<-o>, B<--output>=I<file>
+
+Save the logs in I<file> instead of standard error.
+
+=item B<-q>, B<--quiet>
+
+Be less verbose.  Accumulates.
+
+=item B<-v>, B<--verbose>
+
+Be more verbose.  Accumulates.
+
+=item B<-V>, B<--valgrind-option>=I<option>
+
+Pass I<option> to Valgrind.  Accumulates.  For instance B<-V
+--suppressions=I<suppression-file>>.
+
+=back
+
+=cut
+
+# Instrument mode.
+use constant
+{
+  mode_auto       => 1,
+  mode_none       => 2,
+  mode_osx        => 3,
+  mode_valgrind   => 4,
+};
+my $mode = mode_auto;
+# From value to name.
+my %mode_name =
+  (
+   mode_auto()     => "auto",
+   mode_none()     => "none",
+   mode_osx()      => "osx",
+   mode_valgrind() => "valgrind",
+  );
+# From name to value.
+my %mode = map { $mode_name{$_} => $_ } keys %mode_name;
+
+# Where to save logs.  STDERR if undef.
+my $output;
+
+# Depending on the version of Valgrind, use --log-file or
+# --log-file-exactly.
+my $valgrind_log_file = '--log-file';
+
+# More options for valgrind.
+my @valgrind_option =
+  (
+   "--error-exitcode=242",
+  );
+
+# Verbosity level.
+my $verbose = 1;
+
+=head1 FUNCTIONS
+
+=over 4
+
+=item C<verbose($level, @message)>
+
+Report the C<@message> is C<$level> E<lt>= C<$verbose>.
+
+=cut
+
+sub verbose($@)
+{
+  my ($level, @message) = @_;
+  print STDERR "$0: ", @message
+    if $level <= $verbose;
+}
+
+
+sub help ($)
+{
+  my ($verbose) = @_;
+  use Pod::Usage;
+  # See <URL:http://perldoc.perl.org/pod2man.html#NOTES>.
+  pod2usage( { -message => "Portable instrumentation",
+               -exitval => 0,
+               -verbose => $verbose,
+               -output  => \*STDOUT });
+}
+
+######################################################################
+
+sub getopt ()
+{
+  use Getopt::Long;
+  my %option = (
+    "h|help"        => sub { help ($verbose) },
+    "m|mode=s"      => sub { exists $mode{$_[1]} or die "unknown mode: $_[1]";
+                             $mode = $mode{$_[1]}; },
+    "o|output=s"    => \$output,
+    "q|quiet"       => sub { --$verbose },
+    "v|verbose+"    => \$verbose,
+    "V|valgrind-option=s" => \@valgrind_option,
+    );
+  Getopt::Long::Configure ("bundling", "pass_through");
+  GetOptions (%option)
+    or exit 1;
+  # If there is one, do not keep the --.
+  shift @ARGV
+    if exists $ARGV[0] && $ARGV[0] eq '--';
+}
+
+######################################################################
+
+sub compute_mode ()
+{
+  my $valgrind_help = `valgrind --help 2>/dev/null`;
+
+  if ($valgrind_help)
+    {
+      $mode = mode_valgrind;
+      $valgrind_log_file = '--log-file-exactly'
+        if $valgrind_help =~ /--log-file-exactly/;
+    }
+  elsif ($OSNAME eq 'darwin')
+    {
+      $mode = mode_osx;
+    }
+}
+
+
+######################################################################
+
+sub instrument_prefix ()
+{
+  my @res = ();
+  if ($mode == mode_osx)
+    {
+      @res = (
+        "env",
+        "MallocBadFreeAbort=1",
+        "MallocCheckHeapAbort=1"
+        "MallocErrorAbort=1",
+        "MallocGuardEdges=1",
+        "MallocPreScribble=1",
+        "MallocScribble=1",
+        );
+      push @res, "MallocLogFile=$output"
+        if $output;
+    }
+  elsif ($mode == mode_valgrind)
+    {
+      @res = ("valgrind", @valgrind_option);
+      push @res, "--quiet"
+        if 0 == $verbose;
+      push @res, "--verbose"
+        if 2 <= $verbose;
+      push @res, "$valgrind_log_file=$output"
+        if $output;
+      push @res, "--";
+    }
+  return @res;
+}
+
+######################################################################
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
+getopt;
+compute_mode
+  if $mode == mode_auto;
+verbose 1, "mode: $mode: $mode_name{$mode}\n";
+my @res = (instrument_prefix, @ARGV);
+print "@res\n";
+
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:

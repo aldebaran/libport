@@ -38,58 +38,23 @@ m4_defun([_URBI_INSTRUMENT_PREPARE],
 instrument ()
 {
   local log=$[1]
-  case $INSTRUMENT:$(uname -s) in
-      (true:Darwin)
-          # Instrument to use Darwin's malloc features.  The man page
-          # says "MallocBadFreeAbort" exists, but setting MallocHelp
-          # reports about "MallocErrorAbort".  The former does not
-          # work, the latter does.
-          echo "env"                            \
-              "MallocGuardEdges=1"              \
-              "MallocPreScribble=1"             \
-              "MallocScribble=1"                \
-              "MallocErrorAbort=1"              \
-              "MallocCheckHeapAbort=1"          \
-              "MallocLogFile=$log"
-          ;;
-      (true:*)
-          # Instrument using Valgrind.
-          : ${VALGRIND=valgrind}
-          if ($VALGRIND --version) >/dev/null 2>&1; then
-            local suppressions
-            if test -f $srcdir/valgrind-suppressions; then
-              suppressions="--suppressions=$srcdir/valgrind-suppressions"
-            fi
 
-            case $($VALGRIND --help) in
-            *--log-file-exactly*) valgrind_log_option_name=--log-file-exactly ;;
-            *) valgrind_log_option_name=--log-file ;;
-            esac
+  # Initialization.
+  if test -z "$instrument_was_run"; then
+    instrument_was_run=true
+    normalize_boolean INSTRUMENT
+    # Under some circumstances, instead of 2s until "server.port", I
+    # have 156s when running Valgrind...  But factor 100 is really a
+    # lot, see if we can do with 50.
+    if $INSTRUMENT; then
+      timeout_factor 50
+    fi
+  fi
 
-            echo "$VALGRIND"                            \
-              "--error-exitcode=242"                    \
-                 "$valgrind_log_option_name=$log"       \
-                 "$suppressions"                        \
-                 "--"
-          else
-            stderr "cannot find valgrind as $VALGRIND"
-          fi
-          ;;
-      (*)
-          # Don't instrument.
-          ;;
-  esac
+  if $INSTRUMENT; then
+    $abs_top_srcdir/build-aux/instrument -o $log
+  fi
 }
-
-# FIXME: This should be issued farther in the code, not with the functions.
-normalize_boolean INSTRUMENT
-
-# Under some circumstances, instead of 2s until "server.port", I have
-# 156s when running Valgrind...  But factor 100 is really a lot, see
-# if we can do with 50.
-if $INSTRUMENT; then
-  timeout_factor 50
-fi
 ])
 
 
