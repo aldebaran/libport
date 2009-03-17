@@ -42,7 +42,7 @@ int lt_dllog (unsigned level, const char* ormat, ...);
 
 #if defined LT_DEBUG_LOADERS
 # define LT_LOG(Args)                           \
-  lt_dllog Args;
+  lt_dllog Args
 #else
 # define LT_LOG(Args)
 #endif
