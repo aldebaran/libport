@@ -81,6 +81,9 @@ if test -d $tmp; then
   # processes may access concurrently to it.
   for f in *
   do
+    # Empty directory might return the globbing pattern.
+    test "$f" != "*" ||
+      break
     if ps -p $f >/dev/null; then
       stderr "process $f is running"
     else
