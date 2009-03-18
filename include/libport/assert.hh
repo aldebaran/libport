@@ -15,10 +15,8 @@
 #  define LIBPORT_ASSERT_VERBOSE 1
 # endif
 
-# if LIBPORT_ASSERT_VERBOSE
-#  include <iostream> // std::cerr
-#  include <libport/cstdio> // libport::strerror.
-# endif
+# include <iostream> // std::cerr
+# include <libport/cstdio> // libport::strerror.
 
 # include <libport/compiler.hh>
 
@@ -73,18 +71,12 @@ namespace libport
 /// if Msg is complex, beware of predence issues with << and use parens
 /// on the invocation side.
 
-# if ! LIBPORT_ASSERT_VERBOSE
-#  define pabort(Msg)       libport::abort()
-# else
-
-#  define pabort(Msg)					\
+# define pabort(Msg)					\
   ((void) (__pabort (__FILE__ ":" << __LINE__, Msg)))
 
-#  define __pabort(Loc, Msg)						\
+# define __pabort(Loc, Msg)						\
   (std::cerr << Loc << ": abort: " << Msg << std::endl,			\
    libport::abort())
-
-# endif // LIBPORT_ASSERT_VERBOSE
 
 
 /*----------------------------------------------.
