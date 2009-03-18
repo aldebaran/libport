@@ -15,6 +15,13 @@ General options:
 
 =over 4
 
+=item B<-f>, B<--force>
+
+By default no instrumentation is done on shell scripts.  It is
+frequent when running tests in the build tree to actually test shell
+scripts that bounce to actual binaries. With this option,
+instrumentation is always performed.
+
 =item B<-h>, B<--help>
 
 Display this message and exit.
@@ -67,6 +74,9 @@ Pass I<option> to Valgrind.  Accumulates.  For instance B<-V
 =back
 
 =cut
+
+# Whether scripts should also be instrumented.
+my $force = 0;
 
 # Instrument mode.
 use constant
@@ -139,6 +149,7 @@ sub getopt ()
 {
   use Getopt::Long;
   my %option = (
+    "f|force"       => \$force,
     "h|help"        => sub { help ($verbose) },
     "m|mode=s"      => sub { exists $mode{$_[1]} or die "unknown mode: $_[1]";
                              $mode = $mode{$_[1]}; },
@@ -214,10 +225,29 @@ sub instrument_prefix ()
 ## ------ ##
 
 getopt;
-compute_mode
-  if $mode == mode_auto;
-verbose 1, "mode: $mode: $mode_name{$mode}\n";
-my @res = (instrument_prefix, @ARGV);
+my @res = @ARGV;
+
+# Should we instrument?
+my $instrument = $force;
+if (!$instrument)
+{
+  # Don't instrument shell scripts.
+  if (exists $ARGV[0])
+    {
+      my $type = `file $ARGV[0]`;
+      chop $type;
+      verbose 2, "type of $ARGV[0]: $type";
+      $instrument = $type !~ /script/;
+    }
+}
+
+if ($instrument)
+{
+  compute_mode
+    if $mode == mode_auto;
+  verbose 2, "mode: $mode: $mode_name{$mode}\n";
+  unshift @res, instrument_prefix;
+}
 print "@res\n";
 
 
