@@ -11,6 +11,9 @@ use English;
 
 =head1 OPTIONS
 
+The environment variable INSTRUMENTFLAGS is prepended to the command
+line arguments before option parsing.
+
 General options:
 
 =over 4
@@ -148,6 +151,11 @@ sub help ($)
 sub getopt ()
 {
   use Getopt::Long;
+
+  my $envvar = 'INSTRUMENTFLAGS';
+  unshift @ARGV, split(/ /, $ENV{$envvar})
+    if exists $ENV{$envvar};
+
   my %option = (
     "f|force"       => \$force,
     "h|help"        => sub { help ($verbose) },
@@ -161,6 +169,11 @@ sub getopt ()
   Getopt::Long::Configure ("bundling", "pass_through");
   GetOptions (%option)
     or exit 1;
+
+  # Can't be verbose before processing --force...
+  verbose 2, "prepended arguments $envvar=$ENV{$envvar}\n"
+    if exists $ENV{$envvar};
+
   # If there is one, do not keep the --.
   shift @ARGV
     if exists $ARGV[0] && $ARGV[0] eq '--';
@@ -236,7 +249,7 @@ if (!$instrument)
     {
       my $type = `file $ARGV[0]`;
       chop $type;
-      verbose 2, "type of $ARGV[0]: $type";
+      verbose 2, "type of $ARGV[0]: $type\n";
       $instrument = $type !~ /script/;
     }
 }
