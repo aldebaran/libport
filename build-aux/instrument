@@ -184,7 +184,7 @@ sub instrument_prefix ()
       @res = (
         "env",
         "MallocBadFreeAbort=1",
-        "MallocCheckHeapAbort=1"
+        "MallocCheckHeapAbort=1",
         "MallocErrorAbort=1",
         "MallocGuardEdges=1",
         "MallocPreScribble=1",
