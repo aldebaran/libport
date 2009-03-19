@@ -1,6 +1,6 @@
 ##
 ## build-aux.mk: This file is part of build-aux.
-## Copyright (C) Gostai S.A.S., 2006-2008.
+## Copyright (C) 2006-2009, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -11,7 +11,9 @@
 ##
 
 # This file is meant to be included only by the top-level Makefile.am.
-EXTRA_DIST += $(top_srcdir)/build-aux/install-sh-c
+EXTRA_DIST +=					\
+  $(build_aux_srcdir)/install-sh-c		\
+  $(build_aux_srcdir)/instrument
 
 
 ## ------ ##
