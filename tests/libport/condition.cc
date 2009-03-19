@@ -33,6 +33,7 @@ static void cond_thread(int idx,
   BlockLock bl(cond);
   while (true)
   {
+    sem++;
     cond.wait();
     if (targetId == idx || targetId == -1)
       output[idx]++;
@@ -41,7 +42,6 @@ static void cond_thread(int idx,
       sem++;
       break;
     }
-    sem++;
   }
 }
 
@@ -56,6 +56,7 @@ static void start_threads(std::vector<int>& output,
                                      boost::ref(targetId),
                                      boost::ref(cond),
                                      boost::ref(sem)));
+  sem -= NTHREAD;
 }
 
 static void clear(libport::Condition& cond,
