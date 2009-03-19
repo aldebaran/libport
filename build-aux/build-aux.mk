@@ -44,17 +44,6 @@ reconf:
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS)
 
 
-## ----------- ##
-## Build-aux.  ##
-## ----------- ##
-
-# Short cuts
-.PHONY: baux-help baux-up baux-ci baux-pin
-baux-up baux-ci baux-pin:
-	$(MAKE) $(AM_MAKEFLAGS) $$(echo "$@" | sed s/baux/build-aux/)
-
-include $(top_srcdir)/build-aux/svn-externals.mk
-SVN_EXTERNALS += build-aux
 
 ## -------- ##
 ## boost.m4 ##
