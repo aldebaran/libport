@@ -131,8 +131,28 @@ namespace libport
     std::string value(const boost::optional<std::string>& def
                       = boost::optional<std::string>()) const;
     std::string value(const char* def) const;
-    template <typename T>
-    T get(const boost::optional<T>& def = boost::optional<T>()) const;
+
+    template <typename T> T get(const boost::optional<T>& def) const;
+
+    // Used to be implemented as a default argument to the previous
+    // function, but MSVC dies with:
+    //
+    // error C2440: 'default argument' : cannot convert from
+    // 'boost::optional<T>' to 'const boost::optional<T> &'
+    //  with
+    //  [
+    //      T=int
+    //  ]
+    //  Reason: cannot convert from 'boost::optional<T>'
+    //   to 'const boost::optional<T>'
+    //  with
+    //  [
+    //      T=int
+    //  ]
+    //  No user-defined-conversion operator available that can
+    //  perform this conversion, or the operator cannot be called.
+    template <typename T> T get() const;
+
     bool filled() const;
 
   private:

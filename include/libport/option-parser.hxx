@@ -15,6 +15,12 @@ namespace libport
     }
     return boost::lexical_cast<T>(value_);
   }
+
+  template <typename T>
+  T OptionValue::get() const
+  {
+    return get(boost::optional<T>());
+  }
 }
 
 #endif
