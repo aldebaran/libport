@@ -12,6 +12,7 @@
 
 # This file is meant to be included only by the top-level Makefile.am.
 EXTRA_DIST +=					\
+  $(build_aux_srcdir)/semaphore-clean.sh	\
   $(build_aux_srcdir)/install-sh-c		\
   $(build_aux_srcdir)/instrument
 
