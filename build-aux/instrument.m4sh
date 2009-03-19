@@ -27,18 +27,14 @@ m4_defun([_URBI_INSTRUMENT_PREPARE],
 }
 
 
-# COMMAND-PREFIX instrument LOG-FILE
-# ----------------------------------
+# COMMAND-PREFIX instrument OPTIONS and ARGUMENTS
+# -----------------------------------------------
 # Return what's to be prepended to an executable so that it is instrumented
 # to be checked: Valgrind or Darwin's Malloc features.
 #
-# Use LOG-FILE as output file.
-#
-# Shared with uconsole-check, please keep sync.
+# OPTIONS and ARGUMENTS are passed to instrument, see its --help.
 instrument ()
 {
-  local log=$[1]
-
   # Initialization.
   if test -z "$instrument_was_run"; then
     instrument_was_run=true
@@ -51,9 +47,11 @@ instrument ()
     fi
   fi
 
-  if $INSTRUMENT; then
-    $abs_top_srcdir/build-aux/instrument -o $log
+  if ! $INSTRUMENT; then
+    set x --mode=none "$[@]"
+    shift
   fi
+  $abs_top_srcdir/build-aux/instrument "$[@]"
 }
 ])
 
