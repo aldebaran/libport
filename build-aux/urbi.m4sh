@@ -173,8 +173,8 @@ find_urbi_server ()
 spawn_urbi_server ()
 {
   rm -f server.port
-  local flags="--port 0 --port-file server.port $*"
-  local cmd="$(instrument "server.val") $URBI_SERVER $flags"
+  local cmd=$(instrument -o "server.val" -- \
+              $URBI_SERVER $flags --port 0 --port-file server.port "$@")
   echo "$cmd" >server.cmd
   $cmd </dev/null >server.out 2>server.err &
   children_register server
