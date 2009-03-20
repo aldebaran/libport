@@ -1,0 +1,249 @@
+# Valgrind suppression file.
+
+# Format of this file is:
+# {
+#     name_of_suppression
+#     tool_name:supp_kind
+#     (optional extra info for some suppression types)
+#     caller0 name, or /name/of/so/file.so
+#     caller1 name, or ditto
+#     (optionally: caller2 name)
+#     (optionally: caller3 name)
+#  }
+#
+# For Memcheck, the supp_kinds are:
+#
+#     Param Value1 Value2 Value4 Value8 Value16
+#     Free Addr1 Addr2 Addr4 Addr8 Addr16
+#     Cond (previously known as Value0)
+#
+# and the optional extra info is:
+#     if Param: name of system call param
+#     if Free: name of free-ing fn)
+#
+
+# Do not use `...' which is a cool feature, but no available in
+# Valgrind on etch.
+
+## --------------------------------------------- ##
+## 2009-03-20, bf-linux-1-virtual, Debian Etch.  ##
+## --------------------------------------------- ##
+
+# See also https://bugs.launchpad.net/valgrind/+bug/2958
+{
+   _dl_open from tryall_dlopen_module
+   Memcheck:Addr4
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libdl-2.3.6.so
+   fun:dlopen
+   fun:vm_open
+   fun:tryall_dlopen
+   fun:tryall_dlopen_module
+}
+
+{
+   _dl_open
+   Memcheck:Addr4
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+}
+
+{
+   _dl_sym from xdlsym 1.
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libc-2.3.6.so
+   fun:_dl_sym
+   obj:/lib/tls/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libdl-2.3.6.so
+   fun:dlsym
+   fun:vm_sym
+   fun:lt_dlsym
+#   fun:int (*(anonymous namespace)::xlt_dlsym<int (*)(std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, bool, bool)>(lt__handle*, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&))(std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, bool, bool)
+   fun:_ZN67_GLOBAL__N_.._.._.._sdk_remote_src_urbi_launch.cc_9F64A10B_6DFFCB069xlt_dlsymIPFiRKSt6vectorISsSaISsEEbbEEET_P10lt__handleRKSs
+   fun:main
+}
+
+{
+   _dl_sym from xdlsym 2.
+   Memcheck:Addr4
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libc-2.3.6.so
+   fun:_dl_sym
+   obj:/lib/tls/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libdl-2.3.6.so
+   fun:dlsym
+   fun:vm_sym
+   fun:lt_dlsym
+#   fun:int (*(anonymous namespace)::xlt_dlsym<int (*)(std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, bool, bool)>(lt__handle*, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&))(std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, bool, bool)
+   fun:_ZN67_GLOBAL__N_.._.._.._sdk_remote_src_urbi_launch.cc_9F64A10B_6DFFCB069xlt_dlsymIPFiRKSt6vectorISsSaISsEEbbEEET_P10lt__handleRKSs
+}
+
+
+## ------------------------------------------ ##
+## Come from la nuit des temps in Urbivalid.  ##
+## ------------------------------------------ ##
+
+{
+   libc
+   Memcheck:Cond
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+}
+{
+   gethostbyname
+   Memcheck:Cond
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/libc-2.7.so
+   obj:/lib/ld-2.7.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/libc-2.7.so
+   fun:gethostbyname_r
+   fun:gethostbyname
+   fun:_ZN7Network13TCPServerPipe4initEiRKSs
+}
+
+{
+   dlopen
+   Memcheck:Addr4
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/libc-2.7.so
+   obj:/lib/ld-2.7.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/libc-2.7.so
+   fun:__nss_hosts_lookup
+}
+{
+  dlopen64
+   Memcheck:Addr8
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/libc-2.7.so
+   obj:/lib/ld-2.7.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/libc-2.7.so
+}
+
+{
+   dlopen2
+   Memcheck:Cond
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/libc-2.7.so
+   obj:/lib/ld-2.7.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/libc-2.7.so
+   fun:__nss_hosts_lookup
+   fun:gethostbyname_r
+   fun:gethostbyname
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   fun:__nss_hosts_lookup
+   fun:gethostbyname_r
+   fun:gethostbyname
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   fun:__nss_hosts_lookup
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Addr4
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/tls/i686/cmov/libc-2.3.6.so
+   fun:__nss_hosts_lookup
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Addr4
+   obj:/lib/ld-2.4.so
+   obj:/lib/ld-2.4.so
+   obj:/lib/ld-2.4.so
+   obj:/lib/ld-2.4.so
+   obj:/lib/ld-2.4.so
+   obj:/lib/ld-2.4.so
+   obj:/lib/tls/i686/cmov/libc-2.4.so
+   obj:/lib/ld-2.4.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/tls/i686/cmov/libc-2.4.so
+   fun:__nss_hosts_lookup
+}
