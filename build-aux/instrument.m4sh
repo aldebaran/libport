@@ -51,13 +51,15 @@ instrument ()
     fi
   fi
 
+  # Additional flags for instrument.
+  local flags
   if $INSTRUMENT; then
-    set x --valgrind-option=--suppressions=$abs_top_srcdir/build-aux/instrument.supp
+    local supp=$abs_top_srcdir/build-aux/instrument.supp
+    flags=--valgrind-option=--suppressions=$supp
   else
-    set x --mode=none "$[@]"
+    flags=--mode=none
   fi
-  shift
-  instrument_result=$($abs_top_srcdir/build-aux/instrument "$[@]")
+  instrument_result=$($abs_top_srcdir/build-aux/instrument $flags "$[@]")
 }
 ])
 

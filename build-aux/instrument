@@ -319,6 +319,8 @@ getopt;
 compute_mode
   if $mode == mode_auto;
 my @res = instrument($mode, @ARGV);
+
+verbose "result: @res\n";
 print "@res\n";
 
 
