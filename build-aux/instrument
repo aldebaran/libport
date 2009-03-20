@@ -222,8 +222,9 @@ sub file_type ($)
 
 ######################################################################
 
-sub instrument_prefix ()
+sub instrument_prefix ($)
 {
+  my ($mode) = @_;
   my @res = ();
   if ($mode == mode_osx)
     {
@@ -253,6 +254,61 @@ sub instrument_prefix ()
   return @res;
 }
 
+sub find_gnu_libtool ()
+{
+  # Beware that on Mac OS X, libtool is not GNU libtool.
+  my @libtool = qw(glibtool libtool);
+  unshift @libtool, $ENV{LIBTOOL}
+    if exists $ENV{LIBTOOL};
+  for my $libtool (@libtool)
+    {
+      my $version = `$libtool --version |
+                       sed 1q |
+                       grep 'GNU libtool' 2>/dev/null`;
+      if ($? == 0)
+        {
+          chomp $version;
+          verbose 2, "using GNU Libtool: $libtool: $version\n";
+          return $libtool;
+        }
+    }
+  verbose 2, "did not find GNU Libtool as: @libtool\n";
+}
+
+
+# instrument_prefix($mode, @argv)
+# -------------------------------
+sub instrument ($@)
+{
+  my ($mode, @argv) = @_;
+  my @res = @argv;
+
+  # No instrumentation required.
+  return @res
+    if $mode == mode_none;
+
+  # The type of the program to instrument.
+  my $type = exists $argv[0] ? file_type $argv[0] : '';
+
+  # Instrument if required, or if not a script.
+  return @res
+    unless $force || $type !~ /script/;
+
+  # If it's a libtool wrapper, don't instrument it unless we can find
+  # libtool.
+  my $libtool = $type =~ /libtool wrapper/ ? find_gnu_libtool : undef;
+
+  # Really instrument here.
+  verbose 2, "mode: $mode: $mode_name{$mode}\n";
+  unshift @res, instrument_prefix($mode);
+
+  # Now, if this requires libtool, pass it.
+  unshift @res, $libtool, "--mode=execute"
+    if $libtool;
+
+  return @res;
+}
+
 ######################################################################
 
 ## ------ ##
@@ -260,25 +316,9 @@ sub instrument_prefix ()
 ## ------ ##
 
 getopt;
-my @res = @ARGV;
-
-# The type of the program to instrument.
-my $type = exists $ARGV[0] ? file_type $ARGV[0] : '';
-
-# Should we instrument?
-my $instrument = $force || $type !~ /script/;
-
-if ($instrument)
-{
-  compute_mode
-    if $mode == mode_auto;
-  verbose 2, "mode: $mode: $mode_name{$mode}\n";
-  unshift @res, instrument_prefix;
-}
-
-unshift @res, "libtool", "--mode=execute"
-  if $type =~ /libtool wrapper/;
-
+compute_mode
+  if $mode == mode_auto;
+my @res = instrument($mode, @ARGV);
 print "@res\n";
 
 
