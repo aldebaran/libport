@@ -58,6 +58,7 @@
 
 // C4512: 'classname' : assignment operator could not be generated
 
+// C4514: 'strchr' : unreferenced inline function has been removed
 
 // C4571: Informational: catch(...) semantics changed since Visual
 //                C++ 7.1; structured exceptions (SEH) are no longer caught.
@@ -101,9 +102,9 @@
                  4121 4127                      \
                  4251 4290                      \
                  4347 4355                      \
-                 4512 4571                      \
+                 4512 4514 4571                 \
                  4619 4625 4626 4668            \
                  4710 4711                      \
-                 4800 4820 )
+                 4800 4820)
 
 #endif
