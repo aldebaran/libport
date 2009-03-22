@@ -318,14 +318,18 @@ sub instrument ($@)
 Return C<$str> properly escaped for a regular Bourne shell.  Avoid
 useless quotes to produce a readable result.
 
+This is insufficient.  We actually need to have the result "eval"'ed.
+
 =cut
 
 sub shellescape($)
 {
   my ($str) = @_;
-  $str =~ s,',\\',g;
-  $str = "'$str'"
-    if $str =~ m([^-+_/.[:alnum:]]);
+  if ($str =~ m([^-=+_/.[:alnum:]]))
+    {
+      $str =~ s,[\\'],'\\&',g;
+      $str = "'$str'";
+    }
   return $str;
 }
 
