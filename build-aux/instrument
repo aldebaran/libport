@@ -5,6 +5,8 @@ use English;
 
 =head1 NAME
 
+instrument - automatic binary instrumentation
+
 =head1 SYNOPSIS
 
   instrument [OPTIONS...] [--] PROGRAM [ARGUMENTS...]
@@ -311,6 +313,22 @@ sub instrument ($@)
 
 ######################################################################
 
+=item C<shellescape($str)>
+
+Return C<$str> properly escaped for a regular Bourne shell.  Avoid
+useless quotes to produce a readable result.
+
+=cut
+
+sub shellescape($)
+{
+  my ($str) = @_;
+  $str =~ s,',\\',g;
+  $str = "'$str'"
+    if $str =~ m([^-+_/.[:alnum:]]);
+  return $str;
+}
+
 ## ------ ##
 ## Main.  ##
 ## ------ ##
@@ -319,7 +337,7 @@ getopt;
 compute_mode
   if $mode == mode_auto;
 my @res = instrument($mode, @ARGV);
-
+@res = map { shellescape($_); } @res;
 verbose 2, "result: @res\n";
 print "@res\n";
 
