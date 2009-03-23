@@ -16,6 +16,13 @@ namespace libport
   }
 
   inline
+  Finally::Finally(Finally& f)
+    : actions_(f.actions_)
+  {
+    f.actions_.clear();
+  }
+
+  inline
   Finally::Finally(const action_type& a)
   {
     actions_.reserve(4);
