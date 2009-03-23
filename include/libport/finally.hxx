@@ -11,12 +11,22 @@ namespace libport
 
   inline
   Finally::Finally()
+    : enabled_(true)
   {
     actions_.reserve(4);
   }
 
   inline
+  Finally::Finally(const Finally& f)
+    : enabled_(true),
+      actions_(f.actions_)
+  {
+    f.enabled_ = false;
+  }
+
+  inline
   Finally::Finally(const action_type& a)
+    : enabled_(true)
   {
     actions_.reserve(4);
     *this << a;
@@ -24,6 +34,7 @@ namespace libport
 
   inline
   Finally::Finally(unsigned int n)
+    : enabled_(true)
   {
     actions_.reserve(n);
   }
@@ -31,8 +42,11 @@ namespace libport
   inline
   Finally::~Finally()
   {
-    foreach (const action_type& a, actions_)
-      a();
+    if (enabled_)
+    {
+      foreach (const action_type& a, actions_)
+	a();
+    }
   }
 
   inline
