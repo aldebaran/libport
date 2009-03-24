@@ -32,17 +32,25 @@ namespace libport
 namespace libport
 {
   class Condition;
+
   class LIBPORT_API Semaphore
   {
   public:
-    Semaphore(int cnt = 0);
+    Semaphore(unsigned cnt = 0);
     ~Semaphore();
-    void operator++ (int);
-    void operator-- (int);
-    void operator++ ();
-    void operator-- ();
 
+    /// Acquire.
+    void operator++();
+    /// Release.
+    void operator--();
+
+    void operator++(int);
+    void operator--(int);
+
+    /// Acquire \a c times.
     Semaphore& operator -= (unsigned c);
+
+    /// Releases \a c times.
     Semaphore& operator += (unsigned c);
 
     operator int ();

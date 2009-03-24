@@ -7,15 +7,15 @@ namespace libport
 {
 
   inline void
-  Semaphore::operator++ (int)
+  Semaphore::operator++(int)
   {
-    Semaphore::operator++ ();
+    Semaphore::operator++();
   }
 
   inline void
-  Semaphore::operator-- (int)
+  Semaphore::operator--(int)
   {
-    Semaphore::operator-- ();
+    Semaphore::operator--();
   }
 
 } // namespace libport

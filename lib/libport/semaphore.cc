@@ -11,10 +11,10 @@ namespace libport
 
 # if defined WIN32 || defined LIBPORT_WIN32
   sem_t*
-  sem_open (const char* /* name */,
-	    int /* oflag */,
-	    unsigned int /*mode_t*/ /* mode */,
-	    unsigned int /* value */)
+  sem_open(const char* /* name */,
+           int /* oflag */,
+           unsigned int /*mode_t*/ /* mode */,
+           unsigned int /* value */)
   {
     return 0; // Use sem_init instead.
   }
@@ -84,7 +84,7 @@ namespace libport
 namespace libport
 {
 
-  Semaphore::Semaphore (int cnt)
+  Semaphore::Semaphore(unsigned cnt)
   {
 # ifdef __APPLE__
     static unsigned int counter = 0;
@@ -141,7 +141,7 @@ namespace libport
     ++instances_;
   }
 
-  Semaphore::~Semaphore ()
+  Semaphore::~Semaphore()
   {
     destroy();
     --instances_;
@@ -192,7 +192,7 @@ namespace libport
 
 
   void
-  Semaphore::operator++ ()
+  Semaphore::operator++()
   {
     if (sem_post(sem_))
     {
@@ -202,22 +202,22 @@ namespace libport
   }
 
   void
-  Semaphore::operator-- ()
+  Semaphore::operator--()
   {
     get(0);
   }
 
-  Semaphore& Semaphore::operator -= (unsigned c)
+  Semaphore& Semaphore::operator-=(unsigned c)
   {
     for (unsigned i = 0; i < c; ++i)
-      --(*this);
+      --*this;
     return *this;
   }
 
-  Semaphore& Semaphore::operator += (unsigned c)
+  Semaphore& Semaphore::operator+=(unsigned c)
   {
     for (unsigned i = 0; i < c; ++i)
-      ++(*this);
+      ++*this;
     return *this;
   }
 
@@ -257,7 +257,7 @@ namespace libport
     return true;
   }
 
-  Semaphore::operator int ()
+  Semaphore::operator int()
   {
     int res;
     if (sem_getvalue(sem_, &res))
