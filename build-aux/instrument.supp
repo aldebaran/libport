@@ -22,8 +22,8 @@
 #     if Free: name of free-ing fn)
 #
 
-# Do not use `...' which is a cool feature, but no available in
-# Valgrind on etch.
+# We use `...' which is a needed feature, but no available in Valgrind
+# on etch.  Too bad for them.
 
 ## --------------------------------------------- ##
 ## 2009-03-20, bf-linux-1-virtual, Debian Etch.  ##
@@ -51,13 +51,7 @@
    _dl_open
    Memcheck:Addr4
    obj:/lib/ld-2.3.6.so
-   obj:/lib/ld-2.3.6.so
-   obj:/lib/ld-2.3.6.so
-   obj:/lib/ld-2.3.6.so
-   obj:/lib/ld-2.3.6.so
-   obj:/lib/ld-2.3.6.so
-   obj:/lib/ld-2.3.6.so
-   obj:/lib/tls/libc-2.3.6.so
+   ...
    obj:/lib/ld-2.3.6.so
    fun:_dl_open
    obj:/lib/tls/libdl-2.3.6.so
@@ -113,6 +107,7 @@
    obj:/lib/ld-2.7.so
    obj:/lib/ld-2.7.so
 }
+
 {
    gethostbyname
    Memcheck:Cond
@@ -127,7 +122,6 @@
    obj:/lib/libc-2.7.so
    fun:gethostbyname_r
    fun:gethostbyname
-   fun:_ZN7Network13TCPServerPipe4initEiRKSs
 }
 
 {
@@ -272,6 +266,4 @@
    fun:dlsym
    fun:vm_sym
    fun:lt_dlsym
-   fun:_ZN67_GLOBAL__N_.._.._.._sdk_remote_src_urbi_launch.cc_9F64A10B_0C71F8DD9xlt_dlsymIPFiRKN15__gnu_debug_def6vectorISsSaISsEEEbbEEET_P10lt__handleRKSs
-   fun:main
 }
