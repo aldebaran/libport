@@ -264,9 +264,9 @@ sub find_gnu_libtool ()
     if exists $ENV{LIBTOOL};
   for my $libtool (@libtool)
     {
-      my $version = `$libtool --version |
+      my $version = `$libtool --version 2>/dev/null |
                        sed 1q |
-                       grep 'GNU libtool' 2>/dev/null`;
+                       grep 'GNU libtool'`;
       if ($? == 0)
         {
           chomp $version;
