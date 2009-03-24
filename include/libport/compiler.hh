@@ -17,6 +17,7 @@
 #  define ATTRIBUTE_NORETURN __declspec(noreturn)
 #  define ATTRIBUTE_NOTHROW  __declspec(nothrow)
 #  define ATTRIBUTE_DEPRECATED __declspec(deprecated)
+#  define ATTRIBUTE_NOINLINE __declspec(noinline)
 # endif
 
 # ifndef __attribute__
@@ -27,6 +28,7 @@
 #    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
 #    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
 #    define ATTRIBUTE_DEPRECATED __attribute__((__deprecated__))
+#    define ATTRIBUTE_NOINLINE __attribute__((__noinline__))
 #  endif
 # endif
 
