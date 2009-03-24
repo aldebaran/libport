@@ -247,3 +247,31 @@
    obj:/lib/tls/i686/cmov/libc-2.4.so
    fun:__nss_hosts_lookup
 }
+
+# Conditional jump or move depends on uninitialised value(s)
+#    at 0x4015411: (within /lib/ld-2.6.1.so)
+#    by 0x436839A: (within /lib/libc-2.6.1.so)
+#    by 0x4368739: _dl_sym (in /lib/libc-2.6.1.so)
+#    by 0x40F3DF7: (within /lib/libdl-2.6.1.so)
+#    by 0x400D891: (within /lib/ld-2.6.1.so)
+#    by 0x40F40EB: (within /lib/libdl-2.6.1.so)
+#    by 0x40F3D8A: dlsym (in /lib/libdl-2.6.1.so)
+#    by 0x805CE98: vm_sym (dlopen.c:239)
+#    by 0x805A955: lt_dlsym (ltdl.c:2038)
+#    by 0x804D9CE: int (*(anonymous namespace)::xlt_dlsym<int (*)(__gnu_debug_def::vector<std::string, std::allocator<std::string> > const&, bool, bool)>(lt__handle*, std::string const&))(__gnu_debug_def::vector<std::string, std::allocator<std::string> > const&, bool, bool) (urbi-launch.cc:98)
+#    by 0x8050144: main (urbi-launch.cc:314)
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libc-2.6.1.so
+   fun:_dl_sym
+   obj:/lib/libdl-2.6.1.so
+   obj:/lib/ld-2.6.1.so
+   obj:/lib/libdl-2.6.1.so
+   fun:dlsym
+   fun:vm_sym
+   fun:lt_dlsym
+   fun:_ZN67_GLOBAL__N_.._.._.._sdk_remote_src_urbi_launch.cc_9F64A10B_0C71F8DD9xlt_dlsymIPFiRKN15__gnu_debug_def6vectorISsSaISsEEEbbEEET_P10lt__handleRKSs
+   fun:main
+}
