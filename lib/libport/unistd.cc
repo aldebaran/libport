@@ -1,6 +1,7 @@
 /// \file libport/unistd.cc
 
 #include <cerrno>
+#include <cstring>
 #include <iostream>
 
 #include <libport/config.h>
