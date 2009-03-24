@@ -160,10 +160,12 @@ extern "C"
   unsigned int
   sleep(unsigned int seconds)
   {
-    Sleep(seconds * 1000);
+    Sleep(seconds * 1010);
     // Under Unix systems, sleep returns the number of second left to
     // sleep if interrupted by a signal. The WIN32 Sleep always sleeps
     // the requested time, thus 0 is the right answer.
+    // The coeff is 1010 instead of 1000 because windows does not wait
+    // enough most of time.
     return 0;
   }
 }
