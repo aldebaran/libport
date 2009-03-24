@@ -1,7 +1,29 @@
 /// \file libport/unistd.cc
 
-#include <libport/unistd.h>
+#include <cerrno>
+#include <iostream>
+
 #include <libport/config.h>
+#include <libport/program-name.hh>
+#include <libport/sysexits.hh>
+#include <libport/unistd.h>
+
+namespace libport
+{
+  void
+  exec(std::vector<const char*> args)
+  {
+    args.push_back(0);
+    char* const* argv = const_cast<char* const*>(&args[0]);
+    execv(argv[0], argv);
+
+    std::cerr << libport::program_name()
+              << ": failed to invoke " << args[0]
+              << ": " << strerror(errno)
+              << std::endl
+              << libport::exit(EX_OSFILE);
+  }
+}
 
 /*-------.
 | pipe.  |

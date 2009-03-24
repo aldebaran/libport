@@ -1,9 +1,12 @@
 #ifndef LIBPORT_UNISTD_H
 # define LIBPORT_UNISTD_H
 
+# include <libport/compiler.hh>
 # include <libport/detect-win32.h>
 # include <libport/export.hh>
 # include <libport/config.h>
+
+# include <vector>
 
 // This is traditional Unix file.
 # ifdef LIBPORT_HAVE_UNISTD_H
@@ -70,6 +73,17 @@ namespace libport
 
 }
 
+
+/*-----------------------.
+| exec family wrappers.  |
+`-----------------------*/
+
+namespace libport
+{
+  ATTRIBUTE_NORETURN LIBPORT_API
+  void
+  exec(std::vector<const char*> args);
+}
 
 /*--------------.
 | getpagesize.  |
