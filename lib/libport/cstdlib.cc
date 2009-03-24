@@ -61,4 +61,10 @@ namespace libport
     const char* res = getenv(c);
     return res ? res : deflt;
   }
+
+  std::string
+  xgetenv(const char* c, const std::string& deflt)
+  {
+    return xgetenv(c, deflt.c_str());
+  }
 }
