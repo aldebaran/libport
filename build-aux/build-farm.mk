@@ -56,14 +56,19 @@ distcheck-buildfarm: dist
 	  list='$(DIST_ARCHIVES)'; for i in $$list; do echo $$i; done) | \
 	  sed -e 1h -e 1s/./=/g -e 1p -e 1x -e '$$p' -e '$$x'
 
-# The buildfarm should not try to render colors in the output, it
-# should instrument the tests (that's the best moment to do that since
-# we no longer run wrappers, but really the programs themselves), and
-# it should report the logs, as otherwise it just display a big fat
-# silent failure.
+# Do not try to render colors in the output.
+#
+# Instrument the tests: installcheck (the only tests run by
+# distcheck-buildfarm) the best moment to do that since we no longer
+# run wrappers, but really the programs themselves.  But instrument
+# only part of the time, Valgrind is *very* slow, and we cannot afford
+# to wait for it to have run all the tests.
+#
+# Report the logs, as otherwise it just display a big fat silent
+# failure.
 DISTCHECK_INSTALLCHECK_FLAGS ?=			\
   AM_COLOR_TESTS=no				\
-  INSTRUMENT=1					\
+  INSTRUMENT=0.02				\
   VERBOSE=1
 
 # Remove the dists and distdirs that we made.
