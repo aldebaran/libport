@@ -70,9 +70,7 @@
    fun:dlsym
    fun:vm_sym
    fun:lt_dlsym
-#   fun:int (*(anonymous namespace)::xlt_dlsym<int (*)(std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, bool, bool)>(lt__handle*, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&))(std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, bool, bool)
-   fun:_ZN67_GLOBAL__N_.._.._.._sdk_remote_src_urbi_launch.cc_9F64A10B_6DFFCB069xlt_dlsymIPFiRKSt6vectorISsSaISsEEbbEEET_P10lt__handleRKSs
-   fun:main
+   ...
 }
 
 {
@@ -89,8 +87,7 @@
    fun:dlsym
    fun:vm_sym
    fun:lt_dlsym
-#   fun:int (*(anonymous namespace)::xlt_dlsym<int (*)(std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, bool, bool)>(lt__handle*, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&))(std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, bool, bool)
-   fun:_ZN67_GLOBAL__N_.._.._.._sdk_remote_src_urbi_launch.cc_9F64A10B_6DFFCB069xlt_dlsymIPFiRKSt6vectorISsSaISsEEbbEEET_P10lt__handleRKSs
+   ...
 }
 
 
@@ -125,7 +122,7 @@
 }
 
 {
-   dlopen
+   __nss_lookup_function
    Memcheck:Addr4
    obj:/lib/ld-2.7.so
    obj:/lib/ld-2.7.so
@@ -175,7 +172,7 @@
 }
 
 {
-   <insert a suppression name here>
+   gethostbyname
    Memcheck:Cond
    obj:/lib/ld-2.3.6.so
    obj:/lib/tls/i686/cmov/libc-2.3.6.so
@@ -192,7 +189,7 @@
 }
 
 {
-   <insert a suppression name here>
+   __nss_hosts_lookup
    Memcheck:Cond
    obj:/lib/ld-2.3.6.so
    obj:/lib/ld-2.3.6.so
@@ -209,7 +206,7 @@
 }
 
 {
-   <insert a suppression name here>
+   __nss_hosts_lookup
    Memcheck:Addr4
    obj:/lib/ld-2.3.6.so
    obj:/lib/ld-2.3.6.so
@@ -226,7 +223,7 @@
 }
 
 {
-   <insert a suppression name here>
+   __nss_hosts_lookup
    Memcheck:Addr4
    obj:/lib/ld-2.4.so
    obj:/lib/ld-2.4.so
@@ -374,4 +371,34 @@
    fun:__nss_lookup_function
    obj:/lib/tls/libc-2.3.6.so
    fun:__nss_hosts_lookup
+}
+
+# Conditional jump or move depends on uninitialised value(s)
+#    at 0x4008ED5: (within /lib/ld-2.3.6.so)
+#    by 0x42E1674: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x42E0C8E: _dl_open (in /lib/tls/libc-2.3.6.so)
+#    by 0x4091D8D: (within /lib/tls/libdl-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x409242C: (within /lib/tls/libdl-2.3.6.so)
+#    by 0x4091D20: dlopen (in /lib/tls/libdl-2.3.6.so)
+#    by 0x8051AA7: vm_open (dlopen.c:193)
+#    by 0x804F99B: tryall_dlopen (ltdl.c:430)
+#    by 0x804FC7A: tryall_dlopen_module (ltdl.c:510)
+#    by 0x80510B5: try_dlopen (ltdl.c:538)
+{
+   _dl_open from tryall_dlopen_module
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/libdl-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libdl-2.3.6.so
+   fun:dlopen
+   fun:vm_open
+   fun:tryall_dlopen
+   fun:tryall_dlopen_module
+   fun:try_dlopen
 }
