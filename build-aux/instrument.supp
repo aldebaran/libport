@@ -255,7 +255,7 @@
 #    by 0x804D9CE: int (*(anonymous namespace)::xlt_dlsym<int (*)(__gnu_debug_def::vector<std::string, std::allocator<std::string> > const&, bool, bool)>(lt__handle*, std::string const&))(__gnu_debug_def::vector<std::string, std::allocator<std::string> > const&, bool, bool) (urbi-launch.cc:98)
 #    by 0x8050144: main (urbi-launch.cc:314)
 {
-   <insert a suppression name here>
+   dlsym
    Memcheck:Cond
    obj:/lib/ld-2.6.1.so
    obj:/lib/libc-2.6.1.so
@@ -266,4 +266,112 @@
    fun:dlsym
    fun:vm_sym
    fun:lt_dlsym
+}
+
+
+## --------------------------------------------- ##
+## 2009-03-26, AD, Debian etch, Valgrind 3.4.1.  ##
+## --------------------------------------------- ##
+
+# Conditional jump or move depends on uninitialised value(s)
+#    at 0x4010C4E: (within /lib/ld-2.3.6.so)
+#    by 0x42DD21F: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x42DCC8E: _dl_open (in /lib/tls/libc-2.3.6.so)
+#    by 0x42DF4BC: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x42DF51D: __libc_dlopen_mode (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B926C: __nss_lookup_function (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B936F: (within /lib/tls/libc-2.3.6.so)
+#    by 0x42BADF5: __nss_hosts_lookup (in /lib/tls/libc-2.3.6.so)
+#    by 0x42BDC95: gethostbyname_r (in /lib/tls/libc-2.3.6.so)
+#    by 0x42BD4CD: gethostbyname (in /lib/tls/libc-2.3.6.so)
+{
+   gethostbyname
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/tls/libc-2.3.6.so
+   fun:__nss_hosts_lookup
+   fun:gethostbyname_r
+   fun:gethostbyname
+}
+
+# Conditional jump or move depends on uninitialised value(s)
+#    at 0x4010DDC: (within /lib/ld-2.3.6.so)
+#    by 0x4004B78: (within /lib/ld-2.3.6.so)
+#    by 0x4006792: (within /lib/ld-2.3.6.so)
+#    by 0x42DD21F: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x42DCC8E: _dl_open (in /lib/tls/libc-2.3.6.so)
+#    by 0x42DF4BC: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x42DF51D: __libc_dlopen_mode (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B926C: __nss_lookup_function (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B936F: (within /lib/tls/libc-2.3.6.so)
+#    by 0x42BADF5: __nss_hosts_lookup (in /lib/tls/libc-2.3.6.so)
+{
+   __nss_hosts_lookup
+   Memcheck:Cond
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/tls/libc-2.3.6.so
+   fun:__nss_hosts_lookup
+}
+
+# Invalid read of size 4
+#    at 0x4010E00: (within /lib/ld-2.3.6.so)
+#    by 0x4004B78: (within /lib/ld-2.3.6.so)
+#    by 0x4006792: (within /lib/ld-2.3.6.so)
+#    by 0x42DD21F: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x42DCC8E: _dl_open (in /lib/tls/libc-2.3.6.so)
+#    by 0x42DF4BC: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x42DF51D: __libc_dlopen_mode (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B926C: __nss_lookup_function (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B936F: (within /lib/tls/libc-2.3.6.so)
+#    by 0x42BADF5: __nss_hosts_lookup (in /lib/tls/libc-2.3.6.so)
+#  Address 0x43517b8 is 24 bytes inside a block of size 27 alloc'd
+#    at 0x401DAE8: malloc (vg_replace_malloc.c:207)
+#    by 0x4006B83: (within /lib/ld-2.3.6.so)
+#    by 0x42DD21F: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x42DCC8E: _dl_open (in /lib/tls/libc-2.3.6.so)
+#    by 0x42DF4BC: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x42DF51D: __libc_dlopen_mode (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B926C: __nss_lookup_function (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B936F: (within /lib/tls/libc-2.3.6.so)
+#    by 0x42BADF5: __nss_hosts_lookup (in /lib/tls/libc-2.3.6.so)
+#    by 0x42BDC95: gethostbyname_r (in /lib/tls/libc-2.3.6.so)
+{
+   __nss_hosts_lookup
+   Memcheck:Addr4
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   obj:/lib/tls/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:_dl_open
+   obj:/lib/tls/libc-2.3.6.so
+   obj:/lib/ld-2.3.6.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/tls/libc-2.3.6.so
+   fun:__nss_hosts_lookup
 }
