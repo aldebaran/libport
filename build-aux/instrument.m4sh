@@ -56,7 +56,8 @@ instrument ()
   if $INSTRUMENT; then
     local supp=$abs_top_srcdir/build-aux/instrument.supp
     flags=--valgrind-option=--suppressions=$supp
-    flags+=' '--valgrind-option=--gen-suppressions=all
+    flags+=' --valgrind-option=--gen-suppressions=all'
+    flags+=" --libtool=$abs_top_builddir/libtool"
   else
     flags=--mode=none
   fi

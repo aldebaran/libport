@@ -33,6 +33,12 @@ instrumentation is always performed.
 
 Display this message and exit.
 
+=item B<--libtool>=I<libtool>.
+
+Specify what Libtool to use.  By default uses the first one of
+I<$LIBTOOL>, I<glibtool>, I<libtool> whose first line of --version
+contains I<GNU libtool>.
+
 =item B<-m>, B<--mode>=I<mode>.
 
 Specify the instrumentation mode:
@@ -84,6 +90,9 @@ Pass I<option> to Valgrind.  Accumulates.  For instance B<-V
 
 # Whether scripts should also be instrumented.
 my $force = 0;
+
+# The libtool the use.  If undef, use find_gnu_libtool to find it.
+my $libtool;
 
 # Instrument mode.
 use constant
@@ -163,6 +172,18 @@ sub getopt ()
   my %option = (
     "f|force"       => \$force,
     "h|help"        => sub { help ($verbose) },
+    "libtool=s"
+      => sub
+         {
+           if (-x $_[1])
+             {
+               $libtool = $_[1];
+             }
+           else
+             {
+               verbose 0, "--libtool ignored: not an executable: $_[1]\n";
+             }
+         },
     "m|mode=s"      => sub { exists $mode{$_[1]} or die "unknown mode: $_[1]";
                              $mode = $mode{$_[1]}; },
     "o|output=s"    => \$output,
@@ -256,12 +277,29 @@ sub instrument_prefix ($)
   return @res;
 }
 
+=item C<find_gnu_libtool()>
+
+If C<$libtool> is defined, use that one, otherwise set try to find GNU
+Libtool and return it, otherwise return undef.
+
+=cut
+
 sub find_gnu_libtool ()
 {
-  # Beware that on Mac OS X, libtool is not GNU libtool.
-  my @libtool = qw(glibtool libtool);
-  unshift @libtool, $ENV{LIBTOOL}
-    if exists $ENV{LIBTOOL};
+  # List of libtools to use.
+  my @libtool;
+  # If the user specified the libtool to use, use that one.
+  if ($libtool)
+    {
+      @libtool = ($libtool);
+    }
+  else
+    {
+      # Beware that on Mac OS X, libtool is not GNU libtool.
+      @libtool = qw(glibtool libtool);
+      unshift @libtool, $ENV{LIBTOOL}
+        if exists $ENV{LIBTOOL};
+    }
   for my $libtool (@libtool)
     {
       my $version = `$libtool --version 2>/dev/null |
