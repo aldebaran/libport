@@ -19,6 +19,12 @@
 # include <libport/cstdio> // libport::strerror.
 
 # include <libport/compiler.hh>
+# include <libport/backtrace.hh>
+# include <libport/foreach.hh>
+
+# ifdef _MSC_VER
+#  include <crtdbg.h>
+# endif
 
 namespace libport
 {
@@ -28,7 +34,15 @@ namespace libport
   inline
   void abort()
   {
+# ifdef _MSC_VER
+    char* s = getenv("_DEBUG_VCXX");
+    if (s)
+      _CrtDbgBreak();
+    else
+      std::abort();
+# else
     std::abort();
+# endif
   }
 }
 
@@ -75,8 +89,10 @@ namespace libport
   ((void) (__pabort (__FILE__ ":" << __LINE__, Msg)))
 
 # define __pabort(Loc, Msg)						\
-  (std::cerr << Loc << ": abort: " << Msg << std::endl,			\
-   libport::abort())
+  {std::cerr << Loc << ": abort: " << Msg << std::endl;			\
+   foreach(const std::string& str, libport::backtrace())		\
+     std::cerr << str << std::endl;					\
+   libport::abort();}
 
 
 /*----------------------------------------------.
