@@ -177,6 +177,7 @@ sub getopt ()
     "c|cache=s"     => \$cache,
     "d|directory"   => sub { $directory_p = 1 },
     "f|file"        => sub { $format = 'file' },
+    "l|latex"       => sub { $format = 'latex' },
     "H|header"      => sub { $format = 'header' },
     "h|help"        => sub { help ($verbose) },
     "n|no-eol"      => sub { $no_eol = 1 },
@@ -373,6 +374,35 @@ class System.PackageInfo
 EOF
 }
 
+=item C<generate_latex(%keyword)>
+
+Generate a LaTeX file.
+
+=cut
+
+sub generate_latex(%)
+{
+  my (%keyword) = @_;
+  return <<EOF;
+% The SCM version string.
+\\newcommand{\\VcsVersion}{$keyword{Version}\\xspace}
+
+% The SCM revision string.
+\\newcommand{\\VcsRevision}{$keyword{Rev}\\xspace}
+
+% The SCM identification string.
+\\newcommand{\\VcsId}{$keyword{Id}\\xspace}
+
+% The SCM date string.
+\\newcommand{\\VcsDate}{$keyword{Date}\\xspace}
+
+% Version and revision together.
+\\newcommand{\\VcsVersionRev}{%
+  version \\VcsVersion rev. \\VcsRevision%
+}
+EOF
+}
+
 =item C<generate($format, %keyword)>
 
 Generate the result for C<$format>.
@@ -385,6 +415,7 @@ sub generate($%)
   my %converter =
     (
      file   => \&generate_file,
+     latex  => \&generate_latex,
      header => \&generate_header,
      urbi   => \&generate_urbi,
     );
