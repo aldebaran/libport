@@ -88,6 +88,9 @@ Pass I<option> to Valgrind.  Accumulates.  For instance B<-V
 
 =cut
 
+# Whether not to run the command, but just display it.
+my $dry_run = 0;
+
 # Whether scripts should also be instrumented.
 my $force = 0;
 
@@ -186,6 +189,7 @@ sub getopt ()
          },
     "m|mode=s"      => sub { exists $mode{$_[1]} or die "unknown mode: $_[1]";
                              $mode = $mode{$_[1]}; },
+    "n|dry-run"     => \$dry_run,
     "o|output=s"    => \$output,
     "q|quiet"       => sub { --$verbose },
     "v|verbose+"    => \$verbose,
@@ -382,6 +386,11 @@ my @res = instrument($mode, @ARGV);
 @res = map { shellescape($_); } @res;
 verbose 2, "result: @res\n";
 print "@res\n";
+if (!$dry_run)
+{
+  exec { $res[0] } @res
+    or die "couldn't exec @res: $!\n";
+}
 
 
 ### Setup "GNU" style for perl-mode and cperl-mode.

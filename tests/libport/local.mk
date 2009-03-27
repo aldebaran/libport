@@ -1,5 +1,16 @@
 # This is for Boost Unit Test tests.  "all" is much more verbose.
 TESTSFLAGS = --log_level=test-suite
+
+# There are issues with Boost
+# (https://svn.boost.org/trac/boost/ticket/2889) that prevent us from
+# using instrumentation with Boost.Test.
+#
+# INSTRUMENT = $(build_aux_srcdir)/instrument
+# INSTRUMENTFLAGS =							 \
+#   --valgrind-option=--suppressions=$(build_aux_srcdir)/instrument.supp \
+#   --valgrind-option=--gen-suppressions=all				 \
+#   --libtool=$(abs_top_builddir)/libtool
+
 # For some reason, this rule *must* be defined before loading
 # check.mk.
 %.log: %$(EXEEXT)
@@ -110,7 +121,7 @@ EXTRA_DIST +=					\
   tests/libport/ufloat-config.h			\
   tests/libport/666.txt
 
-TESTS_ENVIRONMENT +=							     \
+TESTS_ENVIRONMENT +=				\
   SRCDIR=$(srcdir)
 
 CLEANFILES += tests/libport/exists.pid

@@ -55,14 +55,14 @@ instrument ()
   fi
 
   # Additional flags for instrument.
-  local flags
+  local flags='--dry-run'
   if $INSTRUMENT; then
     local supp=$abs_top_srcdir/build-aux/instrument.supp
-    flags=--valgrind-option=--suppressions=$supp
+    flags+=" --valgrind-option=--suppressions=$supp"
     flags+=' --valgrind-option=--gen-suppressions=all'
     flags+=" --libtool=$abs_top_builddir/libtool"
   else
-    flags=--mode=none
+    flags+=' --mode=none'
   fi
   instrument_result=$($abs_top_srcdir/build-aux/instrument $flags "$[@]")
 }
