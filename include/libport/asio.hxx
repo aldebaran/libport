@@ -10,6 +10,7 @@
 #include <libport/thread.hh>
 #include <libport/lockable.hh>
 #include <libport/semaphore.hh>
+#include <libport/unistd.h>
 
 namespace libport {
 namespace netdetail {
@@ -72,6 +73,8 @@ namespace netdetail {
     acceptOne(SocketFactory fact, Acceptor *a, BaseFactory bf);
     static BaseSocket* create(Stream* base);
     void startReader();
+    int stealFD();
+    int getFD();
   private:
     Stream* base_;
     void continueWrite(DestructionLock lock, boost::system::error_code erc,
@@ -103,6 +106,8 @@ namespace netdetail {
       std::string getRemoteHost() ACCEPTOR_FAIL
       unsigned short getLocalPort();
     std::string getLocalHost();
+    int stealFD() {return -1;}
+    int getFD();
   private:
     Acceptor* base_;
   };
@@ -140,6 +145,12 @@ namespace netdetail {
   {
     return base_->local_endpoint().address().to_string();
   }
+  template<class Acceptor> int
+  AcceptorImpl<Acceptor>::getFD()
+  {
+    return base_->native();
+  }
+
   inline void
   runIoService(boost::asio::io_service* io)
   {
@@ -281,6 +292,22 @@ namespace netdetail {
   SocketImpl<Stream>::isConnected()
   {
     return base_->lowest_layer().is_open();
+  }
+
+  template<typename Stream> int
+  SocketImpl<Stream>::stealFD()
+  {
+    size_t fd = base_->lowest_layer().native();
+    fd = dup(fd);
+    // Call close, so shutdown wont be called
+    base_->lowest_layer().close();
+    return fd;
+  }
+
+  template<typename Stream> int
+  SocketImpl<Stream>::getFD()
+  {
+    return base_->lowest_layer().native();
   }
 
   template<class T>
@@ -766,6 +793,41 @@ namespace netdetail {
     // It is safe to reach that point with an open socket.
     close();
     AsioDestructible::destroy();
+  }
+
+  inline int
+  Socket::stealFD()
+  {
+    if (base_)
+      return base_->stealFD();
+    else
+      return -1;
+  }
+
+  inline int
+  Socket::getFD()
+  {
+    if (base_)
+      return base_->getFD();
+    else
+      return -1;
+  }
+
+  template<class Sock> inline void
+  Socket::setFD(int fd, typename Sock::protocol_type proto)
+  {
+    if (base_ && base_->isConnected())
+    {
+      base_->close();
+      base_->destroy();
+      base_ = 0;
+    }
+    Sock* s = new Sock(get_io_service());
+    s->assign(proto, fd);
+    netdetail::SocketImplBase* b =
+    (netdetail::SocketImplBase*)netdetail::SocketImpl<Sock>::create(s);
+    setBase(b);
+    b->startReader();
   }
 
   inline void

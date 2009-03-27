@@ -52,6 +52,8 @@ namespace libport
     virtual unsigned short getLocalPort() = 0;
     /// Get IP address of local endpoint
     virtual std::string getLocalHost() = 0;
+    virtual int stealFD() = 0;
+    virtual int getFD() = 0;
     /// Callback function called each time new data is available.
     boost::function1<bool, boost::asio::streambuf&> onReadFunc;
     /// Callback function called in case of error on the socket.
@@ -161,6 +163,14 @@ namespace libport
               const std::string& tmpDHFile = "" ,
               const std::string& cipherList = "");
 #endif
+
+    /// Steal file descriptor from Socket. Return the file descriptor.
+    int stealFD();
+    /// Get file descriptor from Socket.
+    int getFD();
+    /// Set file descriptor
+    template<class Sock>
+    void setFD(int fd, typename Sock::protocol_type proto);
   protected:
     bool onRead_(boost::asio::streambuf&);
     std::string buffer;

@@ -73,6 +73,23 @@ namespace libport
 
 }
 
+/*-------.
+|  dup.  |
+`-------*/
+
+# if defined WIN32
+extern "C"
+{
+  inline int dup(int fd)
+  {
+    return _dup(fd);
+  }
+  inline int dup2(int oldfd, int newfd)
+  {
+    return _dup2(oldfd, newfd);
+  }
+}
+# endif
 
 /*-----------------------.
 | exec family wrappers.  |
@@ -170,7 +187,6 @@ extern "C"
   }
 }
 # endif
-
 
 /*---------.
 | usleep.  |
