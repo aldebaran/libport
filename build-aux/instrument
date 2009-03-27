@@ -385,8 +385,11 @@ compute_mode
 my @res = instrument($mode, @ARGV);
 @res = map { shellescape($_); } @res;
 verbose 2, "result: @res\n";
-print "@res\n";
-if (!$dry_run)
+if ($dry_run)
+{
+  print "@res\n";
+}
+else
 {
   exec { $res[0] } @res
     or die "couldn't exec @res: $!\n";
