@@ -99,6 +99,10 @@ namespace libport
      */
     virtual void onError(boost::system::error_code){}
 
+    /** Called on socket connection
+     */
+     virtual void onConnect() {}
+
     /// Ask for the asynchronous destruction of this object.
     virtual void destroy();
 

@@ -428,6 +428,7 @@ namespace netdetail {
       // This is now connected.
       Socket* s = fact();
       s->setBase(wrapper);
+      s->onConnect();
       // Start reading.
       wrapper->startReader();
     }
