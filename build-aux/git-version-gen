@@ -267,7 +267,13 @@ sub fetch_keywords ()
   return %res;
 }
 
-sub escape (\%)
+=item C<escape(\%hashref)>
+
+Escape the values of C<%hashref> for C string syntax.
+
+=cut
+
+sub escape(\%)
 {
   my ($hash) = @_;
   for (values %$hash)
@@ -276,34 +282,35 @@ sub escape (\%)
     }
 }
 
-######################################################################
+=item C<generate_file(%keyword)>
 
-## ------ ##
-## Main.  ##
-## ------ ##
+Return as file name.
 
-getopt;
-$cache = "$srcdir/.version"
-  unless $cache;
+=cut
 
-# Looks for the SCM keywords.
-my %keyword = fetch_keywords;
-
-# Compute the main result.
-my $res;
-if ($format eq 'file')
+sub generate_file(%)
 {
-  $res = $keyword{Rev};
+  my (%keyword) = @_;
+  my $res = $keyword{Rev};
   $res =~ s,/,-,g;
   $res .= "\n"
     unless $no_eol;
+  return $res;
 }
-elsif ($format eq 'header')
+
+=item C<generate_header(%keyword)>
+
+Generate a C/C++ header.
+
+=cut
+
+sub generate_header(%)
 {
+  my (%keyword) = @_;
   my $guard = uc $output;
   $guard =~ s/\W/_/g;
   escape %keyword;
-  $res = <<EOF;
+  return <<EOF;
 #ifndef $guard
 # define $guard
 
@@ -331,10 +338,18 @@ elsif ($format eq 'header')
 #endif // !$guard
 EOF
 }
-elsif ($format eq 'urbi')
+
+=item C<generate_urbi(%keyword)>
+
+Generate an Urbi file.
+
+=cut
+
+sub generate_urbi(%)
 {
+  my (%keyword) = @_;
   escape %keyword;
-  $res = <<EOF;
+  return <<EOF;
 class System.PackageInfo
 {
   // The SCM version string.
@@ -357,6 +372,40 @@ class System.PackageInfo
 };
 EOF
 }
+
+=item C<generate($format, %keyword)>
+
+Generate the result for C<$format>.
+
+=cut
+
+sub generate($%)
+{
+  my ($format, %keyword) = @_;
+  my %converter =
+    (
+     file   => \&generate_file,
+     header => \&generate_header,
+     urbi   => \&generate_urbi,
+    );
+  return &{$converter{$format}}(%keyword);
+}
+
+######################################################################
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
+getopt;
+$cache = "$srcdir/.version"
+  unless $cache;
+
+# Looks for the SCM keywords.
+my %keyword = fetch_keywords;
+
+# Compute the main result.
+my $res = generate($format, %keyword);
 
 # Save the result.
 if ($res)
