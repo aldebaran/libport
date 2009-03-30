@@ -238,7 +238,8 @@ sub fetch_keywords ()
       # Description, Version, TarballVersion.
       $log =~ s{^(\w+):\s*(.*)$}{ $res{$1} = $2; ''; }emg;
       $res{Description} = git 'describe';
-      ($res{Version} = $res{Description}) =~ s/-[^-]*$//;
+      # In "preview/1.6/beta-1-747-g6cb67e3", strip "-747-g6cb67e3".
+      ($res{Version} = $res{Description}) =~ s/-\d+-g[\da-f]+$//;
       ($res{TarballVersion} = $res{Description}) =~ s,/,-,g;
 
       # Cache the result, only if needed.
