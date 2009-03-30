@@ -149,7 +149,7 @@ fd_read_jumbo(FdStream*& stream, int fd)
 {
   static const int size = BUFSIZ * 3 / 2;
 
-  void* thread = libport::startThread(boost::bind(thread_write, fd, size));
+  pthread_t thread = libport::startThread(boost::bind(thread_write, fd, size));
 
   char c;
   int count = 0;

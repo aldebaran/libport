@@ -8,6 +8,8 @@ libport_include_HEADERS =			\
   include/libport/cstring			\
   include/libport/cstring.hxx			\
   include/libport/fcntl.h			\
+  include/libport/pthread.h			\
+  include/libport/pthread.hxx			\
   include/libport/unistd.h
 
 # arpa/ headers

@@ -7,72 +7,38 @@
 
 namespace libport
 {
-# if defined WIN32
-  typedef DWORD ThreadStartRet;
-#  define THREADSTARTCALL WINAPI
-# else
-  typedef void* ThreadStartRet;
-#  define THREADSTARTCALL
-# endif
   inline
-  ThreadStartRet THREADSTARTCALL
+  void*
   _startThread(void * data)
   {
     boost::function0<void> * s =(boost::function0<void>*) data;
     (*s)();
     delete s;
-    return static_cast<ThreadStartRet> (0);
+    return 0;
   }
 
   inline
-  void* startThread(boost::function0<void> func)
+  pthread_t
+  startThread(boost::function0<void> func)
   {
     boost::function0<void> * cp = new boost::function0<void>(func);
-# if defined WIN32
-    unsigned long id;
-    void* r = CreateThread(NULL, 0, &_startThread, cp, 0, &id);
-# else
-    pthread_t* pt = new pthread_t;
-    pthread_create(pt, 0, &_startThread, cp);
-    void* r = pt;
-# endif
-    return r;
+    pthread_t pt;
+    pthread_create(&pt, 0, &_startThread, cp);
+    return pt;
   }
 
   template<class T>
-  void*
+  pthread_t
   startThread(T* obj)
   {
     return startThread(boost::bind(&T::operator(), obj));
   }
 
-  template<class T> void*
+  template<class T>
+  pthread_t
   startThread(T * obj, void (T::*func)(void))
   {
     return startThread(boost::bind(func, obj));
-  }
-
-  inline void joinThread(void* t)
-  {
-# if defined WIN32
-    WaitForSingleObject(t, INFINITE);
-# else
-    pthread_join(*(pthread_t*)t, 0);
-# endif
-  }
-
-  inline pthread_t pthread_self()
-  {
-# if defined WIN32
-    return GetCurrentThreadId();
-# else
-    return pthread_self();
-# endif
-  }
-
-  inline bool checkMainThread(pthread_t tid)
-  {
-    return tid != pthread_self();
   }
 
   /*---------------.
@@ -142,7 +108,7 @@ namespace libport
   ThreadedCall<Res>::wait()
   {
     if (!res_ && handle_)
-      joinThread(handle_);
+      pthread_join(handle_, NULL);
   }
 
   template<typename Res>

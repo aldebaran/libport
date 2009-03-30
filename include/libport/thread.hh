@@ -4,40 +4,21 @@
 # include <boost/function.hpp>
 # include <boost/optional.hpp>
 
-# if defined WIN32
-#  include <libport/windows.hh>
-# else
-#  if !defined LIBPORT_HAVE_PTHREAD_H || !LIBPORT_HAVE_PTHREAD_H
-#   error "pthread.h is required"
-#  endif
-# include <pthread.h>
-# endif
+# include <libport/pthread.h>
 
 namespace libport
 {
 
-# if defined WIN32
-  typedef DWORD pthread_t;
-# else
-  typedef pthread_t pthread_t;
-# endif
-
-  void*
+  pthread_t
   startThread(boost::function0<void> func);
 
   template<class T>
-  void*
+  pthread_t
   startThread(T* obj);
 
   template<class T>
-  void*
+  pthread_t
   startThread(T* obj, void (T::*func)(void));
-
-  void joinThread(void* t);
-
-  pthread_t pthread_self();
-
-  bool checkMainThread(pthread_t);
 
   template<typename Res>
   class ThreadedCall
@@ -57,7 +38,7 @@ namespace libport
 
   private:
     boost::optional<Res> res_;
-    void* handle_;
+    pthread_t handle_;
   };
 
 } // namespace libport
