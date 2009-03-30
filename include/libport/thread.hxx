@@ -5,15 +5,6 @@
 # include <libport/detect-win32.h>
 # include <boost/bind.hpp>
 
-# if defined WIN32
-#  include <libport/windows.hh>
-# else
-#  if !defined LIBPORT_HAVE_PTHREAD_H || !LIBPORT_HAVE_PTHREAD_H
-#   error "pthread.h is required"
-#  endif
-# include <pthread.h>
-# endif
-
 namespace libport
 {
 # if defined WIN32
@@ -70,7 +61,19 @@ namespace libport
 # endif
   }
 
+  inline pthread_t pthread_self()
+  {
+# if defined WIN32
+    return GetCurrentThreadId();
+# else
+    return pthread_self();
+# endif
+  }
 
+  inline bool checkMainThread(pthread_t tid)
+  {
+    return tid != pthread_self();
+  }
 
   /*---------------.
   | ThreadedCall.  |
