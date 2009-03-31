@@ -313,22 +313,29 @@ sub generate_header(%)
 #ifndef $guard
 # define $guard
 
+// The SCM date string.
+# define ${prefix}DATE "$keyword{Date}"
+
+// The SCM complete description string, with slashes.
+# define ${prefix}DESCRIPTION "$keyword{Description}"
+
+// The SCM identification string.
+# define ${prefix}ID \\
+  "$keyword{Id}"
+
+// The SCM complete version string, with dashes.
+# define ${prefix}TARBALL_VERSION \\
+  "$keyword{TarballVersion}"
+
+// The SCM revision string.
+# define ${prefix}REVISION "$keyword{Rev}"
+
 // The SCM version string.
 // Overrides that from config.h.
 # ifdef ${prefix}VERSION
 #  undef ${prefix}VERSION
 # endif
 # define ${prefix}VERSION "$keyword{Version}"
-
-// The SCM revision string.
-# define ${prefix}REVISION "$keyword{Rev}"
-
-// The SCM identification string.
-# define ${prefix}ID \\
-  "$keyword{Id}"
-
-// The SCM date string.
-# define ${prefix}DATE "$keyword{Date}"
 
 // Version and revision together.
 # define ${prefix}VERSION_REV \\
@@ -363,17 +370,25 @@ sub generate_latex(%)
 {
   my (%keyword) = @_;
   return <<EOF;
-% The SCM version string.
-\\newcommand{\\VcsVersion}{$keyword{Version}\\xspace}
+% The SCM date string.
+\\newcommand{\\VcsDate}{$keyword{Date}\\xspace}
 
-% The SCM revision string.
-\\newcommand{\\VcsRevision}{$keyword{Rev}\\xspace}
+% The SCM complete description string, with slashes.
+\\newcommand{\\VcsDescription}{$keyword{Description}\\xspace}
 
 % The SCM identification string.
 \\newcommand{\\VcsId}{$keyword{Id}\\xspace}
 
-% The SCM date string.
-\\newcommand{\\VcsDate}{$keyword{Date}\\xspace}
+% The SCM revision string.
+\\newcommand{\\VcsRevision}{$keyword{Rev}\\xspace}
+
+% The SCM complete version string, with dashes.
+\\newcommand{\\VcsTarballVersion}{%
+  $keyword{TarballVersion}\\xspace%
+}
+
+% The SCM version string.
+\\newcommand{\\VcsVersion}{$keyword{Version}\\xspace}
 
 % Version and revision together.
 \\newcommand{\\VcsVersionRev}{%
@@ -395,17 +410,23 @@ sub generate_urbi(%)
   return <<EOF;
 class System.PackageInfo
 {
-  // The SCM version string.
-  var version = "$keyword{Version}";
+  // The SCM date string.
+  var date = "$keyword{Date}";
 
-  // The SCM revision string.
-  var revision = "$keyword{Rev}";
+  // The SCM complete description string, with slashes.
+  var description = "$keyword{Description}";
 
   // The SCM identification string.
   var id = "$keyword{Id}";
 
-  // The SCM date string.
-  var date = "$keyword{Date}";
+  // The SCM revision string.
+  var revision = "$keyword{Rev}";
+
+  // The SCM complete version string, with dashes.
+  var tarball_version = "$keyword{TarballVersion}";
+
+  // The SCM version string.
+  var version = "$keyword{Version}";
 
   // Version and revision together.
   function version_rev
