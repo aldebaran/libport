@@ -347,7 +347,7 @@ Return the raw output from git-describe.
 sub generate_raw(%)
 {
   my (%keyword) = @_;
-  my $res = $keyword{Rev};
+  my $res = $keyword{Description};
   $res .= "\n"
     unless $no_eol;
   return $res;
