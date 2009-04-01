@@ -21,8 +21,6 @@ namespace libport
 
     /// Build a Finally object
     Finally();
-    /// Build a finally object and desactive the original one
-    Finally(const Finally& f);
     /// Build a Finally object, and register \a a to be executed add
     /// destruction.
     Finally(const action_type& a);
@@ -36,13 +34,11 @@ namespace libport
     Finally& operator <<(const action_type& a);
 
   private:
-
-    mutable bool enabled_;
-
     // Implementation note: using a vector here is as efficient as a
     // list if a single action is stored. When multiple actions are
     // stored, the vector implementation is more efficient.
     std::vector<action_type> actions_;
+
   };
 
   /// Save a variable and restore it at the end of the scope.
