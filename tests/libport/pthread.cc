@@ -25,10 +25,10 @@ void* thread2(void* data)
 void test_pthread()
 {
   pthread_t my_thread[2];
-  char* vim = "vim";
+  const char* vim = "vim";
   void* ret;
 
-  BOOST_CHECK(!pthread_create(my_thread, 0, &thread1, vim));
+  BOOST_CHECK(!pthread_create(my_thread, 0, &thread1, (char*)vim));
   BOOST_CHECK(!pthread_create(my_thread + 1, 0, &thread2, my_thread));
   pthread_join(my_thread[1], &ret);
   BOOST_CHECK_EQUAL(ret, (void*)0xdeadbeef);
