@@ -52,8 +52,11 @@ CXX_FLAVOR=$urbi_cv_cxx_flavor
 # URBI_PROG_CXX
 # -------------
 # Look for a C++ compiler, and pass interesting warning options.
+# URBI_COMPILATION_MODE must be called after, since it needs to know
+# the flavor.
 AC_DEFUN([URBI_PROG_CXX],
-[AC_REQUIRE([AC_CANONICAL_HOST])dnl
+[AC_BEFORE([$0], [URBI_COMPILATION_MODE])dnl
+AC_REQUIRE([AC_CANONICAL_HOST])dnl
 # Look for a C++ compiler.
 AC_LANG_PUSH([C++])
 AC_PROG_CXX

@@ -35,13 +35,16 @@ urbi_compilation_mode_set ()
       (debug)
         URBI_APPEND_COMPILERFLAGS([-O2 -ggdb])
         # Not all the code includes config.h.
-        URBI_APPEND_CPPFLAGS([-DURBI_DEBUG -D_GLIBCXX_DEBUG])
+        URBI_APPEND_CPPFLAGS([-DURBI_DEBUG])
+        case $CXX_FLAVOR in
+          (gcc-apple) ;; # Does not work with OS'X native GCC-4.2.
+          (*) URBI_APPEND_CPPFLAGS([-D_GLIBCXX_DEBUG]);;
+        esac
         AC_DEFINE([URBI_DEBUG], [1],
                   [Define to enable Urbi debugging tools.])
-        AC_DEFINE([_GLIBCXX_DEBUG], [1],
-                  [Define to enable STL debug mode.])
         AC_DEFINE([YYDEBUG], [1],
                   [Define to enable parser runtime debug traces.])
+        AC_SUBST([FLEXXXFLAGS], [--debug])
         AC_SUBST([BISON_FLAGS], ["$BISON_FLAGS -Dassert"])
         # Define USE_VALGRIND only if valgrind/valgrind.h exists.
         AC_CHECK_HEADER([valgrind/valgrind.h],
