@@ -108,10 +108,10 @@ namespace libport
     typedef boost::optional<std::string> ostring;
     OptionValued(const std::string& doc,
                  const std::string& name_long,
+                 const std::string& formal,
                  char name_short = '\0');
     using Option::set_callback;
     void set_callback(boost::function1<void, const std::string&>* callback);
-    void formal_name_set(const std::string& name);
     ostring test_option(cli_args_type& args);
 
   protected:
@@ -132,7 +132,8 @@ namespace libport
   public:
     OptionValue(const std::string& doc,
                 const std::string& name_long,
-                char name_short = '\0');
+                char name_short = '\0',
+		const std::string& formal = "");
     virtual bool test(cli_args_type& args);
     virtual void init();
     std::string value(const boost::optional<std::string>& def
@@ -177,8 +178,9 @@ namespace libport
   public:
     typedef std::vector<std::string> values_type;
     OptionValues(const std::string& doc,
-                const std::string& name_long,
-                char name_short = '\0');
+		 const std::string& name_long,
+		 char name_short = '\0',
+		 const std::string& formal = "");
     virtual bool test(cli_args_type& args);
     virtual void init();
     const values_type& get() const;
@@ -216,11 +218,13 @@ namespace libport
   public:
     cli_args_type operator () (const cli_args_type& args);
     OptionParser& operator << (Option& opt);
+    OptionParser& operator << (const std::string& doc);
     void usage(std::ostream& ouput);
     void options_doc(std::ostream& ouput);
 
   private:
     std::vector<Option*> options_;
+    std::vector<std::string> doc_;
     Error::errors_type errors_;
   };
 

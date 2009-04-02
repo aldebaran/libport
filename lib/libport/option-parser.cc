@@ -7,6 +7,40 @@
 namespace libport
 {
 
+  /*------.
+  | Error |
+  `------*/
+
+  Error::Error(const std::string& msg)
+    : errors_()
+  {
+    errors_.push_back(msg);
+  }
+
+  Error::Error(const errors_type& errors)
+    : errors_(errors)
+  {}
+
+  Error::~Error() throw ()
+  {}
+
+  const Error::errors_type&
+  Error::errors() const
+  {
+    return errors_;
+  }
+
+  const char*
+  Error::what() const throw ()
+  {
+    std::string res;
+
+    foreach (const std::string error, errors_)
+      res += error + "\n";
+
+    return res.c_str();
+  }
+
   /*-------.
   | Option |
   `-------*/
@@ -75,7 +109,9 @@ namespace libport
   OptionNamed::doc_(std::ostream& output) const
   {
     if (name_short_)
-      output << "-" << name_short_ << ", ";
+      output << "  -" << name_short_ << ", ";
+    else
+      output << "      ";
     output << "--" << name_long_;
   }
 
@@ -139,7 +175,7 @@ namespace libport
   OptionFlag::doc_(std::ostream& output) const
   {
     OptionNamed::doc_(output);
-    output << col << documentation_;
+    output << " " << col << documentation_;
   }
 
 
@@ -149,22 +185,18 @@ namespace libport
 
   OptionValued::OptionValued(const std::string& doc,
                              const std::string& name_long,
-                             char name_short)
+                             const std::string& formal,
+			     char name_short)
     : OptionNamed(doc, name_long, name_short)
     , callback1_(0)
-    , formal_(name_long)
-  {}
+  {
+    formal_ = formal.size() ? formal : name_long;
+  }
 
   void
   OptionValued::set_callback(boost::function1<void, const std::string&>* callback)
   {
     callback1_ = callback;
-  }
-
-  void
-  OptionValued::formal_name_set(const std::string& name)
-  {
-    formal_ = name;
   }
 
   void
@@ -179,7 +211,7 @@ namespace libport
   OptionValued::doc_(std::ostream& output) const
   {
     OptionNamed::doc_(output);
-    output << "=" << formal_ << col << documentation_;
+    output << "=" << formal_ << " " << col << documentation_;
   }
 
   OptionValued::ostring
@@ -221,8 +253,9 @@ namespace libport
 
   OptionValue::OptionValue(const std::string& doc,
                            const std::string& name_long,
-                           char name_short)
-    : OptionValued(doc, name_long, name_short)
+                           char name_short,
+			   const std::string& formal)
+    : OptionValued(doc, name_long, formal, name_short)
     , filled_(false)
     , value_()
   {}
@@ -278,8 +311,9 @@ namespace libport
 
   OptionValues::OptionValues(const std::string& doc,
                              const std::string& name_long,
-                             char name_short)
-    : OptionValued(doc, name_long, name_short)
+                             char name_short,
+			     const std::string& formal)
+    : OptionValued(doc, name_long, formal, name_short)
     , values_()
   {}
 
@@ -307,6 +341,43 @@ namespace libport
   {
     return values_;
   };
+
+  /*-----------.
+  | OptionsEnd |
+  `-----------*/
+
+  OptionsEnd::OptionsEnd()
+    : Option("")
+  {}
+
+  bool
+  OptionsEnd::test(cli_args_type& args)
+  {
+    if (args[0] != "--")
+      return false;
+
+    values_.insert(values_.end(), args.begin() + 1, args.end());
+    args.clear();
+    return true;
+  }
+
+  void
+  OptionsEnd::init()
+  {
+    values_.clear();
+  }
+
+  const OptionsEnd::values_type&
+  OptionsEnd::get() const
+  {
+    return values_;
+  }
+
+  void OptionsEnd::usage_(std::ostream&) const
+  {}
+
+  void OptionsEnd::doc_(std::ostream&) const
+  {}
 
   /*-------------.
   | OptionParser |
@@ -351,6 +422,14 @@ namespace libport
   OptionParser::operator << (Option& opt)
   {
     options_.push_back(&opt);
+    doc_.push_back("");
+    return *this;
+  }
+
+  OptionParser&
+  OptionParser::operator << (const std::string& doc)
+  {
+    doc_.push_back(doc);
     return *this;
   }
 
@@ -368,93 +447,32 @@ namespace libport
     MarkupOStream stream(output);
 
     stream << libport::table;
-    foreach (Option* opt, options_)
+    std::vector<Option*>::iterator it = options_.begin();
+    foreach (std::string& str, doc_)
     {
       stream << row;
-      opt->doc(stream);
+      if (str.size())
+	stream << libport::etable << row << str << libport::table;
+      else
+	(*it++)->doc(stream);
     }
+
+//     foreach (Option* opt, options_)
+//     {
+//       stream << row;
+//       opt->doc(stream);
+//     }
     stream << libport::etable;
-  }
-
-  /*-----------.
-  | OptionsEnd |
-  `-----------*/
-
-  OptionsEnd::OptionsEnd()
-    : Option("")
-  {}
-
-  bool
-  OptionsEnd::test(cli_args_type& args)
-  {
-    if (args[0] != "--")
-      return false;
-
-    values_.insert(values_.end(), args.begin() + 1, args.end());
-    args.clear();
-    return true;
-  }
-
-  void
-  OptionsEnd::init()
-  {
-    values_.clear();
-  }
-
-  const OptionsEnd::values_type&
-  OptionsEnd::get() const
-  {
-    return values_;
-  }
-
-  void OptionsEnd::usage_(std::ostream&) const
-  {}
-
-  void OptionsEnd::doc_(std::ostream&) const
-  {}
-
-  /*------.
-  | Error |
-  `------*/
-
-  Error::Error(const std::string& msg)
-    : errors_()
-  {
-    errors_.push_back(msg);
-  }
-
-  Error::Error(const errors_type& errors)
-    : errors_(errors)
-  {}
-
-  Error::~Error() throw ()
-  {}
-
-  const Error::errors_type&
-  Error::errors() const
-  {
-    return errors_;
-  }
-
-  const char*
-  Error::what() const throw ()
-  {
-    std::string res;
-
-    foreach (const std::string error, errors_)
-      res += error + "\n";
-
-    return res.c_str();
   }
 
   namespace opts
   {
-    libport::OptionValues files  ("load file",                                  "file",    'f');
+    libport::OptionValues files  ("load file",                                  "file",    'f', "FILE");
     libport::OptionFlag   help   ("display this message and exit successfully", "help",    'h');
-    libport::OptionValue  host   ("address to connect to",                      "host",    'H');
-    libport::OptionValue  port   ("port to connect to",                         "port",    'P');
-    libport::OptionValue  host_l ("address to listen on",                       "host",    'H');
-    libport::OptionValue  port_l ("port to listen on",                          "port",    'P');
+    libport::OptionValue  host   ("address to connect to",                      "host",    'H', "HOST");
+    libport::OptionValue  port   ("port to connect to",                         "port",    'P', "PORT");
+    libport::OptionValue  host_l ("address to listen on",                       "host",    'H', "HOST");
+    libport::OptionValue  port_l ("port to listen on",                          "port",    'P', "PORT");
     libport::OptionFlag   verbose("be more verbose",                            "verbose", 'v');
     libport::OptionFlag   version("display version information",                "version");
   }

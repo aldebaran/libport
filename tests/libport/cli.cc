@@ -191,8 +191,7 @@ void
 check_usage()
 {
   OptionFlag  flag("whether to flag", "flag", 'f');
-  OptionValue val ("set the value",   "value", 'v');
-  val.formal_name_set("val");
+  OptionValue val ("set the value",   "value", 'v', "VAL");
 
   OptionParser p;
   p << flag << val;
@@ -201,15 +200,15 @@ check_usage()
     std::stringstream s;
     p.usage(s);
     BOOST_CHECK_EQUAL(s.str(),
-                      "test_suite [--flag] [--value=val]");
+                      "test_suite [--flag] [--value=VAL]");
   }
 
   {
     std::stringstream s;
     p.options_doc(s);
     BOOST_CHECK_EQUAL(s.str(),
-                      "-f, --flag      whether to flag\n"
-                      "-v, --value=val set the value\n");
+                      "  -f, --flag       whether to flag\n"
+                      "  -v, --value=VAL  set the value\n");
   }
 }
 
