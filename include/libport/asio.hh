@@ -97,7 +97,7 @@ namespace libport
      */
     virtual int onRead(const void*, size_t length){return length;}
 
-    /** Called in case of error on the socket.
+    /** Called in case of error on the socket. By default, do nothing.
      */
     virtual void onError(boost::system::error_code);
 
@@ -149,6 +149,9 @@ namespace libport
      */
     boost::system::error_code listen(SocketFactory f, const std::string& host,
                                      const std::string& port, bool udp = false);
+    boost::system::error_code listen(SocketFactory f, const std::string& host,
+                                     unsigned port, bool udp = false);
+
 #ifndef LIBPORT_NO_SSL
     boost::system::error_code
     listenSSL(SocketFactory f,

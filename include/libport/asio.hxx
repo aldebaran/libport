@@ -7,9 +7,10 @@
 
 // #define LIBPORT_ECHO(S) std::cerr << __FILE__ ":" <<  __LINE__ << ": " #S ": " << S << std::endl
 
-#include <libport/thread.hh>
+#include <libport/lexical-cast.hh>
 #include <libport/lockable.hh>
 #include <libport/semaphore.hh>
+#include <libport/thread.hh>
 #include <libport/unistd.h>
 
 namespace libport {
@@ -698,6 +699,14 @@ namespace netdetail {
     erc = Socket::listenProto<boost::asio::ip::tcp>(f, host, port,
                                                     &netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
     return erc;
+  }
+
+  inline
+  boost::system::error_code
+  Socket::listen(SocketFactory f, const std::string& host,
+                 unsigned port, bool udp)
+  {
+    return listen(f, host, string_cast(port), udp);
   }
 
   inline
