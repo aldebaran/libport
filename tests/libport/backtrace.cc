@@ -16,9 +16,8 @@ ATTRIBUTE_NOINLINE
 void
 inner()
 {
-  std::vector<backtrace_type> bt(backtrace());
-  foreach(backtrace_type str, bt)
-    std::cout << str  << std::endl;
+  foreach(const std::string& s, backtrace())
+    std::cout << s << std::endl;
 }
 
 ATTRIBUTE_NOINLINE

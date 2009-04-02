@@ -12,7 +12,7 @@ typedef USHORT (WINAPI *CSBT)(ULONG, ULONG, PVOID*, PULONG);
 
 namespace libport
 {
-  std::vector<backtrace_type>
+  backtrace_type
   backtrace()
   {
     void* array[63];
@@ -22,22 +22,20 @@ namespace libport
 				      "RtlCaptureStackBackTrace");
     assert(csbt);
     unsigned int frames = csbt(0, 63, array, 0);
-    std::vector<backtrace_type> res;
+    backtrace_type res;
     for (unsigned int i = 0; i < frames; ++i)
       res.push_back((char*) array[i]);
     return res;
   }
 }
 
-#else /* !WIN32 */
-
-# if LIBPORT_HAVE_EXECINFO_H
-#  include <execinfo.h>
-#  include <cstdlib>
+#elif LIBPORT_HAVE_EXECINFO_H
+# include <execinfo.h>
+# include <cstdlib>
 
 namespace libport
 {
-  std::vector<backtrace_type>
+  backtrace_type
   backtrace()
   {
     enum { size = 128 };
@@ -45,28 +43,25 @@ namespace libport
     size_t frames = ::backtrace(callstack, size);
     char** strs = backtrace_symbols(callstack, frames);
 
-    std::vector<backtrace_type> res(frames, 0);
+    backtrace_type res(frames, 0);
     for (size_t i = 0; i < frames; ++i)
       res[i] = strs[i];
-
     free(strs);
     return res;
   }
 }
 
-# else // ! LIBPORT_HAVE_EXECINFO_H
+# else // ! WIN32 && ! LIBPORT_HAVE_EXECINFO_H
 
 namespace libport
 {
   backtrace_type
   backtrace()
   {
-    std::vector<backtrace_type> res;
-    res.push_back("(no avaible backtrace)");
+    backtrace_type res;
+    res.push_back("(backtrace not available)");
     return res;
   }
 }
 
-# endif
-
-#endif /* !WIN32 */
+#endif

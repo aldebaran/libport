@@ -6,23 +6,19 @@
 # include <libport/export.hh>
 
 # ifdef WIN32
-
 #  include <string>
-typedef std::string backtrace_type;
-
-# else /* WIN32 */
-
-typedef const char * backtrace_type;
-
+typedef std::vector<std::string> backtrace_type;
+# else // !WIN32
+typedef std::vector<const char*> backtrace_type;
 # endif
 
 namespace libport
 {
-  std::vector<backtrace_type>
+  /// Return the stack trace as a collection of strings.
+  /// There is nothing particular to do about the memory, just
+  /// clear the container when done.
   LIBPORT_API
-  backtrace();
+  backtrace_type backtrace();
 }
-
-
 
 #endif // !LIBPORT_BACKTRACE_HH

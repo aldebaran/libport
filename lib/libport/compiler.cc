@@ -21,7 +21,7 @@ namespace libport
   }
 
   std::ostream&
-  EchoPrologue::dump (std::ostream& o) const
+  EchoPrologue::dump(std::ostream& o) const
   {
     return o << (colored() ? "\x1b\x5b\x33\x33\x6d" : "")
              << file_ << ": "
