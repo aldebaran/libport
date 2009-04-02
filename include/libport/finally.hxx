@@ -16,7 +16,7 @@ namespace libport
   }
 
   inline
-  Finally::Finally(Finally& f)
+  Finally::Finally(const Finally& f)
     : actions_(f.actions_)
   {
     f.actions_.clear();
