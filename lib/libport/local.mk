@@ -7,6 +7,7 @@ lib_libport_libport_la_CPPFLAGS =		\
 
 # Sources to compile to use libport.
 dist_lib_libport_libport_la_SOURCES = 		\
+  lib/libport/assert.cc				\
   lib/libport/backtrace.cc			\
   lib/libport/base64.cc				\
   lib/libport/buffer-stream.cc			\

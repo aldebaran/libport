@@ -19,8 +19,6 @@
 # include <libport/cstdio> // libport::strerror.
 
 # include <libport/compiler.hh>
-# include <libport/backtrace.hh>
-# include <libport/foreach.hh>
 
 # ifdef _MSC_VER
 #  include <crtdbg.h>
@@ -30,20 +28,10 @@ namespace libport
 {
   /// A wrapper to std::abort to ensure that it is declared as
   /// noreturn (which is not the case of std::abort with MSVC).
+  LIBPORT_API
   ATTRIBUTE_NORETURN
-  inline
-  void abort()
-  {
-# ifdef _MSC_VER
-    char* s = getenv("_DEBUG_VCXX");
-    if (s)
-      _CrtDbgBreak();
-    else
-      std::abort();
-# else
-    std::abort();
-# endif
-  }
+  void abort();
+
 }
 
 /*---------------------------.
@@ -85,15 +73,9 @@ namespace libport
 /// if Msg is complex, beware of predence issues with << and use parens
 /// on the invocation side.
 
-# define pabort(Msg)					\
-  ((void) (__pabort (__FILE__ ":" << __LINE__, Msg)))
-
-# define __pabort(Loc, Msg)						\
-  {std::cerr << Loc << ": abort: " << Msg << std::endl;			\
-   foreach(const std::string& str, libport::backtrace())		\
-     std::cerr << str << std::endl;					\
-   libport::abort();}
-
+# define pabort(Msg)								\
+  std::cerr << __FILE__ ":" << __LINE__ << ": abort: " << Msg << std::endl;	\
+  libport::abort ()
 
 /*----------------------------------------------.
 | errabort -- perror (well, strerror) + abort.  |
@@ -135,6 +117,5 @@ namespace libport
 #  define assert_exp(Obj)		\
   libport::assert_exp_(Obj, __FILE__, __LINE__ , #Obj)
 # endif // LIBPORT_ASSERT_VERBOSE
-
 
 #endif // !LIBPORT_ASSERT_HH
