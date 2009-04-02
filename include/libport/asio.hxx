@@ -852,4 +852,10 @@ namespace netdetail {
     }
     return *io;
   }
+
+  inline void
+  Socket::onError(boost::system::error_code)
+  {
+    // Nothing
+  }
 }

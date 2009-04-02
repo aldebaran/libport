@@ -99,7 +99,7 @@ namespace libport
 
     /** Called in case of error on the socket.
      */
-    virtual void onError(boost::system::error_code){}
+    virtual void onError(boost::system::error_code);
 
     /** Called on socket connection
      */
