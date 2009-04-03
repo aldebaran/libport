@@ -31,7 +31,6 @@ namespace libport
   LIBPORT_API
   ATTRIBUTE_NORETURN
   void abort();
-
 }
 
 /*---------------------------.
@@ -47,16 +46,12 @@ namespace libport
 #  define passert(Subject, Assertion)			\
   ((void) ((Assertion)					\
 	   ? 0						\
-	   : __passert (__FILE__ ":" <<  __LINE__,	\
-			Subject, Assertion)))
+	   : __passert(Subject, Assertion)))
 
-#  define __passert(Loc, Subject, Assertion)				\
-  (std::cerr								\
-     << Loc << ": failed assertion: " << #Assertion << std::endl	\
-     << Loc << ": with "						\
-     << #Subject << " = " << Subject << std::endl,			\
-   libport::abort(),                                                    \
-   0)
+#  define __passert(Subject, Assertion)                         \
+  pabort("failed assertion: " << #Assertion << std::endl	\
+         << "\t with "                                          \
+         << #Subject << " = " << Subject)
 
 # endif // LIBPORT_ASSERT_VERBOSE
 
@@ -73,9 +68,10 @@ namespace libport
 /// if Msg is complex, beware of predence issues with << and use parens
 /// on the invocation side.
 
-# define pabort(Msg)								\
-  std::cerr << __FILE__ ":" << __LINE__ << ": abort: " << Msg << std::endl;	\
-  libport::abort ()
+# define pabort(Msg)                                    \
+  (std::cerr << __FILE__ ":" << __LINE__                \
+             << ": abort: " << Msg << std::endl,        \
+   libport::abort(), 0)
 
 /*----------------------------------------------.
 | errabort -- perror (well, strerror) + abort.  |
