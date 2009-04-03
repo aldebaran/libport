@@ -43,8 +43,7 @@ options="$@"
 flex_nonstd='cin|cout|cerr|[io]stream'
 
 set +e
-# -s to disable the default rule (ECHO).
-$FLEX -s -+ -o"$output" "$input" 2>$output_log
+$FLEX -+ -o"$output" "$input" 2>$output_log
 status=$?
 set -e
 

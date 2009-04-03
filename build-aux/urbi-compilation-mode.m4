@@ -44,8 +44,8 @@ urbi_compilation_mode_set ()
                   [Define to enable Urbi debugging tools.])
         AC_DEFINE([YYDEBUG], [1],
                   [Define to enable parser runtime debug traces.])
-        AC_SUBST([FLEXXXFLAGS], [--debug])
-        AC_SUBST([BISON_FLAGS], ["$BISON_FLAGS -Dassert"])
+        URBI_APPEND_FLAGS([FLEXXXFLAGS], [--debug])
+        URBI_APPEND_FLAGS([BISONFLAGS], [-Dassert -Ddebug])
         # Define USE_VALGRIND only if valgrind/valgrind.h exists.
         AC_CHECK_HEADER([valgrind/valgrind.h],
                         [URBI_APPEND_CPPFLAGS([-DUSE_VALGRIND])])
@@ -68,11 +68,22 @@ urbi_compilation_mode_set ()
         URBI_APPEND_COMPILERFLAGS([-Os -fomit-frame-pointer \
                                    -fdata-sections -ffunction-sections])
         URBI_APPEND_FLAGS([LDFLAGS], [--gc-sections])
+        AC_SUBST([YYERROR_VERBOSE], [false])
         urbi_compilation_mode_set final
         ;;
 
       (speed)
         URBI_APPEND_COMPILERFLAGS([-O3])
+        # From flex.info.
+        #
+        # The default setting is `-Cem', which specifies that `flex'
+        # should generate equivalence classes and meta-equivalence
+        # classes.  This setting provides the highest degree of table
+        # compression.
+        #
+        # `-Cfe' is often a good compromise between speed and size for
+        # production scanners.
+        URBI_APPEND_FLAGS([FLEXXXFLAGS], [-Cfe])
         AC_DEFINE([SPEED], [1],
                   [Define to optimize for speed the kernel
                    at the detriment of compilation time.])
@@ -106,7 +117,7 @@ URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
      MODE: comma-separated list of:
         Overall Levels:
           - build: Disable optimization for faster compilation.
-          - debug: Enable debug information.
+          - debug: Enable debug information, and scanner/parser traces.
           - space: Optimize for smaller space (implies final).
           - speed: Optimize for speed (implies final).
 
@@ -118,6 +129,7 @@ URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
           - symbols: Activate precompiled-symbols.
           - threads: Implement coroutines with threads.])
 
+AC_SUBST([YYERROR_VERBOSE], [true])
 AC_MSG_CHECKING([for compilation mode])
 urbi_compilation_mode=$(echo $enable_compilation_mode | tr ',' ' ')
 AC_MSG_RESULT([$urbi_compilation_mode])

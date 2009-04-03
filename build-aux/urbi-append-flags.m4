@@ -46,7 +46,8 @@ urbi_append_flags ()
 # Append the FLAG... to $VAR, separated by spaces, unless it already
 # includes it.
 AC_DEFUN([URBI_APPEND_FLAGS],
-[AC_REQUIRE([_URBI_APPEND_FLAGS])dnl
+[AC_SUBST([$1])dnl
+AC_REQUIRE([_URBI_APPEND_FLAGS])dnl
 urbi_append_flags $1 $2
 ])
 
