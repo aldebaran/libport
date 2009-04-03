@@ -229,8 +229,9 @@ namespace libport
   ConsoleDebug::color(int color, bool bold)
   {
     static bool tty = isatty(STDOUT_FILENO);
+    static bool force = getenv("GD_COLOR");
     boost::format format("[33;0%s;%sm");
-    if (tty)
+    if (tty || force)
       std::cerr << str(format % (bold ? 1 : 0) % color);
   }
 
