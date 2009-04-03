@@ -4,6 +4,7 @@
 # include <exception>
 
 # include <boost/optional.hpp>
+# include <boost/function.hpp>
 
 # include <libport/export.hh>
 # include <libport/program-name.hh>
@@ -43,13 +44,16 @@ namespace libport
     virtual ~Option();
     virtual bool test(cli_args_type& args) = 0;
     virtual void init() = 0;
+    void set_callback(boost::function0<void>* callback);
     void usage(std::ostream& output) const;
     void doc(std::ostream& output) const;
+    void callback() const;
 
   protected:
     virtual void usage_(std::ostream& output) const = 0;
     virtual void doc_(std::ostream& output) const = 0;
     std::string documentation_;
+    boost::function0<void>* callback_;
   };
 
 
@@ -105,12 +109,15 @@ namespace libport
     OptionValued(const std::string& doc,
                  const std::string& name_long,
                  char name_short = '\0');
+    using Option::set_callback;
+    void set_callback(boost::function1<void, const std::string&>* callback);
     void formal_name_set(const std::string& name);
     ostring test_option(cli_args_type& args);
 
   protected:
     virtual void usage_(std::ostream& output) const;
     virtual void doc_(std::ostream& output) const;
+    boost::function1<void, const std::string&>* callback1_;
 
   private:
     std::string formal_;

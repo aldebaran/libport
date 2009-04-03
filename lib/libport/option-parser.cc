@@ -13,10 +13,17 @@ namespace libport
 
   Option::Option(const std::string& doc)
     : documentation_(doc)
+    , callback_(0)
   {}
 
   Option::~Option()
   {}
+
+  void
+  Option::set_callback(boost::function0<void>* callback)
+  {
+    callback_ = callback;
+  }
 
   void
   Option::usage(std::ostream& output) const
@@ -30,6 +37,13 @@ namespace libport
   {
     if (!documentation_.empty())
       doc_(output);
+  }
+
+  void
+  Option::callback() const
+  {
+    if (callback_)
+      (*callback_)();
   }
 
   /*------------.
@@ -137,8 +151,15 @@ namespace libport
                              const std::string& name_long,
                              char name_short)
     : OptionNamed(doc, name_long, name_short)
+    , callback1_(0)
     , formal_(name_long)
   {}
+
+  void
+  OptionValued::set_callback(boost::function1<void, const std::string&>* callback)
+  {
+    callback1_ = callback;
+  }
 
   void
   OptionValued::formal_name_set(const std::string& name)
@@ -187,6 +208,9 @@ namespace libport
       }
       args.erase(args.begin());
     }
+
+    if (res && callback1_)
+      (*callback1_)(res.get());
     return res;
   }
 
@@ -303,7 +327,10 @@ namespace libport
         try
         {
           if (opt->test(args))
+	  {
+	    opt->callback();
             goto end;
+	  }
         }
         catch (Error& e)
         {
