@@ -63,22 +63,22 @@ namespace libport
     , level_stack_()
     , locations_(getenv("GD_LOC"))
     , timestamps_(getenv("GD_TIME"))
-    , filter_(1)
+    , filter_(levels::log)
   {
-    push_level(1);
+    push_level(levels::log);
     if (const char* lvl_c = getenv("GD_LEVEL"))
     {
       std::string lvl = lvl_c;
       if (lvl == "NONE")
-        filter_ = 0;
+        filter_ = levels::none;
       else if (lvl == "LOG")
-        filter_ = 1;
+        filter_ = levels::log;
       else if (lvl == "TRACE")
-        filter_ = 2;
+        filter_ = levels::trace;
       else if (lvl == "DEBUG")
-        filter_ = 3;
+        filter_ = levels::debug;
       else if (lvl == "DUMP")
-        filter_ = 4;
+        filter_ = levels::dump;
       else
         // Don't use GD_ABORT here, we're in the debugger constructor!
         assert(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP)");
@@ -89,9 +89,15 @@ namespace libport
   {}
 
   void
-  Debug::filter(unsigned lvl)
+  Debug::filter(levels::Level lvl)
   {
     filter_ = lvl;
+  }
+
+  Debug::levels::Level
+  Debug::level() const
+  {
+    return filter_;
   }
 
 # ifdef LIBPORT_HAVE_IP_SEMAPHORE
@@ -128,7 +134,7 @@ namespace libport
   }
 
   libport::Finally::action_type
-  Debug::push_level(unsigned lvl)
+  Debug::push_level(levels::Level lvl)
   {
     level_stack_.push_back(lvl);
     return boost::bind(&Debug::pop_level, this);

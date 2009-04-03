@@ -59,6 +59,18 @@ namespace libport
       };
     };
 
+    struct levels
+    {
+      enum Level
+      {
+	none = 0,
+	log = 1,
+	trace = 2,
+	debug = 3,
+	dump = 4,
+      };
+    };
+
     Debug();
     virtual ~Debug();
     void debug(const std::string& msg,
@@ -83,7 +95,7 @@ namespace libport
 
     libport::Finally::action_type push_category(const std::string& name);
 
-    libport::Finally::action_type push_level(unsigned lvl);
+    libport::Finally::action_type push_level(levels::Level lvl);
 
     void locations(bool value);
     bool locations();
@@ -92,7 +104,8 @@ namespace libport
 
     ATTRIBUTE_NORETURN static void abort(const std::string& msg);
 
-    void filter(unsigned lvl);
+    void filter(levels::Level lvl);
+    levels::Level level() const;
     bool disabled();
 
   protected:
@@ -104,10 +117,10 @@ namespace libport
     void pop_level();
 
     std::list<std::string> categories_stack_;
-    std::list<unsigned> level_stack_;
+    std::list<levels::Level> level_stack_;
     bool locations_;
     bool timestamps_;
-    unsigned filter_;
+    levels::Level filter_;
   };
 
   class LIBPORT_API ConsoleDebug: public Debug
@@ -131,7 +144,7 @@ namespace libport
     unsigned indent_;
   };
 
-#ifndef WIN32
+#  ifndef WIN32
   class LIBPORT_API SyslogDebug: public Debug
   {
   public:
@@ -150,7 +163,7 @@ namespace libport
   private:
     unsigned indent_;
   };
-#endif
+#  endif
 
   LIBPORT_API extern boost::function0<Debug*> make_debugger;
   LIBPORT_API Debug* debugger();
@@ -331,36 +344,64 @@ namespace libport
   libport::Finally _gd_pop_level_##Lvl          \
   (GD_DEBUGGER->push_level(Lvl));
 
-#  define GD_LOG()                              \
-  GD_LEVEL(1);                                  \
+#  define GD_LOG()						  \
+  GD_LEVEL(::libport::Debug::levels::log);                        \
 
-#  define GD_TRACE()                            \
-  GD_LEVEL(2);                                  \
+#  define GD_TRACE()						  \
+  GD_LEVEL(::libport::Debug::levels::trace);                      \
 
-#  define GD_DEBUG()                            \
-  GD_LEVEL(3);                                  \
+#  define GD_DEBUG()						  \
+  GD_LEVEL(::libport::Debug::levels::debug);                      \
 
-#  define GD_DUMP()                             \
-  GD_LEVEL(4);                                  \
+#  define GD_DUMP()						\
+  GD_LEVEL(::libport::Debug::levels::dump);			\
 
-#  define GD_FILTER(Lvl)                        \
+#  define GD_FILTER(Lvl)					\
   GD_DEBUGGER->filter(Lvl);
 
-#  define GD_FILTER_NONE()                       \
-  GD_FILTER(0);                                  \
+#  define GD_FILTER_NONE()					   \
+  GD_FILTER(::libport::Debug::levels::none);                       \
 
-#  define GD_FILTER_LOG()                        \
-  GD_FILTER(1);                                  \
+#  define GD_FILTER_LOG()					   \
+  GD_FILTER(::libport::Debug::levels::log);                        \
 
-#  define GD_FILTER_TRACE()                      \
-  GD_FILTER(2);                                  \
+#  define GD_FILTER_TRACE()					   \
+  GD_FILTER(::libport::Debug::levels::trace);                      \
 
-#  define GD_FILTER_DEBUG()                      \
-  GD_FILTER(3);                                  \
+#  define GD_FILTER_DEBUG()					   \
+  GD_FILTER(::libport::Debug::levels::debug);                      \
 
-#  define GD_FILTER_DUMP()                      \
-  GD_FILTER(4);                                 \
-                                                \
+#  define GD_FILTER_DUMP()					\
+  GD_FILTER(::libport::Debug::levels::dump);			\
+
+#  define GD_CURRENT_LEVEL()					\
+  GD_DEBUGGER->level()						\
+
+#  define GD_FILTER_INC()					\
+  if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::dump)	\
+    GD_DEBUGGER->filter(					\
+      (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() + 1))\
+
+#  define GD_FILTER_DEC()					\
+  if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::none)	\
+    GD_DEBUGGER->filter(					\
+      (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() - 1))\
+
+#  define GD_SHOW_LEVEL(Lvl)				\
+  (GD_CURRENT_LEVEL() >= Lvl)					\
+
+#  define GD_SHOW_LOG()					\
+  GD_SHOW_LEVEL(::libport::Debug::levels::log)		\
+
+#  define GD_SHOW_TRACE()					\
+  GD_SHOW_LEVEL(::libport::Debug::levels::trace)		\
+
+#  define GD_SHOW_DEBUG()					\
+  GD_SHOW_LEVEL(::libport::Debug::levels::debug)		\
+
+#  define GD_SHOW_DUMP()					\
+  GD_SHOW_LEVEL(::libport::Debug::levels::dump)		\
+
 /*-----------.
 | Assertions |
 `-----------*/
@@ -463,6 +504,14 @@ namespace libport
 #  define GD_FILTER_TRACE()
 #  define GD_FILTER_DEBUG()
 #  define GD_FILTER_DUMP()
+#  define GD_CURRENT_LEVEL()
+#  define GD_FILTER_INC()
+#  define GD_FILTER_DEC()
+#  define GD_SHOW_LEVEL(Lvl)
+#  define GD_SHOW_LOG()
+#  define GD_SHOW_TRACE()
+#  define GD_SHOW_DEBUG()
+#  define GD_SHOW_DUMP()
 #  define GD_ABORT(Msg)
 #  define GD_FABORT(Msg, Seq)
 #  define GD_UNREACHABLE()
