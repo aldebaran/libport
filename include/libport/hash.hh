@@ -22,7 +22,14 @@
 #  else
 #    define LIBPORT_HASH_NAMESPACE __gnu_cxx
 #  endif
-#  include <ext/hash_map>
+#  ifdef __DEPRECATED
+// Do not warn that ext/hash_map is deprecated
+#   undef __DEPRECATED
+#   include <ext/hash_map>
+#   define __DEPRECATED
+#  else
+#   include <ext/hash_map>
+#  endif
 
 namespace LIBPORT_HASH_NAMESPACE
 {
