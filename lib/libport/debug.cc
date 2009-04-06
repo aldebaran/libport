@@ -137,6 +137,7 @@ namespace libport
   bool
   Debug::disabled()
   {
+    assert(!categories_stack_.empty());
     return !debug::test_category(categories_stack_.back())
       || level_stack_.back() > filter_;
   }
@@ -159,6 +160,7 @@ namespace libport
   void
   Debug::pop_category()
   {
+    assert(!categories_stack_.empty());
     categories_stack_.pop_back();
   }
 
