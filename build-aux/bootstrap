@@ -32,8 +32,9 @@ if test "X$TERM" != Xdumb                       \
   std=$(tput sgr0)
 fi
 
-config_files="$HOME/.libport/bootstrap.cfg externals/bootstrap.cfg
-               .bootstrap.cfg .externals"
+config_files="$HOME/.libport/bootstrap.cfg
+              submodules/bootstrap.cfg externals/bootstrap.cfg
+              .bootstrap.cfg .externals"
 
 usage ()
 {
@@ -45,8 +46,9 @@ Bootstrap the GNU Build system using autoreconf.
 See also <URL:https://core.gostai.com/projects/common/wiki/LibPort>.
 
 This file and git-my-update use \`~/.libport/bootstrap.cfg',
-\`externals/bootstrap.cfg' and \`.bootstrap.cfg' to describe what's to
-do.  For backward compatibility, \`.externals' is also supported.
+\`submodules/bootstrap.cfg' and \`.bootstrap.cfg' to describe what's to
+do.  For backward compatibility, \`.externals' are \`externals/bootstrap.cfg'
+are also supported.
 
 The syntax is dummy and made to be easily sed-parsable.  It supports
 the following directives (which must be in column 0, anything else is
