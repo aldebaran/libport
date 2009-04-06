@@ -289,7 +289,7 @@ namespace libport
   `-------------*/
 
   cli_args_type
-  OptionParser::operator () (const cli_args_type& _args)
+  OptionParser::operator() (const cli_args_type& _args)
   {
     cli_args_type args(_args);
     cli_args_type remainder;
