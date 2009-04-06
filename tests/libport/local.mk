@@ -24,6 +24,7 @@ TESTS_BINARIES =				\
   tests/libport/cli.cc				\
   tests/libport/condition.cc			\
   tests/libport/cstdlib.cc			\
+  tests/libport/debug.cc			\
   tests/libport/deref.cc			\
   tests/libport/dirent.cc			\
   tests/libport/erase-if.cc			\
