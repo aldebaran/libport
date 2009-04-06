@@ -27,7 +27,7 @@
 #
 #   This macro calls:
 #
-#     AC_SUBST(POSTGRESQL_CFLAGS)
+#     AC_SUBST(POSTGRESQL_CPPFLAGS)
 #     AC_SUBST(POSTGRESQL_LDFLAGS)
 #     AC_SUBST(POSTGRESQL_VERSION)
 #
@@ -41,7 +41,7 @@
 #
 # COPYLEFT
 #
-#   Copyright (c) 2008 Mateusz Loskot <mateusz@loskot.net>
+#   Copyright (c) 2008, 2009 Mateusz Loskot <mateusz@loskot.net>
 #
 #   Copying and distribution of this file, with or without modification, are
 #   permitted in any medium without royalty provided the copyright notice
@@ -65,9 +65,9 @@ AC_DEFUN([AX_LIB_POSTGRESQL],
         [want_postgresql="yes"]
     )
 
-    POSTGRESQL_CFLAGS=""
-    POSTGRESQL_LDFLAGS=""
-    POSTGRESQL_VERSION=""
+    POSTGRESQL_CPPFLAGS=
+    POSTGRESQL_LDFLAGS=
+    POSTGRESQL_VERSION=
 
     dnl
     dnl Check PostgreSQL libraries (libpq)
@@ -75,26 +75,27 @@ AC_DEFUN([AX_LIB_POSTGRESQL],
 
     if test "$want_postgresql" = "yes"; then
 
-        if test -z "$PG_CONFIG" -o test; then
-            AC_PATH_PROG([PG_CONFIG], [pg_config], [])
-        fi
+        test -n "$PG_CONFIG" ||
+          AC_PATH_PROG([PG_CONFIG], [pg_config], [])
+
+        test -n "$PG_CONFIG" ||
+          AC_MSG_ERROR([cannot find pg_config])
 
         if test ! -x "$PG_CONFIG"; then
-            AC_MSG_ERROR([$PG_CONFIG does not exist or it is not an exectuable file])
-            PG_CONFIG="no"
-            found_postgresql="no"
+          AC_MSG_ERROR([PK_CONFIG = $PG_CONFIG cannot be run.])
+          PG_CONFIG=no
+          found_postgresql=no
         fi
 
         if test "$PG_CONFIG" != "no"; then
             AC_MSG_CHECKING([for PostgreSQL libraries])
 
-            POSTGRESQL_CFLAGS="-I`$PG_CONFIG --includedir`"
+            POSTGRESQL_CPPFLAGS="-I`$PG_CONFIG --includedir`"
             POSTGRESQL_LDFLAGS="-L`$PG_CONFIG --libdir` -lpq"
-
-            POSTGRESQL_VERSION=`$PG_CONFIG --version | sed -e 's#PostgreSQL ##'`
+            POSTGRESQL_VERSION=`$PG_CONFIG --version | sed -e 's/PostgreSQL //'`
 
             AC_DEFINE([HAVE_POSTGRESQL], [1],
-                [Define to 1 if PostgreSQL libraries are available])
+                [Define to 1 if PostgreSQL libraries are available.])
 
             found_postgresql="yes"
             AC_MSG_RESULT([yes])
@@ -150,6 +151,10 @@ AC_DEFUN([AX_LIB_POSTGRESQL],
     fi
 
     AC_SUBST([POSTGRESQL_VERSION])
-    AC_SUBST([POSTGRESQL_CFLAGS])
+    AC_SUBST([POSTGRESQL_CPPFLAGS])
     AC_SUBST([POSTGRESQL_LDFLAGS])
 ])
+
+# Local Variables:
+# mode: autoconf
+# End:
