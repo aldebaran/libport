@@ -325,7 +325,7 @@ namespace libport
     ::libport::debug::add_category(#Name);                              \
 
 #  define GD_CATEGORY(Cat)                                              \
-  libport::Finally _gd_pop_category_##Cat                               \
+  libport::Finally _gd_pop_category_##__LINE__                          \
   (GD_DEBUGGER->push_category(#Cat));                                   \
 
 #  define GD_DISABLE_CATEGORY(Cat)                                      \
@@ -341,7 +341,7 @@ namespace libport
 `------*/
 
 #  define GD_LEVEL(Lvl)                         \
-  libport::Finally _gd_pop_level_##Lvl          \
+  libport::Finally _gd_pop_level_##__LINE__     \
   (GD_DEBUGGER->push_level(Lvl));
 
 #  define GD_LOG()						  \
