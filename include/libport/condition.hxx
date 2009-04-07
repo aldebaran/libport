@@ -83,7 +83,7 @@ namespace libport
     // Since wait will try to ackquire the lock, no new wait can insert itself
     // after this point, and be woken up by our broadcast
     BlockLock bl(this);
-    for (int i=0; i<readers_count_; i++)
+    for (size_t i = 0; i < readers_count_; ++i)
       sem_++;
   }
 
