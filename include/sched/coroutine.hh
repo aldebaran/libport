@@ -71,6 +71,14 @@ bool coroutine_stack_space_almost_gone(Coro* coro);
 SCHED_CORO_API
 void coroutine_initialize_main(Coro* coro);
 
+/// Return the currently active coroutine.
+SCHED_CORO_API
+Coro* coroutine_current();
+
+/// Return the main coroutine, passed to coroutine_initialize_main()
+SCHED_CORO_API
+Coro* coroutine_main();
+
 # include <sched/coroutine.hxx>
 
 #endif // SCHED_COROUTINE_HH

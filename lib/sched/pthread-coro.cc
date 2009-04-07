@@ -44,6 +44,7 @@ void
 coroutine_start(Coro* self, Coro* other,
                 void (*callback)(void*), void* context)
 {
+  coro_current_ = other;
 #if defined WIN32
   unsigned long id;
   void* r =
@@ -71,6 +72,7 @@ coroutine_start(Coro* self, Coro* other,
 #endif
   other->started_ = true;
   self->sem_--;
+  coro_curent_ = self;
 }
 
 void*
@@ -83,8 +85,10 @@ coroutine_stack_addr(Coro*)
 void
 coroutine_switch_to(Coro* self, Coro* next)
 {
+  coro_current_ = next;
   next->sem_++;
   self->sem_--;
+  coro_current_ = self;
   if (self->die_)
   {
     delete self;
@@ -108,8 +112,9 @@ coroutine_stack_size(Coro*)
 }
 
 void
-coroutine_initialize_main(Coro*)
+coroutine_initialize_main(Coro* c)
 {
+  coro_main_ = c;
 }
 
 #endif //! LIBPORT_SCHED_CORO_OSTHREAD

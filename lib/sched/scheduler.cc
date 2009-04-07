@@ -17,6 +17,11 @@
 #include <sched/scheduler.hh>
 #include <sched/job.hh>
 
+Coro* coroutine_main_;
+Coro* coroutine_current_;
+void (*coroutine_new_hook) (Coro*) = 0;
+void (*coroutine_free_hook)(Coro*) = 0;
+
 namespace sched
 {
 

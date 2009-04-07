@@ -5,6 +5,14 @@ lib_sched_libsched_la_CPPFLAGS =		\
   $(AM_CPPFLAGS)				\
   -DBUILDING_LIBSCHED
 
+if PTHREAD_SOURCES
+lib_sched_libsched_la_CPPFLAGS +=               \
+  -I$(PTHREAD_SOURCES)                          \
+  -I$(PTHREAD_SOURCES)/linuxthreads             \
+  -I$(PTHREAD_SOURCES)/linuxthreads/sysdeps/pthread  \
+  -I$(PTHREAD_SOURCES)/linuxthreads/sysdeps/arm
+endif
+
 dist_lib_sched_libsched_la_SOURCES =		\
   lib/sched/configuration.cc			\
   lib/sched/job.cc				\
@@ -13,6 +21,7 @@ dist_lib_sched_libsched_la_SOURCES =		\
   lib/sched/pthread-coro.hxx			\
   lib/sched/scheduler.cc			\
   lib/sched/tag.cc				\
+  lib/sched/uclibc-workaround.cc		\
   lib/sched/libcoroutine/Base.h			\
   lib/sched/libcoroutine/Coro.cc		\
   lib/sched/libcoroutine/PortableUContext.c	\

@@ -1,6 +1,27 @@
 #ifndef SCHED_COROUTINE_CORO_HXX
 # define SCHED_COROUTINE_CORO_HXX
 
+// Hook stuff for uclibc-workaround
+SCHED_API extern Coro* coroutine_current_;
+SCHED_API extern Coro* coroutine_main_;
+SCHED_API extern void (*coroutine_free_hook)(Coro*);
+SCHED_API extern void (*coroutine_new_hook) (Coro*);
+// Hack to force inclusion of hook object when the user links against a static
+// libsched
+SCHED_API void coroutine_force_hook_linkage();
+
+inline Coro*
+coroutine_current()
+{
+  return coroutine_current_;
+}
+
+inline Coro*
+coroutine_main()
+{
+  return coroutine_main_;
+}
+
 inline Coro*
 coroutine_new(size_t stack_size)
 {
@@ -9,12 +30,16 @@ coroutine_new(size_t stack_size)
                      (stack_size
                       ? stack_size
                       : sched::configuration.default_stack_size));
+  if (coroutine_new_hook)
+    coroutine_new_hook(res);
   return res;
 }
 
 inline void
 coroutine_free(Coro* coro)
 {
+  if (coroutine_free_hook)
+    coroutine_free_hook(coro);
   Coro_free(coro);
 }
 
@@ -39,21 +64,28 @@ coroutine_stack_size(Coro* self)
 inline void
 coroutine_initialize_main(Coro* coro)
 {
+  coroutine_main_ = coro;
+  coroutine_current_ = coro;
   Coro_initializeMainCoro(coro);
+  coroutine_force_hook_linkage();
 }
 
 template<typename T>
 inline void
 coroutine_start(Coro* self, Coro* other, void (*callback)(T*), T* context)
 {
+  coroutine_current_ = other;
   Coro_startCoro_(self, other, context,
 		  reinterpret_cast<CoroStartCallback*>(callback));
+  coroutine_current_ = self;
 }
 
 inline void
 coroutine_switch_to(Coro* self, Coro* next)
 {
+  coroutine_current_ = next;
   Coro_switchTo_(self, next);
+  coroutine_current_ = self;
 }
 
 #endif // SCHED_COROUTINE_CORO_HXX
