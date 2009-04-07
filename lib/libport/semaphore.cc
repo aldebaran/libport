@@ -1,3 +1,4 @@
+#include <cerrno>
 #include <iostream>
 
 #include <libport/assert.hh>
@@ -5,11 +6,25 @@
 #include <libport/program-name.hh>
 #include <libport/semaphore.hh>
 #include <libport/sysexits.hh>
+#include <time.h>
 
 namespace libport
 {
 
 # if defined WIN32 || defined LIBPORT_WIN32
+#  define CLOCK_REALTIME 0
+#  define ETIMEDOUT 110
+
+  void
+  clock_gettime(int, struct timespec* t)
+  {
+    if (t)
+    {
+      t->tv_sec = 0;
+      t->tv_nsec = 0;
+    }
+  }
+
   sem_t*
   sem_open(const char* /* name */,
            int /* oflag */,
@@ -47,6 +62,21 @@ namespace libport
   }
 
   int
+  sem_timedwait(sem_t* sem, const struct timespec *abs_timeout)
+  {
+    unsigned int result = WaitForSingleObject(*sem, abs_timeout->tv_sec * 1000
+					      + abs_timeout->tv_nsec / 1000000);
+    if (result == WAIT_FAILED)
+      errabort("WaitForSingleObject");
+    if (result == WAIT_TIMEOUT)
+    {
+      errno = ETIMEDOUT;
+      return -1;
+    }
+    return (result == WAIT_FAILED) ? -1 : 0;
+  }
+
+  int
   sem_destroy(sem_t* sem)
   {
     return CloseHandle(*sem) ? 0 : -1;
@@ -73,13 +103,13 @@ namespace libport
  * Semaphores created with sem_open must be closed with sem_close.
  * Semaphores created with sem_init must be closed with sem_destroy.
  */
-# ifdef __APPLE__
-#  include <fstream>
-#  include <sstream>
-#  include <sys/stat.h>
-# endif
-
-# include <cerrno>
+#ifdef __APPLE__
+# include <fstream>
+# include <sstream>
+# include <sys/stat.h>
+# include <sys/time.h>
+# include <signal.h>
+#endif
 
 namespace libport
 {
@@ -221,6 +251,18 @@ namespace libport
     return *this;
   }
 
+# if defined __APPLE__
+
+  int flag;
+
+  void fun_timeout(int fl)
+  {
+    std::cout << fl << std::endl;
+    flag = 0;
+  }
+
+# endif
+
   bool
   Semaphore::get(const int timeout)
   {
@@ -229,22 +271,40 @@ namespace libport
     {
       if (timeout == 0)
         err = sem_wait(sem_);
-# if defined __linux
+# if defined __APPLE__
       else
       {
-        struct timespec ts;
-        ts.tv_sec = time(NULL) + timeout;
-        ts.tv_nsec = 0;
-        err = sem_timedwait(sem_, &ts);
+	struct itimerval it;
+	it.it_interval.tv_sec = 0;
+	it.it_interval.tv_usec = 0;
+	it.it_value.tv_sec = timeout;
+	it.it_value.tv_usec = 0;
+	flag = 1;
+	signal(SIGALRM, fun_timeout);
+	setitimer(ITIMER_REAL, &it, NULL);
+	do
+	{
+	  err = sem_trywait(sem_);
+	} while (flag && err == -1 && errno == EAGAIN);
+	if (!flag)
+	  err = -1;
       }
 # else
       else
-        pabort("Using timeout is implemented only on linux.");
+      {
+        struct timespec ts;
+	clock_gettime(CLOCK_REALTIME, &ts);
+	ts.tv_sec += timeout;
+        err = sem_timedwait(sem_, &ts);
+      }
 # endif
     }
     while (err == -1 && errno == EINTR);
 
-# if defined __linux
+# if defined __APPLE__
+    if (!flag)
+      return false;
+# else
     if (err && errno == ETIMEDOUT)
       return false;
 # endif

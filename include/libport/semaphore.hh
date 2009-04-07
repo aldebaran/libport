@@ -17,6 +17,14 @@
 namespace libport
 {
   typedef HANDLE sem_t;
+
+  typedef unsigned int time_t;
+
+  struct timespec
+  {
+    time_t tv_sec;
+    long tv_nsec;
+  };
 }
 
 # else /* !WIN32 */
