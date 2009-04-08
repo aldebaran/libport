@@ -89,6 +89,7 @@ tests_libport_backtrace_SOURCES			= tests/libport/backtrace.cc
 tests_libport_cli_SOURCES                       = tests/libport/cli.cc
 tests_libport_condition_SOURCES                 = tests/libport/condition.cc
 tests_libport_cstdlib_SOURCES                   = tests/libport/cstdlib.cc
+tests_libport_debug_SOURCES                     = tests/libport/debug.cc
 tests_libport_deref_SOURCES                     = tests/libport/deref.cc
 tests_libport_dirent_SOURCES                    = tests/libport/dirent.cc
 tests_libport_erase_if_SOURCES                  = tests/libport/erase-if.cc
