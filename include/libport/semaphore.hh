@@ -33,9 +33,9 @@ namespace libport
     Semaphore(unsigned cnt = 0);
     ~Semaphore();
 
-    /// Acquire.
-    void operator++();
     /// Release.
+    void operator++();
+    /// Acquire.
     void operator--();
 
     void operator++(int);
