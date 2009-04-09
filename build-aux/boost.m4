@@ -247,6 +247,9 @@ AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
 AS_VAR_PUSHDEF([Boost_lib_LIBS], [boost_cv_lib_$1_LIBS])dnl
 BOOST_FIND_HEADER([$3])
 boost_save_CPPFLAGS=$CPPFLAGS
+# Remove CXXFLAGS, -fdefault_visibility=hidden is killing us
+boost_save_CXXFLAGS=$CXXFLAGS
+CXXFLAGS=
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 # Now let's try to find the library.  The algorithm is as follows: first look
 # for a given library name according to the user's PREFERRED-RT-OPT.  For each
@@ -369,6 +372,7 @@ esac
 AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])
 AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])
 CPPFLAGS=$boost_save_CPPFLAGS
+CXXFLAGS=$boost_save_CXXFLAGS
 AS_VAR_POPDEF([Boost_lib])dnl
 AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
 AS_VAR_POPDEF([Boost_lib_LIBS])dnl
