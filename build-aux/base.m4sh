@@ -75,7 +75,7 @@ m4_defun([_URBI_FIND_PROG_PREPARE],
 # -------------------
 # Return full path to FILE in PATH ($PATH_SEPARATOR separated),
 # nothing if not found.
-find_prog ()
+find_file ()
 {
   _AS_PATH_WALK([$[2]],
                 [AS_IF([test -f $as_dir/$[1]],
@@ -103,7 +103,7 @@ xfind_file ()
 {
   local res
   local path="$[2]"
-  res=$(find_prog "$[1]" "$path")
+  res=$(find_file "$[1]" "$path")
   test -n "$res" ||
     cannot_find OSFILE "cannot find $[1] in" "$[2]"
   echo "$res"
