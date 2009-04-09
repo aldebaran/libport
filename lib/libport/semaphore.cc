@@ -257,7 +257,6 @@ namespace libport
 
   void fun_timeout(int fl)
   {
-    std::cout << fl << std::endl;
     flag = 0;
   }
 
