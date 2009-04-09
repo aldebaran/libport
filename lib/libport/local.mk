@@ -1,5 +1,8 @@
 lib_LTLIBRARIES += lib/libport/libport.la
-lib_libport_libport_la_LDFLAGS = -avoid-version -no-undefined $(SOCKETS_LIBS)
+lib_libport_libport_la_LDFLAGS =		\
+  -avoid-version -no-undefined			\
+  $(CLOCK_LIBS)					\
+  $(SOCKETS_LIBS)
 lib_libport_libport_la_CPPFLAGS =		\
   $(AM_CPPFLAGS)				\
   -Ilib						\
