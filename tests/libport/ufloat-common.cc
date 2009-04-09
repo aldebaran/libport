@@ -79,11 +79,16 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(&test_max<unsigned int>));
 
   suite->add(BOOST_TEST_CASE(&test_signed_range<long>));
+
+  // On 64 bits, long is like long long, see below...
+#if !(defined LIBPORT_URBI_UFLOAT_DOUBLE && _LP64)
   suite->add(BOOST_TEST_CASE(&test_max<long>));
+#endif
 
   suite->add(BOOST_TEST_CASE(&test_unsigned_range<unsigned long>));
+#if !(defined LIBPORT_URBI_UFLOAT_DOUBLE && _LP64)
   suite->add(BOOST_TEST_CASE(&test_max<unsigned long>));
-
+#endif
   suite->add(BOOST_TEST_CASE(&test_signed_range<long long>));
 
   suite->add(BOOST_TEST_CASE(&test_unsigned_range<unsigned long long>));
