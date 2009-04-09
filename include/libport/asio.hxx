@@ -655,6 +655,7 @@ namespace netdetail {
       // Do not die until newS is gone, since it will call our virtual functions.
       newS->link(getDestructionLock());
       newS->startReader();
+      onConnect();
     }
     return erc;
   }
