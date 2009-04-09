@@ -8,8 +8,9 @@
 #  include <string>
 # endif
 
-# include <libport/export.hh>
 # include <libport/detect-win32.h>
+# include <libport/export.hh>
+# include <libport/utime.hh>
 
 // Get sem_t.
 # if defined WIN32
@@ -58,9 +59,10 @@ namespace libport
     operator int ();
 
     /** Get semaphore with a limit of \b timeout in second.
-     * Fixme: Use timeout != 0 work only on linux.
+     * Fixme: Use seconds != 0 work only on linux.
      */
-    bool get(const int timeout = 0);
+    bool get(unsigned seconds = 0);
+    bool uget(utime_t useconds = 0);
 
     /// The number of alive Semaphores (#constructed - #destroyed).
     static size_t instances();

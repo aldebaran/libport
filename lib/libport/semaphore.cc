@@ -71,8 +71,6 @@ namespace libport
     case WAIT_TIMEOUT:
       errno = ETIMEDOUT;
       return -1;
-    case WAIT_FAILED:
-      return -1;
     default:
       return 0;
     }
@@ -266,12 +264,12 @@ namespace libport
 # endif
 
   bool
-  Semaphore::get(const int timeout)
+  Semaphore::uget(utime_t useconds)
   {
     int err;
     do
     {
-      if (timeout == 0)
+      if (useconds == 0)
         err = sem_wait(sem_);
 # if defined __APPLE__
       else
@@ -279,8 +277,9 @@ namespace libport
 	struct itimerval it;
 	it.it_interval.tv_sec = 0;
 	it.it_interval.tv_usec = 0;
-	it.it_value.tv_sec = timeout;
-	it.it_value.tv_usec = 0;
+
+	it.it_value.tv_sec = 0;
+	it.it_value.tv_usec = useconds;
 	flag = 1;
 	signal(SIGALRM, fun_timeout);
 	setitimer(ITIMER_REAL, &it, NULL);
@@ -296,7 +295,7 @@ namespace libport
       {
         struct timespec ts;
 	clock_gettime(CLOCK_REALTIME, &ts);
-	ts.tv_sec += timeout;
+	ts.tv_nsec += useconds * 1000;
         err = sem_timedwait(sem_, &ts);
       }
 # endif
@@ -317,6 +316,12 @@ namespace libport
       errabort("sem_wait");
     }
     return true;
+  }
+
+  bool
+  Semaphore::get(unsigned seconds)
+  {
+    return uget(seconds * 1000 * 1000);
   }
 
   Semaphore::operator int()
