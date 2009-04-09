@@ -40,40 +40,42 @@ namespace libport
     *sem = CreateSemaphore(0, value, MAXLONG, 0);
     if (!sem)
       errabort("CreateSemaphore");
-    return sem ? 0 : -1;
+    return 0;
   }
 
   int
   sem_post(sem_t* sem)
   {
-    unsigned int result = ReleaseSemaphore(*sem, 1, 0);
-    if (!result)
+    if (!ReleaseSemaphore(*sem, 1, 0))
       errabort("ReleaseSemaphore");
-    return result ? 0 : -1;
+    return 0;
   }
 
   int
   sem_wait(sem_t* sem)
   {
-    unsigned int result = WaitForSingleObject(*sem, INFINITE);
-    if (result == WAIT_FAILED)
+    if (WaitForSingleObject(*sem, INFINITE) == WAIT_FAILED)
       errabort("WaitForSingleObject");
-    return (result == WAIT_FAILED) ? -1 : 0;
+    return 0;
   }
 
   int
   sem_timedwait(sem_t* sem, const struct timespec *abs_timeout)
   {
-    unsigned int result = WaitForSingleObject(*sem, abs_timeout->tv_sec * 1000
-					      + abs_timeout->tv_nsec / 1000000);
-    if (result == WAIT_FAILED)
-      errabort("WaitForSingleObject");
-    if (result == WAIT_TIMEOUT)
+    switch (WaitForSingleObject(*sem,
+                                abs_timeout->tv_sec * 1000
+                                + abs_timeout->tv_nsec / 1000000))
     {
+    case WAIT_FAILED:
+      errabort("WaitForSingleObject");
+    case WAIT_TIMEOUT:
       errno = ETIMEDOUT;
       return -1;
+    case WAIT_FAILED:
+      return -1;
+    default:
+      return 0;
     }
-    return (result == WAIT_FAILED) ? -1 : 0;
   }
 
   int
