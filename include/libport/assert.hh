@@ -44,8 +44,9 @@ namespace libport
 # else
 
 #  define passert(Subject, Assertion)			\
-  if (!(Assertion))					\
-    __passert(Subject, Assertion)
+  ((void) ((Assertion)					\
+	   ? 0						\
+	   : __passert(Subject, Assertion)))
 
 #  define __passert(Subject, Assertion)                         \
   pabort("failed assertion: " << #Assertion << std::endl	\
@@ -68,12 +69,9 @@ namespace libport
 /// on the invocation side.
 
 # define pabort(Msg)                                    \
-  do                                                    \
-  {                                                     \
-    std::cerr << __FILE__ ":" << __LINE__		\
-	      << ": abort: " << Msg << std::endl;	\
-    libport::abort();                                   \
-  } while (0)
+  (std::cerr << __FILE__ ":" << __LINE__                \
+             << ": abort: " << Msg << std::endl,        \
+   libport::abort(), 0)
 
 /*----------------------------------------------.
 | errabort -- perror (well, strerror) + abort.  |
