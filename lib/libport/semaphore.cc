@@ -278,8 +278,8 @@ namespace libport
 	it.it_interval.tv_sec = 0;
 	it.it_interval.tv_usec = 0;
 
-	it.it_value.tv_sec = 0;
-	it.it_value.tv_usec = useconds;
+	it.it_value.tv_sec = useconds / 1000000;
+	it.it_value.tv_usec = useconds % 1000000;
 	flag = 1;
 	signal(SIGALRM, fun_timeout);
 	setitimer(ITIMER_REAL, &it, NULL);
@@ -295,7 +295,8 @@ namespace libport
       {
         struct timespec ts;
 	clock_gettime(CLOCK_REALTIME, &ts);
-	ts.tv_nsec += useconds * 1000;
+	ts.tv_sec += useconds / 1000000;
+	ts.tv_nsec += (useconds % 1000000) * 1000;
         err = sem_timedwait(sem_, &ts);
       }
 # endif
