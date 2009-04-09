@@ -33,7 +33,7 @@ void check_timeout()
   sem--;
   t1 = libport::utime();
   pthread_create(&th, 0, &thread1, &sem);
-  BOOST_CHECK_EQUAL(sem.get(1), false);
+  BOOST_CHECK_EQUAL(sem.uget(1000000), false);
   t2 = libport::utime() - t1;
   BOOST_CHECK(t2 < 1500000);
   pthread_join(th, NULL);
