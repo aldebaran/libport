@@ -41,17 +41,25 @@ AC_CONFIG_HEADERS([include/config.h])
 URBI_PACKAGE_KIND([sdk])
 URBI_LIBPORT
 
-# libport/backtrace.
-AC_CHECK_HEADERS(execinfo.h)
-# libport/semaphore.
-AC_CHECK_LIB([rt], [clock_gettime],
-             AC_SUBST([CLOCK_LIBS], [-lrt]))
-
-
 BOOST_TEST
 BOOST_SYSTEM
 
 URBI_COMPILATION_MODE
+
+## --------- ##
+## Libport.  ##
+## --------- ##
+
+# libport/backtrace.
+AC_CHECK_HEADERS(execinfo.h)
+# libport/semaphore.
+AC_CHECK_LIB([rt], [clock_gettime],
+             [AC_SUBST([CLOCK_LIBS], [-lrt])])
+
+
+## ---------- ##
+## Libsched.  ##
+## ---------- ##
 
 # For some reason, coroutine don't work properly on OSX PPC.  The test
 # suite seems ok though, so maybe we could make it work.  Meanwhile,
