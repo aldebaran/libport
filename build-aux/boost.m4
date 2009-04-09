@@ -131,7 +131,7 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
     # I didn't indent this loop on purpose (to avoid over-indented code)
     for boost_inc in "$boost_dir" "$boost_dir"/boost-*
     do
-      if x"$boost_inc" != x; then
+      if test x"$boost_inc" != x; then
         # We are going to check whether the version of Boost installed
         # in $boost_inc is usable by running a compilation that
         # #includes it.  But if we pass a -I/some/path in which Boost
