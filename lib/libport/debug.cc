@@ -301,6 +301,7 @@ namespace libport
       color(colors::blue);
       std::cerr << "    (" << fun << ", " << file << ":" << line << ")";
     }
+    color(colors::white);
     std::cerr << std::endl;
   }
 
