@@ -467,13 +467,18 @@ namespace libport
 
   namespace opts
   {
-    libport::OptionValues files  ("load file",                                  "file",    'f', "FILE");
-    libport::OptionFlag   help   ("display this message and exit successfully", "help",    'h');
-    libport::OptionValue  host   ("address to connect to",                      "host",    'H', "HOST");
-    libport::OptionValue  port   ("port to connect to",                         "port",    'P', "PORT");
-    libport::OptionValue  host_l ("address to listen on",                       "host",    'H', "HOST");
-    libport::OptionValue  port_l ("port to listen on",                          "port",    'P', "PORT");
-    libport::OptionFlag   verbose("be more verbose",                            "verbose", 'v');
-    libport::OptionFlag   version("display version information",                "version");
+    OptionFlag
+      help("display this message and exit successfully", "help",    'h'),
+      verbose("be more verbose",                         "verbose", 'v'),
+      version("display version information",             "version");
+
+    OptionValue
+      host("address to connect to",    "host",    'H', "HOST"),
+      port("port to connect to",       "port",    'P', "PORT"),
+      host_l("address to listen on",   "host",    'H', "HOST"),
+      port_l("port to listen on",      "port",    'P', "PORT");
+
+    OptionValues
+      files("load file",     "file",    'f', "FILE");
   }
 }
