@@ -7,9 +7,9 @@
 namespace libport
 {
 
-  /*------.
-  | Error |
-  `------*/
+  /*--------.
+  | Error.  |
+  `--------*/
 
   Error::Error(const std::string& msg)
     : errors_()
@@ -41,9 +41,9 @@ namespace libport
     return res.c_str();
   }
 
-  /*-------.
-  | Option |
-  `-------*/
+  /*---------.
+  | Option.  |
+  `---------*/
 
   Option::Option(const std::string& doc)
     : documentation_(doc)
@@ -80,9 +80,9 @@ namespace libport
       (*callback_)();
   }
 
-  /*------------.
-  | OptionNamed |
-  `------------*/
+  /*--------------.
+  | OptionNamed.  |
+  `--------------*/
 
   OptionNamed::OptionNamed(const std::string& doc,
                            const std::string& name_long,
@@ -115,9 +115,9 @@ namespace libport
     output << "--" << name_long_;
   }
 
-  /*-----------.
-  | OptionFlag |
-  `-----------*/
+  /*-------------.
+  | OptionFlag.  |
+  `-------------*/
 
   OptionFlag::OptionFlag(const std::string& doc,
                          const std::string& name_long,
@@ -179,9 +179,9 @@ namespace libport
   }
 
 
-  /*-------------.
-  | OptionValued |
-  `-------------*/
+  /*---------------.
+  | OptionValued.  |
+  `---------------*/
 
   OptionValued::OptionValued(const std::string& doc,
                              const std::string& name_long,
@@ -247,9 +247,9 @@ namespace libport
   }
 
 
-  /*------------.
-  | OptionValue |
-  `------------*/
+  /*--------------.
+  | OptionValue.  |
+  `--------------*/
 
   OptionValue::OptionValue(const std::string& doc,
                            const std::string& name_long,
@@ -305,9 +305,9 @@ namespace libport
   };
 
 
-  /*-------------.
-  | OptionValues |
-  `-------------*/
+  /*---------------.
+  | OptionValues.  |
+  `---------------*/
 
   OptionValues::OptionValues(const std::string& doc,
                              const std::string& name_long,
@@ -342,9 +342,9 @@ namespace libport
     return values_;
   };
 
-  /*-----------.
-  | OptionsEnd |
-  `-----------*/
+  /*-------------.
+  | OptionsEnd.  |
+  `-------------*/
 
   OptionsEnd::OptionsEnd()
     : Option("")
@@ -379,9 +379,9 @@ namespace libport
   void OptionsEnd::doc_(std::ostream&) const
   {}
 
-  /*-------------.
-  | OptionParser |
-  `-------------*/
+  /*---------------.
+  | OptionParser.  |
+  `---------------*/
 
   cli_args_type
   OptionParser::operator() (const cli_args_type& _args)
