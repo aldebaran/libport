@@ -253,11 +253,14 @@ namespace libport
 
 # if defined __APPLE__
 
-  int flag;
+  // On OSX there seems to be no means to timeout passively, so we
+  // launch a thread that will change the following flag when the time
+  // is out.
+  static bool time_is_out;
 
-  void fun_timeout(int fl)
+  void fun_timeout(int)
   {
-    flag = 0;
+    time_is_out = true;
   }
 
 # endif
@@ -279,15 +282,19 @@ namespace libport
 
 	it.it_value.tv_sec = useconds / 1000000;
 	it.it_value.tv_usec = useconds % 1000000;
-	flag = 1;
+	time_is_out = false;
 	signal(SIGALRM, fun_timeout);
 	setitimer(ITIMER_REAL, &it, NULL);
 	do
 	{
 	  err = sem_trywait(sem_);
-	} while (flag && err == -1 && errno == EAGAIN);
-	if (!flag)
+	} while (!time_is_out && err == -1 && errno == EAGAIN);
+	if (time_is_out)
+        {
+          // Match the interface under Linux.
 	  err = -1;
+          errno = ETIMEDOUT;
+        }
       }
 # else
       else
@@ -302,19 +309,14 @@ namespace libport
     }
     while (err == -1 && errno == EINTR);
 
-# if defined __APPLE__
-    if (!flag)
-      return false;
-# else
-    if (err && errno == ETIMEDOUT)
-      return false;
-# endif
-
     if (err)
     {
+      if (errno == ETIMEDOUT)
+        return false;
       destroy();
       errabort("sem_wait");
     }
+
     return true;
   }
 
