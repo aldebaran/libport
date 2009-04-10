@@ -190,7 +190,7 @@ namespace libport
     : OptionNamed(doc, name_long, name_short)
     , callback1_(0)
   {
-    formal_ = formal.size() ? formal : name_long;
+    formal_ = formal.empty() ?  name_long : formal;
   }
 
   void
@@ -451,10 +451,10 @@ namespace libport
     foreach (std::string& str, doc_)
     {
       stream << row;
-      if (str.size())
-	stream << libport::etable << row << str << libport::table;
-      else
+      if (str.empty())
 	(*it++)->doc(stream);
+      else
+	stream << libport::etable << row << str << libport::table;
     }
 
 //     foreach (Option* opt, options_)
