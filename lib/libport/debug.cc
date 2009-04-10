@@ -413,17 +413,17 @@ namespace libport
 
   Debug* debugger()
   {
-#ifndef WIN32
     static std::map<pthread_t, Debug*> debuggers;
     pthread_t id = pthread_self();
     if (!libport::mhas(debuggers, id))
+    {
       debuggers[id] = make_debugger();
+      debuggers[id]->push_category("NONE");
+    }
     return debuggers[id];
-#else
-    static Debug* debug = make_debugger();
-    return debug;
-#endif
   }
+
+  GD_ADD_CATEGORY(NONE);
 
 }
 
