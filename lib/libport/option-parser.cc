@@ -436,7 +436,7 @@ namespace libport
   void
   OptionParser::usage(std::ostream& output)
   {
-    output << libport::program_name();
+    output << program_name();
     foreach (Option* opt, options_)
       opt->usage(output);
   }
@@ -446,7 +446,7 @@ namespace libport
   {
     MarkupOStream stream(output);
 
-    stream << libport::table;
+    stream << table;
     std::vector<Option*>::iterator it = options_.begin();
     foreach (std::string& str, doc_)
     {
@@ -454,7 +454,7 @@ namespace libport
       if (str.empty())
 	(*it++)->doc(stream);
       else
-	stream << libport::etable << row << str << libport::table;
+	stream << etable << row << str << table;
     }
 
 //     foreach (Option* opt, options_)
@@ -462,7 +462,7 @@ namespace libport
 //       stream << row;
 //       opt->doc(stream);
 //     }
-    stream << libport::etable;
+    stream << etable;
   }
 
   namespace opts
