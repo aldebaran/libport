@@ -217,101 +217,100 @@ namespace libport
 
 // INFO
 
-#  define GD_INFO(Message)                                            \
-  GD_DEBUGGER->debug(Message, ::libport::Debug::types::info,           \
-                    GD_FUNCTION, __FILE__, __LINE__);        \
+#  define GD_INFO(Message)                                      \
+  GD_DEBUGGER->debug(Message, ::libport::Debug::types::info,    \
+                    GD_FUNCTION, __FILE__, __LINE__)
 
-#  define GD_FINFO(Msg, Seq)                 \
-  GD_INFO(GD_FORMAT(Msg, Seq));              \
+#  define GD_FINFO(Msg, Seq)                    \
+  GD_INFO(GD_FORMAT(Msg, Seq))
 
-#  define GD_SINFO(Msg)                      \
-  GD_INFO(GD_STREAM(Msg));                   \
+#  define GD_SINFO(Msg)                         \
+  GD_INFO(GD_STREAM(Msg))
 
-#  define GD_VINFO(Msg, Exp)                     \
-  GD_FINFO("%s: %s = %s", (Msg) (#Exp) (Exp))    \
+#  define GD_VINFO(Msg, Exp)                    \
+  GD_FINFO("%s: %s = %s", (Msg) (#Exp) (Exp))
 
 
-#  define GD_INFO_LOG(Msg)                        \
-  { GD_LOG(); GD_INFO(Msg)}                       \
+#  define GD_INFO_LOG(Msg)                      \
+  do { GD_LOG(); GD_INFO(Msg); } while (0)
 
 #  define GD_INFO_TRACE(Msg)                    \
-  { GD_TRACE(); GD_INFO(Msg)}                   \
+  do { GD_TRACE(); GD_INFO(Msg); } while (0)
 
 #  define GD_INFO_DEBUG(Msg)                    \
-  { GD_DEBUG(); GD_INFO(Msg)}                   \
+  do { GD_DEBUG(); GD_INFO(Msg); } while (0)
 
-#  define GD_INFO_DUMP(Msg)                       \
-  { GD_DUMP(); GD_INFO(Msg)}                      \
+#  define GD_INFO_DUMP(Msg)                     \
+  do { GD_DUMP(); GD_INFO(Msg); } while (0)
 
-#  define GD_FINFO_LOG(Msg, Seq)                 \
-  { GD_LOG(); GD_FINFO(Msg, Seq)}                \
+#  define GD_FINFO_LOG(Msg, Seq)                        \
+  do { GD_LOG(); GD_FINFO(Msg, Seq); } while (0)
 
-#  define GD_FINFO_TRACE(Msg, Seq)               \
-  { GD_TRACE(); GD_FINFO(Msg, Seq)}              \
+#  define GD_FINFO_TRACE(Msg, Seq)                      \
+  do { GD_TRACE(); GD_FINFO(Msg, Seq); } while (0)
 
-#  define GD_FINFO_DEBUG(Msg, Seq)               \
-  { GD_DEBUG(); GD_FINFO(Msg, Seq)}              \
+#  define GD_FINFO_DEBUG(Msg, Seq)                      \
+  do { GD_DEBUG(); GD_FINFO(Msg, Seq); } while (0)
 
-#  define GD_FINFO_DUMP(Msg, Seq)                \
-  { GD_DUMP(); GD_FINFO(Msg, Seq)}               \
+#  define GD_FINFO_DUMP(Msg, Seq)                       \
+  do { GD_DUMP(); GD_FINFO(Msg, Seq); } while (0)
 
-#  define GD_SINFO_LOG(Msg, Seq)                 \
-  { GD_LOG(); GD_SINFO(Msg, Seq)}                \
+#  define GD_SINFO_LOG(Msg, Seq)                        \
+  do { GD_LOG(); GD_SINFO(Msg, Seq); } while (0)
 
-#  define GD_SINFO_TRACE(Msg, Seq)               \
-  { GD_TRACE(); GD_SINFO(Msg, Seq)}              \
+#  define GD_SINFO_TRACE(Msg, Seq)                      \
+  do { GD_TRACE(); GD_SINFO(Msg, Seq); } while (0)
 
-#  define GD_SINFO_DEBUG(Msg, Seq)               \
-  { GD_DEBUG(); GD_SINFO(Msg, Seq)}              \
+#  define GD_SINFO_DEBUG(Msg, Seq)                      \
+  do { GD_DEBUG(); GD_SINFO(Msg, Seq); } while (0)
 
-#  define GD_SINFO_DUMP(Msg, Seq)                \
-  { GD_DUMP(); GD_SINFO(Msg, Seq)}               \
+#  define GD_SINFO_DUMP(Msg, Seq)                       \
+  do { GD_DUMP(); GD_SINFO(Msg, Seq); } while (0)
 
-#  define GD_VINFO_LOG(Msg, Val)                 \
-  { GD_LOG(); GD_VINFO(Msg, Val)}                \
+#  define GD_VINFO_LOG(Msg, Val)                        \
+  do { GD_LOG(); GD_VINFO(Msg, Val); } while (0)
 
-#  define GD_VINFO_TRACE(Msg, Val)               \
-  { GD_TRACE(); GD_VINFO(Msg, Val)}              \
+#  define GD_VINFO_TRACE(Msg, Val)                      \
+  do { GD_TRACE(); GD_VINFO(Msg, Val); } while (0)
 
-#  define GD_VINFO_DEBUG(Msg, Val)               \
-  { GD_DEBUG(); GD_VINFO(Msg, Val)}              \
+#  define GD_VINFO_DEBUG(Msg, Val)                      \
+  do { GD_DEBUG(); GD_VINFO(Msg, Val); } while (0)
 
-#  define GD_VINFO_DUMP(Msg, Val)                \
-  { GD_DUMP(); GD_VINFO(Msg, Val)}               \
-
+#  define GD_VINFO_DUMP(Msg, Val)                       \
+  do { GD_DUMP(); GD_VINFO(Msg, Val); } while (0)
 
 #  define GD_WARN(Message)                                      \
-  GD_DEBUGGER->debug(Message, ::libport::Debug::types::warn,      \
-                    GD_FUNCTION, __FILE__, __LINE__);           \
+  GD_DEBUGGER->debug(Message, ::libport::Debug::types::warn,    \
+                    GD_FUNCTION, __FILE__, __LINE__)
 
 #  define GD_FWARN(Msg, Seq)                 \
-  GD_WARN(GD_FORMAT(Msg, Seq));              \
+  GD_WARN(GD_FORMAT(Msg, Seq))
 
 #  define GD_SWARN(Msg)                 \
-  GD_WARN(GD_STREAM(Msg));              \
+  GD_WARN(GD_STREAM(Msg))
 
 #  define GD_VWARN(Msg, Exp)                    \
   GD_FWARN("%s: %s = %s", (Msg) (#Exp) (Exp))   \
 
 
-#  define GD_ERROR(Message)                                             \
-  GD_DEBUGGER->debug(Message, ::libport::Debug::types::error,             \
-                    GD_FUNCTION, __FILE__, __LINE__);                   \
+#  define GD_ERROR(Message)                                     \
+  GD_DEBUGGER->debug(Message, ::libport::Debug::types::error,   \
+                    GD_FUNCTION, __FILE__, __LINE__)
 
 #  define GD_FERROR(Msg, Seq)               \
-  GD_ERROR(GD_FORMAT(Msg, Seq));            \
+  GD_ERROR(GD_FORMAT(Msg, Seq))
 
 #  define GD_SERROR(Msg)               \
-  GD_ERROR(GD_STREAM(Msg));            \
+  GD_ERROR(GD_STREAM(Msg))
 
 #  define GD_VERROR(Msg, Exp)                    \
-  GD_FERROR("%s: %s = %s", (Msg) (#Exp) (Exp))   \
+  GD_FERROR("%s: %s = %s", (Msg) (#Exp) (Exp))
 
 
 #  define GD_PUSH(Message)                              \
   libport::Finally _gd_pop_                             \
   (GD_DEBUGGER->push(Message,                           \
-                    GD_FUNCTION, __FILE__, __LINE__));
+                     GD_FUNCTION, __FILE__, __LINE__))
 
 #  define GD_FPUSH(Message, Seq)                \
   GD_PUSH(GD_FORMAT(Message, Seq))              \
@@ -322,73 +321,77 @@ namespace libport
 
 #  define GD_ADD_CATEGORY(Name)                                         \
   static int _gd_category_##Name =                                      \
-    ::libport::debug::add_category(#Name);                              \
+    ::libport::debug::add_category(#Name)
 
 #  define GD_CATEGORY(Cat)                                              \
   libport::Finally _gd_pop_category_##__LINE__                          \
-  (GD_DEBUGGER->push_category(#Cat));                                   \
+  (GD_DEBUGGER->push_category(#Cat))
 
 #  define GD_DISABLE_CATEGORY(Cat)                                      \
   static int _gd_category_disable_##Cat =                               \
-  ::libport::debug::disable_category(#Cat);                             \
+  ::libport::debug::disable_category(#Cat)
 
 #  define GD_ENABLE_CATEGORY(Cat)                \
   static int _gd_category_enable_##Cat =         \
-  ::libport::debug::enable_category(#Cat);       \
-                                                 \
+  ::libport::debug::enable_category(#Cat)
+
 /*--------.
 | Level.  |
 `--------*/
 
 #  define GD_LEVEL(Lvl)                         \
   libport::Finally _gd_pop_level_##__LINE__     \
-  (GD_DEBUGGER->push_level(Lvl));
+  (GD_DEBUGGER->push_level(Lvl))
 
 #  define GD_LOG()						  \
-  GD_LEVEL(::libport::Debug::levels::log);                        \
+  GD_LEVEL(::libport::Debug::levels::log)
 
 #  define GD_TRACE()						  \
-  GD_LEVEL(::libport::Debug::levels::trace);                      \
+  GD_LEVEL(::libport::Debug::levels::trace)
 
 #  define GD_DEBUG()						  \
-  GD_LEVEL(::libport::Debug::levels::debug);                      \
+  GD_LEVEL(::libport::Debug::levels::debug)
 
 #  define GD_DUMP()						\
-  GD_LEVEL(::libport::Debug::levels::dump);			\
+  GD_LEVEL(::libport::Debug::levels::dump)
 
 #  define GD_FILTER(Lvl)					\
-  GD_DEBUGGER->filter(Lvl);
+  GD_DEBUGGER->filter(Lvl)
 
 #  define GD_FILTER_NONE()					   \
-  GD_FILTER(::libport::Debug::levels::none);                       \
+  GD_FILTER(::libport::Debug::levels::none)
 
 #  define GD_FILTER_LOG()					   \
-  GD_FILTER(::libport::Debug::levels::log);                        \
+  GD_FILTER(::libport::Debug::levels::log)
 
 #  define GD_FILTER_TRACE()					   \
-  GD_FILTER(::libport::Debug::levels::trace);                      \
+  GD_FILTER(::libport::Debug::levels::trace)
 
 #  define GD_FILTER_DEBUG()					   \
-  GD_FILTER(::libport::Debug::levels::debug);                      \
+  GD_FILTER(::libport::Debug::levels::debug)
 
 #  define GD_FILTER_DUMP()					\
-  GD_FILTER(::libport::Debug::levels::dump);			\
+  GD_FILTER(::libport::Debug::levels::dump)
 
 #  define GD_CURRENT_LEVEL()					\
   GD_DEBUGGER->level()						\
 
-#  define GD_FILTER_INC()					\
-  if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::dump)	\
-    GD_DEBUGGER->filter(					\
-      (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() + 1))\
+#  define GD_FILTER_INC()                                               \
+  do {                                                                  \
+    if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::dump)           \
+      GD_DEBUGGER->filter(                                              \
+        (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() + 1));     \
+  } while (0)
 
-#  define GD_FILTER_DEC()					\
-  if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::none)	\
-    GD_DEBUGGER->filter(					\
-      (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() - 1))\
+#  define GD_FILTER_DEC()                                               \
+  do {                                                                  \
+  if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::none)             \
+    GD_DEBUGGER->filter(                                                \
+      (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() - 1));       \
+      } while (0)
 
 #  define GD_SHOW_LEVEL(Lvl)				\
-  (GD_CURRENT_LEVEL() >= Lvl)					\
+  (GD_CURRENT_LEVEL() >= Lvl)                           \
 
 #  define GD_SHOW_LOG()					\
   GD_SHOW_LEVEL(::libport::Debug::levels::log)		\
@@ -399,7 +402,7 @@ namespace libport
 #  define GD_SHOW_DEBUG()					\
   GD_SHOW_LEVEL(::libport::Debug::levels::debug)		\
 
-#  define GD_SHOW_DUMP()					\
+#  define GD_SHOW_DUMP()                                \
   GD_SHOW_LEVEL(::libport::Debug::levels::dump)		\
 
 /*-------------.
@@ -407,7 +410,7 @@ namespace libport
 `-------------*/
 
 #  define GD_ABORT(Msg)                         \
-  libport::Debug::abort(Msg);
+  libport::Debug::abort(Msg)
 
 #  define GD_FABORT(Msg, Seq)                   \
   GD_ABORT(GD_FORMAT(Msg, Seq))                 \
