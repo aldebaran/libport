@@ -194,9 +194,9 @@ namespace libport
 
 
 
-/*--------.
-| Helpers |
-`--------*/
+/*----------.
+| Helpers.  |
+`----------*/
 
 #  define GD_DEBUGGER libport::debugger()
 
@@ -211,9 +211,9 @@ namespace libport
 
 #  define GD_FUNCTION __FUNCTION__
 
-/*------.
-| Print |
-`------*/
+/*--------.
+| Print.  |
+`--------*/
 
 // INFO
 
@@ -308,17 +308,17 @@ namespace libport
   GD_FERROR("%s: %s = %s", (Msg) (#Exp) (Exp))   \
 
 
-#  define GD_PUSH(Message)                                             \
-  libport::Finally _gd_pop_                                            \
-  (GD_DEBUGGER->push(Message,                                           \
-                    GD_FUNCTION, __FILE__, __LINE__));                 \
+#  define GD_PUSH(Message)                              \
+  libport::Finally _gd_pop_                             \
+  (GD_DEBUGGER->push(Message,                           \
+                    GD_FUNCTION, __FILE__, __LINE__));
 
 #  define GD_FPUSH(Message, Seq)                \
   GD_PUSH(GD_FORMAT(Message, Seq))              \
                                                 \
-/*-----------.
-| Categories |
-`-----------*/
+/*-------------.
+| Categories.  |
+`-------------*/
 
 #  define GD_ADD_CATEGORY(Name)                                         \
   static int _gd_category_##Name =                                      \
@@ -336,9 +336,9 @@ namespace libport
   static int _gd_category_enable_##Cat =         \
   ::libport::debug::enable_category(#Cat);       \
                                                  \
-/*------.
-| Level |
-`------*/
+/*--------.
+| Level.  |
+`--------*/
 
 #  define GD_LEVEL(Lvl)                         \
   libport::Finally _gd_pop_level_##__LINE__     \
@@ -402,12 +402,12 @@ namespace libport
 #  define GD_SHOW_DUMP()					\
   GD_SHOW_LEVEL(::libport::Debug::levels::dump)		\
 
-/*-----------.
-| Assertions |
-`-----------*/
+/*-------------.
+| Assertions.  |
+`-------------*/
 
-#  define GD_ABORT(Msg)                            \
-  libport::Debug::abort(Msg);                       \
+#  define GD_ABORT(Msg)                         \
+  libport::Debug::abort(Msg);
 
 #  define GD_FABORT(Msg, Seq)                   \
   GD_ABORT(GD_FORMAT(Msg, Seq))                 \
@@ -415,13 +415,13 @@ namespace libport
 #  define GD_UNREACHABLE()                      \
   GD_ABORT("Unreachable code reached")          \
 
-#  define GD_IHEXDUMP(Data, Size)                                       \
-  libport::gd_ihexdump                                                   \
-  (reinterpret_cast<const unsigned char*>(Data), Size)                  \
+#  define GD_IHEXDUMP(Data, Size)                       \
+  libport::gd_ihexdump                                  \
+  (reinterpret_cast<const unsigned char*>(Data), Size)
 
-/*----------.
-| Configure |
-`----------*/
+/*------------.
+| Configure.  |
+`------------*/
 
 #  define GD__INIT_                                                     \
   static int _libport_initdebug_()                                      \
