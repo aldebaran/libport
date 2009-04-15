@@ -17,15 +17,20 @@ namespace libport
 {
   namespace exception
   {
-    inline  Exception::Exception (const std::string& thrower, const std::string& msg)
-      : std::logic_error (msg), thrower (thrower)
-    {};
-    
-    inline Exception::~Exception () throw (){};
-    
-    inline Semaphore::Semaphore (const std::string& thrower, const std::string& msg)
-      : Exception (thrower, msg)
-    {};    
+    inline
+    Exception::Exception(const std::string& msg)
+      : msg_(msg)
+    {}
+
+    inline
+    Exception::~Exception() throw ()
+    {}
+
+    inline const char*
+    Exception::what() const throw ()
+    {
+      return msg_.c_str();
+    }
   }
 }
 

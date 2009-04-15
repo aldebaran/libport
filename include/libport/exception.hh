@@ -20,21 +20,19 @@ namespace libport
   namespace exception
   {
     /// Interface for all exceptions thrown by the libfsm.
-    struct LIBPORT_API Exception: public std::logic_error
+    class LIBPORT_API Exception: public std::exception
     {
+    public:
       /** Ctor.
        *  @param  thrower  Name of function/method throwing the exception.
        *  @param  msg      Reason for throwing the exception.
        */
-      Exception (const std::string& thrower, const std::string& msg);
+      Exception (const std::string& msg);
       virtual ~Exception () throw ();
-      std::string thrower;
-    };
+      virtual const char* what() const throw();
 
-    /// Exception.
-    struct LIBPORT_API Semaphore : public Exception
-    {
-      Semaphore (const std::string& thrower, const std::string& msg);
+    private:
+      std::string msg_;
     };
   }
 }
