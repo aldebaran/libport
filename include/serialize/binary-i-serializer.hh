@@ -16,14 +16,11 @@ namespace libport
       BinaryISerializer(const std::string& stream);
       ~BinaryISerializer();
 
-      void serialize(const std::string& name, Serializable& s);
-      void serialize(const std::string& name, std::string& s);
-      void serialize(const std::string& name, int& i);
+      virtual void unserialize(const std::string& name, std::string& s);
+      virtual void unserialize(const std::string& name, int& i);
 
-    private:
-      action_type serialize_collection(const std::string& name, int& size);
-
-      std::ifstream stream_;
+      virtual size_t start_collection(const std::string& name);
+      virtual void end_collection();
     };
   }
 }

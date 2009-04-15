@@ -8,108 +8,76 @@
 #include <serialize/binary-i-serializer.hh>
 #include <serialize/binary-o-serializer.hh>
 #include <serialize/serializable.hh>
-#include <serialize/serializer.hh>
-#include <serialize/xml-i-serializer.hh>
-#include <serialize/xml-o-serializer.hh>
+//#include <serialize/serializer.hh>
+// #include <serialize/xml-i-serializer.hh>
+// #include <serialize/xml-o-serializer.hh>
 
 using namespace libport::serialize;
 using libport::test_suite;
 
-struct Data: public Serializable
+class Datas: public Serializable
 {
-  Data(const std::string& d1 = "",
-       const std::string& d2 = "")
-    : data1(d1)
-    , data2(d2)
-  {}
-
-  virtual void serialize(libport::serialize::Serializer& ser)
+public:
+  Datas(int a, int b, int c)
   {
-    ser.serialize("data1", data1);
-    ser.serialize("data2", data2);
+    datas_.push_back(a);
+    datas_.push_back(b);
+    datas_.push_back(c);
   }
 
-  bool operator == (const Data& other) const
-  {
-    return data1 == other.data1 && data2 == other.data2;
-  }
-
-  std::string data1;
-  std::string data2;
+  std::vector<int> datas_;
+  SERIALIZABLE(Datas, , , (datas));
 };
 
-struct Datas: public Serializable
+class Test: public Serializable
 {
-  Datas(const std::string& n)
-    : name(n)
-    , datas()
+public:
+  Test(const std::string& name)
+    : name_(name)
   {}
 
-  Datas& operator << (Data d)
-  {
-    datas.push_back(d);
-    return *this;
-  }
-
-  bool operator == (const Datas& other) const
-  {
-    bool res = true;
-    res = res && name == other.name;
-    res = res && datas.size() == other.datas.size();
-    for (unsigned i = 0; res && i < datas.size(); ++i)
-      res = res && datas[i] == other.datas[i];
-    return res;
-  }
-
-  virtual void serialize(libport::serialize::Serializer& ser)
-  {
-    ser.serialize("name", name);
-    ser.serialize("datas", datas);
-  }
-
-  std::string name;
-  std::vector<Data> datas;
+protected:
+  std::string name_;
+  SERIALIZABLE(Test, , , (name));
 };
+
+class TestData: public Test
+{
+public:
+  TestData(const std::string& name)
+    : Test(name)
+    , description_("Draven")
+    , datas_(42, 51, 69)
+  {}
+
+  bool operator==(const TestData& other)
+  {
+    return name_ == other.name_
+      && description_ == other.description_
+      && datas_.datas_ == other.datas_.datas_;
+  }
+
+protected:
+  std::string description_;
+  Datas datas_;
+  SERIALIZABLE(TestData, (Test), (datas), (description));
+};
+
+static const std::string path = "tests/serialize/test";
 
 void test()
 {
-  // The test file base name.
-  const std::string basename = "tests/serialize/test";
+  TestData src("Eric");
 
-  // Test datas
-  Datas o("name");
-  o << Data("foo&", "<bar>");
-  o << Data("baz", "quux");
-
-  // Export them as XML
   {
-    XmlOSerializer os(basename + ".xml");
-    os.serialize("test", o);
-  }
-  // Import them as XML
-  {
-    Datas i("");
-    {
-      XmlISerializer is(basename + ".xml");
-      is.serialize("test", i);
-    }
-    BOOST_CHECK(i == o);
+    BinaryOSerializer out(path + ".bin");
+    out.serialize("data", src);
   }
 
-  // Export them as binary
   {
-    BinaryOSerializer os(basename + ".bin");
-    os.serialize("test", o);
-  }
-  // Import them as binary
-  {
-    Datas i("");
-    {
-      BinaryISerializer is(basename + ".bin");
-      is.serialize("test", i);
-    }
-    std::cerr << i.name << std::endl;
-    BOOST_CHECK(i == o);
+    BinaryISerializer in(path + ".bin");
+    TestData dst(in);
+    BOOST_CHECK(src == dst);
   }
 }
 

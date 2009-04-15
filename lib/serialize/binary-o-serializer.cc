@@ -1,3 +1,5 @@
+#include <arpa/inet.h>
+
 #include <boost/bind.hpp>
 
 #include <serialize/serializable.hh>
@@ -11,7 +13,8 @@ namespace libport
     static void
     put_int(std::ostream& s, int i)
     {
-      s.write(reinterpret_cast<char*>(&i), sizeof(int));
+      int normalized = htonl(i);
+      s.write(reinterpret_cast<char*>(&normalized), sizeof(int));
     }
 
     BinaryOSerializer::BinaryOSerializer(const std::string& path)
@@ -23,13 +26,13 @@ namespace libport
     {}
 
     void
-    BinaryOSerializer::serialize(const std::string&, Serializable& s)
+    BinaryOSerializer::serialize(const std::string&, const Serializable& s)
     {
       s.serialize(*this);
     }
 
     void
-    BinaryOSerializer::serialize(const std::string&, std::string& s)
+    BinaryOSerializer::serialize(const std::string&, const std::string& s)
     {
       int size = s.size();
       put_int(stream_, size);
@@ -37,17 +40,19 @@ namespace libport
     }
 
     void
-    BinaryOSerializer::serialize(const std::string&, int& i)
+    BinaryOSerializer::serialize(const std::string&, int i)
     {
       put_int(stream_, i);
     }
 
-    BinaryOSerializer::action_type
-    BinaryOSerializer::serialize_collection(const std::string&, int& size)
+    void
+    BinaryOSerializer::start_collection(const std::string&, size_t size)
     {
       put_int(stream_, size);
-      return action_type();
     }
 
+    void
+    BinaryOSerializer::end_collection()
+    {}
   }
 }

@@ -10,7 +10,4 @@ dist_lib_serialize_libserialize_la_SOURCES =	\
   lib/serialize/binary-o-serializer.cc		\
   lib/serialize/exception.cc			\
   lib/serialize/i-serializer.cc			\
-  lib/serialize/o-serializer.cc			\
-  lib/serialize/serializer.cc			\
-  lib/serialize/xml-i-serializer.cc		\
-  lib/serialize/xml-o-serializer.cc
+  lib/serialize/o-serializer.cc

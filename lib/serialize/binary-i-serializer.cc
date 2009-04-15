@@ -1,3 +1,5 @@
+#include <arpa/inet.h>
+
 #include <boost/bind.hpp>
 
 #include <serialize/serializable.hh>
@@ -13,25 +15,18 @@ namespace libport
     {
       int res;
       s.read(reinterpret_cast<char*>(&res), sizeof(int));
-      return res;
+      return ntohl(res);
     }
 
     BinaryISerializer::BinaryISerializer(const std::string& path)
       : ISerializer(path)
-      , stream_(path.c_str())
     {}
 
     BinaryISerializer::~BinaryISerializer()
     {}
 
     void
-    BinaryISerializer::serialize(const std::string&, Serializable& s)
-    {
-      s.serialize(*this);
-    }
-
-    void
-    BinaryISerializer::serialize(const std::string&, std::string& s)
+    BinaryISerializer::unserialize(const std::string&, std::string& s)
     {
       int size = get_int(stream_);
       char* buf = new char[size + 1];
@@ -41,17 +36,19 @@ namespace libport
     }
 
     void
-    BinaryISerializer::serialize(const std::string&, int& i)
+    BinaryISerializer::unserialize(const std::string&, int& i)
     {
       i = get_int(stream_);
     }
 
-    BinaryISerializer::action_type
-    BinaryISerializer::serialize_collection(const std::string&, int& size)
+    size_t
+    BinaryISerializer::start_collection(const std::string&)
     {
-      size = get_int(stream_);
-      return action_type();
+      return get_int(stream_);
     }
 
+    void
+    BinaryISerializer::end_collection()
+    {}
   }
 }

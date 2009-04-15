@@ -5,8 +5,7 @@ namespace libport
   namespace serialize
   {
     ISerializer::ISerializer(const std::string& path)
-      : Serializer(true)
-      , path_(path)
+      : stream_(path.c_str())
     {}
   }
 }
