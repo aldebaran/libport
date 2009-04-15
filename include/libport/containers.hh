@@ -69,6 +69,11 @@ namespace libport
   template<typename Container, typename Functor>
   void
   erase_if(Container& c, const Functor& f);
+
+
+  // Compare two containers
+  template <template <typename, typename> class Cont, typename E, typename A>
+  bool operator==(const Cont<E, A>& lhs, const Cont<E, A>& rhs);
 } // namespace libport
 
 namespace std

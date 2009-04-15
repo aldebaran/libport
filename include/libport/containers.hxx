@@ -129,6 +129,20 @@ namespace libport
     typename Container::iterator end_c = end(c);
     c.erase(std::remove_if(begin(c), end_c, f), end_c);
   }
+
+  template <template <typename, typename> class Cont, typename E, typename A>
+  bool operator==(const Cont<E, A>& lhs, const Cont<E, A>& rhs)
+  {
+    typedef Cont<E, A> C;
+    typename C::const_iterator l = lhs.begin();
+    typename C::const_iterator r = rhs.begin();
+
+    for (; l != lhs.end() && r != rhs.end(); ++l, ++r)
+      if (*l != *r)
+        return false;
+
+    return l == lhs.end() && r == rhs.end();
+  }
 } // namespace libport
 
 namespace std
