@@ -14,6 +14,7 @@ namespace libport
     public:
       // FIXME: This should be an ostream. See ISerialier::ISerialier comment.
       OSerializer(const std::string& path);
+      virtual ~OSerializer();
 
       virtual void
         serialize(const std::string& name, const Serializable& value) = 0;

@@ -7,5 +7,8 @@ namespace libport
     ISerializer::ISerializer(const std::string& path)
       : stream_(path.c_str())
     {}
+
+    ISerializer::~ISerializer()
+    {}
   }
 }

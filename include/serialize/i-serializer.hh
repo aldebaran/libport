@@ -16,6 +16,7 @@ namespace libport
       // FIXME: This should be an istream. However, tinyxml can only parse files ...
       // For now, support files only too.
       ISerializer(const std::string& path);
+      virtual ~ISerializer();
 
       virtual void
         unserialize(const std::string& name, std::string& value) = 0;
