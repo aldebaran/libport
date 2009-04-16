@@ -14,12 +14,18 @@ namespace libport
     public:
       // FIXME: This should be an ostream. See ISerialier::ISerialier comment.
       OSerializer(const std::string& path);
-      virtual void serialize(const std::string& name, const Serializable& value) = 0;
-      virtual void serialize(const std::string& name, const std::string& value) = 0;
-      virtual void serialize(const std::string& name, int value) = 0;
 
-      template <template <typename, typename> class Cont, typename T, typename A>
+      virtual void
+        serialize(const std::string& name, const Serializable& value) = 0;
+      virtual void
+        serialize(const std::string& name, const std::string& value) = 0;
+      virtual void
+        serialize(const std::string& name, int value) = 0;
+
+      template <template <typename, typename> class Cont,
+                typename T, typename A>
         void serialize(const std::string& name, const Cont<T, A>& collection);
+
       virtual void start_collection(const std::string& name, size_t size) = 0;
       virtual void end_collection() = 0;
 
