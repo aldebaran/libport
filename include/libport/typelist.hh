@@ -162,6 +162,27 @@ namespace libport
           typedef typename At<T, I - 1>::res res;
       };
 
+      /// LooseAt: same as At, but return Null if out of bound
+      template <typename T, int I>
+      struct LooseAt:
+        private Assert <I >= 0, Must_be_positive<I> >
+      {
+        typedef Null res;
+      };
+
+      template <typename H, typename T>
+      struct LooseAt<List<H, T>, 0>
+      {
+        typedef H res;
+      };
+
+      template <typename H, typename T, int I>
+      struct LooseAt<List<H, T>, I>:
+          private Assert <I >= 0, Must_be_positive<I> >
+      {
+        typedef typename LooseAt<T, I - 1>::res res;
+      };
+
       // Contains
       template <typename L, typename V>
       struct Contains:
