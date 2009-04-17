@@ -18,6 +18,10 @@ namespace libport
     return !--count_;
   }
 
+  inline unsigned RefCounted::counter_get () const
+  {
+    return count_;
+  }
 }
 
 #endif
