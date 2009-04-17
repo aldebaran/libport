@@ -143,9 +143,8 @@ namespace libport
       // At
       template <typename T, int I>
       struct At:
-          private Uniquify <int, 0>,
           private Uniquify <Assert <I >= 0, Must_be_positive<I> >, 1>,
-          private Uniquify <Assert <false, Out_of_bound<T> >, 2>::res
+          private Error<Out_of_bound<T> >
       {
           typedef Null res;
       };
