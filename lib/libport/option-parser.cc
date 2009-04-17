@@ -1,4 +1,5 @@
 #include <boost/format.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <libport/foreach.hh>
 #include <libport/markup-ostream.hh>
@@ -34,10 +35,9 @@ namespace libport
   Error::what() const throw ()
   {
     std::string res;
-
     foreach (const std::string error, errors_)
       res += error + "\n";
-
+    // FIXME: Huh???  Does not seem safe to me.
     return res.c_str();
   }
 
@@ -54,7 +54,7 @@ namespace libport
   {}
 
   void
-  Option::set_callback(boost::function0<void>* callback)
+  Option::set_callback(callback_type* callback)
   {
     callback_ = callback;
   }
@@ -161,7 +161,7 @@ namespace libport
   OptionFlag::get() const
   {
     return value_;
-  };
+  }
 
   void
   OptionFlag::usage_(std::ostream& output) const
@@ -189,12 +189,12 @@ namespace libport
 			     char name_short)
     : OptionNamed(doc, name_long, name_short)
     , callback1_(0)
+    , formal_(formal.empty() ?  boost::to_upper_copy(name_long) : formal)
   {
-    formal_ = formal.empty() ?  name_long : formal;
   }
 
   void
-  OptionValued::set_callback(boost::function1<void, const std::string&>* callback)
+  OptionValued::set_callback(callback_type* callback)
   {
     callback1_ = callback;
   }
@@ -218,14 +218,11 @@ namespace libport
   OptionValued::test_option(cli_args_type& args)
   {
     size_t pos = args[0].find("=");
-    std::string name;
+    // s/=.*//.
+    std::string name =
+      pos != std::string::npos ? args[0].substr(0, pos) : args[0];
+
     ostring res;
-
-    if (pos != std::string::npos)
-      name = args[0].substr(0, pos);
-    else
-      name = args[0];
-
     if (test_name(name))
     {
       if (pos != std::string::npos)
@@ -340,7 +337,7 @@ namespace libport
   OptionValues::get() const
   {
     return values_;
-  };
+  }
 
   /*-------------.
   | OptionsEnd.  |
@@ -473,12 +470,12 @@ namespace libport
       version("display version information",             "version");
 
     OptionValue
-      host("address to connect to",    "host",    'H', "HOST"),
-      port("port to connect to",       "port",    'P', "PORT"),
-      host_l("address to listen on",   "host",    'H', "HOST"),
-      port_l("port to listen on",      "port",    'P', "PORT");
+      host("address to connect to",    "host",    'H'),
+      port("port to connect to",       "port",    'P'),
+      host_l("address to listen on",   "host",    'H'),
+      port_l("port to listen on",      "port",    'P');
 
     OptionValues
-      files("load file",     "file",    'f', "FILE");
+      files("load file",     "file",    'f');
   }
 }

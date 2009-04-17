@@ -44,7 +44,8 @@ namespace libport
     virtual ~Option();
     virtual bool test(cli_args_type& args) = 0;
     virtual void init() = 0;
-    void set_callback(boost::function0<void>* callback);
+    typedef boost::function0<void> callback_type;
+    void set_callback(callback_type* callback);
     void usage(std::ostream& output) const;
     void doc(std::ostream& output) const;
     void callback() const;
@@ -53,7 +54,7 @@ namespace libport
     virtual void usage_(std::ostream& output) const = 0;
     virtual void doc_(std::ostream& output) const = 0;
     std::string documentation_;
-    boost::function0<void>* callback_;
+    callback_type* callback_;
   };
 
 
@@ -111,13 +112,14 @@ namespace libport
                  const std::string& formal,
                  char name_short = '\0');
     using Option::set_callback;
-    void set_callback(boost::function1<void, const std::string&>* callback);
+    typedef boost::function1<void, const std::string&> callback_type;
+    void set_callback(callback_type* callback);
     ostring test_option(cli_args_type& args);
 
   protected:
     virtual void usage_(std::ostream& output) const;
     virtual void doc_(std::ostream& output) const;
-    boost::function1<void, const std::string&>* callback1_;
+    callback_type* callback1_;
 
   private:
     std::string formal_;
