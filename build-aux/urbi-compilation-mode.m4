@@ -65,6 +65,8 @@ urbi_compilation_mode_set ()
         ;;
 
       (space)
+        AC_DEFINE([OPTIMIZE_SPACE], [1],
+                  [Define to 1 to optimize for space.])
         URBI_APPEND_COMPILERFLAGS([-Os -fomit-frame-pointer \
                                    -fdata-sections -ffunction-sections])
         URBI_APPEND_FLAGS([LDFLAGS], [--gc-sections])
@@ -84,8 +86,8 @@ urbi_compilation_mode_set ()
         # `-Cfe' is often a good compromise between speed and size for
         # production scanners.
         URBI_APPEND_FLAGS([FLEXXXFLAGS], [-Cfe])
-        AC_DEFINE([SPEED], [1],
-                  [Define to optimize for speed the kernel
+        AC_DEFINE([OPTIMIZE_SPEED], [1],
+                  [Define to 1 to optimize for speed the kernel
                    at the detriment of compilation time.])
         urbi_compilation_mode_set final
         ;;

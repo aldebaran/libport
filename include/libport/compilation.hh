@@ -3,7 +3,7 @@
 
 # include <libport/config.h>
 
-# ifdef LIBPORT_SPEED
+# ifdef LIBPORT_OPTIMIZE_SPEED
 #  define LIBPORT_SPEED_INLINE inline
 #  define LIBPORT_SPEED_ALWAYS_INLINE __attribute__((always_inline))
 # else
