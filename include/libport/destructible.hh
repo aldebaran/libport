@@ -49,6 +49,9 @@ namespace libport
     /// Ask if a destruction request was received.
     bool pendingDestruction();
 
+    /// Hold destruction lock \b l until destroyed.
+    void link(DestructionLock l);
+
     /// Request the destruction of this object.
     void destroy();
 
@@ -73,9 +76,6 @@ namespace libport
 
     /// Override this function to change the effective destruction behavior.
     virtual void doDestroy();
-
-    /// Hold destruction lock \b l until destroyed.
-    void link(DestructionLock l);
 
     /// Release all held destruction locks
     void unlinkAll();

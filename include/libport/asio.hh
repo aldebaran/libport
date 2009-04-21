@@ -124,12 +124,31 @@ namespace libport
      * \param host hostname to connect to.
      * \param port port to connect to, as a service name or an int.
      * \param usTimeout timeout in microseconds, 0 meaning none.
+     * \param asynchronous make an asynchronous attempt. The function will
+     *    return immediately, and either onConnect will be called when the
+     *    connection succeeds, or onError() will be called.
      * \return an error code if the connection failed.
      *
      */
     boost::system::error_code connect(const std::string& host,
                                       const std::string& port,
-                                      bool udp=false, utime_t usTimeout = 0);
+                                      bool udp=false, utime_t usTimeout = 0,
+                                      bool asynchronous = false);
+
+    /** Make an asynchronous connection attempt to a remote host.
+     *  This API garantees that either the onConnect() or the onError() function
+     *  will be called.
+     * \param host hostname to connect to.
+     * \param port port to connect to, as a service name or an int.
+     * \param usTimeout timeout in microseconds, 0 meaning none.
+     */
+    void async_connect(const std::string& host,
+                       const std::string& port,
+                       bool udp=false, utime_t usTimeout = 0)
+    {
+      connect(host, port, udp, usTimeout, true);
+    }
+
 
     typedef void* Handle;
     typedef boost::function0<Socket*> SocketFactory;
@@ -184,7 +203,7 @@ namespace libport
                 const std::string&port, BaseFactory bf);
     template<typename Proto, typename BaseFactory> boost::system::error_code
     connectProto(const std::string& host, const std::string& port,
-                 utime_t timeout, BaseFactory bf);
+                 utime_t timeout, bool async, BaseFactory bf);
   };
 
   //FIXME: extend to provide a way to ensure workerThread not started.

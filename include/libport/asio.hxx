@@ -592,7 +592,69 @@ namespace netdetail {
     return true;
   }
 
+  namespace netdetail
+  {
+    template<typename Proto, class BaseFactory> void
+    async_connect(typename Proto::socket* bs,
+                  Socket* s,
+                  Destructible::DestructionLock,
+                  BaseFactory bf,
+                  const boost::system::error_code& error)
+    {
+      if (error)
+      {
+        s->onError(error);
+        delete bs;
+      }
+      else
+      {
+        SocketImplBase* b = bind_or_delete(s, bf, bs);
+        if (!b)
+          s->onError(errorcodes::make_error_code(errorcodes::operation_canceled));
+        b->link(s->getDestructionLock());
+        b->startReader();
+        s->onConnect();
+      }
+    }
 
+    template<typename Proto, class BaseFactory> void
+    async_resolve(typename Proto::resolver* r,
+                  Socket* s,
+                  Destructible::DestructionLock l,
+                  BaseFactory bf,
+                  boost::system::error_code error,
+                  const typename Proto::resolver::iterator i)
+    {
+      if (error)
+        s->onError(error);
+      else
+      {
+        typename Proto::endpoint ep = *i;
+        typename Proto::socket* bs = new typename Proto::socket(get_io_service());
+        bs->async_connect(ep,
+                          boost::bind(&async_connect<Proto, BaseFactory>,
+                                      bs, s, l, bf, _1));
+      }
+      delete r;
+    }
+
+    template<typename Proto, class BaseFactory> void
+    async_resolve_connect(Socket* s,
+                          Destructible::DestructionLock l,
+                          const std::string& host,
+                          const std::string& port,
+                          int,
+                          BaseFactory bf
+                          )
+    {
+      typename Proto::resolver::query query(host, port);
+      typename Proto::resolver* resolver =
+        new typename Proto::resolver(get_io_service());
+      resolver->async_resolve(query,
+                              boost::bind(&async_resolve<Proto, BaseFactory>,
+                                          resolver, s, l, bf, _1, _2));
+    }
+  }
   template<typename Proto> typename Proto::endpoint
   resolve(const std::string& host,
           const std::string& port, boost::system::error_code &erc)
@@ -607,10 +669,17 @@ namespace netdetail {
 
   template<class Proto, class BaseFactory> boost::system::error_code
   Socket::connectProto(const std::string& host, const std::string& port,
-                       utime_t timeout, BaseFactory bf)
+                       utime_t timeout, bool async, BaseFactory bf)
   {
     using namespace netdetail;
     boost::system::error_code erc;
+    if (async)
+    {
+      netdetail::async_resolve_connect<Proto, BaseFactory>(this,
+                                              this->getDestructionLock(),
+                                              host, port, timeout, bf);
+      return erc;
+    }
     typename Proto::endpoint ep = resolve<Proto>(host, port, erc);
     if (erc)
       return erc;
@@ -662,14 +731,14 @@ namespace netdetail {
 
   inline boost::system::error_code
   Socket::connect(const std::string& host, const std::string& port, bool udp,
-                  utime_t timeout)
+                  utime_t timeout, bool async)
   {
     assert(timeout >= 0);
     if (udp)
-      return connectProto<boost::asio::ip::udp>(host, port, timeout,
+      return connectProto<boost::asio::ip::udp>(host, port, timeout, async,
                                                 &netdetail::SocketImpl<boost::asio::ip::udp::socket>::create);
     else
-      return connectProto<boost::asio::ip::tcp>(host, port, timeout,
+      return connectProto<boost::asio::ip::tcp>(host, port, timeout, async,
                                                 &netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
   }
 
