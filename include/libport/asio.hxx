@@ -854,11 +854,20 @@ namespace netdetail {
   get_io_service(bool startWorkerThread)
   {
     static boost::asio::io_service* io = 0;
+    static bool hasWorkerThread = false;
+    if (!startWorkerThread && hasWorkerThread)
+    {
+      std::cerr <<"fatal, worker thread allready running" << std::endl;
+      abort();
+    }
     if (!io)
     {
       io = new boost::asio::io_service;
       if (startWorkerThread)
+      {
+        hasWorkerThread = true;
         libport::startThread(boost::bind(&netdetail::runIoService, io));
+      }
     }
     return *io;
   }
