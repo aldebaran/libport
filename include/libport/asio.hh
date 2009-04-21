@@ -195,6 +195,15 @@ namespace libport
    * is responsible for calling the work or poll methods of the io_service.
    */
   boost::asio::io_service& get_io_service(bool startWorkerThread = true);
+
+  typedef boost::shared_ptr<boost::asio::deadline_timer> AsyncCallHandler;
+  /** Call \b callback() in \b usDelay microseconds.
+   *  If the method cancel() of the returned timer object is invoked before
+   *  expiration of the delay, the call is aborted and callback() is not
+   *  called.
+   */
+  AsyncCallHandler
+  asyncCall(boost::function0<void> callback, utime_t usDelay);
 }
 
 # include "libport/asio.hxx"

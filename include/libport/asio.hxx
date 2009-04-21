@@ -877,4 +877,25 @@ namespace netdetail {
   {
     // Nothing
   }
+  namespace netdetail
+  {
+    inline void
+    timer_trigger(boost::shared_ptr<boost::asio::deadline_timer>,
+                       boost::function0<void> callback,
+                       boost::system::error_code erc)
+    {
+      if (!erc)
+        callback();
+    }
+  }
+
+  inline AsyncCallHandler
+  asyncCall(boost::function0<void> callback, utime_t usDelay)
+  {
+    AsyncCallHandler
+    res(new boost::asio::deadline_timer(get_io_service()));
+    res->expires_from_now(boost::posix_time::microseconds(usDelay));
+    res->async_wait(boost::bind(&netdetail::timer_trigger, res, callback, _1));
+    return res;
+  }
 }
