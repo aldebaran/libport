@@ -66,6 +66,7 @@ libport_include_HEADERS +=			\
   include/libport/finally.hh			\
   include/libport/finally.hxx			\
   include/libport/foreach.hh			\
+  include/libport/format.hh			\
   include/libport/fwd.hh			\
   include/libport/hash.hh			\
   include/libport/indent.hh			\
@@ -143,6 +144,10 @@ libport_include_HEADERS +=			\
   include/libport/weak-ptr.hh			\
   include/libport/weak-ptr.hxx			\
   include/libport/windows.hh
+
+%.hh: %.hh.py
+	$< > $@.tmp
+	mv $@.tmp $@
 
 ## ---------- ##
 ## config.h.  ##
