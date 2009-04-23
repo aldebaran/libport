@@ -14,7 +14,10 @@
 /// \brief A shortcut for \a BOOST_FOREACH.
 ///
 /// Not to be confused with libport::for_each.
+// No redefinition if already defined by other libraries.
+#ifndef foreach
 # define foreach BOOST_FOREACH
+#endif
 
 /// \def rforeach(VarDec, Sequence)
 /// \brief Same as foreach, but in reversed order.
