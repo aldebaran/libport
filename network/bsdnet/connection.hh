@@ -35,7 +35,7 @@ public:
    * @param clientinfo a pointer to the informations about the client connected
    * NOTE : the LinuxConnection stole the property of the struct hostent and
    * is thus responsible for its deletion, and the declaration of its allocation*/
-  Connection(int connfd);
+  Connection(int connfd, const std::string& remote_ip);
   virtual ~Connection();
   virtual void close();
 
@@ -75,11 +75,18 @@ public:
     return send_queue_empty() ? -1 : fd;
   }
 
+  std::string getRemoteIP() const
+  {
+    return remote_ip_;
+  }
+
 protected:
   //! Overloading this function is required by UConnection
   virtual size_t effective_send(const char* buffer, size_t length);
   //! The file descriptor of the connection
   int fd;
+  //! IP address of the remote host.
+  std::string remote_ip_;
   //! The reception buffer
   char read_buff[PACKETSIZE];
 

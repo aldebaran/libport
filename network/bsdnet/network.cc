@@ -193,12 +193,13 @@ namespace Network
     sockaddr_in client;
     socklen_t asize = sizeof (sockaddr_in);
     int cfd = accept(fd, (sockaddr*) &client, &asize);
+    std::string remote_ip = inet_ntoa(client.sin_addr);
     if (cfd == -1)
     {
       perror ("cannot accept");
       return;
     }
-    Connection* c = new Connection(cfd);
+    Connection* c = new Connection(cfd, remote_ip);
     kernel::urbiserver->connection_add(c);
     registerNetworkPipe(c);
   }

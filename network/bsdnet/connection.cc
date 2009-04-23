@@ -12,9 +12,10 @@
  The global variable ::linuxserver saves the need to pass a UServer parameter
  to the LinuxConnection constructor.
  */
-Connection::Connection(int fd)
+Connection::Connection(int fd, const std::string& remote_ip)
   : UConnection(*kernel::urbiserver, Connection::PACKETSIZE)
   , fd(fd)
+  , remote_ip_(remote_ip)
 {
   // Test the error from UConnection constructor.
   if (uerror_ != USUCCESS)
