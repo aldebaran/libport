@@ -145,6 +145,8 @@ libport_include_HEADERS +=			\
   include/libport/weak-ptr.hxx			\
   include/libport/windows.hh
 
+# format.hh: format.hh.py.
+EXTRA_DIST += include/libport/format.hh.py
 %.hh: %.hh.py
 	$< > $@.tmp
 	mv $@.tmp $@
