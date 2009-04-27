@@ -2,9 +2,12 @@
 # define LIBPORT_UTIME_HH
 
 # include <libport/export.hh>
+
 namespace libport
 {
+  /// Microseconds.
   typedef long long utime_t;
+
   /// Return elapsed time from an arbitrary basis in microseconds.
   LIBPORT_API utime_t utime();
 }
