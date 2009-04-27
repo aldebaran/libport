@@ -138,6 +138,7 @@ libport_include_HEADERS +=			\
   include/libport/unit-test.hh			\
   include/libport/ulong-fixed-point.hh		\
   include/libport/utime.hh			\
+  include/libport/utime.hxx			\
   include/libport/version.hh			\
   include/libport/warning-push.hh		\
   include/libport/warning-pop.hh		\
