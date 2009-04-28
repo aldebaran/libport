@@ -2,6 +2,7 @@
 # define LIBPORT_UTIME_HH
 
 # include <libport/export.hh>
+# include <libport/sys/time.h>
 
 namespace libport
 {
