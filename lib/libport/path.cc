@@ -135,19 +135,12 @@ namespace libport
   std::string
   path::to_string() const
   {
-    std::string res;
-    if (absolute_)
-    {
-#ifdef WIN32
-      if (!volume_.empty())
-	res = volume_ + separator_;
-      else
-#endif
-	res = separator_;
-    }
-    else if (path_.empty())
+    if (!absolute_ && path_.empty())
       return ".";
 
+    std::string res = WIN32_IF(volume_, "");
+    if (absolute_)
+      res += separator_;
     bool tail = false;
     foreach (const std::string& dir, path_)
     {
@@ -165,10 +158,9 @@ namespace libport
   }
 
   std::ostream&
-  path::dump(std::ostream& ostr) const
+  path::dump(std::ostream& o) const
   {
-    ostr << operator std::string();
-    return ostr;
+    return o << operator std::string();
   }
 
   void

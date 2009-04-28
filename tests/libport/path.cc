@@ -74,6 +74,12 @@ void equal(const path& lhs, const path& rhs)
   BOOST_CHECK_EQUAL(lhs, rhs);
 }
 
+void to_string(const path& in, const std::string& out)
+{
+  BOOST_CHECK_EQUAL(in.to_string(), out);
+}
+
+
 test_suite*
 init_test_suite()
 {
@@ -92,6 +98,24 @@ init_test_suite()
   def("C:\\Documents and Settings", "C:", true);
   def("c:", "c:", true);
   def("\\\\shared_volume\\subdir", "\\\\shared_volume", true);
+#endif
+#undef def
+
+  // Test printing.
+  test_suite* to_string_suite = BOOST_TEST_SUITE("to_string");
+  suite->add(to_string_suite);
+# define def(In)                                      \
+  ctor_suite->add(BOOST_TEST_CASE(bind(to_string, In, In)));
+#ifdef WIN32
+  def("C:\\Documents and Settings");
+  def("c:");
+  def("\\\\shared_volume\\subdir");
+#else
+  def(".");
+  def("/");
+  def("urbi.u");
+  def("foo/bar.cc");
+  def("/usr/local");
 #endif
 #undef def
 
