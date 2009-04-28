@@ -80,6 +80,7 @@ namespace Network
   bool
   TCPServerPipe::init(int p, const std::string& addr)
   {
+    passert(p, 0 <= p);
     port = p;
 #if defined WIN32
     // Initialize the socket API, even on Mingw.  See
@@ -133,10 +134,10 @@ namespace Network
     else
     {
       //attempt name resolution
-      hostent* hp = gethostbyname (addr.c_str());
+      hostent* hp = gethostbyname(addr.c_str());
       if (!hp) //assume IP address in case of failure
 	// FIXME: Check that inet_addr did not return INADDR_NONE.
-	address.sin_addr.s_addr = inet_addr (addr.c_str());
+	address.sin_addr.s_addr = inet_addr(addr.c_str());
       else
       {
 	/* hp->h_addr is now a char* such as the IP is:
@@ -151,7 +152,7 @@ namespace Network
 	 * sizeof (int) is not necessarily 4 and also because the result
 	 * depends on the endianness of the host.
 	 */
-	memcpy (&address.sin_addr, hp->h_addr, hp->h_length);
+	memcpy(&address.sin_addr, hp->h_addr, hp->h_length);
       }
     }
 
@@ -230,7 +231,7 @@ namespace Network
   int
   createTCPServer(const std::string& address, int port)
   {
-    passert(port, 0 < port);
+    passert(port, 0 <= port);
     TCPServerPipe* tsp = new TCPServerPipe();
     if (!tsp->init(port, address))
     {
