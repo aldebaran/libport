@@ -5,6 +5,7 @@
 #   error network/bsdnet/network.hh must be loaded before kernel/userver.hh.
 # endif
 
+# include <libport/assert.hh>
 # include <libport/config.h>
 # include <libport/network.h>
 # include <libport/utime.hh>
@@ -47,6 +48,9 @@ namespace Network
 
   /// Create a tcp server, binding on specified address/port, return local port.
   URBI_SDK_API int createTCPServer(int port=0, std::string address = "");
+
+  /// Create a tcp server, binding on specified address/port, return local port.
+  URBI_SDK_API int createTCPServer(const std::string& address, int port);
 
   /// Perform the select with a delay of usedDelay microseconds.
   /// \returns  whether at least one action was performed

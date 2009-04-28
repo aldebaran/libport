@@ -224,12 +224,13 @@ namespace Network
   std::ostream&
   operator<< (std::ostream& o, const Pipe& p)
   {
-    return p.dump (o);
+    return p.dump(o);
   }
 
   int
-  createTCPServer(int port, std::string address)
+  createTCPServer(const std::string& address, int port)
   {
+    passert(port, 0 < port);
     TCPServerPipe* tsp = new TCPServerPipe();
     if (!tsp->init(port, address))
     {
@@ -237,6 +238,12 @@ namespace Network
       return 0;
     }
     return tsp->getLocalPort();
+  }
+
+  int
+  createTCPServer(int port, std::string address)
+  {
+    return createTCPServer(address, port);
   }
 
 #if !defined WIN32
