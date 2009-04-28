@@ -52,7 +52,7 @@ namespace libport
   inline bool
   path::absolute_get() const
   {
-    return this->absolute_;
+    return absolute_;
   }
 }
 

@@ -32,21 +32,25 @@ namespace libport
   }
 
   void
-  path::test_absolute(std::string& p)
+  path::init(std::string p)
   {
+    if (p.empty())
+      throw invalid_path("Path can't be empty.");
+
+    // Compute volume_ and absolute_.
 #if defined WIN32
     // Under Win32, absolute paths start with a letter followed by
     // ":\". If the trailing slash is missing, this is a relative
     // path.
-    if (p.length() >= 2
+    if (2 <= p.length()
 	&& isalpha(p[0]) && p[1] == ':')
     {
       volume_ = p.substr(0, 2);
       absolute_ = p.length() >= 3 && p[2] == '\\';
-      p = absolute_ ? p.erase(0, 3) : p.erase(0, 2);
+      p.erase(0, absolute_ ? 3 : 2);
     }
     // Network share, such as "\\shared volume\foo\bar"
-    else if (p.length() >= 3
+    else if (3 <= p.length()
 	     && p[0] == '\\' && p[1] == '\\')
     {
       absolute_ = true;
@@ -65,40 +69,24 @@ namespace libport
     // Fallback to Unix cases for subsystems such as cygwin
     else
 #endif // WIN32
-    if ((p.length() > 0) && (p[0] == '/'))
+    if (!p.empty() && p[0] == '/')
     {
       absolute_ = true;
       p = p.erase(0, 0);
     }
     else
       absolute_ = false;
-  }
 
-  void
-  path::init(std::string p)
-  {
-    static std::string sep =
-#ifdef WIN32
-      "/\\";
-#else
-      "/";
-#endif // WIN32
-
-    if (p.empty())
-      throw invalid_path("Path can't be empty.");
-
-    test_absolute(p);
 
     // Cut directories on / and \.
-
-    for (std::string::size_type pos = p.find_first_of(sep);
+    for (std::string::size_type pos = p.find_first_of(separator_);
 	 pos != std::string::npos;
-	 pos = p.find_first_of(sep))
+	 pos = p.find_first_of(separator_))
     {
-      this->append_dir(p.substr(0, pos));
+      append_dir(p.substr(0, pos));
       p.erase(0, pos + 1);
     }
-    this->append_dir(p);
+    append_dir(p);
   }
 
   path&
@@ -126,7 +114,7 @@ namespace libport
     for (path_type::const_iterator dir = rhs.path_.begin();
 	 dir != rhs.path_.end();
 	 ++dir)
-      this->append_dir(*dir);
+      append_dir(*dir);
 
     return *this;
   }
@@ -147,22 +135,14 @@ namespace libport
   path::to_string() const
   {
     std::string path_str;
-    char separator = separator_;
-
     if (absolute_)
     {
 #ifdef WIN32
       if (!volume_.empty())
-      {
 	path_str = volume_ + "\\" + path_str;
-	separator = '\\';
-      }
       else
 #endif
-      {
 	path_str = "/" + path_str;
-	separator = '/';
-      }
     }
     else if (path_.empty())
       return ".";
@@ -175,7 +155,7 @@ namespace libport
       if (first)
 	first = false;
       else
-	path_str += separator;
+	path_str += separator_;
       path_str += *dir;
     }
 
@@ -191,7 +171,7 @@ namespace libport
   std::ostream&
   path::dump(std::ostream& ostr) const
   {
-    ostr << this->operator std::string();
+    ostr << operator std::string();
     return ostr;
   }
 

@@ -92,13 +92,10 @@ namespace libport
     /// Init object with path \a p.
     void init(std::string p);
 
-    /// Test whether the given path is absolute and set attributes adequately.
-    void test_absolute(std::string& p);
-
     /// Represented path.
     path_type path_;
 
-    /// "absolute" flag.
+    /// Whether an absolute path.
     bool absolute_;
 
 #ifdef WIN32
