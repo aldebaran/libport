@@ -472,8 +472,8 @@ namespace libport
     OptionValue
       host("address to connect to",    "host",    'H'),
       port("port to connect to",       "port",    'P'),
-      host_l("address to listen on",   "host",    'H'),
-      port_l("port to listen on",      "port",    'P');
+      host_l("address to listen to",   "host",    'H'),
+      port_l("port to listen to, 0 for automatic selection", "port",  'P');
 
     OptionValues
       files("load file",     "file",    'f');
