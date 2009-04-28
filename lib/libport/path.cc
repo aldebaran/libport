@@ -10,9 +10,10 @@
 #include <sys/types.h>
 #include <cctype>
 
-#include <libport/detect-win32.h>
 #include <libport/contract.hh>
+#include <libport/detect-win32.h>
 #include <libport/finally.hh>
+#include <libport/foreach.hh>
 #include <libport/path.hh>
 
 // Implementation detail: if path_ is empty and absolute_ is false,
@@ -134,32 +135,27 @@ namespace libport
   std::string
   path::to_string() const
   {
-    std::string path_str;
+    std::string res;
     if (absolute_)
     {
 #ifdef WIN32
       if (!volume_.empty())
-	path_str = volume_ + "\\" + path_str;
+	res = volume_ + separator_;
       else
 #endif
-	path_str = "/" + path_str;
+	res = separator_;
     }
     else if (path_.empty())
       return ".";
 
-    bool first = true;
-    for (path_type::const_iterator dir = path_.begin();
-	 dir != path_.end();
-	 ++dir)
+    bool tail = false;
+    foreach (const std::string& dir, path_)
     {
-      if (first)
-	first = false;
-      else
-	path_str += separator_;
-      path_str += *dir;
+      if (tail++)
+	res += separator_;
+      res += dir;
     }
-
-    return path_str;
+    return res;
   }
 
   bool
