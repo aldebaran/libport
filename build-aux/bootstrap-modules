@@ -10,39 +10,52 @@
 #   files in the module directory
 #
 
->modules.mk
->modules.ac
+: >modules.mk
+: >modules.ac
 
+me=$(basename $0)
 buildauxdir=$(dirname $0)
 
-log()
+stderr ()
 {
-  echo "$@"
+  local i
+  for i
+  do
+    echo >&2 "$me: $i"
+  done
 }
 
-# Look for directories containing a module.ac
-for moduledir in $(find * -type d); do
-  acfile=$moduledir/local.ac
+# Look for local.ac files.
+acfiles=$(find * -name local.ac)
+stderr "acfiles: " $acfiles
+for acfile in $acfiles
+do
+  moduledir=$(dirname $acfile)
   modulename=$(basename $moduledir)
   modulenormname=$(echo $modulename | tr '-' '_')
   modulenormdir=$(echo $moduledir | tr '-' '_')
-  if ! test -f $acfile; then continue; fi
 
-  # Check if this is a full or a skeleton module.ac
+  # Check if this is a full or a skeleton local.ac.
   if grep -q URBI_MODULE $acfile; then
-    log "Appending $acfile"
+    stderr "Appending $acfile"
     echo "m4_include($acfile)" >> modules.ac
   else
-    log "Generating and appending $acfile.auto"
-    echo "URBI_MODULE([$modulenormname], [" > $acfile.auto
-    cat $acfile >> $acfile.auto
-    echo "])" >> $acfile.auto
+    stderr "Generating and appending $acfile.auto"
+    {
+      echo "URBI_MODULE([$modulenormname],"
+      echo "["
+      cat $acfile
+      echo "])"
+    }>$acfile.auto
     echo "m4_include($acfile.auto)" >> modules.ac
   fi
 
   # Generate local.mk if it is not there
-  if ! test -f "$moduledir/local.mk"; then
-    log "Generating and appending $moduledir/local.mk.auto"
+  if test -f "$moduledir/local.mk"; then
+    stderr "Appending $moduledir/local.mk"
+    echo "include $moduledir/local.mk" >> modules.mk
+  else
+    stderr "Generating and appending $moduledir/local.mk.auto"
     modulesources=$(find "$moduledir" \
 	-name '*.cc'      \
 	-or -name '*.cpp' \
@@ -57,8 +70,5 @@ for moduledir in $(find * -type d); do
 	-e  "s!@MODULESOURCES@!$modulesources!g" \
       "$buildauxdir/module.mk.skel" > "$moduledir/local.mk.auto"
     echo "include $moduledir/local.mk.auto" >> modules.mk
-  else
-    log "Appending $moduledir/local.mk"
-    echo "include $moduledir/local.mk" >> modules.mk
   fi
 done
