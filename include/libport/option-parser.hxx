@@ -6,6 +6,7 @@
 namespace libport
 {
   template <typename T>
+  inline
   T OptionValue::get(const boost::optional<T>& def) const
   {
     if (!filled_)
@@ -17,10 +18,20 @@ namespace libport
   }
 
   template <typename T>
+  inline
   T OptionValue::get() const
   {
     return get(boost::optional<T>());
   }
+
+  inline
+  std::ostream&
+  operator<<(std::ostream& o, const OptionParser& p)
+  {
+    p.options_doc(o);
+    return o;
+  }
+
 }
 
 #endif

@@ -431,7 +431,7 @@ namespace libport
   }
 
   void
-  OptionParser::usage(std::ostream& output)
+  OptionParser::usage(std::ostream& output) const
   {
     output << program_name();
     foreach (Option* opt, options_)
@@ -439,13 +439,13 @@ namespace libport
   }
 
   void
-  OptionParser::options_doc(std::ostream& output)
+  OptionParser::options_doc(std::ostream& output) const
   {
     MarkupOStream stream(output);
 
     stream << table;
-    std::vector<Option*>::iterator it = options_.begin();
-    foreach (std::string& str, doc_)
+    std::vector<Option*>::const_iterator it = options_.begin();
+    foreach (const std::string& str, doc_)
     {
       stream << row;
       if (str.empty())

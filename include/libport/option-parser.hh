@@ -14,9 +14,9 @@ namespace libport
   typedef cli_args_type args_type;
 
 
-  /*------.
-  | Error |
-  `------*/
+  /*--------.
+  | Error.  |
+  `--------*/
 
   class LIBPORT_API Error: public std::exception
   {
@@ -33,9 +33,9 @@ namespace libport
   };
 
 
-  /*-------.
-  | Option |
-  `-------*/
+  /*---------.
+  | Option.  |
+  `---------*/
 
   class LIBPORT_API Option
   {
@@ -58,9 +58,9 @@ namespace libport
   };
 
 
-  /*------------.
-  | OptionNamed |
-  `------------*/
+  /*--------------.
+  | OptionNamed.  |
+  `--------------*/
 
   class LIBPORT_API OptionNamed: public Option
   {
@@ -77,9 +77,9 @@ namespace libport
     char name_short_;
   };
 
-  /*-----------.
-  | OptionFlag |
-  `-----------*/
+  /*-------------.
+  | OptionFlag.  |
+  `-------------*/
 
   class LIBPORT_API OptionFlag: public OptionNamed
   {
@@ -99,9 +99,9 @@ namespace libport
     bool value_;
   };
 
-  /*-------------.
-  | OptionValued |
-  `-------------*/
+  /*---------------.
+  | OptionValued.  |
+  `---------------*/
 
   class LIBPORT_API OptionValued: public OptionNamed
   {
@@ -125,9 +125,9 @@ namespace libport
     std::string formal_;
   };
 
-  /*------------.
-  | OptionValue |
-  `------------*/
+  /*--------------.
+  | OptionValue.  |
+  `--------------*/
 
   class LIBPORT_API OptionValue: public OptionValued
   {
@@ -171,9 +171,9 @@ namespace libport
   };
 
 
-  /*-------------.
-  | OptionValues |
-  `-------------*/
+  /*---------------.
+  | OptionValues.  |
+  `---------------*/
 
   class LIBPORT_API OptionValues: public OptionValued
   {
@@ -191,9 +191,9 @@ namespace libport
     values_type values_;
   };
 
-  /*-----------.
-  | OptionsEnd |
-  `-----------*/
+  /*-------------.
+  | OptionsEnd.  |
+  `-------------*/
 
   class LIBPORT_API OptionsEnd: public Option
   {
@@ -211,9 +211,9 @@ namespace libport
   };
 
 
-  /*-------------.
-  | OptionParser |
-  `-------------*/
+  /*---------------.
+  | OptionParser.  |
+  `---------------*/
 
   class LIBPORT_API OptionParser
   {
@@ -221,14 +221,21 @@ namespace libport
     cli_args_type operator () (const cli_args_type& args);
     OptionParser& operator << (Option& opt);
     OptionParser& operator << (const std::string& doc);
-    void usage(std::ostream& ouput);
-    void options_doc(std::ostream& ouput);
+    void usage(std::ostream& ouput) const;
+    void options_doc(std::ostream& ouput) const;
 
   private:
     std::vector<Option*> options_;
     std::vector<std::string> doc_;
     Error::errors_type errors_;
   };
+
+  /// Bounce to options_doc.
+  std::ostream& operator<<(std::ostream& o, const OptionParser& p);
+
+  /*---------------------.
+  | Predefined options.  |
+  `---------------------*/
 
   namespace opts
   {
