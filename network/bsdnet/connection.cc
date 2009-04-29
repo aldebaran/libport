@@ -5,6 +5,9 @@
 #include <network/bsdnet/connection.hh>
 
 #include <kernel/userver.hh>
+#include <object/cxx-conversions.hh>
+#include <object/lobby.hh>
+#include <object/symbols.hh>
 
 //! LinuxConnection constructor.
 /*! The constructor calls UConnection::UConnection with the appropriate
@@ -22,6 +25,7 @@ Connection::Connection(int fd, const std::string& remote_ip)
     close();
   else
     initialize();
+  lobby_->slot_set(SYMBOL(remoteIP), object::to_urbi(remote_ip_));
 }
 
 //! Connection destructor.
