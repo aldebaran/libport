@@ -111,6 +111,12 @@ namespace sched
     children_.push_back(child);
   }
 
+  static bool
+  job_compare(rJob lhs, rJob rhs)
+  {
+    return lhs == rhs;
+  }
+
   void
   Job::yield_until_terminated(Job& other)
   {
@@ -133,7 +139,7 @@ namespace sched
 	// We have been awoken by an exception; in this case,
 	// dequeue ourselves from the other thread queue if
 	// we are still enqueued there.
-	libport::erase_if(other.to_wake_up_, boost::lambda::_1 == this);
+	libport::erase_if(other.to_wake_up_, boost::bind(job_compare, this, _1));
 	throw;
       }
     }

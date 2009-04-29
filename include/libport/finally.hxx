@@ -49,11 +49,17 @@ namespace libport
     return *this;
   }
 
+  template <typename T>
+  static void set(T* what, const T& value)
+  {
+    *what = value;
+  }
+
   template<typename T>
   inline
   Finally::action_type restore(T& v)
   {
-    return boost::lambda::var(v) = v;
+    return boost::bind(set<T>, &v, v);
   }
 
   template<typename T>

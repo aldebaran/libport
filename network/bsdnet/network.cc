@@ -364,7 +364,11 @@ namespace Network
     pList->push_back(p);
 #if !defined WIN32
     if (controlPipe[0] == -1)
-      pipe(controlPipe);
+      if (pipe(controlPipe))
+      {
+        perror("network");
+        std::abort();
+      }
     p->controlFd = controlPipe[1];
 #endif
   }

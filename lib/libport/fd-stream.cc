@@ -61,6 +61,7 @@ namespace libport
 
   void FdBuf::write(char* buffer, size_t size)
   {
-    ::write(fd_write_, buffer, size);
+    int res = ::write(fd_write_, buffer, size);
+    (void)res;
   }
 }
