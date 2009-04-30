@@ -2,6 +2,7 @@
 # define LIBPORT_XLTDL_HH
 
 # include <libltdl/ltdl.h>
+# include <libport/file-library.hh>
 
 namespace libport
 {
@@ -17,13 +18,22 @@ namespace libport
 
     /// Exit status on dlopen failures.
     xlt_dladvise& exit_failure(int s);
+    const file_library& path() const;
+    file_library& path();
     xlt_dladvise& verbose(bool verbose);
 
+    /// Looks in the path_ if defined.
+    /// Always passes an absolute path to ltdl, so that its
+    /// own search path is never used.
     lt_dlhandle xdlopen(const std::string& s) const;
 
   private:
+    /// Does not use the search path.  Can return 0.
+    lt_dlhandle dlopen_(const std::string& s) const;
+
     lt_dladvise advise_;
     int exit_failure_;
+    file_library path_;
     bool verbose_;
   };
 

@@ -1,4 +1,5 @@
 #include <boost/static_assert.hpp>
+#include <libport/path.hxx>
 
 namespace libport
 {
@@ -19,6 +20,7 @@ namespace libport
   inline
   xlt_dladvise::xlt_dladvise()
     : exit_failure_(1)
+    , path_()
     , verbose_(false)
   {
     if (lt_dladvise_init(&advise_))
@@ -44,11 +46,33 @@ namespace libport
 
   inline
   xlt_dladvise::xlt_dladvise&
+  xlt_dladvise::exit_failure(int s)
+  {
+    exit_failure_ = s;
+    return *this;
+  }
+
+  inline
+  xlt_dladvise::xlt_dladvise&
   xlt_dladvise::ext()
   {
     if (lt_dladvise_ext(&advise_))
       LIBPORT_XLTDL_ERROR(1, "failed to set dladvise to ext");
     return *this;
+  }
+
+  inline
+  const file_library&
+  xlt_dladvise::path() const
+  {
+    return path_;
+  }
+
+  inline
+  file_library&
+  xlt_dladvise::path()
+  {
+    return path_;
   }
 
   inline
@@ -60,11 +84,10 @@ namespace libport
   }
 
   inline
-  xlt_dladvise::xlt_dladvise&
-  xlt_dladvise::exit_failure(int s)
+  lt_dlhandle
+  xlt_dladvise::dlopen_(const std::string& s) const
   {
-    exit_failure_ = s;
-    return *this;
+    return lt_dlopenadvise(s.c_str(), advise_);
   }
 
   inline
@@ -73,7 +96,22 @@ namespace libport
   {
     if (verbose_)
       LIBPORT_XLTDL_MESSAGE("loading " << s);
-    lt_dlhandle res = lt_dlopenadvise(s.c_str(), advise_);
+    // We cannot simply use search_file in file_library, because we
+    // don't know the extension of the file we are looking for (*.la,
+    // *.so, *.dyld etc.).  That's an implementation detail that ltdl
+    // saves us from.
+    lt_dlhandle res = 0;
+    if (libport::path(s).absolute_get())
+      res = dlopen_(s);
+    else
+      foreach (const libport::path& p, path_.search_path_get())
+        if ((res = dlopen_(p / s)))
+        {
+          if (verbose_)
+            LIBPORT_XLTDL_MESSAGE("found " << s << " in " << p);
+          break;
+        }
+
     if (!res)
       LIBPORT_XLTDL_ERROR(exit_failure_, "failed to load " << s);
     return res;
