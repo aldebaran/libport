@@ -5,12 +5,12 @@ namespace libport
 
 # define LIBPORT_XLTDL_MESSAGE(Message)         \
   std::cerr << program_name()                   \
-            << ": " << Message << std::endl
+            << ": " << Message                  \
+            << std::endl
 
-# define LIBPORT_XLTDL_ERROR(Status, Message)           \
-  LIBPORT_XLTDL_MESSAGE(Message                         \
-                        << ": " << lt_dlerror()         \
-                        << libport::exit(Status))
+# define LIBPORT_XLTDL_ERROR(Status, Message)                   \
+  LIBPORT_XLTDL_MESSAGE(Message << ": " << lt_dlerror())        \
+  << libport::exit(Status)
 
   /*---------------.
   | xlt_dladvise.  |
