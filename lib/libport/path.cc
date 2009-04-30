@@ -55,11 +55,11 @@ namespace libport
 	     && p[0] == '\\' && p[1] == '\\')
     {
       absolute_ = true;
-      std::string::size_type pos = p.find("\\", 3);
+      std::string::size_type pos = p.find('\\', 3);
       if (pos == std::string::npos)
       {
 	volume_ = p;
-	p = "";
+	p.clear();
       }
       else
       {
@@ -168,7 +168,7 @@ namespace libport
   {
     precondition(dir.find(separator_) == std::string::npos);
 
-    if (dir != "" && dir != ".")
+    if (!dir.empty() && dir != ".")
     {
       // The following does not work properly with symlinks.  One
       // cannot expect that removing "foo/../" inside a valid path
