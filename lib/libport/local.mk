@@ -47,7 +47,8 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/unique-pointer.cc			\
   lib/libport/unistd.cc				\
   lib/libport/utime.cc				\
-  lib/libport/version.cc
+  lib/libport/version.cc			\
+  lib/libport/xltdl.cc
 
 # These are broken and someone will have to fix them...
 # libport_sources += 				\

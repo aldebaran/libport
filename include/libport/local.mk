@@ -144,7 +144,9 @@ libport_include_HEADERS +=			\
   include/libport/warning-pop.hh		\
   include/libport/weak-ptr.hh			\
   include/libport/weak-ptr.hxx			\
-  include/libport/windows.hh
+  include/libport/windows.hh			\
+  include/libport/xltdl.hh			\
+  include/libport/xltdl.hxx
 
 # format.hh: format.hh.py.
 EXTRA_DIST += include/libport/format.hh.py
