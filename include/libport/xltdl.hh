@@ -1,5 +1,5 @@
-#ifndef LIBPORT_XLTDL_HXX
-# define LIBPORT_XLTDL_HXX
+#ifndef LIBPORT_XLTDL_HH
+# define LIBPORT_XLTDL_HH
 
 # include <libltdl/ltdl.h>
 
@@ -42,4 +42,4 @@ namespace libport
 
 # include <libport/xltdl.hxx>
 
-#endif // ! LIBPORT_XLTDL_HXX
+#endif // ! LIBPORT_XLTDL_HH
