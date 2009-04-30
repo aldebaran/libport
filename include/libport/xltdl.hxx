@@ -1,3 +1,5 @@
+#include <boost/static_assert.hpp>
+
 namespace libport
 {
 
@@ -104,11 +106,11 @@ namespace libport
     if (!res)
       LIBPORT_XLTDL_ERROR(1, "failed to dlsym " << s);
     // GCC 3.4.6 on x86_64 at least requires that we go through a
-    // scalar type. It doesn't support casting a void* into a
-    // function pointer directly. Later GCC versions do not have
-    // this problem. We use a BOOST_STATIC_ASSERT at the top of
-    // the file to ensure that "void*" and "unsigned long" have
-    // the same size.
+    // scalar type. It doesn't support casting a void* into a function
+    // pointer directly. Later GCC versions do not have this
+    // problem. We use a BOOST_STATIC_ASSERT to ensure that "void*"
+    // and "unsigned long" have the same size.
+    BOOST_STATIC_ASSERT(sizeof(unsigned long) == sizeof(void*));
     return reinterpret_cast<T>(reinterpret_cast<unsigned long>(res));
   }
 
