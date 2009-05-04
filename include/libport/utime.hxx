@@ -1,3 +1,6 @@
+#ifndef LIBPORT_UTIME_HXX
+# define LIBPORT_UTIME_HXX
+
 namespace libport
 {
   inline
@@ -10,3 +13,5 @@ namespace libport
     return res;
   }
 }
+
+#endif

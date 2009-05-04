@@ -1,6 +1,8 @@
 #ifndef LIBPORT_UTIME_HH
 # define LIBPORT_UTIME_HH
 
+# include <sys/time.h>
+
 # include <libport/export.hh>
 # include <libport/sys/time.h>
 
