@@ -4,6 +4,7 @@
 #include <libport/assert.hh>
 #include <libport/containers.hh>
 #include <libport/debug.hh>
+#include <libport/escape.hh>
 #include <libport/ip-semaphore.hh>
 #include <libport/windows.hh>
 #include <libport/unistd.h>
@@ -323,7 +324,9 @@ namespace libport
 
   std::string gd_ihexdump(const unsigned char* data, unsigned size)
   {
-    std::string res;
+    std::stringstream ss;
+    ss << libport::escape(std::string((const char*)data, (size_t)(size)));
+    std::string res = "\"" + ss.str() + "\" ";
     bool first = true;
     for (unsigned i = 0; i < size; ++i)
     {
