@@ -168,7 +168,7 @@ namespace libport
   LIBPORT_API extern boost::function0<Debug*> make_debugger;
   LIBPORT_API Debug* debugger();
 
-  std::string gd_ihexdump(const unsigned char* data, unsigned size);
+  LIBPORT_API std::string gd_ihexdump(const unsigned char* data, unsigned size);
 
 
   class StreamWrapper
