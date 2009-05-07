@@ -3,9 +3,11 @@
 
 namespace libport
 {
+
+  template <typename Unit>
   inline
   utime_t
-  seconds_to_utime(unsigned long seconds)
+  seconds_to_utime(Unit seconds)
   {
     return seconds * 1000 * 1000;
   }

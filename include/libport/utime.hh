@@ -5,6 +5,7 @@
 
 # include <libport/export.hh>
 # include <libport/sys/time.h>
+# include <libport/ufloat.hh>
 
 namespace libport
 {
@@ -12,7 +13,8 @@ namespace libport
   typedef long long utime_t;
 
   /// Convert from seconds to utime_t.
-  utime_t seconds_to_utime(unsigned long seconds);
+  template <typename Unit>
+  utime_t seconds_to_utime(Unit seconds);
 
   /// From timeval to utime.
   utime_t timeval_to_utime(const timeval& t);
