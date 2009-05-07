@@ -38,12 +38,10 @@ namespace libport
   utime_t
   utime()
   {
-    struct timeval tv;
+    timeval tv;
     gettimeofday(&tv, 0);
-    static long start_s = tv.tv_sec;
-    static long start_us = tv.tv_usec;
-    utime_t res = (tv.tv_sec - start_s) * 1000000LL + (tv.tv_usec - start_us);
-    return res;
+    static timeval t0 = tv;
+    return timeval_to_utime(tv - t0);
   }
 }
 
