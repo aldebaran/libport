@@ -19,6 +19,7 @@
 # include <libport/cstdio> // libport::strerror.
 
 # include <libport/compiler.hh>
+# include <libport/format.hh>
 
 # ifdef _MSC_VER
 #  include <crtdbg.h>
@@ -54,7 +55,6 @@ namespace libport
          << #Subject << " = " << Subject)
 
 # endif // LIBPORT_ASSERT_VERBOSE
-
 
 
 /*-------------------------.
@@ -113,5 +113,26 @@ namespace libport
 #  define assert_exp(Obj)		\
   libport::assert_exp_(Obj, __FILE__, __LINE__ , #Obj)
 # endif // LIBPORT_ASSERT_VERBOSE
+
+
+/*-------------------------------------------------------------.
+| assert_comp -- compare two values, show both of them if fail |
+`-------------------------------------------------------------*/
+
+# if ! LIBPORT_ASSERT_VERBOSE
+#  define assert_eq
+#  define assert_ne
+# else
+#  define assert_op(Op, A, B)                                           \
+  if (!(A Op B))                                                        \
+    pabort(::libport::format(#A " " #Op " " #B " (%s " #Op " %s)", A, B)) \
+
+#  define assert_eq(A, B) assert_op(==, A, B)
+#  define assert_ne(A, B) assert_op(!=, A, B)
+#  define assert_lt(A, B) assert_op(< , A, B)
+#  define assert_le(A, B) assert_op(<=, A, B)
+#  define assert_gt(A, B) assert_op(> , A, B)
+#  define assert_ge(A, B) assert_op(>=, A, B)
+# endif
 
 #endif // !LIBPORT_ASSERT_HH
