@@ -1,6 +1,6 @@
 ##
 ## FindDocbookXsl.cmake: This file is part of cmake-aux.
-## Copyright (C) Gostai S.A.S., 2008.
+## Copyright (C) 2008, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the

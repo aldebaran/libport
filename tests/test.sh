@@ -1,6 +1,6 @@
 #! /bin/sh
 # Basic test script.
-# Copyright (C) Gostai S.A.S., 2006.
+# Copyright (C) 2006, Gostai S.A.S.
 # 
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
