@@ -79,6 +79,11 @@ move_if_change = $(build_aux_dir)/move-if-change
 ## The following uses GNU Make.
 AUTOMAKE_OPTIONS += -Wno-portability
 
+
+## ---------- ##
+## ls_files.  ##
+## ---------- ##
+
 # ls_files_in_dir DIR GLOBBING-PATTERNS
 # -------------------------------------
 # The files in DIR that match the GLOBBING-PATTERNS.
@@ -97,6 +102,21 @@ ls_files =					\
   $(call ls_files_in_dir,$(srcdir),$(1))
 
 EXTRA_DIST += $(build_aux_dir)/ls-files
+
+
+
+
+# make_path REPLACEMENT-PATTERN, DIR...
+# -------------------------------------
+# Apply REPLACEMENT-PATTERN to each DIR, and join the result with colons.
+# For instance:
+# (call make_path,foo/%/bar,a b c)
+#  => foo/a/bar:foo/b/bar:foo/c/bar
+build_aux_empty :=
+build_aux_space := $(build_aux_empty) $(build_aux_empty)
+make_path =					\
+  $(subst $(build_aux_space),:,$(patsubst %,$(1),$(2)))
+
 
 
 # Sometimes it is really convenient to see the output of the
