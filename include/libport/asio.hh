@@ -41,7 +41,7 @@ namespace libport
     /// Alias on close() for API compatibility.
     inline void disconnect() {close();}
     /// Return if the socket is connected to a remote host.
-    virtual bool isConnected() = 0;
+    virtual bool isConnected() const = 0;
     /// Disconnect the socket from the remote host, calls onError.
     virtual void close() = 0;
     /// Get port of remote endpoint
@@ -114,11 +114,11 @@ namespace libport
     inline void send(void* addr, size_t len) {write((const void*)addr, len);}
     inline void send(const std::string& s) {write(s.c_str(), s.length());}
     inline void close() {if (base_) base_->close();}
-    inline unsigned short getRemotePort() { return base_->getRemotePort();}
-    inline std::string getRemoteHost() {return base_->getRemoteHost();}
-    inline unsigned short getLocalPort() { return base_->getLocalPort();}
-    inline std::string getLocalHost() {return base_->getLocalHost();}
-    inline bool isConnected() {return base_?base_->isConnected():false;}
+    inline unsigned short getRemotePort() const { return base_->getRemotePort();}
+    inline std::string getRemoteHost() const {return base_->getRemoteHost();}
+    inline unsigned short getLocalPort() const { return base_->getLocalPort();}
+    inline std::string getLocalHost() const {return base_->getLocalHost();}
+    inline bool isConnected() const {return base_?base_->isConnected():false;}
 
     /** Connect to a remote host.
      * \param host hostname to connect to.

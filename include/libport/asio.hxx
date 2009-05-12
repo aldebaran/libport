@@ -66,7 +66,7 @@ namespace netdetail {
     std::string getRemoteHost() const;
     unsigned short getLocalPort() const;
     std::string getLocalHost() const;
-    bool isConnected();
+    bool isConnected() const;
     template<typename Acceptor, typename BaseFactory> static void
     onAccept(boost::system::error_code erc, Stream* s, SocketFactory fact,
              Acceptor *a, BaseFactory bf);
@@ -101,7 +101,7 @@ namespace netdetail {
     AcceptorImpl(Acceptor* base);
     ~AcceptorImpl();
     void write(const void*, unsigned int) ACCEPTOR_FAIL
-      bool isConnected() {return false;}
+    bool isConnected() const {return false;}
     void close();
     unsigned short getRemotePort() const ACCEPTOR_FAIL
       std::string getRemoteHost() const ACCEPTOR_FAIL
@@ -290,7 +290,7 @@ namespace netdetail {
   }
 
   template<typename Stream> bool
-  SocketImpl<Stream>::isConnected()
+  SocketImpl<Stream>::isConnected() const
   {
     return base_->lowest_layer().is_open();
   }
