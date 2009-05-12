@@ -124,6 +124,21 @@ namespace libport
   // anyway the template definition is there too).
   //
   // So I could not find something to please both.
+
+  // Also used in libport/ufloat.cc.
+# define UFLOAT_CASTS                           \
+                                                \
+  UFLOAT_CAST(char);                            \
+  UFLOAT_CAST(unsigned char);                   \
+  UFLOAT_CAST(short);                           \
+  UFLOAT_CAST(unsigned short);                  \
+  UFLOAT_CAST(int);                             \
+  UFLOAT_CAST(unsigned int);                    \
+  UFLOAT_CAST(long);                            \
+  UFLOAT_CAST(unsigned long);                   \
+  UFLOAT_CAST(long long);                       \
+  UFLOAT_CAST(unsigned long long);
+
 # ifdef _MSC_VER
 
   /// Convert a libport::ufloat to T. Raise
@@ -132,28 +147,24 @@ namespace libport
   template <typename T>
   T numeric_cast(ufloat v) throw (bad_numeric_cast);
 
-#  define CAST(Type)                                             \
+#  define UFLOAT_CAST(Type)                                     \
   template                                                      \
   Type                                                          \
   LIBPORT_API                                                   \
   numeric_cast<Type>(ufloat v) throw (bad_numeric_cast);
 
-  CAST(int);
-  CAST(unsigned int);
-  CAST(long);
-  CAST(unsigned long);
-  CAST(long long);
-  CAST(unsigned long long);
+  // Declare the casts.
+  UFLOAT_CASTS
 
-#  undef CAST
+#  undef UFLOAT_CAST
 
 # else // ! _MSC_VER
 
   /// Convert a libport::ufloat to T. Raise
   /// libport::bad_numeric_cast if the provided argument is not
   /// directly convertible to a T.
-  template <typename T>                                         \
-  LIBPORT_API                                                   \
+  template <typename T>
+  LIBPORT_API
   T numeric_cast(ufloat v) throw (bad_numeric_cast);
 
 # endif

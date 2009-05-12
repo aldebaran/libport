@@ -158,18 +158,14 @@ namespace libport
     }
   }
 
-# define CAST(Type)                                             \
+# define UFLOAT_CAST(Type)                                      \
   template                                                      \
   Type                                                          \
   numeric_cast<Type>(ufloat v) throw (bad_numeric_cast);
 
-  CAST(int);
-  CAST(unsigned int);
-  CAST(long);
-  CAST(unsigned long);
-  CAST(long long);
-  CAST(unsigned long long);
+  // Instantiate.
+  UFLOAT_CASTS
 
-#undef CAST
+#undef UFLOAT_CAST
 
 } // namespace libport

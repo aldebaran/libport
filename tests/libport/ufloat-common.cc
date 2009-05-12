@@ -72,11 +72,18 @@ init_test_suite()
   //
   // unknown location(0): fatal error in "test_signed_range<int>":
   // memory access violation
-  suite->add(BOOST_TEST_CASE(&test_signed_range<int>));
+#define CHECK(Type)                                     \
+  suite->add(BOOST_TEST_CASE(&test_signed_range<int>)); \
   suite->add(BOOST_TEST_CASE(&test_max<int>));
 
-  suite->add(BOOST_TEST_CASE(&test_unsigned_range<unsigned int>));
-  suite->add(BOOST_TEST_CASE(&test_max<unsigned int>));
+  CHECK(char);
+  CHECK(unsigned char);
+  CHECK(short);
+  CHECK(unsigned short);
+  CHECK(int);
+  CHECK(unsigned int);
+
+#undef CHECK
 
   suite->add(BOOST_TEST_CASE(&test_signed_range<long>));
 
