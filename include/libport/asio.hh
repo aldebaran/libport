@@ -45,13 +45,13 @@ namespace libport
     /// Disconnect the socket from the remote host, calls onError.
     virtual void close() = 0;
     /// Get port of remote endpoint
-    virtual unsigned short getRemotePort() = 0;
+    virtual unsigned short getRemotePort() const = 0;
     /// Get IP address of remote endpoint
-    virtual std::string getRemoteHost() = 0;
+    virtual std::string getRemoteHost() const = 0;
     /// Get port of local endpoint
-    virtual unsigned short getLocalPort() = 0;
+    virtual unsigned short getLocalPort() const = 0;
     /// Get IP address of local endpoint
-    virtual std::string getLocalHost() = 0;
+    virtual std::string getLocalHost() const = 0;
     virtual int stealFD() = 0;
     virtual int getFD() = 0;
     /// Callback function called each time new data is available.

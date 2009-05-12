@@ -62,10 +62,10 @@ namespace netdetail {
       }
     void write(const void* data, unsigned int length);
     void close();
-    unsigned short getRemotePort();
-    std::string getRemoteHost();
-    unsigned short getLocalPort();
-    std::string getLocalHost();
+    unsigned short getRemotePort() const;
+    std::string getRemoteHost() const;
+    unsigned short getLocalPort() const;
+    std::string getLocalHost() const;
     bool isConnected();
     template<typename Acceptor, typename BaseFactory> static void
     onAccept(boost::system::error_code erc, Stream* s, SocketFactory fact,
@@ -103,10 +103,10 @@ namespace netdetail {
     void write(const void*, unsigned int) ACCEPTOR_FAIL
       bool isConnected() {return false;}
     void close();
-    unsigned short getRemotePort() ACCEPTOR_FAIL
-      std::string getRemoteHost() ACCEPTOR_FAIL
-      unsigned short getLocalPort();
-    std::string getLocalHost();
+    unsigned short getRemotePort() const ACCEPTOR_FAIL
+      std::string getRemoteHost() const ACCEPTOR_FAIL
+      unsigned short getLocalPort() const;
+    std::string getLocalHost() const;
     int stealFD() {return -1;}
     int getFD();
   private:
@@ -137,12 +137,12 @@ namespace netdetail {
     base_ = 0;
   }
   template<class Acceptor> unsigned short
-  AcceptorImpl<Acceptor>::getLocalPort()
+  AcceptorImpl<Acceptor>::getLocalPort() const
   {
     return base_->local_endpoint().port();
   }
   template<class Acceptor> std::string
-  AcceptorImpl<Acceptor>::getLocalHost()
+  AcceptorImpl<Acceptor>::getLocalHost() const
   {
     return base_->local_endpoint().address().to_string();
   }
@@ -266,25 +266,25 @@ namespace netdetail {
   }
 
   template<typename Stream> unsigned short
-  SocketImpl<Stream>::getRemotePort()
+  SocketImpl<Stream>::getRemotePort() const
   {
     return base_->lowest_layer().remote_endpoint().port();
   }
 
   template<typename Stream> std::string
-  SocketImpl<Stream>::getRemoteHost()
+  SocketImpl<Stream>::getRemoteHost() const
   {
     return base_->lowest_layer().remote_endpoint().address().to_string();
   }
 
   template<typename Stream> unsigned short
-  SocketImpl<Stream>::getLocalPort()
+  SocketImpl<Stream>::getLocalPort() const
   {
     return base_->lowest_layer().local_endpoint().port();
   }
 
   template<typename Stream> std::string
-  SocketImpl<Stream>::getLocalHost()
+  SocketImpl<Stream>::getLocalHost() const
   {
     return base_->lowest_layer().local_endpoint().address().to_string();
   }
