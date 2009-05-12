@@ -115,6 +115,26 @@ namespace libport
 
 #endif
 
+/*------------------.
+| cast exceptions.  |
+`------------------*/
+
+  const char *bad_numeric_cast::what() const throw()
+  {
+    return "bad numeric conversion: overflow";
+  }
+
+  const char *negative_overflow::what() const throw()
+  {
+    return "bad numeric conversion: negative overflow";
+  }
+
+  const char *positive_overflow::what() const throw()
+  {
+    return "bad numeric conversion: positive overflow";
+  }
+
+
 /*-------------------.
 | ufloat converter.  |
 `-------------------*/
@@ -152,10 +172,15 @@ namespace libport
 
       return converter(val);
     }
-    catch (boost::numeric::bad_numeric_cast&)
-    {
-      throw bad_numeric_cast();
+#define RETHROW(Name)                           \
+    catch (boost::numeric::Name&)               \
+    {                                           \
+      throw Name();                             \
     }
+    RETHROW(negative_overflow)
+    RETHROW(positive_overflow)
+    RETHROW(bad_numeric_cast)
+#undef RETHROW
   }
 
 # define UFLOAT_CAST(Type)                                      \

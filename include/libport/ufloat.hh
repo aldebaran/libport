@@ -9,6 +9,7 @@
 
 # include <cfloat>
 # include <exception>
+# include <typeinfo> // bad_cast
 
 /*-----------------.
 | Ufloat support.  |
@@ -106,10 +107,30 @@ namespace libport
 }
 # endif /* !LIBPORT_HAVE_TRUNC */
 
-/* Float to int converter.  */
+
+/*---------------------.
+| Float to int casts.  |
+`---------------------*/
+
 namespace libport
 {
-  struct LIBPORT_API bad_numeric_cast : public std::exception {};
+  class LIBPORT_API bad_numeric_cast : public std::bad_cast
+  {
+  public:
+    virtual const char *what() const throw();
+  };
+
+  class LIBPORT_API negative_overflow : public bad_numeric_cast
+  {
+  public:
+    virtual const char *what() const throw();
+  };
+
+  class LIBPORT_API positive_overflow : public bad_numeric_cast
+  {
+  public:
+    virtual const char *what() const throw();
+  };
 
   // numeric_cast must be hidden in the library as it uses Boost.
   //
