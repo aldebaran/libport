@@ -7,6 +7,7 @@
 
 
 # include <iostream>
+# include <boost/version.hpp>
 # include <boost/asio.hpp>
 #ifndef LIBPORT_NO_SSL
 # include <boost/asio/ssl.hpp>
@@ -16,6 +17,10 @@
 # include <libport/destructible.hh>
 # include <libport/finally.hh>
 # include <libport/utime.hh>
+
+# if BOOST_VERSION >= 103600
+#  include <libport/rs232.hh>
+# endif
 
 namespace libport
 {
@@ -134,6 +139,13 @@ namespace libport
                                       const std::string& port,
                                       bool udp=false, utime_t usTimeout = 0,
                                       bool asynchronous = false);
+
+# if BOOST_VERSION >= 103600
+
+    boost::system::error_code open_serial(const std::string& device,
+                                          unsigned int rate);
+
+# endif
 
     /** Make an asynchronous connection attempt to a remote host.
      *  This API garantees that either the onConnect() or the onError() function

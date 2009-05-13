@@ -3,7 +3,6 @@
 #include <boost/system/error_code.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/construct.hpp>
-#include <boost/version.hpp>
 
 // #define LIBPORT_ECHO(S) std::cerr << __FILE__ ":" <<  __LINE__ << ": " #S ": " << S << std::endl
 
@@ -813,6 +812,26 @@ namespace libport
         &netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
   }
 
+# if BOOST_VERSION >= 103600
+
+  inline boost::system::error_code
+  Socket::open_serial(const std::string& device,
+                      unsigned int rate)
+  {
+    boost::system::error_code erc;
+
+    Rs232 sp(libport::get_io_service());
+    sp.open(device, erc);
+    sp.set_option(boost::asio::serial_port::baud_rate(rate), erc);
+    typedef libport::netdetail::SocketImpl<Rs232> SerBase;
+    SerBase* sb = (SerBase*)SerBase::create(&sp);
+    this->setBase(sb);
+    sb->startReader();
+
+    return erc;
+  }
+
+# endif
 
   template<typename Proto, typename BaseFactory>
   boost::system::error_code
