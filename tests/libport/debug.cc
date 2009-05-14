@@ -12,6 +12,8 @@ check ()
 {
   GD_CATEGORY(TEST);
 
+  GD_FILTER_LOG();
+
   BOOST_CHECK_EQUAL(GD_CURRENT_LEVEL(), libport::Debug::levels::log);
 
   GD_FILTER_DEC();
