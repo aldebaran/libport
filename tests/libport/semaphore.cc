@@ -26,15 +26,13 @@ void* thread1(void* data)
 
 void check_timeout()
 {
-  pthread_t th;
   libport::Semaphore sem(1);
-  libport::utime_t t1, t2;
-
   sem--;
-  t1 = libport::utime();
+  libport::utime_t t1 = libport::utime();
+  pthread_t th;
   pthread_create(&th, 0, &thread1, &sem);
   BOOST_CHECK_EQUAL(sem.uget(1000000), false);
-  t2 = libport::utime() - t1;
+  libport::utime_t t2 = libport::utime() - t1;
   BOOST_CHECK(t2 < 1500000);
   pthread_join(th, NULL);
   sem++;
