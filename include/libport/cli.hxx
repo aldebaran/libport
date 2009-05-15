@@ -70,7 +70,7 @@ namespace libport
   file_contents_get(const std::string& s)
   {
     std::ifstream i(s.c_str());
-    if (i.bad())
+    if (i.fail())
       std::cerr << program_name() << ": cannot open `"
                 << s << "' for reading: " << strerror(errno) << std::endl
                 << libport::exit(EX_NOINPUT);
@@ -78,7 +78,7 @@ namespace libport
     // or later is available, by initializing res with "initialized_value".
     boost::value_initialized<T> res;
     i >> boost::get(res);
-    if (i.bad())
+    if (i.fail())
       std::cerr << program_name() << ": cannot read expected contents from `"
                 << s << "': " << strerror(errno) << std::endl
                 << libport::exit(EX_DATAERR);
