@@ -16,6 +16,10 @@
 /* Os-thread implementation of coroutines, using semaphores to ensure
    that only one coroutine is running at the same time.  */
 
+/// FIXME: Needed to make bearclaw's code compile. Don't ask.
+Coro* coro_current_;
+Coro* coro_main_;
+
 Coro::Coro()
   : started_(false)
   , die_(false)
@@ -72,14 +76,35 @@ coroutine_start(Coro* self, Coro* other,
 #endif
   other->started_ = true;
   self->sem_--;
-  coro_curent_ = self;
+  coro_current_ = self;
 }
+
+#ifndef __APPLE__
+static std::pair<void*, size_t>
+get_stack()
+{
+  void* stack = 0;
+  size_t size = 0;
+  pthread_attr_t attr;
+  if (pthread_attr_init(&attr))
+    errabort("pthread_attr_init");
+  if (pthread_attr_getstack(&attr, &stack, &size))
+    errabort("pthread_attr_getstackaddr");
+  if (pthread_attr_destroy(&attr))
+    errabort("pthread_attr_destroy");
+  return std::make_pair(stack, size);
+}
+#endif
 
 void*
 coroutine_stack_addr(Coro*)
 {
+#ifdef __APPLE__
   // Undocumented, but works on OS X 10.5.
   return pthread_get_stackaddr_np(pthread_self());
+#else
+  return get_stack().first;
+#endif
 }
 
 void
@@ -107,8 +132,12 @@ coroutine_current_stack_pointer(Coro*)
 size_t
 coroutine_stack_size(Coro*)
 {
+#ifdef __APPLE__
   // Undocumented, but works on OS X 10.5.
   return pthread_get_stacksize_np(pthread_self());
+#else
+  return get_stack().second;
+#endif
 }
 
 void

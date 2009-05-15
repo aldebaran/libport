@@ -16,9 +16,13 @@
 #include <sched/export.hh>
 #include <sched/coroutine.hh>
 
-SCHED_API void coroutine_force_hook_linkage()
-{
-}
+// First prototype the function to avoid "no previous definition" warning.
+// Obviously, don't make it static either!
+SCHED_API void coroutine_force_hook_linkage();
+
+void
+coroutine_force_hook_linkage()
+{}
 
 #if defined __arm__
 #include <features.h>
