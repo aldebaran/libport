@@ -4,6 +4,8 @@
 # include <cassert>
 # include <cstddef> // size_t
 
+# include <boost/noncopyable.hpp>
+
 # ifdef __APPLE__
 #  include <string>
 # endif
@@ -36,7 +38,7 @@ namespace libport
 {
   class Condition;
 
-  class LIBPORT_API Semaphore
+  class LIBPORT_API Semaphore: public boost::noncopyable
   {
   public:
     Semaphore(unsigned cnt = 0);
