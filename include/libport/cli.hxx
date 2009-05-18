@@ -2,13 +2,12 @@
 #include <cerrno>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/utility/value_init.hpp>
 
 #include <libport/cli.hh>
-#include <libport/sysexits.hh>
-#include <libport/program-name.hh>
 
 namespace libport
 {
@@ -71,24 +70,19 @@ namespace libport
   {
     std::ifstream i(s.c_str());
     if (i.fail())
-      std::cerr << program_name() << ": cannot open `"
-                << s << "' for reading: " << strerror(errno) << std::endl
-                << libport::exit(EX_NOINPUT);
+      throw(std::runtime_error("cannot open `" + s + "' for reading: "
+                               + strerror(errno)));
     // FIXME: The call to boost::get() below can be omitted when Boost 1.36.0
     // or later is available, by initializing res with "initialized_value".
     boost::value_initialized<T> res;
     i >> boost::get(res);
     if (i.fail())
-      std::cerr << program_name() << ": cannot read expected contents from `"
-                << s << "': " << strerror(errno) << std::endl
-                << libport::exit(EX_DATAERR);
-
+      throw(std::runtime_error("cannot read expected contents from `"
+                               + s + "': " + strerror(errno)));
 #if 0
     // I don't know how to skip the spaces easily, so don't do that.
     if (!i.eof())
-      std::cerr << program_name << ": garbage after contents in `"
-                << s << "'" << std::endl
-                << libport::exit(1);
+      throw(std::runtime_error("garbage after contents in `" + s + "'"));
 #endif
     return res;
   }

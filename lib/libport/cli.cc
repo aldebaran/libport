@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include <libport/cli.hh>
-#include <libport/sysexits.hh>
 #include <libport/program-name.hh>
 
 namespace libport
@@ -10,18 +9,15 @@ namespace libport
   void
   usage_error(const std::string& opt, const std::string& err)
   {
-    std::cerr
-      << program_name() << ": " << opt << ": " << err
-      << std::endl
-      << "Try `" << program_name() << " --help' for more information."
-      << std::endl
-      << libport::exit (EX_USAGE);
+    throw(std::runtime_error
+          (opt + ": " + err + "\n"
+           + "Try `" + program_name() + " --help' for more information."));
   }
 
   void
   required_argument(const std::string& opt)
   {
-    usage_error (opt, "requires an argument");
+    usage_error(opt, "requires an argument");
   }
 
   void
