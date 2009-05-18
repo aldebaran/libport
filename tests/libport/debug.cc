@@ -28,6 +28,8 @@ check ()
   BOOST_CHECK_EQUAL(GD_CURRENT_LEVEL(), libport::Debug::levels::dump);
 
   BOOST_CHECK(GD_SHOW_DUMP());
+
+  BOOST_CHECK_NO_THROW(GD_QUIT());
 }
 
 test_suite*

@@ -29,6 +29,9 @@ namespace libport
     LIBPORT_API int add_category(const std::string& name);
     LIBPORT_API int enable_category(const std::string& name);
     LIBPORT_API int disable_category(const std::string& name);
+
+    /// Reclaim the allocated memory.
+    LIBPORT_API void clear();
     bool test_category(const std::string& name);
   }
 
@@ -190,6 +193,7 @@ namespace libport
   };
 
   extern boost::function0<Debug*> make_debugger;
+
 }
 
 
@@ -200,14 +204,14 @@ namespace libport
 
 #  define GD_DEBUGGER libport::debugger()
 
-#  define GD_FORMAT_ELEM(R, Data, Elem) % Elem  \
+#  define GD_FORMAT_ELEM(R, Data, Elem) % Elem
 
 #  define GD_FORMAT(Msg, Seq)                           \
   str(boost::format(Msg)                                \
-      BOOST_PP_SEQ_FOR_EACH(GD_FORMAT_ELEM, , Seq))     \
+      BOOST_PP_SEQ_FOR_EACH(GD_FORMAT_ELEM, , Seq))
 
-#  define GD_STREAM(Msg)                                                \
-  (libport::StreamWrapper() << Msg).str()                                \
+#  define GD_STREAM(Msg)                        \
+  (libport::StreamWrapper() << Msg).str()
 
 #  define GD_FUNCTION __FUNCTION__
 
@@ -388,22 +392,22 @@ namespace libport
   if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::none)             \
     GD_DEBUGGER->filter(                                                \
       (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() - 1));       \
-      } while (0)
+  } while (0)
 
 #  define GD_SHOW_LEVEL(Lvl)				\
   (GD_CURRENT_LEVEL() >= Lvl)                           \
 
-#  define GD_SHOW_LOG()					\
-  GD_SHOW_LEVEL(::libport::Debug::levels::log)		\
+#  define GD_SHOW_LOG()                         \
+  GD_SHOW_LEVEL(::libport::Debug::levels::log)
 
-#  define GD_SHOW_TRACE()					\
-  GD_SHOW_LEVEL(::libport::Debug::levels::trace)		\
+#  define GD_SHOW_TRACE()                               \
+  GD_SHOW_LEVEL(::libport::Debug::levels::trace)
 
-#  define GD_SHOW_DEBUG()					\
-  GD_SHOW_LEVEL(::libport::Debug::levels::debug)		\
+#  define GD_SHOW_DEBUG()                               \
+  GD_SHOW_LEVEL(::libport::Debug::levels::debug)
 
-#  define GD_SHOW_DUMP()                                \
-  GD_SHOW_LEVEL(::libport::Debug::levels::dump)		\
+#  define GD_SHOW_DUMP()                        \
+  GD_SHOW_LEVEL(::libport::Debug::levels::dump)
 
 /*-------------.
 | Assertions.  |
@@ -413,14 +417,15 @@ namespace libport
   libport::Debug::abort(Msg)
 
 #  define GD_FABORT(Msg, Seq)                   \
-  GD_ABORT(GD_FORMAT(Msg, Seq))                 \
+  GD_ABORT(GD_FORMAT(Msg, Seq))
 
 #  define GD_UNREACHABLE()                      \
-  GD_ABORT("Unreachable code reached")          \
+  GD_ABORT("Unreachable code reached")
 
 #  define GD_IHEXDUMP(Data, Size)                       \
   libport::gd_ihexdump                                  \
   (reinterpret_cast<const unsigned char*>(Data), Size)
+
 
 /*------------.
 | Configure.  |
@@ -431,9 +436,13 @@ namespace libport
   { make_debugger = (_libport_mkdebug_); return 42; }                   \
   static int _libport_debug_initialized_ = _libport_initdebug_();       \
 
+// Must be called before any use.
+#  define GD_INIT()                             \
+  GD_INIT_CONSOLE()
 
-#  define GD_INIT()                               \
-  GD_INIT_CONSOLE()                               \
+// Should be called before quitting to reclaim memory.
+#  define GD_QUIT()                             \
+  ::libport::debug::clear()
 
 #  define GD_INIT_CONSOLE()                                             \
   namespace libport                                                     \
@@ -448,7 +457,6 @@ namespace libport
   {                                                                     \
     static Debug* _libport_mkdebug_()                                   \
     { return new SyslogDebug(#Program); }                               \
-    make_debugger = (_libport_mkdebug_);                                \
     GD__INIT_;                                                          \
   }                                                                     \
 
@@ -520,6 +528,7 @@ namespace libport
 #  define GD_UNREACHABLE()
 #  define GD_IHEXDUMP(Data, Size)
 #  define GD_INIT()
+#  define GD_QUIT()
 #  define GD_INIT_CONSOLE()
 #  define GD_ADD_CATEGORY(Name)
 #  define GD_ENABLE(Name)

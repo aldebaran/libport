@@ -5,6 +5,7 @@
 #include <libport/containers.hh>
 #include <libport/debug.hh>
 #include <libport/escape.hh>
+#include <libport/foreach.hh>
 #include <libport/ip-semaphore.hh>
 #include <libport/windows.hh>
 #include <libport/unistd.h>
@@ -414,9 +415,32 @@ namespace libport
 
   boost::function0<Debug*> make_debugger;
 
+  typedef std::map<pthread_t, Debug*> map_type;
+  // Do not make it an actual object, as it is sometimes used on
+  // dtors, and the order to destruction is not specified.  Using a
+  // dynamically allocated object protects us from this.
+  static map_type* pdebuggers = new map_type;
+
+  namespace debug
+  {
+    void clear()
+    {
+#if FIXME
+      typedef std::pair<pthread_t, Debug*> entry;
+      foreach (entry p, *pdebuggers)
+      {
+        delete p.second;
+        p.second = 0;
+      }
+#endif
+      delete pdebuggers;
+      pdebuggers = 0;
+    }
+  }
+
   Debug* debugger()
   {
-    static std::map<pthread_t, Debug*> debuggers;
+    map_type& debuggers = *pdebuggers;
     pthread_t id = pthread_self();
     if (!libport::mhas(debuggers, id))
     {
