@@ -113,6 +113,8 @@ getopt ()
             (--no-recursive)  recurse=false;;
             (*) error 64 "invalid argument: $1";;
         esac
+        test $# -gt 0 ||
+          error 64 "not enough arguments"
         shift
     done
 }
