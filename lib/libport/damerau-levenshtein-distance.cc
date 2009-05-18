@@ -16,15 +16,17 @@ namespace libport
   size_t
   damerau_levenshtein_distance(const std::string& s1, const std::string& s2)
   {
-    boost::multi_array<size_t, 2> d(boost::extents[s1.size()+1][s2.size()+1]);
+    size_t ss1 = s1.size();
+    size_t ss2 = s2.size();
+    boost::multi_array<size_t, 2> d(boost::extents[ss1+1][ss2+1]);
 
-    for (size_t i = 0; i <= s1.size(); ++i)
+    for (size_t i = 0; i <= ss1; ++i)
       d[i][0] = i;
-    for (size_t j = 1; j <= s2.size(); ++j)
+    for (size_t j = 1; j <= ss2; ++j)
       d[0][j] = j;
 
-    for (size_t i = 1; i <= s1.size(); ++i)
-      for (size_t j = 1; j <= s2.size(); ++j)
+    for (size_t i = 1; i <= ss1; ++i)
+      for (size_t j = 1; j <= ss2; ++j)
       {
 	size_t cost = s1[i-1] == s2[j-1] ? 0 : 1;
 	d[i][j] = min(d[i-1][j] + 1,        // Deletion
@@ -34,7 +36,7 @@ namespace libport
 	  d[i][j] = min(d[i][j],
                         d[i-2][j-2] + cost); // Transposition
       }
-    return d[s1.size()][s2.size()];
+    return d[ss1][ss2];
   }
 }
 
