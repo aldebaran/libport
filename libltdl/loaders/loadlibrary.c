@@ -176,6 +176,7 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
     UINT errormode = SetErrorMode(SEM_FAILCRITICALERRORS);
     SetErrorMode(errormode | SEM_FAILCRITICALERRORS);
 
+    LT_LOG1 (2, "LoadLibrary (%s)\n", wpath);
     module = LoadLibrary (wpath);
 
 #if LT_DEBUG_LOADERS

@@ -1,6 +1,6 @@
 # Generated from ltmain.m4sh.
 
-# libtool (GNU libtool 1.3071 2009-01-29) 2.2.7a
+# libtool (GNU libtool 1.3095 2009-05-05) 2.2.7a
 # Written by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006,
@@ -70,7 +70,7 @@
 #         compiler:		$LTCC
 #         compiler flags:		$LTCFLAGS
 #         linker:		$LD (gnu? $with_gnu_ld)
-#         $progname:	(GNU libtool 1.3071 2009-01-29) 2.2.7a
+#         $progname:	(GNU libtool 1.3095 2009-05-05) 2.2.7a
 #         automake:	$automake_version
 #         autoconf:	$autoconf_version
 #
@@ -79,8 +79,8 @@
 PROGRAM=libtool
 PACKAGE=libtool
 VERSION=2.2.7a
-TIMESTAMP=" 1.3071 2009-01-29"
-package_revision=1.3071
+TIMESTAMP=" 1.3095 2009-05-05"
+package_revision=1.3095
 
 # Be Bourne compatible
 if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
@@ -519,7 +519,7 @@ func_version ()
 {
     $SED -n '/(C)/!b go
 	:more
-	/\./! {
+	/\./!{
 	  N
 	  s/\n# //
 	  b more
@@ -1772,7 +1772,7 @@ func_mode_execute ()
     for file
     do
       case $file in
-      -*) ;;
+      -* | *.la | *.lo ) ;;
       *)
 	# Do a test to see if this is really a libtool program.
 	if func_ltwrapper_script_p "$file"; then
@@ -1928,6 +1928,10 @@ func_mode_install ()
     func_quote_for_eval "$arg"
     install_prog="$install_prog$func_quote_for_eval_result"
     install_shared_prog=$install_prog
+    case " $install_prog " in
+      *[\\\ /]cp\ *) install_cp=: ;;
+      *) install_cp=false ;;
+    esac
 
     # We need to accept at least all the BSD install flags.
     dest=
@@ -1950,10 +1954,9 @@ func_mode_install ()
       case $arg in
       -d) isdir=yes ;;
       -f)
-	case " $install_prog " in
-	*[\\\ /]cp\ *) ;;
-	*) prev=$arg ;;
-	esac
+	if $install_cp; then :; else
+	  prev=$arg
+	fi
 	;;
       -g | -m | -o)
 	prev=$arg
@@ -1995,8 +1998,10 @@ func_mode_install ()
       func_fatal_help "the \`$prev' option requires an argument"
 
     if test -n "$install_override_mode" && $no_mode; then
-      func_quote_for_eval "$install_override_mode"
-      install_shared_prog="$install_shared_prog -m $func_quote_for_eval_result"
+      if $install_cp; then :; else
+	func_quote_for_eval "$install_override_mode"
+	install_shared_prog="$install_shared_prog -m $func_quote_for_eval_result"
+      fi
     fi
 
     if test -z "$files"; then
@@ -4953,8 +4958,9 @@ func_mode_link ()
       # -F/path gives path to uninstalled frameworks, gcc on darwin
       # -p, -pg, --coverage, -fprofile-* pass through profiling flag for GCC
       # @file GCC response files
+      # -tp=* Portland pgcc target processor selection
       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
-      -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*)
+      -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*)
         func_quote_for_eval "$arg"
 	arg="$func_quote_for_eval_result"
         func_append compile_command " $arg"
@@ -6083,6 +6089,7 @@ func_mode_link ()
 	  if test "$link_all_deplibs" != no; then
 	    # Add the search paths of all dependency libraries
 	    for deplib in $dependency_libs; do
+	      path=
 	      case $deplib in
 	      -L*) path="$deplib" ;;
 	      *.la)
@@ -7381,17 +7388,19 @@ EOF
 		  # command to the queue.
 		  if test "$k" -eq 1 ; then
 		    # The first file doesn't have a previous command to add.
-		    eval concat_cmds=\"$reload_cmds $objlist $last_robj\"
+		    reload_objs=$objlist
+		    eval concat_cmds=\"$reload_cmds\"
 		  else
 		    # All subsequent reloadable object files will link in
 		    # the last one created.
-		    eval concat_cmds=\"\$concat_cmds~$reload_cmds $objlist $last_robj~\$RM $last_robj\"
+		    reload_objs="$objlist $last_robj"
+		    eval concat_cmds=\"\$concat_cmds~$reload_cmds~\$RM $last_robj\"
 		  fi
 		  last_robj=$output_objdir/$output_la-${k}.$objext
 		  func_arith $k + 1
 		  k=$func_arith_result
 		  output=$output_objdir/$output_la-${k}.$objext
-		  objlist=$obj
+		  objlist=" $obj"
 		  func_len " $last_robj"
 		  func_arith $len0 + $func_len_result
 		  len=$func_arith_result
@@ -7401,7 +7410,8 @@ EOF
 	      # reloadable object file.  All subsequent reloadable object
 	      # files will link in the last one created.
 	      test -z "$concat_cmds" || concat_cmds=$concat_cmds~
-	      eval concat_cmds=\"\${concat_cmds}$reload_cmds $objlist $last_robj\"
+	      reload_objs="$objlist $last_robj"
+	      eval concat_cmds=\"\${concat_cmds}$reload_cmds\"
 	      if test -n "$last_robj"; then
 	        eval concat_cmds=\"\${concat_cmds}~\$RM $last_robj\"
 	      fi
