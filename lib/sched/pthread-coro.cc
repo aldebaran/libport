@@ -37,10 +37,13 @@ coroutine_free(Coro* c)
   // If the thread has not been created, do nothing, otherwise free it.
   if (c->started_)
   {
+    // First let c's thread terminate naturally
     c->die_ = true;
     c->sem_++;
     if (pthread_join(c->thread_, 0))
       errabort("pthread_join");
+    // Actually free it
+    delete c;
   }
 }
 
@@ -115,10 +118,7 @@ coroutine_switch_to(Coro* self, Coro* next)
   self->sem_--;
   coro_current_ = self;
   if (self->die_)
-  {
-    delete self;
     pthread_exit(0);
-  }
 }
 
 void*
