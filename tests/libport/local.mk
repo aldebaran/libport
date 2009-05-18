@@ -14,7 +14,7 @@ TESTSFLAGS = --log_level=test-suite
 # For some reason, this rule *must* be defined before loading
 # check.mk.
 %.log: %$(EXEEXT)
-        @$(am__check_pre) ./$< $(TESTSFLAGS) $(am__check_post)
+	@$(am__check_pre) ./$< $(TESTSFLAGS) $(am__check_post)
 
 # Program to check:
 TESTS_BINARIES =                                \
