@@ -39,4 +39,3 @@ namespace libport
     return d[ss1][ss2];
   }
 }
-

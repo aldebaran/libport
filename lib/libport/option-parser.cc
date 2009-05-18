@@ -293,13 +293,13 @@ namespace libport
       return def.get();
     }
     return value_;
-  };
+  }
 
   std::string
   OptionValue::value(const char* def) const
   {
     return value(std::string(def));
-  };
+  }
 
 
   /*---------------.
