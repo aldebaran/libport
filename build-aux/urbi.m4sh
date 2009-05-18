@@ -174,7 +174,7 @@ spawn_urbi_server ()
 {
   rm -f server.port
   instrument -o "server.val" -- \
-     $URBI_SERVER $flags --port 0 --port-file server.port "$@"
+     $URBI_SERVER $flags "$@" --port 0 --port-file server.port
   echo "$instrument_result" >server.cmd
   $instrument_result </dev/null >server.out 2>server.err &
   children_register server
