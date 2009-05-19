@@ -45,7 +45,7 @@ urbi_compilation_mode_set ()
         AC_DEFINE([YYDEBUG], [1],
                   [Define to enable parser runtime debug traces.])
         URBI_APPEND_FLAGS([FLEXXXFLAGS], [--debug])
-        URBI_APPEND_FLAGS([BISONFLAGS], [-Dassert -Ddebug])
+        URBI_APPEND_FLAGS([BISONFLAGS], [-Dparse.assert -Dparse.trace])
         # Define USE_VALGRIND only if valgrind/valgrind.h exists.
         AC_CHECK_HEADER([valgrind/valgrind.h],
                         [URBI_APPEND_CPPFLAGS([-DUSE_VALGRIND])])
