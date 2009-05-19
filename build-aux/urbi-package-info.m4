@@ -1,6 +1,6 @@
 #
 # urbi-package-info.m4: This file is part of build-aux.
-# Copyright (C) Gostai S.A.S., 2006-2008.
+# Copyright (C) 2006-2009, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -27,6 +27,14 @@ m4_define([AC_PACKAGE_COPYRIGHT_YEARS], [$2])
 AC_SUBST([PACKAGE_COPYRIGHT_YEARS], ['$2'])
 AC_DEFINE_UNQUOTED([PACKAGE_COPYRIGHT_YEARS], ["$PACKAGE_COPYRIGHT_YEARS"],
 		   [Define to the copyright years of this package.])
+
+m4_define([AC_PACKAGE_COPYRIGHT], [Copyright (C) $2, $1])
+m4_bmatch([$1], [[^!?.]$],
+          [m4_append([AC_PACKAGE_COPYRIGHT], [.])])
+AC_SUBST([PACKAGE_COPYRIGHT], ['m4_defn([AC_PACKAGE_COPYRIGHT])'])
+AC_DEFINE_UNQUOTED([PACKAGE_COPYRIGHT], ["$PACKAGE_COPYRIGHT"],
+		   [Define to the copyright line of this package,
+                    including the period.])
 ])
 
 ## Local Variables:
