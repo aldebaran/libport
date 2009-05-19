@@ -176,7 +176,7 @@ spawn_urbi_server ()
   instrument -o "server.val" -- \
      $URBI_SERVER $flags "$@" --port 0 --port-file server.port
   echo "$instrument_result" >server.cmd
-  $instrument_result </dev/null >server.out 2>server.err &
+  eval "$instrument_result </dev/null >server.out 2>server.err &"
   children_register server
 
   # Wait for the port file to be completed: it must have one full line
