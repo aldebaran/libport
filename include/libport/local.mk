@@ -68,7 +68,6 @@ libport_include_HEADERS +=				\
   include/libport/finally.hh				\
   include/libport/finally.hxx				\
   include/libport/foreach.hh				\
-  include/libport/format.hh				\
   include/libport/fwd.hh				\
   include/libport/hash.hh				\
   include/libport/indent.hh				\
@@ -152,17 +151,19 @@ libport_include_HEADERS +=				\
   include/libport/xltdl.hh				\
   include/libport/xltdl.hxx
 
+## ----------- ##
+## generated.  ##
+## ----------- ##
+
 # format.hh: format.hh.py.
 EXTRA_DIST += include/libport/format.hh.py
 %.hh: %.hh.py
 	$< > $@.tmp
 	mv $@.tmp $@
 
-## ---------- ##
-## config.h.  ##
-## ---------- ##
 nodist_libport_include_HEADERS =		\
-  include/libport/config.h
+  include/libport/config.h			\
+  include/libport/format.hh
 
 generate_libport_config_h = \
   $(srcdir)/include/libport/generate-libport-config-h
