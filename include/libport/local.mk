@@ -155,16 +155,20 @@ libport_include_HEADERS +=				\
 ## generated.  ##
 ## ----------- ##
 
-# format.hh: format.hh.py.
-EXTRA_DIST += include/libport/format.hh.py
-%.hh: %.hh.py
-	$< > $@.tmp
-	mv $@.tmp $@
-
 nodist_libport_include_HEADERS =		\
   include/libport/config.h			\
   include/libport/format.hh
+CLEANFILES += $(nodist_libport_include_HEADERS)
+BUILT_SOURCES += $(nodist_libport_include_HEADERS)
 
+# format.hh.
+EXTRA_DIST += include/libport/format.hh.py
+%.hh: %.hh.py
+	test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
+	$< >$@.tmp
+	mv $@.tmp $@
+
+# config.h.
 generate_libport_config_h = \
   $(srcdir)/include/libport/generate-libport-config-h
 EXTRA_DIST += $(generate_libport_config_h)
@@ -177,5 +181,3 @@ include/libport/config.h: $(CONFIG_HEADER) $(generate_libport_config_h)
 	$(generate_libport_config_h) $< $@.tmp
 	mv $@.tmp $@
 
-CLEANFILES += $(nodist_libport_include_HEADERS)
-BUILT_SOURCES += $(nodist_libport_include_HEADERS)
