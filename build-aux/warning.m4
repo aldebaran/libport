@@ -67,7 +67,7 @@ AC_CACHE_CHECK([whether _AC_LANG compiler accepts $1],
 	       [ac_Option],
 [ac_save_[]TC_COMPILER_FLAGS_NAME=$TC_COMPILER_FLAGS_NAME
 URBI_APPEND_FLAGS([TC_COMPILER_FLAGS_NAME], [$1])
-ac_Option=no
+AS_VAR_SET([ac_Option], [no])
 AC_COMPILE_STDERR_IFELSE([AC_LANG_PROGRAM],
   [if ($EGREP 'm4_do([ignoring option],
 		     [|ignoring command line option .$1.],
@@ -75,12 +75,12 @@ AC_COMPILE_STDERR_IFELSE([AC_LANG_PROGRAM],
 		     [|option.*$1.*not supported],
 		     [|$1.* is valid for.*but not for])' conftest.err
       ) >/dev/null 2>&1; then :; else
-      ac_Option=yes
+      AS_VAR_SET([ac_Option], [yes])
    fi])
 TC_COMPILER_FLAGS_NAME=$ac_save_[]TC_COMPILER_FLAGS_NAME
 ])
 AS_IF([test AS_VAR_GET(ac_Option) = yes], [$2], [$3])[]dnl
-AS_VAR_PUSHDEF([ac_Option])dnl
+AS_VAR_POPDEF([ac_Option])dnl
 ])# TC_COMPILER_OPTION_IF
 
 
