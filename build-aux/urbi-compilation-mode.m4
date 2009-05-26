@@ -65,11 +65,17 @@ urbi_compilation_mode_set ()
         ;;
 
       (space)
+        AC_SUBST([OPTIMIZE_SPACE], [true])
         AC_DEFINE([OPTIMIZE_SPACE], [1],
                   [Define to 1 to optimize for space.])
-        URBI_APPEND_COMPILERFLAGS([-Os -fomit-frame-pointer \
-                                   -fdata-sections -ffunction-sections])
-        URBI_APPEND_FLAGS([LDFLAGS], [--gc-sections])
+        local i
+        for i in -Os -fomit-frame-pointer -fdata-sections -ffunction-sections
+        do
+          TC_COMPILER_OPTION_IF([$i],
+                                [URBI_APPEND_COMPILERFLAGS([$i])])
+        done
+        TC_COMPILER_OPTION_IF([--gc-sections],
+                              [URBI_APPEND_FLAGS([LDFLAGS], [--gc-sections])])
         AC_SUBST([YYERROR_VERBOSE], [false])
         urbi_compilation_mode_set final
         ;;
@@ -109,6 +115,9 @@ urbi_compilation_mode_set ()
   done
   AC_DEFINE_UNQUOTED([URBI_KERNEL_STACK_SIZE], [$stacksize],
                      [Default coroutine stack size in kB.])
+
+  # Whether we build for small space.
+  AM_CONDITIONAL([OPTIMIZE_SPACE], [$OPTIMIZE_SPACE])
 }
 
 URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
@@ -132,6 +141,7 @@ URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
           - threads: Implement coroutines with threads.])
 
 AC_SUBST([YYERROR_VERBOSE], [true])
+AC_SUBST([OPTIMIZE_SPACE], [false])
 AC_MSG_CHECKING([for compilation mode])
 urbi_compilation_mode=$(echo $enable_compilation_mode | tr ',' ' ')
 AC_MSG_RESULT([$urbi_compilation_mode])
