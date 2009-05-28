@@ -1,0 +1,461 @@
+#! /usr/bin/perl -w
+
+use strict;
+use diagnostics;
+
+=head1 NAME
+
+studentize - remove code sections to be filled by students
+
+=head1 SYNOPSIS
+
+  studentize I<directory>
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<-h>, B<--help>
+
+Display short help message and exit successfully.
+
+=item B<-m>, B<--man>
+
+Display detailed help message and exit successfully.
+
+=back
+
+=head1 DESCRIPTION
+
+Recurse in the I<directory>, removing sections of code.  There are two
+means to remove some code:
+
+=over 8
+
+=item Explicit removal
+
+Code between
+
+  //<<
+  ...
+  //>>
+
+or
+
+  /*<<*/
+  ...
+  /*>>*/
+
+or
+
+  #<<
+  ...
+  #>>
+
+or
+
+  (*<<*)
+  ...
+  (*>>*)
+
+will be replaced by
+
+  // FIXME: Some code was deleted here.
+
+(or with /*...*/ or #...).
+
+Optionally some comments may be provided:
+
+  //<< Additional comments.
+  ...
+  //>>
+
+yields
+
+  // FIXME: Some code was deleted here (Additional comments).
+
+=item Silent removal
+
+Code between //<<- ... ->>// (or /*<<-*/ ... /*->>*/, or #<<- ...
+#->>, or (*<<- ... ->>*)) is completely removed, leaving no trace.
+
+=item Stage specific removal.
+
+        //<STAGE-NAME< blah blah
+
+          Code
+
+        //>>
+
+which leaves the code included (but removes the mark) if STAGE-NAME is
+passed to --stage, otherwise leaves
+
+        // blah blah.
+
+Of course it means we can accumulate --stage invocations: "studentize
+--stage=ast,type --stage=ref-count" requests leaving the code labeled
+as ast, type or ref-count.
+
+You can provide a configuration (-f your file) file
+containing the list of valid stage names: if --stage receives
+something else, it reports an error.
+
+You can also use silent marks like:
+
+    //<STAGE<- Comment
+      Some Code
+    //->>
+
+    Which have the same behavior as the non silent version when STAGE is
+    passed to --stage, otherwise it leaves a comment but do not counts the
+    lines between marks.
+
+=item Specific removal
+
+Studentize processes all kinds of marks by default (/*<<-*/ and /*->>*/,
+#<< and #>>, etc.).  You can restrict the set of active marks using
+either the options --keep-marks (positive selection) or --skip-marks
+(negative selection), with the set of kept (resp. skipped) marks.
+
+For example, using --keep-marks='(*' on the following snippet
+
+  //<<- This comment will be ignored by studentize (i.e., kept).
+  Foo.
+  //->>
+  (*<<- This comment will be processed by studentize (i.e., removed).  *)
+  Bar.
+  (*->>*)
+
+gives
+
+  //<<- This comment will be ignored by studentize (i.e., kept).
+  Foo.
+  //->>
+
+=back
+
+Warning: this is not handled:
+  Visible  /*<<*/ Hidden /*>>*/ Visible
+
+=cut
+
+use IO::File;
+use File::stat;
+use File::Basename;
+use File::Find;
+use File::Spec;
+use File::Path;
+use Pod::Usage;
+use Getopt::Long;
+
+my $me = basename ($0);
+
+my %lines_suppressed;
+my %chunks_suppressed;
+
+my $valid = 1;
+my $destdir;
+my $ignore_re;
+my $accept_re;
+my $skip_marks_re;
+my $keep_marks_re;
+my %stages = ();
+my %available_stages = ();
+
+my @marks =
+(
+  { in_re => qr/\/\*/,   out_re => qr/\*\//,	in => '/*',  out => ' */' },
+  { in_re => qr/\(\*/,   out_re => qr/\*\)/,	in => '(*',  out => ' *)' },
+  { in_re => qr/\/\//,   out_re => qr/$/,	in => '//',  out => ''   },
+  { in_re => qr/#/,      out_re => qr/$/,	in => '#',   out => ''   },
+  { in_re => qr/dnl/,    out_re => qr/$/,	in => 'dnl', out => ''   },
+);
+
+sub error ($$$) {
+  undef $valid;
+  my ($file, $location, $msg) = @_;
+  print STDERR "$file\:$location\: Error: $msg.$/";
+}
+
+sub studentize ($)
+{
+  my $file = shift;
+  my ($infile, $outfile);
+  my ($IN, $OUT);
+
+  # Number of lines suppressed.
+  my $lines = 0;
+  # Number of chunks suppressed.
+  my $chunks = 0;
+
+  if ($file ne '-')
+    {
+
+      return
+        unless -f $file;
+
+      # Of course studentize itself must not be processed.
+      # A good reason to avoid this is that it contains our special
+      # markups in a random order, which is confusing.
+      # Hence the "..." operators might end scanning studentize without
+      # being properly reset.  This results in most files being just empty...
+      # Similarly for ChangeLog.
+      return
+        if $file =~ /studentize/;
+
+      return
+        if $ignore_re && $file =~ /$ignore_re/;
+
+      return
+        if $accept_re && $file !~ /$accept_re/;
+
+      # Preserve the executable bits.
+      my $mode = (stat ($file))->mode
+        or die;
+
+      ($infile, $outfile) = ($file, $file);
+
+      if ($destdir)
+      {
+        $outfile = File::Spec->catfile ($destdir, $file);
+      }
+      else
+      {
+        $infile .= '.tmp';
+        rename ($file, $infile)
+          or die "$0: cannot rename $file as $infile: $!$/";
+      }
+
+      $IN = new IO::File($infile, '<')
+        or die "$me: Can't open $infile : $!";
+      unless ($OUT = new IO::File($outfile, '>'))
+        {
+          mkpath dirname ($outfile);
+          $OUT = new IO::File($outfile, '>')
+            or die "$me: Can't open $outfile : $!";
+        }
+
+      # Restore preserved executable bits.
+      chmod $mode, $outfile
+        or die;
+    }
+  else
+    {
+      ($infile, $outfile) = ('stdin', 'stdout');
+      ($IN, $OUT) = (\*STDIN, \*STDOUT);
+    }
+
+  my @stack;
+  my $silent = 0;
+
+  LINE: while (<$IN>)
+    {
+      chomp;
+
+      my $top = $stack[-1];
+
+      if ($top && m/$$top{tag}/)
+        {
+	  $silent = $$top{'silent'};
+	  pop @stack;
+	  next LINE;
+        }
+      foreach my $mark (@marks)
+        {
+          next if $skip_marks_re && $mark->{'in'} =~ $skip_marks_re;
+          next if $keep_marks_re && $mark->{'in'} !~ $keep_marks_re;
+	  # Recognize comments such as
+	  #   //<<
+	  # and
+	  #   //<< Used during colorization, in T9.
+	  # but not <<-.
+	  if (m/$$mark{in_re}(<[^<]*<|-?>>)(-)?(.*?)$$mark{out_re}/)
+	    {
+	      my ($current_mark, $silent_, $comment) = ($1, $2 || '', $3 || '');
+	      if ($current_mark =~ /-?>>/)
+	        {
+		  error $infile, $., 'This student mark close nothing';
+		  next LINE;
+		}
+
+	      push @stack, { loc => $.,
+		             silent => $silent,
+			     tag => "$$mark{in_re}$silent_>>$$mark{out_re}",
+                             cut => 1
+                           };
+	      $top = $stack[-1];
+
+              my $stage_required;
+              my $stage_present;
+              if ($current_mark =~ /^<(.+)<$/)
+                {
+                  $stage_required = $1;
+                  $stage_present = $stages{$stage_required};
+                  unless ($available_stages{$stage_required})
+                    {
+                      error $infile, $.,
+                            "Unsupported stage name: `$stage_required'";
+                    }
+                }
+
+	      ++$silent if $silent_;
+	      unless (($silent && !$stage_required)
+                      || (@stack > 1 && $stack[-2]->{cut}))
+		{
+                  my $message = 'FIXME: Some code was deleted here';
+		  $top->{cut} = 0 if $stage_present;
+                  if ($comment && $comment =~ /^\s*(.*?)\.?\s*$/)
+                    {
+                      $comment = $1;
+
+                      if ($silent || $stage_required)
+                        {
+                          $message = $comment;
+                          $comment = '';
+                        }
+                      $comment = " ($comment)" if $comment;
+                    }
+
+                  if ($top->{cut} && !($stage_required && $silent))
+                    {
+                      ++$chunks;
+                      print $OUT $$mark{'in'},
+                                 " $message$comment.",
+                                 $$mark{'out'}, $/;
+                    }
+		}
+
+	      if ($top && m/$$top{tag}/)
+		{
+		  $silent = $$top{'silent'};
+		  pop @stack;
+		}
+	      next LINE;
+	    }
+      }
+
+      if ($top && $top->{cut})
+        {
+	  ++$lines unless $silent;
+	}
+      else
+        {
+          print $OUT $_, $/;
+	}
+    }
+  close $IN;
+
+  foreach my $tag (@stack)
+    {
+      error $infile, $$tag{'loc'}, 'This student mark isn\'t close';
+    }
+
+  unless ($destdir || $file eq '-')
+    {
+      unlink $infile
+	or die "$0: cannot remove $infile\: $!\n";
+    }
+
+  # print STDERR `wc -c $file`;
+
+  if ($lines)
+    {
+      (my $name = $file) =~ s,tc-[^/]+/,,;
+      my $section = '';
+      for my $part (split ('/', $name))
+	{
+	  $section = $section . $part;
+	  $lines_suppressed{$section} += $lines;
+	  $chunks_suppressed{$section} += $chunks;
+	  $section = $section . '/';
+	}
+    }
+}
+
+
+## Define options
+my ($man, $help, @args, @stages, $config);
+
+## Parse options
+GetOptions (
+  'man|m'		=> \$man,
+  'help|h|?'		=> \$help,
+  '<>'			=> sub { push @args, shift },
+  'destdir=s'		=> \$destdir,
+  'ignore=s'		=> \$ignore_re,
+  'accept=s'		=> \$accept_re,
+  'skip-marks=s'	=> \$skip_marks_re,
+  'keep-marks=s'	=> \$keep_marks_re,
+  'stage|s=s'           => \@stages,
+  'config|f=s'          => \$config,
+) or pod2usage(-verbose => 0);
+
+pod2usage(-verbose => 1) if $help;
+pod2usage(-verbose => 2) if $man;
+
+if (@args == 0)
+{
+  print STDERR "$me: not enough arguments\n";
+  pod2usage (2);
+}
+
+if ($config)
+{
+  my $CONFIG = new IO::File($config, '<')
+    or die "$me: Can't open $config: $!";
+  for (<$CONFIG>)
+    {
+      chomp;
+      $available_stages{$_} = 1;
+    }
+}
+
+$stages{$_} = 1 for split(/,/, join(',', @stages));
+
+if (@args == 1 && $args[0] eq '-')
+{
+  studentize '-';
+}
+else
+{
+  my @xargs;
+  find ({ wanted => sub { push @xargs, $_ }, no_chdir => 1 }, @args);
+
+  studentize $_ for @xargs;
+}
+
+$valid or exit 1;
+
+# Build the report (e.g., to be dumped in README).
+print "Number of suppressed lines, suppressed chunks, average chunks size:\n"
+  if (keys %lines_suppressed);
+for my $file (sort keys %lines_suppressed)
+{
+  my $depth = $file =~ tr,/,, * 4;
+  my $average =
+    $chunks_suppressed{$file}
+      ? sprintf '%3d', $lines_suppressed{$file} / $chunks_suppressed{$file}
+      : '';
+  printf "%-30s: %4d %3d %s\n",
+         (' ' x $depth) . basename ($file),
+         $lines_suppressed{$file},
+	 $chunks_suppressed{$file},
+	 $average;
+}
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:
