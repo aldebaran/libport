@@ -23,6 +23,11 @@ Display short help message and exit successfully.
 
 Display detailed help message and exit successfully.
 
+=item B<-f>, B<--config>=I<file>
+
+Load configuration file I<file> which contains a list of stage names,
+one per line.
+
 =back
 
 =head1 DESCRIPTION
@@ -177,6 +182,9 @@ sub error ($$$) {
   print STDERR "$file\:$location\: Error: $msg.$/";
 }
 
+
+# studentize ($FILENAME)
+# ----------------------
 sub studentize ($)
 {
   my $file = shift;
@@ -347,7 +355,7 @@ sub studentize ($)
 
   foreach my $tag (@stack)
     {
-      error $infile, $$tag{'loc'}, 'This student mark isn\'t close';
+      error $infile, $$tag{'loc'}, 'this mark is not closed';
     }
 
   unless ($destdir || $file eq '-')
@@ -372,9 +380,26 @@ sub studentize ($)
     }
 }
 
+# config_load ($CONFIG_FILE)
+# --------------------------
+sub config_load ($)
+{
+  my ($file) = @_;
+  my $CONFIG = new IO::File($file, '<')
+    or die "$me: cannot open $file: $!";
+  for (<$CONFIG>)
+    {
+      chomp;
+      $available_stages{$_} = 1;
+    }
+}
+
+## ------ ##
+## Main.  ##
+## ------ ##
 
 ## Define options
-my ($man, $help, @args, @stages, $config);
+my ($man, $help, @args, @stages);
 
 ## Parse options
 GetOptions (
@@ -387,7 +412,7 @@ GetOptions (
   'skip-marks=s'	=> \$skip_marks_re,
   'keep-marks=s'	=> \$keep_marks_re,
   'stage|s=s'           => \@stages,
-  'config|f=s'          => \$config,
+  'config|f=s'          => sub { config_load ($_[1]) },
 ) or pod2usage(-verbose => 0);
 
 pod2usage(-verbose => 1) if $help;
@@ -397,17 +422,6 @@ if (@args == 0)
 {
   print STDERR "$me: not enough arguments\n";
   pod2usage (2);
-}
-
-if ($config)
-{
-  my $CONFIG = new IO::File($config, '<')
-    or die "$me: Can't open $config: $!";
-  for (<$CONFIG>)
-    {
-      chomp;
-      $available_stages{$_} = 1;
-    }
 }
 
 $stages{$_} = 1 for split(/,/, join(',', @stages));
