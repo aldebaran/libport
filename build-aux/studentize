@@ -351,7 +351,12 @@ sub studentize ($)
                   if ($top->{cut} && !($stage_required && $silent))
                     {
                       ++$chunks;
-                      print $OUT $$mark{'in'},
+                      # We should keep the layout of the opening or
+                      # closing mark.  Yet it is better to indent at
+                      # least a bit so that when studentizing Flex
+                      # rules we don't produce comments that Flex
+                      # reads as rules.
+                      print $OUT "  ", $$mark{'in'},
                                  " $message$comment.",
                                  $$mark{'out'}, $/;
                     }
