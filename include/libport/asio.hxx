@@ -575,7 +575,7 @@ namespace libport
           throw std::runtime_error("SSL_CTX_set_cipher_list failed");
       }
 
-#define COMMA ,
+#define ASIO_COMMA ,
 #define CHECK_CALL(param, call, args)           \
       do {                                      \
         if (!param.empty())                     \
@@ -589,9 +589,9 @@ namespace libport
       CHECK_CALL(settings.tmpDHFile, context.use_tmp_dh_file, );
       CHECK_CALL(settings.certChainFile, context.use_certificate_chain_file, );
       CHECK_CALL(settings.privateKeyFile, context.use_private_key_file,
-                 ssl::context_base::pem COMMA);
+                 ssl::context_base::pem ASIO_COMMA);
 #undef CHECK_CALL
-#undef COMMA
+#undef ASIO_COMMA
 
       // Create a SSL stream taking its underlying stream by ref.
       typedef boost::asio::ssl::stream<Stream&> SSLStream;
