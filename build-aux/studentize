@@ -23,10 +23,24 @@ Display short help message and exit successfully.
 
 Display detailed help message and exit successfully.
 
+=item B<--mark>=I<name>
+
+Declare the existence of the marks named I<name>.
+
 =item B<-f>, B<--config>=I<file>
 
 Load configuration file I<file> which contains a list of stage names,
 one per line.
+
+=item B<--accept>=I<regexp>
+
+When recursing into directories, work on files that match I<regexp>.
+
+=item B<--ignore>=I<regexp>
+
+When recursing into directories, skip files that match I<regexp>.
+
+
 
 =back
 
@@ -415,6 +429,7 @@ GetOptions (
   'skip-marks=s'	=> \$skip_marks_re,
   'keep-marks=s'	=> \$keep_marks_re,
   'stage|s=s'           => \@stages,
+  'mark=s'              => sub { $available_stages{$_[1]} = 1 },
   'config|f=s'          => sub { config_load ($_[1]) },
 ) or pod2usage(-verbose => 0);
 
