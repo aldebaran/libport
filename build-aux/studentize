@@ -27,6 +27,10 @@ Display detailed help message and exit successfully.
 
 Declare the existence of the marks named I<name>.
 
+=item B<-s>, B<--stage>=I<name>
+
+Keep code marked with I<name>.  Accumulates.
+
 =item B<-f>, B<--config>=I<file>
 
 Load configuration file I<file> which contains a list of stage names,
@@ -411,6 +415,31 @@ sub config_load ($)
     }
 }
 
+sub report ()
+{
+  my $res = '';
+  if (keys %lines_suppressed)
+    {
+      $res .=
+        "Number of suppressed lines, suppressed chunks, average chunks size:\n";
+      for my $file (sort keys %lines_suppressed)
+        {
+          my $depth = $file =~ tr,/,, * 4;
+          my $average =
+            ($chunks_suppressed{$file}
+             ? sprintf ('%3d',
+                        $lines_suppressed{$file} / $chunks_suppressed{$file})
+             : '');
+          $res .= sprintf ("%-30s: %4d %3d %s\n",
+                           (' ' x $depth) . basename ($file),
+                           $lines_suppressed{$file},
+                           $chunks_suppressed{$file},
+                           $average);
+        }
+    }
+  return $res;
+}
+
 ## ------ ##
 ## Main.  ##
 ## ------ ##
@@ -459,21 +488,7 @@ else
 $valid or exit 1;
 
 # Build the report (e.g., to be dumped in README).
-print "Number of suppressed lines, suppressed chunks, average chunks size:\n"
-  if (keys %lines_suppressed);
-for my $file (sort keys %lines_suppressed)
-{
-  my $depth = $file =~ tr,/,, * 4;
-  my $average =
-    $chunks_suppressed{$file}
-      ? sprintf '%3d', $lines_suppressed{$file} / $chunks_suppressed{$file}
-      : '';
-  printf "%-30s: %4d %3d %s\n",
-         (' ' x $depth) . basename ($file),
-         $lines_suppressed{$file},
-	 $chunks_suppressed{$file},
-	 $average;
-}
+print STDERR report;
 
 ### Setup "GNU" style for perl-mode and cperl-mode.
 ## Local Variables:
