@@ -301,8 +301,11 @@ sub studentize ($)
                   $stage_present = $stages{$stage_required};
                   unless ($available_stages{$stage_required})
                     {
-                      error $infile, $.,
-                            "Unsupported stage name: `$stage_required'";
+                      error ($infile, $.,
+                             ("unsupported stage name: `$stage_required' "
+                              . "("
+                              . join (', ', sort keys %available_stages)
+                              . ")"));
                     }
                 }
 
