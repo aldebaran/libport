@@ -185,6 +185,7 @@ my $keep_marks_re;
 my %stages = ();
 my %available_stages = ();
 
+# Ouch, this is actually the structure of the comments!
 my @marks =
 (
   { in_re => qr/\/\*/,   out_re => qr/\*\//,	in => '/*',  out => ' */' },
@@ -295,18 +296,20 @@ sub studentize ($)
 	  # and
 	  #   //<< Used during colorization, in T9.
 	  # but not <<-.
-	  if (m/$$mark{in_re}(<[^<]*<|-?>>)(-)?(.*?)$$mark{out_re}/)
+	  if (m/$$mark{in_re}(<.*?<|-?>.*?>)(-)?(.*?)$$mark{out_re}/)
 	    {
 	      my ($current_mark, $silent_, $comment) = ($1, $2 || '', $3 || '');
-	      if ($current_mark =~ /-?>>/)
+	      if ($current_mark =~ /-?>.*?>/)
 	        {
-		  error $infile, $., 'This student mark close nothing';
+		  error $infile, $., 'this mark closes nothing';
 		  next LINE;
 		}
 
+              # The name of the tag, if provided.
+              (my $tag = $current_mark) =~ s/^<(.*)<$/$1/;
 	      push @stack, { loc => $.,
 		             silent => $silent,
-			     tag => "$$mark{in_re}$silent_>>$$mark{out_re}",
+			     tag => "$$mark{in_re}$silent_>(?:$tag)?>$$mark{out_re}",
                              cut => 1
                            };
 	      $top = $stack[-1];
