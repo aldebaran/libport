@@ -33,6 +33,7 @@ urbi_compilation_mode_set ()
         ;;
 
       (debug)
+        COMPILATION_MODE_DEBUG=true
         URBI_APPEND_COMPILERFLAGS([-O2 -ggdb])
         # Not all the code includes config.h.
         URBI_APPEND_CPPFLAGS([-DURBI_DEBUG])
@@ -44,7 +45,6 @@ urbi_compilation_mode_set ()
                   [Define to enable Urbi debugging tools.])
         AC_DEFINE([YYDEBUG], [1],
                   [Define to enable parser runtime debug traces.])
-        URBI_APPEND_FLAGS([FLEXXXFLAGS], [--debug])
         URBI_APPEND_FLAGS([BISONFLAGS], [-Dparse.assert -Dparse.trace])
         # Define USE_VALGRIND only if valgrind/valgrind.h exists.
         AC_CHECK_HEADER([valgrind/valgrind.h],
@@ -65,6 +65,7 @@ urbi_compilation_mode_set ()
         ;;
 
       (space)
+        COMPILATION_MODE_SPACE=true
         AC_SUBST([OPTIMIZE_SPACE], [true])
         AC_DEFINE([OPTIMIZE_SPACE], [1],
                   [Define to 1 to optimize for space.])
@@ -82,16 +83,7 @@ urbi_compilation_mode_set ()
 
       (speed)
         URBI_APPEND_COMPILERFLAGS([-O3])
-        # From flex.info.
-        #
-        # The default setting is `-Cem', which specifies that `flex'
-        # should generate equivalence classes and meta-equivalence
-        # classes.  This setting provides the highest degree of table
-        # compression.
-        #
-        # `-Cfe' is often a good compromise between speed and size for
-        # production scanners.
-        URBI_APPEND_FLAGS([FLEXXXFLAGS], [-Cfe])
+        COMPILATION_MODE_SPEED=true
         AC_DEFINE([OPTIMIZE_SPEED], [1],
                   [Define to 1 to optimize for speed the kernel
                    at the detriment of compilation time.])
@@ -118,6 +110,9 @@ urbi_compilation_mode_set ()
 
   # Whether we build for small space.
   AM_CONDITIONAL([OPTIMIZE_SPACE], [$OPTIMIZE_SPACE])
+  AM_CONDITIONAL([COMPILATION_MODE_DEBUG], [$COMPILATION_MODE_DEBUG])
+  AM_CONDITIONAL([COMPILATION_MODE_SPACE], [$COMPILATION_MODE_SPACE])
+  AM_CONDITIONAL([COMPILATION_MODE_SPEED], [$COMPILATION_MODE_SPEED])
 }
 
 URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
@@ -142,6 +137,9 @@ URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
 
 AC_SUBST([YYERROR_VERBOSE], [true])
 AC_SUBST([OPTIMIZE_SPACE], [false])
+AC_SUBST([COMPILATION_MODE_DEBUG], [false])
+AC_SUBST([COMPILATION_MODE_SPACE], [false])
+AC_SUBST([COMPILATION_MODE_SPEED], [false])
 AC_MSG_CHECKING([for compilation mode])
 urbi_compilation_mode=$(echo $enable_compilation_mode | tr ',' ' ')
 AC_MSG_RESULT([$urbi_compilation_mode])
