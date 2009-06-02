@@ -2,7 +2,9 @@
 
 # _URBI_ARG_OPTION_BRE
 # --------------------
-# A BRE that match valid OPTION for _URB_ARG.
+# A BRE that matches valid options for _URBI_ARG.  First group should
+# be the kind (enable/disable or with/without), and second group
+# should be the item actually used.
 m4_define([_URBI_ARG_OPTION_BRE],
           [^\(disable\|enable\|with\|without\)-\([^=]*\).*$])
 
@@ -61,6 +63,11 @@ AC_DEFUN([URBI_ARGLIST_ENABLE],
 # ---------------------------------------------------------------
 AC_DEFUN([URBI_ARG_WITH],
 [_URBI_ARG([with], [$1], [$2], [$3], [$4], [$5])])
+
+# URBI_ARGLIST_WITH(OPTION, HELP-STRING, RANGE, DEFAULT, [MORE-HELP])
+# ---------------------------------------------------------------
+AC_DEFUN([URBI_ARGLIST_WITH],
+[_URBI_ARG([with], [$1], [$2], [($3)(,($3))*], [$4], [$5])])
 
 
 ## Local Variables:
