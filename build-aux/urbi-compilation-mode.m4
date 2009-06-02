@@ -66,8 +66,7 @@ urbi_compilation_mode_set ()
 
       (space)
         COMPILATION_MODE_SPACE=true
-        AC_SUBST([OPTIMIZE_SPACE], [true])
-        AC_DEFINE([OPTIMIZE_SPACE], [1],
+        AC_DEFINE([COMPILATION_MODE_SPACE], [1],
                   [Define to 1 to optimize for space.])
         local i
         for i in -Os -fomit-frame-pointer -fdata-sections -ffunction-sections
@@ -84,7 +83,7 @@ urbi_compilation_mode_set ()
       (speed)
         URBI_APPEND_COMPILERFLAGS([-O3])
         COMPILATION_MODE_SPEED=true
-        AC_DEFINE([OPTIMIZE_SPEED], [1],
+        AC_DEFINE([COMPILATION_MODE_SPEED], [1],
                   [Define to 1 to optimize for speed the kernel
                    at the detriment of compilation time.])
         urbi_compilation_mode_set final
@@ -109,7 +108,6 @@ urbi_compilation_mode_set ()
                      [Default coroutine stack size in kB.])
 
   # Whether we build for small space.
-  AM_CONDITIONAL([OPTIMIZE_SPACE], [$OPTIMIZE_SPACE])
   AM_CONDITIONAL([COMPILATION_MODE_DEBUG], [$COMPILATION_MODE_DEBUG])
   AM_CONDITIONAL([COMPILATION_MODE_SPACE], [$COMPILATION_MODE_SPACE])
   AM_CONDITIONAL([COMPILATION_MODE_SPEED], [$COMPILATION_MODE_SPEED])
@@ -136,7 +134,6 @@ URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
           - threads: Implement coroutines with threads.])
 
 AC_SUBST([YYERROR_VERBOSE], [true])
-AC_SUBST([OPTIMIZE_SPACE], [false])
 AC_SUBST([COMPILATION_MODE_DEBUG], [false])
 AC_SUBST([COMPILATION_MODE_SPACE], [false])
 AC_SUBST([COMPILATION_MODE_SPEED], [false])
