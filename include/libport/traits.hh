@@ -1,68 +1,96 @@
 #ifndef LIBPORT_TRAITS_HH
 # define LIBPORT_TRAITS_HH
 
-# include <libport/intrusive-ptr.hh>
+# include <boost/tr1/type_traits.hpp>
 
-/* FIXME: convert this to tr1 names. */
+# include <libport/meta.hh>
 
 namespace libport
 {
   namespace traits
   {
+    /*------.
+    | IsPOD |
+    `------*/
+
+    /// Whether 'T' is a POD.
+    template <typename T>
+    struct IsPOD
+    {
+      static const bool res = std::tr1::is_pod<T>::value;
+    };
+
+    /*---.
+    | Id |
+    `---*/
+
+    /// Identity
     template <typename T>
     struct Id
     {
       typedef T res;
     };
 
+    /*------.
+    | Const |
+    `------*/
+
+    /// Constify T
     template <typename T>
     struct Const
     {
       typedef const T res;
     };
 
+    /*----.
+    | Ptr |
+    `----*/
+
+    /// Make T a pointer
     template <typename T>
     struct Ptr
     {
       typedef T* res;
     };
 
+    /*----.
+    | Ref |
+    `----*/
+
+    /// Make T a reference
     template <typename T>
     struct Ref
     {
       typedef T& res;
     };
 
+    /*---------.
+    | ConstPtr |
+    `---------*/
 
+    /// Make T a const pointer
     template <typename T>
     struct ConstPtr
     {
       typedef typename meta::Compose<Ptr, Const>::Res<T>::res res;
     };
 
+    /*---------.
+    | ConstRef |
+    `---------*/
+
+    /// Make T a const reference
     template <typename T>
     struct ConstRef
     {
       typedef typename meta::Compose<Ref, Const>::Res<T>::res res;
     };
 
-    template <typename T>
-    struct SharedPtr
-    {
-      typedef typename libport::intrusive_ptr<T> res;
-    };
-
-    template <typename T>
-    struct ConstSharedPtr
-    {
-      typedef typename meta::Compose<SharedPtr, Const>::Res<T>::res res;
-    };
-
-
     /*-------------------.
     | Remove reference.  |
     `-------------------*/
 
+    /// Remove reference mark from T
     template <typename T>
     struct remove_reference
     {
@@ -75,6 +103,19 @@ namespace libport
       typedef T type;
     };
 
+    /*----.
+    | Arg |
+    `----*/
+
+    /// Give the best type for passing a T as argument
+    /* That is, T if T is a POD, const T& otherwise.
+     *
+     */
+    template <typename T>
+    struct Arg
+    {
+      typedef typename meta::If<IsPOD<T>::res, T, const T&>::res res;
+    };
   }
 }
 
