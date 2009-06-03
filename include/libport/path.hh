@@ -56,6 +56,8 @@ namespace libport
     bool operator==(const path& rhs) const;
 
     std::string basename() const;
+    /// The extension of the file, or "" if not applicable.
+    std::string extension() const;
     /// Return the volume.  Empty, unless on windows, in which
     /// case it looks like "c:".
     std::string volume_get() const;

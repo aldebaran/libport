@@ -195,6 +195,18 @@ namespace libport
     return path_.back();
   }
 
+  std::string
+  path::extension() const
+  {
+    std::string name = basename();
+    size_t pos = name.rfind(".");
+
+    if (pos == std::string::npos || pos == name.size() - 1)
+      return "";
+
+    return name.substr(pos + 1);
+  }
+
   path
   path::dirname() const
   {
