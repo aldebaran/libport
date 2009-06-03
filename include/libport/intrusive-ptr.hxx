@@ -9,6 +9,8 @@
 # include <cassert>
 # include <typeinfo>
 
+# include <serialize/serialize.hh>
+
 namespace libport
 {
   template <typename T>
@@ -225,6 +227,43 @@ namespace libport
     return p.unsafe_cast<U>();
   }
 
+  /*--------------.
+  | Serialization |
+  `--------------*/
+  namespace serialize
+  {
+    template <typename T>
+    struct serialize::BinaryOSerializer::Impl<libport::intrusive_ptr<const T> >
+    {
+      static void put(const std::string& name,
+                      const libport::intrusive_ptr<const T>& ptr,
+                      std::ostream& output, BinaryOSerializer& ser)
+      {
+        Impl<const T*>::put(name, ptr.get(), output, ser);
+      }
+    };
+
+    template <typename T>
+    struct serialize::BinaryOSerializer::Impl<libport::intrusive_ptr<T> >
+    {
+      static void put(const std::string& name,
+                      const libport::intrusive_ptr<T>& ptr,
+                      std::ostream& output, BinaryOSerializer& ser)
+      {
+        Impl<const T*>::put(name, ptr.get(), output, ser);
+      }
+    };
+
+    template <typename T>
+    struct serialize::BinaryISerializer::Impl<libport::intrusive_ptr<T> >
+    {
+      static intrusive_ptr<T> get(const std::string& name,
+                                  std::istream& input, BinaryISerializer& ser)
+      {
+        return Impl<T*>::get(name, input, ser);
+      }
+    };
+  }
 }
 
 #endif // !LIBPORT_BOOST_INTRUSIVE_PTR_HXX

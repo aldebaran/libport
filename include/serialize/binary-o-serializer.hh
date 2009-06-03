@@ -1,31 +1,33 @@
 #ifndef LIBPORT_SERIALIZE_BINARY_O_SERIALIZER_HH
 # define LIBPORT_SERIALIZE_BINARY_O_SERIALIZER_HH
 
-# include <fstream>
-
+# include <libport/hash.hh>
 # include <serialize/o-serializer.hh>
 
 namespace libport
 {
   namespace serialize
   {
-    class SERIALIZE_API BinaryOSerializer: public OSerializer
+    class SERIALIZE_API BinaryOSerializer: public OSerializer<BinaryOSerializer>
     {
     public:
-
-      BinaryOSerializer(const std::string& stream);
+      BinaryOSerializer(std::ostream& output);
       ~BinaryOSerializer();
-
-      virtual void serialize(const std::string& name, const Serializable& value);
-      virtual void serialize(const std::string& name, const std::string& value);
-      virtual void serialize(const std::string& name, int value);
+      template <typename T>
+      struct Impl;
 
     private:
-      virtual void start_collection(const std::string& name, size_t size);
-      virtual void end_collection();
-      std::ofstream stream_;
+      typedef libport::hash_map<long, unsigned> ptr_map_type;
+      unsigned ptr_id_;
+      ptr_map_type ptr_map_;
+
+      typedef libport::hash_map<Symbol, unsigned> symbol_map_type;
+      unsigned symbol_id_;
+      symbol_map_type symbol_map_;
     };
   }
 }
+
+# include <serialize/binary-o-serializer.hxx>
 
 #endif

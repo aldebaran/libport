@@ -1,20 +1,25 @@
 #ifndef O_SERIALIZER_HXX
 # define O_SERIALIZER_HXX
 
-# include <libport/foreach.hh>
-
 namespace libport
 {
   namespace serialize
   {
-    template <template <typename, typename> class Cont, typename T, typename A>
-    void OSerializer::serialize(const std::string& name, const Cont<T, A>& collection)
+    template <class Exact>
+    OSerializer<Exact>::OSerializer(std::ostream& output)
+      : stream_(output)
+    {}
+
+    template <class Exact>
+    OSerializer<Exact>::~OSerializer()
+    {}
+
+    template <class Exact>
+    template <typename T>
+    void
+    OSerializer<Exact>::serialize(const std::string& name, typename traits::Arg<T>::res v)
     {
-      size_t size = collection.size();
-      start_collection(name, size);
-      foreach (const T& elt, collection)
-        serialize("item", elt);
-      end_collection();
+      Exact::template Impl<T>::put(name, v, stream_, static_cast<Exact&>(*this));
     }
   }
 }

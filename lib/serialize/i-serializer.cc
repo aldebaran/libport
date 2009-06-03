@@ -4,8 +4,10 @@ namespace libport
 {
   namespace serialize
   {
-    ISerializer::ISerializer(const std::string& path)
-      : stream_(path.c_str())
+    ISerializer::ISerializer(std::istream& input)
+      : stream_(input)
+      , ids_()
+      , id_(0)
     {}
 
     ISerializer::~ISerializer()

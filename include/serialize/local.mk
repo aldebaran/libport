@@ -5,9 +5,7 @@ serialize_include_HEADERS =			\
   include/serialize/binary-o-serializer.hh	\
   include/serialize/exception.hh		\
   include/serialize/export.hh			\
-  include/serialize/fwd.hh			\
   include/serialize/i-serializer.hh		\
   include/serialize/i-serializer.hxx		\
   include/serialize/o-serializer.hh		\
-  include/serialize/o-serializer.hxx		\
-  include/serialize/serializable.hh
+  include/serialize/o-serializer.hxx

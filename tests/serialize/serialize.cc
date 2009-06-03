@@ -1,92 +1,220 @@
+#include <fstream>
 #include <string>
 
 #include <boost/bind.hpp>
 
 #include <libport/export.hh>
+#include <libport/hierarchy.hh>
 #include <libport/unit-test.hh>
 
-#include <serialize/binary-i-serializer.hh>
-#include <serialize/binary-o-serializer.hh>
-#include <serialize/serializable.hh>
-//#include <serialize/serializer.hh>
-// #include <serialize/xml-i-serializer.hh>
-// #include <serialize/xml-o-serializer.hh>
+#include <serialize/serialize.hh>
 
-using namespace libport::serialize;
 using libport::test_suite;
+using namespace libport::serialize;
 
-class Datas: public Serializable
+void binary_pod()
 {
-public:
-  Datas(int a, int b, int c)
   {
-    datas_.push_back(a);
-    datas_.push_back(b);
-    datas_.push_back(c);
+    std::ofstream f("binary_pod");
+    BinaryOSerializer ser(f);
+
+    ser.serialize<int>("test", 42);
+    ser.serialize<bool>("test", true);
+    ser.serialize<bool>("test", false);
+    ser.serialize<std::string>("test", "string ");
+    int* p1 = new int(51);
+    int* p2 = new int(69);
+    ser.serialize<int*>("test", p1);
+    ser.serialize<int*>("test", p2);
+    ser.serialize<int*>("test", p2);
+    ser.serialize<int*>("test", p1);
+    ser.serialize<int*>("test", NULL);
   }
+  {
+    std::ifstream f("binary_pod");
+    BOOST_CHECK(f.good());
+    BinaryISerializer ser(f);
 
-  std::vector<int> datas_;
-  SERIALIZABLE(Datas, , , (datas));
-};
+    BOOST_CHECK_EQUAL(ser.unserialize<int>("test"), 42);
+    BOOST_CHECK(ser.unserialize<bool>("test"));
+    BOOST_CHECK(!ser.unserialize<bool>("test"));
+    BOOST_CHECK_EQUAL(ser.unserialize<std::string>("test"), "string ");
+    int* p1 = ser.unserialize<int*>("test");
+    int* p2 = ser.unserialize<int*>("test");
+    int* p3 = ser.unserialize<int*>("test");
+    int* p4 = ser.unserialize<int*>("test");
+    int* p5 = ser.unserialize<int*>("test");
+    BOOST_CHECK_EQUAL(*p1, 51);
+    BOOST_CHECK_EQUAL(*p2, 69);
+    BOOST_CHECK_EQUAL(p1, p4);
+    BOOST_CHECK_EQUAL(p2, p3);
+    BOOST_CHECK_EQUAL(p5, reinterpret_cast<int*>(NULL));
+  }
+}
 
-class Test: public Serializable
+struct Person
 {
-public:
-  Test(const std::string& name)
+  Person(const std::string& name, const std::string& surname)
     : name_(name)
+    , surname_(surname)
   {}
 
-protected:
-  std::string name_;
-  SERIALIZABLE(Test, , , (name));
+  template <typename S>
+  Person(ISerializer<S>& input)
+    : name_(input.template unserialize<std::string>("name"))
+    , surname_(input.template unserialize<std::string>("surname"))
+  {
+
+  }
+
+  template <typename S>
+  void serialize(OSerializer<S>& output) const
+  {
+    output.serialize<std::string>("name", name_);
+    output.serialize<std::string>("surname", surname_);
+  }
+
+  std::string name_, surname_;
 };
 
-class TestData: public Test
+void binary_class()
 {
-public:
-  TestData(const std::string& name)
-    : Test(name)
-    , description_("Draven")
-    , datas_(42, 51, 69)
+  {
+    std::ofstream f("binary_class");
+    BinaryOSerializer ser(f);
+
+    Person ed("Draven", "Eric");
+    Person cs("Slade", "Cutter");
+    ser.serialize<Person>("test", ed);
+    ser.serialize<Person>("test", cs);
+  }
+  {
+    std::ifstream f("binary_class");
+    BinaryISerializer ser(f);
+
+    Person ed = ser.unserialize<Person>("test");
+    Person cs = ser.unserialize<Person>("test");
+    BOOST_CHECK_EQUAL(ed.name_, "Draven");
+    BOOST_CHECK_EQUAL(ed.surname_, "Eric");
+    BOOST_CHECK_EQUAL(cs.name_, "Slade");
+    BOOST_CHECK_EQUAL(cs.surname_, "Cutter");
+  }
+}
+
+class Unix;
+class Linux;
+class Gentoo;
+class Debian;
+
+class Unix: public libport::meta::Hierarchy<Unix, TYPELIST_2(Gentoo, Debian)>
+{
+
+};
+
+
+struct Linux: public Unix
+{
+  Linux(const std::string& k)
+    : kernel(k)
   {}
 
-  bool operator==(const TestData& other)
+  template <typename T>
+  Linux(ISerializer<T>& ser)
   {
-    return name_ == other.name_
-      && description_ == other.description_
-      && datas_.datas_ == other.datas_.datas_;
+    kernel = ser.template unserialize<std::string>("kernel");
   }
 
-protected:
-  std::string description_;
-  Datas datas_;
-  SERIALIZABLE(TestData, (Test), (datas), (description));
+  template <typename T>
+  void serialize(OSerializer<T>& ser) const
+  {
+    ser.template serialize<std::string>("kernel", kernel);
+  }
+
+  std::string kernel;
 };
 
-static const std::string path = "tests/serialize/test";
-
-void test()
+struct Debian: public Linux
 {
-  TestData src("Eric");
+  Debian(const std::string& kernel, const std::string& v)
+    : Linux(kernel)
+    , version(v)
+  {}
 
+  template <typename T>
+  Debian(ISerializer<T>& ser)
+    : Linux(ser)
   {
-    BinaryOSerializer out(path + ".bin");
-    out.serialize("data", src);
+    version = ser.template unserialize<std::string>("version");
   }
 
+  template <typename T>
+  void serialize(OSerializer<T>& ser) const
   {
-    BinaryISerializer in(path + ".bin");
-    TestData dst(in);
-    BOOST_CHECK(src == dst);
+    Linux::serialize(ser);
+    ser.serialize<std::string>("version", version);
+  }
+
+  std::string version;
+};
+
+struct Gentoo: public Linux
+{
+  Gentoo(const std::string& kernel, int v)
+    : Linux(kernel)
+    , version(v)
+  {}
+
+  template <typename T>
+  Gentoo(ISerializer<T>& ser)
+    : Linux(ser)
+  {
+    version = ser.template unserialize<int>("version");
+  }
+
+  template <typename T>
+  void serialize(OSerializer<T>& ser) const
+  {
+    Linux::serialize(ser);
+    ser.serialize<int>("version", version);
+  }
+
+  int version;
+};
+
+void binary_hierarchy()
+{
+  {
+    std::ofstream f("binary_hier");
+    BinaryOSerializer ser(f);
+
+    Debian d("2.4", "sarge");
+    Gentoo g("2.6", 2008);
+    ser.serialize<Debian>("test", d);
+    ser.serialize<Gentoo>("test", g);
+  }
+  {
+    std::ifstream f("binary_hier");
+    BinaryISerializer ser(f);
+
+    Unix* d_ = ser.unserialize<Unix>("test");
+    Unix* g_ = ser.unserialize<Unix>("test");
+    Debian* d = dynamic_cast<Debian*>(d_ );
+    Gentoo* g = dynamic_cast<Gentoo*>(g_) ;
+    BOOST_CHECK(d);
+    BOOST_CHECK(g);
+    BOOST_CHECK_EQUAL(d->kernel, "2.4");
+    BOOST_CHECK_EQUAL(d->version, "sarge");
+    BOOST_CHECK_EQUAL(g->kernel, "2.6");
+    BOOST_CHECK_EQUAL(g->version, 2008);
   }
 }
 
 test_suite*
 init_test_suite()
 {
-  test_suite* suite = BOOST_TEST_SUITE("serialization test suite");
-
-  suite->add(BOOST_TEST_CASE(test));
-
+  test_suite* suite = BOOST_TEST_SUITE("Serialization test suite");
+  suite->add(BOOST_TEST_CASE(binary_pod));
+  suite->add(BOOST_TEST_CASE(binary_class));
+  suite->add(BOOST_TEST_CASE(binary_hierarchy));
   return suite;
 }

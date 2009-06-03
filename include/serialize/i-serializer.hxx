@@ -5,18 +5,21 @@ namespace libport
 {
   namespace serialize
   {
-    template <template <typename, typename> class Cont, typename T, typename A>
-    void ISerializer::unserialize
-    (const std::string& name, Cont<T, A>& collection)
+    template <class Exact>
+    ISerializer<Exact>::ISerializer(std::istream& input)
+      : stream_(input)
+    {}
+
+    template <class Exact>
+    ISerializer<Exact>::~ISerializer()
+    {}
+
+    template <class Exact>
+    template <typename T>
+    typename meta::If<meta::Inherits<T, meta::BaseHierarchy>::res, T*, T>::res
+    ISerializer<Exact>::unserialize(const std::string& name)
     {
-      size_t size = start_collection(name);
-      for (unsigned i = 0; i < size; ++i)
-      {
-        T elt;
-        unserialize("item", elt);
-        collection.push_back(elt);
-      }
-      end_collection();
+      return Exact::template Impl<T>::get(name, stream_, static_cast<Exact&>(*this));
     }
   }
 }

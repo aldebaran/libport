@@ -4,11 +4,6 @@ namespace libport
 {
   namespace serialize
   {
-    OSerializer::OSerializer(const std::string& path)
-      : stream_(path.c_str())
-    {}
 
-    OSerializer::~OSerializer()
-    {}
   }
 }
