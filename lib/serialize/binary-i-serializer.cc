@@ -6,8 +6,8 @@ namespace libport
   {
     BinaryISerializer::BinaryISerializer(std::istream& input)
       : ISerializer<BinaryISerializer>(input)
-      , ptr_id_(0)
       , ptr_map_()
+      , sym_map_()
     {}
 
     BinaryISerializer::~BinaryISerializer()

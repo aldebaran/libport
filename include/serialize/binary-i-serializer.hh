@@ -22,8 +22,7 @@ namespace libport
       template <typename T>
       struct PHImpl;
 
-      typedef libport::hash_map<unsigned, void*> ptr_map_type;
-      unsigned ptr_id_;
+      typedef std::vector<void*> ptr_map_type;
       ptr_map_type ptr_map_;
 
       typedef std::vector<libport::Symbol> symbol_map_type;
