@@ -13,11 +13,14 @@
 `----------------*/
 
 # ifdef _MSC_VER
+
 #  define __attribute__(a)
-#  define ATTRIBUTE_NORETURN __declspec(noreturn)
-#  define ATTRIBUTE_NOTHROW  __declspec(nothrow)
+#  define ATTRIBUTE_ALWAYS_INLINE __forceinline
 #  define ATTRIBUTE_DEPRECATED __declspec(deprecated)
 #  define ATTRIBUTE_NOINLINE __declspec(noinline)
+#  define ATTRIBUTE_NORETURN __declspec(noreturn)
+#  define ATTRIBUTE_NOTHROW  __declspec(nothrow)
+
 # endif
 
 # ifndef __attribute__
@@ -25,10 +28,12 @@
 #  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
 #   define __attribute__(Spec) /* empty */
 #  else
-#    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
-#    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
+     // GCC 3.4 does not support "always_inline" without "inline".
+#    define ATTRIBUTE_ALWAYS_INLINE inline __attribute__((__always_inline__))
 #    define ATTRIBUTE_DEPRECATED __attribute__((__deprecated__))
 #    define ATTRIBUTE_NOINLINE __attribute__((__noinline__))
+#    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
+#    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
 #  endif
 # endif
 
