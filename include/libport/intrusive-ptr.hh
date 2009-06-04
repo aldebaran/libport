@@ -63,13 +63,13 @@ namespace libport
 
     /// \name Assignment operators.
     /// \{
-      // This one is required or an incorrect implicit default will be used.
-      intrusive_ptr& operator=(const intrusive_ptr<T>& other);
-      template <typename U>
-      intrusive_ptr& operator=(const intrusive_ptr<U>& other);
+    // This one is required or an incorrect implicit default will be used.
+    intrusive_ptr& operator=(const intrusive_ptr<T>& other);
+    template <typename U>
+    intrusive_ptr& operator=(const intrusive_ptr<U>& other);
 
-      template <typename U>
-      intrusive_ptr& operator=(U* ptr);
+    template <typename U>
+    intrusive_ptr& operator=(U* ptr);
     /// \}
 
     /// \name Equality operators.
@@ -120,12 +120,12 @@ namespace libport
 
     /// \name boost::intrusive_ptr API.
     /// \{
-      /// Get the underlying pointee.
-      T* get() const;
-      /// Equivalent to (*this) = 0;
-      void reset();
-      T* operator->() const;
-      T& operator *() const;
+    /// Get the underlying pointee.
+    T* get() const;
+    /// Equivalent to (*this) = 0;
+    void reset();
+    T* operator->() const;
+    T& operator *() const;
     /// \}
 
   private:
