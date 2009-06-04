@@ -35,7 +35,8 @@ namespace libport
     template <typename T>
     struct ISerialize
     {
-      static void res(const std::pair<typename T::root**, BinaryISerializer*>& c)
+      static void
+      res(const std::pair<typename T::root**, BinaryISerializer*>& c)
       {
         *c.first = reinterpret_cast<typename T::root*>(new T(*c.second));
       }
@@ -49,7 +50,7 @@ namespace libport
           std::istream&, BinaryISerializer& ser)
       {
         unsigned id = ser.unserialize<unsigned char>("id");
-        typename T::root* res;
+        typename T::root* res = 0;
         typedef std::pair<typename T::root**, BinaryISerializer*> Cookie;
         Cookie c(&res, &ser);
         T::template dispatch<ISerialize, Cookie>(id, c);
