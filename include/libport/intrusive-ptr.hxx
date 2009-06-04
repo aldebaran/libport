@@ -9,24 +9,31 @@
 # include <cassert>
 # include <typeinfo>
 
+# include <libport/compilation.hh>
+
 # include <serialize/serialize.hh>
 
 namespace libport
 {
   template <typename T>
   template <typename U>
+  ATTRIBUTE_ALWAYS_INLINE
   intrusive_ptr<T>::intrusive_ptr(const intrusive_ptr<U>& other)
     :pointee_(0)
   {
     (*this) = other;
   }
+
   template <typename T>
+  ATTRIBUTE_ALWAYS_INLINE
   intrusive_ptr<T>::intrusive_ptr(const intrusive_ptr<T>& other)
     :pointee_(0)
   {
     (*this) = other;
   }
+
   template <typename T>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::intrusive_ptr (T* p)
   :pointee_(0)
   {
@@ -34,6 +41,7 @@ namespace libport
   }
 
   template <typename T>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::~intrusive_ptr()
   {
     // This cast is required, or the compiler uses the intrusive_ptr ctor,
@@ -43,6 +51,7 @@ namespace libport
 
   template <typename T>
   template <typename U>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>&
   intrusive_ptr<T>::operator = (const intrusive_ptr<U>& other)
   {
@@ -50,6 +59,7 @@ namespace libport
   }
 
   template <typename T>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>&
   intrusive_ptr<T>::operator = (const intrusive_ptr<T>& other)
   {
@@ -58,6 +68,7 @@ namespace libport
 
   template <typename T>
   template <typename U>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>&
   intrusive_ptr<T>::operator = (U* other)
   {
@@ -77,23 +88,28 @@ namespace libport
   }
 
   template <typename T> bool
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::operator == (const T* p) const
   {
     return pointee_ == p;
   }
 
   template <typename T> bool
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::operator == (const intrusive_ptr<T> &p) const
   {
     return pointee_ == p.get();
   }
 
   template <typename T> bool
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::operator != (const intrusive_ptr<T> &p) const
   {
     return pointee_ != p.get();
   }
+
   template <typename T> bool
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::operator != (const T* p) const
   {
     return pointee_ != p;
@@ -101,6 +117,7 @@ namespace libport
 
   template <typename T>
   template <typename U>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<U>
   intrusive_ptr<T>::cast() const
   {
@@ -112,6 +129,7 @@ namespace libport
 
   template <typename T>
   template <typename U>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<U>
   intrusive_ptr<T>::unsafe_cast() const
   {
@@ -121,7 +139,7 @@ namespace libport
 
   template <typename T>
   template <typename U>
-  inline
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<U>
   intrusive_ptr<T>::unchecked_cast() const
   {
@@ -131,6 +149,7 @@ namespace libport
 
   template <typename T>
   template <typename U>
+  LIBPORT_SPEED_INLINE
   bool
   intrusive_ptr<T>::is_a () const
   {
@@ -138,6 +157,7 @@ namespace libport
   }
 
   template <typename T>
+  LIBPORT_SPEED_INLINE
   T*
   intrusive_ptr<T>::get() const
   {
@@ -145,6 +165,7 @@ namespace libport
   }
 
   template <typename T>
+  LIBPORT_SPEED_INLINE
   T*
   intrusive_ptr<T>::operator->() const
   {
@@ -153,6 +174,7 @@ namespace libport
   }
 
   template <typename T>
+  LIBPORT_SPEED_INLINE
   T&
   intrusive_ptr<T>::operator*() const
   {
@@ -160,6 +182,7 @@ namespace libport
   }
 
   template <typename T>
+  LIBPORT_SPEED_INLINE
   void
   intrusive_ptr<T>::reset()
   {
@@ -167,6 +190,7 @@ namespace libport
   }
 
   template <typename T>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::operator bool() const
   {
     return pointee_;
@@ -175,6 +199,7 @@ namespace libport
 #ifndef LIBPORT_NO_BOOST
   template <typename T>
   template <typename Archive>
+  LIBPORT_SPEED_INLINE
   void
   intrusive_ptr<T>::save(Archive& ar, const unsigned int /* version */) const
   {
@@ -183,6 +208,7 @@ namespace libport
 
   template <typename T>
   template <typename Archive>
+  LIBPORT_SPEED_INLINE
   void
   intrusive_ptr<T>::load(Archive& ar, const unsigned int /* version */)
   {
@@ -195,6 +221,7 @@ namespace libport
 
   template <typename T>
   template <typename Archive>
+  LIBPORT_SPEED_INLINE
   void
   intrusive_ptr<T>::serialize(Archive& ar, const unsigned int version)
   {
@@ -207,6 +234,7 @@ namespace libport
   `--------------------------*/
 
   template <typename T>
+  LIBPORT_SPEED_INLINE
   T*
   get_pointer(const intrusive_ptr<T>& p)
   {
@@ -214,6 +242,7 @@ namespace libport
   }
 
   template <typename T>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>
   make_intrusive_ptr(T* t)
   {
@@ -221,6 +250,7 @@ namespace libport
   }
 
   template <typename U, typename T>
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<U>
   unsafe_cast(const intrusive_ptr<T>& p)
   {
