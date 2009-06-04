@@ -17,27 +17,27 @@ namespace libport
 {
   template <typename T>
   template <typename U>
-  ATTRIBUTE_ALWAYS_INLINE
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::intrusive_ptr(const intrusive_ptr<U>& other)
-    :pointee_(0)
+    : pointee_(0)
   {
-    (*this) = other;
+    *this = other;
   }
 
   template <typename T>
-  ATTRIBUTE_ALWAYS_INLINE
+  LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::intrusive_ptr(const intrusive_ptr<T>& other)
-    :pointee_(0)
+    : pointee_(0)
   {
-    (*this) = other;
+    *this = other;
   }
 
   template <typename T>
   LIBPORT_SPEED_INLINE
   intrusive_ptr<T>::intrusive_ptr (T* p)
-  :pointee_(0)
+    : pointee_(0)
   {
-    (*this) = p;
+    *this = p;
   }
 
   template <typename T>
@@ -46,7 +46,7 @@ namespace libport
   {
     // This cast is required, or the compiler uses the intrusive_ptr ctor,
     // leading to an infinite loop.
-    (*this) = (T*)0;
+    *this = (T*)0;
   }
 
   template <typename T>
@@ -55,7 +55,7 @@ namespace libport
   intrusive_ptr<T>&
   intrusive_ptr<T>::operator = (const intrusive_ptr<U>& other)
   {
-    return (*this) = other.get();
+    return *this = other.get();
   }
 
   template <typename T>
@@ -63,7 +63,7 @@ namespace libport
   intrusive_ptr<T>&
   intrusive_ptr<T>::operator = (const intrusive_ptr<T>& other)
   {
-    return (*this) = other.get();
+    return *this = other.get();
   }
 
   template <typename T>
@@ -186,7 +186,7 @@ namespace libport
   void
   intrusive_ptr<T>::reset()
   {
-    (*this) = 0;
+    *this = 0;
   }
 
   template <typename T>
