@@ -70,6 +70,7 @@ libport_include_HEADERS +=				\
   include/libport/foreach.hh				\
   include/libport/fwd.hh				\
   include/libport/hash.hh				\
+  include/libport/hierarchy.hh				\
   include/libport/indent.hh				\
   include/libport/ip-semaphore.hh			\
   include/libport/instance-tracker.hh			\
@@ -130,6 +131,8 @@ libport_include_HEADERS +=				\
   include/libport/timer.hxx				\
   include/libport/tokenizer.hh				\
   include/libport/traits.hh				\
+  include/libport/type-info.hh				\
+  include/libport/type-info.hxx				\
   include/libport/typelist.hh				\
   include/libport/uffloat.hh				\
   include/libport/ufloat.h				\
