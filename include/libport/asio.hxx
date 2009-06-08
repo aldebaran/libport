@@ -812,6 +812,16 @@ namespace libport
         &netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
   }
 
+  inline boost::system::error_code
+  Socket::connect(const std::string& host,
+                  unsigned port,
+                  bool udp,
+                  utime_t timeout,
+                  bool async)
+  {
+    return connect(host, string_cast(port), udp, timeout, async);
+  }
+
 # if BOOST_VERSION >= 103600
 
   inline boost::system::error_code

@@ -140,6 +140,11 @@ namespace libport
                                       bool udp=false, utime_t usTimeout = 0,
                                       bool asynchronous = false);
 
+    boost::system::error_code connect(const std::string& host,
+                                      unsigned port,
+                                      bool udp=false, utime_t usTimeout = 0,
+                                      bool asynchronous = false);
+
 # if BOOST_VERSION >= 103600
 
     boost::system::error_code open_serial(const std::string& device,
