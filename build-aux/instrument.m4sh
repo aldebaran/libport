@@ -44,8 +44,17 @@ instrument ()
     instrument_was_run=true
     # Decide if we instrument or not.  INSTRUMENT is expected to be an
     # number bw 0 and 1: the likeliness to actually instrument.
-    INSTRUMENT=$(perl -e \
-        'print rand() < '"${INSTRUMENT:-0}"' ? "true\n" : "false\n"')
+    verbose "INSTRUMENT: $INSTRUMENT"
+    INSTRUMENT=$(perl -e "\$_ = ${INSTRUMENT:-0};"    \
+            -e 'if (/^\d+(?:.\d+)?/)
+                {
+                  $_ = rand() < $_ ? "true" : "false";
+                }
+                elsif (! /^(false|true)$/)
+                {
+                  $_ = "false";
+                }
+                print "$_\n";')
 
     # Under some circumstances, instead of 2s until "server.port", I
     # have 156s when running Valgrind...  But factor 100 is really a

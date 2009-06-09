@@ -234,6 +234,7 @@ sub file_type ($)
   my ($file) = @_;
   my $res = `file $file`;
   chop $res;
+  $res =~ s/^\Q$file\E:\s*//;
   if ($res =~ /shell script/)
     {
       # The sed|grep pattern comes from libtool itself.
