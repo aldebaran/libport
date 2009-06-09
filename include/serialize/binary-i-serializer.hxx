@@ -177,7 +177,7 @@ namespace libport
       res(BinaryISerializer& ser, std::istream& input)
       {
         unsigned id = ser.ptr_map_.size();
-        ser.ptr_map_.push_back(NULL);
+        ser.ptr_map_.push_back(0);
         // FIXME: loops
         T* res = BinaryISerializer::Impl<T>::get("value", input, ser);
         ser.ptr_map_[id] = res;
@@ -200,7 +200,7 @@ namespace libport
           case cached:
           {
             unsigned id = Impl<unsigned>::get("id", input, ser);
-            assert(id < ptr_map_.size());
+            assert(id < ser.ptr_map_.size());
             return reinterpret_cast<T*>(ser.ptr_map_[id]);
           }
           case serialized:
