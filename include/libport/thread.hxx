@@ -74,6 +74,10 @@ namespace libport
   ThreadedCall<Res>::wrap(boost::function0<Res> f)
   {
     res_ = f();
+#ifdef LIBPORT_HAVE_PTHREAD_SOURCES
+    while(true)
+      usleep(995000);
+#endif
   }
 
   /// Return true if a job finished
@@ -107,8 +111,13 @@ namespace libport
   void
   ThreadedCall<Res>::wait()
   {
+#ifdef LIBPORT_HAVE_PTHREAD_SOURCES
+    while (!res_ && handle_)
+      usleep(200000);
+#else
     if (!res_ && handle_)
       pthread_join(handle_, NULL);
+#endif
   }
 
   template<typename Res>
