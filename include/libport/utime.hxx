@@ -9,7 +9,7 @@ namespace libport
   utime_t
   seconds_to_utime(Unit seconds)
   {
-    return seconds * 1000 * 1000;
+    return seconds * 1000LL * 1000LL;
   }
 
   inline
