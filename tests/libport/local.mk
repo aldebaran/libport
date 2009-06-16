@@ -19,6 +19,7 @@ TESTSFLAGS = --log_level=test-suite
 # Program to check:
 TESTS_BINARIES =                                \
   tests/libport/asio.cc                         \
+  tests/libport/assert.cc                       \
   tests/libport/base64.cc                       \
   tests/libport/backtrace.cc                    \
   tests/libport/cli.cc                          \
@@ -85,6 +86,7 @@ tests_libport_asio_LDADD = $(BOOST_SYSTEM_LIBS)  $(LDADD)
 tests_libport_asio_LDFLAGS = $(BOOST_SYSTEM_LDFLAGS) $(PTHREAD_LDFLAGS) $(AM_LDFLAGS)
 tests_libport_asio_CXXFLAGS = $(PTHREAD_CFLAGS) $(AM_CXXFLAGS)
 
+tests_libport_assert_SOURCES                            = tests/libport/assert.cc
 tests_libport_base64_SOURCES                            = tests/libport/base64.cc
 tests_libport_backtrace_SOURCES                         = tests/libport/backtrace.cc
 tests_libport_cli_SOURCES                               = tests/libport/cli.cc

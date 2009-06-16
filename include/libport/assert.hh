@@ -9,17 +9,18 @@
 
 // We have mysterious random aborts on OSX which is compiled with
 // NDEBUG.  Temporarily disable NDEBUG to have verbose paborts.
-# if defined NDEBUG
-#  define LIBPORT_ASSERT_VERBOSE 0
-# else
-#  define LIBPORT_ASSERT_VERBOSE 1
+# ifndef LIBPORT_ASSERT_VERBOSE
+#  if defined NDEBUG
+#   define LIBPORT_ASSERT_VERBOSE 0
+#  else
+#   define LIBPORT_ASSERT_VERBOSE 1
+#  endif
 # endif
 
 # include <iostream> // std::cerr
 # include <libport/cstdio> // libport::strerror.
 
 # include <libport/compiler.hh>
-# include <libport/format.hh>
 
 # ifdef _MSC_VER
 #  include <crtdbg.h>
@@ -34,27 +35,18 @@ namespace libport
   void abort();
 }
 
-/*---------------------------.
-| passert -- Pretty assert.  |
-`---------------------------*/
 
-/// \def passert(Subject, Assertion)
-/// Same as assert, but on failure, dump \a Subject of std::cerr.
-# if ! LIBPORT_ASSERT_VERBOSE
-#  define passert(Subject, Assertion)
+/*--------------.
+| ASSERT_ECHO.  |
+`--------------*/
+
+# if LIBPORT_ASSERT_VERBOSE
+#  define ASSERT_ECHO(File, Line, Message)                      \
+  std::cerr << File << ":" << Line << ": " << Message << std::endl
 # else
+#  define ASSERT_ECHO(File, Line, Message)
+# endif
 
-#  define passert(Subject, Assertion)			\
-  ((void) ((Assertion)					\
-	   ? 0						\
-	   : __passert(Subject, Assertion)))
-
-#  define __passert(Subject, Assertion)                         \
-  pabort("failed assertion: " << #Assertion << std::endl	\
-         << "\t with "                                          \
-         << #Subject << " = " << Subject)
-
-# endif // LIBPORT_ASSERT_VERBOSE
 
 
 /*-------------------------.
@@ -63,15 +55,38 @@ namespace libport
 
 /// \def pabort(Msg)
 ///
-/// Same as abort, but when NDEBUG is not set, report the Msg using
-/// the operator<< on std::cerr.  Msg may include << itself.  So
-/// if Msg is complex, beware of predence issues with << and use parens
-/// on the invocation side.
+/// Same as abort, but if LIBPORT_ASSERT_VERBOSE is set, report the
+/// Msg using the operator<< on std::cerr.  Msg may include << itself.
+/// So if Msg is complex, beware of predence issues with << and use
+/// parens on the invocation side.
 
-# define pabort(Msg)                                    \
-  (std::cerr << __FILE__ ":" << __LINE__                \
-             << ": abort: " << Msg << std::endl,        \
+# define pabort(Msg)                                      \
+  (ASSERT_ECHO(__FILE__, __LINE__, "abort: " << Msg),     \
    libport::abort(), 0)
+
+
+/*-----------------------------------------------------.
+| __passert -- Pretty assert with additional message.  |
+`-----------------------------------------------------*/
+
+/// \def __passert(Assertion, Message)
+/// Same as assert, but on failure, dump \a Message of std::cerr.
+# define __passert(Assertion, Message)			\
+  ((void) ((Assertion)					\
+	   ? 0						\
+	   : pabort(Message)))
+
+/*---------------------------.
+| passert -- Pretty assert.  |
+`---------------------------*/
+
+/// \def passert(Subject, Assertion)
+/// Same as assert, but on failure, dump \a Subject of std::cerr.
+#  define passert(Subject, Assertion)                           \
+  __passert(Assertion,                                          \
+            "failed assertion: " << #Assertion << std::endl	\
+            << "\t with " << #Subject << " = " << Subject)
+
 
 /*----------------------------------------------.
 | errabort -- perror (well, strerror) + abort.  |
@@ -87,9 +102,7 @@ namespace libport
 | assert_exp -- Require a non-null value, and return it.  |
 `--------------------------------------------------------*/
 
-# if ! LIBPORT_ASSERT_VERBOSE
-#  define assert_exp(Obj)		(Obj)
-# else
+# if LIBPORT_ASSERT_VERBOSE
 // Basically, an assert that can be used in an expression.  I meant to
 // use "nonnull", but this name is unused by libstdc++, so the #define
 // breaks everything.
@@ -102,8 +115,7 @@ namespace libport
   {
     if (!t)
     {
-      std::cerr
-	<< file << ": " << line << ": failed assertion: " << msg << std::endl;
+      ASSERT_ECHO(file, line, "failed assertion: " << msg);
       libport::abort();
     }
     return t;
@@ -112,27 +124,59 @@ namespace libport
 
 #  define assert_exp(Obj)		\
   libport::assert_exp_(Obj, __FILE__, __LINE__ , #Obj)
-# endif // LIBPORT_ASSERT_VERBOSE
+# else // !LIBPORT_ASSERT_VERBOSE
+#  define assert_exp(Obj)		(Obj)
+# endif // !LIBPORT_ASSERT_VERBOSE
 
 
-/*-------------------------------------------------------------.
-| assert_comp -- compare two values, show both of them if fail |
-`-------------------------------------------------------------*/
+/*---------------------------------------------------------------.
+| assert_comp -- compare two values, show both of them if fail.  |
+`---------------------------------------------------------------*/
 
-# if ! LIBPORT_ASSERT_VERBOSE
-#  define assert_eq
-#  define assert_ne
-# else
-#  define assert_op(Op, A, B)                                           \
-  if (!(A Op B))                                                        \
-    pabort(::libport::format(#A " " #Op " " #B " (%s " #Op " %s)", A, B)) \
+#  define DEFINE_ASSERT_OP(OpName, Op)                                  \
+namespace libport                                                       \
+{                                                                       \
+  template <typename T>                                                 \
+  inline                                                                \
+  void                                                                  \
+  assert_ ## OpName(const T& lhs, const T& rhs,                         \
+                    const char* lstr, const char* rstr,                 \
+                    const char* file, int line)                         \
+  {                                                                     \
+    if (!(lhs Op rhs))                                                  \
+    {                                                                   \
+      ASSERT_ECHO(file, line,                                           \
+                  "failed assertion: " << lstr << " " #Op " " << rstr); \
+      ASSERT_ECHO(file, line, "  with " << lstr << " = " << lhs);       \
+      ASSERT_ECHO(file, line, "  with " << rstr << " = " << rhs);       \
+      libport::abort();                                                 \
+    }                                                                   \
+  }                                                                     \
+}
 
-#  define assert_eq(A, B) assert_op(==, A, B)
-#  define assert_ne(A, B) assert_op(!=, A, B)
-#  define assert_lt(A, B) assert_op(< , A, B)
-#  define assert_le(A, B) assert_op(<=, A, B)
-#  define assert_gt(A, B) assert_op(> , A, B)
-#  define assert_ge(A, B) assert_op(>=, A, B)
+  DEFINE_ASSERT_OP(eq, ==)
+  DEFINE_ASSERT_OP(ge, >=)
+  DEFINE_ASSERT_OP(gt, > )
+  DEFINE_ASSERT_OP(le, <=)
+  DEFINE_ASSERT_OP(lt, < )
+  DEFINE_ASSERT_OP(ne, !=)
+
+# if LIBPORT_ASSERT_VERBOSE
+#  define assert_eq(A, B) ::libport::assert_eq(A, B, #A, #B, __FILE__, __LINE__)
+#  define assert_ge(A, B) ::libport::assert_ge(A, B, #A, #B, __FILE__, __LINE__)
+#  define assert_gt(A, B) ::libport::assert_gt(A, B, #A, #B, __FILE__, __LINE__)
+#  define assert_le(A, B) ::libport::assert_le(A, B, #A, #B, __FILE__, __LINE__)
+#  define assert_lt(A, B) ::libport::assert_lt(A, B, #A, #B, __FILE__, __LINE__)
+#  define assert_ne(A, B) ::libport::assert_ne(A, B, #A, #B, __FILE__, __LINE__)
+
+# else // !LIBPORT_ASSERT_VERBOSE
+
+#  define assert_eq(A, B) assert(A == B)
+#  define assert_ge(A, B) assert(A >= B)
+#  define assert_gt(A, B) assert(A >  B)
+#  define assert_le(A, B) assert(A <= B)
+#  define assert_lt(A, B) assert(A <  B)
+#  define assert_ne(A, B) assert(A != B)
 # endif
 
 #endif // !LIBPORT_ASSERT_HH
