@@ -268,6 +268,21 @@ namespace sched
     child_exception_->rethrow();
   }
 
+  ATTRIBUTE_ALWAYS_INLINE
+  Job::ChildrenCollecter::ChildrenCollecter(rJob parent, size_t s)
+    : std::vector<rJob>()
+    , parent_(parent)
+  {
+    reserve(s);
+  }
+
+  ATTRIBUTE_ALWAYS_INLINE
+  Job::ChildrenCollecter::~ChildrenCollecter()
+  {
+    foreach (rJob& child, *this)
+      parent_->terminate_child(child);
+  }
+
 } // namespace sched
 
 #endif // !SCHED_JOB_HXX

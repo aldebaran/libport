@@ -11,7 +11,6 @@
 
 # include <boost/any.hpp>
 
-# include <libport/finally.hh>
 # include <libport/symbol.hh>
 # include <libport/utime.hh>
 
@@ -287,13 +286,33 @@ namespace sched
     /// \return The number of jobs.
     static unsigned int alive_jobs();
 
+    /// Helper to unregister all children upon destruction.
+    class ChildrenCollecter: public std::vector<rJob>
+    {
+    public:
+      /// Construct a child collecter.
+      ///
+      /// \param parent Parent of the child to collect
+      ///
+      /// \param size Approximative previsional number of children.
+      ChildrenCollecter(rJob parent, size_t size);
+      /// Terminate all childrens.
+      ~ChildrenCollecter();
+
+    private:
+      rJob parent_;
+    };
+
     /// Register a child.
     ///
     /// \param child The child job.
     ///
-    /// \param at_end Children will be automatically terminated
-    ///               when this object gets no longer referenced.
-    void register_child(const rJob& child, libport::Finally& at_end);
+    /// \param children Children will be automatically terminated
+    ///                 when this object is destroyed.
+    void register_child(const rJob& child, ChildrenCollecter& children);
+
+    /// Terminate child and remove it from our children list.
+    void terminate_child(const rJob& child);
 
     /// Do we have a parent?
     ///
@@ -364,9 +383,6 @@ namespace sched
 
     /// Our children.
     jobs_type children_;
-
-    /// Terminate child and remove it from our children list.
-    void terminate_child(const rJob& child);
 
     /// Check stack space from time to time.
     bool check_stack_space_;

@@ -103,11 +103,11 @@ namespace sched
   }
 
   void
-  Job::register_child(const rJob& child, libport::Finally& at_end)
+  Job::register_child(const rJob& child, ChildrenCollecter& children)
   {
     assert(!child->parent_);
     child->parent_ = this;
-    at_end << boost::bind(&Job::terminate_child, this, child);
+    children.push_back(child);
     children_.push_back(child);
   }
 
