@@ -9,6 +9,35 @@
 # include <vector>
 
 # include <libport/foreach.hh>
+# include <libport/preproc.hh>
+
+# define FINALLY_ATTR_DECLARE(Attr)             \
+  LIBPORT_FIRST(Attr) LIBPORT_SECOND(Attr);
+# define FINALLY_ATTR_ARG(Attr)                                 \
+  LIBPORT_FIRST(Attr) LIBPORT_CAT(LIBPORT_SECOND(Attr), _)
+# define FINALLY_ATTR_INIT(Attr)                                \
+  LIBPORT_SECOND(Attr)(LIBPORT_CAT(LIBPORT_SECOND(Attr), _))
+# define FINALLY_ATTR_FETCH(Attr)               \
+  LIBPORT_SECOND(Attr)
+
+# define FINALLY(Vars, Action)                                          \
+    struct Finally                                                      \
+    {                                                                   \
+      ATTRIBUTE_ALWAYS_INLINE                                           \
+        Finally(LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_ARG, Vars)))  \
+        : LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_INIT, Vars))        \
+      {}                                                                \
+                                                                        \
+      ATTRIBUTE_ALWAYS_INLINE                                           \
+      ~Finally()                                                        \
+      {                                                                 \
+        Action;                                                         \
+      }                                                                 \
+                                                                        \
+      LIBPORT_APPLY(FINALLY_ATTR_DECLARE, Vars);                        \
+    };                                                                  \
+    Finally finally                                                     \
+    (LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_FETCH, Vars)));          \
 
 namespace libport
 {
