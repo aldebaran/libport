@@ -178,7 +178,7 @@ namespace libport
   {
   public:
     template <typename T>
-    const StreamWrapper& operator <<(T& e) const
+    const StreamWrapper& operator <<(const T& e) const
     {
       stream_ << e;
       return *this;
