@@ -97,6 +97,7 @@ libport_include_HEADERS +=				\
   include/libport/pid-file.hh				\
   include/libport/pod-cast.hh				\
   include/libport/pod-cast.hxx				\
+  include/libport/preproc.hh				\
   include/libport/program-name.hh			\
   include/libport/range.hh				\
   include/libport/range.hxx				\
