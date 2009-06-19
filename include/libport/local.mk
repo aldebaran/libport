@@ -33,9 +33,9 @@ libport_include_HEADERS +=				\
   include/libport/asio.hxx				\
   include/libport/assert.hh				\
   include/libport/attributes.hh				\
+  include/libport/backtrace.hh				\
   include/libport/base64.hh				\
   include/libport/buffer-stream.hh			\
-  include/libport/backtrace.hh				\
   include/libport/cli.hh				\
   include/libport/cli.hxx				\
   include/libport/compilation.hh			\
@@ -72,20 +72,21 @@ libport_include_HEADERS +=				\
   include/libport/hash.hh				\
   include/libport/hierarchy.hh				\
   include/libport/indent.hh				\
-  include/libport/ip-semaphore.hh			\
   include/libport/instance-tracker.hh			\
   include/libport/instance-tracker.hxx			\
   include/libport/intrusive-ptr.hh			\
   include/libport/intrusive-ptr.hxx			\
+  include/libport/io-stream.hh				\
+  include/libport/ip-semaphore.hh			\
   include/libport/lexical-cast.hh			\
   include/libport/lockable.hh				\
   include/libport/lockable.hxx				\
-  include/libport/netdb.h				\
-  include/libport/network.h				\
   include/libport/map.hh				\
   include/libport/map.hxx				\
   include/libport/markup-ostream.hh			\
   include/libport/meta.hh				\
+  include/libport/netdb.h				\
+  include/libport/network.h				\
   include/libport/option-parser.hh			\
   include/libport/option-parser.hxx			\
   include/libport/package-info.hh			\
@@ -118,7 +119,6 @@ libport_include_HEADERS +=				\
   include/libport/singleton-ptr.hxx			\
   include/libport/statistics.hh				\
   include/libport/statistics.hxx			\
-  include/libport/io-stream.hh				\
   include/libport/symbol.hh				\
   include/libport/symbol.hxx				\
   include/libport/sysexits.hh				\
@@ -139,15 +139,15 @@ libport_include_HEADERS +=				\
   include/libport/ufloat.hh				\
   include/libport/ufloat.hxx				\
   include/libport/ull-fixed-point.hh			\
+  include/libport/ulong-fixed-point.hh			\
   include/libport/unique-pointer.hh			\
   include/libport/unique-pointer.hxx			\
   include/libport/unit-test.hh				\
-  include/libport/ulong-fixed-point.hh			\
   include/libport/utime.hh				\
   include/libport/utime.hxx				\
   include/libport/version.hh				\
-  include/libport/warning-push.hh			\
   include/libport/warning-pop.hh			\
+  include/libport/warning-push.hh			\
   include/libport/weak-ptr.hh				\
   include/libport/weak-ptr.hxx				\
   include/libport/windows.hh				\
