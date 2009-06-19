@@ -292,12 +292,12 @@ Escape the values of C<%hashref> for TeX string syntax.
 
 sub latex_escape(\%)
 {
-  my ($hash) = @_;
-  for (values %$hash)
-    {
-      s/\\/\\textbackslash/g;
-      s/[$%{}]/\\$&/g;
-    }
+   my ($hash) = @_;
+   for (values %$hash)
+     {
+       s/\\/\\textbackslash/g;
+       s/[\$\%\{\}]/\\$&/g;
+     }
 }
 
 =item C<generate_file(%keyword)>
