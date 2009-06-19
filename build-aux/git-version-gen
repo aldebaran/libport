@@ -284,6 +284,22 @@ sub escape(\%)
     }
 }
 
+=item C<latex_escape(\%hashref)>
+
+Escape the values of C<%hashref> for TeX string syntax.
+
+=cut
+
+sub latex_escape(\%)
+{
+  my ($hash) = @_;
+  for (values %$hash)
+    {
+      s/\\/\\textbackslash/g;
+      s/[$%{}]/\\$&/g;
+    }
+}
+
 =item C<generate_file(%keyword)>
 
 Return as file name.
@@ -369,6 +385,7 @@ Generate a LaTeX file.
 sub generate_latex(%)
 {
   my (%keyword) = @_;
+  latex_escape %keyword;
   return <<EOF;
 % The SCM date string.
 \\newcommand{\\VcsDate}{$keyword{Date}\\xspace}
