@@ -125,7 +125,12 @@ namespace sched
 
     /// Terminate the job. The job will execute its cleanup method
     /// and inform the scheduler that it is ready to be destroyed.
+    /// Must not be called by a child to an ancester of his.
     void terminate_now();
+
+    /// Asynchronous termination.  Allows a child to kill its parent.
+    /// Will be killed at the next cycle.
+    void terminate_asap();
 
     /// Register this Job on its Scheduler so that it is rescheduled
     /// during the next cycle. This should be called from the

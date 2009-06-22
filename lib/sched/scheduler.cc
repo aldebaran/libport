@@ -351,17 +351,38 @@ namespace sched
 
     // Since killing the current job (the one requesting the
     // termination) will result in its immediate termination
-    // (including its children), kill all other jobs before.
+    // (including its children).
+    //
+    // So first kill all jobs which death will not terminate this one.
+    //
+    // To this end, we first find the oldest ancester of the
+    // current_job_, they we kill all the jobs that do not descend
+    // from it, then we kill it.
     rJob ancester = 0;
     if (current_job_)
-      ancester = current_job_->ancester();
+    {
+      ancester = current_job_;
+      foreach (const rJob& job, jobs_get())
+        if (job->ancester_of(ancester))
+          ancester = job;
+    }
 
     foreach (const rJob& job, jobs_get())
       if (!ancester || !ancester->ancester_of(job))
 	job->terminate_now();
 
     if (ancester)
-      ancester->terminate_now();
+    {
+      // If the ancester is just the current job, we can kill it now.
+      // Otherwise, since terminate_now first kills the children, the
+      // current_job_ cannot kill its ancester, so we send a signal to
+      // it, and wait for the signal to terminate the ancester and its
+      // family.
+      if (ancester == current_job_)
+        ancester->terminate_now();
+      else
+        ancester->terminate_asap();
+    }
   }
 
   void

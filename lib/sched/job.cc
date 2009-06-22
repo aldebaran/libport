@@ -56,14 +56,7 @@ namespace sched
     }
     catch (TerminateException& e)
     {
-      // Normal termination requested.  If we're a child job, let the
-      // parent handle it, otherwise killall_jobs will probably not
-      // notice that the "current" job is a child of the shell job, so
-      // it will kill the shell job which, recursively, will kill its
-      // children, including the job that asked for the termination.
-      // So it will not terminate properly.
-      if (parent_)
-	parent_->async_throw(ChildException(e.clone()));
+      // Normal termination requested.
     }
     catch (StopException&)
     {
@@ -100,6 +93,12 @@ namespace sched
   {
     // We have to terminate our children as well.
     terminate_jobs(children_);
+    terminate_asap();
+  }
+
+  void
+  Job::terminate_asap()
+  {
     if (!terminated())
       async_throw(TerminateException());
   }
