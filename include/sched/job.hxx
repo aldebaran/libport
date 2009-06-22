@@ -214,9 +214,30 @@ namespace sched
     return parent_;
   }
 
+  inline
+  bool
+  Job::ancester_of(const rJob& that) const
+  {
+    for (const Job* j = that.get(); j; j = j->parent_.get())
+      if (j == this)
+        return true;
+    return false;
+  }
+
+  inline
+  rJob
+  Job::ancester()
+  {
+    rJob res(this);
+    while (res->parent_.get())
+      res = res->parent_.get();
+    return res;
+  }
+
   inline std::ostream&
   operator<< (std::ostream& o, const Job& j)
   {
+    return j.dump(o);
   }
 
   inline const char*
@@ -240,7 +261,6 @@ namespace sched
   ChildException::ChildException(exception_ptr exc)
     : child_exception_(exc)
   {
-    return j.dump(o);
   }
 
   inline

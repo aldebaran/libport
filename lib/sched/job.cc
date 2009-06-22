@@ -56,9 +56,16 @@ namespace sched
 	check_for_pending_exception();
       work();
     }
-    catch (TerminateException&)
+    catch (TerminateException& e)
     {
-      // Normal termination requested
+      // Normal termination requested.  If we're a child job, let the
+      // parent handle it, otherwise killall_jobs will probably not
+      // notice that the "current" job is a child of the shell job, so
+      // it will kill the shell job which, recursively, will kill its
+      // children, including the job that asked for the termination.
+      // So it will not terminate properly.
+      if (parent_)
+	parent_->async_throw(ChildException(e.clone()));
     }
     catch (StopException&)
     {
@@ -71,11 +78,11 @@ namespace sched
       if (parent_)
 	parent_->async_throw(ChildException(e.clone()));
     }
-    catch (const std::exception& se)
+    catch (const std::exception& e)
     {
       // Exception is lost and cannot be propagated properly but can be
       // printed onto the console for diagnostic purpose.
-      std::cerr << "Exception `" << se.what() << "' caught in job "
+      std::cerr << "Exception `" << e.what() << "' caught in job "
 		<< this << ", loosing it\n";
     }
     catch (...)
@@ -157,7 +164,8 @@ namespace sched
 	// We have been awoken by an exception; in this case,
 	// dequeue ourselves from the other thread queue if
 	// we are still enqueued there.
-	libport::erase_if(other.to_wake_up_, boost::bind(job_compare, this, _1));
+	libport::erase_if(other.to_wake_up_,
+                          boost::bind(job_compare, this, _1));
 	throw;
       }
     }

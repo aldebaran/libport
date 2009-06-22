@@ -324,6 +324,14 @@ namespace sched
     /// \return True if we have a parent.
     bool child_job() const;
 
+    /// Whether \a this is an ancester of \a that.
+    bool ancester_of(const rJob& that) const;
+
+    /// The root of this job family.
+    ///
+    /// \return Its ancester with ancesters.
+    rJob ancester();
+
   protected:
 
     /// Must be implemented to do something useful. If an exception is

@@ -12,6 +12,7 @@
 #include <libport/compiler.hh>
 #include <libport/containers.hh>
 #include <libport/contract.hh>
+#include <libport/deref.hh>
 #include <libport/foreach.hh>
 
 #include <sched/scheduler.hh>
@@ -148,8 +149,8 @@ namespace sched
       // Should the job be started?
       bool start = false;
 
-      // Save the current time since we will use it several times during this job
-      // analysis.
+      // Save the current time since we will use it several times
+      // during this job analysis.
       libport::utime_t current_time = get_time_();
 
       ECHO("Considering " << *job << " in state " << state_name(job->state_get()));
@@ -344,19 +345,23 @@ namespace sched
   void
   Scheduler::killall_jobs()
   {
-    ECHO("killing all jobs!");
-
     // Mark the scheduler as ready to die when all the jobs are
     // really dead.
     ready_to_die_ = true;
 
-    // Since killing the current job will result in its immediate
-    // termination, kill all other jobs before.
-    foreach (const rJob& job, jobs_get())
-      if (job != current_job_)
-	job->terminate_now();
+    // Since killing the current job (the one requesting the
+    // termination) will result in its immediate termination
+    // (including its children), kill all other jobs before.
+    rJob ancester = 0;
     if (current_job_)
-      current_job_->terminate_now();
+      ancester = current_job_->ancester();
+
+    foreach (const rJob& job, jobs_get())
+      if (!ancester || !ancester->ancester_of(job))
+	job->terminate_now();
+
+    if (ancester)
+      ancester->terminate_now();
   }
 
   void
