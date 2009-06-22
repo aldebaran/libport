@@ -8,6 +8,7 @@
 #include <libport/compiler.hh>     // For ECHO
 #include <libport/containers.hh>
 #include <libport/foreach.hh>
+#include <libport/indent.hh>
 
 #include <sched/job.hh>
 
@@ -19,6 +20,23 @@ namespace sched
     : depth_(depth)
     , payload_(payload)
   {
+  }
+
+  std::ostream&
+  Job::dump(std::ostream& o) const
+  {
+    o << "Job(" << name_ << ")"
+      << " "
+      << (child_job() ? "child job" : "root job");
+    if (!children_.empty())
+    {
+      o << " Children:" << libport::incendl
+        << "{" << libport::iendl;
+      foreach (const rJob& j, children_)
+        o << *j << libport::iendl;
+      o << "}" << libport::decendl;
+    }
+    return o;
   }
 
   void

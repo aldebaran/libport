@@ -217,7 +217,6 @@ namespace sched
   inline std::ostream&
   operator<< (std::ostream& o, const Job& j)
   {
-    return o << "Job(" << j.name_get() << ")";
   }
 
   inline const char*
@@ -241,6 +240,7 @@ namespace sched
   ChildException::ChildException(exception_ptr exc)
     : child_exception_(exc)
   {
+    return j.dump(o);
   }
 
   inline

@@ -89,7 +89,7 @@ namespace sched
     ///
     /// \param name The name of the new job, or an automatically created
     ///        one if none is provided.
-    explicit Job(Scheduler& scheduler, const libport::Symbol& name);
+    Job(Scheduler& scheduler, const libport::Symbol& name);
 
     /// Job destructor.
     ///
@@ -101,6 +101,11 @@ namespace sched
     ///
     /// \return A reference on the job scheduler.
     Scheduler& scheduler_get() const;
+
+    /// Dump internal data (for the developper).
+    ///
+    /// \return \a o
+    std::ostream& dump(std::ostream& o) const;
 
     /// Get the underlying coroutine corresponding to this job.
     ///
