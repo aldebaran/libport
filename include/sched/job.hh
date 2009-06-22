@@ -413,7 +413,10 @@ namespace sched
   };
 
   SCHED_API
-  std::ostream& operator<< (std::ostream&, const Job&);
+  std::ostream& operator<< (std::ostream& o, const Job& j);
+
+  SCHED_API
+  std::ostream& operator<< (std::ostream& o, const jobs_type& js);
 
   /// This exception will be raised to tell the job that it is currently
   /// stopped and must try to unwind tags from its tag stack until it

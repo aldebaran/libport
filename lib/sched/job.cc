@@ -9,6 +9,7 @@
 #include <libport/containers.hh>
 #include <libport/foreach.hh>
 #include <libport/indent.hh>
+#include <libport/separator.hh>
 
 #include <sched/job.hh>
 
@@ -29,13 +30,10 @@ namespace sched
       << " "
       << (child_job() ? "child job" : "root job");
     if (!children_.empty())
-    {
       o << " Children:" << libport::incendl
-        << "{" << libport::iendl;
-      foreach (const rJob& j, children_)
-        o << *j << libport::iendl;
-      o << "}" << libport::decendl;
-    }
+        << "{" << libport::incendl
+        << children_ << libport::decendl
+        << "}" << libport::decindent;
     return o;
   }
 
@@ -101,9 +99,7 @@ namespace sched
   Job::terminate_now()
   {
     // We have to terminate our children as well.
-    foreach (const rJob& child, children_)
-      child->terminate_now();
-    children_.clear();
+    terminate_jobs(children_);
     if (!terminated())
       async_throw(TerminateException());
   }
@@ -261,5 +257,15 @@ namespace sched
       job->terminate_now();
     jobs.clear();
   }
+
+  std::ostream&
+  operator<< (std::ostream& o, const jobs_type& js)
+  {
+    // Template parameters needed for gcc-3.
+    return o << libport::separate<const jobs_type,
+                                  std::ostream&(*)(std::ostream&)>
+                                 (js, libport::iendl);
+  }
+
 
 } // namespace sched
