@@ -44,7 +44,8 @@ namespace libport
 #  define ASSERT_ECHO(File, Line, Message)                      \
   std::cerr << File << ":" << Line << ": " << Message << std::endl
 # else
-#  define ASSERT_ECHO(File, Line, Message)
+#  define ASSERT_ECHO(File, Line, Message)      \
+  (void) 0
 # endif
 
 
