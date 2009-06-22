@@ -26,9 +26,11 @@
 // Do not warn that ext/hash_map is deprecated
 #   undef __DEPRECATED
 #   include <ext/hash_map>
+#   include <ext/hash_set>
 #   define __DEPRECATED
 #  else
 #   include <ext/hash_map>
+#   include <ext/hash_set>
 #  endif
 
 namespace LIBPORT_HASH_NAMESPACE
@@ -191,16 +193,7 @@ namespace libport
 {
   using LIBPORT_HASH_NAMESPACE::hash_map;
 
-  // FIXME: This is for compatibility with the previous approach.
-  // Instead of libport::hash_map_type<...>::type, use
-  // libport::hash_map<...>.
-
-  template<class K, class V>
-  class hash_map_type
-  {
-  public:
-    typedef hash_map<K, V> type;
-  };
+  using LIBPORT_HASH_NAMESPACE::hash_set;
 
 }
 
