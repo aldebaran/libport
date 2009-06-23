@@ -225,16 +225,6 @@ namespace sched
     return false;
   }
 
-  inline
-  rJob
-  Job::ancester()
-  {
-    rJob res(this);
-    while (res->parent_.get())
-      res = res->parent_.get();
-    return res;
-  }
-
   inline std::ostream&
   operator<< (std::ostream& o, const Job& j)
   {
