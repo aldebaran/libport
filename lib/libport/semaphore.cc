@@ -15,7 +15,7 @@ namespace libport
 #  define CLOCK_REALTIME 0
 #  define ETIMEDOUT 110
 
-  void
+  int
   clock_gettime(int, struct timespec* t)
   {
     if (t)
@@ -23,6 +23,7 @@ namespace libport
       t->tv_sec = 0;
       t->tv_nsec = 0;
     }
+    return 0;
   }
 
   sem_t*

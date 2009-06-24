@@ -7,12 +7,12 @@
 #include <libport/escape.hh>
 #include <libport/foreach.hh>
 #include <libport/ip-semaphore.hh>
+#include <libport/pthread.h>
 #include <libport/windows.hh>
 #include <libport/unistd.h>
 
 #ifndef WIN32
 # include <syslog.h>
-# include <pthread.h>
 #endif
 
 #ifndef LIBPORT_DEBUG_DISABLE

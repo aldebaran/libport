@@ -1,10 +1,9 @@
 #ifndef LIBPORT_SERIALIZE_BINARY_I_SERIALIZER_HXX
 # define LIBPORT_SERIALIZE_BINARY_I_SERIALIZER_HXX
 
-# include <arpa/inet.h>
-
 # include <vector>
 
+# include <libport/arpa/inet.h>
 # include <libport/contract.hh>
 # include <libport/foreach.hh>
 # include <libport/hierarchy.hh>
