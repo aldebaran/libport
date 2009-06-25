@@ -29,7 +29,8 @@
 namespace libport
 {
 
-  Semaphore::Semaphore(unsigned cnt)
+  Semaphore::Semaphore(unsigned value)
+    : value_(value)
   {
 # ifdef __APPLE__
     static unsigned int counter = 0;
@@ -41,7 +42,7 @@ namespace libport
       errno = 0;
       s << "sema/" << getpid() << "/" << counter++;
       name_ = s.str();
-      sem_ = sem_open(name_.c_str(), O_CREAT | O_EXCL, 0777, cnt);
+      sem_ = sem_open(name_.c_str(), O_CREAT | O_EXCL, 0777, value);
       sem_open_errno = errno;
     } while (sem_ == SEM_FAILED && errno == EEXIST);
 
@@ -77,10 +78,10 @@ namespace libport
     }
 # else
     sem_ = new sem_t;
-    if (sem_init(sem_, 0, cnt))
+    if (sem_init(sem_, 0, value))
     {
       destroy();
-      errabort("sem_init(" << cnt << ')');
+      errabort("sem_init(" << value << ')');
     }
 # endif
     ++instances_;
@@ -144,6 +145,7 @@ namespace libport
       destroy();
       errabort("sem_post");
     }
+    ++value_;
   }
 
   void
@@ -233,6 +235,7 @@ namespace libport
       errabort("sem_wait");
     }
 
+    --value_;
     return true;
   }
 
@@ -244,13 +247,16 @@ namespace libport
 
   Semaphore::operator int()
   {
+#ifndef __APPLE__
     int res;
     if (sem_getvalue(sem_, &res))
     {
       destroy();
       errabort("sem_getvalue");
     }
-    return res;
+    assert_eq(res, value_);
+#endif
+    return value_;
   }
 
 } // namespace libport

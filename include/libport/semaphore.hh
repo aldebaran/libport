@@ -21,7 +21,7 @@ namespace libport
   class LIBPORT_API Semaphore: public boost::noncopyable
   {
   public:
-    Semaphore(unsigned cnt = 0);
+    Semaphore(unsigned value = 0);
     ~Semaphore();
 
     /// Release.
@@ -52,6 +52,7 @@ namespace libport
   private:
     void destroy();
     sem_t* sem_;
+    unsigned value_;
 # ifdef __APPLE__
     std::string name_;
 # endif
