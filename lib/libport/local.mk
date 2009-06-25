@@ -1,10 +1,15 @@
 lib_LTLIBRARIES += lib/libport/libport.la
 lib_libport_libport_la_LDFLAGS =		\
-  -avoid-version -no-undefined			\
+  -avoid-version -no-undefined
+
+lib_libport_libport_la_LIBADD =			\
+  $(LIBADD)					\
+  $(BOOST_SYSTEM_LIBS)				\
   $(CLOCK_LIBS)					\
   $(SOCKETS_LIBS)				\
   $(PTHREAD_LDFLAGS)				\
-  $(PTHREAD_LIBS)
+  $(PTHREAD_LIBS)				\
+  $(SSL_LIBS)
 
 lib_libport_libport_la_CPPFLAGS =		\
   $(AM_CPPFLAGS)				\
