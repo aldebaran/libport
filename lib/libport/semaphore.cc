@@ -217,10 +217,13 @@ namespace libport
       else
       {
         struct timespec ts;
-	if (clock_gettime(CLOCK_REALTIME, &ts))
+        if (clock_gettime(CLOCK_REALTIME, &ts))
           errabort("clock_gettime");
-	ts.tv_sec += useconds / 1000000;
-	ts.tv_nsec += (useconds % 1000000) * 1000;
+        ts.tv_sec += useconds / (1000 * 1000);
+        ts.tv_nsec += (useconds % (1000 * 1000)) * 1000;
+        // Respect the constrainsts.
+        ts.tv_sec += ts.tv_nsec / (1000 * 1000 * 1000);
+        ts.tv_nsec %= 1000 * 1000 * 1000;
         err = sem_timedwait(sem_, &ts);
       }
 # endif
