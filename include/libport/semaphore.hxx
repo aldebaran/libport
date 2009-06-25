@@ -9,13 +9,13 @@ namespace libport
   inline void
   Semaphore::operator++(int)
   {
-    Semaphore::operator++();
+    operator++();
   }
 
   inline void
   Semaphore::operator--(int)
   {
-    Semaphore::operator--();
+    operator--();
   }
 
 } // namespace libport

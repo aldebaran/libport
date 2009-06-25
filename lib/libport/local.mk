@@ -29,22 +29,24 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/dirent.cc				\
   lib/libport/escape.cc				\
   lib/libport/fd-stream.cc			\
-  lib/libport/path.cc				\
   lib/libport/file-library.cc			\
   lib/libport/file-system.cc			\
   lib/libport/indent.cc				\
+  lib/libport/io-stream.cc			\
   lib/libport/ip-semaphore.cc			\
   lib/libport/markup-ostream.cc			\
   lib/libport/option-parser.cc			\
   lib/libport/package-info.cc			\
+  lib/libport/path.cc				\
   lib/libport/pid-file.cc			\
   lib/libport/program-name.cc			\
   lib/libport/read-stdin.cc			\
   lib/libport/sched.cc				\
+  lib/libport/semaphore-rpl.cc			\
   lib/libport/semaphore.cc			\
-  lib/libport/io-stream.cc			\
   lib/libport/symbol.cc				\
   lib/libport/sysexits.cc			\
+  lib/libport/time.cc				\
   lib/libport/timer.cc				\
   lib/libport/tokenizer.cc			\
   lib/libport/ufloat.cc				\

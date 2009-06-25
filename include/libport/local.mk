@@ -1,6 +1,7 @@
 # C headers.
 libport_includedir = $(libport_include_basedir)/libport
 libport_include_HEADERS =			\
+  include/libport/cerrno			\
   include/libport/cmath				\
   include/libport/csignal			\
   include/libport/cstdio			\
@@ -10,6 +11,8 @@ libport_include_HEADERS =			\
   include/libport/fcntl.h			\
   include/libport/pthread.h			\
   include/libport/pthread.hxx			\
+  include/libport/semaphore.h			\
+  include/libport/time.h			\
   include/libport/unistd.h
 
 # arpa/ headers

@@ -1,0 +1,12 @@
+#ifndef LIBPORT_CERRNO
+# define LIBPORT_CERRNO
+
+# include <libport/detect-win32.h>
+
+# include <cerrno>
+
+# if defined WIN32
+#  define ETIMEDOUT 110
+# endif
+
+#endif // ! LIBPORT_CERRNO
