@@ -16,10 +16,15 @@
 # ------------
 # Look for the pthreads.
 AC_DEFUN([URBI_PTHREAD],
-[ACX_PTHREAD([pthreads=true], [pthreads=false])
+[AC_REQUIRE([URBI_WIN32])dnl
+ACX_PTHREAD([pthreads=true], [pthreads=false])
 AC_CHECK_HEADERS([pthread.h])
 
 SDK_CFLAGS="$SDK_CFLAGS $PTHREAD_CFLAGS"
 SDK_CXXFLAGS="$SDK_CXXFLAGS $PTHREAD_CFLAGS"
 SDK_LIBS="$SDK_LIBS $PTHREAD_LIBS"
+if ! $windows; then
+   PTHREAD_LDFLAGS+=-lpthread
+fi
+AC_SUBST([PTHREAD_LDFLAGS])
 ])

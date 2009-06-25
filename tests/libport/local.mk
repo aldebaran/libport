@@ -83,7 +83,7 @@ LDADD +=                                        \
 
 tests_libport_asio_SOURCES                        = tests/libport/asio.cc
 tests_libport_asio_LDADD = $(BOOST_SYSTEM_LIBS)  $(LDADD)
-tests_libport_asio_LDFLAGS = $(BOOST_SYSTEM_LDFLAGS) $(PTHREAD_LDFLAGS) $(AM_LDFLAGS)
+tests_libport_asio_LDFLAGS = $(BOOST_SYSTEM_LDFLAGS) $(AM_LDFLAGS)
 tests_libport_asio_CXXFLAGS = $(PTHREAD_CFLAGS) $(AM_CXXFLAGS)
 
 tests_libport_assert_SOURCES                            = tests/libport/assert.cc

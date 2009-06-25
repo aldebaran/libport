@@ -26,7 +26,7 @@ include tests/local.mk
 AM_CPPFLAGS +=					\
   $(LIBPORT_CPPFLAGS)				\
   -I$(srcdir)/lib
-AM_CXXFLAGS += $(WARNING_CXXFLAGS)
+AM_CXXFLAGS += $(WARNING_CXXFLAGS) $(PTHREAD_CFLAGS)
 
 # libport.
 include include/libport/local.mk
