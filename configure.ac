@@ -51,13 +51,14 @@ URBI_COMPILATION_MODE
 ## --------- ##
 
 # libport/backtrace.
-AC_CHECK_HEADERS(execinfo.h)
+AC_CHECK_HEADERS([execinfo.h])
+
 # libport/semaphore.
 AC_CHECK_LIB([rt], [clock_gettime],
              [AC_SUBST([CLOCK_LIBS], [-lrt])])
 
-
-AC_SUBST([SSL_LIBS], [-lssl])
+# -lssl suffices on GNU/Linux, OS X want -lcrypto explicitly.
+AC_SUBST([SSL_LIBS], ['-lssl -lcrypto'])
 
 ## ---------- ##
 ## Libsched.  ##
