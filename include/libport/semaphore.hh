@@ -38,8 +38,6 @@ namespace libport
     /// Releases \a c times.
     Semaphore& operator += (unsigned c);
 
-    operator int ();
-
     /** Get semaphore with a limit of \b timeout in second.
      * Fixme: Use seconds != 0 work only on linux.
      */
@@ -52,7 +50,6 @@ namespace libport
   private:
     void destroy();
     sem_t* sem_;
-    unsigned value_;
 # ifdef __APPLE__
     std::string name_;
 # endif

@@ -27,18 +27,14 @@ void* thread1(void* data)
 void check_timeout()
 {
   libport::Semaphore sem(1);
-  BOOST_CHECK_EQUAL(1, (int) sem);
   sem--;
-  BOOST_CHECK_EQUAL(0, (int) sem);
   libport::utime_t t1 = libport::utime();
   pthread_t th;
   pthread_create(&th, 0, &thread1, &sem);
   BOOST_CHECK_EQUAL(sem.uget(1000000), false);
-  BOOST_CHECK_EQUAL(0, (int) sem);
   libport::utime_t t2 = libport::utime() - t1;
   BOOST_CHECK(t2 < 1500000);
   pthread_join(th, NULL);
-  BOOST_CHECK_EQUAL(1, (int) sem);
 }
 
 test_suite*

@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include <libport/assert.hh>
-#include <libport/exception.hh>
 #include <libport/program-name.hh>
 #include <libport/semaphore.hh>
 #include <libport/sysexits.hh>
@@ -30,7 +29,6 @@ namespace libport
 {
 
   Semaphore::Semaphore(unsigned value)
-    : value_(value)
   {
 # ifdef __APPLE__
     static unsigned int counter = 0;
@@ -145,7 +143,6 @@ namespace libport
       destroy();
       errabort("sem_post");
     }
-    ++value_;
   }
 
   void
@@ -238,7 +235,6 @@ namespace libport
       errabort("sem_wait");
     }
 
-    --value_;
     return true;
   }
 
@@ -246,20 +242,6 @@ namespace libport
   Semaphore::get(unsigned seconds)
   {
     return uget(seconds * 1000 * 1000);
-  }
-
-  Semaphore::operator int()
-  {
-#ifndef __APPLE__
-    int res;
-    if (sem_getvalue(sem_, &res))
-    {
-      destroy();
-      errabort("sem_getvalue");
-    }
-    assert_eq(res, value_);
-#endif
-    return value_;
   }
 
 } // namespace libport
