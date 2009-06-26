@@ -137,10 +137,10 @@ namespace libport
 #  define DEFINE_ASSERT_OP(OpName, Op)                                  \
 namespace libport                                                       \
 {                                                                       \
-  template <typename T>                                                 \
+  template <typename T, typename U>                                     \
   inline                                                                \
   void                                                                  \
-  assert_ ## OpName(const T& lhs, const T& rhs,                         \
+  assert_ ## OpName(const T& lhs, const U& rhs,                         \
                     const char* lstr, const char* rstr,                 \
                     const char* file, int line)                         \
   {                                                                     \
