@@ -12,10 +12,12 @@
 using libport::test_suite;
 using namespace libport::serialize;
 
+#define BASE "tests/serialize/"
+
 void binary_pod()
 {
   {
-    std::ofstream f("binary_pod");
+    std::ofstream f(BASE "binary_pod");
     BinaryOSerializer ser(f);
 
     ser.serialize<int>("test", 42);
@@ -31,7 +33,7 @@ void binary_pod()
     ser.serialize<int*>("test", NULL);
   }
   {
-    std::ifstream f("binary_pod");
+    std::ifstream f(BASE "binary_pod");
     BOOST_CHECK(f.good());
     BinaryISerializer ser(f);
 
@@ -80,7 +82,7 @@ struct Person
 void binary_class()
 {
   {
-    std::ofstream f("binary_class");
+    std::ofstream f(BASE "binary_class");
     BinaryOSerializer ser(f);
 
     Person ed("Draven", "Eric");
@@ -89,7 +91,7 @@ void binary_class()
     ser.serialize<Person>("test", cs);
   }
   {
-    std::ifstream f("binary_class");
+    std::ifstream f(BASE "binary_class");
     BinaryISerializer ser(f);
 
     Person ed = ser.unserialize<Person>("test");
@@ -184,7 +186,7 @@ struct Gentoo: public Linux
 void binary_hierarchy()
 {
   {
-    std::ofstream f("binary_hier");
+    std::ofstream f(BASE "binary_hier");
     BinaryOSerializer ser(f);
 
     Debian d("2.4", "sarge");
@@ -193,7 +195,7 @@ void binary_hierarchy()
     ser.serialize<Gentoo>("test", g);
   }
   {
-    std::ifstream f("binary_hier");
+    std::ifstream f(BASE "binary_hier");
     BinaryISerializer ser(f);
 
     Unix* d_ = ser.unserialize<Unix>("test");
