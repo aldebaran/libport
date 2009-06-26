@@ -1,6 +1,8 @@
 #ifndef LIBPORT_BOOST_ERROR_HXX
 # define LIBPORT_BOOST_ERROR_HXX
 
+# include <iostream>
+
 namespace libport
 {
 
