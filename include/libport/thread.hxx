@@ -1,17 +1,19 @@
 #ifndef LIBPORT_THREAD_HXX
 # define LIBPORT_THREAD_HXX
 
+# include <boost/bind.hpp>
+# include <libport/assert.hh>
+# include <libport/cerrno>
 # include <libport/config.h>
 # include <libport/detect-win32.h>
-# include <boost/bind.hpp>
 
 namespace libport
 {
   inline
   void*
-  _startThread(void * data)
+  _startThread(void *data)
   {
-    boost::function0<void> * s =(boost::function0<void>*) data;
+    boost::function0<void> *s = (boost::function0<void>*) data;
     (*s)();
     delete s;
     return 0;
@@ -21,9 +23,10 @@ namespace libport
   pthread_t
   startThread(boost::function0<void> func)
   {
-    boost::function0<void> * cp = new boost::function0<void>(func);
+    boost::function0<void> *cp = new boost::function0<void>(func);
     pthread_t pt;
-    pthread_create(&pt, 0, &_startThread, cp);
+    if (pthread_create(&pt, 0, &_startThread, cp))
+      errabort("pthread_create");
     return pt;
   }
 
@@ -75,12 +78,11 @@ namespace libport
   {
     res_ = f();
 #ifdef LIBPORT_HAVE_PTHREAD_SOURCES
-    while(true)
+    while (true)
       usleep(995000);
 #endif
   }
 
-  /// Return true if a job finished
   template<typename Res>
   inline
   void
@@ -116,7 +118,8 @@ namespace libport
       usleep(200000);
 #else
     if (!res_ && handle_)
-      pthread_join(handle_, NULL);
+      if (pthread_join(handle_, NULL))
+        errabort("pthread_join");
 #endif
   }
 

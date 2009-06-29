@@ -1,9 +1,9 @@
 #include <libport/config.h>
 #ifdef LIBPORT_HAVE_SEMGET
 
-# include <cerrno>
-# include <cstdio>
-# include <cstdlib>
+# include <libport/cerrno>
+# include <libport/cstdio>
+# include <libport/cstdlib>
 # include <sys/ipc.h>
 # include <sys/sem.h>
 # include <sys/types.h>

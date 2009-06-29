@@ -1,8 +1,9 @@
 #ifndef LIBPORT_LOCKABLE_HXX
 # define LIBPORT_LOCKABLE_HXX
 
-# include <libport/cerrno>
 # include <libport/assert.hh>
+# include <libport/cerrno>
+# include <libport/format.hh>
 
 /*--------------------------.
 | Implementation: Windows.  |
