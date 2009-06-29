@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <iostream>
 
 #include <libport/backtrace.hh>
 #include <libport/config.h>
@@ -13,7 +14,7 @@ typedef USHORT (WINAPI *CSBT)(ULONG, ULONG, PVOID*, PULONG);
 
 namespace libport
 {
-  backtrace&
+  backtrace_type&
   backtrace(backtrace& res)
   {
     void* array[63];
@@ -37,7 +38,7 @@ namespace libport
 
 namespace libport
 {
-  backtrace&
+  backtrace_type&
   backtrace(backtrace_type& res)
   {
     enum { size = 128 };
@@ -59,7 +60,7 @@ namespace libport
 
 namespace libport
 {
-  backtrace&
+  backtrace_type&
   backtrace(backtrace_type& res)
   {
     res.clear();
@@ -78,4 +79,33 @@ namespace libport
     backtrace_type res;
     return backtrace(res);
   }
+
+
+  Backtrace::Backtrace()
+    : backtrace_()
+  {
+    backtrace(backtrace_);
+  }
+
+  const backtrace_type&
+  Backtrace::backtrace_get() const
+  {
+    return backtrace_;
+  }
+
+  std::ostream&
+  Backtrace::dump(std::ostream& o) const
+  {
+    foreach(const std::string& s, backtrace_)
+      o << s << std::endl;
+    return o;
+  }
+
+  std::ostream&
+  operator<<(std::ostream& o, const Backtrace& b)
+  {
+    return b.dump(o);
+  }
+
+
 }

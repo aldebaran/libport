@@ -12,31 +12,58 @@
 using libport::test_suite;
 using namespace libport;
 
-ATTRIBUTE_NOINLINE
-void
-inner()
+namespace freefunction
 {
-  foreach(const std::string& s, backtrace())
-    std::cout << s << std::endl;
+  ATTRIBUTE_NOINLINE
+  void
+  inner()
+  {
+    foreach(const std::string& s, backtrace())
+      std::cout << s << std::endl;
+  }
+
+  ATTRIBUTE_NOINLINE
+  void
+  outer()
+  {
+    inner();
+  }
+
+  void
+  check()
+  {
+    outer();
+  }
 }
 
-ATTRIBUTE_NOINLINE
-void
-outer()
+namespace object
 {
-  inner();
-}
+  ATTRIBUTE_NOINLINE
+  void
+  inner()
+  {
+    std::cout << Backtrace() << std::endl;
+  }
 
-void
-check()
-{
-  outer();
+  ATTRIBUTE_NOINLINE
+  void
+  outer()
+  {
+    inner();
+  }
+
+  void
+  check()
+  {
+    outer();
+  }
 }
 
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::backtrace");
-  suite->add(BOOST_TEST_CASE(check));
+  suite->add(BOOST_TEST_CASE(freefunction::check));
+  suite->add(BOOST_TEST_CASE(object::check));
   return suite;
 }
