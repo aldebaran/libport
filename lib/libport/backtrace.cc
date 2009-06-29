@@ -13,8 +13,8 @@ typedef USHORT (WINAPI *CSBT)(ULONG, ULONG, PVOID*, PULONG);
 
 namespace libport
 {
-  backtrace_type
-  backtrace()
+  backtrace&
+  backtrace(backtrace& res)
   {
     void* array[63];
     HMODULE hdl = GetModuleHandle(TEXT("kernel32.dll"));
@@ -22,10 +22,11 @@ namespace libport
     CSBT csbt = (CSBT) GetProcAddress(hdl,
 				      "RtlCaptureStackBackTrace");
     assert(csbt);
-    unsigned int frames = csbt(0, 63, array, 0);
-    backtrace_type res;
-    for (unsigned int i = 0; i < frames; ++i)
-      res.push_back((char*) array[i]);
+    size_t frames = csbt(0, 63, array, 0);
+    res.clear();
+    res.reserve(frames);
+    for (size_t i = 0; i < frames; ++i)
+      res << (char*) array[i];
     return res;
   }
 }
@@ -36,15 +37,15 @@ namespace libport
 
 namespace libport
 {
-  backtrace_type
-  backtrace()
+  backtrace&
+  backtrace(backtrace_type& res)
   {
     enum { size = 128 };
     void* callstack[size];
     size_t frames = ::backtrace(callstack, size);
     char** strs = backtrace_symbols(callstack, frames);
 
-    backtrace_type res;
+    res.clear();
     res.reserve(frames);
     for (size_t i = 0; i < frames; ++i)
       res << strs[i];
@@ -58,13 +59,23 @@ namespace libport
 
 namespace libport
 {
-  backtrace_type
-  backtrace()
+  backtrace&
+  backtrace(backtrace_type& res)
   {
-    backtrace_type res;
-    res.push_back("(backtrace not available)");
+    res.clear();
+    res << "(backtrace not available)";
     return res;
   }
 }
 
 #endif
+
+namespace libport
+{
+  backtrace_type
+  backtrace()
+  {
+    backtrace_type res;
+    return backtrace(res);
+  }
+}

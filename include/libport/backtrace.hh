@@ -15,11 +15,14 @@ namespace libport
   /// everything.
   typedef std::vector<std::string> backtrace_type;
 
+  /// Store stack trace as a collection of strings in \a bt.
+  LIBPORT_API void backtrace(backtrace_type& bt);
+
   /// Return the stack trace as a collection of strings.
   /// There is nothing particular to do about the memory, just
   /// clear the container when done.
-  LIBPORT_API
-  backtrace_type backtrace();
+  LIBPORT_API backtrace_type backtrace();
+
 }
 
 #endif // !LIBPORT_BACKTRACE_HH
