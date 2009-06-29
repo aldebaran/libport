@@ -7,6 +7,8 @@
 namespace libport
 {
 
+  /// Same as perror, but for Boost errors:
+  /// Display \a s, then the human readable message for \a erc.
   void boost_error(const std::string& s, boost::system::error_code erc);
 
 }
