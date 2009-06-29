@@ -1,5 +1,7 @@
 #include <string>
 
+#include <libport/assert.hh>
+#include <libport/cerrno>
 #include <libport/pthread.h>
 #include <libport/unit-test.hh>
 
@@ -17,7 +19,8 @@ void* thread1(void* data)
 
 void* thread2(void* data)
 {
-  pthread_join(*(pthread_t *)data, 0);
+  if (pthread_join(*(pthread_t *)data, 0))
+    errabort("pthread_join");
   truth.insert(0, "emacs");
   return (void*)0xdeadbeef;
 }
@@ -30,7 +33,8 @@ void test_pthread()
 
   BOOST_CHECK(!pthread_create(my_thread, 0, &thread1, (char*)vim));
   BOOST_CHECK(!pthread_create(my_thread + 1, 0, &thread2, my_thread));
-  pthread_join(my_thread[1], &ret);
+  if (pthread_join(my_thread[1], &ret))
+    errabort("pthread_join");
 #if !defined WIN32
   BOOST_CHECK_EQUAL(ret, (void*)0xdeadbeef);
 #endif

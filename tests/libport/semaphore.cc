@@ -1,7 +1,9 @@
+#include <libport/assert.hh>
+#include <libport/cerrno>
 #include <libport/pthread.h>
 #include <libport/semaphore.hh>
-#include <libport/unit-test.hh>
 #include <libport/unistd.h>
+#include <libport/unit-test.hh>
 #include <libport/utime.hh>
 
 using libport::test_suite;
@@ -30,11 +32,13 @@ void check_timeout()
   sem--;
   libport::utime_t t1 = libport::utime();
   pthread_t th;
-  pthread_create(&th, 0, &thread1, &sem);
+  if (pthread_create(&th, 0, &thread1, &sem))
+    errabort("pthread_create");
   BOOST_CHECK_EQUAL(sem.uget(1000000), false);
   libport::utime_t t2 = libport::utime() - t1;
   BOOST_CHECK(t2 < 1500000);
-  pthread_join(th, NULL);
+  if (pthread_join(th, NULL))
+    errabort("pthread_join");
 }
 
 test_suite*
