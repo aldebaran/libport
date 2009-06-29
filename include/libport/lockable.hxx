@@ -45,39 +45,6 @@ namespace libport
 } // namespace libport
 
 
-/*-----------------------.
-| Implementation: AIBO.  |
-`-----------------------*/
-
-# elif defined LIBPORT_URBI_ENV_AIBO && LIBPORT_URBI_ENV_AIBO
-
-namespace libport
-{
-
-  inline void initLock(Lock&)
-  {
-  }
-
-  inline void lockLock(Lock&)
-  {
-  }
-
-  inline void lockUnlock(Lock&)
-  {
-  }
-
-  inline void deleteLock(Lock&)
-  {
-  }
-
-  inline bool lockTryLock(Lock&)
-  {
-    return true;
-  }
-
-} // namespace libport
-
-
 /*---------------------------.
 | Implementation: pthreads.  |
 `---------------------------*/
@@ -141,31 +108,31 @@ namespace libport
   inline
   Lockable::Lockable()
   {
-    libport::initLock(lock_);
+    initLock(lock_);
   }
 
   inline
   Lockable::~Lockable()
   {
-    libport::deleteLock(lock_);
+    deleteLock(lock_);
   }
 
   inline
   void Lockable::lock()
   {
-    libport::lockLock(lock_);
+    lockLock(lock_);
   }
 
   inline
   void Lockable::unlock()
   {
-    libport::lockUnlock(lock_);
+    lockUnlock(lock_);
   }
 
   inline
   bool Lockable::tryLock()
   {
-    return libport::lockTryLock(lock_);
+    return lockTryLock(lock_);
   }
 
 

@@ -15,26 +15,22 @@ namespace libport
 {
   typedef HANDLE Lock;
 }
-# elif defined LIBPORT_URBI_ENV_AIBO && LIBPORT_URBI_ENV_AIBO
-namespace libport
-{
-  typedef int Lock;
-}
-# else
-# if !defined LIBPORT_HAVE_PTHREAD_H || !LIBPORT_HAVE_PTHREAD_H
-#  error "pthreads are required"
-# endif
+# elif LIBPORT_HAVE_PTHREAD_H
 # include <pthread.h>
 namespace libport
 {
   typedef pthread_mutex_t Lock;
 }
+# else
+#  error "pthreads are required"
 # endif
 
 
 namespace libport
 {
+
   class Condition;
+
   /*-----------.
   | Lockable.  |
   `-----------*/
