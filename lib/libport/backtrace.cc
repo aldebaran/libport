@@ -2,6 +2,7 @@
 
 #include <libport/backtrace.hh>
 #include <libport/config.h>
+#include <libport/containers.hh>
 
 #ifdef WIN32
 # include <windows.h>
@@ -43,9 +44,11 @@ namespace libport
     size_t frames = ::backtrace(callstack, size);
     char** strs = backtrace_symbols(callstack, frames);
 
-    backtrace_type res(frames, 0);
+    backtrace_type res;
+    res.reserve(frames);
     for (size_t i = 0; i < frames; ++i)
-      res[i] = strs[i];
+      res << strs[i];
+    // Free strs, and the strings in contains.
     free(strs);
     return res;
   }
