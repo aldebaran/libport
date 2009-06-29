@@ -37,6 +37,7 @@ libport_include_HEADERS +=				\
   include/libport/assert.hh				\
   include/libport/attributes.hh				\
   include/libport/backtrace.hh				\
+  include/libport/backtrace.hxx				\
   include/libport/base64.hh				\
   include/libport/boost-error.hh			\
   include/libport/boost-error.hxx			\

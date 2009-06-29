@@ -101,11 +101,4 @@ namespace libport
     return o;
   }
 
-  std::ostream&
-  operator<<(std::ostream& o, const Backtrace& b)
-  {
-    return b.dump(o);
-  }
-
-
 }

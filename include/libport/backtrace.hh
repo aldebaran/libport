@@ -36,12 +36,17 @@ namespace libport
     const backtrace_type& backtrace_get() const;
     std::ostream& dump(std::ostream& o) const;
 
+    typedef backtrace_type::const_iterator const_iterator;
+    const_iterator begin() const;
+    const_iterator end() const;
+
   private:
     backtrace_type backtrace_;
   };
 
-  LIBPORT_API
   std::ostream& operator<<(std::ostream& o, const Backtrace& b);
 }
+
+# include <libport/backtrace.hxx>
 
 #endif // !LIBPORT_BACKTRACE_HH
