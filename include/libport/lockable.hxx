@@ -1,7 +1,8 @@
 #ifndef LIBPORT_LOCKABLE_HXX
 # define LIBPORT_LOCKABLE_HXX
 
-#include <libport/assert.hh>
+# include <libport/cerrno>
+# include <libport/assert.hh>
 
 /*--------------------------.
 | Implementation: Windows.  |
@@ -57,42 +58,58 @@ namespace libport
   inline void initLock(Lock& l)
   {
     pthread_mutexattr_t ma;
-    pthread_mutexattr_init(&ma);
+    if (pthread_mutexattr_init(&ma))
+      errabort("pthread_mutexattr_init");
     /* See
      * http://www.nabble.com/Compiling-on-MacOS-10.4-Tiger-t284385.html
      * for more about this code.  Yes, the second #if is very
      * suspicious, I don't know why it's like this.  */
 #  if defined  __APPLE__ || defined __FreeBSD__
-    pthread_mutexattr_settype(&ma, PTHREAD_MUTEX_RECURSIVE);
+    if (pthread_mutexattr_settype(&ma, PTHREAD_MUTEX_RECURSIVE))
+      errabort("pthread_mutexattr_settype");
 #  elif defined PTHREAD_MUTEX_RECURSIVE_NP
     // cygwin
-    pthread_mutexattr_setkind_np(&ma, PTHREAD_MUTEX_RECURSIVE);
+    if (pthread_mutexattr_setkind_np(&ma, PTHREAD_MUTEX_RECURSIVE))
+      errabort("pthread_mutexattr_setkind_np");
 #  else
     // deprecated according to man page and fails to compile
     // pthread_mutexattr_setkind_np(&ma, PTHREAD_MUTEX_RECURSIVE_NP);
-    pthread_mutexattr_settype(&ma, PTHREAD_MUTEX_RECURSIVE_NP);
+    if (pthread_mutexattr_settype(&ma, PTHREAD_MUTEX_RECURSIVE_NP))
+      errabort("pthread_mutexattr_settype");
 #  endif
-    pthread_mutex_init(&l, &ma);
+    if (pthread_mutex_init(&l, &ma))
+      errabort("pthread_mutex_init");
   }
 
   inline void lockLock(Lock& l)
   {
-    pthread_mutex_lock(&l);
+    if (pthread_mutex_lock(&l))
+      errabort("pthread_mutex_lock");
   }
 
   inline void lockUnlock(Lock& l)
   {
-    pthread_mutex_unlock(&l);
+    if (pthread_mutex_unlock(&l))
+      errabort("pthread_mutex_unlock");
   }
 
   inline void deleteLock(Lock& l)
   {
-    pthread_mutex_destroy(&l);
+    if (pthread_mutex_destroy(&l))
+      errabort("pthread_mutex_destroy");
   }
 
   inline bool lockTryLock(Lock& l)
   {
-    return !pthread_mutex_trylock(&l);
+    if (pthread_mutex_trylock(&l))
+    {
+      if (errno == EBUSY)
+        return false;
+      else
+        errabort("pthread_mutex_trylock");
+    }
+    else
+      return true;
   }
 
 } // namespace libport
