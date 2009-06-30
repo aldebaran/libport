@@ -42,7 +42,7 @@ namespace libport
     /// Write data asynchronously to the socket.
     virtual void write(const void* data, unsigned int length) = 0;
     /// Alias on write() for API compatibility.
-    inline void send(void* addr, size_t len) {write((const void*)addr, len);}
+    inline void send(const void* addr, size_t len) {write(addr, len);}
     /// Alias on close() for API compatibility.
     inline void disconnect() {close();}
     /// Return if the socket is connected to a remote host.
@@ -116,7 +116,7 @@ namespace libport
     inline void write(const void* data, unsigned int length)
       { base_->write(data, length);}
     /// Alias on write() for API compatibility.
-    inline void send(void* addr, size_t len) {write((const void*)addr, len);}
+    inline void send(const void* addr, size_t len) {write(addr, len);}
     inline void send(const std::string& s) {write(s.c_str(), s.length());}
     inline void close() {if (base_) base_->close();}
     inline unsigned short getRemotePort() const { return base_->getRemotePort();}
