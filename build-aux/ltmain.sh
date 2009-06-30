@@ -1,6 +1,6 @@
 # Generated from ltmain.m4sh.
 
-# libtool (GNU libtool 1.3095 2009-05-05) 2.2.7a
+# libtool (GNU libtool 1.3109 2009-06-29) 2.2.7a
 # Written by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006,
@@ -70,7 +70,7 @@
 #         compiler:		$LTCC
 #         compiler flags:		$LTCFLAGS
 #         linker:		$LD (gnu? $with_gnu_ld)
-#         $progname:	(GNU libtool 1.3095 2009-05-05) 2.2.7a
+#         $progname:	(GNU libtool 1.3109 2009-06-29) 2.2.7a
 #         automake:	$automake_version
 #         autoconf:	$autoconf_version
 #
@@ -79,8 +79,8 @@
 PROGRAM=libtool
 PACKAGE=libtool
 VERSION=2.2.7a
-TIMESTAMP=" 1.3095 2009-05-05"
-package_revision=1.3095
+TIMESTAMP=" 1.3109 2009-06-29"
+package_revision=1.3109
 
 # Be Bourne compatible
 if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
@@ -2680,7 +2680,18 @@ func_extract_an_archive ()
     $opt_debug
     f_ex_an_ar_dir="$1"; shift
     f_ex_an_ar_oldlib="$1"
-    func_show_eval "(cd \$f_ex_an_ar_dir && $AR x \"\$f_ex_an_ar_oldlib\")" 'exit $?'
+    if test "$lock_old_archive_extraction" = yes; then
+      lockfile=$f_ex_an_ar_oldlib.lock
+      until $opt_dry_run || ln "$progpath" "$lockfile" 2>/dev/null; do
+	func_echo "Waiting for $lockfile to be removed"
+	sleep 2
+      done
+    fi
+    func_show_eval "(cd \$f_ex_an_ar_dir && $AR x \"\$f_ex_an_ar_oldlib\")" \
+		   'stat=$?; rm -f "$lockfile"; exit $stat'
+    if test "$lock_old_archive_extraction" = yes; then
+      $opt_dry_run || rm -f "$lockfile"
+    fi
     if ($AR t "$f_ex_an_ar_oldlib" | sort | sort -uc >/dev/null 2>&1); then
      :
     else
@@ -3202,9 +3213,7 @@ EOF
 #include <assert.h>
 #include <string.h>
 #include <ctype.h>
-#ifndef __MINGW32CE__
-# include <errno.h>
-#endif
+#include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 
@@ -3234,7 +3243,7 @@ int setenv (const char *, const char *, int);
 #  define _INTPTR_T_DEFINED
 #  define intptr_t int
 # endif
-#elif defined(__MINGW32__) && !defined(__MINGW32CE__)
+#elif defined(__MINGW32__)
 # define setmode _setmode
 # define stat    _stat
 # define chmod   _chmod
@@ -3332,10 +3341,6 @@ char *strendzap (char *str, const char *pat);
 void lt_fatal (const char *message, ...);
 void lt_setenv (const char *name, const char *value);
 char *lt_extend_str (const char *orig_value, const char *add, int to_end);
-void lt_opt_process_env_set (const char *arg);
-void lt_opt_process_env_prepend (const char *arg);
-void lt_opt_process_env_append (const char *arg);
-int lt_split_name_value (const char *arg, char** name, char** value);
 void lt_update_exe_path (const char *name, const char *value);
 void lt_update_lib_path (const char *name, const char *value);
 char **prepare_spawn (char **argv);
@@ -3391,18 +3396,6 @@ static const size_t opt_prefix_len         = LTWRAPPER_OPTION_PREFIX_LENGTH;
 static const char *ltwrapper_option_prefix = LTWRAPPER_OPTION_PREFIX;
 
 static const char *dumpscript_opt       = LTWRAPPER_OPTION_PREFIX "dump-script";
-
-static const size_t env_set_opt_len     = LTWRAPPER_OPTION_PREFIX_LENGTH + 7;
-static const char *env_set_opt          = LTWRAPPER_OPTION_PREFIX "env-set";
-  /* argument is putenv-style "foo=bar", value of foo is set to bar */
-
-static const size_t env_prepend_opt_len = LTWRAPPER_OPTION_PREFIX_LENGTH + 11;
-static const char *env_prepend_opt      = LTWRAPPER_OPTION_PREFIX "env-prepend";
-  /* argument is putenv-style "foo=bar", new value of foo is bar${foo} */
-
-static const size_t env_append_opt_len  = LTWRAPPER_OPTION_PREFIX_LENGTH + 10;
-static const char *env_append_opt       = LTWRAPPER_OPTION_PREFIX "env-append";
-  /* argument is putenv-style "foo=bar", new value of foo is ${foo}bar */
 
 int
 main (int argc, char *argv[])
@@ -3528,51 +3521,6 @@ EOF
   newargc=0;
   for (i = 1; i < argc; i++)
     {
-      if (strncmp (argv[i], env_set_opt, env_set_opt_len) == 0)
-        {
-          if (argv[i][env_set_opt_len] == '=')
-            {
-              const char *p = argv[i] + env_set_opt_len + 1;
-              lt_opt_process_env_set (p);
-            }
-          else if (argv[i][env_set_opt_len] == '\0' && i + 1 < argc)
-            {
-              lt_opt_process_env_set (argv[++i]); /* don't copy */
-            }
-          else
-            lt_fatal ("%s missing required argument", env_set_opt);
-          continue;
-        }
-      if (strncmp (argv[i], env_prepend_opt, env_prepend_opt_len) == 0)
-        {
-          if (argv[i][env_prepend_opt_len] == '=')
-            {
-              const char *p = argv[i] + env_prepend_opt_len + 1;
-              lt_opt_process_env_prepend (p);
-            }
-          else if (argv[i][env_prepend_opt_len] == '\0' && i + 1 < argc)
-            {
-              lt_opt_process_env_prepend (argv[++i]); /* don't copy */
-            }
-          else
-            lt_fatal ("%s missing required argument", env_prepend_opt);
-          continue;
-        }
-      if (strncmp (argv[i], env_append_opt, env_append_opt_len) == 0)
-        {
-          if (argv[i][env_append_opt_len] == '=')
-            {
-              const char *p = argv[i] + env_append_opt_len + 1;
-              lt_opt_process_env_append (p);
-            }
-          else if (argv[i][env_append_opt_len] == '\0' && i + 1 < argc)
-            {
-              lt_opt_process_env_append (argv[++i]); /* don't copy */
-            }
-          else
-            lt_fatal ("%s missing required argument", env_append_opt);
-          continue;
-        }
       if (strncmp (argv[i], ltwrapper_option_prefix, opt_prefix_len) == 0)
         {
           /* however, if there is an option in the LTWRAPPER_OPTION_PREFIX
@@ -3609,11 +3557,7 @@ EOF
   if (rval == -1)
     {
       /* failed to start process */
-#ifndef __MINGW32CE__
       LTWRAPPER_DEBUGPRINTF (("(main) failed to launch target \"%s\": errno = %d\n", lt_argv_zero, errno));
-#else
-      LTWRAPPER_DEBUGPRINTF (("(main) failed to launch target \"%s\"\n", lt_argv_zero));
-#endif
       return 127;
     }
   return rval;
@@ -3842,12 +3786,8 @@ chase_symlinks (const char *pathspec)
 	}
       else
 	{
-#ifndef __MINGW32CE__
 	  char *errstr = strerror (errno);
 	  lt_fatal ("Error accessing file %s (%s)", tmp_pathspec, errstr);
-#else
-	  lt_fatal ("Error accessing file %s", tmp_pathspec);
-#endif
 	}
     }
   XFREE (tmp_pathspec);
@@ -3955,89 +3895,6 @@ lt_extend_str (const char *orig_value, const char *add, int to_end)
       new_value = xstrdup (add);
     }
   return new_value;
-}
-
-int
-lt_split_name_value (const char *arg, char** name, char** value)
-{
-  const char *p;
-  int len;
-  if (!arg || !*arg)
-    return 1;
-
-  p = strchr (arg, (int)'=');
-
-  if (!p)
-    return 1;
-
-  *value = xstrdup (++p);
-
-  len = strlen (arg) - strlen (*value);
-  *name = XMALLOC (char, len);
-  strncpy (*name, arg, len-1);
-  (*name)[len - 1] = '\0';
-
-  return 0;
-}
-
-void
-lt_opt_process_env_set (const char *arg)
-{
-  char *name = NULL;
-  char *value = NULL;
-
-  if (lt_split_name_value (arg, &name, &value) != 0)
-    {
-      XFREE (name);
-      XFREE (value);
-      lt_fatal ("bad argument for %s: '%s'", env_set_opt, arg);
-    }
-
-  lt_setenv (name, value);
-  XFREE (name);
-  XFREE (value);
-}
-
-void
-lt_opt_process_env_prepend (const char *arg)
-{
-  char *name = NULL;
-  char *value = NULL;
-  char *new_value = NULL;
-
-  if (lt_split_name_value (arg, &name, &value) != 0)
-    {
-      XFREE (name);
-      XFREE (value);
-      lt_fatal ("bad argument for %s: '%s'", env_prepend_opt, arg);
-    }
-
-  new_value = lt_extend_str (getenv (name), value, 0);
-  lt_setenv (name, new_value);
-  XFREE (new_value);
-  XFREE (name);
-  XFREE (value);
-}
-
-void
-lt_opt_process_env_append (const char *arg)
-{
-  char *name = NULL;
-  char *value = NULL;
-  char *new_value = NULL;
-
-  if (lt_split_name_value (arg, &name, &value) != 0)
-    {
-      XFREE (name);
-      XFREE (value);
-      lt_fatal ("bad argument for %s: '%s'", env_append_opt, arg);
-    }
-
-  new_value = lt_extend_str (getenv (name), value, 1);
-  lt_setenv (name, new_value);
-  XFREE (new_value);
-  XFREE (name);
-  XFREE (value);
 }
 
 void
@@ -6391,7 +6248,7 @@ func_mode_link ()
 	    age="$number_minor"
 	    revision="$number_revision"
 	    ;;
-	  freebsd-aout|freebsd-elf|sunos)
+	  freebsd-aout|freebsd-elf|qnx|sunos)
 	    current="$number_major"
 	    revision="$number_minor"
 	    age="0"
@@ -7875,14 +7732,14 @@ EOF
 
       wrappers_required=yes
       case $host in
+      *cegcc* | *mingw32ce*)
+        # Disable wrappers for cegcc and mingw32ce hosts, we are cross compiling anyway.
+        wrappers_required=no
+        ;;
       *cygwin* | *mingw* )
         if test "$build_libtool_libs" != yes; then
           wrappers_required=no
         fi
-        ;;
-      *cegcc*)
-        # Disable wrappers for cegcc, we are cross compiling anyway.
-        wrappers_required=no
         ;;
       *)
         if test "$need_relink" = no || test "$build_libtool_libs" != yes; then
