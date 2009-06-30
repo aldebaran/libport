@@ -122,8 +122,8 @@ void test_one(bool proto)
 {
   TestSocket* client = new TestSocket(false, true);
   boost::system::error_code err
-    = client->connect("localhost", S_AVAIL_PORT, proto);
-  BOOST_CHECK_MESSAGE(!err, err.message());
+    = client->connect("127.0.0.1", S_AVAIL_PORT, proto);
+  BOOST_REQUIRE_MESSAGE(!err, err.message());
   BOOST_CHECK_NO_THROW(client->send(msg));
   usleep(delay);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, proto ? 1 : 2);
