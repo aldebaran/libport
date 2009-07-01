@@ -1,5 +1,7 @@
 #include <boost/static_assert.hpp>
 #include <libport/path.hxx>
+#include <libport/program-name.hh>
+#include <libport/sysexits.hh>
 
 namespace libport
 {

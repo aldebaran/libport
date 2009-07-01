@@ -1,7 +1,7 @@
 #ifndef LIBPORT_XLTDL_HH
 # define LIBPORT_XLTDL_HH
 
-# include <libltdl/ltdl.h>
+# include <ltdl.h>
 # include <libport/file-library.hh>
 
 namespace libport
