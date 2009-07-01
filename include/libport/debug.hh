@@ -259,17 +259,17 @@ namespace libport
 #  define GD_FINFO_DUMP(Msg, Seq)                       \
   do { GD_DUMP(); GD_FINFO(Msg, Seq); } while (0)
 
-#  define GD_SINFO_LOG(Msg, Seq)                        \
-  do { GD_LOG(); GD_SINFO(Msg, Seq); } while (0)
+#  define GD_SINFO_LOG(Msg)                        \
+  do { GD_LOG(); GD_SINFO(Msg); } while (0)
 
-#  define GD_SINFO_TRACE(Msg, Seq)                      \
-  do { GD_TRACE(); GD_SINFO(Msg, Seq); } while (0)
+#  define GD_SINFO_TRACE(Msg)                      \
+  do { GD_TRACE(); GD_SINFO(Msg); } while (0)
 
-#  define GD_SINFO_DEBUG(Msg, Seq)                      \
-  do { GD_DEBUG(); GD_SINFO(Msg, Seq); } while (0)
+#  define GD_SINFO_DEBUG(Msg)                      \
+  do { GD_DEBUG(); GD_SINFO(Msg); } while (0)
 
-#  define GD_SINFO_DUMP(Msg, Seq)                       \
-  do { GD_DUMP(); GD_SINFO(Msg, Seq); } while (0)
+#  define GD_SINFO_DUMP(Msg)                       \
+  do { GD_DUMP(); GD_SINFO(Msg); } while (0)
 
 #  define GD_VINFO_LOG(Msg, Val)                        \
   do { GD_LOG(); GD_VINFO(Msg, Val); } while (0)
