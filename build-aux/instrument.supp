@@ -26,6 +26,53 @@
 # on etch.  Too bad for them.
 
 ## --------------------------------------------- ##
+## 2009-07-02, pc-linux, Gentoo.                 ##
+## --------------------------------------------- ##
+
+{
+   _boost_asio_getaddrinfo
+   Memcheck:Cond
+   obj:/lib/ld-2.9.so
+   obj:/lib/libc-2.9.so
+   obj:/lib/ld-2.9.so
+   obj:/lib/libc-2.9.so
+   fun:__libc_dlsym
+   fun:__nss_lookup_function
+   obj:/lib/libc-2.9.so
+   fun:getaddrinfo
+   fun:_ZN5boost4asio6detail10socket_ops11getaddrinfoEPKcS4_PK8addrinfoPPS5_RNS_6system10error_codeE
+   fun:_ZN5boost4asio6detail16resolver_serviceINS0_2ip3tcpEE7resolveERNS_10shared_ptrIvEERKNS3_20basic_resolver_queryIS4_EERNS_6system10error_codeE
+   fun:_ZN5boost4asio2ip16resolver_serviceINS1_3tcpEE7resolveERNS_10shared_ptrIvEERKNS1_20basic_resolver_queryIS3_EERNS_6system10error_codeE
+   fun:_ZN5boost4asio2ip14basic_resolverINS1_3tcpENS1_16resolver_serviceIS3_EEE7resolveERKNS1_20basic_resolver_queryIS3_EERNS_6system10error_codeE
+}
+
+{
+   _getaddrinfo
+   Memcheck:Addr4
+   obj:/lib/ld-2.9.so
+   obj:/lib/libc-2.9.so
+   obj:/lib/ld-2.9.so
+   obj:/lib/libc-2.9.so
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   obj:/lib/libc-2.9.so
+   fun:__nss_services_lookup2
+   fun:getservbyname_r
+   obj:/lib/libc-2.9.so
+   obj:/lib/libc-2.9.so
+   fun:getaddrinfo
+}
+
+# bug report has been sent to boost team.
+{
+   _boost_unit_test_invalid_read
+   Memcheck:Addr4
+   fun:_ZN5boost9unit_test14framework_implD1Ev
+   fun:exit
+   fun:(below main)
+}
+
+## --------------------------------------------- ##
 ## 2009-03-20, bf-linux-1-virtual, Debian Etch.  ##
 ## --------------------------------------------- ##
 
