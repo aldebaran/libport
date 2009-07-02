@@ -3,6 +3,7 @@
 
 namespace libport
 {
+  static pthread_t asio_worker_thread;
   boost::asio::io_service&
   get_io_service(bool startWorkerThread)
   {
@@ -19,8 +20,11 @@ namespace libport
       if (startWorkerThread)
       {
         hasWorkerThread = true;
-        libport::startThread(boost::bind(&netdetail::runIoService, io));
+        asio_worker_thread =
+          libport::startThread(boost::bind(&netdetail::runIoService, io));
       }
+      else
+        asio_worker_thread = pthread_self();
     }
     return *io;
   }
@@ -148,6 +152,34 @@ namespace libport
     }
     while(r && !buffer.empty());
     return true;
+  }
+
+  void
+  Socket::sleep(utime_t duration)
+  {
+    //FIXME: implement for real
+    if (isPollThread())
+      pollFor(duration, get_io_service());
+    else
+      usleep(duration);
+  }
+
+  static void stop_io_service(boost::asio::io_service& io)
+  {
+    io.stop();
+  }
+  void pollFor(utime_t duration, boost::asio::io_service& io)
+  {
+    boost::asio::io_service::work work(io);
+    AsyncCallHandler asc =
+      asyncCall(boost::bind(&stop_io_service, boost::ref(io)), duration);
+    io.reset();
+    io.run();
+  }
+
+  bool isPollThread()
+  {
+    return pthread_self() == asio_worker_thread;
   }
 
 # if BOOST_VERSION >= 103600

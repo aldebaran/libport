@@ -210,6 +210,10 @@ namespace libport
     /// Set file descriptor
     template<class Sock>
     void setFD(int fd, typename Sock::protocol_type proto);
+    /** Sleep for specified amount of time, polling if current thread is
+     * the asio worker thread
+     */
+    static void sleep(utime_t duration);
   protected:
     bool onRead_(boost::asio::streambuf&);
     std::string buffer;
@@ -232,6 +236,13 @@ namespace libport
    */
   LIBPORT_API boost::asio::io_service&
   get_io_service(bool startWorkerThread = true);
+
+  LIBPORT_API bool
+  isPollThread();
+
+  /// Poll on an io_service for given duration in microseconds.
+  LIBPORT_API void
+  pollFor(utime_t duration, boost::asio::io_service& io = get_io_service());
 
   typedef boost::shared_ptr<boost::asio::deadline_timer> AsyncCallHandler;
   /** Call \b callback() in \b usDelay microseconds.
