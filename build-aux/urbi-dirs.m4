@@ -1,6 +1,6 @@
 #
 # urbi-dirs.m4: This file is part of build-aux.
-# Copyright (C) 2006-2008, Gostai S.A.S.
+# Copyright (C) 2006-2009, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -97,7 +97,8 @@ esac
 AC_SUBST([URBI_ENV])
 
 # URBI_ROOT.
-AC_DEFINE_UNQUOTED([URBI_ROOT], ["$prefix"],
+AC_DEFINE_UNQUOTED([URBI_ROOT],
+                   ["$(URBI_RESOLVE_DIR(["$prefix"]))"],
                    [Define as the install prefix.])
 
 # If we target windows, dealing with paths to dlls is a problem.
