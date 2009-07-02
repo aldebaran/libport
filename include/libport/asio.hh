@@ -24,7 +24,7 @@
 
 namespace libport
 {
-  class AsioDestructible: public Destructible
+  class LIBPORT_API AsioDestructible: public Destructible
   {
     protected:
       virtual void doDestroy();
@@ -34,7 +34,7 @@ namespace libport
    *
    * This class has a callback-based API: onReadFunc() and onErrorFunc().
    */
-  class BaseSocket: public AsioDestructible
+  class LIBPORT_API BaseSocket: public AsioDestructible
   {
   public:
     virtual ~BaseSocket(){}
@@ -68,7 +68,7 @@ namespace libport
   };
 
   /// Endpoint on an UDP socket.
-  class UDPLink
+  class LIBPORT_API UDPLink
   {
   public:
     virtual ~UDPLink() {}
@@ -86,7 +86,7 @@ namespace libport
    * - call waitForDestructionPermission(), if the io_service is running in
    *   another thread(the default behavior).
    */
-  class Socket: public AsioDestructible
+  class LIBPORT_API Socket: public AsioDestructible
   {
   public:
     Socket(): base_(0){}
@@ -230,7 +230,8 @@ namespace libport
    * If \b startWorkerThread is false on \b first invocation, the user
    * is responsible for calling the work or poll methods of the io_service.
    */
-  boost::asio::io_service& get_io_service(bool startWorkerThread = true);
+  LIBPORT_API boost::asio::io_service&
+  get_io_service(bool startWorkerThread = true);
 
   typedef boost::shared_ptr<boost::asio::deadline_timer> AsyncCallHandler;
   /** Call \b callback() in \b usDelay microseconds.
