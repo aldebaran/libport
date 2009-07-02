@@ -17,12 +17,13 @@ const char* msg = "coincoin\n";
 
 // On OSX:
 //   listen            connect        status
-// "127.0.0.1"       "127.0.0.1"       PASS
-// "localhost"       "localhost"       PASS
-// ""                "localhost"       PASS
+// "127.0.0.1"       "127.0.0.1"       PASS  IPv4
+// "localhost"       "localhost"       PASS  IPv6
+// ""                "localhost"       PASS  IPv6
 // ""                "127.0.0.1"       FAIL
-static const char* listen_host = "";
-static const char* connect_host = "localhost";
+// ""                ""                PASS  IPv6
+static const char* listen_host = "127.0.0.1";
+static const char* connect_host = "127.0.0.1";
 
 template<class T>
 void
@@ -185,10 +186,8 @@ test()
   RESOLVE();
   RESOLVE();
   RESOLVE();
-  std::cerr << "BEFORE TEST_ONE" << std::endl;
   test_one(false);
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
-  std::cerr << "AFTER TEST_ONE" << std::endl;
   RESOLVE();
   test_one(false);
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
