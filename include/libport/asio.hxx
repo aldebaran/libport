@@ -490,12 +490,7 @@ namespace libport
     {
       if (erc)
         return;
-      SocketImplBase* wrapper = dynamic_cast<SocketImplBase*>(bf(s));
-      if (!wrapper)
-      { // Failure.
-        delete s;
-      }
-      else
+      if (SocketImplBase* wrapper = dynamic_cast<SocketImplBase*>(bf(s)))
       {
         // This is now connected.
         Socket* s = fact();
@@ -503,6 +498,11 @@ namespace libport
         s->onConnect();
         // Start reading.
         wrapper->startReader();
+      }
+      else
+      {
+        // Failure.
+        delete s;
       }
       acceptOne(fact, a, bf);
     }
