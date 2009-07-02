@@ -16,7 +16,8 @@ namespace libport
     struct Uniquify
     {};
 
-
+    struct True{};
+    struct False{};
     /// Equality tester
     template <typename T1, typename T2>
     struct Eq
@@ -31,7 +32,7 @@ namespace libport
     };
 
     /// If
-    template <bool cond, typename Then, typename Else>
+    template <bool cond, typename Then=True, typename Else=False>
     struct If
     {
         typedef Then res;
