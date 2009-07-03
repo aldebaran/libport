@@ -163,7 +163,7 @@ namespace libport
   {
     //FIXME: implement for real
     if (isPollThread())
-      pollFor(duration, get_io_service());
+      pollFor(duration);
     else
       usleep(duration);
   }
@@ -172,13 +172,16 @@ namespace libport
   {
     io.stop();
   }
-  void pollFor(utime_t duration, boost::asio::io_service& io)
+  void pollFor(utime_t duration, bool once, boost::asio::io_service& io)
   {
     boost::asio::io_service::work work(io);
+    io.reset();
     AsyncCallHandler asc =
       asyncCall(boost::bind(&stop_io_service, boost::ref(io)), duration);
-    io.reset();
-    io.run();
+    if (once)
+      io.run_one();
+    else
+      io.run();
   }
 
   bool isPollThread()

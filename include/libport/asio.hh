@@ -240,9 +240,13 @@ namespace libport
   LIBPORT_API bool
   isPollThread();
 
-  /// Poll on an io_service for given duration in microseconds.
+  /** Poll on an io_service for given duration in microseconds.
+   *  @param duration max duration for which to poll in microseconds
+   *  @param once process at most one handler before returning if true
+   */
   LIBPORT_API void
-  pollFor(utime_t duration, boost::asio::io_service& io = get_io_service());
+  pollFor(utime_t duration, bool once = false,
+          boost::asio::io_service& io = get_io_service());
 
   typedef boost::shared_ptr<boost::asio::deadline_timer> AsyncCallHandler;
   /** Call \b callback() in \b usDelay microseconds.
