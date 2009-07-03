@@ -77,8 +77,12 @@ namespace libport
       base_->onErrorFunc = 0;
       base_ = 0;
     }
-    // FIXME: this line asserts that another thread is running io_services.
-    waitForDestructionPermission();
+    // FIXME: optimize
+    while (!checkDestructionPermission())
+    {
+      sleep(100);
+    }
+    //waitForDestructionPermission();
   }
 
   Socket::Handle
