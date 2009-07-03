@@ -395,7 +395,7 @@ namespace libport
   } while (0)
 
 #  define GD_SHOW_LEVEL(Lvl)				\
-  (GD_CURRENT_LEVEL() >= Lvl)                           \
+  (GD_CURRENT_LEVEL() >= Lvl)
 
 #  define GD_SHOW_LOG()                         \
   GD_SHOW_LEVEL(::libport::Debug::levels::log)
@@ -432,9 +432,14 @@ namespace libport
 `------------*/
 
 #  define GD__INIT_                                                     \
-  static int _libport_initdebug_()                                      \
-  { make_debugger = (_libport_mkdebug_); return 42; }                   \
-  static int _libport_debug_initialized_ = _libport_initdebug_();       \
+  static int                                                            \
+  _libport_initdebug_()                                                 \
+  {                                                                     \
+    make_debugger = _libport_mkdebug_;                                  \
+    return 42;                                                          \
+  }                                                                     \
+                                                                        \
+  static int _libport_debug_initialized_ = _libport_initdebug_();
 
 // Must be called before any use.
 #  define GD_INIT()                             \
@@ -448,26 +453,30 @@ namespace libport
   namespace libport                                                     \
   {                                                                     \
     static Debug* _libport_mkdebug_()                                   \
-    { return new ConsoleDebug(); }                                      \
+    {                                                                   \
+      return new ConsoleDebug();                                        \
+    }                                                                   \
     GD__INIT_;                                                          \
-  }                                                                     \
+  }
 
 #  define GD_INIT_SYSLOG(Program)                                       \
   namespace libport                                                     \
   {                                                                     \
     static Debug* _libport_mkdebug_()                                   \
-    { return new SyslogDebug(#Program); }                               \
+    {                                                                   \
+      return new SyslogDebug(#Program);                                 \
+    }                                                                   \
     GD__INIT_;                                                          \
-  }                                                                     \
+  }
 
-#  define GD_ENABLE(Name)                         \
-  GD_DEBUGGER->Name(true);                         \
+#  define GD_ENABLE(Name)                       \
+  GD_DEBUGGER->Name(true)
 
-#  define GD_ENABLE_LOCATIONS()                   \
-  GD_ENABLE(locations)                            \
+#  define GD_ENABLE_LOCATIONS()                 \
+  GD_ENABLE(locations)
 
-#  define GD_ENABLE_TIMESTAMPS()                  \
-  GD_ENABLE(timestamps)                           \
+#  define GD_ENABLE_TIMESTAMPS()                \
+  GD_ENABLE(timestamps)
 
 # else
 

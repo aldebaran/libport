@@ -444,7 +444,13 @@ namespace libport
     pthread_t id = pthread_self();
     if (!libport::mhas(debuggers, id))
     {
-      debuggers[id] = make_debugger();
+      if (make_debugger.empty())
+      {
+        debuggers[id] = new ConsoleDebug;
+        GD_WARN("GD_INIT was not invoked, defaulting to console logs");
+      }
+      else
+        debuggers[id] = make_debugger();
       debuggers[id]->push_category("NONE");
     }
     return debuggers[id];
