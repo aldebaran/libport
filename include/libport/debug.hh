@@ -18,6 +18,7 @@
 
 #  include <libport/export.hh>
 #  include <libport/finally.hh>
+#  include <libport/option-parser.hh>
 
 namespace libport
 {
@@ -108,6 +109,7 @@ namespace libport
     ATTRIBUTE_NORETURN static void abort(const std::string& msg);
 
     void filter(levels::Level lvl);
+    void filter(const std::string& lvl);
     levels::Level level() const;
     bool disabled();
 
@@ -194,8 +196,14 @@ namespace libport
 
   extern boost::function0<Debug*> make_debugger;
 
-}
+  namespace opts
+  {
 
+    extern LIBPORT_API libport::OptionValue debug;
+
+  }
+
+}
 
 
 /*----------.

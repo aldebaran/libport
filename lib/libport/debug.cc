@@ -69,22 +69,7 @@ namespace libport
   {
     push_level(levels::log);
     if (const char* lvl_c = getenv("GD_LEVEL"))
-    {
-      std::string lvl = lvl_c;
-      if (lvl == "NONE")
-        filter_ = levels::none;
-      else if (lvl == "LOG")
-        filter_ = levels::log;
-      else if (lvl == "TRACE")
-        filter_ = levels::trace;
-      else if (lvl == "DEBUG")
-        filter_ = levels::debug;
-      else if (lvl == "DUMP")
-        filter_ = levels::dump;
-      else
-        // Don't use GD_ABORT here, we're in the debugger constructor!
-        assert(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP)");
-    }
+      filter(lvl_c);
   }
 
   Debug::~Debug()
@@ -94,6 +79,24 @@ namespace libport
   Debug::filter(levels::Level lvl)
   {
     filter_ = lvl;
+  }
+
+  void
+  Debug::filter(const std::string& lvl)
+  {
+    if (lvl == "NONE")
+      filter(Debug::levels::none);
+    else if (lvl == "LOG")
+      filter(Debug::levels::log);
+    else if (lvl == "TRACE")
+      filter(Debug::levels::trace);
+    else if (lvl == "DEBUG")
+      filter(Debug::levels::debug);
+    else if (lvl == "DUMP")
+      filter(Debug::levels::dump);
+    else
+      // Don't use GD_ABORT here, we can be in the debugger constructor!
+      assert(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP)");
   }
 
   Debug::levels::Level
@@ -217,6 +220,22 @@ namespace libport
   {
     GD_ERROR(msg);
     libport::abort();
+  }
+
+  namespace opts
+  {
+
+    void cb_debug_fun(const std::string& lvl)
+    {
+      GD_DEBUGGER->filter(lvl);
+    }
+
+    OptionValued::callback_type cb_debug(&cb_debug_fun);
+
+    OptionValue
+    debug("set the debug level in NONE, LOG (default), TRACE, DEBUG, DUMP",
+          "debug", 'd', "LEVEL", &cb_debug);
+
   }
 
   ConsoleDebug::ConsoleDebug()
