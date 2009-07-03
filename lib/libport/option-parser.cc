@@ -186,11 +186,13 @@ namespace libport
   OptionValued::OptionValued(const std::string& doc,
                              const std::string& name_long,
                              const std::string& formal,
-			     char name_short)
+			     char name_short,
+                             callback_type* cb)
     : OptionNamed(doc, name_long, name_short)
     , callback1_(0)
     , formal_(formal.empty() ?  boost::to_upper_copy(name_long) : formal)
   {
+    set_callback(cb);
   }
 
   void
@@ -251,8 +253,9 @@ namespace libport
   OptionValue::OptionValue(const std::string& doc,
                            const std::string& name_long,
                            char name_short,
-			   const std::string& formal)
-    : OptionValued(doc, name_long, formal, name_short)
+			   const std::string& formal,
+                           callback_type* cb)
+    : OptionValued(doc, name_long, formal, name_short, cb)
     , filled_(false)
     , value_()
   {}
@@ -309,8 +312,9 @@ namespace libport
   OptionValues::OptionValues(const std::string& doc,
                              const std::string& name_long,
                              char name_short,
-			     const std::string& formal)
-    : OptionValued(doc, name_long, formal, name_short)
+			     const std::string& formal,
+                             callback_type* cb)
+    : OptionValued(doc, name_long, formal, name_short, cb)
     , values_()
   {}
 

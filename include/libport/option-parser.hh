@@ -107,12 +107,13 @@ namespace libport
   {
   public:
     typedef boost::optional<std::string> ostring;
+    using Option::set_callback;
+    typedef boost::function1<void, const std::string&> callback_type;
     OptionValued(const std::string& doc,
                  const std::string& name_long,
                  const std::string& formal,
-                 char name_short = '\0');
-    using Option::set_callback;
-    typedef boost::function1<void, const std::string&> callback_type;
+                 char name_short = '\0',
+                 callback_type* cb = 0);
     void set_callback(callback_type* callback);
     ostring test_option(cli_args_type& args);
 
@@ -135,7 +136,8 @@ namespace libport
     OptionValue(const std::string& doc,
                 const std::string& name_long,
                 char name_short = '\0',
-		const std::string& formal = "");
+		const std::string& formal = "",
+                callback_type* cb = 0);
     virtual bool test(cli_args_type& args);
     virtual void init();
     std::string value(const boost::optional<std::string>& def
@@ -182,7 +184,8 @@ namespace libport
     OptionValues(const std::string& doc,
 		 const std::string& name_long,
 		 char name_short = '\0',
-		 const std::string& formal = "");
+		 const std::string& formal = "",
+                 callback_type* cb = 0);
     virtual bool test(cli_args_type& args);
     virtual void init();
     const values_type& get() const;
