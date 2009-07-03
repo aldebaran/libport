@@ -29,7 +29,8 @@ namespace libport
     typedef boost::asio::basic_datagram_socket<boost::asio::ip::udp,
                                                boost::asio::datagram_socket_service<boost::asio::ip::udp> > udpsock;
 
-    class SocketImplBase: public BaseSocket, protected libport::Lockable
+    class LIBPORT_API SocketImplBase: public BaseSocket
+    , protected libport::Lockable
     {
     public:
       SocketImplBase(): current_(-1), pending_(false) {}
@@ -55,7 +56,7 @@ namespace libport
     read_or_recv(SocketImpl<Stream>* s, Lock lock);
 
     template<class Stream>
-    class SocketImpl : public SocketImplBase
+    class LIBPORT_API SocketImpl : public SocketImplBase
     {
     public:
       SocketImpl():base_(0) {}
