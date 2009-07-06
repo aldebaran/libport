@@ -125,7 +125,13 @@ namespace libport
 
     {
 # ifdef LIBPORT_HAVE_IP_SEMAPHORE
-      IPSemaphore::Lock lock(sem());
+      static bool useLock = getenv("GD_USE_LOCK") || getenv("GD_PID");
+      libport::Finally f;
+      if (useLock)
+      {
+        --sem();
+        f << boost::bind(&IPSemaphore::operator++, boost::ref(sem()));
+      }
 # endif
       message(msg, type, fun, file, line);
     }
