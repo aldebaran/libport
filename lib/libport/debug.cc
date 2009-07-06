@@ -148,9 +148,9 @@ namespace libport
   bool
   Debug::disabled()
   {
-    return level_stack_.back() > filter_
-      || categories_stack_.empty()
-      || !debug::test_category(categories_stack_.back());
+    return (level_stack_.back() > filter_
+            || categories_stack_.empty()
+            || !debug::test_category(categories_stack_.back()));
   }
 
   static void noop()
@@ -184,8 +184,9 @@ namespace libport
   std::string
   Debug::category()
   {
-    std::string res = categories_stack_.empty() ?
-      "NONE" : categories_stack_.back();
+    std::string res = (categories_stack_.empty()
+                       ? "NONE"
+                       : categories_stack_.back());
     int size = res.size();
     int largest = debug::categories_largest();
     if (size < largest)
