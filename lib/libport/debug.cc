@@ -84,19 +84,19 @@ namespace libport
   void
   Debug::filter(const std::string& lvl)
   {
-    if (lvl == "NONE")
+    if (lvl == "NONE" || lvl == "0")
       filter(Debug::levels::none);
-    else if (lvl == "LOG")
+    else if (lvl == "LOG" || lvl == "1")
       filter(Debug::levels::log);
-    else if (lvl == "TRACE")
+    else if (lvl == "TRACE" || lvl == "2")
       filter(Debug::levels::trace);
-    else if (lvl == "DEBUG")
+    else if (lvl == "DEBUG" || lvl == "3")
       filter(Debug::levels::debug);
-    else if (lvl == "DUMP")
+    else if (lvl == "DUMP" || lvl == "4")
       filter(Debug::levels::dump);
     else
       // Don't use GD_ABORT here, we can be in the debugger constructor!
-      assert(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP)");
+      assert(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP or [0-4])");
   }
 
   Debug::levels::Level
