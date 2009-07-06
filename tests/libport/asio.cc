@@ -159,7 +159,8 @@ void test_one(bool proto)
   do {                                                                  \
     libport::resolve<boost::asio::ip::tcp>(connect_host,                \
                                            S_AVAIL_PORT, err);          \
-    BOOST_TEST_MESSAGE("Resolve: " + err.message());                    \
+    BOOST_TEST_MESSAGE("Resolve: "                                      \
+                       + (err ? err.message() : "No error"));           \
   } while (0)
 
 
