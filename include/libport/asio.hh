@@ -7,10 +7,18 @@
 
 # include <iostream>
 # include <boost/version.hpp>
-# include <boost/asio.hpp>
-#ifndef LIBPORT_NO_SSL
-# include <boost/asio/ssl.hpp>
-#endif
+
+// At least on OS X, many symbols are not available where we expect
+// them.  And it is clearly connected to our using
+// -fvisibility=hidden.  I (AD) could not exactly pinpoint the
+// problem, but at least I know one cure: do not play dirty visibility
+// tricks with Asio.
+# pragma GCC visibility push(default)
+#  include <boost/asio.hpp>
+#  ifndef LIBPORT_NO_SSL
+#    include <boost/asio/ssl.hpp>
+#  endif
+# pragma GCC visibility pop
 # include <boost/function.hpp>
 
 # include <libport/destructible.hh>
