@@ -5,7 +5,6 @@
 # include <libport/config.h>
 # include <libport/sys/socket.h>
 
-
 # include <iostream>
 # include <boost/version.hpp>
 # include <boost/asio.hpp>
@@ -15,6 +14,7 @@
 # include <boost/function.hpp>
 
 # include <libport/destructible.hh>
+# include <libport/export.hh>
 # include <libport/finally.hh>
 # include <libport/utime.hh>
 

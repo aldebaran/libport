@@ -100,8 +100,10 @@ namespace libport
     // Acceptor implementation
 #define ACCEPTOR_FAIL                                                   \
     {throw std::runtime_error("Call not implemented for Acceptors");}
-    template<class Acceptor> class AcceptorImpl
-      :public BaseSocket
+
+    template<class Acceptor>
+    class AcceptorImpl
+      : public BaseSocket
     {
     public:
       AcceptorImpl(Acceptor* base);
@@ -262,14 +264,16 @@ namespace libport
     SocketImplBase*
     bind_or_delete(Socket* sock, Factory f, Sock* s)
     {
-      SocketImplBase* base =  dynamic_cast<SocketImplBase*>(f(s));
-      if (!base)
+      if (SocketImplBase* base =  dynamic_cast<SocketImplBase*>(f(s)))
+      {
+        sock->setBase(base);
+        return base;
+      }
+      else
       {
         delete s;
         return 0;
       }
-      sock->setBase(base);
-      return base;
     }
 
     template<typename Stream>
