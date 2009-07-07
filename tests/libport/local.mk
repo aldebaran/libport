@@ -1,5 +1,6 @@
 # This is for Boost Unit Test tests.  "all" is much more verbose.
-TESTSFLAGS = --log_level=test-suite
+LOG_LEVEL = test-suite
+TESTSFLAGS = --log_level=$(LOG_LEVEL)
 
 # There are issues with Boost
 # (https://svn.boost.org/trac/boost/ticket/2889) that prevent us from
