@@ -63,11 +63,24 @@
    fun:getaddrinfo
 }
 
+## ------------ ##
+## Boost.Test.  ##
+## ------------ ##
+
 # bug report has been sent to boost team.
 {
    _boost_unit_test_invalid_read
    Memcheck:Addr4
    fun:_ZN5boost9unit_test14framework_implD1Ev
+   fun:exit
+   fun:(below main)
+}
+
+{
+   Boost.Test on OS X.
+   Memcheck:Addr4
+   fun:__tcf_1
+   fun:__cxa_finalize
    fun:exit
    fun:(below main)
 }
