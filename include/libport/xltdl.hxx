@@ -103,16 +103,20 @@ namespace libport
     // *.so, *.dyld etc.).  That's an implementation detail that ltdl
     // saves us from.
     lt_dlhandle res = 0;
-    if (libport::path(s).absolute_get())
+    if (path_.search_path_get().empty() || libport::path(s).absolute_get())
       res = dlopen_(s);
     else
       foreach (const libport::path& p, path_.search_path_get())
+      {
+        if (verbose_)
+          LIBPORT_XLTDL_MESSAGE("looing for " << s << " in " << p);
         if ((res = dlopen_(p / s)))
         {
           if (verbose_)
             LIBPORT_XLTDL_MESSAGE("found " << s << " in " << p);
           break;
         }
+      }
 
     if (!res)
       LIBPORT_XLTDL_ERROR(exit_failure_, "failed to load " << s);
