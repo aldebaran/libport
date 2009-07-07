@@ -57,6 +57,9 @@ AC_CHECK_HEADERS([execinfo.h])
 AC_CHECK_LIB([rt], [clock_gettime],
              [AC_SUBST([CLOCK_LIBS], [-lrt])])
 
+# libport/valgrind.
+AC_CHECK_HEADERS([valgrind/valgrind.h])
+
 # -lssl suffices on GNU/Linux, OS X wants -lcrypto explicitly.
 AC_SUBST([SSL_LIBS], ['-lssl -lcrypto'])
 

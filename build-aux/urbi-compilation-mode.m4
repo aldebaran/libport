@@ -46,8 +46,8 @@ urbi_compilation_mode_set ()
 
         URBI_APPEND_FLAGS([BISONFLAGS], [-Dparse.assert -Dparse.trace])
         # Define USE_VALGRIND only if valgrind/valgrind.h exists.
-        AC_CHECK_HEADER([valgrind/valgrind.h],
-                        [URBI_APPEND_CPPFLAGS([-DUSE_VALGRIND])])
+        AC_CHECK_HEADERS([valgrind/valgrind.h],
+                         [URBI_APPEND_CPPFLAGS([-DUSE_VALGRIND])])
         stacksize=1024
         ;;
 
