@@ -264,6 +264,60 @@ namespace libport
                  utime_t timeout, bool async, BaseFactory bf);
   };
 
+  /** Wrapper of libport::Socket to be able to use Socket without inherit from
+   *  it.
+   */
+  class LIBPORT_API ConcreteSocket: public Socket
+  {
+  public:
+    typedef boost::function2<int, const void*, size_t> onread_type;
+    typedef boost::function1<void, boost::system::error_code> onerror_type;
+    typedef boost::function0<void> onconnect_type;
+    typedef Socket super_type;
+
+    ConcreteSocket()
+      : onconnect_(boost::bind(&super_type::onConnect, this))
+      , onerror_(boost::bind(&super_type::onError, this, _1))
+      , onread_(boost::bind(&super_type::onRead, this, _1, _2))
+      {}
+
+    ConcreteSocket& onConnect(onconnect_type cb)
+    {
+      onconnect_ = cb;
+      return *this;
+    }
+
+    ConcreteSocket& onError(onerror_type cb)
+    {
+      onerror_ = cb;
+      return *this;
+    }
+
+    ConcreteSocket& onRead(onread_type cb)
+    {
+      onread_ = cb;
+      return *this;
+    }
+
+    virtual void onConnect()
+    {
+      onconnect_();
+    }
+    virtual void onError(boost::system::error_code erc)
+    {
+      onerror_(erc);
+    }
+    virtual int onRead(const void* data, size_t length)
+    {
+      return onread_(data, length);
+    }
+
+  private:
+    onconnect_type onconnect_;
+    onerror_type onerror_;
+    onread_type onread_;
+  };
+
   //FIXME: extend to provide a way to ensure workerThread not started.
   /** Get the io_service handling all asynchronous operations.
    *
