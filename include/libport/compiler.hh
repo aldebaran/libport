@@ -38,25 +38,6 @@
 # endif
 
 
-/*--------.
-| SLEEP.  |
-`--------*/
-
-# ifdef LIBPORT_URBI_ENV_AIBO
-
-// On aibo, make sure the log message arrives.
-
-#  define SLEEP(C)					\
-  do {							\
-    long sum = 0;					\
-    for (long i = 0; i < C * 100000000; ++i)		\
-      sum += i;						\
-  } while(0)
-
-# else
-#  define SLEEP(C) ((void) 0)
-# endif // !LIBPORT_URBI_ENV_AIBO
-
 /*----------------------.
 | __PRETTY_FUNCTION__.  |
 `----------------------*/
@@ -105,7 +86,6 @@ namespace libport
       std::cerr << libport::EchoPrologue(__FILE__, __LINE__,    \
                                          __FUNCTION__)          \
                 << Msg << std::endl;                            \
-      SLEEP(1);                                                 \
     }                                                           \
   } while (0)
 
