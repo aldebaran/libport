@@ -5,16 +5,17 @@ TESTSFLAGS = --log_level=test-suite
 # (https://svn.boost.org/trac/boost/ticket/2889) that prevent us from
 # using instrumentation with Boost.Test.
 #
-# INSTRUMENT = $(build_aux_srcdir)/instrument
-# INSTRUMENTFLAGS =                                                      \
-#   --valgrind-option=--suppressions=$(build_aux_srcdir)/instrument.supp \
-#   --valgrind-option=--gen-suppressions=all                             \
-#   --libtool=$(abs_top_builddir)/libtool
+INSTRUMENT = $(build_aux_srcdir)/instrument
+INSTRUMENTFLAGS =                                                      \
+  --valgrind-option=--suppressions=$(build_aux_srcdir)/instrument.supp \
+  --valgrind-option=--gen-suppressions=all                             \
+  --libtool=$(abs_top_builddir)/libtool
+RUN_INSTRUMENT = $(INSTRUMENT) $(INSTRUMENTFLAGS)
 
 # For some reason, this rule *must* be defined before loading
 # check.mk.
 %.log: %$(EXEEXT)
-	@$(am__check_pre) ./$< $(TESTSFLAGS) $(am__check_post)
+	@$(am__check_pre) $(RUN_INSTRUMENT) ./$< $(TESTSFLAGS) $(am__check_post)
 
 # Program to check:
 TESTS_BINARIES =                                \

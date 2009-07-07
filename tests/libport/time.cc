@@ -1,5 +1,6 @@
 #include <libport/time.hh>
 #include <libport/unit-test.hh>
+#include <libport/valgrind.hh>
 
 using libport::test_suite;
 
@@ -7,7 +8,11 @@ static void check_delta(libport::Duration expected,
                         libport::Duration effective,
                         libport::Duration delta)
 {
-  BOOST_CHECK(effective > expected - delta && effective < expected + delta);
+  // Does not work: BOOST_CHECK_CLOSE(effective, expected, delta);
+  if (RUNNING_ON_VALGRIND)
+    delta *= 4;
+  BOOST_CHECK_LT(expected - delta, effective);
+  BOOST_CHECK_LT(effective, expected + delta);
 }
 
 static void test_duration()
