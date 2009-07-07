@@ -26,16 +26,24 @@ namespace libport
 # endif
     typedef ::libport::Socket::SocketFactory SocketFactory;
 
-    typedef boost::asio::basic_datagram_socket<boost::asio::ip::udp,
-                                               boost::asio::datagram_socket_service<boost::asio::ip::udp> > udpsock;
+    typedef boost::asio::basic_datagram_socket
+               <boost::asio::ip::udp,
+                boost::asio::datagram_socket_service<boost::asio::ip::udp> >
+            udpsock;
 
-    class LIBPORT_API SocketImplBase: public BaseSocket
-    , protected libport::Lockable
+    class LIBPORT_API SocketImplBase
+      : public BaseSocket
+      , protected libport::Lockable
     {
     public:
-      SocketImplBase(): current_(-1), pending_(false) {}
+      SocketImplBase()
+        : current_(-1)
+        , pending_(false)
+      {}
+
       /// Start an asynchronous read operation.
       virtual void startReader() = 0;
+
     protected:
       /// Write double-buffer.
       boost::asio::streambuf buffers_[2];
@@ -59,25 +67,34 @@ namespace libport
     class LIBPORT_API SocketImpl : public SocketImplBase
     {
     public:
-      SocketImpl():base_(0) {}
+      SocketImpl()
+        : base_(0)
+      {}
       ~SocketImpl()
       {
         wasDestroyed();
         waitForDestructionPermission();
         delete base_;
       }
+
       void write(const void* data, unsigned int length);
       void close();
+
       unsigned short getRemotePort() const;
       std::string getRemoteHost() const;
       unsigned short getLocalPort() const;
       std::string getLocalHost() const;
       bool isConnected() const;
-      template<typename Acceptor, typename BaseFactory> static void
+
+      template<typename Acceptor, typename BaseFactory>
+      static void
       onAccept(boost::system::error_code erc, Stream* s, SocketFactory fact,
 	       Acceptor *a, BaseFactory bf);
-      template<typename Acceptor, typename BaseFactory> static void
+
+      template<typename Acceptor, typename BaseFactory>
+      static void
       acceptOne(SocketFactory fact, Acceptor *a, BaseFactory bf);
+
       static BaseSocket* create(Stream* base);
       void startReader();
       int stealFD();
@@ -89,8 +106,13 @@ namespace libport
       void onReadDemux(DestructionLock lock, boost::system::error_code erc);
 
       friend class libport::Socket;
-      template<class T, class L> friend void read_or_recv(SocketImpl<T>*, L);
-      template<class T> friend void send_bounce(SocketImpl<T>*,const void*, size_t);
+
+      template<class T, class L>
+        friend void read_or_recv(SocketImpl<T>*, L);
+
+      template<class T>
+        friend void send_bounce(SocketImpl<T>*,const void*, size_t);
+
       friend void
       recv_bounce(SocketImpl<udpsock>*s, AsioDestructible::DestructionLock lock,
 		  boost::system::error_code erc, size_t recv);

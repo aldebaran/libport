@@ -50,9 +50,15 @@ namespace libport
     /// Write data asynchronously to the socket.
     virtual void write(const void* data, unsigned int length) = 0;
     /// Alias on write() for API compatibility.
-    inline void send(const void* addr, size_t len) {write(addr, len);}
+    void send(const void* addr, size_t len)
+    {
+      write(addr, len);
+    }
     /// Alias on close() for API compatibility.
-    inline void disconnect() {close();}
+    void disconnect()
+    {
+      close();
+    }
     /// Return if the socket is connected to a remote host.
     virtual bool isConnected() const = 0;
     /// Disconnect the socket from the remote host, calls onError.
@@ -79,9 +85,13 @@ namespace libport
   class LIBPORT_API UDPLink
   {
   public:
-    virtual ~UDPLink() {}
+    virtual ~UDPLink()
+    {}
     virtual void reply(const void* data, size_t length) = 0;
-    inline void reply(const std::string& s) {reply(s.c_str(), s.length());}
+    void reply(const std::string& s)
+    {
+      reply(s.c_str(), s.length());
+    }
   };
 
   /** Socket class with a higher API.
@@ -97,7 +107,9 @@ namespace libport
   class LIBPORT_API Socket: public AsioDestructible
   {
   public:
-    Socket(): base_(0){}
+    Socket()
+      : base_(0)
+    {}
     virtual ~Socket();
     /** Set underlying BaseSocket object, setup its callbacks to call our virtual functions.
      */
@@ -108,7 +120,10 @@ namespace libport
      *   be passed again to this function as soon as at least an extra byte
      *   is available.
      */
-    virtual int onRead(const void*, size_t length){return length;}
+    virtual int onRead(const void*, size_t length)
+    {
+      return length;
+    }
 
     /** Called in case of error on the socket. By default, do nothing.
      */
@@ -116,22 +131,36 @@ namespace libport
 
     /** Called on socket connection
      */
-     virtual void onConnect() {}
+    virtual void onConnect()
+    {}
 
     /// Ask for the asynchronous destruction of this object.
     virtual void destroy();
 
-    inline void write(const void* data, unsigned int length)
-      { base_->write(data, length);}
+    void write(const void* data, unsigned int length)
+    {
+      base_->write(data, length);
+    }
     /// Alias on write() for API compatibility.
-    inline void send(const void* addr, size_t len) {write(addr, len);}
-    inline void send(const std::string& s) {write(s.c_str(), s.length());}
-    inline void close() {if (base_) base_->close();}
-    inline unsigned short getRemotePort() const { return base_->getRemotePort();}
-    inline std::string getRemoteHost() const {return base_->getRemoteHost();}
-    inline unsigned short getLocalPort() const { return base_->getLocalPort();}
-    inline std::string getLocalHost() const {return base_->getLocalHost();}
-    inline bool isConnected() const {return base_?base_->isConnected():false;}
+    void send(const void* addr, size_t len)
+    {
+      write(addr, len);
+    }
+    void send(const std::string& s)
+    {
+      write(s.c_str(), s.length());
+    }
+    void close()
+    {
+      if (base_)
+        base_->close();
+    }
+
+    unsigned short getRemotePort() const { return base_->getRemotePort();}
+    std::string getRemoteHost() const    { return base_->getRemoteHost();}
+    unsigned short getLocalPort() const  { return base_->getLocalPort();}
+    std::string getLocalHost() const     { return base_->getLocalHost();}
+    bool isConnected() const      {return base_ ? base_->isConnected() : false;}
 
     /** Connect to a remote host.
      * \param host hostname to connect to.
