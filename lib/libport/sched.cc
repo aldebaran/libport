@@ -25,7 +25,6 @@ namespace libport
   int
   sched_estimate_granularity()
   {
-#if !defined LIBPORT_URBI_ENV_AIBO
     //evaluate scheduler granularity
     utime_t mind = 1000000000;
     for (int i=0; i<10;i++)
@@ -41,9 +40,6 @@ namespace libport
     if ((mind/1000 + 1) * 1000 - mind < 100)
       mind = (mind/1000 + 1) * 1000;
     return mind;
-#else
-    return 0;
-#endif /* LIBPORT_URBI_ENV_AIBO */
   }
 
   namespace

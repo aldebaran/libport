@@ -4,16 +4,13 @@
 
 #include <libport/cstring>
 #include <libport/detect-win32.h>
+#include <libport/sys/select.h>
+#include <libport/cerrno>
 
 #if defined LIBPORT_WIN32 || defined WIN32
 # include <libport/windows.hh>
 # include <libport/lockable.hh>
 # include <iostream>
-#else
-# if ! defined LIBPORT_URBI_ENV_AIBO
-#  include <sys/select.h>
-# endif
-# include <errno.h>
 #endif
 
 #include <libport/compiler.hh>
@@ -61,18 +58,6 @@ namespace libport
     std::string res = data.first;
     data.first.clear();
     return res;
-  }
-
-#elif defined LIBPORT_URBI_ENV_AIBO
-
-  /*-------.
-  | AIBO.  |
-  `-------*/
-
-  std::string
-  read_stdin()
-  {
-    return std::string();
   }
 
 #else

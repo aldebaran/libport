@@ -275,11 +275,6 @@ namespace libport
     return *this;
   }
 
-  const long timer::clocks_per_sec =
-#if ! defined LIBPORT_URBI_ENV_AIBO
-    sysconf (_SC_CLK_TCK);
-#else
-    100;
-#endif
+  const long timer::clocks_per_sec = sysconf(_SC_CLK_TCK);
 
 } // namespace libport
