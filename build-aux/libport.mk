@@ -14,7 +14,7 @@
 ## LIBPORT_BUILDPREFIX must be empty, or end with a /.
 
 ## $(top_srcdir) to find sources, $(top_builddir) to find libport/config.h.
-LIBPORT_CPPFLAGS = -I$(LIBPORT_SRCDIR)/include -I$(LIBPORT_BUILDPREFIX)include
+LIBPORT_CPPFLAGS = -I$(LIBPORT_SRCDIR)/include -I$(LIBPORT_BUILDPREFIX)include -I$(LIBPORT_SRCDIR)/libltdl
 LIBPORT_LIBS = $(LIBPORT_BUILDPREFIX)lib/libport/libport.la
 
 LTDL_CPPFLAGS = -I$(LIBPORT_SRCDIR) -I$(LIBPORT_SRCDIR)/libltdl
