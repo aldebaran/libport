@@ -78,17 +78,15 @@ namespace libport
 }
 
 // We used to use __PRETTY_FUNCTION__, but this is really too verbose.
-#  define LIBPORT_ECHO(Msg)                                     \
-  do {                                                          \
-    bool debug = !getenv("DISABLE_DEBUG_TRACES");               \
-    if (debug)                                                  \
-    {                                                           \
-      std::cerr << libport::EchoPrologue(__FILE__, __LINE__,    \
-                                         __FUNCTION__)          \
-                << Msg << std::endl;                            \
-    }                                                           \
-  } while (0)
+#  define LIBPORT_ECHO_PROLOGUE                                 \
+  libport::EchoPrologue(__FILE__, __LINE__, __FUNCTION__)
 
+// Care was taken to make of LIBPORT_ECHO an expression, not a
+// statement.  It returns std::cerr.
+#  define LIBPORT_ECHO(Msg)                                             \
+  (getenv("DISABLE_DEBUG_TRACES")                                       \
+   ? std::cerr                                                          \
+   : std::cerr << LIBPORT_ECHO_PROLOGUE << Msg << std::endl)
 
 // Disable debug traces when compiling with NDEBUG.
 # ifdef NDEBUG
