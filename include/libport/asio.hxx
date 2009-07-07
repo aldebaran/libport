@@ -120,9 +120,6 @@ namespace libport
     };
 
     // Acceptor implementation
-#define ACCEPTOR_FAIL                                                   \
-    {throw std::runtime_error("Call not implemented for Acceptors");}
-
     template<class Acceptor>
     class AcceptorImpl
       : public BaseSocket
@@ -130,19 +127,27 @@ namespace libport
     public:
       AcceptorImpl(Acceptor* base);
       ~AcceptorImpl();
-      void write(const void*, unsigned int) ACCEPTOR_FAIL
-	bool isConnected() const {return false;}
+      bool isConnected() const
+      {
+        return false;
+      }
       void close();
+#define ACCEPTOR_FAIL                                                   \
+    {throw std::runtime_error("Call not implemented for Acceptors");}
+      void write(const void*, unsigned int) ACCEPTOR_FAIL
       unsigned short getRemotePort() const ACCEPTOR_FAIL
-	std::string getRemoteHost() const ACCEPTOR_FAIL
-	unsigned short getLocalPort() const;
+      std::string getRemoteHost() const ACCEPTOR_FAIL
+#undef ACCEPTOR_FAIL
+      unsigned short getLocalPort() const;
       std::string getLocalHost() const;
-      int stealFD() {return -1;}
+      int stealFD()
+      {
+        return -1;
+      }
       int getFD();
     private:
       Acceptor* base_;
     };
-#undef ACCEPTOR_FAIL
 
     template<class Acceptor>
     AcceptorImpl<Acceptor>::AcceptorImpl(Acceptor* base)
@@ -305,6 +310,7 @@ namespace libport
       Destructible::DestructionLock l = getDestructionLock();
       if (base_->lowest_layer().is_open())
       {
+        // Error code is ignored on purpose, after all, we're closing.
         boost::system::error_code erc;
         base_->lowest_layer().shutdown(
           Stream::lowest_layer_type::shutdown_both,
