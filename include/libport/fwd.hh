@@ -58,10 +58,6 @@ namespace libport
   // Anyway, we want std::tr1::unodered_map here.
   template<class _Key, class _Tp, class _HashFcn, class _EqualKey, class _Alloc>
   class hash_map;
-
-  // FIXME: To remove some day.
-  template<class K, class V>
-  class hash_map_type;
 #endif
 
   // lockable.hh.
@@ -75,6 +71,9 @@ namespace libport
 
   // ref-pt.hh
   template <class T> class RefPt;
+
+  // asio.hh;
+  struct Socket;
 
   // select-const.hh.
   template <typename T> struct constify_traits;
