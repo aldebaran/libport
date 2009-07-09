@@ -229,11 +229,11 @@ namespace libport
     boost::system::error_code
     listenSSL(SocketFactory f,
               const std::string& host,
-              const std::string&  port,
+              const std::string& port,
               boost::asio::ssl::context_base::method ctx
-              = boost::asio::ssl::context::sslv23_server,
+                = boost::asio::ssl::context::sslv23_server,
               boost::asio::ssl::context::options options
-              = boost::asio::ssl::context::verify_none,
+                = boost::asio::ssl::context::verify_none,
               const std::string& privateKeyFile = "",
               const std::string& certChainFile = "",
               const std::string& tmpDHFile = "" ,

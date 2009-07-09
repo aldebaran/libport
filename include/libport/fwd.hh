@@ -60,6 +60,10 @@ namespace libport
   class hash_map;
 #endif
 
+  // asio.hh;
+  struct ConcreteSocket;
+  struct Socket;
+
   // lockable.hh.
   class Lockable;
 
@@ -72,18 +76,15 @@ namespace libport
   // ref-pt.hh
   template <class T> class RefPt;
 
-  // asio.hh;
-  struct Socket;
-
   // select-const.hh.
   template <typename T> struct constify_traits;
   template <typename T> struct id_traits;
 
-  // shared-ref.hh.
-  template <typename T> class shared_ref;
-
   // semaphore.hh.
   class Semaphore;
+
+  // shared-ref.hh.
+  template <typename T> class shared_ref;
 
   // symbol.hh.
   class Symbol;
