@@ -1,3 +1,4 @@
+#include <iostream>
 #include <boost/static_assert.hpp>
 #include <libport/path.hxx>
 #include <libport/program-name.hh>
