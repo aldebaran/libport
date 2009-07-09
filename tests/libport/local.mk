@@ -56,7 +56,8 @@ TESTS_BINARIES =                                \
   tests/libport/tokenizer.cc                    \
   tests/libport/ufloat-double.cc                \
   tests/libport/unescape.cc                     \
-  tests/libport/utime.cc
+  tests/libport/utime.cc			\
+  tests/libport/xltdl.cc
 
 # ufloat-float.cc is commented out as we do not support ufloat /=
 # double (it would require that we recompile the library with another
@@ -125,6 +126,9 @@ tests_libport_tokenizer_SOURCES                         = tests/libport/tokenize
 tests_libport_ufloat_double_SOURCES                     = tests/libport/ufloat-double.cc
 tests_libport_unescape_SOURCES                          = tests/libport/unescape.cc
 tests_libport_utime_SOURCES                             = tests/libport/utime.cc
+tests_libport_xltdl_SOURCES                             = tests/libport/xltdl.cc
+
+tests_libport_xltdl_LDADD = $(LDADD) $(LTDL_LIBS)
 
 EXTRA_DIST +=                                   \
   tests/libport/ufloat-common.cc                \

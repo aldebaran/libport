@@ -88,6 +88,10 @@ namespace libport
 
   // symbol.hh.
   class Symbol;
+
+  // xltdl.hh
+  class xlt_advise;
+  class xlt_handle;
 }
 
 #endif // !LIBPORT_FWD_HH

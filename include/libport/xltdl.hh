@@ -1,52 +1,84 @@
 #ifndef LIBPORT_XLTDL_HH
 # define LIBPORT_XLTDL_HH
 
-# include <ltdl.h>
+# include <stdexcept>
+
+# include <libport/fwd.hh>
+# include <libport/compiler.hh>
 # include <libport/file-library.hh>
+
+# include <ltdl.h>
 
 namespace libport
 {
 
-  class xlt_dladvise
+  class xlt_advise
   {
   public:
-    xlt_dladvise();
-    ~xlt_dladvise();
+    /// Exceptions thrown on errors.
+    struct exception : std::runtime_error
+    {
+      exception(const std::string& msg);
+    };
 
-    xlt_dladvise& global(bool global);
-    xlt_dladvise& ext();
 
-    /// Exit status on dlopen failures.
-    xlt_dladvise& exit_failure(int s);
-    const file_library& path() const;
-    file_library& path();
-    xlt_dladvise& verbose(bool verbose);
+    xlt_advise() throw (exception);
+    ~xlt_advise() throw (exception);
 
-    /// Looks in the path_ if defined.
-    /// Always passes an absolute path to ltdl, so that its
-    /// own search path is never used.
-    lt_dlhandle xdlopen(const std::string& s) const;
+    xlt_advise& global(bool global) throw (exception);
+    xlt_advise& ext() throw (exception);
+
+    const file_library& path() const throw ();
+    file_library& path() throw ();
+
+    xlt_handle open(const std::string& s) throw(exception);
+
+    /// Throw an exception, or exit with exit_status_ if nonnull.
+    static void fail(std::string msg) throw (exception) ATTRIBUTE_NORETURN;
 
   private:
     /// Does not use the search path.  Can return 0.
-    lt_dlhandle dlopen_(const std::string& s) const;
+    lt_dlhandle dlopen_(const std::string& s) const throw (exception);
 
     lt_dladvise advise_;
-    int exit_failure_;
     file_library path_;
-    bool verbose_;
+  };
+
+
+  class xlt_handle
+  {
+  public:
+    typedef xlt_advise::exception exception;
+
+    xlt_handle(lt_dlhandle h = 0);
+    ~xlt_handle();
+
+    /// Close the handle.
+    void close() throw (exception);
+
+    /// Detach so that destruction does not close.
+    void detach();
+
+    /// Detach so that destruction does not close.
+    void attach(lt_dlhandle h);
+
+    /// Wrapper around lt_dlsym that exits on failures.
+    template <typename T>
+    T sym(const std::string& s) throw (exception);
+
+    /// Bounce to xlt_advise::fail.
+    static void fail(const std::string& msg) throw (exception)
+      ATTRIBUTE_NORETURN;
+
+    /// The handle.
+    /// Exposed, as currently we don't cover the whole lt_ interface.
+    lt_dlhandle handle;
   };
 
   /// Wrapper around lt_dlopenext that exits on failures.
-  lt_dlhandle
-  xlt_dlopenext(const std::string& s, bool global, int exit_failure = 1,
-                bool verbose = false);
-
-  /// Wrapper around lt_dlsym that exits on failures.
-  template <typename T>
-  static
-  T
-  xlt_dlsym(lt_dlhandle h, const std::string& s);
+  xlt_handle
+  xlt_openext(const std::string& s, bool global, int exit_failure = 1)
+    throw (xlt_advise::exception);
 
 }
 

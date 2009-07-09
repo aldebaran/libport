@@ -1,155 +1,239 @@
 #include <iostream>
 #include <boost/static_assert.hpp>
+
+#include <iostream>
+
+#include <libport/debug.hh>
+#include <libport/format.hh>
 #include <libport/path.hxx>
 #include <libport/program-name.hh>
 #include <libport/sysexits.hh>
 
+GD_ADD_CATEGORY(XLTDL);
+
 namespace libport
 {
 
-# define LIBPORT_XLTDL_MESSAGE(Message)         \
-  std::cerr << program_name()                   \
-            << ": " << Message                  \
-            << std::endl
-
-# define LIBPORT_XLTDL_ERROR(Status, Message)                   \
-  LIBPORT_XLTDL_MESSAGE(Message << ": " << lt_dlerror())        \
-  << libport::exit(Status)
-
   /*---------------.
-  | xlt_dladvise.  |
+  | xlt::details.  |
   `---------------*/
 
-  inline
-  xlt_dladvise::xlt_dladvise()
-    : exit_failure_(1)
-    , path_()
-    , verbose_(false)
+  namespace xlt
   {
+    namespace details
+    {
+      /// \param verbosity  the current debug level.
+      /// \param level      the level of this message.
+      static
+      inline
+      int
+      ltdebug(unsigned /* verbosity */,
+              unsigned /* level */, const char* format, va_list args)
+      {
+        GD_CATEGORY(XLTDL);
+        int errors = 0;
+        char* msg = 0;
+        errors += vasprintf(&msg, format, args) < 0;
+        if (!errors && msg)
+        {
+          GD_INFO(msg);
+          free(msg);
+        }
+        return errors;
+      }
+
+
+      static
+      inline
+      void init()
+      {
+        static bool tail = false;
+        if (!tail++)
+        {
+          lt_dlinit();
+          lt_dladd_log_function((lt_dllog_function*) &ltdebug, 0);
+        }
+      }
+
+    }
+  }
+
+  /*------------------------.
+  | xlt_advise::exception.  |
+  `------------------------*/
+
+  xlt_advise::exception::exception(const std::string& msg)
+    : std::runtime_error(msg)
+  {}
+
+
+  /*-------------.
+  | xlt_advise.  |
+  `-------------*/
+
+  inline
+  xlt_advise::xlt_advise()
+    throw(xlt_advise::exception)
+    : path_()
+  {
+    xlt::details::init();
     if (lt_dladvise_init(&advise_))
-      LIBPORT_XLTDL_ERROR(1, "failed to initialize dladvise");
+      fail("failed to initialize dladvise");
   }
 
+  // FIXME: Bad: dtors must not throw.
   inline
-  xlt_dladvise::~xlt_dladvise()
+  xlt_advise::~xlt_advise()
+    throw(xlt_advise::exception)
   {
+    // FIXME: lt_dlexit when we refcount.
     if (lt_dladvise_destroy(&advise_))
-      LIBPORT_XLTDL_ERROR(1, "failed to destroy dladvise");
+      fail("failed to destroy dladvise");
   }
 
   inline
-  xlt_dladvise::xlt_dladvise&
-  xlt_dladvise::global(bool global)
+  xlt_advise::xlt_advise&
+  xlt_advise::global(bool global)
+    throw(xlt_advise::exception)
   {
     if (global ? lt_dladvise_global(&advise_) : lt_dladvise_local(&advise_))
-      LIBPORT_XLTDL_ERROR(1, "failed to set dladvise to "
-                          << (global ? "global" : "local"));
+      fail(libport::format("failed to set dladvise to %s",
+                           global ? "global" : "local"));
     return *this;
   }
 
   inline
-  xlt_dladvise::xlt_dladvise&
-  xlt_dladvise::exit_failure(int s)
-  {
-    exit_failure_ = s;
-    return *this;
-  }
-
-  inline
-  xlt_dladvise::xlt_dladvise&
-  xlt_dladvise::ext()
+  xlt_advise::xlt_advise&
+  xlt_advise::ext()
+    throw(xlt_advise::exception)
   {
     if (lt_dladvise_ext(&advise_))
-      LIBPORT_XLTDL_ERROR(1, "failed to set dladvise to ext");
+      fail("failed to set dladvise to ext");
     return *this;
   }
 
   inline
   const file_library&
-  xlt_dladvise::path() const
+  xlt_advise::path() const throw()
   {
     return path_;
   }
 
   inline
   file_library&
-  xlt_dladvise::path()
+  xlt_advise::path() throw()
   {
     return path_;
   }
 
   inline
-  xlt_dladvise::xlt_dladvise&
-  xlt_dladvise::verbose(bool v)
+  lt_dlhandle
+  xlt_advise::dlopen_(const std::string& s) const
+    throw(xlt_advise::exception)
   {
-    verbose_ = v;
-    return *this;
+    GD_CATEGORY(XLTDL);
+    lt_dlhandle res = lt_dlopenadvise(s.c_str(), advise_);
+    GD_FINFO("trying  %s: %s", (s)((res ? "found" : "not found")));
+    return res;
   }
 
   inline
-  lt_dlhandle
-  xlt_dladvise::dlopen_(const std::string& s) const
+  xlt_handle
+  xlt_advise::open(const std::string& s)
+    throw(xlt_advise::exception)
   {
-    return lt_dlopenadvise(s.c_str(), advise_);
-  }
-
-  inline
-  lt_dlhandle
-  xlt_dladvise::xdlopen(const std::string& s) const
-  {
-    if (verbose_)
-      LIBPORT_XLTDL_MESSAGE("loading " << s);
+    GD_CATEGORY(XLTDL);
+    GD_FINFO("loading %s", (s));
+    lt_dlhandle res = 0;
     // We cannot simply use search_file in file_library, because we
     // don't know the extension of the file we are looking for (*.la,
     // *.so, *.dyld etc.).  That's an implementation detail that ltdl
     // saves us from.
-    lt_dlhandle res = 0;
     if (path_.search_path_get().empty() || libport::path(s).absolute_get())
       res = dlopen_(s);
     else
       foreach (const libport::path& p, path_.search_path_get())
-      {
-        if (verbose_)
-          LIBPORT_XLTDL_MESSAGE("looing for " << s << " in " << p);
         if ((res = dlopen_(p / s)))
-        {
-          if (verbose_)
-            LIBPORT_XLTDL_MESSAGE("found " << s << " in " << p);
           break;
-        }
-      }
 
     if (!res)
-      LIBPORT_XLTDL_ERROR(exit_failure_, "failed to load " << s);
+      fail(libport::format("failed to open %s", s));
+
     return res;
   }
 
 
+  /// Throw an exception, or exit with exit_failure_ if nonnull.
+  void
+  xlt_advise::fail(std::string msg)
+    throw(xlt_advise::exception)
+  {
+    msg += ": ";
+    msg += lt_dlerror();
+    throw exception(msg);
+  }
+
   /*-------------.
-  | Standalone.  |
+  | xlt_handle.  |
   `-------------*/
 
-  lt_dlhandle
-  xlt_dlopenext(const std::string& s, bool global, int exit_failure,
-                bool verbose)
+  inline
+  xlt_handle::xlt_handle(lt_dlhandle h)
+    : handle(h)
+  {}
+
+  inline
+  xlt_handle::~xlt_handle()
   {
-    return (xlt_dladvise()
-            .global(global)
-            .ext()
-            .exit_failure(exit_failure)
-            .verbose(verbose)
-            .xdlopen(s));
+    // FIXME: We can't close -- yet.  We need to keep track of the
+    // number of trackers.  Otherwise a simple "handle h =
+    // advise.open" will close the handle when cleaning the temporary
+    // made by "advise.open".
+
+    // close();
+  }
+
+  inline
+  void
+  xlt_handle::close()
+    throw(xlt_handle::exception)
+  {
+    if (handle)
+    {
+      int errors = lt_dlclose(handle);
+      handle = 0;
+      if (errors)
+        fail("cannot close");
+    }
+  }
+
+  inline
+  void
+  xlt_handle::detach()
+  {
+    assert(handle);
+    handle = 0;
+  }
+
+  inline
+  void
+  xlt_handle::attach(lt_dlhandle h)
+  {
+    assert(!handle);
+    handle = h;
   }
 
 
   template <typename T>
   inline
   T
-  xlt_dlsym(lt_dlhandle h, const std::string& s)
+  xlt_handle::sym(const std::string& s)
+    throw (xlt_handle::exception)
   {
-    void* res = lt_dlsym(h, s.c_str());
+    assert(handle);
+    void* res = lt_dlsym(handle, s.c_str());
     if (!res)
-      LIBPORT_XLTDL_ERROR(1, "failed to dlsym " << s);
+      fail(libport::format("failed to dlsym %s", s));
     // GCC 3.4.6 on x86_64 at least requires that we go through a
     // scalar type. It doesn't support casting a void* into a function
     // pointer directly. Later GCC versions do not have this
@@ -159,7 +243,38 @@ namespace libport
     return reinterpret_cast<T>(reinterpret_cast<unsigned long>(res));
   }
 
-#undef LIBPORT_XLTDL_ERROR
-#undef LIBPORT_XLTDL_MESSAGE
+
+  /// Throw an exception, or exit with exit_failure_ if nonnull.
+  inline
+  void
+  xlt_handle::fail(const std::string& msg)
+    throw(xlt_advise::exception)
+  {
+    xlt_advise::fail(msg);
+  }
+
+
+  /*-------------.
+  | Standalone.  |
+  `-------------*/
+
+  inline
+  xlt_handle
+  xlt_openext(const std::string& s, bool global, int exit_failure)
+    throw (xlt_advise::exception)
+  {
+    try
+    {
+      return xlt_advise().global(global).ext().open(s);
+    }
+    catch (std::exception& s)
+    {
+      std::cerr << libport::program_name()
+                << ": "
+                << s.what()
+                << std::endl
+                << libport::exit(exit_failure);
+    }
+  }
 
 }
