@@ -323,7 +323,11 @@ namespace libport
     color(c);
     for (unsigned i = 0; i < indent_; ++i)
       std::cerr << " ";
-    std::cerr << msg;
+    // As syslog would do, don't issue the users' \n.
+    if (!msg.empty() && msg[msg.size() - 1] == '\n')
+      std::cerr.write(msg.c_str(), msg.size() - 1);
+    else
+      std::cerr << msg;
     if (locations())
     {
       color(colors::blue);
@@ -415,7 +419,11 @@ namespace libport
     s << "[" << category() << "] ";
     for (unsigned i = 0; i < indent_; ++i)
       s << " ";
-    s << msg;
+    // As syslog would do, don't issue the users' \n.
+    if (!msg.empty() && msg[msg.size() - 1] == '\n')
+      s.write(msg.c_str(), msg.size() - 1);
+    else
+      s << msg;
     if (locations())
       s << "    (" << fun << ", " << file << ":" << line << ")";
     int prio = type_to_prio(type) | LOG_DAEMON;
