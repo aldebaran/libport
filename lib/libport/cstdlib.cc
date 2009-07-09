@@ -53,18 +53,25 @@ extern "C"
 | xgetenv.  |
 `----------*/
 
-namespace libport
+extern "C"
 {
+  // It makes sense for this function to live in the C world, but it
+  // is also put there so that our test suite can load libport.so and
+  // look for "xgetenv" in it without worrying about mangling.
   const char*
   xgetenv(const char* c, const char* deflt)
   {
     const char* res = getenv(c);
     return res ? res : deflt;
   }
+}
 
+namespace libport
+{
   std::string
   xgetenv(const char* c, const std::string& deflt)
   {
-    return xgetenv(c, deflt.c_str());
+    const char* res = getenv(c);
+    return res ? res : deflt;
   }
 }

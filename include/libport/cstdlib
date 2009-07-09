@@ -48,15 +48,18 @@ extern "C"
 | xgetenv.  |
 `----------*/
 
-namespace libport
+extern "C"
 {
   /// Return getenv(c) if defined, \a deflt otherwise.
   LIBPORT_API
   const char* xgetenv(const char* c, const char* deflt = "");
+}
 
+namespace libport
+{
   /// Return getenv(c) if defined, \a deflt otherwise.
   LIBPORT_API
-  std::string xgetenv(const char* c, const std::string& deflt);
+  std::string xgetenv(const char* c, const std::string& deflt = "");
 }
 
 #endif // ! LIBPORT_CSTDLIB
