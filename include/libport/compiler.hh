@@ -37,6 +37,13 @@
 #  endif
 # endif
 
+// For throw() vs. nothrow, see
+// http://www.nabble.com/Rest-of-trivial-decorations-td23114765.html
+# ifdef __cplusplus
+#  undef ATTRIBUTE_NOTHROW
+#  define ATTRIBUTE_NOTHROW throw()
+# endif
+
 
 /*----------------------.
 | __PRETTY_FUNCTION__.  |
