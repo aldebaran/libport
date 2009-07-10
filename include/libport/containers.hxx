@@ -147,27 +147,77 @@ namespace libport
 
 namespace std
 {
-#define INSERT(Container)                                       \
-  template<typename Value, typename Arg>                        \
-  Container<Value>&                                             \
-  operator<<(Container<Value>& c, const Arg& v)                 \
-  {                                                             \
-    c.push_back(v);                                             \
-    return c;                                                   \
-  }                                                             \
-                                                                \
-  template<typename Value, typename Arg, typename Alloc>        \
-  Container<Value>&                                             \
-  operator<<(Container<Value>& c,                               \
-             const Container<Arg, Alloc>& vs)                   \
-  {                                                             \
-    c.insert(c.end(), vs.begin(), vs.end());                    \
-    return c;                                                   \
+
+  /*---------------------.
+  | Container << Value.  |
+  `---------------------*/
+
+#define INSERT2(Container, Function)                    \
+  template<typename Lhs, typename Alloc,                \
+           typename Rhs>                                \
+  Container<Lhs, Alloc>&                                \
+  operator<<(Container<Lhs, Alloc>& c, const Rhs& v)    \
+  {                                                     \
+    c.Function(v);                                      \
+    return c;                                           \
   }
 
+#define INSERT(Container) INSERT2(Container, push_back)
   APPLY_ON_BACK_INSERTION_CONTAINERS(INSERT)
+#undef INSERT
+
+#define INSERT(Container) INSERT2(Container, insert)
+  APPLY_ON_ASSOCIATIVE_CONTAINERS(INSERT)
+#undef INSERT
+#undef INSERT2
+
+
+  /*-------------------------.
+  | Container << Container.  |
+  `-------------------------*/
+
+#define INSERT(Cont1, Cont2)                    \
+  template<typename Lhs, typename Alloc1,       \
+           typename Rhs, typename Alloc2>       \
+  Cont1<Lhs, Alloc1>&                           \
+  operator<<(Cont1<Lhs, Alloc1>& c,             \
+             const Cont2<Rhs, Alloc2>& vs)      \
+  {                                             \
+    c.insert(c.end(), vs.begin(), vs.end());    \
+    return c;                                   \
+  }
+
+  INSERT(deque, deque);
+  INSERT(list, list);
+  INSERT(list, set);
+  INSERT(vector, set);
+  INSERT(vector, vector);
 
 #undef INSERT
+
+
+
+  /*-------------------.
+  | set << Container.  |
+  `-------------------*/
+
+#define INSERT(Cont1, Cont2)                    \
+  template<typename Lhs, typename Alloc1,       \
+           typename Rhs, typename Alloc2>       \
+  Cont1<Lhs, Alloc1>&                           \
+  operator<<(Cont1<Lhs, Alloc1>& c,             \
+             const Cont2<Rhs, Alloc2>& vs)      \
+  {                                             \
+    foreach (const Rhs& v, vs)                  \
+      c << v;                                   \
+    return c;                                   \
+  }
+
+  INSERT(set, set);
+  INSERT(set, vector);
+
+#undef INSERT
+
 } // namespace std
 
 #endif // !LIBPORT_CONTAINERS_HXX

@@ -9,6 +9,7 @@
 # include <deque>
 # include <iosfwd>
 # include <list>
+# include <set>
 # include <vector>
 
 namespace libport
@@ -76,26 +77,80 @@ namespace libport
   bool operator==(const Cont<E, A>& lhs, const Cont<E, A>& rhs);
 } // namespace libport
 
+
+
 namespace std
 {
+
+  /*---------------------.
+  | Container << Value.  |
+  `---------------------*/
+
 #define APPLY_ON_BACK_INSERTION_CONTAINERS(Macro)       \
   Macro(deque);                                         \
   Macro(list);                                          \
-  Macro(vector);                                        \
+  Macro(vector);
 
-  // Insert with '<<'
-#define INSERT(Container)                                               \
-  template<typename Value, typename Arg>                                \
-  Container<Value>&                                                     \
-  operator<< (Container<Value>& c, const Arg& v);                       \
-                                                                        \
-  template<typename Value, typename Arg, typename Alloc>                \
-  Container<Value>&                                                     \
-  operator<< (Container<Value>& c, const Container<Arg, Alloc>& vs)
+  // Push back with '<<'.
+#define INSERT(Container)                               \
+  template<typename Lhs, typename Alloc,                \
+           typename Rhs>                                \
+  Container<Lhs, Alloc>&                                \
+  operator<<(Container<Lhs, Alloc>& c, const Rhs& v)
 
   APPLY_ON_BACK_INSERTION_CONTAINERS(INSERT)
 
 #undef INSERT
+
+
+  /*---------------------------------.
+  | Associative Container << Value.  |
+  `---------------------------------*/
+
+#define APPLY_ON_ASSOCIATIVE_CONTAINERS(Macro)  \
+  Macro(set);
+
+  // Insert with '<<'.
+#define INSERT(Container)                               \
+  template<typename Lhs, typename Alloc,                \
+           typename Rhs>                                \
+  Container<Lhs, Alloc>&                                \
+  operator<<(Container<Lhs, Alloc>& c, const Rhs& v)
+
+  APPLY_ON_ASSOCIATIVE_CONTAINERS(INSERT)
+
+#undef INSERT
+
+
+  /*-------------------------.
+  | Container << Container.  |
+  `-------------------------*/
+
+#define APPLY_ON_CONTAINERS_CONTAINERS(Macro)   \
+  Macro(deque, deque);                          \
+  Macro(list, list);                            \
+  Macro(list, set);                             \
+  Macro(set, set);                              \
+  Macro(set, vector);                           \
+  Macro(vector, set);                           \
+  Macro(vector, vector);
+
+  // Concatenate with '<<'.
+  // Arguably concatenation should be `+='.  Consider the case
+  // of appending a container to a container of containers.  Or use
+  // an intermediate function, say 'c1 << contents(c2)'.
+#define INSERT(Cont1, Cont2)                    \
+  template<typename Lhs, typename Alloc1,       \
+           typename Rhs, typename Alloc2>       \
+  Cont1<Lhs, Alloc1>&                           \
+  operator<< (Cont1<Lhs, Alloc1>& c,            \
+              const Cont2<Rhs, Alloc2>& vs)
+
+  APPLY_ON_CONTAINERS_CONTAINERS(INSERT)
+
+#undef INSERT
+
+
 } // namespace std
 
 # include <libport/containers.hxx>

@@ -6,8 +6,8 @@ using libport::test_suite;
 static void
 check_operator_lt_lt()
 {
-  typedef std::vector<std::string> strings;
-  strings s1, s2;
+  typedef std::vector<std::string> string_list;
+  string_list s1, s2;
 
   s1 << "a" << "b";
   BOOST_CHECK_EQUAL(s1.size(), 2);
@@ -19,6 +19,13 @@ check_operator_lt_lt()
   BOOST_CHECK_EQUAL(s1.size(), 4);
   BOOST_CHECK_EQUAL(s1[2], "c");
   BOOST_CHECK_EQUAL(s1[3], "d");
+
+  typedef std::set<std::string> string_set;
+  string_set s3;
+  s3 << s1;
+  BOOST_CHECK_EQUAL(s3.size(), 4);
+  s3 << s1;
+  BOOST_CHECK_EQUAL(s3.size(), 4);
 }
 
 test_suite*
