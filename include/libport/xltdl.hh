@@ -5,6 +5,7 @@
 
 # include <libport/fwd.hh>
 # include <libport/compiler.hh>
+# include <libport/export.hh>
 # include <libport/file-library.hh>
 
 # include <ltdl.h>
@@ -12,7 +13,7 @@
 namespace libport
 {
 
-  class xlt_advise
+  class LIBPORT_API xlt_advise
   {
   public:
     /// Exceptions thrown on errors.
@@ -45,7 +46,7 @@ namespace libport
   };
 
 
-  class xlt_handle
+  class LIBPORT_API xlt_handle
   {
   public:
     typedef xlt_advise::exception exception;
@@ -76,6 +77,7 @@ namespace libport
   };
 
   /// Wrapper around lt_dlopenext that exits on failures.
+  LIBPORT_API
   xlt_handle
   xlt_openext(const std::string& s, bool global, int exit_failure = 1)
     throw (xlt_advise::exception);
