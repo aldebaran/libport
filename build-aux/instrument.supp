@@ -85,6 +85,18 @@
    fun:(below main)
 }
 
+{
+   Lib postgresql on OS X.  AD 2009-07-10.
+   Memcheck:Cond
+   fun:pq_block_sigpipe
+   fun:pqsecure_write
+   fun:pqSendSome
+   fun:pqPacketSend
+   fun:PQconnectPoll
+   fun:connectDBComplete
+   fun:PQconnectdb
+}
+
 ## --------------------------------------------- ##
 ## 2009-03-20, bf-linux-1-virtual, Debian Etch.  ##
 ## --------------------------------------------- ##
