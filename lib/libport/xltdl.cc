@@ -1,2 +1,21 @@
-// There should be no function here, so that we could even use xltdl
-// to load libport.
+#include <libport/xltdl.hh>
+
+
+namespace libport
+{
+  namespace xlt
+  {
+    namespace details
+    {
+      void init()
+      {
+        static bool tail = false;
+        if (!tail++)
+        {
+          lt_dlinit();
+          lt_dladd_log_function((lt_dllog_function*) &ltdebug, 0);
+        }
+      }
+    }
+  }
+}

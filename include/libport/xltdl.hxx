@@ -22,6 +22,8 @@ namespace libport
   {
     namespace details
     {
+      LIBPORT_API void init();
+
       /// \param verbosity  the current debug level.
       /// \param level      the level of this message.
       static
@@ -40,19 +42,6 @@ namespace libport
           free(msg);
         }
         return errors;
-      }
-
-
-      static
-      inline
-      void init()
-      {
-        static bool tail = false;
-        if (!tail++)
-        {
-          lt_dlinit();
-          lt_dladd_log_function((lt_dllog_function*) &ltdebug, 0);
-        }
       }
 
     }

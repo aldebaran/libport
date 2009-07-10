@@ -6,6 +6,7 @@ lib_libport_libport_la_LIBADD =			\
   $(LIBADD)					\
   $(BOOST_SYSTEM_LIBS)				\
   $(CLOCK_LIBS)					\
+  $(LTDL_LIBS)                                  \
   $(SOCKETS_LIBS)				\
   $(PTHREAD_LDFLAGS)				\
   $(PTHREAD_LIBS)				\
