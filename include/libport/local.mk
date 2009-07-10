@@ -27,6 +27,7 @@ sys_libport_include_HEADERS =			\
   include/libport/sys/select.h			\
   include/libport/sys/socket.h			\
   include/libport/sys/stat.h			\
+  include/libport/sys/stat.hxx			\
   include/libport/sys/time.h			\
   include/libport/sys/time.hxx
 
