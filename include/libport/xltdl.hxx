@@ -28,7 +28,7 @@ namespace libport
       inline
       int
       ltdebug(unsigned /* verbosity */,
-              unsigned /* level */, const char* format, va_list args)
+              unsigned level, const char* format, va_list args)
       {
         GD_CATEGORY(XLTDL);
         int errors = 0;
@@ -36,7 +36,7 @@ namespace libport
         errors += vasprintf(&msg, format, args) < 0;
         if (!errors && msg)
         {
-          GD_INFO(msg);
+          GD_FINFO_DEBUG("%s%s", (std::string(level * 2, ' '))(msg));
           free(msg);
         }
         return errors;
