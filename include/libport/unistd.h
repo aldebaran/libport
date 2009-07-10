@@ -97,9 +97,15 @@ extern "C"
 
 namespace libport
 {
+  /// Throws on error.
+  /// \param path_lookup whether args[0] should be looked for in PATH.
   ATTRIBUTE_NORETURN LIBPORT_API
-  void
-  exec(std::vector<const char*> args);
+  void exec(std::vector<const char*> args, bool path_lookup = false);
+
+  /// Throws on error.
+  /// \param path_lookup whether args[0] should be looked for in PATH.
+  ATTRIBUTE_NORETURN LIBPORT_API
+  void exec(const std::vector<std::string>& args, bool path_lookup = false);
 }
 
 /*--------------.

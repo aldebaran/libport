@@ -3,26 +3,40 @@
 #include <libport/cerrno>
 #include <libport/cstring>
 #include <iostream>
+#include <stdexcept>
 
 #include <libport/config.h>
-#include <libport/program-name.hh>
-#include <libport/sysexits.hh>
+#include <libport/format.hh>
+#include <libport/separator.hh>
 #include <libport/unistd.h>
 
 namespace libport
 {
+
   void
-  exec(std::vector<const char*> args)
+  exec(std::vector<const char*> args, bool path_lookup)
   {
     args.push_back(0);
     char* const* argv = const_cast<char* const*>(&args[0]);
-    execv(argv[0], argv);
+    if (path_lookup)
+      execvp(argv[0], argv);
+    else
+      execv(argv[0], argv);
 
-    std::cerr << libport::program_name()
-              << ": failed to invoke " << args[0]
-              << ": " << strerror(errno)
-              << std::endl
-              << libport::exit(EX_OSFILE);
+    throw std::runtime_error(format("failed to %s(%s): %s",
+                                    path_lookup ? "execvp" : "execv",
+                                    libport::separate(args, " "),
+                                    strerror(errno)));
+  }
+
+  void
+  exec(const std::vector<std::string>& args, bool path_lookup)
+  {
+    std::vector<const char*> as;
+    as.reserve(args.size() + 2);
+    foreach (const std::string& s, args)
+      as << s.c_str();
+    exec(as, path_lookup);
   }
 }
 
