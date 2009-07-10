@@ -150,11 +150,20 @@ namespace std
 #define INSERT(Container)                                       \
   template<typename Value, typename Arg>                        \
   Container<Value>&                                             \
-  operator << (Container<Value>& container, const Arg& v)       \
+  operator<<(Container<Value>& c, const Arg& v)                 \
   {                                                             \
-    container.push_back(v);                                     \
-    return container;                                           \
+    c.push_back(v);                                             \
+    return c;                                                   \
   }                                                             \
+                                                                \
+  template<typename Value, typename Arg, typename Alloc>        \
+  Container<Value>&                                             \
+  operator<<(Container<Value>& c,                               \
+             const Container<Arg, Alloc>& vs)                   \
+  {                                                             \
+    c.insert(c.end(), vs.begin(), vs.end());                    \
+    return c;                                                   \
+  }
 
   APPLY_ON_BACK_INSERTION_CONTAINERS(INSERT)
 

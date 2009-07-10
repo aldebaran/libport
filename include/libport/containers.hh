@@ -71,7 +71,7 @@ namespace libport
   erase_if(Container& c, const Functor& f);
 
 
-  // Compare two containers
+  // Compare two containers.
   template <template <typename, typename> class Cont, typename E, typename A>
   bool operator==(const Cont<E, A>& lhs, const Cont<E, A>& rhs);
 } // namespace libport
@@ -84,10 +84,14 @@ namespace std
   Macro(vector);                                        \
 
   // Insert with '<<'
-#define INSERT(Container)                                       \
-  template<typename Value, typename Arg>                        \
-  Container<Value>&                                             \
-  operator << (Container<Value>& container, const Arg& v)       \
+#define INSERT(Container)                                               \
+  template<typename Value, typename Arg>                                \
+  Container<Value>&                                                     \
+  operator<< (Container<Value>& c, const Arg& v);                       \
+                                                                        \
+  template<typename Value, typename Arg, typename Alloc>                \
+  Container<Value>&                                                     \
+  operator<< (Container<Value>& c, const Container<Arg, Alloc>& vs)
 
   APPLY_ON_BACK_INSERTION_CONTAINERS(INSERT)
 
