@@ -97,7 +97,12 @@ lt_dllog (unsigned level, const char* format, ...)
       {
         lt__log_list *l;
         for (l = lt_logs; l; l = l->next)
-          errors += (*l->function) (l->data, level, format, args);
+          {
+            va_list as;
+            va_copy(as, args);
+            errors += (*l->function) (l->data, level, format, as);
+            va_end(as);
+          }
       }
       va_end(args);
     }
