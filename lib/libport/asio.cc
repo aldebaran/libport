@@ -197,7 +197,7 @@ namespace libport
   {
     boost::system::error_code erc;
 
-    Rs232 sp(libport::get_io_service());
+    Rs232& sp = *new Rs232(libport::get_io_service());
     sp.open(device, erc);
     sp.set_option(boost::asio::serial_port::baud_rate(rate), erc);
     typedef libport::netdetail::SocketImpl<Rs232> SerBase;
