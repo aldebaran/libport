@@ -6,6 +6,8 @@
 #ifndef LIBPORT_SELECT_REF_HH
 # define LIBPORT_SELECT_REF_HH
 
+# warn use libport/traits.hh instead.
+
 namespace libport
 {
 
