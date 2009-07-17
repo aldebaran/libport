@@ -17,7 +17,7 @@ namespace libport
 
   namespace netdetail
   {
-
+    using boost::asio::io_service;
     namespace errorcodes =
 # if 103600 <= BOOST_VERSION
     boost::system::errc;
@@ -88,12 +88,13 @@ namespace libport
 
       template<typename Acceptor, typename BaseFactory>
       static void
-      onAccept(boost::system::error_code erc, Stream* s, SocketFactory fact,
-	       Acceptor *a, BaseFactory bf);
+      onAccept(io_service& io, boost::system::error_code erc, Stream* s,
+               SocketFactory fact, Acceptor *a, BaseFactory bf);
 
       template<typename Acceptor, typename BaseFactory>
       static void
-      acceptOne(SocketFactory fact, Acceptor *a, BaseFactory bf);
+      acceptOne(io_service& io, SocketFactory fact, Acceptor *a,
+                BaseFactory bf);
 
       static BaseSocket* create(Stream* base);
       void startReader();
@@ -193,14 +194,6 @@ namespace libport
       return base_->native();
     }
 
-    inline void
-    runIoService(boost::asio::io_service* io)
-    {
-      // Trick to have io->run() never return.
-      boost::asio::io_service::work work(*io);
-      io->run();
-    }
-
     class UDPLinkImpl: public UDPLink
     {
     public:
@@ -291,7 +284,7 @@ namespace libport
     SocketImplBase*
     bind_or_delete(Socket* sock, Factory f, Sock* s)
     {
-      if (SocketImplBase* base =  dynamic_cast<SocketImplBase*>(f(s)))
+      if (SocketImplBase* base =  static_cast<SocketImplBase*>(f(s)))
       {
         sock->setBase(base);
         return base;
@@ -515,7 +508,9 @@ namespace libport
     template<typename Stream>
     template<typename Acceptor, typename BaseFactory>
     void
-    SocketImpl<Stream>::onAccept(boost::system::error_code erc,
+    SocketImpl<Stream>::onAccept(
+                                 io_service& io,
+                                 boost::system::error_code erc,
                                  Stream* s,
                                  SocketFactory fact,
                                  Acceptor *a,
@@ -537,22 +532,22 @@ namespace libport
         // Failure.
         delete s;
       }
-      acceptOne(fact, a, bf);
+      acceptOne(io, fact, a, bf);
     }
 
     template<typename Stream>
     template<typename Acceptor, typename BaseFactory>
     void
-    SocketImpl<Stream>::acceptOne(SocketFactory fact,
+    SocketImpl<Stream>::acceptOne(io_service& io, SocketFactory fact,
                                   Acceptor *a,
                                   BaseFactory bf)
     {
-      Stream* s = new Stream(get_io_service());
+      Stream* s = new Stream(io);
       a->async_accept(
         *s,
         boost::bind(&SocketImpl<Stream>::template
                     onAccept<Acceptor, BaseFactory>,
-                    _1, s, fact, a, bf));
+                    boost::ref(io), _1, s, fact, a, bf));
     }
 
 
@@ -684,7 +679,7 @@ namespace libport
       else
       {
         typename Proto::endpoint ep = *i;
-        typename Proto::socket* bs = new typename Proto::socket(get_io_service());
+        typename Proto::socket* bs = new typename Proto::socket(r->get_io_service());
         bs->async_connect(ep,
                           boost::bind(&async_connect<Proto, BaseFactory>,
                                       bs, s, l, bf, _1));
@@ -703,7 +698,7 @@ namespace libport
     {
       typename Proto::resolver::query query(host, port);
       typename Proto::resolver* resolver =
-        new typename Proto::resolver(get_io_service());
+        new typename Proto::resolver(s->get_io_service());
       resolver->async_resolve(query,
                               boost::bind(&async_resolve<Proto, BaseFactory>,
                                           resolver, s, l, bf, _1, _2));
@@ -718,11 +713,19 @@ namespace libport
           boost::system::error_code &erc)
   {
     typename Proto::resolver::query query(host, port);
+    // Synchronous resolution, we do not care which io_service is used.
     typename Proto::resolver resolver(get_io_service());
     typename Proto::resolver::iterator iter = resolver.resolve(query, erc);
     if (erc)
       return typename Proto::endpoint();
     return *iter;
+  }
+
+  inline
+  boost::asio::io_service&
+  Socket::get_io_service()
+  {
+    return io_;
   }
 
   template<class Proto, class BaseFactory>
@@ -835,7 +838,8 @@ namespace libport
     BaseSocket* impl =
       new netdetail::AcceptorImpl<typename Proto::acceptor>(a);
     setBase(impl);
-    netdetail::SocketImpl<typename Proto::socket>::acceptOne(f, a, bf);
+    netdetail::SocketImpl<typename Proto::socket>::acceptOne(
+      get_io_service(), f, a, bf);
     return erc;
   }
 
@@ -941,10 +945,11 @@ namespace libport
   }
 
   inline AsyncCallHandler
-  asyncCall(boost::function0<void> callback, utime_t usDelay)
+  asyncCall(boost::function0<void> callback, utime_t usDelay,
+            boost::asio::io_service& io)
   {
     AsyncCallHandler
-      res(new boost::asio::deadline_timer(get_io_service()));
+      res(new boost::asio::deadline_timer(io));
     res->expires_from_now(boost::posix_time::microseconds(usDelay));
     res->async_wait(boost::bind(&netdetail::timer_trigger, res, callback, _1));
     return res;

@@ -93,5 +93,12 @@ namespace libport
   class xlt_advise;
   class xlt_handle;
 }
+namespace boost
+{
+  namespace asio
+  {
+    class io_service;
+  }
+}
 
 #endif // !LIBPORT_FWD_HH

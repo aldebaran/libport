@@ -38,6 +38,16 @@ namespace libport
       virtual void doDestroy();
   };
 
+  //FIXME: extend to provide a way to ensure workerThread not started.
+  /** Get the io_service handling all asynchronous operations.
+   *
+   * \param startWorkerThread create a thread in which to run the io_service.
+   * If \b startWorkerThread is false on \b first invocation, the user
+   * is responsible for calling the work or poll methods of the io_service.
+   */
+  LIBPORT_API boost::asio::io_service&
+  get_io_service(bool startWorkerThread = true);
+
   /** BaseSocket class.
    *
    * This class has a callback-based API: onReadFunc() and onErrorFunc().
@@ -107,8 +117,9 @@ namespace libport
   class LIBPORT_API Socket: public AsioDestructible
   {
   public:
-    Socket()
+    Socket(boost::asio::io_service& io = libport::get_io_service())
       : base_(0)
+      , io_(io)
     {}
     virtual ~Socket();
     /** Set underlying BaseSocket object, setup its callbacks to call our virtual functions.
@@ -251,6 +262,7 @@ namespace libport
      * the asio worker thread
      */
     static void sleep(utime_t duration);
+    boost::asio::io_service& get_io_service();
   protected:
     bool onRead_(boost::asio::streambuf&);
     std::string buffer;
@@ -262,6 +274,7 @@ namespace libport
     template<typename Proto, typename BaseFactory> boost::system::error_code
     connectProto(const std::string& host, const std::string& port,
                  utime_t timeout, bool async, BaseFactory bf);
+    boost::asio::io_service& io_;
   };
 
   /** Wrapper of libport::Socket to be able to use Socket without inherit from
@@ -275,8 +288,9 @@ namespace libport
     typedef boost::function0<void> onconnect_type;
     typedef Socket super_type;
 
-    ConcreteSocket()
-      : onconnect_(boost::bind(&super_type::onConnect, this))
+    ConcreteSocket(boost::asio::io_service& io = libport::get_io_service())
+      : Socket(io)
+      , onconnect_(boost::bind(&super_type::onConnect, this))
       , onerror_(boost::bind(&super_type::onError, this, _1))
       , onread_(boost::bind(&super_type::onRead, this, _1, _2))
       {}
@@ -318,16 +332,6 @@ namespace libport
     onread_type onread_;
   };
 
-  //FIXME: extend to provide a way to ensure workerThread not started.
-  /** Get the io_service handling all asynchronous operations.
-   *
-   * \param startWorkerThread create a thread in which to run the io_service.
-   * If \b startWorkerThread is false on \b first invocation, the user
-   * is responsible for calling the work or poll methods of the io_service.
-   */
-  LIBPORT_API boost::asio::io_service&
-  get_io_service(bool startWorkerThread = true);
-
   LIBPORT_API bool
   isPollThread();
 
@@ -346,7 +350,8 @@ namespace libport
    *  called.
    */
   AsyncCallHandler
-  asyncCall(boost::function0<void> callback, utime_t usDelay);
+  asyncCall(boost::function0<void> callback, utime_t usDelay,
+            boost::asio::io_service& io = get_io_service());
 }
 
 # include "libport/asio.hxx"

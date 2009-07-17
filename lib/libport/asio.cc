@@ -3,6 +3,19 @@
 
 namespace libport
 {
+
+  void
+  runIoService(boost::asio::io_service* io)
+  {
+    while (true) {
+      // Used so that io->run() never returns.
+      boost::asio::io_service::work work(*io);
+      io->run();
+      std::cerr << "The impossible happened";
+      io->reset();
+    }
+  }
+
   static pthread_t asio_worker_thread;
   boost::asio::io_service&
   get_io_service(bool startWorkerThread)
@@ -21,7 +34,7 @@ namespace libport
       {
         hasWorkerThread = true;
         asio_worker_thread =
-          libport::startThread(boost::bind(&netdetail::runIoService, io));
+          libport::startThread(boost::bind(&runIoService, io));
       }
       else
         asio_worker_thread = pthread_self();
@@ -98,7 +111,7 @@ namespace libport
      * if this protocol is not supported by the system. So try to bind using all
      * the endopints until one succeeds, and not just the first. */
     udp::resolver::query query(host, port);
-    udp::resolver resolver(get_io_service());
+    udp::resolver resolver(libport::get_io_service());
     udp::resolver::iterator iter = resolver.resolve(query, erc);
     if (erc)
       return Handle();
@@ -177,7 +190,7 @@ namespace libport
     boost::asio::io_service::work work(io);
     io.reset();
     AsyncCallHandler asc =
-      asyncCall(boost::bind(&stop_io_service, boost::ref(io)), duration);
+      asyncCall(boost::bind(&stop_io_service, boost::ref(io)), duration, io);
     if (once)
       io.run_one();
     else
@@ -197,7 +210,7 @@ namespace libport
   {
     boost::system::error_code erc;
 
-    Rs232& sp = *new Rs232(libport::get_io_service());
+    Rs232& sp = *new Rs232(get_io_service());
     sp.open(device, erc);
     sp.set_option(boost::asio::serial_port::baud_rate(rate), erc);
     typedef libport::netdetail::SocketImpl<Rs232> SerBase;
