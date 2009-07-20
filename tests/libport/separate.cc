@@ -1,5 +1,5 @@
 /**
- ** Test code for libport/separator.hh features.
+ ** Test code for libport/separate.hh features.
  */
 
 #include <vector>
@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <libport/contract.hh>
-#include <libport/separator.hh>
+#include <libport/separate.hh>
 #include <libport/pair.hh>
 
 #include <libport/unit-test.hh>

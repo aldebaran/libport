@@ -121,8 +121,9 @@ libport_include_HEADERS +=				\
   include/libport/select-ref.hh				\
   include/libport/semaphore.hh				\
   include/libport/semaphore.hxx				\
+  include/libport/separate.hh				\
+  include/libport/separate.hxx				\
   include/libport/separator.hh				\
-  include/libport/separator.hxx				\
   include/libport/singleton-ptr.hh			\
   include/libport/singleton-ptr.hxx			\
   include/libport/statistics.hh				\

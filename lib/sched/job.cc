@@ -9,7 +9,7 @@
 #include <libport/containers.hh>
 #include <libport/foreach.hh>
 #include <libport/indent.hh>
-#include <libport/separator.hh>
+#include <libport/separate.hh>
 
 #include <sched/job.hh>
 

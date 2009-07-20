@@ -48,7 +48,7 @@ TESTS_BINARIES =                                \
   tests/libport/pid-file.cc                     \
   tests/libport/pthread.cc                      \
   tests/libport/semaphore.cc                    \
-  tests/libport/separator.cc                    \
+  tests/libport/separate.cc                     \
   tests/libport/singleton-ptr.cc                \
   tests/libport/statistics.cc                   \
   tests/libport/symbol.cc                       \
@@ -118,7 +118,7 @@ tests_libport_path_SOURCES                              = tests/libport/path.cc
 tests_libport_pid_file_SOURCES                          = tests/libport/pid-file.cc
 tests_libport_pthread_SOURCES                           = tests/libport/pthread.cc
 tests_libport_semaphore_SOURCES                         = tests/libport/semaphore.cc
-tests_libport_separator_SOURCES                         = tests/libport/separator.cc
+tests_libport_separate_SOURCES                          = tests/libport/separate.cc
 tests_libport_singleton_ptr_SOURCES                     = tests/libport/singleton-ptr.cc
 tests_libport_statistics_SOURCES                        = tests/libport/statistics.cc
 tests_libport_symbol_SOURCES                            = tests/libport/symbol.cc

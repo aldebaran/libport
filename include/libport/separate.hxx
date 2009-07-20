@@ -1,10 +1,10 @@
 /**
- ** \file libport/separator.hxx
+ ** \file libport/separate.hxx
  ** \brief Output containers with a separator between items.
  */
 
-#ifndef LIBPORT_SEPARATOR_HXX
-# define LIBPORT_SEPARATOR_HXX
+#ifndef LIBPORT_SEPARATE_HXX
+# define LIBPORT_SEPARATE_HXX
 
 # include <ostream>
 
@@ -12,7 +12,7 @@
 
 # include <libport/deref.hh>
 # include <libport/foreach.hh>
-# include <libport/separator.hh>
+# include <libport/separate.hh>
 
 namespace libport
 {
@@ -56,4 +56,4 @@ namespace libport
 
 }
 
-#endif // !LIBPORT_SEPARATOR_HXX
+#endif // !LIBPORT_SEPARATE_HXX

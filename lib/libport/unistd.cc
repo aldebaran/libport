@@ -7,7 +7,7 @@
 
 #include <libport/config.h>
 #include <libport/format.hh>
-#include <libport/separator.hh>
+#include <libport/separate.hh>
 #include <libport/unistd.h>
 
 namespace libport
