@@ -190,23 +190,23 @@ namespace libport
 # if defined __APPLE__
       else
       {
-	struct itimerval it;
-	it.it_interval.tv_sec = 0;
-	it.it_interval.tv_usec = 0;
+        struct itimerval it;
+        it.it_interval.tv_sec = 0;
+        it.it_interval.tv_usec = 0;
 
-	it.it_value.tv_sec = useconds / 1000000;
-	it.it_value.tv_usec = useconds % 1000000;
-	time_is_out = false;
-	signal(SIGALRM, fun_timeout);
-	setitimer(ITIMER_REAL, &it, NULL);
-	do
-	{
-	  err = sem_trywait(sem_);
-	} while (!time_is_out && err == -1 && errno == EAGAIN);
-	if (time_is_out)
+        it.it_value.tv_sec = useconds / 1000000;
+        it.it_value.tv_usec = useconds % 1000000;
+        time_is_out = false;
+        signal(SIGALRM, fun_timeout);
+        setitimer(ITIMER_REAL, &it, NULL);
+        do
+        {
+          err = sem_trywait(sem_);
+        } while (!time_is_out && err == -1 && errno == EAGAIN);
+        if (time_is_out)
         {
           // Match the interface under Linux.
-	  err = -1;
+          err = -1;
           errno = ETIMEDOUT;
         }
       }
@@ -218,7 +218,7 @@ namespace libport
           errabort("clock_gettime");
         ts.tv_sec += useconds / (1000 * 1000);
         ts.tv_nsec += (useconds % (1000 * 1000)) * 1000;
-        // Respect the constrainsts.
+        // Respect the constraints.
         ts.tv_sec += ts.tv_nsec / (1000 * 1000 * 1000);
         ts.tv_nsec %= 1000 * 1000 * 1000;
         err = sem_timedwait(sem_, &ts);

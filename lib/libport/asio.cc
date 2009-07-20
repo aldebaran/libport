@@ -7,7 +7,8 @@ namespace libport
   void
   runIoService(boost::asio::io_service* io)
   {
-    while (true) {
+    while (true)
+    {
       // Used so that io->run() never returns.
       boost::asio::io_service::work work(*io);
       io->run();
