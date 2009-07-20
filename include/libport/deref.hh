@@ -24,24 +24,27 @@ namespace libport
     Deref (std::ostream&);
 
   public:
-    template <typename T> std::ostream& operator<< (const T* t) const;
-    template <typename T> std::ostream& operator<< (T* t) const;
+# define LIBPORT_DEREF(Type)                                             \
+    template <typename T> std::ostream& operator<< (Type t) const
 
-    template <typename T> std::ostream& operator<< (const std::auto_ptr<T>& t) const;
-
-    template <typename T>
-    std::ostream& operator<< (const intrusive_ptr<T>& t) const;
-
+    LIBPORT_DEREF(const T*);
+    LIBPORT_DEREF(T*);
+    LIBPORT_DEREF(const std::auto_ptr<T>&);
+    LIBPORT_DEREF(const intrusive_ptr<T>&);
 # ifndef LIBPORT_NO_BOOST
-    template <typename T>
-    std::ostream& operator<< (const boost::shared_ptr<T>& t) const;
+    LIBPORT_DEREF(const boost::shared_ptr<T>&);
 # endif
+    LIBPORT_DEREF(const T&);
+    LIBPORT_DEREF(T&);
+#undef LIBPORT_DEREF
 
-    template <typename T> std::ostream& operator<< (const T& t) const;
-    template <typename T> std::ostream& operator<< (T& t) const;
+    // As a special case, do not consider that "char*" is to be
+    // dereferenced: we want to process it as a whole (a string), and
+    // not as a pointer to a single char.
+    std::ostream& operator<< (const char* t) const;
 
   protected:
-    friend Deref operator<< (std::ostream&, deref_e);
+    friend Deref operator<<(std::ostream&, deref_e);
 
     std::ostream& ostr_;
   };

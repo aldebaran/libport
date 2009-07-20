@@ -33,6 +33,10 @@ check ()
 
   const boost::shared_ptr<int> si(new int(123));
   CHECK(si);
+
+  // As a special case, we don't want to consider that "char*" is a
+  // pointer to a single char that we should deference.
+  CHECK("123");
 }
 
 test_suite*

@@ -17,13 +17,13 @@ using libport::test_suite;
 void
 check()
 {
-# define CHECK(Type, Num, Separator)				\
-  {								\
-    std::vector<Type> v (4);					\
-    std::fill (v.begin (), v.end (), Num);			\
-    std::ostringstream s;					\
-    s << libport::separate (v, Separator);			\
-    BOOST_CHECK_EQUAL(s.str (), "51, 51, 51, 51");		\
+# define CHECK(Type, Num, Separator)                    \
+  {                                                     \
+    std::vector<Type> v(4);                             \
+    std::fill(v.begin(), v.end(), Num);			\
+    std::ostringstream s;                               \
+    s << libport::separate(v, Separator);               \
+    BOOST_CHECK_EQUAL(s.str(), "51, 51, 51, 51");       \
   }
 
   CHECK(int, 51, ", ");
@@ -31,6 +31,8 @@ check()
 
   int p = 51;
   CHECK(int*, &p, ", ");
+
+  CHECK(const char*, "51", ", ");
 }
 
 test_suite*

@@ -13,7 +13,13 @@
 
 namespace libport
 {
+
+  /*--------.
+  | Deref.  |
+  `--------*/
+
   template <typename T>
+  inline
   std::ostream&
   Deref::operator<< (const T* t) const
   {
@@ -24,16 +30,15 @@ namespace libport
   }
 
   template <typename T>
+  inline
   std::ostream&
   Deref::operator<< (T* t) const
   {
-    if (t)
-      return ostr_ << *t;
-    else
-      return ostr_ << "NULL";
+    return operator<<(const_cast<const T*>(t));
   }
 
   template <typename T>
+  inline
   std::ostream&
   Deref::operator<< (const std::auto_ptr<T>& t) const
   {
@@ -41,6 +46,7 @@ namespace libport
   }
 
   template <typename T>
+  inline
   std::ostream&
   Deref::operator<< (const intrusive_ptr<T>& t) const
   {
@@ -49,6 +55,7 @@ namespace libport
 
 # ifndef LIBPORT_NO_BOOST
   template <typename T>
+  inline
   std::ostream&
   Deref::operator<< (const boost::shared_ptr<T>& t) const
   {
@@ -57,18 +64,26 @@ namespace libport
 # endif
 
   template <typename T>
+  inline
   std::ostream&
   Deref::operator<< (const T& t) const
   {
     return ostr_ << t;
   }
 
+
   template <typename T>
+  inline
   std::ostream&
   Deref::operator<< (T& t) const
   {
-    return ostr_ << t;
+    return operator<<(const_cast<const T&>(t));
   }
+
+
+  /*-------------.
+  | Standalone.  |
+  `-------------*/
 
   inline
   Deref
