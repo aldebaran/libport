@@ -13,7 +13,55 @@
 
 
 m4_defun([_URBI_CHILDREN_PREPARE],
-[
+[[
+# quote_for_eval_arg ARG
+# ----------------------
+# Aesthetically quote ARG to be evaled later.
+# This function returns two values: QUOTE_FOR_EVAL_RESULT
+# is double-quoted, suitable for a subsequent eval, whereas
+# QUOTE_FOR_EVAL_UNQUOTED_RESULT has merely all characters
+# which are still active within double quotes backslashified.
+#
+# Taken from Libtool.
+quote_for_eval_arg ()
+{
+  case $][1 in
+    (*[\\\`\"\$]*)
+      local quote_subst='s/\([`"$\\]\)/\\\1/g'
+      quote_for_eval_arg_unquoted_result=`echo "$][1" | sed -e "$quote_subst"`;;
+    (*)
+      quote_for_eval_arg_unquoted_result="$][1";;
+  esac
+
+  case $quote_for_eval_arg_unquoted_result in
+    # Double-quote args containing shell metacharacters to delay
+    # word splitting, command substitution and and variable
+    # expansion for a subsequent eval.
+    # Many Bourne shells cannot handle close brackets correctly
+    # in scan sets, so we specify it separately.
+    (*[\[\~\#\^\&\*\(\)\{\}\|\;\<\>\?\'\ \	]*|*]*|"")
+      quote_for_eval_arg_result="\"$quote_for_eval_arg_unquoted_result\"";;
+    (*)
+      quote_for_eval_arg_result="$quote_for_eval_arg_unquoted_result";;
+  esac
+}
+
+# quote_for_eval_arg ARG...
+# -------------------------
+quote_for_eval ()
+{
+  local i
+  local sep
+  local res
+  for i
+  do
+    quote_for_eval_arg "$i"
+    res+=$sep$quote_for_eval_arg_result
+    sep=" "
+  done
+  quote_for_eval_result=$res
+}
+
 
 # run TITLE COMMAND...
 # --------------------
@@ -26,17 +74,18 @@ run_counter=0
 run_prefix=
 run ()
 {
-  local title=$[1]
-  run_prefix=$run_counter-$(echo $[1] |
-			     sed -e 's/[[^a-zA-Z0-9][^a-zA-Z0-9]]*/-/g;s/-$//')
+  local title=$][1
+  run_prefix=$run_counter-$(echo $][1 |
+			     sed -e 's/[^a-zA-Z0-9][^a-zA-Z0-9]*/-/g;s/-$//')
   run_counter=$(($run_counter + 1))
   shift
 
-  echo "$[@]"> $run_prefix.cmd
+  quote_for_eval "$][@"
+  echo "$quote_for_eval_result"> $run_prefix.cmd
 
   # Beware of set -e.
   local sta
-  if "$[@]" >$run_prefix.out 2>$run_prefix.err; then
+  if eval "$quote_for_eval_result" >$run_prefix.out 2>$run_prefix.err; then
     sta=0
   else
     sta=$?
@@ -56,8 +105,8 @@ run ()
 # Same as run, but die on errors.
 xrun ()
 {
-  run "$[@]" ||
-    fatal "$[2] failed"
+  run "$][@" ||
+    fatal "$][2 failed"
 }
 
 
@@ -89,7 +138,7 @@ pids_alive ()
     # Unfortunately sometimes there are flags displayed before the
     # process number.  Since we never saw a "ps -p PID" that does not
     # display the title line, we expect two lines.
-    case $(ps -p $pid | wc -l | sed -e '[s/^[	 ]*//]') in
+    case $(ps -p $pid | wc -l | sed -e 's/^[	 ]*//') in
       (1) # process is dead.
 	 ;;
       (2) # Process is live.
@@ -139,17 +188,17 @@ timeout_factor ()
 # ----------------------
 pids_wait ()
 {
-  local timeout=$[1]
+  local timeout=$][1
   shift
 
   : ${timeout_factor:=1}
   timeout=$(($timeout * $timeout_factor))
   local count_down=$timeout
 
-  while pids_alive "$[@]"; do
+  while pids_alive "$][@"; do
     if test $count_down -le 0; then
       echo "Timeout (${timeout}s) expired"
-      pids_kill "$[@]"
+      pids_kill "$][@"
       break
     fi
     sleep 1
@@ -170,18 +219,18 @@ pids_wait ()
 # Report the input and output for $FILE-PREFIX.
 rst_run_report ()
 {
-  local title=$[1]
+  local title=$][1
   case $title in
     (?*) title+=" ";;
   esac
 
-  rst_pre "${title}Command"          $[2].cmd
-  rst_pre "${title}Pid"              $[2].pid
-  rst_pre "${title}Status"           $[2].sta
-  rst_pre "${title}Input"            $[2].in
-  rst_pre "${title}Output"           $[2].out
-  rst_pre "${title}Error"            $[2].err
-  rst_pre "${title}Instrumentation"  $[2].val
+  rst_pre "${title}Command"          $][2.cmd
+  rst_pre "${title}Pid"              $][2.pid
+  rst_pre "${title}Status"           $][2.sta
+  rst_pre "${title}Input"            $][2.in
+  rst_pre "${title}Output"           $][2.out
+  rst_pre "${title}Error"            $][2.err
+  rst_pre "${title}Instrumentation"  $][2.val
 }
 
 
@@ -191,7 +240,7 @@ rst_run_report ()
 # i.e., return 1 iff there are no children alive.
 children_alive ()
 {
-  pids_alive $(children_pid "$[@]")
+  pids_alive $(children_pid "$][@")
 }
 
 
@@ -200,7 +249,7 @@ children_alive ()
 # Remove the children files.
 children_clean ()
 {
-  test $[#] -ne 0 ||
+  test $][# -ne 0 ||
     { set x $children; shift; }
 
   local i
@@ -216,7 +265,7 @@ children_clean ()
 # Return the PIDs of the CHILDREN (whether alive or not).
 children_pid ()
 {
-  test $[#] -ne 0 ||
+  test $][# -ne 0 ||
     { set x $children; shift; }
 
   local i
@@ -242,11 +291,11 @@ children_pid ()
 # the name.
 children_register ()
 {
-  test $[#] -eq 1
-  rm -f $[1].sta
-  children+=" $[1]"
-  echo $! >$[1].pid
-  echo $[1] >$!.name
+  test $][# -eq 1
+  rm -f $][1.sta
+  children+=" $][1"
+  echo $! >$][1.pid
+  echo $][1 >$!.name
 }
 
 
@@ -255,7 +304,7 @@ children_register ()
 # Produce an RST report for the CHILDREN.
 children_report ()
 {
-  test $[#] -ne 0 ||
+  test $][# -ne 0 ||
     { set x $children; shift; }
 
   local i
@@ -274,7 +323,7 @@ children_report ()
 children_kill ()
 {
   local pids
-  pids=$(children_pid "$[@]")
+  pids=$(children_pid "$][@")
   pids_kill $pids
 }
 
@@ -289,7 +338,7 @@ children_kill ()
 children_harvest ()
 {
   # Harvest exit status.
-  test $[#] -ne 0 ||
+  test $][# -ne 0 ||
     { set x $children; shift; }
 
   local i
@@ -318,7 +367,7 @@ children_harvest ()
 # If several CHILD are given, return the highest exit status.
 children_status ()
 {
-  test $[#] -ne 0 ||
+  test $][# -ne 0 ||
     { set x $children; shift; }
 
   local res=0
@@ -330,7 +379,7 @@ children_status ()
       error SOFTWARE "children_status: cannot find $i.sta." \
 		     "Was children_harvest called?"         \
 		     "Maybe children_cleanup was already called..."
-    local sta=$(sed -n '1{s/^\([[0-9][0-9]]*\).*/\1/;p;q;}' <$i.sta)
+    local sta=$(sed -n '1{s/^\([0-9][0-9]*\).*/\1/;p;q;}' <$i.sta)
     if test $res -lt $sta; then
       res=$sta
     fi
@@ -345,14 +394,14 @@ children_status ()
 # ones.
 children_wait ()
 {
-  local timeout=$[1]
+  local timeout=$][1
   shift
   local pids
-  pids=$(children_pid "$[@]")
+  pids=$(children_pid "$][@")
   pids_wait $timeout $pids
 }
 
-])
+]])
 
 
 m4_defun([URBI_CHILDREN_PREPARE],
