@@ -127,7 +127,11 @@ my $valgrind_log_file = '--log-file';
 # More options for valgrind.
 my @valgrind_option =
   (
-   "--error-exitcode=242",
+   '--error-exitcode=242',
+   '--gen-suppressions=all',
+   # Some configuration might be needed here if Valgrind on Linux does
+   # not support this OS X option.
+   '--auto-run-dsymutil=yes',
   );
 
 # Verbosity level.
@@ -380,7 +384,16 @@ sub shellescape($)
 ## Main.  ##
 ## ------ ##
 
+
+# If we can see our "built-in" instrument.supp file, use it.
+{
+  my $supp = "$0.supp";
+  push @valgrind_option, "--suppressions=$supp"
+    if -f $supp;
+}
+
 getopt;
+
 compute_mode
   if $mode == mode_auto;
 my @res = instrument($mode, @ARGV);
