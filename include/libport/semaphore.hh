@@ -45,6 +45,7 @@ namespace libport
     bool uget(utime_t useconds = 0);
 
     /// The number of alive Semaphores (#constructed - #destroyed).
+    /// Used in the test suite.
     static size_t instances();
 
   private:
