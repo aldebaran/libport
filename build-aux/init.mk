@@ -1,6 +1,6 @@
 ##
 ## init.mk: This file is part of build-aux.
-## Copyright (C) 2006-2008, Gostai S.A.S.
+## Copyright (C) 2006-2009, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -62,7 +62,6 @@ CLEANFILES += $(PROGRAMS:=.auto.*) $(EXTRA_PROGRAMS:=.auto.*)
 ## even include the subdir/ component in subdir-objects.
 CLEANFILES += lt-*.obj
 
-
 # Files which are not shipped should be cleaned.
 CLEANFILES += $(nodist_check_SCRIPTS) $(nodist_noinst_SCRIPTS)
 
@@ -79,6 +78,23 @@ move_if_change = $(build_aux_dir)/move-if-change
 ## The following uses GNU Make.
 AUTOMAKE_OPTIONS += -Wno-portability
 
+
+## -------- ##
+## Stamps.  ##
+## -------- ##
+
+# Running continuously the test suite is costly, especially for the
+# buildfarm.  Some changes have no impact whatsoever on the kernel,
+# uconsole etc, for instance changes in the documentation.  In that
+# case we would like not to rerun the test suite.  But spelling out
+# the exact dependencies (on the libraries, the binaries, the
+# wrappers, but also the urbi/*.u files) is hard.  So we create stamp
+# files that make it easier to depend on changes of some components.
+STAMPS =
+.PHONY: stamps
+stamps: $(STAMPS)
+noinst_DATA = $(STAMPS)
+CLEANFILES += $(STAMPS)
 
 ## ---------- ##
 ## ls_files.  ##
