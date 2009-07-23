@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <iostream>
+#include <cerrno>
 
 #include <libport/detect-win32.h>
 #include <libport/config.h>
@@ -138,14 +139,16 @@ namespace libport
   path
   file_library::find_file(const path& file) const
   {
-    // Split file in two components, basename and basedir.
     path directory = file.dirname();
 
     if (directory.absolute_get())
     {
       // If file is absolute, just check that it exists.
       if (!file.exists())
+      {
+        errno = ENOENT;
         throw Not_found();
+      }
       else
         return directory;
     }
@@ -180,6 +183,7 @@ namespace libport
     }
 
     // File not found in search path.
+    errno = ENOENT;
     throw Not_found();
   }
 

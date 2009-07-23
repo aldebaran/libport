@@ -91,11 +91,13 @@ namespace libport
     /// \name Finding files.
     /// \{
     /** \brief Search a file.
-
-	Determine real path of \a file, by looking in search path if
-	necessary.
-
-	\return Directory containing \a file, or "" if not found. */
+     *
+     * Determine real path of \a file, by looking in search path if
+     * necessary.
+     *
+     * \return Directory containing \a file.
+     * \throw  Not_found    file cannot be found,
+     *                      in which case errno is set to ENOENT. */
     path find_file(const path& file) const;
 
     /// \brief Check if \a file exists in directory \a dir.
@@ -117,8 +119,8 @@ namespace libport
     void push_cwd();
 
     /** \brief Find file "\a relative_path / \a filename" using include path.
-	\return Absolute path where the file lies or empty path
-		if the file does not exist. */
+	\return Absolute    path where the file lies.
+        \throw  Not_found   file not found. */
     path find_in_search_path(const path& relative_path,
                              const std::string& filename) const;
 
