@@ -96,7 +96,7 @@ namespace libport
 	necessary.
 
 	\return Directory containing \a file, or "" if not found. */
-    path find_file(const path& file);
+    path find_file(const path& file) const;
 
     /// \brief Check if \a file exists in directory \a dir.
     bool find_in_directory(const path& dir, const std::string& file) const;

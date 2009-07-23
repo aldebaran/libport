@@ -136,27 +136,27 @@ namespace libport
 
 
   path
-  file_library::find_file(const path& file)
+  file_library::find_file(const path& file) const
   {
     // Split file in two components, basename and basedir.
     path directory = file.dirname();
 
     if (directory.absolute_get())
-      {
-	// If file is absolute, just check that it exists.
-	if (!file.exists())
-	  throw Not_found();
-	else
-	  return directory;
-      }
+    {
+      // If file is absolute, just check that it exists.
+      if (!file.exists())
+        throw Not_found();
+      else
+        return directory;
+    }
     else
-      {
-	// Does the file can be found in current directory?
-	if (find_in_directory(current_directory_get(), file))
-	  return (current_directory_get() / file).dirname();
-	else
-	  return find_in_search_path(directory, file.basename());
-      }
+    {
+      // Does the file can be found in current directory?
+      if (find_in_directory(current_directory_get(), file))
+        return (current_directory_get() / file).dirname();
+      else
+        return find_in_search_path(directory, file.basename());
+    }
   }
 
   bool
