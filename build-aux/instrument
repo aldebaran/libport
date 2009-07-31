@@ -129,9 +129,6 @@ my @valgrind_option =
   (
    '--error-exitcode=242',
    '--gen-suppressions=all',
-   # Some configuration might be needed here if Valgrind on Linux does
-   # not support this OS X option.
-   '--auto-run-dsymutil=yes',
   );
 
 # Verbosity level.
@@ -384,6 +381,9 @@ sub shellescape($)
 ## Main.  ##
 ## ------ ##
 
+# Get debug symbols on OS X
+push @valgrind_option, '--auto-run-dsymutil=yes'
+  if $OSNAME eq 'darwin';
 
 # If we can see our "built-in" instrument.supp file, use it.
 {
