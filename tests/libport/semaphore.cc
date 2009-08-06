@@ -26,19 +26,29 @@ void* thread1(void* data)
   return 0;
 }
 
+#ifndef __APPLE__
+# define CHECK_SEM(N) BOOST_CHECK_EQUAL(sem.value(), N)
+#else
+# define CHECK_SEM(N) (void)0
+#endif
+
 void check_timeout()
 {
   libport::Semaphore sem(1);
+  CHECK_SEM(1);
   sem--;
+  CHECK_SEM(0);
   libport::utime_t t1 = libport::utime();
   pthread_t th;
   if (pthread_create(&th, 0, &thread1, &sem))
     errabort("pthread_create");
   BOOST_CHECK_EQUAL(sem.uget(1000000), false);
+  CHECK_SEM(0);
   libport::utime_t t2 = libport::utime() - t1;
   BOOST_CHECK(t2 < 1500000);
   if (pthread_join(th, NULL))
     errabort("pthread_join");
+  CHECK_SEM(1);
 }
 
 test_suite*

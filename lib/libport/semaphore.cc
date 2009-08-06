@@ -238,6 +238,20 @@ namespace libport
     return true;
   }
 
+#ifndef __APPLE__
+  int
+  Semaphore::value() const
+  {
+    int res;
+    if (sem_getvalue(sem_, &res))
+    {
+      const_cast<Semaphore*>(this)->destroy();
+      errabort("sem_getvalue");
+    }
+    return res;
+  }
+#endif
+
   bool
   Semaphore::get(unsigned seconds)
   {
