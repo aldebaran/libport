@@ -4,6 +4,7 @@
  */
 
 #include <stdexcept>
+#include <fstream>
 #include <libport/file-system.hh>
 #include <libport/sys/param.h>
 #include <libport/sys/stat.h>
@@ -34,5 +35,21 @@ namespace libport
 # else
     return S_ISDIR(st.st_mode);
 # endif
+  }
+
+  std::string
+  file_content(const std::string& n)
+  {
+    std::ifstream s(n.c_str());
+    if (!s.good())
+      throw std::runtime_error("Failed to open " + n +" for reading");
+    std::string res;
+    char buf[BUFSIZ + 1];
+    while (!s.eof())
+    {
+      s.read(buf, sizeof buf - 1);
+      res += std::string(buf, s.gcount());
+    }
+    return res;
   }
 }
