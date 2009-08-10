@@ -51,7 +51,7 @@ fi
 AC_DEFUN([_URBI_LIBPORT_COMMON],
 [
 AC_ARG_WITH([boost-thread-static],
-	[AC_HELP_STRING([--with-boost-thread-static]
+	[AS_HELP_STRING([--with-boost-thread-static],
 			[link with the static version of boost thread library])]
 	[], [with_boost_thread_static=yes])
 
@@ -78,7 +78,7 @@ AC_AFTER([$0], [URBI_DIRS])dnl
 # Check that we can find libport files.
 libport_config_hh=$(URBI_RESOLVE_DIR([$kernelincludedir/libport/config.h]))
 if test ! -f $libport_config_h; then
-  AC_ERROR([--with-urbi-kernel: cannot find $libport_config_h])
+  AC_MSG_ERROR([--with-urbi-kernel: cannot find $libport_config_h])
 fi
 ])
 
