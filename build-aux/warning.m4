@@ -31,7 +31,7 @@ AS_IF([_AC_EVAL_STDERR($ac_compile) &&
 	 AC_TRY_COMMAND([test -s conftest.$ac_objext])],
       [$2],
       [_AC_MSG_LOG_CONFTEST
-m4_ifvaln([$3],[$3])dnl])dnl
+m4_ifvaln([$3],[$3])dnl])
 rm -f conftest.$ac_objext m4_ifval([$1], [conftest.$ac_ext])[]dnl
 ])# AC_COMPILE_STDERR_IFELSE
 
@@ -79,7 +79,7 @@ AC_COMPILE_STDERR_IFELSE([AC_LANG_PROGRAM],
    fi])
 TC_COMPILER_FLAGS_NAME=$ac_save_[]TC_COMPILER_FLAGS_NAME
 ])
-AS_IF([test AS_VAR_GET(ac_Option) = yes], [$2], [$3])[]dnl
+AS_IF([test AS_VAR_GET(ac_Option) = yes], [$2], [$3])
 AS_VAR_POPDEF([ac_Option])dnl
 ])# TC_COMPILER_OPTION_IF
 

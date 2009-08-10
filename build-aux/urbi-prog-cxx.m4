@@ -59,7 +59,7 @@ AC_DEFUN([URBI_PROG_CXX],
 AC_REQUIRE([AC_CANONICAL_HOST])dnl
 # Look for a C++ compiler.
 AC_LANG_PUSH([C++])
-AC_PROG_CXX
+AC_REQUIRE([AC_PROG_CXX])dnl
 
 # Compute the flavor of this compiler.
 URBI_PROG_CXX_FLAVOR
