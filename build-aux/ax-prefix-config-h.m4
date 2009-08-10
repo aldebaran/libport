@@ -1,6 +1,6 @@
 #
 # ax-prefix-config-h.m4: This file is part of build-aux.
-# Copyright (C) 2006-2008, Gostai S.A.S.
+# Copyright (C) 2006-2009, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -44,13 +44,14 @@
 #
 #   Example:
 #
-#     AC_INIT(config.h.in)        # config.h.in as created by "autoheader"
+#     AC_INIT
+#     AC_CONFIG_SRCDIR([config.h.in])     # config.h.in as created by autoheader
 #     AM_INIT_AUTOMAKE(testpkg, 0.1.1)    # makes #undef VERSION and PACKAGE
 #     AM_CONFIG_HEADER(config.h)          # prep config.h from config.h.in
 #     AX_PREFIX_CONFIG_H(mylib/_config.h) # prep mylib/_config.h from it..
-#     AC_MEMORY_H                         # makes "#undef NEED_MEMORY_H"
 #     AC_C_CONST_H                        # makes "#undef const"
-#     AC_OUTPUT(Makefile)                 # creates the "config.h" now
+#     AC_CONFIG_FILES([Makefile])
+#     AC_OUTPUT                           # creates the "config.h" now
 #                                         # and also mylib/_config.h
 #
 #   if the argument to AX_PREFIX_CONFIG_H would have been omitted then
