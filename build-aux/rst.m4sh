@@ -64,7 +64,7 @@ rst_tab ()
   # We use "cat -v" so that we don't miss hidden characters, but
   # also so Windows runs don't display with an empty line between
   # one line.  They now display as "LINE^M".
-  cat -v "$[@]" | sed -e 's/^/	/'
+  cat -v "$[@]" | perl -pe 's/\^\@<:@\@<:@33/\x1B\@<:@33/g;s/^/	/'
   echo
 }
 
