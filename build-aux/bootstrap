@@ -12,6 +12,9 @@
 ## For comments, bug reports and feedback: http://www.urbiforge.com
 ##
 
+nl='
+'
+
 # Required version of these tools.
 : ${autoconf_prereq=2.61}
 : ${automake_prereq=1.10}
@@ -147,9 +150,7 @@ run ()
 
 fatal ()
 {
-  stderr "$red" "$@" "$std"
-  # Be sure to die, even in subshell.  Exit is not strong enough.
-  kill $pid
+  error 1 "$red" "$@" "$std"
 }
 
 awk_strverscmp='
@@ -406,15 +407,19 @@ link_types=$(attributes links | tr -cs 'a-z' ' ')
 if test -z "$link_types"; then
   link_types="symbolic"
 fi
-attributes '(hard)?link' |
-while read link
+links=$(attributes '(hard)?link')
+save_IFS=$IFS
+IFS=$nl
+for link in $links
 do
+  IFS=$save_IFS
   # "from -> to" in the sense of symlinks: ./$from points to ./$to.
   from=$(echo "$link" | perl -pe 's/\s*->.*$//')
   to=$(echo "$link"   | perl -pe 's/^.*->\s*//')
 
   link "$from" "$to"
 done
+IFS=$save_IFS
 
 test ! -f .externals ||
   fatal "Remove \`.externals', use \`.bootstrap.cfg' instead."
