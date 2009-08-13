@@ -344,7 +344,7 @@ lt_dlexit (void)
 	  loader = next;
 	}
 
-      FREE(user_search_path);
+      FREE (user_search_path);
     }
 
  done:
@@ -463,8 +463,7 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
   }
 
   LT__SETERRORSTR (saved_error);
-  if (saved_error)
-    free(saved_error);
+  FREE (saved_error);
  done:
   return errors;
 }
@@ -1490,8 +1489,7 @@ try_dlopen (lt_dlhandle *phandle, const char *filename, const char *ext,
     }
 
   LT__SETERRORSTR (saved_error);
-  if (saved_error)
-    free(saved_error);
+  FREE (saved_error);
 
 
  cleanup:
@@ -1560,7 +1558,7 @@ int
 lt_dladvise_destroy (lt_dladvise *padvise)
 {
   if (padvise)
-    FREE(*padvise);
+    FREE (*padvise);
   return 0;
 }
 
