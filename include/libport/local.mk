@@ -24,6 +24,7 @@ arpa_libport_include_HEADERS =			\
 sys_libport_includedir = $(libport_includedir)/sys
 sys_libport_include_HEADERS =			\
   include/libport/sys/param.h			\
+  include/libport/sys/prctl.h			\
   include/libport/sys/select.h			\
   include/libport/sys/socket.h			\
   include/libport/sys/stat.h			\

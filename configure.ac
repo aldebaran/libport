@@ -53,6 +53,8 @@ URBI_COMPILATION_MODE
 # libport/backtrace.
 AC_CHECK_HEADERS([execinfo.h])
 
+AC_CHECK_HEADERS([sys/prctl.h])
+
 # libport/semaphore.
 AC_CHECK_LIB([rt], [clock_gettime],
              [AC_SUBST([CLOCK_LIBS], [-lrt])])
