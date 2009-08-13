@@ -1,6 +1,6 @@
 # Generated from ltmain.m4sh.
 
-# libtool (GNU libtool 1.3109 2009-06-29) 2.2.7a
+# libtool (GNU libtool 1.3111 2009-07-24) 2.2.7a
 # Written by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006,
@@ -70,7 +70,7 @@
 #         compiler:		$LTCC
 #         compiler flags:		$LTCFLAGS
 #         linker:		$LD (gnu? $with_gnu_ld)
-#         $progname:	(GNU libtool 1.3109 2009-06-29) 2.2.7a
+#         $progname:	(GNU libtool 1.3111 2009-07-24) 2.2.7a
 #         automake:	$automake_version
 #         autoconf:	$autoconf_version
 #
@@ -79,8 +79,8 @@
 PROGRAM=libtool
 PACKAGE=libtool
 VERSION=2.2.7a
-TIMESTAMP=" 1.3109 2009-06-29"
-package_revision=1.3109
+TIMESTAMP=" 1.3111 2009-07-24"
+package_revision=1.3111
 
 # Be Bourne compatible
 if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
