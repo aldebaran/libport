@@ -368,6 +368,8 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
            vtable ? vtable->name : "(ALL)");
 
   LT__GETERROR (saved_error);
+  if (saved_error)
+    saved_error = strdup(saved_error);
 
   /* check whether the module was already opened */
   for (;handle; handle = handle->next)
@@ -461,7 +463,8 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
   }
 
   LT__SETERRORSTR (saved_error);
-
+  if (saved_error)
+    free(saved_error);
  done:
   return errors;
 }
@@ -1162,7 +1165,9 @@ try_dlopen (lt_dlhandle *phandle, const char *filename, const char *ext,
   LT_LOG2 (1, "try_dlopen (%s, %s)\n", LT_NONNULL (filename), LT_NONNULL (ext));
 
   LT__GETERROR (saved_error);
-
+  /* The string might be freed */
+  if (saved_error)
+    saved_error = strdup(saved_error);
   /* dlopen self? */
   if (!filename)
     {
@@ -1485,6 +1490,9 @@ try_dlopen (lt_dlhandle *phandle, const char *filename, const char *ext,
     }
 
   LT__SETERRORSTR (saved_error);
+  if (saved_error)
+    free(saved_error);
+
 
  cleanup:
   FREE (dir);
