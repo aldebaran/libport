@@ -115,7 +115,7 @@ namespace libport
   {
     GD_CATEGORY(XLTDL);
     lt_dlhandle res = lt_dlopenadvise(s.c_str(), advise_);
-    GD_FINFO("trying  %s: %s", (s)((res ? "found" : "not found")));
+    GD_FINFO("loading %s: %s", (s)((res ? "pass" : "fail")));
     return res;
   }
 
