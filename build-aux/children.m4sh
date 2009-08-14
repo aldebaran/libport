@@ -80,6 +80,7 @@ run ()
   run_counter=$(($run_counter + 1))
   shift
 
+  ${abs_top_srcdir}/build-aux/print-env -I >$run_prefix.env
   quote_for_eval "$][@"
   echo "$quote_for_eval_result"> $run_prefix.cmd
 
@@ -225,6 +226,7 @@ rst_run_report ()
   esac
 
   rst_pre "${title}Command"          $][2.cmd
+  rst_pre "${title}Environment"      $][2.env
   rst_pre "${title}Pid"              $][2.pid
   rst_pre "${title}Status"           $][2.sta
   rst_pre "${title}Input"            $][2.in
