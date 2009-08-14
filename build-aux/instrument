@@ -251,6 +251,8 @@ sub file_type ($)
 
 ######################################################################
 
+# instrument_prefix($mode)
+# ------------------------
 sub instrument_prefix ($)
 {
   my ($mode) = @_;
@@ -322,8 +324,8 @@ sub find_gnu_libtool ()
 }
 
 
-# instrument_prefix($mode, @argv)
-# -------------------------------
+# instrument($mode, @argv)
+# ------------------------
 sub instrument ($@)
 {
   my ($mode, @argv) = @_;
@@ -360,7 +362,8 @@ sub instrument ($@)
 =item C<shellescape($str)>
 
 Return C<$str> properly escaped for a regular Bourne shell.  Avoid
-useless quotes to produce a readable result.
+useless quotes to produce a readable result.  Keep sync with the copy
+in print-env.
 
 This is insufficient.  We actually need to have the result "eval"'ed.
 
