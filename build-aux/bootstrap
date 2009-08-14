@@ -85,10 +85,11 @@ subpackage: DIR-NAME
   E.g., \`subpackage: lock-system'.
 
 Options:
-  -h, --help               display this message and exit
-  -n, --dry-run            do nothing
-  -l, --libtoolize=NAME    invoke libtoolize as NAME [$LIBTOOLIZE]
-      --no-recursive       do not bootstrap subpackages
+  -f, --force             force, i.e., replace existing symlinks
+  -h, --help              display this message and exit
+  -n, --dry-run           do nothing
+  -l, --libtoolize=NAME   invoke libtoolize as NAME [$LIBTOOLIZE]
+      --no-recursive      do not bootstrap subpackages
 EOF
   exit 0
 }
@@ -110,6 +111,7 @@ getopt ()
         esac
 
         case $1 in
+            (-f|--force) force=true;;
             (-h|--help) usage;;
             (-l|--libtoolize) shift; LIBTOOLIZE="$1 $LIBTOOLIZE_FLAGS";;
             (-n|--dry-run) run=false;;
@@ -275,7 +277,7 @@ link_symbolic ()
   # will be lost anyway.
   if test -d $from -a ! -L $from; then
     stderr "Attempting to remove pre-existing $from directory"
-    rmdir $from 2> /dev/null || true
+    rmdir $from 2>/dev/null|| true
     if test -d $from; then
       fatal "$from is a non-empty directory. " \
 	    "Please remove and restart."
@@ -290,16 +292,22 @@ link_symbolic ()
   local morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
 
   # It is a nightmare to have incorrect links, diagnose this.
-  if test -e $from; then
-    if test ! -L $from; then
-      fatal "$from exists and is not a symlink." \
-            "Please remove and restart."
-    fi
+  if test -L $from; then
     current_to=$(readlink $from)
-    if test "$current_to" != "$morf/$to"; then
-      fatal "$from is a symlink to $current_to instead of $morf/$to." \
-            "Please remove and restart."
+    test "$current_to" != "$morf/$to" ||
+      return 0
+    local msg="$from is a symlink to $current_to instead of $morf/$to."
+    if $force; then
+      stderr "warning: $msg"
+      rm -f $from
+    else
+      fatal "$msg" "Please remove and restart, or use \`bootstrap --force'."
     fi
+  fi
+
+  if test -e $from; then
+    fatal "$from exists and is not a symlink." \
+          "Please remove and restart."
   else
     # All is good, install the symlink.
     run ln -sf $morf/$to $from
@@ -375,6 +383,7 @@ set -e
 # repo.  Do not override it.
 export LIBTOOLIZE=true
 
+force=false
 recurse=true
 run=true
 
@@ -446,7 +455,7 @@ if $recurse; then
     # using GNU Make's format.
     stderr "Entering directory \`$i'";
     cd "$i"
-    ./bootstrap
+    ./bootstrap $($force && echo "--force")
     stderr "Leaving directory \`$i'";
     cd "$pwd"
   done
