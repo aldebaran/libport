@@ -17,6 +17,11 @@ m4_define([_m4_divert(URBI-INIT)],    10)
 
 m4_defun([_URBI_ABSOLUTE_PREPARE],
 [
+# Autoconf 2.64 no longer defines as_me.
+: ${as_me=$(basename $as_myself)}
+# Autoconf 2.64 provides as_echo which we should trust.
+: ${as_echo=echo}
+
 # is_absolute PATH
 # ----------------
 is_absolute ()
@@ -50,7 +55,7 @@ absolute ()
   case $(uname -s) in
     (CYGWIN*) res=$(cygpath "$res")
   esac
-  echo "$res"
+  $as_echo "$res"
 }
 
 # canonicalize FILE
@@ -63,9 +68,9 @@ canonicalize ()
   local res
   while test x"$tmp" != x"$res"; do
     res=$tmp
-    tmp=$(echo "$res" | sed -e 's,/[^/]*/\.\.,,')
+    tmp=$($as_echo "$res" | sed -e 's,/[^/]*/\.\.,,')
   done
-  echo "$res"
+  $as_echo "$res"
 }
 ])
 
@@ -79,7 +84,7 @@ find_file ()
 {
   _AS_PATH_WALK([$[2]],
                 [AS_IF([test -f $as_dir/$[1]],
-                       [echo "$as_dir/$[1]"; break])])
+                       [$as_echo "$as_dir/$[1]"; break])])
 }
 
 
@@ -106,7 +111,7 @@ xfind_file ()
   res=$(find_file "$[1]" "$path")
   test -n "$res" ||
     cannot_find OSFILE "cannot find $[1] in" "$[2]"
-  echo "$res"
+  $as_echo "$res"
 }
 
 
@@ -121,7 +126,7 @@ find_prog ()
 
   _AS_PATH_WALK([$path],
                 [AS_IF([AS_TEST_X([$as_dir/$[1]])],
-                       [echo "$as_dir/$[1]"; break])])
+                       [$as_echo "$as_dir/$[1]"; break])])
 }
 
 # xfind_prog PROG [PATH=$PATH]
@@ -135,7 +140,7 @@ xfind_prog ()
   res=$(find_prog "$[1]" "$path")
   test -n "$res" ||
     cannot_find OSFILE "cannot find executable $[1] in" "$path"
-  echo "$res"
+  $as_echo "$res"
 }
 
 # require_thing TEST-FLAG ERROR_MESSAGE THING [HINT]
@@ -176,7 +181,7 @@ stderr ()
   local i
   for i
   do
-    echo >&2 "$as_me: $i"
+    $as_echo >&2 "$as_me: $i"
   done
 # This line is a nuisance in usual output, yet it makes sense in debug
 # output in RST files.  But the problem should be solved there
@@ -298,8 +303,8 @@ get_options ()
   while test $[#] -ne 0; do
     case $[1] in
         (--*=*)
-            opt=$(echo "$[1]" | sed -e 's/=.*//')
-            val=$(echo "$[1]" | sed -e ['s/[^=]*=//'])
+            opt=$($as_echo "$[1]" | sed -e 's/=.*//')
+            val=$($as_echo "$[1]" | sed -e ['s/[^=]*=//'])
             shift
             set dummy "$opt" "$val" ${1+"$[@]"};
             shift
