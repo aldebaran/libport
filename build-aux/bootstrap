@@ -89,7 +89,7 @@ Options:
   -h, --help              display this message and exit
   -n, --dry-run           do nothing
   -l, --libtoolize=NAME   invoke libtoolize as NAME [$LIBTOOLIZE]
-      --no-recursive      do not bootstrap subpackages
+  -N, --no-recursive      do not bootstrap subpackages
 EOF
   exit 0
 }
@@ -115,7 +115,7 @@ getopt ()
             (-h|--help) usage;;
             (-l|--libtoolize) shift; LIBTOOLIZE="$1 $LIBTOOLIZE_FLAGS";;
             (-n|--dry-run) run=false;;
-            (--no-recursive)  recurse=false;;
+            (-N|--no-rec*)  recurse=false;;
             (*) error 64 "invalid argument: $1";;
         esac
         test $# -gt 0 ||
