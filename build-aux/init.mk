@@ -42,7 +42,9 @@ dist_bin_SCRIPTS =
 include_HEADERS =
 lib_LTLIBRARIES =
 nodist_bin_SCRIPTS =
+nodist_check_DATA =
 nodist_check_SCRIPTS =
+nodist_noinst_DATA =
 nodist_noinst_SCRIPTS =
 noinst_LTLIBRARIES =
 
