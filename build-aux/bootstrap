@@ -379,6 +379,10 @@ link ()
 
 set -e
 
+## ------ ##
+## Main.  ##
+## ------ ##
+
 # Do not use libtoolize, because Libport embeds its own Libtool in the
 # repo.  Do not override it.
 export LIBTOOLIZE=true
@@ -467,6 +471,9 @@ for i in $keep
 do
   run mv -f $i.bak $i
 done
+
+# Bootstraping finished, create the stamps.
+echo "boostrap: $(date)" >>bootstrap.stamp
 
 # If the pseudo-standard name "_build" is used, then how about trying
 # to continue the re-build?
