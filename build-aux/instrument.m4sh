@@ -35,8 +35,8 @@ m4_defun([_URBI_INSTRUMENT_PREPARE],
 # OPTIONS and ARGUMENTS are passed to instrument, see its --help.
 #
 # Do not use this function in $(), as it is then run in a subshell,
-# and modifications to INSTRUMENT and timeout_factor are lost.  Get
-# the result in $instrument_result.
+# and modifications to INSTRUMENTATION and timeout_factor are lost.
+# Get the result in $instrument_result.
 instrument ()
 {
   # Initialization.
@@ -44,8 +44,8 @@ instrument ()
     instrument_was_run=true
     # Decide if we instrument or not.  INSTRUMENT is expected to be an
     # number bw 0 and 1: the likeliness to actually instrument.
-    verbose "INSTRUMENT: $INSTRUMENT"
-    INSTRUMENT=$(perl -e "\$_ = ${INSTRUMENT:-0};"    \
+    verbose "INSTRUMENTATION: $INSTRUMENTATION"
+    INSTRUMENTATION=$(perl -e "\$_ = ${INSTRUMENTATION:-0};"    \
             -e 'if (/^\d+(?:.\d+)?/)
                 {
                   $_ = rand() < $_ ? "true" : "false";
@@ -59,14 +59,14 @@ instrument ()
     # Under some circumstances, instead of 2s until "server.port", I
     # have 156s when running Valgrind...  But factor 100 is really a
     # lot, see if we can do with 50.
-    if $INSTRUMENT; then
+    if $INSTRUMENTATION; then
       timeout_factor 50
     fi
   fi
 
   # Additional flags for instrument.
   local flags='--dry-run'
-  if $INSTRUMENT; then
+  if $INSTRUMENTATION; then
     flags+=" --libtool=$abs_top_builddir/libtool"
   else
     flags+=' --mode=none'

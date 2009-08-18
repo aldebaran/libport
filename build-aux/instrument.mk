@@ -1,6 +1,5 @@
-## Warning: we have a conflict between INSTRUMENT being the name of
-## the instrumentation tool, and INSTRUMENT being a (fuzzy) Boolean
-## stating where we should be instrumenting.
+## INSTRUMENT is the instrumentation tool.  INSTRUMENTATION is the
+## probability (from 0 to 1) to activate instrumentation.
 
 INSTRUMENT = $(build_aux_srcdir)/instrument
 INSTRUMENTFLAGS =                                                      \

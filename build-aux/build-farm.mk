@@ -68,7 +68,7 @@ distcheck-buildfarm: dist
 # failure.
 DISTCHECK_INSTALLCHECK_FLAGS ?=			\
   AM_COLOR_TESTS=no				\
-  INSTRUMENT=0.02				\
+  INSTRUMENTATION=0.02				\
   VERBOSE=1
 
 # Remove the dists and distdirs that we made.

@@ -70,7 +70,7 @@ check-clean-local:
 ## --------------- ##
 
 # The target run by the buildfarm.
-CHECK_BUILDFARM_FLAGS = -j4 AM_COLOR_TESTS=no VERBOSE=1 INSTRUMENT=1
+CHECK_BUILDFARM_FLAGS = -j4 AM_COLOR_TESTS=no VERBOSE=1 INSTRUMENTATION=1
 check-buildfarm:
 	-$(build_aux_dir)/semaphore-clean.sh
 	$(MAKE) $(AM_MAKEFLAGS)			\
