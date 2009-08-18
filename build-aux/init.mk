@@ -39,6 +39,7 @@ TFAIL_TESTS =
 XFAIL_TESTS =
 bin_PROGRAMS =
 dist_bin_SCRIPTS =
+dist_noinst_DATA =
 dist_noinst_SCRIPTS =
 include_HEADERS =
 lib_LTLIBRARIES =
