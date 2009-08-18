@@ -42,8 +42,9 @@ instrument ()
   # Initialization.
   if test -z "$instrument_was_run"; then
     instrument_was_run=true
-    # Decide if we instrument or not.  INSTRUMENT is expected to be an
-    # number bw 0 and 1: the likeliness to actually instrument.
+    # Decide whether we instrument.  $INSTRUMENTATION is expected to
+    # be a number bw 0 and 1 (the probability to instrument), or
+    # true/false.  Anything else stands for "false".
     verbose "INSTRUMENTATION: $INSTRUMENTATION"
     INSTRUMENTATION=$(perl -e "\$_ = ${INSTRUMENTATION:-0};"    \
             -e 'if (/^\d+(?:.\d+)?/)
