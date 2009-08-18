@@ -2,8 +2,5 @@
 ## probability (from 0 to 1) to activate instrumentation.
 
 INSTRUMENT = $(build_aux_srcdir)/instrument
-INSTRUMENTFLAGS =                                                      \
-  --valgrind-option=--suppressions=$(build_aux_srcdir)/instrument.supp \
-  --valgrind-option=--gen-suppressions=all                             \
-  --libtool=$(abs_top_builddir)/libtool
+INSTRUMENTFLAGS = --libtool=$(abs_top_builddir)/libtool
 RUN_INSTRUMENT = $(INSTRUMENT) $(INSTRUMENTFLAGS)
