@@ -74,6 +74,11 @@ void equal(const path& lhs, const path& rhs)
   BOOST_CHECK_EQUAL(lhs, rhs);
 }
 
+void not_equal(const path& lhs, const path& rhs)
+{
+  BOOST_CHECK_NE(lhs, rhs);
+}
+
 void to_string(const path& in, const std::string& out)
 {
   BOOST_CHECK_EQUAL(in.to_string(), out);
@@ -150,10 +155,15 @@ init_test_suite()
   def("foo/bar/baz/quux", "foo/bar/baz/quux");
   def("/foo/bar/baz/quux", "/foo/bar/baz/quux");
   def("just/stay", "./just/././stay/./");
+  def("foo", "foo/");
 //  def("in/is/fun",
 //      "in/and/out/../../is/fun/too/..");
   def("in/and/out/../../is/fun/too/..",
       "in/and/out/../../is/fun/too/..");
+#undef def
+#define def(lhs, rhs)                                           \
+  eq_suite->add(BOOST_TEST_CASE(bind(not_equal, lhs, rhs)));
+  def("foo", "/foo");
 #undef def
 
   // Test basename/dirname

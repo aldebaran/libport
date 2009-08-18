@@ -154,7 +154,9 @@ namespace libport
   bool
   path::operator==(const path& rhs) const
   {
-    return path_ == rhs.path_;
+    return (volume_get() == rhs.volume_get()
+            && absolute_get() == rhs.absolute_get()
+            && components() == rhs.components());
   }
 
   std::ostream&
