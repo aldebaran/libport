@@ -12,6 +12,10 @@ namespace libport
 
   /// Whether the C string \a Lhs and \a Rhs are equal up to \a n chars.
   bool strneq(const char* lhs, const char* rhs, size_t n);
+
+  /// Pointer to the first occurence of \a c in the first \a n bytes
+  /// of \a str, or 0 if not found.
+  const char* strnchr(const char* str, size_t n, char c);
 }
 
 # include <libport/cstring.hxx>

@@ -13,4 +13,16 @@ namespace libport
   {
     return !strncmp(lhs, rhs, n);
   }
+
+  // FIXME: might be already present on some systems, or at least
+  // optimizable.
+  inline
+  const char*
+  strnchr(const char* str, size_t n, char c)
+  {
+    for (unsigned i = 0; i < n; ++i)
+      if (str[i] == c)
+        return str + i;
+    return 0;
+  }
 }
