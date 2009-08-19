@@ -1,19 +1,21 @@
 #ifndef LIBPORT_ATTRIBUTES_HH
 # define LIBPORT_ATTRIBUTES_HH
 
+# include <libport/traits.hh>
+
 #define ATTRIBUTE(Type, Name)                   \
   private:                                      \
   Type Name ## _;
 
-#define ATTRIBUTE_GETTER(Type, Name)            \
-  public:                                       \
-  const Type& Name ## _get() const              \
-  { return Name ## _; }
+#define ATTRIBUTE_GETTER(Type, Name)                    \
+  public:                                               \
+  libport::traits::Arg<Type>::res Name ## _get() const  \
+  { return Name ## _; }                                 \
 
-#define ATTRIBUTE_SETTER(Type, Name)            \
-  public:                                       \
-  void Name ## _set(const Type& val)            \
-  { Name ## _ = val; }
+#define ATTRIBUTE_SETTER(Type, Name)                            \
+  public:                                                       \
+  void Name ## _set(libport::traits::Arg<Type>::res val)        \
+  { Name ## _ = val; }                                          \
 
 #define ATTRIBUTE_R(Type, Name)                 \
   ATTRIBUTE(Type, Name);                        \
