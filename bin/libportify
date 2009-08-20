@@ -79,7 +79,7 @@ sub libportify ($)
 {
   local ($_) = @_;
   s{TRACE\s*\((\d),\s*(.*?)\)}
-   {gdebug(trace_num_to_category($1), to_format($2))}ge;
+   {gdebug(trace_num_to_category($1), to_format($2))}ges;
   return $_;
 }
 
