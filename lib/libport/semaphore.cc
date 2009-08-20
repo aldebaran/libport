@@ -238,19 +238,21 @@ namespace libport
     return true;
   }
 
-#ifndef __APPLE__
   int
   Semaphore::value() const
   {
-    int res;
+    int res = -1;
+#ifdef __APPLE__
+    errno = ENOSYS;
+#else
     if (sem_getvalue(sem_, &res))
     {
       const_cast<Semaphore*>(this)->destroy();
       errabort("sem_getvalue");
     }
+#endif
     return res;
   }
-#endif
 
   bool
   Semaphore::get(unsigned seconds)

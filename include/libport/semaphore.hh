@@ -44,10 +44,8 @@ namespace libport
     bool get(unsigned seconds = 0);
     bool uget(utime_t useconds = 0);
 
-#ifndef __APPLE__
     /// Get value
     int value() const;
-#endif
 
     /// The number of alive Semaphores (#constructed - #destroyed).
     /// Used in the test suite.
