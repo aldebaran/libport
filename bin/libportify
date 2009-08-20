@@ -33,7 +33,9 @@ sub to_format ($)
   my @arg;
   for my $c (split(/\s*<<\s*/, $stream))
   {
-      if ($c =~ /^"(.*)"$/)
+      $c =~ s/^\s+//;
+      $c =~ s/\s+$//;
+      if ($c =~ /^"(.*)"$/ || $c =~ /^'(.*)'$/)
       {
           $res .= $1;
       }
@@ -78,8 +80,20 @@ sub trace_num_to_category ($)
 sub libportify ($)
 {
   local ($_) = @_;
+
+  s{include\s*<(string).h>}
+   {include <c$2>}g;
+
+  # TRACE(0, "foo: " << foo);
   s{TRACE\s*\((\d),\s*(.*?)\)}
    {gdebug(trace_num_to_category($1), to_format($2))}ges;
+
+  # DEBUG_LOG("-> Remote") << "askForStreamDestruction (" << cnx_id << ")" << std::endl;
+  # DEBUG_LOG(session_id)  << std::endl;
+  # DEBUG_LOG(session_id) << "parseRTSPUrl: "<< e.what ();
+  s{DEBUG_LOG\s*\((.*?)\)(.*?)(?:\s*<<\s*std::endl)?\s*;}
+   {gdebug("INFO_LOG", to_format("'[' << $1 << \"] \" $2")) . ";";}ges;
+
   return $_;
 }
 
@@ -88,6 +102,21 @@ sub libportify ($)
 sub libportify_file ($)
 {
   my ($file) = @_;
+
+  # When using globbing, we sometimes find directories.
+  if (! -f $file)
+  {
+    warn "ignoring non file: $file";
+    return;
+  }
+
+  # When using globbing, we sometimes find directories.
+  if ($file =~ /\.bak$/)
+  {
+    warn "ignoring backup file: $file";
+    return;
+  }
+
   my ($bak) = "$file.bak";
   rename ($file, $bak) or die "cannot rename $file as $bak: $!";
   my $contents = contents ($bak);
