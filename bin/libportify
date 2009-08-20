@@ -1,0 +1,118 @@
+#! /usr/bin/perl -w
+use strict;
+use IO::File;
+
+# contents ($FILE_NAME)
+# ---------------------
+sub contents ($)
+{
+  my ($file) = @_;
+  local $/;                     # Turn on slurp-mode.
+  my $f = new IO::File "< $file" or die "cannot open $file: $!";
+  my $contents = $f->getline or die "cannot read $file: $!";
+  $f->close;
+  return $contents;
+}
+
+
+# to_format $STREAM
+# -----------------
+# Take a C++ stream content sequence without the stream itself
+# and return a format string and arguments.
+#
+# For instance
+#
+#    "this is a message"
+#    => ("this is a message", "")
+#    "this is a message " << foo << ": " << bar
+#    => ("this is a message %s: %s", "(foo)(bar)")
+sub to_format ($)
+{
+  my ($stream) = @_;
+  my $res = "";
+  my @arg;
+  for my $c (split(/\s*<<\s*/, $stream))
+  {
+      if ($c =~ /^"(.*)"$/)
+      {
+          $res .= $1;
+      }
+      else
+      {
+          $res .= "%s";
+          push @arg, $c
+      }
+  }
+  my $args = join '', map { "($_)" } @arg;
+  return ("\"$res\"", $args);
+}
+
+# gdebug($CATEGORY, [$FORMAT, $ARGS])
+# -----------------------------------
+sub gdebug($@)
+{
+  my ($category, ($format, $args)) = @_;
+  if ($args)
+  {
+    return "GD_F$category($format, $args)";
+  }
+  else
+  {
+    return "GD_$category($format)";
+  }
+}
+
+# trace_num_to_category($NUM)
+# ---------------------------
+# TRACE is used for informative messages.  Bounce to INFO.
+sub trace_num_to_category ($)
+{
+  my ($num) = @_;
+  my @cat = ("log", "trace", "debug", "dump");
+  my $res = $cat[$num] || "dump";
+  return "INFO_" . uc $res;
+}
+
+# libportify ($STRING)
+# --------------------
+sub libportify ($)
+{
+  local ($_) = @_;
+  s{TRACE\s*\((\d),\s*(.*?)\)}
+   {gdebug(trace_num_to_category($1), to_format($2))}ge;
+  return $_;
+}
+
+# libportify_file ($FILE)
+# -----------------------
+sub libportify_file ($)
+{
+  my ($file) = @_;
+  my ($bak) = "$file.bak";
+  rename ($file, $bak) or die "cannot rename $file as $bak: $!";
+  my $contents = contents ($bak);
+  my $out = new IO::File(">$file") or die;
+  print $out libportify($contents);
+  $out->close;
+  system("colordiff -u $bak $file");
+}
+
+map { libportify_file $_ } @ARGV;
+
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:
