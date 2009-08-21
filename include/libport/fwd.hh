@@ -71,7 +71,7 @@ namespace libport
   class PackageInfo;
 
   // path.hh;
-  struct Path;
+  struct path;
 
   // ref-pt.hh
   template <class T> class RefPt;
