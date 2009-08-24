@@ -11,6 +11,8 @@
 # include <string>
 # include <iosfwd>
 
+# include <boost/function.hpp>
+
 # include <libport/export.hh>
 
 namespace libport
@@ -70,6 +72,12 @@ namespace libport
     /// Total execution time of \a rhs is ignored.
     timer& operator<<(const timer& rhs);
 
+    /// Things to do when this timer is about to be destroyed.
+    typedef boost::function0<void> callback_type;
+
+    /// Register a new callback.
+    void destruction_hook(const callback_type& c);
+
   private:
     class time_var;
     class time
@@ -122,14 +130,13 @@ namespace libport
     /// \see stop()
     time_var total;
 
-    /** \brief A stream onto which the results are dumped when the
-	object is destroyed.  */
-    std::ostream* dump_stream;
+    /// Things to do when this timer is about to be destroyed.
+    typedef std::vector<callback_type> callbacks_type;
+    callbacks_type destruction_callbacks_;
 
     /// Number of clocks ticks per second, set according to the system
     /// timing function used.
     static const long clocks_per_sec;
-
   };
 
 } // namespace libport

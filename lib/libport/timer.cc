@@ -87,10 +87,10 @@ namespace libport
   bool
   timer::time_var::is_zero ()
   {
-    return true
+    return (true
 	    && elapsed.wall == 0
 	    && elapsed.user == 0
-	    && elapsed.sys  == 0;
+	    && elapsed.sys  == 0);
   }
 
 
@@ -98,15 +98,13 @@ namespace libport
   | timer.  |
   `--------*/
 
-  timer::timer () :
-    dump_stream (0)
-  { }
+  timer::timer()
+  {}
 
   // Duplicate a timer. No tasks should be running.
-  timer::timer (const timer& rhs) :
-    intmap (rhs.intmap),
-    total (rhs.total),
-    dump_stream (rhs.dump_stream)
+  timer::timer(const timer& rhs)
+    : intmap(rhs.intmap)
+    , total(rhs.total)
   {
     precondition (rhs.tasks.empty ());
 
@@ -119,21 +117,18 @@ namespace libport
 
   timer::~timer ()
   {
-    // If magic is asked on destruction, let it happen completely.
-    if (dump_stream)
-      {
-	// Consider that if the tasks were not properly closed, then
-	// stop was not invoked either.
-	if (!tasks.empty ())
-	  {
-	    do
-	      pop ();
-	    while (!tasks.empty ())
-	      ;
-	    stop ();
-	  }
-	dump (*dump_stream);
-      }
+    // Consider that if the tasks were not properly closed, then stop
+    // was not invoked either.
+    if (!tasks.empty ())
+    {
+      do
+        pop ();
+      while (!tasks.empty ());
+      stop ();
+    }
+
+    foreach (const callback_type& c, destruction_callbacks_)
+      c();
 
     // Deallocate all our time_var.
     for (task_map_type::iterator i = tasksmap.begin ();
@@ -141,6 +136,11 @@ namespace libport
       delete i->second;
   }
 
+  void
+  timer::destruction_hook(const callback_type& c)
+  {
+    destruction_callbacks_.push_back(c);
+  }
 
   void
   timer::name (int i, std::string task_name)

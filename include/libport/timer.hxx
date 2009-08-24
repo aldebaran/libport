@@ -6,8 +6,12 @@
 #ifndef LIBPORT_TIMER_HXX
 # define LIBPORT_TIMER_HXX
 
-# include <libport/timer.hh>
+# include <boost/bind.hpp>
+# include <boost/ref.hpp>
+
 # include <libport/contract.hh>
+# include <libport/foreach.hh>
+# include <libport/timer.hh>
 
 namespace libport
 {
@@ -44,7 +48,9 @@ namespace libport
   void
   timer::dump_on_destruction(std::ostream& out)
   {
-    dump_stream = &out;
+    destruction_hook(boost::bind(&timer::dump,
+                                 this,
+                                 boost::ref(out)));
   }
 
   inline
@@ -62,8 +68,8 @@ namespace libport
   }
 
   inline
-  timer::time::time() :
-    user(0), sys(0), wall(0)
+  timer::time::time()
+    : user(0), sys(0), wall(0)
   { }
 
   inline
