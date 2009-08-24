@@ -33,6 +33,9 @@ check (const std::string& in,
   tok = libport::make_tokenizer(in, "\n",
                                 "", boost::keep_empty_tokens);
   BOOST_CHECK_EQUAL(string_cast(tok), out_kept);
+
+  tok = libport::lines(in);
+  BOOST_CHECK_EQUAL(string_cast(tok), out_kept);
 }
 
 test_suite*

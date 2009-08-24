@@ -13,4 +13,10 @@ namespace libport
     return tokenizer_type(str, s);
   }
 
+  tokenizer_type
+  lines(const std::string& str)
+  {
+    return make_tokenizer(str, "\n", 0, boost::keep_empty_tokens);
+  }
+
 }

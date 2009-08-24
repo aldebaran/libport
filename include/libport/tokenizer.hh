@@ -22,6 +22,11 @@ namespace libport
                  const char* kept_delims = "",
                  boost::empty_token_policy empty_tokens = boost::drop_empty_tokens);
 
+  /// Split \a str at each line (terminated by \n).
+  /// Empty lines are kept.
+  LIBPORT_API
+  tokenizer_type
+  lines(const std::string& str);
 }
 
 #endif // !LIBPORT_TOKENIZER_HH
