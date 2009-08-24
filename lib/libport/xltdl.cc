@@ -115,7 +115,7 @@ namespace libport
   {
     GD_CATEGORY(XLTDL);
     lt_dlhandle res = lt_dlopenadvise(s.c_str(), advise_);
-    GD_FINFO("loading %s: %s", (s)((res ? "pass" : "fail")));
+    GD_FINFO_TRACE("loading %s: %s", (s)((res ? "pass" : "fail")));
     return res;
   }
 
@@ -124,7 +124,7 @@ namespace libport
     throw(xlt_advise::exception)
   {
     GD_CATEGORY(XLTDL);
-    GD_FINFO("loading %s", (s));
+    GD_FINFO_TRACE("loading %s", (s));
     lt_dlhandle res = 0;
     // We cannot simply use search_file in file_library, because we
     // don't know the extension of the file we are looking for (*.la,
