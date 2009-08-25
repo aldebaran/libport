@@ -104,7 +104,6 @@ rst_expect ()
     case $exit in
       ('' | true) exit=false;;
     esac
-  else
   fi
 }
 ])
