@@ -6,10 +6,11 @@
 #ifndef LIBPORT_TIMER_HH
 # define LIBPORT_TIMER_HH
 
-# include <stack>
-# include <map>
-# include <string>
 # include <iosfwd>
+# include <map>
+# include <stack>
+# include <string>
+# include <vector>
 
 # include <boost/function.hpp>
 
