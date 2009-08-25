@@ -1,6 +1,6 @@
 ##                                                         -*- shell-script -*-
 ## rst.as: This file is part of build-aux.
-## Copyright (C) 2006-2008, Gostai S.A.S.
+## Copyright (C) 2006-2009, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -89,23 +89,22 @@ rst_pre ()
 rst_expect ()
 {
   rst_subsubsection "$me: $[2]"
+  # Dump something, it is really surprising in the logs to see
+  # nothing.
+  rst_pre "Expected $[1] for $me"      $[1].exp
+  rst_pre "Raw $[2] for $me"           $[2].raw
   # --strip-trailing-cr helps to fight \r.
   if ! diff --strip-trailing-cr -u                              \
             --label="Expected $[1] ($[1].exp)"  $[1].exp        \
 	    --label="Effective $[1] ($[2].eff)" $[2].eff        \
 	    >$[2].diff; then
-    rst_pre "Expected $[1] for $me"      $[1].exp
-    rst_pre "Raw effective $[2] for $me" $[2].raw
-    rst_pre "Effective $[2] for $me"     $[2].eff
-    rst_pre "Diffs on $[2] for $me"      $[2].diff
+    rst_pre "Effective $[2] for $me"   $[2].eff
+    rst_pre "Diffs on $[2] for $me"    $[2].diff
     # If exit is already set, e.g. to "exit SKIP", don't alter it.
     case $exit in
-      '' | true) exit=false;;
+      ('' | true) exit=false;;
     esac
   else
-    # Dump something, it is really surprising in the logs to see
-    # nothing.
-    rst_pre "Raw effective $[2] for $me" $[2].raw
   fi
 }
 ])
