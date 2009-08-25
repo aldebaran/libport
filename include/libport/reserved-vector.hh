@@ -15,8 +15,8 @@ namespace libport
   public:
     ReservedVector();
 
-    template<typename I>
-    ReservedVector(I b, I e);
+    template<typename I1, typename I2>
+    ReservedVector(I1 b, I2 e);
 
     template<int R2>
     ReservedVector(const ReservedVector<T, R2>& b);

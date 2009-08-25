@@ -7,8 +7,8 @@ namespace libport
   }
 
   template<class T, int R>
-  template<typename I>
-  ReservedVector<T, R>::ReservedVector(I b, I e)
+  template<typename I1, typename I2>
+  ReservedVector<T, R>::ReservedVector(I1 b, I2 e)
     : std::vector<T>(b, e)
   {}
 
