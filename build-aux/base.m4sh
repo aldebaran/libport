@@ -1,6 +1,6 @@
 ##                                                         -*- shell-script -*-
 ## base.as: This file is part of build-aux.
-## Copyright (C) 2006-2008, Gostai S.A.S.
+## Copyright (C) 2006-2009, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -16,7 +16,7 @@ m4_pattern_forbid([^_?URBI_])dnl
 m4_define([_m4_divert(URBI-INIT)],    10)
 
 m4_defun([_URBI_ABSOLUTE_PREPARE],
-[
+[[
 # Autoconf 2.64 no longer defines as_me.
 : ${as_me=$(basename $as_myself)}
 # Autoconf 2.64 provides as_echo which we should trust.
@@ -27,8 +27,8 @@ m4_defun([_URBI_ABSOLUTE_PREPARE],
 is_absolute ()
 {
   case $[1] in
-    ([[\\/]]* | ?:[[\\/]]*) return 0;;
-    (                    *) return 1;;
+    ([\\/]* | ?:[\\/]*) return 0;;
+    (                *) return 1;;
   esac
 }
 
@@ -38,15 +38,7 @@ is_absolute ()
 absolute ()
 {
   local res
-  AS_IF([is_absolute "$[1]"],
-  [# Absolute paths do not need to be expanded.
-   res=$[1]],
-  [local dir=$(pwd)/$(dirname "$[1]")
-   if test -d "$dir"; then
-     res=$(cd "$dir" 2>/dev/null && pwd)/$(basename "$[1]")
-   else
-     fatal "absolute: not a directory: $dir"
-   fi])
+  res=$(canonicalize "$][1")
 
   # On Windows, we must make sure we have a Windows-like UNIX-friendly path (of
   # the form C:/cygwin/path/to/somewhere instead of /path/to/somewhere, notice
@@ -58,21 +50,13 @@ absolute ()
   $as_echo "$res"
 }
 
-# canonicalize FILE
+# canonicalize PATH
 # -----------------
-# "Simplifiy" all the "foo/.." bits.  This is fragile when there are
-# symlinks, use with care.
 canonicalize ()
 {
-  local tmp=$[1]
-  local res
-  while test x"$tmp" != x"$res"; do
-    res=$tmp
-    tmp=$($as_echo "$res" | sed -e 's,/[^/]*/\.\.,,')
-  done
-  $as_echo "$res"
+  perl -mCwd -e 'print Cwd::realpath($ARGV[0]), "\n";' -- "$][1"
 }
-])
+]])
 
 
 m4_defun([_URBI_FIND_PROG_PREPARE],
