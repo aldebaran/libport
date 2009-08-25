@@ -15,6 +15,7 @@
 # Status is 0 if $2 is changed, 1 otherwise.
 
 diff="diff -q"
+echo=echo
 
 usage ()
 {
@@ -28,6 +29,7 @@ Options:
   -h, --help        display this message and exit
   -I, --ignore-matching-lines REGEXP
                     ignore differences in lines matching REGEXP
+  -s, --silent      do not report anything
 EOF
   exit 0
 }
@@ -42,6 +44,10 @@ do
       shift
       diff+=" -I $1";;
 
+    (-s|--silent)
+      echo=:
+      ;;
+
     (*)
       if test -z "$from"; then
         from=$1
@@ -54,7 +60,7 @@ do
 done
 
 if test -r "$to" && $diff "$from" "$to"; then
-  echo >&2 "$to is unchanged"
+  $echo >&2 "$to is unchanged"
   # The file might have actually changed, but changes that are
   # ignored.  In that case, we want the latest contents, but the
   # oldest time stamp.  Since mv preserves time stamps, just set the
