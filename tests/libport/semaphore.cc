@@ -40,14 +40,14 @@ void check_timeout()
   CHECK_SEM(0);
   libport::utime_t t1 = libport::utime();
   pthread_t th;
-  if (pthread_create(&th, 0, &thread1, &sem))
-    errabort("pthread_create");
+  if (int err = pthread_create(&th, 0, &thread1, &sem))
+    errabort(err, "pthread_create");
   BOOST_CHECK_EQUAL(sem.uget(1000000), false);
   CHECK_SEM(0);
   libport::utime_t t2 = libport::utime() - t1;
   BOOST_CHECK(t2 < 1500000);
-  if (pthread_join(th, NULL))
-    errabort("pthread_join");
+  if (int err = pthread_join(th, 0))
+    errabort(err, "pthread_join");
   CHECK_SEM(1);
 }
 

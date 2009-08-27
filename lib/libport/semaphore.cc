@@ -118,18 +118,12 @@ namespace libport
     int u = sem_unlink(name_.c_str());
     int unlink_errno = errno;
     if (c)
-    {
-      errno = close_errno;
-      errabort("sem_close");
-    }
+      errabort(close_errno, "sem_close");
     if (u)
-    {
-      errno = unlink_errno;
-      errabort("sem_unlink");
-    }
+      errabort(unlink_errno, "sem_unlink");
 # else
     if (sem_destroy(sem_))
-      errabort("sem_destroy");
+      errnoabort("sem_destroy");
     delete sem_;
 # endif
   }
@@ -141,7 +135,7 @@ namespace libport
     if (sem_post(sem_))
     {
       destroy();
-      errabort("sem_post");
+      errnoabort("sem_post");
     }
   }
 
@@ -182,9 +176,9 @@ namespace libport
   bool
   Semaphore::uget(utime_t useconds)
   {
-    int err;
-    do
+    while (true)
     {
+      int err;
       if (useconds == 0)
         err = sem_wait(sem_);
 # if defined __APPLE__
@@ -224,18 +218,22 @@ namespace libport
         err = sem_timedwait(sem_, &ts);
       }
 # endif
-    }
-    while (err == -1 && errno == EINTR);
 
-    if (err)
-    {
-      if (errno == ETIMEDOUT)
+      switch (err ? errno : 0)
+      {
+      case 0:
+        return true;
+      case ETIMEDOUT:
+        // Failure.
         return false;
-      destroy();
-      errabort("sem_wait");
+      case EINTR:
+        // Try again.
+        continue;
+      default:
+        destroy();
+        errnoabort("sem_wait");
+      }
     }
-
-    return true;
   }
 
   int
@@ -248,7 +246,7 @@ namespace libport
     if (sem_getvalue(sem_, &res))
     {
       const_cast<Semaphore*>(this)->destroy();
-      errabort("sem_getvalue");
+      errnoabort("sem_getvalue");
     }
 #endif
     return res;

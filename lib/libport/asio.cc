@@ -12,7 +12,7 @@ namespace libport
       // Used so that io->run() never returns.
       boost::asio::io_service::work work(*io);
       io->run();
-      std::cerr << "The impossible happened";
+      std::cerr << "The impossible happened" << std::endl;
       io->reset();
     }
   }

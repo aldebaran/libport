@@ -71,7 +71,7 @@ namespace libport
 `-----------------------------------------------------*/
 
 /// \def __passert(Assertion, Message)
-/// Same as assert, but on failure, dump \a Message of std::cerr.
+/// Same as assert, but on failure, dump \a Message on std::cerr.
 # define __passert(Assertion, Message)			\
   ((void) ((Assertion)					\
 	   ? 0						\
@@ -93,10 +93,13 @@ namespace libport
 | errabort -- perror (well, strerror) + abort.  |
 `----------------------------------------------*/
 
-/// \def errabort(Msg)
-# define errabort(Msg)    \
-  pabort(libport::strerror(errno) << ": " << Msg)
+/// \def errabort(Err, Msg)
+# define errabort(Err, Msg)                     \
+  pabort(libport::strerror(Err) << ": " << Msg)
 
+/// \def errnoabort(Msg)
+# define errnoabort(Msg)                        \
+  errabort(errno, Msg)
 
 
 /*--------------------------------------------------------.

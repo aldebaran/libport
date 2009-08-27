@@ -11,6 +11,13 @@
 # include <libport/assert.hh>
 # include <libport/ip-semaphore.hh>
 
+// These functions return -1 on error, and set errno.
+#  define XRUN(Function, Args)                  \
+  do {                                          \
+    if ((Function Args) == -1)                  \
+      errnoabort(#Function);                    \
+  } while (false)
+
 namespace libport
 {
   IPSemaphore::IPSemaphore(int count)
@@ -20,7 +27,7 @@ namespace libport
     // Create a set of 1 semaphore, with permisions rwx------
     id_ = semget(IPC_PRIVATE, 1, 0700);
     if (id_ == -1)
-      errabort("Unable to create an inter-process semaphore");
+      errnoabort("Unable to create an inter-process semaphore");
 
     // The man specifies that this union must be defined by the
     // caller. C's ways are past finding out.
@@ -35,21 +42,19 @@ namespace libport
     // Initialize its value to count
     semun arg;
     arg.val = count;
-    if (semctl(id_, 0, SETVAL, arg) == -1)
-      errabort("Unable to set the inter-process semaphore value");
+    XRUN(semctl, (id_, 0, SETVAL, arg));
   }
 
   IPSemaphore::~IPSemaphore()
   {
-    if (getpid() == owner_pid_
-        && semctl(id_, 0, IPC_RMID) == -1)
-      errabort("Unable to set the inter-process semaphore value");
+    if (getpid() == owner_pid_)
+      XRUN(semctl, (id_, 0, IPC_RMID));
   }
 
   // Add \a val to semaphore \a id
   static void alter_sem(int id, int val)
   {
-    assert(val != 0);
+    assert(val);
     sembuf sops[1];
     sops[0].sem_num = 0;
     sops[0].sem_op = val;
@@ -57,8 +62,7 @@ namespace libport
     // several processes if a process segv before it releases the
     // semaphore, for instance.
     sops[0].sem_flg = SEM_UNDO;
-    if (semop(id, sops, 1) == -1)
-      errabort("Unable to increment/decrement the inter-process semaphore");
+    XRUN(semop, (id, sops, 1));
   }
 
   void
