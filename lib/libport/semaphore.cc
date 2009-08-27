@@ -79,7 +79,7 @@ namespace libport
     if (sem_init(sem_, 0, value))
     {
       destroy();
-      errabort("sem_init(" << value << ')');
+      errnoabort("sem_init(" << value << ')');
     }
 # endif
     ++instances_;
@@ -209,7 +209,7 @@ namespace libport
       {
         struct timespec ts;
         if (clock_gettime(CLOCK_REALTIME, &ts))
-          errabort("clock_gettime");
+          errnoabort("clock_gettime");
         ts.tv_sec += useconds / (1000 * 1000);
         ts.tv_nsec += (useconds % (1000 * 1000)) * 1000;
         // Respect the constraints.
