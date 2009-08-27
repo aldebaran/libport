@@ -30,6 +30,7 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/csignal.cc			\
   lib/libport/cstdio.cc				\
   lib/libport/cstdlib.cc			\
+  lib/libport/cstring.cc			\
   lib/libport/damerau-levenshtein-distance.cc   \
   lib/libport/debug.cc				\
   lib/libport/deref.cc				\

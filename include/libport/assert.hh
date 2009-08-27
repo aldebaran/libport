@@ -18,7 +18,7 @@
 # endif
 
 # include <iostream> // std::cerr
-# include <libport/cstdio> // libport::strerror.
+# include <libport/cstring> // libport::strerror.
 
 # include <libport/compiler.hh>
 

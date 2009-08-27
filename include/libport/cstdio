@@ -40,11 +40,6 @@ namespace libport
   /// Portable for Windows.
   LIBPORT_API
   void perror(const char* s);
-
-  /// Portable for Windows.
-  LIBPORT_API
-  const char* strerror(int errnum);
-
 }
 
 #endif // !LIBPORT_CSTDIO
