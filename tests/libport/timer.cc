@@ -10,17 +10,24 @@
 
 using libport::test_suite;
 
+static
+void
+msleep(int milliseconds)
+{
+  usleep(milliseconds * 1000);
+}
+
 void
 check ()
 {
-  libport::timer t;
   enum timevar
-    {
+  {
     One = 1,
     Two,
     Three
   };
 
+  libport::timer t;
   t.name (One, "One");
   t.name (Two, "Two");
   t.name (Three, "Three");
@@ -28,19 +35,22 @@ check ()
   t.start ();
 
   t.push (One);
-  sleep (1);
+  msleep (100);
   t.pop (1);
 
   t.push ("Two");
-  sleep (2);
+  msleep (200);
   t.pop ("Two");
 
   t.push ("Three");
-  sleep (3);
+  msleep (300);
   t.pop (Three);
 
   t.stop ();
   t.dump (std::cerr);
+
+  // Also check that Valgrind is happy with dump on destruction.
+  t.dump_on_destruction(std::cout);
 }
 
 test_suite*

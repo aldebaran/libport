@@ -148,8 +148,8 @@ namespace libport
     intmap[i] = task_name;
   }
 
-  void
-  timer::timeinfo (long time, long total_time, std::ostream& out)
+  std::ostream&
+  timer::timeinfo (long time, long total_time, std::ostream& out) const
   {
     out << setiosflags (std::ios::left);
     out << std::setw (6) << std::setprecision (6)
@@ -161,11 +161,12 @@ namespace libport
 	    (float) time * 100 / total_time :
 	    (float) time);
     out << "%) ";
+    return out;
   }
 
 
-  void
-  timer::dump (std::ostream& out = std::cerr)
+  std::ostream&
+  timer::dump (std::ostream& out) const
   {
     out << "Execution times (seconds)" << std::endl;
     for (task_map_type::const_iterator i = tasksmap.begin ();
@@ -223,13 +224,12 @@ namespace libport
 	<< "wall"
 
 	<< resetiosflags (std::ios::left) << std::endl;
+    return out;
   }
 
   void
   timer::push (const std::string& task_name)
   {
-    time_var* current;
-
     // if stack isn't empty, we set elapsed time for the current task
     if (!tasks.empty ())
       tasks.top ()->stop ();
@@ -237,7 +237,7 @@ namespace libport
     if (tasksmap.find (task_name) == tasksmap.end ())
       tasksmap[task_name] = new time_var;
 
-    current = tasksmap[task_name];
+    time_var* current = tasksmap[task_name];
     tasks.push (current);
     current->start ();
   }

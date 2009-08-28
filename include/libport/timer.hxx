@@ -82,6 +82,13 @@ namespace libport
     return *this;
   }
 
+  inline
+  std::ostream&
+  operator<<(std::ostream& o, const timer& t)
+  {
+    return t.dump(o);
+  }
+
 } // namespace libport
 
 #endif // !LIBPORT_TIMER_HXX

@@ -6,7 +6,7 @@
 #ifndef LIBPORT_TIMER_HH
 # define LIBPORT_TIMER_HH
 
-# include <iosfwd>
+# include <iostream>
 # include <map>
 # include <stack>
 # include <string>
@@ -48,8 +48,8 @@ namespace libport
     void pop();
 
     /// Write results.
-    /// \param out an ostream which defaults to cerr.
-    void dump(std::ostream& out);
+    /// \param out an ostream.
+    std::ostream& dump(std::ostream& out = std::cerr) const;
 
     /// Write results when the timer is destroyed.
     /// \param out an ostream which defaults to cerr.
@@ -113,7 +113,7 @@ namespace libport
     };
 
     /// Format timing results.
-    void timeinfo(long, long, std::ostream&);
+    std::ostream& timeinfo(long, long, std::ostream&) const;
 
     typedef std::map<const std::string, time_var*> task_map_type;
 
@@ -140,7 +140,11 @@ namespace libport
     static const long clocks_per_sec;
   };
 
+  std::ostream&
+  operator<<(std::ostream& o, const timer& t);
+
 } // namespace libport
+
 
 # include <libport/timer.hxx>
 
