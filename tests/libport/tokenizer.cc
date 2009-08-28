@@ -9,6 +9,7 @@ using libport::test_suite;
 
 namespace std
 {
+  // In order to be able to use string_cast.
   std::ostream&
   operator<<(std::ostream& o, const libport::tokenizer_type& tok)
   {
@@ -27,15 +28,15 @@ check (const std::string& in,
        const std::string& out_strip,
        const std::string& out_kept)
 {
-  libport::tokenizer_type tok = libport::make_tokenizer(in, "\n");
-  BOOST_CHECK_EQUAL(string_cast(tok), out_strip);
+#define CHECK(What, Out)                        \
+  BOOST_CHECK_EQUAL(string_cast(What), Out)
 
-  tok = libport::make_tokenizer(in, "\n",
-                                "", boost::keep_empty_tokens);
-  BOOST_CHECK_EQUAL(string_cast(tok), out_kept);
-
-  tok = libport::lines(in);
-  BOOST_CHECK_EQUAL(string_cast(tok), out_kept);
+  CHECK(libport::make_tokenizer(in, "\n"),
+        out_strip);
+  CHECK(libport::make_tokenizer(in, "\n", "", boost::keep_empty_tokens),
+        out_kept);
+  CHECK(libport::lines(in), out_kept);
+#undef CHECK
 }
 
 test_suite*
@@ -51,5 +52,17 @@ init_test_suite()
   CASE("abc\n123",       "abc,123", "abc,123");
   CASE("abc\n123\n",     "abc,123", "abc,123,");
   CASE("\nabc\n\n123\n", "abc,123", ",abc,,123,");
+
+  // Try with a much larger string.
+  {
+    std::stringstream in;
+    std::stringstream out;
+    for (int i = 0; i < 1000; ++i)
+    {
+      in  << i << std::endl;
+      out << (i ? "," : "") << i;
+    }
+    CASE(in.str(), out.str(), out.str() + ",");
+  }
   return suite;
 }

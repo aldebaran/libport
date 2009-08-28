@@ -8,6 +8,30 @@
 
 namespace libport
 {
+  // WARNING: Passing temporary values to make_tokenizer or to lines
+  // is a very bad idea.  The value needs to be existing during the
+  // iteration, not during the construction of the tokenizer.  The
+  // following peice of code is exactly what must not be done:
+  //
+  //    {
+  //      std::stringstream s;
+  //      s << in;
+  //      foreach (const std::string& l, libport::lines(s.str()))
+  //        std::cerr << l << std::endl;
+  //    }
+  //
+  // because `s.str()' no longer exists during the iteration (just
+  // imagine the for-loop behind).  Instead, you really need a
+  // temporary string.  The bad news is: I don't know how to enforce
+  // this.
+  //
+  //    {
+  //      std::stringstream s;
+  //      s << in;
+  //      std::string str = s.str();
+  //      foreach (const std::string& l, libport::lines(str())
+  //        std::cerr << l << std::endl;
+  //    }
 
   typedef boost::tokenizer< boost::char_separator<char> > tokenizer_type;
 
