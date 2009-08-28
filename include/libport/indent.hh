@@ -12,25 +12,25 @@
 namespace libport
 {
   /// Increment the indentation.
-  LIBPORT_API std::ostream& incindent (std::ostream& o);
+  LIBPORT_API std::ostream& incindent(std::ostream& o);
 
   /// Decrement the indentation.
-  LIBPORT_API std::ostream& decindent (std::ostream& o);
+  LIBPORT_API std::ostream& decindent(std::ostream& o);
 
   /// Reset the indentation.
-  LIBPORT_API std::ostream& resetindent (std::ostream& o);
+  LIBPORT_API std::ostream& resetindent(std::ostream& o);
 
   /// Set the indentation.
-  LIBPORT_API  std::ostream& indent (std::ostream& o);
+  LIBPORT_API std::ostream& indent(std::ostream& o);
 
   /// Print an end of line, then set the indentation.
-  LIBPORT_API std::ostream& iendl (std::ostream& o);
+  LIBPORT_API std::ostream& iendl(std::ostream& o);
 
   /// Increment the indentation, print an end of line, and set the indentation.
-  LIBPORT_API std::ostream& incendl (std::ostream& o);
+  LIBPORT_API std::ostream& incendl(std::ostream& o);
 
   /// Decrement the indentation, print an end of line, and set the indentation.
-  LIBPORT_API std::ostream& decendl (std::ostream& o);
+  LIBPORT_API std::ostream& decendl(std::ostream& o);
 }
 
 #endif // !LIBPORT_INDENT_HH
