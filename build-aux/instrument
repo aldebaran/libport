@@ -384,8 +384,8 @@ sub shellescape($)
 ## Main.  ##
 ## ------ ##
 
-# Get debug symbols on OS X
-push @valgrind_option, '--auto-run-dsymutil=yes'
+# Get debug symbols on OS X.
+push @valgrind_option, '--dsymutil=yes'
   if $OSNAME eq 'darwin';
 
 # If we can see our "built-in" instrument.supp file, use it.
