@@ -27,6 +27,7 @@ namespace libport
       case EINTR:
         continue;
       default:
+        (void) err;
         errabort(err, "pthread_cond_wait");
       }
   }
@@ -53,6 +54,7 @@ namespace libport
       case EINTR:
         continue;
       default:
+        (void) err;
         errabort(err, "pthread_cond_timedwait");
       }
   }

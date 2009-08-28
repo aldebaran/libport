@@ -107,6 +107,7 @@ namespace libport
     case EBUSY:
       return false;
     default:
+      (void) err;
       errabort(err, "pthread_mutex_trylock");
     }
   }
