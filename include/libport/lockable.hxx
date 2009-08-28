@@ -1,6 +1,7 @@
 #ifndef LIBPORT_LOCKABLE_HXX
 # define LIBPORT_LOCKABLE_HXX
 
+# include <libport/pthread.h>
 # include <libport/assert.hh>
 # include <libport/cerrno>
 # include <libport/format.hh>
@@ -58,51 +59,43 @@ namespace libport
 
 # else
 
-// On POSIX, pthread_* functions *return* the error code, but don't
-// change errno.
-#  define XRUN(Function, Args)                  \
-  do {                                          \
-    if (int err = Function Args)                \
-      errabort(err, #Function);                 \
-  } while (false)
-
 namespace libport
 {
 
   inline void initLock(Lock& l)
   {
     pthread_mutexattr_t ma;
-    XRUN(pthread_mutexattr_init, (&ma));
+    PTHREAD_RUN(pthread_mutexattr_init, &ma);
     /* See
      * http://www.nabble.com/Compiling-on-MacOS-10.4-Tiger-t284385.html
      * for more about this code.  Yes, the second #if is very
      * suspicious, I don't know why it's like this.  */
 #  if defined  __APPLE__ || defined __FreeBSD__
-    XRUN(pthread_mutexattr_settype, (&ma, PTHREAD_MUTEX_RECURSIVE));
+    PTHREAD_RUN(pthread_mutexattr_settype, &ma, PTHREAD_MUTEX_RECURSIVE);
 #  elif defined PTHREAD_MUTEX_RECURSIVE_NP
     // cygwin
-    XRUN(pthread_mutexattr_setkind_np, (&ma, PTHREAD_MUTEX_RECURSIVE));
+    PTHREAD_RUN(pthread_mutexattr_setkind_np, &ma, PTHREAD_MUTEX_RECURSIVE);
 #  else
     // deprecated according to man page and fails to compile
     // pthread_mutexattr_setkind_np(&ma, PTHREAD_MUTEX_RECURSIVE_NP);
-    XRUN(pthread_mutexattr_settype, (&ma, PTHREAD_MUTEX_RECURSIVE_NP));
+    PTHREAD_RUN(pthread_mutexattr_settype, &ma, PTHREAD_MUTEX_RECURSIVE_NP);
 #  endif
-    XRUN(pthread_mutex_init, (&l, &ma));
+    PTHREAD_RUN(pthread_mutex_init, &l, &ma);
   }
 
   inline void lockLock(Lock& l)
   {
-    XRUN(pthread_mutex_lock, (&l));
+    PTHREAD_RUN(pthread_mutex_lock, &l);
   }
 
   inline void lockUnlock(Lock& l)
   {
-    XRUN(pthread_mutex_unlock, (&l));
+    PTHREAD_RUN(pthread_mutex_unlock, &l);
   }
 
   inline void deleteLock(Lock& l)
   {
-    XRUN(pthread_mutex_destroy, (&l));
+    PTHREAD_RUN(pthread_mutex_destroy, &l);
   }
 
   inline bool lockTryLock(Lock& l)
@@ -119,8 +112,6 @@ namespace libport
   }
 
 } // namespace libport
-
-#  undef XRUN
 
 # endif
 

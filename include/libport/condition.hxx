@@ -10,18 +10,10 @@ namespace libport
 {
 #ifndef WIN32
 
-// On POSIX, pthread_* functions *return* the error code, but don't
-// change errno.
-#  define XRUN(Function, Args)                  \
-  do {                                          \
-    if (int err = Function Args)                \
-      errabort(err, #Function);                 \
-  } while (false)
-
   inline
   Condition::Condition()
   {
-    XRUN(pthread_cond_init, (&cond_, 0));
+    PTHREAD_RUN(pthread_cond_init, &cond_, 0);
   }
 
   inline void
@@ -68,13 +60,13 @@ namespace libport
   inline void
   Condition::signal()
   {
-    XRUN(pthread_cond_signal, (&cond_));
+    PTHREAD_RUN(pthread_cond_signal, &cond_);
   }
 
   inline void
   Condition::broadcast()
   {
-    XRUN(pthread_cond_broadcast, (&cond_));
+    PTHREAD_RUN(pthread_cond_broadcast, &cond_);
   }
 
 #else  // WIN32.
@@ -135,6 +127,5 @@ namespace libport
     return res != WAIT_TIMEOUT;
   }
 
-# undef XRUN
 #endif
 }

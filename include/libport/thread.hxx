@@ -7,14 +7,6 @@
 # include <libport/config.h>
 # include <libport/detect-win32.h>
 
-// On POSIX, pthread_* functions *return* the error code, but don't
-// change errno.
-#  define XRUN(Function, Args)                  \
-  do {                                          \
-    if (int err = Function Args)                \
-      errabort(err, #Function);                 \
-  } while (false)
-
 namespace libport
 {
   inline
@@ -33,7 +25,7 @@ namespace libport
   {
     boost::function0<void> *cp = new boost::function0<void>(func);
     pthread_t pt;
-    XRUN(pthread_create, (&pt, 0, &_startThread, cp));
+    PTHREAD_RUN(pthread_create, &pt, 0, &_startThread, cp);
     return pt;
   }
 
@@ -125,7 +117,7 @@ namespace libport
       usleep(200000);
 #else
     if (!res_ && handle_)
-      XRUN(pthread_join, (handle_, 0));
+      PTHREAD_RUN(pthread_join, handle_, 0);
 #endif
   }
 
@@ -139,5 +131,4 @@ namespace libport
 
 } // namespace libport
 
-# undef XRUN
 #endif // !LIBPORT_THREAD_HXX

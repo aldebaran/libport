@@ -28,4 +28,15 @@ int pthread_join(pthread_t thread, void** retval);
 #  include <libport/pthread.hxx>
 # endif
 
+// On POSIX, pthread_* functions *return* the error code, but don't
+// change errno.
+#  define PTHREAD_RUN(Function, Args...)        \
+  do {                                          \
+    if (int err = Function (Args))              \
+      {                                         \
+        (void) err;                             \
+        errabort(err, #Function);               \
+      }                                         \
+  } while (false)
+
 #endif // !LIBPORT_PTHREAD_HH
