@@ -1,4 +1,4 @@
-# Valgrind suppression file.
+# Valgrind suppression file.               -*- shell-script -*-
 
 # Format of this file is:
 # {
@@ -25,41 +25,39 @@
 # We use `...' which is a needed feature, but no available in Valgrind
 # on etch.  Too bad for them.
 
-## --------------------------------------------- ##
-## 2009-07-02, pc-linux, Gentoo.                 ##
-## --------------------------------------------- ##
+## ------------------------------ ##
+## 2009-07-02, pc-linux, Gentoo.  ##
+## ------------------------------ ##
+
+# Was observed with ld-2.9 and ld-2.8.
 
 {
-   _boost_asio_getaddrinfo
+   getaddrinfo
    Memcheck:Cond
-   obj:/lib/ld-2.9.so
-   obj:/lib/libc-2.9.so
-   obj:/lib/ld-2.9.so
-   obj:/lib/libc-2.9.so
+   obj:/lib/ld-2.*.so
+   obj:/lib/libc-2.*.so
+   obj:/lib/ld-2.*.so
+   obj:/lib/libc-2.*.so
    fun:__libc_dlsym
    fun:__nss_lookup_function
-   obj:/lib/libc-2.9.so
+   obj:/lib/libc-2.*.so
    fun:getaddrinfo
-   fun:_ZN5boost4asio6detail10socket_ops11getaddrinfoEPKcS4_PK8addrinfoPPS5_RNS_6system10error_codeE
-   fun:_ZN5boost4asio6detail16resolver_serviceINS0_2ip3tcpEE7resolveERNS_10shared_ptrIvEERKNS3_20basic_resolver_queryIS4_EERNS_6system10error_codeE
-   fun:_ZN5boost4asio2ip16resolver_serviceINS1_3tcpEE7resolveERNS_10shared_ptrIvEERKNS1_20basic_resolver_queryIS3_EERNS_6system10error_codeE
-   fun:_ZN5boost4asio2ip14basic_resolverINS1_3tcpENS1_16resolver_serviceIS3_EEE7resolveERKNS1_20basic_resolver_queryIS3_EERNS_6system10error_codeE
 }
 
 {
-   _getaddrinfo
+   getaddrinfo
    Memcheck:Addr4
-   obj:/lib/ld-2.9.so
-   obj:/lib/libc-2.9.so
-   obj:/lib/ld-2.9.so
-   obj:/lib/libc-2.9.so
+   obj:/lib/ld-2.*.so
+   obj:/lib/libc-2.*.so
+   obj:/lib/ld-2.*.so
+   obj:/lib/libc-2.*.so
    fun:__libc_dlopen_mode
    fun:__nss_lookup_function
-   obj:/lib/libc-2.9.so
+   obj:/lib/libc-2.*.so
    fun:__nss_services_lookup2
    fun:getservbyname_r
-   obj:/lib/libc-2.9.so
-   obj:/lib/libc-2.9.so
+   obj:/lib/libc-2.*.so
+   obj:/lib/libc-2.*.so
    fun:getaddrinfo
 }
 
