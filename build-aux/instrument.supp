@@ -75,6 +75,14 @@
 }
 
 {
+   _boost_unit_test_invalid_read 64 bits
+   Memcheck:Addr8
+   fun:_ZN5boost9unit_test14framework_implD1Ev
+   fun:exit
+   fun:(below main)
+}
+
+{
    Boost.Test on OS X.
    Memcheck:Addr4
    fun:__tcf_1
