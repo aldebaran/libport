@@ -18,7 +18,7 @@
 # Output variable TELISPEECH_PATH point to the installation location.
 # Set "$telispeech" to "true" or "false".
 AC_DEFUN([WITH_TELISPEECH],
-[AC_ARG_WITH([telisma],
+[AC_ARG_WITH([telispeech],
 	     [AC_HELP_STRING([--with-telispeech=telispeech-path],
 			     [set the path to teliSpeech [/opt/telisma/teliSpeech]])],
 	     [], [with_telispeech=no])
