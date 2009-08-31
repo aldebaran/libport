@@ -347,25 +347,40 @@ namespace libport
   | OptionsEnd.  |
   `-------------*/
 
-  OptionsEnd::OptionsEnd()
+  OptionsEnd::OptionsEnd(bool end_on_nonoption)
     : Option("")
+    , end_on_nonoption_(end_on_nonoption)
   {}
 
   bool
   OptionsEnd::test(cli_args_type& args)
   {
-    if (args[0] != "--")
-      return false;
+    bool isMinusMinus = (args[0] == "--");
 
-    values_.insert(values_.end(), args.begin() + 1, args.end());
-    args.clear();
-    return true;
+    if (isMinusMinus ||
+        (end_on_nonoption_ && !args[0].empty() && args[0][0] != '-'))
+    {
+      found_separator_ = isMinusMinus;
+      values_.insert(values_.end(), args.begin() + (isMinusMinus?1:0),
+                     args.end());
+      args.clear();
+      return true;
+    }
+    else
+      return false;
+  }
+
+  bool
+  OptionsEnd::found_separator() const
+  {
+    return found_separator_;
   }
 
   void
   OptionsEnd::init()
   {
     values_.clear();
+    found_separator_ = false;
   }
 
   const OptionsEnd::values_type&

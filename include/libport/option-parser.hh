@@ -202,15 +202,17 @@ namespace libport
   {
   public:
     typedef std::vector<std::string> values_type;
-    OptionsEnd();
+    OptionsEnd(bool end_on_nonoption = false);
     virtual bool test(cli_args_type& args);
     virtual void init();
     const values_type& get() const;
     virtual void usage_(std::ostream& output) const;
     virtual void doc_(std::ostream& output) const;
-
+    bool found_separator() const;
   private:
     values_type values_;
+    bool end_on_nonoption_;
+    bool found_separator_;
   };
 
 
