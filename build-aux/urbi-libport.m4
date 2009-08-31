@@ -26,7 +26,8 @@ URBI_PTHREAD_SOURCES
 # Check for libport dependencies on Boost.
 AC_DEFUN([_URBI_LIBPORT_BOOST],
 [# Check for Boost headers
-BOOST_REQUIRE([1.35])
+BOOST_REQUIRE([1.37])
+URBI_ISYSTEM([BOOST_CPPFLAGS])
 # Check for Boost.Thread
 if test x$with_boost_thread_static = xyes; then
   boost_threads_flag=s
