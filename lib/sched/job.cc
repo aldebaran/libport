@@ -7,11 +7,14 @@
 
 #include <libport/compiler.hh>     // For ECHO
 #include <libport/containers.hh>
+#include <libport/debug.hh>
 #include <libport/foreach.hh>
 #include <libport/indent.hh>
 #include <libport/separate.hh>
 
 #include <sched/job.hh>
+
+GD_ADD_CATEGORY(sched);
 
 namespace sched
 {
@@ -40,6 +43,7 @@ namespace sched
   void
   Job::run()
   {
+    GD_CATEGORY(sched);
     assert(state_ == to_start);
     ECHO("In Job::run for " << this);
 
@@ -71,15 +75,16 @@ namespace sched
     }
     catch (const std::exception& e)
     {
-      // Exception is lost and cannot be propagated properly but can be
-      // printed onto the console for diagnostic purpose.
-      std::cerr << "Exception `" << e.what() << "' caught in job "
-		<< this << ", loosing it\n";
+      // Exception is lost and cannot be propagated properly but can
+      // be printed onto the console for diagnostic purpose.
+      GD_FERROR("job %s: Exception `%s' caught, losing it",
+                (this)(e.what()));
     }
     catch (...)
     {
       // Exception is lost and cannot be propagated properly.
-      std::cerr << "Exception caught in job " << this << ", loosing it\n";
+      GD_FERROR("job %s: Unknown exception caught, losing it",
+                (this));
     }
 
     terminate_cleanup();
