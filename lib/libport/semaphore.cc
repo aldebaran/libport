@@ -118,9 +118,15 @@ namespace libport
     int u = sem_unlink(name_.c_str());
     int unlink_errno = errno;
     if (c)
+    {
+      (void) close_errno;
       errabort(close_errno, "sem_close");
+    }
     if (u)
+    {
+      (void) unlink_errno;
       errabort(unlink_errno, "sem_unlink");
+    }
 # else
     if (sem_destroy(sem_))
       errnoabort("sem_destroy");
