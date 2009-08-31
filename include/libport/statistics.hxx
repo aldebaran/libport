@@ -97,6 +97,12 @@ namespace libport
 
   template<typename T, typename R>
   inline size_t
+  Statistics<T, R>::n_samples() const
+  {
+    return count_;
+  }
+  template<typename T, typename R>
+  inline size_t
   Statistics<T, R>::capacity() const
   {
     return capacity_;
