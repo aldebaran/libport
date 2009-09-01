@@ -21,65 +21,44 @@ namespace libport
   template <typename T>
   inline
   std::ostream&
-  Deref::operator<< (const T* t) const
-  {
-    if (t)
-      return ostr_ << *t;
-    else
-      return ostr_ << "NULL";
-  }
-
-  template <typename T>
-  inline
-  std::ostream&
-  Deref::operator<< (T* t) const
-  {
-    return operator<<(const_cast<const T*>(t));
-  }
-
-  template <typename T>
-  inline
-  std::ostream&
-  Deref::operator<< (const std::auto_ptr<T>& t) const
-  {
-    return operator <<(t.get());
-  }
-
-  template <typename T>
-  inline
-  std::ostream&
-  Deref::operator<< (const intrusive_ptr<T>& t) const
-  {
-    return operator <<(t.get());
-  }
-
-# ifndef LIBPORT_NO_BOOST
-  template <typename T>
-  inline
-  std::ostream&
-  Deref::operator<< (const boost::shared_ptr<T>& t) const
-  {
-    return operator <<(t.get());
-  }
-# endif
-
-  template <typename T>
-  inline
-  std::ostream&
-  Deref::operator<< (const T& t) const
+  Deref::operator<<(T& t) const
   {
     return ostr_ << t;
   }
 
-
   template <typename T>
   inline
   std::ostream&
-  Deref::operator<< (T& t) const
+  Deref::operator<<(T* t) const
   {
-    return operator<<(const_cast<const T&>(t));
+    if (t)
+      return operator<<(*t);
+    else
+      return operator<<("NULL");
   }
 
+  /// Bounce the operator<< to handle a \a From to the operator<< for
+  /// \a To.
+# define BOUNCE(From, To)                       \
+  template <typename T>                         \
+  inline                                        \
+  std::ostream&                                 \
+  Deref::operator<<(From) const                 \
+  {                                             \
+    return operator<<(To);                      \
+  }
+
+  BOUNCE(const std::auto_ptr<T>& t, t.get())
+  BOUNCE(      std::auto_ptr<T>& t, t.get())
+  BOUNCE(const intrusive_ptr<T>& t, t.get())
+  BOUNCE(      intrusive_ptr<T>& t, t.get())
+
+# ifndef LIBPORT_NO_BOOST
+  BOUNCE(const boost::shared_ptr<T>& t, t.get());
+  BOUNCE(      boost::shared_ptr<T>& t, t.get());
+# endif
+
+# undef BOUNCE
 
   /*-------------.
   | Standalone.  |
@@ -87,7 +66,7 @@ namespace libport
 
   inline
   Deref
-  operator<< (std::ostream& ostr, deref_e)
+  operator<<(std::ostream& ostr, deref_e)
   {
     return Deref (ostr);
   }
