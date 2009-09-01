@@ -52,7 +52,7 @@ fi
 if $telispeech; then
   # More tools for teliSpeecj.
   AC_SUBST([TELISPEECH_CPPFLAGS], ['-I$(TELISPEECH_PATH)/include'])
-  AC_SUBST([TELISPEECH_LDFLAGS],  ['-L$(TELISPEECH_PATH)/lib -ltasr_so -lTLogger_so -lxsystem_so -licudata -licuuc -lxerces-c -lsisr_so -lAcousticTool_so -laudio_processing_so -lxml2'])
+  AC_SUBST([TELISPEECH_LDFLAGS],  ['-L$(TELISPEECH_PATH)/bin -ltasr_so -lTLogger_so -lxsystem_so -licudata -licuuc -lxerces-c -lsisr_so -lAcousticTool_so -laudio_processing_so -lxml2'])
 fi
 
 AM_CONDITIONAL([WITH_TELISPEECH], [$telispeech])
