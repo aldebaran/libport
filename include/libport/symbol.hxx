@@ -67,7 +67,7 @@ namespace libport
 
   inline
   bool
-  Symbol::empty () const
+  Symbol::empty() const
   {
     assert (str_);
     return str_->empty();
