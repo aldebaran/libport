@@ -3,6 +3,7 @@
 
 # include <iostream>
 
+# include <libport/cstdio>
 # include <libport/export.hh>
 
 namespace libport
