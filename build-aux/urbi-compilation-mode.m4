@@ -44,7 +44,6 @@ urbi_compilation_mode_set ()
         # Not all the code includes config.h.
         URBI_APPEND_CPPFLAGS([-DCOMPILATION_MODE_DEBUG])
 
-        URBI_APPEND_FLAGS([BISONFLAGS], [-Dparse.assert -Dparse.trace])
         # Define USE_VALGRIND only if valgrind/valgrind.h exists.
         AC_CHECK_HEADERS([valgrind/valgrind.h],
                          [URBI_APPEND_CPPFLAGS([-DUSE_VALGRIND])])
@@ -75,7 +74,6 @@ urbi_compilation_mode_set ()
         done
         TC_COMPILER_OPTION_IF([--gc-sections],
                               [URBI_APPEND_FLAGS([LDFLAGS], [--gc-sections])])
-        AC_SUBST([PARSE_ERROR], [simple])
         urbi_compilation_mode_set final
         ;;
 
@@ -132,7 +130,6 @@ URBI_ARGLIST_ENABLE([enable-compilation-mode=MODE],
           - symbols: Activate precompiled-symbols.
           - threads: Implement coroutines with threads.])
 
-AC_SUBST([PARSE_ERROR], [verbose])
 AC_SUBST([COMPILATION_MODE_DEBUG], [false])
 AC_SUBST([COMPILATION_MODE_SPACE], [false])
 AC_SUBST([COMPILATION_MODE_SPEED], [false])

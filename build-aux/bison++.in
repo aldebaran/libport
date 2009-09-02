@@ -1,7 +1,7 @@
 #! /bin/sh
 ##
 ## bison++.in: This file is part of build-aux.
-## Copyright (C) 2006-2008, Gostai S.A.S.
+## Copyright (C) 2006-2009, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -41,9 +41,9 @@ shift
 # FIXME: We need $srcdir to be able to compute it.
 namespace=parser
 
-options="$@"
 if $BISON --xml --version >/dev/null 2>&1; then
-  options="$options --xml"
+  set x "$@" --xml
+  shift
 fi
 
 
@@ -66,7 +66,7 @@ mkdir $tmp
 cp $input $tmp
 cd $tmp
 set +e
-$BISON $options $input_base -o $output_base
+$BISON "$@" $input_base -o $output_base
 status=$?
 set -e
 
