@@ -24,9 +24,9 @@
 # See autotroll.m4 :)
 
 
-SUFFIXES = .moc.cpp .moc.cc .moc.cxx .moc.C .h .hh \
-           .ui .ui.h .ui.hh \
-           .qrc .qrc.cpp .qrc.cc .qrc.cxx .qrc.C
+SUFFIXES += .moc.cpp .moc.cc .moc.cxx .moc.C .h .hh \
+            .ui .ui.h .ui.hh \
+            .qrc .qrc.cpp .qrc.cc .qrc.cxx .qrc.C
 
 # --- #
 # MOC #
@@ -78,4 +78,3 @@ SUFFIXES = .moc.cpp .moc.cc .moc.cxx .moc.C .h .hh \
 .qrc.qrc.C:
 	$(RCC) -name `echo "$<" | sed 's|^.*/\(.*\)\.qrc$$|\1|'` $< -o $@
 
-DISTCLEANFILES = $(BUILT_SOURCES)
