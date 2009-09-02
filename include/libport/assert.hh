@@ -104,8 +104,13 @@ namespace libport
 `----------------------------------------------*/
 
 /// \def errabort(Err, Msg)
-# define errabort(Err, Msg)                     \
-  pabort(libport::strerror(Err) << ": " << Msg)
+# define errabort(Err, Msg)                             \
+  do                                                    \
+  {                                                     \
+    (void) Err;                                         \
+    pabort(libport::strerror(Err) << ": " << Msg);      \
+  }                                                     \
+  while (false)                                         \
 
 /// \def errnoabort(Msg)
 # define errnoabort(Msg)                        \
