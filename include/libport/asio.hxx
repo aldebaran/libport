@@ -1,10 +1,27 @@
+/*
+ * Copyright (C) 2009, Gostai S.A.S.
+ *
+ * This software is provided "as is" without warranty of any kind,
+ * either expressed or implied, including but not limited to the
+ * implied warranties of fitness for a particular purpose.
+ *
+ * See the LICENSE file for more information.
+ */
+
+#ifndef LIBPORT_NO_SSL
+// There are many warnings in asio/ssl.  We support GCC 4.1 which does
+// not supproted "#pragma GCC diagnostics", so we have to disable all
+// the warnings in this header.  The cure might be worse than the
+// disease, and maybe fixing the headers on our machines would be a
+// better option.
+# pragma GCC system_header
+#endif
+
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/construct.hpp>
-
-// #define LIBPORT_ECHO(S) std::cerr << __FILE__ ":" <<  __LINE__ << ": " #S ": " << S << std::endl
 
 #include <libport/lexical-cast.hh>
 #include <libport/lockable.hh>
