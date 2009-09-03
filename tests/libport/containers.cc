@@ -20,22 +20,22 @@ check_operator_lt_lt()
   string_list s1, s2;
 
   s1 << "a" << "b";
-  BOOST_CHECK_EQUAL(s1.size(), 2);
+  BOOST_CHECK_EQUAL(s1.size(), 2u);
   BOOST_CHECK_EQUAL(s1[0], "a");
   BOOST_CHECK_EQUAL(s1[1], "b");
 
   s2 << "c" << "d";
   s1 << s2;
-  BOOST_CHECK_EQUAL(s1.size(), 4);
+  BOOST_CHECK_EQUAL(s1.size(), 4u);
   BOOST_CHECK_EQUAL(s1[2], "c");
   BOOST_CHECK_EQUAL(s1[3], "d");
 
   typedef std::set<std::string> string_set;
   string_set s3;
   s3 << s1;
-  BOOST_CHECK_EQUAL(s3.size(), 4);
+  BOOST_CHECK_EQUAL(s3.size(), 4u);
   s3 << s1;
-  BOOST_CHECK_EQUAL(s3.size(), 4);
+  BOOST_CHECK_EQUAL(s3.size(), 4u);
 }
 
 test_suite*

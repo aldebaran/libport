@@ -53,27 +53,27 @@ void check_hard() // Not really checked
     libport::damerau_levenshtein_distance(s1, s2);
 }
 
-#define CHECK(s1, s2, d)						\
-  BOOST_CHECK_EQUAL(libport::damerau_levenshtein_distance(s1, s2), d)
+#define CHECK(S1, S2, D)						\
+  BOOST_CHECK_EQUAL(libport::damerau_levenshtein_distance(S1, S2), D)
 
 void check_deletion()
 {
-  CHECK("azertyuiop", "aeryuop", 3);
+  CHECK("azertyuiop", "aeryuop", 3u);
 }
 
 void check_insertion()
 {
-  CHECK("aeryuop", "azertyuiop", 3);
+  CHECK("aeryuop", "azertyuiop", 3u);
 }
 
 void check_substitution()
 {
-  CHECK("azertyuiopqsdfghjklmwxcvbn,", "qwertyuiopasdfghjkl;zxcvbnm", 6);
+  CHECK("azertyuiopqsdfghjklmwxcvbn,", "qwertyuiopasdfghjkl;zxcvbnm", 6u);
 }
 
 void check_transposition()
 {
-  CHECK("1234567890", "1324576809", 3);
+  CHECK("1234567890", "1324576809", 3u);
 }
 
 test_suite*
