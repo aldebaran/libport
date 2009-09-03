@@ -50,8 +50,7 @@ coroutine_free(Coro* c)
     // First let c's thread terminate naturally
     c->die_ = true;
     c->sem_++;
-    if (pthread_join(c->thread_, 0))
-      errabort("pthread_join");
+    PTHREAD_RUN(pthread_join, c->thread_, 0);
     // Actually free it
     delete c;
   }
@@ -75,17 +74,13 @@ coroutine_start(Coro* self, Coro* other,
   if (first)
   {
     first = false;
-    if (pthread_attr_init(&attr))
-      errabort("pthread_attr_init");
-
-    if (pthread_attr_setstacksize(&attr,
-                                  sched::configuration.default_stack_size))
-      errabort("pthread_attr_setstacksize");
+    PTHREAD_RUN(pthread_attr_init, &attr);
+    PTHREAD_RUN(pthread_attr_setstacksize,
+                &attr, sched::configuration.default_stack_size);
   }
 
-  if (pthread_create(&other->thread_, &attr,
-		     reinterpret_cast<void* (*)(void*)>(callback), context))
-    errabort("pthread_create");
+  PTHREAD_RUN(pthread_create, &other->thread_, &attr,
+              reinterpret_cast<void* (*)(void*)>(callback), context);
 #endif
   other->started_ = true;
   self->sem_--;
@@ -99,12 +94,9 @@ get_stack()
   void* stack = 0;
   size_t size = 0;
   pthread_attr_t attr;
-  if (pthread_attr_init(&attr))
-    errabort("pthread_attr_init");
-  if (pthread_attr_getstack(&attr, &stack, &size))
-    errabort("pthread_attr_getstackaddr");
-  if (pthread_attr_destroy(&attr))
-    errabort("pthread_attr_destroy");
+  PTHREAD_RUN(pthread_attr_init, &attr);
+  PTHREAD_RUN(pthread_attr_getstack, &attr, &stack, &size);
+  PTHREAD_RUN(pthread_attr_destroy, &attr);
   return std::make_pair(stack, size);
 }
 #endif
