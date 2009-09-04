@@ -32,10 +32,23 @@ static void test_environ()
   BOOST_CHECK(!getenv(var));
 }
 
+static void test_system()
+{
+  // Unfortunately, boost::unit_test implodes if any child has a non null
+  // return value, so we cannot test the failing case.
+
+  BOOST_CHECK_EQUAL(libport::system("true"), 0);
+  // BOOST_CHECK_EQUAL(libport::system("false"), 1);
+  BOOST_CHECK_NO_THROW(int ignored = libport::system("true"); (void)ignored);
+  // BOOST_CHECK_THROW(int ignored = libport::system("false"); (void)ignored,
+  //                   std::exception);
+}
+
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::cstdlib");
   suite->add(BOOST_TEST_CASE(test_environ));
+  suite->add(BOOST_TEST_CASE(test_system));
   return suite;
 }
