@@ -9,7 +9,10 @@
  */
 #include <libport/detect-win32.h>
 #include <string>
+#include <libport/assert.hh>
 #include <libport/cstdlib>
+#include <libport/exception.hh>
+#include <libport/format.hh>
 
 #if defined _MSC_VER || defined __MINGW32__
 
@@ -82,5 +85,31 @@ namespace libport
   {
     const char* res = getenv(c);
     return res ? res : deflt;
+  }
+}
+
+/*--------.
+| xsystem |
+`--------*/
+
+namespace libport
+{
+  int
+  system(const std::string& cmd)
+  {
+    int res = ::system(cmd.c_str());
+    if (res == -1)
+      errnoabort("system");
+    return res;
+  }
+
+  void
+  xsystem(const std::string& cmd)
+  {
+    int res = system(cmd);
+    if (!WIFEXITED(res))
+      throw libport::Exception("command was signaled");
+    if (int rv = WEXITSTATUS(res))
+      throw Exception(format("command failed: %s", rv));
   }
 }

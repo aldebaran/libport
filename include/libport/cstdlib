@@ -5,6 +5,7 @@
 # include <cstdlib>
 # include <string>
 
+# include <libport/compiler.hh>
 # include <libport/detect-win32.h>
 # include <libport/export.hh>
 
@@ -60,6 +61,19 @@ namespace libport
   /// Return getenv(c) if defined, \a deflt otherwise.
   LIBPORT_API
   std::string xgetenv(const char* c, const std::string& deflt = "");
+}
+
+/*--------.
+| xsystem |
+`--------*/
+
+namespace libport
+{
+  LIBPORT_API
+  ATTRIBUTE_UNUSED_RESULT
+  int  system(const std::string& cmd);
+  LIBPORT_API
+  void xsystem(const std::string& cmd);
 }
 
 #endif // ! LIBPORT_CSTDLIB
