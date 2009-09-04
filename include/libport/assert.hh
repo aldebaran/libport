@@ -15,6 +15,7 @@
 # define LIBPORT_ASSERT_HH
 
 # include <cassert>
+# include <cerrno>
 # include <cstdlib>
 
 // We have mysterious random aborts on OSX which is compiled with
