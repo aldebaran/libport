@@ -14,7 +14,7 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/mem_fn.hpp>
 
-#include <libport/compiler.hh>     // For ECHO
+#include <libport/compiler.hh>     // For LIBPORT_DEBUG
 #include <libport/containers.hh>
 #include <libport/debug.hh>
 #include <libport/foreach.hh>
@@ -54,7 +54,7 @@ namespace sched
   {
     GD_CATEGORY(sched);
     assert(state_ == to_start);
-    ECHO("In Job::run for " << this);
+    LIBPORT_DEBUG("In Job::run for " << this);
 
     // We may get interrupted during our first run, in which case
     // we better not be in the to_start state while we are executing

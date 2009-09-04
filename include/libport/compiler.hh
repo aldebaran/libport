@@ -78,19 +78,14 @@ namespace libport
     EchoPrologue(const std::string& file, unsigned line,
                  const std::string& function);
 
-    std::ostream& dump (std::ostream& o) const;
+    std::ostream& dump(std::ostream& o) const;
     static bool colored();
     std::string file_;
     unsigned line_;
     std::string function_;
   };
 
-  inline
-  std::ostream&
-  operator<<(std::ostream& o, const EchoPrologue& e)
-  {
-    return e.dump(o);
-  }
+  std::ostream& operator<<(std::ostream& o, const EchoPrologue& e);
 }
 
 // We used to use __PRETTY_FUNCTION__, but this is really too verbose.
@@ -109,23 +104,22 @@ namespace libport
 #  undef ENABLE_DEBUG_TRACES
 # endif
 
-# undef ECHO
 # ifdef ENABLE_DEBUG_TRACES
 #  include <iostream>
-#  define ECHO(Msg) LIBPORT_ECHO(Msg)
+#  define LIBPORT_DEBUG(Msg) LIBPORT_ECHO(Msg)
 # else
-#  define ECHO(Msg) (void) 0
+#  define LIBPORT_DEBUG(Msg) (void) 0
 # endif
 
-# undef ECHO_CMD
-# define ECHO_CMD(Cmd)						\
-  do {								\
-    ECHO("Running " << #Cmd << "..." << std::endl);		\
-    Cmd;							\
-    ECHO("Running " << #Cmd << "... done" << std::endl);	\
+# define LIBPORT_RUN(Cmd)                                               \
+  do {                                                                  \
+    LIBPORT_DEBUG("Running " << #Cmd << "..." << std::endl);		\
+    Cmd;                                                                \
+    LIBPORT_DEBUG("running " << #Cmd << "... done" << std::endl);	\
   } while (0)
 
-# undef PING
-# define PING()  ECHO("ping")
+# define LIBPORT_PING()  LIBPORT_DEBUG("ping")
+
+# include <libport/compiler.hxx>
 
 #endif // !LIBPORT_COMPILER_HH

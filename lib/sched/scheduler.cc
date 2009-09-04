@@ -43,13 +43,13 @@ namespace sched
     , ready_to_die_(false)
     , real_time_behaviour_(false)
   {
-    ECHO("Initializing main coroutine");
+    LIBPORT_DEBUG("Initializing main coroutine");
     coroutine_initialize_main(&coro_);
   }
 
   Scheduler::~Scheduler()
   {
-    ECHO("Destroying scheduler");
+    LIBPORT_DEBUG("Destroying scheduler");
   }
 
   // This function is required to start a new job using the libcoroutine.
@@ -84,17 +84,18 @@ namespace sched
   Scheduler::work()
   {
     ++cycle_;
-    ECHO("======================================================== cycle "
-	  << cycle_);
+    LIBPORT_DEBUG("========================================================"
+                  " cycle "
+                  << cycle_);
 
     libport::utime_t deadline = execute_round();
 
 #ifdef ENABLE_DEBUG_TRACES
     if (deadline)
-      ECHO("Scheduler asking to be woken up in "
-	    << (deadline - get_time_()) / 1000000L << " seconds");
+      LIBPORT_DEBUG("Scheduler asking to be woken up in "
+                    << (deadline - get_time_()) / 1000000L << " seconds");
     else
-      ECHO("Scheduler asking to be woken up ASAP");
+      LIBPORT_DEBUG("Scheduler asking to be woken up ASAP");
 #endif
 
     return deadline;
@@ -138,7 +139,7 @@ namespace sched
     possible_side_effect_ = false;
     bool at_least_one_started = false;
 
-    ECHO(pending_.size() << " jobs in the queue for this round");
+    LIBPORT_DEBUG(pending_.size() << " jobs in the queue for this round");
 
     // Do not use libport::foreach here, as the list of jobs may grow if
     // add_job() is called during the iteration.
@@ -162,7 +163,8 @@ namespace sched
       // during this job analysis.
       libport::utime_t current_time = get_time_();
 
-      ECHO("Considering " << *job << " in state " << state_name(job->state_get()));
+      LIBPORT_DEBUG("Considering " << *job
+                    << " in state " << state_name(job->state_get()));
 
       switch (job->state_get())
       {
@@ -180,9 +182,9 @@ namespace sched
         // destroyed. However, to prevent the job from being
         // prematurely destroyed, we set current_job_ (global to the
         // scheduler) to the rJob.
-	ECHO("Starting job " << *job);
+	LIBPORT_DEBUG("Starting job " << *job);
 	current_job_ = job;
-	ECHO("Job " << *job << " is starting");
+	LIBPORT_DEBUG("Job " << *job << " is starting");
 	job = 0;
 	coroutine_start(&coro_,
                         current_job_->coro_get(), run_job, current_job_.get());
@@ -237,7 +239,7 @@ namespace sched
       if (start || job->has_pending_exception())
       {
 	at_least_one_started = true;
-	ECHO("will resume job " << *job
+	LIBPORT_DEBUG("will resume job " << *job
 	      << (job->side_effect_free_get() ? " (side-effect free)" : ""));
 	possible_side_effect_ |= !job->side_effect_free_get();
 	assert(!current_job_);
@@ -245,7 +247,7 @@ namespace sched
 	assert(current_job_);
 	current_job_ = 0;
 	possible_side_effect_ |= !job->side_effect_free_get();
-	ECHO("back from job " << *job
+	LIBPORT_DEBUG("back from job " << *job
 	      << (job->side_effect_free_get() ? " (side-effect free)" : ""));
 	switch (job->state_get())
 	{
@@ -314,8 +316,9 @@ namespace sched
       // destroyed, erase the local variable first so that it doesn't keep
       // a reference on it which will never be destroyed.
       assert(current_job_ == job);
-      ECHO(*job << " has " << (job->terminated() ? "" : "not ") << "terminated\n\t"
-	   << "state: " << state_name(job->state_get()) << std::endl);
+      LIBPORT_DEBUG(*job << " has "
+                    << (job->terminated() ? "" : "not ") << "terminated\n\t"
+                    << "state: " << state_name(job->state_get()));
       Coro* current_coro = job->coro_get();
       if (job->terminated())
 	job = 0;
@@ -327,7 +330,7 @@ namespace sched
       // We regained control, we are again in the context of the job.
       assert(!current_job_);
       current_job_ = job;
-      ECHO("job " << *job << " resumed");
+      LIBPORT_DEBUG("job " << *job << " resumed");
 
       // Execute a deferred exception if any; this may break out of this loop
       job->check_for_pending_exception();
