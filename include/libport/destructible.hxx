@@ -71,7 +71,7 @@ namespace libport
   inline void
   Destructible::take()
   {
-    count_++;
+    LIBPORT_COND_UPDATE(canDestroy_, count_++, false);
   }
 
   inline void
