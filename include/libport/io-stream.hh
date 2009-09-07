@@ -10,10 +10,9 @@
 #ifndef LIBPORT_IO_STREAM_HH
 # define LIBPORT_IO_STREAM_HH
 
-# include <iostream>
-
 # include <libport/cstdio>
 # include <libport/export.hh>
+# include <libport/iostream>
 
 namespace libport
 {

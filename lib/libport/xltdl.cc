@@ -7,9 +7,11 @@
  *
  * See the LICENSE file for more information.
  */
-#include <iostream>
+
+#include <libport/cstdio>
 #include <libport/debug.hh>
 #include <libport/format.hh>
+#include <libport/iostream>
 #include <libport/path.hxx>
 #include <libport/program-name.hh>
 #include <libport/sysexits.hh>

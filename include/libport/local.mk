@@ -87,6 +87,7 @@ libport_include_HEADERS +=				\
   include/libport/instance-tracker.hxx			\
   include/libport/intrusive-ptr.hh			\
   include/libport/intrusive-ptr.hxx			\
+  include/libport/iostream				\
   include/libport/io-stream.hh				\
   include/libport/ip-semaphore.hh			\
   include/libport/lexical-cast.hh			\
