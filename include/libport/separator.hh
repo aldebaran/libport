@@ -7,5 +7,5 @@
  *
  * See the LICENSE file for more information.
  */
-#warn please, use <libport/separate.hh> instead
+#warning "please, use <libport/separate.hh> instead"
 #include <libport/separate.hh>
