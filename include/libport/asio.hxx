@@ -675,7 +675,7 @@ namespace libport
       {
         SocketImplBase* b = bind_or_delete(s, bf, bs);
         if (!b)
-          s->onError(errorcodes::make_error_code(errorcodes::operation_canceled));
+          s->onError(make_error_code(errorcodes::operation_canceled));
         b->link(s->getDestructionLock());
         b->startReader();
         s->onConnect();
@@ -696,7 +696,8 @@ namespace libport
       else
       {
         typename Proto::endpoint ep = *i;
-        typename Proto::socket* bs = new typename Proto::socket(r->get_io_service());
+        typename Proto::socket* bs =
+          new typename Proto::socket(r->get_io_service());
         bs->async_connect(ep,
                           boost::bind(&async_connect<Proto, BaseFactory>,
                                       bs, s, l, bf, _1));
@@ -757,9 +758,10 @@ namespace libport
     boost::system::error_code erc;
     if (async)
     {
-      netdetail::async_resolve_connect<Proto, BaseFactory>(this,
-                                                           this->getDestructionLock(),
-                                                           host, port, timeout, bf);
+      netdetail::async_resolve_connect<Proto, BaseFactory>
+        (this,
+         this->getDestructionLock(),
+         host, port, timeout, bf);
       return erc;
     }
     typename Proto::endpoint ep = resolve<Proto>(host, port, erc);
@@ -797,13 +799,16 @@ namespace libport
                                        boost::ref(erc)));
       sem--;
       sem--;
-      if (erc) // Failure, but everything is bound and will get nicely destroyed
+      if (erc)
+        // Failure, but everything is bound and will get nicely
+        // destroyed.
         return erc;
     }
     // Start reading.
     if (newS->isConnected())
     {
-      // Do not die until newS is gone, since it will call our virtual functions.
+      // Do not die until newS is gone, since it will call our virtual
+      // functions.
       newS->link(getDestructionLock());
       newS->startReader();
       onConnect();
@@ -818,7 +823,7 @@ namespace libport
                   utime_t timeout,
                   bool async)
   {
-    assert(timeout >= 0);
+    assert(0 <= timeout);
     if (udp)
       return connectProto<boost::asio::ip::udp>(
         host, port, timeout, async,
