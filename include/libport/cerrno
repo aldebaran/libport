@@ -15,8 +15,11 @@
 
 # include <cerrno>
 
-# if defined MSVC_VERSION
-#  define ETIMEDOUT 110
+# if defined WIN32
+// Boost itself redefines ETIMEDOUT. Do not do it if Boost did.
+#  ifndef ETIMEDOUT
+#   define ETIMEDOUT 110
+#  endif
 # endif
 
 #endif // ! LIBPORT_CERRNO
