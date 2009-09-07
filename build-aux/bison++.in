@@ -158,12 +158,12 @@ do
   base=$(basename $file)
   base_noext=$(echo "$base" | sed -e 's/\.[^.]*//')
   case $status:$base in
-    *:$input_base)
+    (*:$input_base)
 	# Leave it here.
 	;;
 
     # Success or not, install it.
-    *:*.xml)
+    (*:*.xml)
 	# Computing the HTML is slow.  Do it when the XML changed.
 	fix_bison_output "$file"
 	compile_xml_file "$file" "xml2xhtml" "html"
@@ -173,12 +173,14 @@ do
 	install "$file"
 	;;
 
-    0:*.hh)
+    (0:*.hh)
 	fix_bison_output "$file"
 	# To save cycles, if the file differs only on sync lines,
 	# update it (to be right), but keep the original timestamps.
 	if test -r "$(out "$file")" &&
-	   diff -I '^#line' -I '/\* Line .* of .*  \*/' -q "$file" "$(out "$file")"; then
+	   diff -I '^#line' -I '/\* Line .* of .*  \*/' -q \
+                "$file" "$(out "$file")"
+        then
 	    touch -r "$(out "$file")" "$file"
 	    cp "$(out "$file")" "$(out "$file").bak"
 	    echo >&2 "$0: kept the stamps of $file"
@@ -186,11 +188,11 @@ do
 	install "$file"
 	;;
 
-    *:*.output)
+    (*:*.output)
 	install "$file"
 	;;
 
-    0:*)
+    (0:*)
 	fix_bison_output "$file"
 	install "$file"
 	;;
