@@ -19,6 +19,15 @@
 #  define ETIMEDOUT 110
 # endif
 
+# define ERRNO_RUN(Function, Args...)           \
+  do {                                          \
+    if (Function (Args) < 0)                    \
+      {                                         \
+        (void) err;                             \
+        errnoabort(#Function);                  \
+      }                                         \
+  } while (false)
+
 #endif // ! LIBPORT_CERRNO
 
 // Local Variables:

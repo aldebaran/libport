@@ -66,10 +66,8 @@ namespace libport
   void sched_set_high_priority ()
   {
 #if defined WIN32
-    HANDLE hProcess;
-    int stat;
-    hProcess = GetCurrentProcess();
-    stat = SetPriorityClass(hProcess, REALTIME_PRIORITY_CLASS);
+    HANDLE hProcess = GetCurrentProcess();
+    int stat = SetPriorityClass(hProcess, REALTIME_PRIORITY_CLASS);
     if (!stat)
       std::cerr << "SetPriorityClass failed: error code "<< GetLastError()
 		<< std::endl;
@@ -77,21 +75,14 @@ namespace libport
 #elif defined LIBPORT_HAVE_SCHED_SETSCHEDULER
     // http://www.opengroup.org/susv3xsh/sched_setscheduler.html
     struct sched_param sp;
-
     sp.sched_priority = 99;
-    int ret = sched_setscheduler(0, SCHED_FIFO, &sp);
-    if (ret)
-      perror("sched_setscheduler failed");
+    ERRNO_RUN(sched_setscheduler, 0, SCHED_FIFO, &sp);
 #elif defined LIBPORT_HAVE_SETPRIORITY
-    int ret = setpriority(PRIO_PROCESS, 0, -20);
-    if (ret)
-       perror("setpriority failed");
+    ERRNO_RUN(setpriority, PRIO_PROCESS, 0, -20);
 #endif
 
 #if defined LIBPORT_HAVE_MLOCKALL
-    int r = mlockall(MCL_CURRENT | MCL_FUTURE);
-    if (r)
-      perror("mlockall failed");
+    ERRNO_RUN(mlockall, MCL_CURRENT | MCL_FUTURE);
 #endif
   lockStack();
   }
