@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 
-#ifndef LIBPORT_NO_SSL
+#if defined LIBPORT_ENABLE_SSL
 // There are many warnings in asio/ssl.  We support GCC 4.1 which does
 // not supproted "#pragma GCC diagnostics", so we have to disable all
 // the warnings in this header.  The cure might be worse than the
@@ -270,7 +270,7 @@ namespace libport
       start_receive();
     }
 
-#ifndef LIBPORT_NO_SSL
+#if defined LIBPORT_ENABLE_SSL
     struct SSLSettings
     {
       boost::asio::ssl::context_base::method context;
@@ -603,7 +603,7 @@ namespace libport
       sem++;
     }
 
-#ifndef LIBPORT_NO_SSL
+#if defined LIBPORT_ENABLE_SSL
     template<typename Stream>
     BaseSocket*
     SSLLayer(SSLSettings settings, Stream* s)
@@ -886,7 +886,7 @@ namespace libport
 
 
 
-#ifndef LIBPORT_NO_SSL
+#if defined LIBPORT_ENABLE_SSL
   inline boost::system::error_code
   Socket::listenSSL(SocketFactory f, const std::string& host,
                     const std::string&  port,

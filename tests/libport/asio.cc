@@ -11,11 +11,6 @@
 #include <libport/sysexits.hh>
 using libport::test_suite;
 
-
-#ifndef LIBPORT_NO_SSL
-# define LIBPORT_NO_SSL
-#endif
-
 #include <libport/asio.hh>
 #include <libport/utime.hh>
 #include <libport/unistd.h>

@@ -50,6 +50,17 @@ URBI_COMPILATION_MODE
 ## Libport.  ##
 ## --------- ##
 
+# libport/asio.
+URBI_ARG_ENABLE([enable-ssl], [enable SSL in Libport.Asio],
+                [yes|no], [no])
+if test x$enable_ssl = xyes; then
+  AC_DEFINE([ENABLE_SSL], [1],
+            [Define to 1 to enable SLL support.])
+
+  # -lssl suffices on GNU/Linux, OS X wants -lcrypto explicitly.
+  AC_SUBST([SSL_LIBS], ['-lssl -lcrypto'])
+fi
+
 # libport/backtrace.
 AC_CHECK_HEADERS([execinfo.h])
 
@@ -61,9 +72,6 @@ AC_CHECK_LIB([rt], [clock_gettime],
 
 # libport/valgrind.
 AC_CHECK_HEADERS([valgrind/valgrind.h])
-
-# -lssl suffices on GNU/Linux, OS X wants -lcrypto explicitly.
-AC_SUBST([SSL_LIBS], ['-lssl -lcrypto'])
 
 ## ---------- ##
 ## Libsched.  ##
@@ -85,7 +93,7 @@ URBI_PTHREAD_SOURCES
 # AT_WITH_QT
 # AC_CONFIG_FILES([gui/Makefile])
 URBI_ARG_ENABLE([enable-boost-serialization],
-                [Enable boost::serialization support],
+                [enable boost::serialization support],
                 [yes|no], [no])
 AM_CONDITIONAL([WITH_BOOST_SERIALIZATION],
                [test x$enable_boost_serialization = xyes])

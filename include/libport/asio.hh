@@ -7,15 +7,14 @@
  *
  * See the LICENSE file for more information.
  */
+
 // Network API based on boost::asio
 #ifndef LIBPORT_ASIO_HH
 # define LIBPORT_ASIO_HH
 
 # include <libport/config.h>
 # include <libport/sys/socket.h>
-
-# include <iostream>
-# include <boost/version.hpp>
+# include <libport/iostream>
 
 // At least on OS X, many symbols are not available where we expect
 // them.  And it is clearly connected to our using
@@ -24,7 +23,7 @@
 // tricks with Asio.
 # pragma GCC visibility push(default)
 #  include <boost/asio.hpp>
-#  ifndef LIBPORT_NO_SSL
+#  if defined LIBPORT_ENABLE_SSL
 #    include <boost/asio/ssl.hpp>
 #  endif
 # pragma GCC visibility pop
@@ -35,6 +34,7 @@
 # include <libport/finally.hh>
 # include <libport/utime.hh>
 
+# include <boost/version.hpp>
 # if BOOST_VERSION >= 103600
 #  include <libport/rs232.hh>
 # endif
@@ -245,7 +245,7 @@ namespace libport
     boost::system::error_code listen(SocketFactory f, const std::string& host,
                                      unsigned port, bool udp = false);
 
-#ifndef LIBPORT_NO_SSL
+#if defined LIBPORT_ENABLE_SSL
     boost::system::error_code
     listenSSL(SocketFactory f,
               const std::string& host,
