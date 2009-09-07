@@ -136,7 +136,8 @@ namespace libport
       , io_(io)
     {}
     virtual ~Socket();
-    /** Set underlying BaseSocket object, setup its callbacks to call our virtual functions.
+    /* Set underlying BaseSocket object, setup its callbacks to call
+     * our virtual functions.
      */
     virtual void setBase(BaseSocket*);
 
