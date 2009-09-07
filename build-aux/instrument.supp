@@ -65,6 +65,27 @@
 ## Boost.Test.  ##
 ## ------------ ##
 
+# Boost 1.37.
+# Invalid read of size 4
+#    at 0x80B1521: __tcf_1 (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/asio)
+#    by 0x4258540: exit (in /lib/libc-2.9.so)
+#    by 0x424172C: (below main) (in /lib/libc-2.9.so)
+#  Address 0x4374a5c is 20 bytes inside a block of size 24 free'd
+#    at 0x402451F: operator delete(void*) (vg_replace_malloc.c:346)
+#    by 0x80B327F: std::_Rb_tree<unsigned long, std::pair<unsigned long const, boost::unit_test::test_unit*>, std::_Select1st<std::pair<unsigned long const, boost::unit_test::test_unit*> >, std::less<unsigned long>, std::allocator<std::pair<unsigned long const, boost::unit_test::test_unit*> > >::erase(unsigned long const&) (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/asio)
+#    by 0x80B11AF: boost::unit_test::framework::deregister_test_unit(boost::unit_test::test_unit*) (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/asio)
+#    by 0x80A9E33: boost::unit_test::test_unit::~test_unit() (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/asio)
+#    by 0x80B151D: __tcf_1 (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/asio)
+#    by 0x4258540: exit (in /lib/libc-2.9.so)
+#    by 0x424172C: (below main) (in /lib/libc-2.9.so)
+{
+   Boost.Test 1.37.
+   Memcheck:Addr4
+   fun:__tcf_1
+   fun:exit
+   fun:(below main)
+}
+
 # bug report has been sent to boost team.
 {
    _boost_unit_test_invalid_read
