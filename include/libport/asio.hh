@@ -21,12 +21,17 @@
 // -fvisibility=hidden.  I (AD) could not exactly pinpoint the
 // problem, but at least I know one cure: do not play dirty visibility
 // tricks with Asio.
-# pragma GCC visibility push(default)
-#  include <boost/asio.hpp>
-#  if defined LIBPORT_ENABLE_SSL
-#    include <boost/asio/ssl.hpp>
-#  endif
-# pragma GCC visibility pop
+# if ! defined WIN32
+#  pragma GCC visibility push(default)
+# endif
+# include <boost/asio.hpp>
+# if defined LIBPORT_ENABLE_SSL
+#   include <boost/asio/ssl.hpp>
+# endif
+# if ! defined WIN32
+#  pragma GCC visibility pop
+# endif
+
 # include <boost/function.hpp>
 
 # include <libport/destructible.hh>
