@@ -17,7 +17,7 @@
 # include <sys/sem.h>
 # include <sys/types.h>
 
-# include <libport/assert.hh>
+# include <libport/cassert>
 # include <libport/ip-semaphore.hh>
 
 // These functions return -1 on error, and set errno.

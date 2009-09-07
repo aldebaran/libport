@@ -11,7 +11,7 @@
 #include <libport/config.h>
 
 #include <algorithm>
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/cstring>
 #include <iostream>
 

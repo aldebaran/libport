@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/cerrno>
 #include <libport/pthread.h>
 #include <libport/semaphore.hh>

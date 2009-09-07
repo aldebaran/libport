@@ -15,7 +15,7 @@
 #  include <cerrno>
 
 #  include <libport/config.h>
-#  include <libport/assert.hh>
+#  include <libport/cassert>
 #  include <libport/compiler.hh>
 #  include <libport/semaphore.hh>
 #  include <libport/thread.hh>

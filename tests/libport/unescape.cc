@@ -12,7 +12,7 @@
  */
 
 #include <libport/escape.hh>
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <sstream>
 #include <iostream>
 #include <stdexcept>

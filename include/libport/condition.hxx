@@ -12,7 +12,7 @@
 # include <errno.h>
 #endif
 
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/exception.hh>
 
 namespace libport

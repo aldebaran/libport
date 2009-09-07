@@ -12,7 +12,7 @@
 
 #include <boost/function.hpp>
 
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/foreach.hh>
 #include <libport/markup-ostream.hh>
 

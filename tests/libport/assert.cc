@@ -9,7 +9,7 @@
  */
 #include <sstream>
 
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/unit-test.hh>
 
 using libport::test_suite;
@@ -30,7 +30,7 @@ check_assert_op()
 test_suite*
 init_test_suite()
 {
-  test_suite* suite = BOOST_TEST_SUITE("assert.hh");
+  test_suite* suite = BOOST_TEST_SUITE("cassert");
   suite->add(BOOST_TEST_CASE(check_assert_op));
   return suite;
 }

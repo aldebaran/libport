@@ -10,7 +10,7 @@
 #include <cassert>
 #include <iostream>
 
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/containers.hh>
 #include <libport/debug.hh>
 #include <libport/escape.hh>

@@ -11,7 +11,7 @@
 # define SCHED_EXCEPTION_HXX
 
 # include <cstdlib>
-# include <libport/assert.hh>
+# include <libport/cassert>
 
 namespace sched
 {

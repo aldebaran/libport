@@ -11,7 +11,7 @@
 # define LIBPORT_LOCKABLE_HXX
 
 # include <libport/pthread.h>
-# include <libport/assert.hh>
+# include <libport/cassert>
 # include <libport/cerrno>
 # include <libport/format.hh>
 

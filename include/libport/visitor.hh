@@ -16,7 +16,7 @@
 # include <cstdlib>
 # include <iostream>
 
-# include <libport/assert.hh>
+# include <libport/cassert>
 # include <libport/meta.hh>
 # include <libport/typelist.hh>
 # include <libport/traits.hh>

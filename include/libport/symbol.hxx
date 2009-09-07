@@ -21,7 +21,7 @@
 
 # include <ostream>
 # include <libport/symbol.hh>
-# include <libport/assert.hh>
+# include <libport/cassert>
 
 namespace libport
 {

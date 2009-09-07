@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/cerrno>
 #include <libport/pthread.h>
 #include <libport/unit-test.hh>

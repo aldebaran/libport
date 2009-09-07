@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 #include <libport/semaphore.h>
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/cerrno>
 
 // Provide replacement for semaphore.h functions.  This is different

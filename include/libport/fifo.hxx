@@ -12,7 +12,7 @@
 
 #include <libport/compiler.hh>
 
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/cstring>
 
 namespace libport

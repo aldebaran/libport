@@ -11,7 +11,7 @@
 # define LIBPORT_THREAD_HXX
 
 # include <boost/bind.hpp>
-# include <libport/assert.hh>
+# include <libport/cassert>
 # include <libport/cerrno>
 # include <libport/config.h>
 # include <libport/detect-win32.h>

@@ -10,7 +10,7 @@
 #include <libport/cerrno>
 #include <iostream>
 
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/program-name.hh>
 #include <libport/semaphore.hh>
 #include <libport/sysexits.hh>

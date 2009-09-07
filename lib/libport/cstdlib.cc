@@ -9,7 +9,7 @@
  */
 #include <libport/detect-win32.h>
 #include <string>
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/cstdlib>
 #include <libport/exception.hh>
 #include <libport/format.hh>

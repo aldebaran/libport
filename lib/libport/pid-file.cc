@@ -14,7 +14,7 @@
 #include <boost/format.hpp>
 #include <boost/optional.hpp>
 
-#include <libport/assert.hh>
+#include <libport/cassert>
 #include <libport/path.hh>
 #include <libport/pid-file.hh>
 #include <libport/program-name.hh>

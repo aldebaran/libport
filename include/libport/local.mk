@@ -1,6 +1,8 @@
 # C headers.
 libport_includedir = $(libport_include_basedir)/libport
 libport_include_HEADERS =			\
+  include/libport/assert.hh			\
+  include/libport/cassert			\
   include/libport/cerrno			\
   include/libport/cmath				\
   include/libport/csignal			\
@@ -36,7 +38,7 @@ sys_libport_include_HEADERS =			\
 libport_include_HEADERS +=				\
   include/libport/asio.hh				\
   include/libport/asio.hxx				\
-  include/libport/assert.hh				\
+  include/libport/cassert				\
   include/libport/attributes.hh				\
   include/libport/backtrace.hh				\
   include/libport/backtrace.hxx				\
