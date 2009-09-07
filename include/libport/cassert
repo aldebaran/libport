@@ -72,9 +72,17 @@ namespace libport
 /// So if Msg is complex, beware of predence issues with << and use
 /// parens on the invocation side.
 
+// Unfortunately, some old compilers (namely gcc 3) complain when the
+// last operand of the comma operator has 'no effect' - which is otherwise
+// perfectly legitimate. Work around them with this function.
+static inline int zero()
+{
+  return 0;
+}
+
 # define pabort(Msg)                                      \
   (ASSERT_ECHO(__FILE__, __LINE__, "abort: " << Msg),     \
-   libport::abort(), 0)
+   libport::abort(), zero())
 
 
 /*-----------------------------------------------------.
