@@ -9,13 +9,13 @@
  */
 
 /// \file libport/assert.hh
-/// \brief Provide nice assert like macros.
+/// \brief Provide nice assert-like macros.
 
 #ifndef LIBPORT_ASSERT_HH
 # define LIBPORT_ASSERT_HH
 
 # include <cassert>
-# include <lipport/cerrno>
+# include <libport/cerrno>
 # include <libport/cstdlib>
 
 // We have mysterious random aborts on OSX which is compiled with
@@ -105,17 +105,31 @@ namespace libport
 `----------------------------------------------*/
 
 /// \def errabort(Err, Msg)
-# define errabort(Err, Msg)                             \
-  do                                                    \
-  {                                                     \
-    (void) Err;                                         \
-    pabort(libport::strerror(Err) << ": " << Msg);      \
-  }                                                     \
-  while (false)                                         \
+///
+/// It is on purpose that Err is not evaluated when NDEBUG: Err could
+/// be costly, or have side effects.  Rather, use ERRNO_RUN, or
+/// PTHREAD_RUN and so forth.
+# define errabort(Err, Msg)                     \
+  pabort(libport::strerror(Err) << ": " << Msg)
 
 /// \def errnoabort(Msg)
 # define errnoabort(Msg)                        \
   errabort(errno, Msg)
+
+
+/// \def ERRNO_RUN(Function, Args...)
+/// Run Function(Args...) and use errnoabort on errors.
+///
+/// It is considered that there is an error when Function returns a
+/// negative value.  Alternatively we could set errno to 0 before
+/// calling the function, and checking it afterwards, but it's more
+/// expensive.
+# define ERRNO_RUN(Function, Args...)           \
+  do {                                          \
+    if (Function (Args) < 0)                    \
+      errnoabort(#Function);                    \
+  } while (false)
+
 
 
 /*--------------------------------------------------------.
@@ -150,7 +164,7 @@ namespace libport
 
 
 /*---------------------------------------------------------------.
-| assert_comp -- compare two values, show both of them if fail.  |
+| assert_<op> -- compare two values, show both of them if fail.  |
 `---------------------------------------------------------------*/
 
 #  define DEFINE_ASSERT_OP(OpName, Op)                                  \

@@ -7,10 +7,12 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <libport/config.h>
 
 #include <algorithm>
-#include <cstring>
+#include <libport/assert.hh>
+#include <libport/cstring>
 #include <iostream>
 
 #include <libport/unistd.h>

@@ -7,8 +7,8 @@
  *
  * See the LICENSE file for more information.
  */
-#include <libport/asio.hh>
 
+#include <libport/asio.hh>
 
 namespace libport
 {
