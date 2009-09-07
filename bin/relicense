@@ -1,0 +1,127 @@
+#! /usr/bin/perl -w
+
+
+# contents ($FILE_NAME)
+# ---------------------
+sub contents ($)
+{
+  my ($file) = @_;
+  local $/;                     # Turn on slurp-mode.
+  use IO::File;
+  my $f = new IO::File "< $file" or die "cannot open $file: $!";
+  my $contents = $f->getline or die "cannot read $file: $!";
+  $f->close;
+  return $contents;
+}
+
+# transform_file ($FILE)
+# -----------------------
+sub transform_file (\&$)
+{
+  my ($transform, $file) = @_;
+
+  # When using globbing, we sometimes find directories.
+  if (! -f $file)
+  {
+    warn "ignoring non file: $file";
+    return;
+  }
+
+  # When using globbing, we sometimes find directories.
+  if ($file =~ /\.bak$/)
+  {
+    warn "ignoring backup file: $file";
+    return;
+  }
+
+  my ($bak) = "$file.bak";
+  rename ($file, $bak) or die "cannot rename $file as $bak: $!";
+  my $contents = contents ($bak);
+  my $out = new IO::File(">$file") or die;
+  print $out (&$transform($contents));
+  $out->close;
+  system("colordiff -u $bak $file");
+}
+
+my @re =
+(
+qr{/\*! \\file (?<file>.*)
+ \*+
+
+ (?<brief>.*\.)
+
+ This file is part of .*
+ Copyright \(c\) (?<years>[\d-]+(, [\d-]+)*) Gostai S.A.S.
+
+ Permission to use, copy, modify, and redistribute this software for
+ non-commercial use is hereby granted.
+
+ This software is provided "as is" without warranty of any kind,
+ either expressed or implied, including but not limited to the
+ implied warranties of fitness for a particular purpose.
+
+ For more information, comments, bug reports: http://www.urbiforge.com
+
+ \*+ \*/}
+);
+
+sub license (%)
+{
+  my (%group) = @_;
+  my $res;
+  $res .= <<EOF;
+/*
+ * Copyright (C) $group{years}, Gostai S.A.S.
+ *
+ * This software is provided \"as is\" without warranty of any kind,
+ * either expressed or implied, including but not limited to the
+ * implied warranties of fitness for a particular purpose.
+ *
+ * See the LICENSE file for more information.
+ */
+EOF
+
+  if ($group{file} && $group{brief})
+  {
+    $res .= <<EOF;
+
+  /// \\file $group{file}
+  /// \\brief $group{brief}
+EOF
+  }
+
+  $res;
+}
+sub convert ($)
+{
+  my ($contents) = @_;
+  for my $re (@re)
+    {
+      my $years;
+      $re =~ s/\s+/\\s+/gm;
+      print STDERR $re, "\n";
+      $contents =~ s{$re}{license(%+)}meg;
+    }
+  $contents;
+}
+
+map { transform_file &convert, $_ } @ARGV;
+
+
+
+### Setup "GNU" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: 0
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: 0
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:

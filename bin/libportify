@@ -8,6 +8,7 @@ sub contents ($)
 {
   my ($file) = @_;
   local $/;                     # Turn on slurp-mode.
+  use IO::File;
   my $f = new IO::File "< $file" or die "cannot open $file: $!";
   my $contents = $f->getline or die "cannot read $file: $!";
   $f->close;
@@ -97,11 +98,12 @@ sub libportify ($)
   return $_;
 }
 
-# libportify_file ($FILE)
+
+# transform_file ($FILE)
 # -----------------------
-sub libportify_file ($)
+sub transform_file (\&$)
 {
-  my ($file) = @_;
+  my ($transform, $file) = @_;
 
   # When using globbing, we sometimes find directories.
   if (! -f $file)
@@ -121,12 +123,12 @@ sub libportify_file ($)
   rename ($file, $bak) or die "cannot rename $file as $bak: $!";
   my $contents = contents ($bak);
   my $out = new IO::File(">$file") or die;
-  print $out libportify($contents);
+  print $out (&$transform($contents));
   $out->close;
   system("colordiff -u $bak $file");
 }
 
-map { libportify_file $_ } @ARGV;
+map { transform_file &libportify, $_ } @ARGV;
 
 
 ### Setup "GNU" style for perl-mode and cperl-mode.
