@@ -95,8 +95,10 @@ namespace libport
     virtual unsigned short getLocalPort() const = 0;
     /// Get IP address of local endpoint
     virtual std::string getLocalHost() const = 0;
+#if ! defined WIN32
     virtual int stealFD() = 0;
     virtual int getFD() = 0;
+#endif
     /// Callback function called each time new data is available.
     boost::function1<bool, boost::asio::streambuf&> onReadFunc;
     /// Callback function called in case of error on the socket.

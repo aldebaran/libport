@@ -115,8 +115,10 @@ namespace libport
 
       static BaseSocket* create(Stream* base);
       void startReader();
+#if ! defined WIN32
       int stealFD();
       int getFD();
+#endif
     private:
       Stream* base_;
       void continueWrite(DestructionLock lock, boost::system::error_code erc,
@@ -364,6 +366,7 @@ namespace libport
       return base_->lowest_layer().is_open();
     }
 
+#if ! defined WIN32
     template<typename Stream>
     int
     SocketImpl<Stream>::stealFD()
@@ -381,6 +384,7 @@ namespace libport
     {
       return base_->lowest_layer().native();
     }
+#endif
 
     template<class T>
     void

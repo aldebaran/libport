@@ -52,6 +52,7 @@ namespace libport
     return *io;
   }
 
+#if ! defined WIN32
   int
   Socket::stealFD()
   {
@@ -69,6 +70,8 @@ namespace libport
     else
       return -1;
   }
+
+#endif
 
   void
   Socket::destroy()
