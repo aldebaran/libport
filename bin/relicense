@@ -45,25 +45,19 @@ sub transform_file (\&$)
 
 my @re =
 (
-qr{/\*! \\file (?<file>.*)
- \*+
+q{This file is part of (?<project>.*)
+Copyright \(c\) (?<years>[\d-]+(, [\d-]+)*) Gostai S.A.S.
 
- (?<brief>.*\.)
+Permission to use, copy, modify, and redistribute this software for
+non-commercial use is hereby granted.
 
- This file is part of .*
- Copyright \(c\) (?<years>[\d-]+(, [\d-]+)*) Gostai S.A.S.
+This software is provided "as is" without warranty of any kind,
+either expressed or implied, including but not limited to the
+implied warranties of fitness for a particular purpose.
 
- Permission to use, copy, modify, and redistribute this software for
- non-commercial use is hereby granted.
-
- This software is provided "as is" without warranty of any kind,
- either expressed or implied, including but not limited to the
- implied warranties of fitness for a particular purpose.
-
- For more information, comments, bug reports: http://www.urbiforge.com
-
- \*+ \*/}
+For more information, comments, bug reports: http://www.urbiforge.com}
 );
+
 
 sub license (%)
 {
@@ -92,14 +86,17 @@ EOF
 
   $res;
 }
+
+
 sub convert ($)
 {
   my ($contents) = @_;
   for my $re (@re)
     {
       my $years;
-      $re =~ s/\s+/\\s+/gm;
+      $re =~ s{^\s*}{^[\\s/*]*}gm;
       print STDERR $re, "\n";
+      $re =~ s/\s+/\\s+/gm;
       $contents =~ s{$re}{license(%+)}meg;
     }
   $contents;
