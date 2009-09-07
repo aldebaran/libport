@@ -33,7 +33,7 @@ namespace libport
   {
     *sem = CreateSemaphore(0, value, MAXLONG, 0);
     if (!sem)
-      errabort("CreateSemaphore");
+      errnoabort("CreateSemaphore");
     return 0;
   }
 
@@ -41,7 +41,7 @@ namespace libport
   sem_post(sem_t* sem)
   {
     if (!ReleaseSemaphore(*sem, 1, 0))
-      errabort("ReleaseSemaphore");
+      errnoabort("ReleaseSemaphore");
     return 0;
   }
 
@@ -49,7 +49,7 @@ namespace libport
   sem_wait(sem_t* sem)
   {
     if (WaitForSingleObject(*sem, INFINITE) == WAIT_FAILED)
-      errabort("WaitForSingleObject");
+      errnoabort("WaitForSingleObject");
     return 0;
   }
 
@@ -61,7 +61,7 @@ namespace libport
                                 + abs_timeout->tv_nsec / 1000000))
     {
     case WAIT_FAILED:
-      errabort("WaitForSingleObject");
+      errnoabort("WaitForSingleObject");
     case WAIT_TIMEOUT:
       errno = ETIMEDOUT;
       return -1;
