@@ -45,7 +45,8 @@ sub transform_file (\&$)
 
 my @re =
 (
-q{This file is part of (?<project>.*)
+q{(?:\\\\file (?<file>.*))?
+This file is part of (?<project>.*)
 Copyright \(c\) (?<years>[\d-]+(, [\d-]+)*) Gostai S.A.S.
 
 Permission to use, copy, modify, and redistribute this software for
@@ -62,6 +63,7 @@ For more information, comments, bug reports: http://www.urbiforge.com}
 sub license (%)
 {
   my (%group) = @_;
+  print STDERR %group, "\n";
   my $res;
   $res .= <<EOF;
 /*
@@ -73,16 +75,14 @@ sub license (%)
  *
  * See the LICENSE file for more information.
  */
+
 EOF
 
-  if ($group{file} && $group{brief})
-  {
-    $res .= <<EOF;
+  $res .= "/// \\file $group{file}"
+    if defined $group{file};
 
-  /// \\file $group{file}
-  /// \\brief $group{brief}
-EOF
-  }
+  $res .= "/// \\brief $group{brief}"
+    if defined $group{brief};
 
   $res;
 }
@@ -93,13 +93,24 @@ sub convert ($)
   my ($contents) = @_;
   for my $re (@re)
     {
-      my $years;
-      $re =~ s{^\s*}{^[\\s/*]*}gm;
-      print STDERR $re, "\n";
-      $re =~ s/\s+/\\s+/gm;
-      $contents =~ s{$re}{license(%+)}meg;
+      $contents =~ s{$re}{license(%+)}smeg;
     }
   $contents;
+}
+
+
+
+## ------ ##
+## Main.  ##
+## ------ ##
+
+# Make the regexps more flexible.
+for my $re (@re)
+{
+  $re =~ s{^\s*}{^[\\s/*]*}gm;
+  print STDERR $re, "\n";
+  $re =~ s/\s+/\\s+/gm;
+  $re .= '\s+';
 }
 
 map { transform_file &convert, $_ } @ARGV;
