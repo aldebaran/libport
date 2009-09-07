@@ -11,6 +11,7 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <libport/cstdio>
 #include <libport/cstring>
 #include <libport/detect-win32.h>
 #include <libport/sys/select.h>
@@ -84,17 +85,16 @@ namespace libport
     struct timeval tv;
     tv.tv_sec = tv.tv_usec = 0;
     int r = select(1, &fd, 0, 0, &tv);
-    if (r <= -1)
-      throw exception::Exception
-        (std::string("select error on stdin: ") + strerror(errno));
-    else if (r>0)
+    if (r < 0)
+      throw exception::Exception(std::string("select error on stdin: ")
+                                 + strerror(errno));
+    else if (0 < r)
     {
       char buf[BUFSIZ];
       r = read(0, buf, sizeof buf);
       if (r <= 0) // EOF counts as an 'error'.
-        throw exception::Exception
-          (std::string("read error on stdin: ")
-           + (r ? strerror(errno) : "EOF"));
+        throw exception::Exception(std::string("read error on stdin: ")
+                                   + (r ? strerror(errno) : "EOF"));
       else
 	return std::string(buf, r);
     }
