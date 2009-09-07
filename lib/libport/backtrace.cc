@@ -24,7 +24,7 @@ typedef USHORT (WINAPI *CSBT)(ULONG, ULONG, PVOID*, PULONG);
 namespace libport
 {
   backtrace_type&
-  backtrace(backtrace& res)
+  backtrace(backtrace_type& res)
   {
     void* array[63];
     HMODULE hdl = GetModuleHandle(TEXT("kernel32.dll"));
