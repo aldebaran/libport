@@ -85,6 +85,14 @@ namespace libport
   void xsystem(const std::string& cmd);
 }
 
+# if defined WIN32
+
+// Under windows, consider programs systematically exit.
+#  define WIFEXITED(Status) true
+#  define WEXITSTATUS(Status) Status
+
+# endif
+
 #endif // ! LIBPORT_CSTDLIB
 
 // Local Variables:
