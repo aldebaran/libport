@@ -1,5 +1,24 @@
 # Wrappers around AC_ARG_ENABLE and AC_ARG_WITH.
 
+# For instance:
+#
+#    URBI_ARG_ENABLE([enable-ssl],
+#                    [enable SSL in Libport.Asio],
+#                    [yes|no], [no])
+#    if test x$enable_ssl = xyes; then
+#      AC_DEFINE([ENABLE_SSL], [1],
+#                [Define to 1 to enable SLL support.])
+#
+#      # -lssl suffices on GNU/Linux, OS X wants -lcrypto explicitly.
+#      AC_SUBST([SSL_LIBS], ['-lssl -lcrypto'])
+#    fi
+#
+# This creates an option --enable-ssl (so, of course, the default
+# value is "no").  Accepted values are "yes" and "no".  The result is
+# in $enable_ssl (even if the option is actually --disable-ssl).
+#
+# If you use URBI_ARG_WITH, the result will be in $with_option instead.
+
 # _URBI_ARG_OPTION_BRE
 # --------------------
 # A BRE that matches valid options for _URBI_ARG.  First group should
@@ -11,10 +30,10 @@ m4_define([_URBI_ARG_OPTION_BRE],
 
 # _URBI_ARG(KIND, OPTION, HELP-STRING, RANGE, DEFAULT, [MORE-HELP])
 # -----------------------------------------------------------------
-# KIND is either enable (AC_ARG_ENABLE) or with (AC_ARG_DISABLE).
+# KIND is either "enable" (AC_ARG_ENABLE) or "with" (AC_ARG_DISABLE).
 #
 # RANGE is an ERE pattern (that will be anchored on both ends)
-#   that accepts the valid values.
+# that accepts the valid values.
 #
 # DEFAULT is the default value.
 #
