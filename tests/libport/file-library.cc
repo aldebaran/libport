@@ -7,22 +7,28 @@
  *
  * See the LICENSE file for more information.
  */
-#include <boost/bind.hpp>
+
+#include <boost/algorithm/string.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/bind.hpp>
 using namespace boost::assign;
 
 #include <libport/file-library.hh>
 #include <libport/lexical-cast.hh>
 #include <libport/unit-test.hh>
-
 using boost::bind;
 using libport::file_library;
 using libport::test_suite;
 
 template <typename Library>
 void ctor(const Library& lib, const char* sep,
-          const std::string& expected)
+          const std::string& _expected)
 {
+#ifndef WIN32
+  std::string expected(_expected);
+#else
+  std::string expected(boost::replace_all_copy(_expected, "/", "\\"));
+#endif
   BOOST_CHECK_NO_THROW(file_library l(lib, sep));
   file_library l(lib, sep);
   BOOST_CHECK_EQUAL(string_cast(l), expected);
