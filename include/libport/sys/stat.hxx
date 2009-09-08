@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
-#ifdef MSVC_VERSION
+#ifdef _MSC_VER
 
 int
 mkdir(const char *path, mode_t)
