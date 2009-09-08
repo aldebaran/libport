@@ -32,6 +32,9 @@ static void test_environ()
   BOOST_CHECK(!getenv(var));
 }
 
+// Testing system under windows is a pain. We're probably not actually
+// going to use it anyway ...
+#ifndef WIN32
 static void test_system()
 {
   // Unfortunately, boost::unit_test implodes if any child has a non null
@@ -43,12 +46,16 @@ static void test_system()
   // BOOST_CHECK_THROW(int ignored = libport::system("false"); (void)ignored,
   //                   std::exception);
 }
+#endif
 
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::cstdlib");
   suite->add(BOOST_TEST_CASE(test_environ));
+
+#ifndef WIN32
   suite->add(BOOST_TEST_CASE(test_system));
+#endif
   return suite;
 }
