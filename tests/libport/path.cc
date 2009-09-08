@@ -115,24 +115,6 @@ init_test_suite()
 #endif
 #undef def
 
-  // Test printing.
-  test_suite* to_string_suite = BOOST_TEST_SUITE("to_string");
-  suite->add(to_string_suite);
-# define def(In)                                      \
-  ctor_suite->add(BOOST_TEST_CASE(bind(to_string, In, In)));
-#ifdef WIN32
-  def("C:\\Documents and Settings");
-  def("c:");
-  def("\\\\shared_volume\\subdir");
-#else
-  def(".");
-  def("/");
-  def("urbi.u");
-  def("foo/bar.cc");
-  def("/usr/local");
-#endif
-#undef def
-
   // Test absoluteness
   test_suite* abs_suite = BOOST_TEST_SUITE("Absolute path detection test suite");
   suite->add(abs_suite);
@@ -152,6 +134,24 @@ init_test_suite()
   def("C:\\absolute\\but\\on\\stupid\\OS", true);
   def("\\\\shared_volume\\subdir", true);
   def("\\relative\\because\\of\\missing\\volume", false);
+#endif
+#undef def
+
+  // Test printing.
+  test_suite* to_string_suite = BOOST_TEST_SUITE("to_string");
+  suite->add(to_string_suite);
+# define def(In)                                      \
+  to_string_suite->add(BOOST_TEST_CASE(bind(to_string, In, In)));
+#ifdef WIN32
+  def("C:\\Documents and Settings");
+  def("c:");
+  def("\\\\shared_volume\\subdir");
+#else
+  def(".");
+  def("/");
+  def("urbi.u");
+  def("foo/bar.cc");
+  def("/usr/local");
 #endif
 #undef def
 
