@@ -140,7 +140,7 @@ namespace libport
   path::to_string() const
   {
     if (!absolute_ && path_.empty())
-      return ".";
+      return WIN32_IF(volume_.empty() ? "." : volume_, ".");
 
     std::string res = WIN32_IF(volume_, "");
     if (absolute_)
