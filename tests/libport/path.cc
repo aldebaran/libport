@@ -186,7 +186,11 @@ init_test_suite()
   def("../../bar", "../..", "bar");
   def("/usr/local/gostai", "/usr/local", "gostai");
   // Standard (and somehow logical) GNU coreutils behavior:
+#ifndef WIN32
   def("/", "/", "/");
+#else
+  def("/", "\\", "\\");
+#endif
   def(".", ".", ".");
 #undef def
 
