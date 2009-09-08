@@ -24,10 +24,10 @@ General options:
 
 =item B<-f>, B<--force>
 
-By default no instrumentation is done on shell scripts.  It is
-frequent when running tests in the build tree to actually test shell
-scripts that bounce to actual binaries. With this option,
-instrumentation is always performed.
+By default no instrumentation is done on shell scripts and Windows
+executables.  It is frequent when running tests in the build tree to
+actually test shell scripts that bounce to actual binaries. With this
+option, instrumentation is always performed.
 
 =item B<-h>, B<--help>
 
@@ -338,9 +338,13 @@ sub instrument ($@)
   # The type of the program to instrument.
   my $type = exists $argv[0] ? file_type $argv[0] : '';
 
-  # Instrument if required, or if not a script.
+  # Don't instrument if this is a shell-script, or a Windows
+  # executable (since in that case, we need wine to run it, which is
+  # something Valgrind does not know about).
+  #
+  # If the user asked for troubles (--force), instrument anyway.
   return @res
-    unless $force || $type !~ /script/;
+    unless $force || $type !~ /script|PE\s+for MS Windows/;
 
   # If it's a libtool wrapper, don't instrument it unless we can find
   # libtool.
