@@ -16,22 +16,22 @@ static size_t STACK_SIZE = 0;
 #define ECHO(S)                                 \
   std::cerr << S << std::endl
 
-#define CHECK_EXCEPTION(where)   \
-do {                             \
-  ECHO("Checking exception in " #where);  \
-  int x = 0;                     \
-  try {                          \
-    x++;                         \
-    throw 15;  \
-    x--;                         \
-  }                              \
-  catch(int i)  \
-  { \
-    ECHO("Caught exception in " #where); \
-    x++; \
-  } \
-  BOOST_CHECK_EQUAL(x, 2); \
-} while(false)
+#define CHECK_EXCEPTION(where)                  \
+do {                                            \
+  ECHO("Checking exception in " #where);        \
+  int x = 0;                                    \
+  try {                                         \
+    x++;                                        \
+    throw 15;                                   \
+    x--;                                        \
+  }                                             \
+  catch(int i)                                  \
+  {                                             \
+    ECHO("Caught exception in " #where);        \
+    x++;                                        \
+  }                                             \
+  BOOST_CHECK_EQUAL(x, 2);                      \
+} while(false)                                  \
 
 Coro* mc;
 Coro* c1, *c2;
