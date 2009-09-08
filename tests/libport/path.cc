@@ -129,6 +129,7 @@ init_test_suite()
   def("/absolute/with/trailing/slash/", true);
   def("/./still/../absolute", true);
 #ifdef WIN32
+  def("\\", true);
   def("c:", false);
   def("C:", false);
   def("C:\\", true);
@@ -147,6 +148,7 @@ init_test_suite()
   def("C:\\Documents and Settings");
   def("c:");
   def("\\\\shared_volume\\subdir");
+  def("\\");
 #else
   def(".");
   def("/");
