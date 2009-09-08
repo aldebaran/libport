@@ -24,6 +24,7 @@
 #include <libport/finally.hh>
 #include <libport/foreach.hh>
 #include <libport/path.hh>
+#include <libport/tokenizer.hh>
 
 // Implementation detail: if path_ is empty and absolute_ is false,
 // then the path is '.'
@@ -89,14 +90,8 @@ namespace libport
 
 
     // Cut directories on / and \.
-    for (std::string::size_type pos = p.find_first_of(separator_);
-	 pos != std::string::npos;
-	 pos = p.find_first_of(separator_))
-    {
-      append_dir(p.substr(0, pos));
-      p.erase(0, pos + 1);
-    }
-    append_dir(p);
+    foreach (const std::string& component, make_tokenizer(p, WIN32_IF("/\\", "/")))
+      append_dir(component);
   }
 
   path&
