@@ -129,6 +129,8 @@ init_test_suite()
   def("/absolute/with/trailing/slash/", true);
   def("/./still/../absolute", true);
 #ifdef WIN32
+  def("c:", false);
+  def("C:", false);
   def("C:\\", true);
   def("C:\\absolute", true);
   def("C:\\absolute\\but\\on\\stupid\\OS", true);
