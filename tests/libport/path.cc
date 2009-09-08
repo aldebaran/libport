@@ -135,7 +135,6 @@ init_test_suite()
   def("C:\\absolute", true);
   def("C:\\absolute\\but\\on\\stupid\\OS", true);
   def("\\\\shared_volume\\subdir", true);
-  def("\\relative\\because\\of\\missing\\volume", false);
 #endif
 #undef def
 

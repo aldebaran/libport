@@ -80,7 +80,7 @@ namespace libport
     // Fallback to Unix cases for subsystems such as cygwin
     else
 #endif // WIN32
-    if (!p.empty() && p[0] == '/')
+    if (!p.empty() && (p[0] == '/' || p[0] == separator_))
     {
       absolute_ = true;
       p = p.erase(0, 0);
