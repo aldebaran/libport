@@ -15,14 +15,12 @@
 # this macro after the invocation to LT_INIT.
 AC_DEFUN([URBI_LIBTOOL],
 [# If you need to create a library, use libtool.
+AC_REQUIRE([URBI_WIN32])dnl
 LT_PREREQ([2.2.6])
 LT_INIT([pic-only shared disable-static dlopen win32-dll])
 AC_SUBST([LIBTOOL_DEPS])
 
-case $CXX_FLAVOR in
-  ('')
-    AC_MSG_ERROR([CXX_FLAVOR undefined]);;
-  (msvc)
+if $windows; then
     # It is perfectly possible to link with static libraries when building dlls.
     # Also for some reason archive_cmds ends up empty for C++ tag.
     AC_CONFIG_COMMANDS([libtool-quirk],
@@ -30,6 +28,5 @@ case $CXX_FLAVOR in
          -e 's/^archive_cmds=""/#& /' \
          -e 's/^deplibs_check_method=.*/#&\ndeplibs_check_method=pass_all/' \
          libtool])
- ;;
-esac
+fi
 ])
