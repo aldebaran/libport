@@ -17,6 +17,16 @@ print '''\
 
 namespace libport
 {
+
+  // Also accept 0-ary format strings.  Don't return it directly,
+  // still consult boost::format to make sure there are no trailing
+  // %s.
+  inline
+  std::string format(const std::string& fmt)
+  {
+    boost::format f(fmt);
+    return str(f);
+  }
 '''
 
 def args(n, f, d = ', '):
@@ -30,6 +40,7 @@ for n in range(1, 9):
         }
     print '''\
   template <%(template)s>
+  inline
   std::string format(const std::string& fmt, %(formals)s)
   {
     boost::format f(fmt);
@@ -41,5 +52,4 @@ for n in range(1, 9):
 print '''\
 }
 
-#endif
-'''
+#endif'''
