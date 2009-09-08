@@ -116,9 +116,10 @@ init_test_suite()
 #undef def
 
   // Test absoluteness
-  test_suite* abs_suite = BOOST_TEST_SUITE("Absolute path detection test suite");
+  test_suite* abs_suite =
+    BOOST_TEST_SUITE("Absolute path detection test suite");
   suite->add(abs_suite);
-#define def(Path, Abs)                                                          \
+#define def(Path, Abs)                                                  \
   abs_suite->add(BOOST_TEST_CASE(bind(path_absolute, Path, Abs)));
   def("relative", false);
   def("relative/with/directories", false);

@@ -90,7 +90,8 @@ namespace libport
 
 
     // Cut directories on / and \.
-    foreach (const std::string& component, make_tokenizer(p, WIN32_IF("/\\", "/")))
+    foreach (const std::string& component,
+             make_tokenizer(p, WIN32_IF("/\\", "/")))
       append_dir(component);
   }
 
