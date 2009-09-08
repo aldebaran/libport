@@ -7,8 +7,47 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_OPTION_PARSER_HH
 # define LIBPORT_OPTION_PARSER_HH
+
+// See http://lists.boost.org/Archives/boost/2009/05/151305.php, and
+// in particular
+// http://lists.boost.org/Archives/boost/2009/05/151318.php:
+//
+//    Of course, one could just turn off strict aliasing for gcc,
+//    using the -fno-strict-aliasing option. Doing so would put you in
+//    good company; many large projects (including the Linux kernel,
+//    BSD, rtems, Python, bjam(!), others that I don't recall off the
+//    top of my head) turn off strict aliasing, with such reasons as
+//    the following cited
+//
+//    - the strict aliasing rules and their implications are arcane,
+//
+//    - the strict aliasing rules forbid idioms common in low-level
+//    system programming type code,
+//
+//    - the methods for dealing with strict aliasing in such low-level
+//    system code make the code harder to understand,
+//
+//    - the benefits derived from enabling strict aliasing are not
+//    worth the headaches
+//
+//    - tools (including compilers that support strict aliasing) don't
+//    (and perhaps can't) provide good diagnostics about
+//    violations. gcc, for example, specifically documents that all
+//    levels for enabled strict aliasing warnings can produce both
+//    false positives and false negatives.
+
+// Bottom line is: Boost.Optional is not strict-aliasing safe, so
+//
+// ## --------------------------------------------------------------- ##
+// ## users of this file must be compiled with -fno-strict-aliasing.  ##
+// ## --------------------------------------------------------------- ##
+//
+// Unfortunately we cannot use the pragma/attribute
+// `optimize("no-strict-aliasing")':
+// https://bugzilla.redhat.com/show_bug.cgi?id=486176.
 
 # include <exception>
 
