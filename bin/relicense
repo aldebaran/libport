@@ -45,9 +45,9 @@ sub transform_file (\&$)
 
 my @re =
 (
-q{(?:\\\\file (?<file>.*))?
-This file is part of (?<project>.*)
-Copyright \(c\) (?<years>[\d-]+(, [\d-]+)*) Gostai S.A.S.
+q{(?:\\\\file <file>)?
+This file is part of <project>
+Copyright \(c\) <years> Gostai S.A.S.
 
 Permission to use, copy, modify, and redistribute this software for
 non-commercial use is hereby granted.
@@ -58,11 +58,29 @@ implied warranties of fitness for a particular purpose.
 
 For more information, comments, bug reports: http://www.urbiforge.com},
 
-q{(?:\\\\file (?<file>[\-\w\./]+))?
+q{\\\\file <file>
+
+ File: .*
+ (?<brief>Implementation.*)
+
+ This file is part of
+ <project>
+ Copyright \(c\) <years>.*
+
+ Permission to use, copy, modify, and redistribute this software for
+ non-commercial use is hereby granted.
+
+ This software is provided "as is" without warranty of any kind,
+ either expressed or implied, including but not limited to the
+ implied warranties of fitness for a particular purpose.
+
+ For more information, comments, bug reports: http://www.urbiforge.net},
+
+q{(?:\\\\file <file>)?
 
 (?<brief>.*\.)?
 
-Copyright \(C\) (?<years>[\d-]+(, [\d-]+)*) Jean-Christophe Baillie.  All rights reserved.
+Copyright \(C\) <years> Jean-Christophe Baillie.  All rights reserved.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -83,7 +101,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
 sub license (%)
 {
   my (%group) = @_;
-  print STDERR %group, "\n";
+  for my $key (sort keys %group)
+    {
+      print "$key => {{$group{$key}}}\n";
+    }
+
   my $res;
   $res .= <<EOF;
 /*
@@ -124,9 +146,23 @@ sub convert ($)
 ## Main.  ##
 ## ------ ##
 
+# The "syntax" of some interesting fields.
+my %field =
+(
+  'file' =>    q{[\\-\\w\\./]+},
+  'project' => q{[^\\n]*},
+  'years' =>   q{[\\d-]+(?:, [\\d-]+)*},
+);
+
 # Make the regexps more flexible.
 for my $re (@re)
 {
+  for my $field (keys %field)
+    {
+      $re =~ s{<$field>}{(?<$field>$field{$field})}g;
+    }
+  # Accept arbitrary comment closing.
+  $re .= ' [\*\\s]*\*/\s';
   $re =~ s{^\s*}{^[\\s/*!]*}gm;
   print STDERR $re, "\n";
   $re =~ s/\s+/\\s+/gm;
