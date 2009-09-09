@@ -18,6 +18,7 @@ generate_semaphore_clean ()
   local clean=/tmp/$me
    cat >$clean.cc.tmp <<EOF
 #include <semaphore.h>
+#include <cassert>
 #include <cerrno>
 #include <fstream>
 #include <iostream>
