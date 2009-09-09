@@ -61,10 +61,6 @@ Test environment to run Qt unit test.
 
 * Scripts
 
-** install-sh-c
-Our own copy of install-sh that support -C in addition.  Useful to
-avoid installing headers that did not change.
-
 ** emacsen-qtestlib.rb
 Make Qt unit test output, Emacs comptible.
 
