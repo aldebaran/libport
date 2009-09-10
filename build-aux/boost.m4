@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 14
+# serial 15
 ], [#
 ], [])])
 
@@ -61,6 +61,13 @@ AC_LANG_CONFTEST([AC_LANG_SOURCE([[$2]])])
 AS_IF([dnl eval is necessary to expand ac_cpp.
 dnl Ultrix and Pyramid sh refuse to redirect output of eval, so use subshell.
 (eval "$ac_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD |
+  # Beware of Windows end-of-lines, for instance if we are running
+  # some Windows programs under Wine.  In that case, boost/version.hpp
+  # is certainly using "\r\n", but the regular Unix shell will only
+  # strip `\n' with backquotes, not the `\r'.  This results in
+  # boost_cv_lib_version='1_37\r' for instance, which breaks
+  # everything else.
+  tr -d '\r' |
   $SED -n -e "$1" >conftest.i 2>&1],
   [$3],
   [$4])
