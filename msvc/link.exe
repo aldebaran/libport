@@ -79,7 +79,8 @@ handle_lib ()
   {
     # The libs we produce are called libfoo.lib, whereas the system
     # libs are called foo.lib.
-    local lib_dirs="$HOME/.wine/winroot/boost_1_35_0/lib"
+    # FIXME: Use external variables.
+    local lib_dirs="$HOME/local/usr/lib" # Path to Boost.
     lib_dirs+=" $VCXX_PATH/lib"
     lib_dirs+=" $VCXX_PATH/PlatformSDK/Lib"
 
