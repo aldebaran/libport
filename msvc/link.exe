@@ -66,6 +66,7 @@ fatal ()
 transform ()
 {
   case $1 in
+    ('') verbose "warning: empty argument passed to transform";;
     (/*) winepath -w "$1";;
     (*)  echo "$1";;
   esac
@@ -282,6 +283,18 @@ EOF
   exit 0
 }
 
+# handle option -o
+# ----------------
+get_options__o ()
+{
+  output=$1
+  case $mode:$output in
+      (*:/dev/null) output=$tmp/discarded-output;;
+      (:*.o|:*.obj) mode=compile;;
+      (:*.i|:*.ii)  mode=preprocess;;
+  esac
+  # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
+}
 
 get_options ()
 {
@@ -299,8 +312,6 @@ get_options ()
     (-dll)  linkargs "/DLL";;
     (-L*)   linkargs -LIBPATH:$(transform ${1#-L});;
     (-l*)   linkargs $(handle_lib $1);;
-    (*.lib) linkargs $(transform $1);;
-    (*.a)   linkargs $(transform "$1" | sed -e 's/.a$/.lib/');;
 
     # Preprocessor options.
     (-E)  mode=preprocess; outargs $1;;
@@ -328,16 +339,14 @@ get_options ()
 
     (-c)  mode=compile; outargs $1;;
     (-o)  shift
-         output=$1
-         case $mode:$output in
-             (*:/dev/null) output=$tmp/discarded-output;;
-             (:*.o|:*.obj) mode=compile;;
-             (:*.i|:*.ii)  mode=preprocess;;
-         esac
-         # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
-        ;;
-    (-Wno-unused-parameter|-Wno-inline)
+          get_options__o "$1"
+          ;;
+    (-o*) get_options__o $(echo "$1" | sed -e 's/^-o//');;
+    (-Wno-unused-parameter)
          # Flags passed by careless tools, such as Bjam.
+        ;;
+    (-Wno-inline)
+        outargs -wd4710
         ;;
     (-g|-ggdb) ;; # outargs "-Zi";;
 
@@ -345,15 +354,17 @@ get_options ()
     (-O2) outargs $1;;
     (-O3) outargs -Ox;;
 
-    (*.dll)
-      outargs $(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/');;
-
     # Language selection.
     (-x) shift
       case $1 in
         (c) outargs "-TC";;
         (c++) outargs "-TP";;
       esac;;
+
+    (*.lib) linkargs $(transform $1);;
+    (*.a)   linkargs $(transform "$1" | sed -e 's/.a$/.lib/');;
+    (*.dll)
+      outargs $(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/');;
 
     # Sources.
     (-include)  shift; outargs "-FI$(transform $1)";;
