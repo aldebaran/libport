@@ -296,10 +296,11 @@ lt_dlexit (void)
 			{
 			  ++errors;
 			}
-		      /* Make sure that the handle pointed to by 'cur' still exists.
-			 lt_dlclose recursively closes dependent libraries which removes
-			 them from the linked list.  One of these might be the one
-			 pointed to by 'cur'.  */
+                      /* Make sure that the handle pointed to by 'cur'
+                         still exists.  lt_dlclose recursively closes
+                         dependent libraries which removes them from
+                         the linked list.  One of these might be the
+                         one pointed to by 'cur'.  */
 		      if (cur)
 			{
 			  for (tmp = handles; tmp; tmp = tmp->next)
@@ -363,7 +364,7 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
   const char *	saved_error	= 0;
   int		errors		= 0;
 
-  LT_LOG2 (1, "tryall_dlopen (%s, %s)\n",
+  LT_LOG2 (2, "tryall_dlopen (%s, %s)\n",
            LT_NONNULL (filename),
            vtable ? vtable->name : "(ALL)");
 
@@ -427,16 +428,15 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
 	else
 	  loader_vtable = lt_dlloader_get (loader);
 
-	LT_LOG2 (2, "Calling %s->module_open (%s)\n",
-                 LT_NAME(loader_vtable), LT_NONNULL (filename));
+	LT_LOG2 (3, "%s->module_open (%s)\n",
+                 LT_NAME (loader_vtable), LT_NONNULL (filename));
         handle->module =
           (*loader_vtable->module_open) (loader_vtable->dlloader_data,
                                          filename, advise);
-	LT_LOG1 (2, "  Result: %s\n",
-                 handle->module ? "Success" : "Failed");
 
 	if (handle->module != 0)
 	  {
+            LT_LOG0 (3, "  success\n");
 	    if (advise)
 	      {
 		handle->info.is_resident  = advise->is_resident;
@@ -445,6 +445,12 @@ tryall_dlopen (lt_dlhandle *phandle, const char *filename,
 	      }
 	    break;
 	  }
+        else
+          {
+            const char *error = 0;
+            LT__GETERROR (error);
+            LT_LOG1 (3, "  fail: %s\n", error);
+          }
       }
     while (!vtable && (loader = lt_dlloader_next (loader)));
 
@@ -1046,7 +1052,9 @@ parse_dotla_file(FILE *file, char **dlname, char **libdir, char **deplibs,
       /* Handle the case where we occasionally need to read a line
 	 that is longer than the initial buffer size.
 	 Behave even if the file contains NUL bytes due to corruption. */
-      while (line[line_len-2] != '\0' && line[line_len-2] != '\n' && !feof (file))
+      while (line[line_len-2] != '\0'
+             && line[line_len-2] != '\n'
+             && !feof (file))
 	{
 	  line = REALLOC (char, line, line_len *2);
 	  if (!line)
@@ -1078,7 +1086,7 @@ parse_dotla_file(FILE *file, char **dlname, char **libdir, char **deplibs,
 #undef  STR_OLD_LIBRARY
 #define STR_OLD_LIBRARY	"old_library="
       else if (strncmp (line, STR_OLD_LIBRARY,
-	    sizeof (STR_OLD_LIBRARY) - 1) == 0)
+                        sizeof (STR_OLD_LIBRARY) - 1) == 0)
 	{
 	  errors += trim (old_name, &line[sizeof (STR_OLD_LIBRARY) - 1]);
           LT_LOG_FIELD (old_name);
@@ -1094,7 +1102,7 @@ parse_dotla_file(FILE *file, char **dlname, char **libdir, char **deplibs,
 #undef  STR_DL_DEPLIBS
 #define STR_DL_DEPLIBS	"dependency_libs="
       else if (strncmp (line, STR_DL_DEPLIBS,
-	    sizeof (STR_DL_DEPLIBS) - 1) == 0)
+                        sizeof (STR_DL_DEPLIBS) - 1) == 0)
 	{
 	  errors += trim (deplibs, &line[sizeof (STR_DL_DEPLIBS) - 1]);
           LT_LOG_FIELD (deplibs);
@@ -1113,7 +1121,7 @@ parse_dotla_file(FILE *file, char **dlname, char **libdir, char **deplibs,
 #undef  STR_LIBRARY_NAMES
 #define STR_LIBRARY_NAMES "library_names="
       else if (!*dlname && strncmp (line, STR_LIBRARY_NAMES,
-	    sizeof (STR_LIBRARY_NAMES) - 1) == 0)
+                                    sizeof (STR_LIBRARY_NAMES) - 1) == 0)
 	{
 	  char *last_libname;
 	  errors += trim (dlname, &line[sizeof (STR_LIBRARY_NAMES) - 1]);
@@ -1490,7 +1498,6 @@ try_dlopen (lt_dlhandle *phandle, const char *filename, const char *ext,
 
   LT__SETERRORSTR (saved_error);
   FREE (saved_error);
-
 
  cleanup:
   FREE (dir);

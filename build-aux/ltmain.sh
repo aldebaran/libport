@@ -1,6 +1,6 @@
 # Generated from ltmain.m4sh.
 
-# libtool (GNU libtool 1.3111 2009-07-24) 2.2.7a
+# libtool (GNU libtool 1.3117 2009-09-07) 2.2.7a
 # Written by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006,
@@ -70,7 +70,7 @@
 #         compiler:		$LTCC
 #         compiler flags:		$LTCFLAGS
 #         linker:		$LD (gnu? $with_gnu_ld)
-#         $progname:	(GNU libtool 1.3111 2009-07-24) 2.2.7a
+#         $progname:	(GNU libtool 1.3117 2009-09-07) 2.2.7a
 #         automake:	$automake_version
 #         autoconf:	$autoconf_version
 #
@@ -79,8 +79,8 @@
 PROGRAM=libtool
 PACKAGE=libtool
 VERSION=2.2.7a
-TIMESTAMP=" 1.3111 2009-07-24"
-package_revision=1.3111
+TIMESTAMP=" 1.3117 2009-09-07"
+package_revision=1.3117
 
 # Be Bourne compatible
 if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then
@@ -2402,6 +2402,10 @@ func_generate_dlsyms ()
 
 #ifdef __cplusplus
 extern \"C\" {
+#endif
+
+#if defined(__GNUC__) && (((__GNUC__ == 4) && (__GNUC_MINOR__ >= 4)) || (__GNUC__ > 4))
+#pragma GCC diagnostic ignored \"-Wstrict-prototypes\"
 #endif
 
 /* External symbol declarations for the compiler. */\
@@ -4759,7 +4763,7 @@ func_mode_link ()
 	for flag in $args; do
 	  IFS="$save_ifs"
           func_quote_for_eval "$flag"
-	  arg="$arg $wl$func_quote_for_eval_result"
+	  arg="$arg $func_quote_for_eval_result"
 	  compiler_flags="$compiler_flags $func_quote_for_eval_result"
 	done
 	IFS="$save_ifs"

@@ -971,6 +971,29 @@ m4_defun_once([_LT_REQUIRED_DARWIN_CHECKS],[
 	[lt_cv_ld_exported_symbols_list=no])
 	LDFLAGS="$save_LDFLAGS"
     ])
+    AC_CACHE_CHECK([for -force_load linker flag],[lt_cv_ld_force_load],
+      [lt_cv_ld_force_load=no
+      cat > conftest.c << _LT_EOF
+int forced_loaded() { return 2;}
+_LT_EOF
+      echo "$LTCC $LTCFLAGS -c -o conftest.o conftest.c" >&AS_MESSAGE_LOG_FD
+      $LTCC $LTCFLAGS -c -o conftest.o conftest.c 2>&AS_MESSAGE_LOG_FD
+      echo "$AR cru libconftest.a conftest.o" >&AS_MESSAGE_LOG_FD
+      $AR cru libconftest.a conftest.o 2>&AS_MESSAGE_LOG_FD
+      cat > conftest.c << _LT_EOF
+int main() { return 0;}
+_LT_EOF
+      echo "$LTCC $LTCFLAGS $LDFLAGS -o conftest conftest.c -Wl,-force_load,./libconftest.a" >&AS_MESSAGE_LOG_FD
+      $LTCC $LTCFLAGS $LDFLAGS -o conftest conftest.c -Wl,-force_load,./libconftest.a 2>conftest.err
+      _lt_result=$?
+      if test -f conftest && test ! -s conftest.err && test $_lt_result = 0 && $GREP forced_load conftest 2>&1 >/dev/null; then
+	lt_cv_ld_force_load=yes
+      else
+	cat conftest.err >&AS_MESSAGE_LOG_FD
+      fi
+        rm -f conftest.err conftest.a conftest conftest.c
+        rm -rf conftest.dSYM
+    ])
     case $host_os in
     rhapsody* | darwin1.[[012]])
       _lt_dar_allow_undefined='${wl}-undefined ${wl}suppress' ;;
@@ -998,7 +1021,7 @@ m4_defun_once([_LT_REQUIRED_DARWIN_CHECKS],[
     else
       _lt_dar_export_syms='~$NMEDIT -s $output_objdir/${libname}-symbols.expsym ${lib}'
     fi
-    if test "$DSYMUTIL" != ":"; then
+    if test "$DSYMUTIL" != ":" && test "$lt_cv_ld_force_load" = "no"; then
       _lt_dsymutil='~$DSYMUTIL $lib || :'
     else
       _lt_dsymutil=
@@ -1018,7 +1041,11 @@ m4_defun([_LT_DARWIN_LINKER_FEATURES],
   _LT_TAGVAR(hardcode_direct, $1)=no
   _LT_TAGVAR(hardcode_automatic, $1)=yes
   _LT_TAGVAR(hardcode_shlibpath_var, $1)=unsupported
-  _LT_TAGVAR(whole_archive_flag_spec, $1)=''
+  if test "$lt_cv_ld_force_load" = "yes"; then
+    _LT_TAGVAR(whole_archive_flag_spec, $1)='`for conv in $convenience\"\"; do test  -n \"$conv\" && new_convenience=\"$new_convenience ${wl}-force_load,$conv\"; done; func_echo_all \"$new_convenience\"`'
+  else
+    _LT_TAGVAR(whole_archive_flag_spec, $1)=''
+  fi
   _LT_TAGVAR(link_all_deplibs, $1)=yes
   _LT_TAGVAR(allow_undefined_flag, $1)="$_lt_dar_allow_undefined"
   case $cc_basename in
@@ -1162,7 +1189,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '[#]line __oline__ "configure"' > conftest.$ac_ext
+  echo '[#]line '$LINENO' "configure"' > conftest.$ac_ext
   if AC_TRY_EVAL(ac_compile); then
     if test "$lt_cv_prog_gnu_ld" = yes; then
       case `/usr/bin/file conftest.$ac_objext` in
@@ -1351,11 +1378,11 @@ AC_CACHE_CHECK([$1], [$2],
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [[^ ]]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:__oline__: $lt_compile\"" >&AS_MESSAGE_LOG_FD)
+   (eval echo "\"\$as_me:$LINENO: $lt_compile\"" >&AS_MESSAGE_LOG_FD)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&AS_MESSAGE_LOG_FD
-   echo "$as_me:__oline__: \$? = $ac_status" >&AS_MESSAGE_LOG_FD
+   echo "$as_me:$LINENO: \$? = $ac_status" >&AS_MESSAGE_LOG_FD
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -1624,7 +1651,13 @@ else
 #  endif
 #endif
 
-void fnord() { int i=42;}
+/* When -fvisbility=hidden is used, assume the code has been annotated
+   correspondingly for the symbols needed.  */
+#if defined(__GNUC__) && (((__GNUC__ == 3) && (__GNUC_MINOR__ >= 3)) || (__GNUC__ > 3))
+void fnord () __attribute__((visibility("default")));
+#endif
+
+void fnord () { int i=42; }
 int main ()
 {
   void *self = dlopen (0, LT_DLGLOBAL|LT_DLLAZY_OR_NOW);
@@ -1633,7 +1666,11 @@ int main ()
   if (self)
     {
       if (dlsym (self,"fnord"))       status = $lt_dlno_uscore;
-      else if (dlsym( self,"_fnord")) status = $lt_dlneed_uscore;
+      else
+        {
+	  if (dlsym( self,"_fnord"))  status = $lt_dlneed_uscore;
+          else puts (dlerror ());
+	}
       /* dlclose (self); */
     }
   else
@@ -1809,11 +1846,11 @@ AC_CACHE_CHECK([if $compiler supports -c -o file.$ac_objext],
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [[^ ]]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:__oline__: $lt_compile\"" >&AS_MESSAGE_LOG_FD)
+   (eval echo "\"\$as_me:$LINENO: $lt_compile\"" >&AS_MESSAGE_LOG_FD)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&AS_MESSAGE_LOG_FD
-   echo "$as_me:__oline__: \$? = $ac_status" >&AS_MESSAGE_LOG_FD
+   echo "$as_me:$LINENO: \$? = $ac_status" >&AS_MESSAGE_LOG_FD
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -3192,13 +3229,13 @@ _LT_DECL([], [NM], [1], [A BSD- or MS-compatible name lister])dnl
 AC_CACHE_CHECK([the name lister ($NM) interface], [lt_cv_nm_interface],
   [lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:__oline__: $ac_compile\"" >&AS_MESSAGE_LOG_FD)
+  (eval echo "\"\$as_me:$LINENO: $ac_compile\"" >&AS_MESSAGE_LOG_FD)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&AS_MESSAGE_LOG_FD
-  (eval echo "\"\$as_me:__oline__: $NM \\\"conftest.$ac_objext\\\"\"" >&AS_MESSAGE_LOG_FD)
+  (eval echo "\"\$as_me:$LINENO: $NM \\\"conftest.$ac_objext\\\"\"" >&AS_MESSAGE_LOG_FD)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&AS_MESSAGE_LOG_FD
-  (eval echo "\"\$as_me:__oline__: output\"" >&AS_MESSAGE_LOG_FD)
+  (eval echo "\"\$as_me:$LINENO: output\"" >&AS_MESSAGE_LOG_FD)
   cat conftest.out >&AS_MESSAGE_LOG_FD
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
