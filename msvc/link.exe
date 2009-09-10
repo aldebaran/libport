@@ -335,7 +335,9 @@ get_options ()
          esac
          # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
         ;;
-    (-Wno-unused-parameter) ;;
+    (-Wno-unused-parameter|-Wno-inline)
+         # Flags passed by careless tools, such as Bjam.
+        ;;
     (-g|-ggdb) ;; # outargs "-Zi";;
 
     # Optimizations.
