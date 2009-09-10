@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 12
+# serial 14
 ], [#
 ], [])])
 
@@ -172,7 +172,7 @@ boost-lib-version = BOOST_LIB_VERSION],
     # e.g. "134" for 1_34_1 or "135" for 1_35
     boost_major_version=`echo "$boost_cv_lib_version" | sed 's/_//;s/_.*//'`
     case $boost_major_version in #(
-      '' | *[[^0-9]]*)
+      '' | *[[!0-9]]*)
         AC_MSG_ERROR([Invalid value: boost_major_version=$boost_major_version])
         ;;
     esac
@@ -247,7 +247,14 @@ AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
 AS_VAR_PUSHDEF([Boost_lib_LIBS], [boost_cv_lib_$1_LIBS])dnl
 BOOST_FIND_HEADER([$3])
 boost_save_CPPFLAGS=$CPPFLAGS
-# Remove CXXFLAGS, -fdefault_visibility=hidden is killing us
+
+# On some platforms, the hidden default visibility hides main, and
+# prevents the macro from finding boost unit_test_suite. I see no
+# reason why boost detection would require custom CXXFLAGS, so just
+# reset them temporarily.
+#
+# So disable current CXXFLAGS, -fdefault_visibility=hidden might kill
+# us.
 boost_save_CXXFLAGS=$CXXFLAGS
 CXXFLAGS=
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
@@ -584,6 +591,13 @@ BOOST_FIND_HEADER([boost/shared_ptr.hpp])
 ])
 
 
+# BOOST_STATICASSERT()
+# --------------------
+# Look for Boost.StaticAssert
+AC_DEFUN([BOOST_STATICASSERT],
+[BOOST_FIND_HEADER([boost/static_assert.hpp])])
+
+
 # BOOST_STRING_ALGO()
 # -------------------
 # Look for Boost.StringAlgo
@@ -667,6 +681,13 @@ BOOST_FIND_HEADER([boost/logic/tribool.hpp])
 # Look for Boost.Tuple
 AC_DEFUN([BOOST_TUPLE],
 [BOOST_FIND_HEADER([boost/tuple/tuple.hpp])])
+
+
+# BOOST_TYPETRAITS()
+# --------------------
+# Look for Boost.TypeTraits
+AC_DEFUN([BOOST_TYPETRAITS],
+[BOOST_FIND_HEADER([boost/type_traits.hpp])])
 
 
 # BOOST_UTILITY()
@@ -800,6 +821,7 @@ m4_define([_BOOST_gcc_test],
 # build.  The Boost build system seems to call this a `tag'.
 AC_DEFUN([_BOOST_FIND_COMPILER_TAG],
 [AC_REQUIRE([AC_PROG_CXX])dnl
+AC_REQUIRE([AC_CANONICAL_HOST])dnl
 AC_CACHE_CHECK([for the toolset name used by Boost for $CXX], [boost_cv_lib_tag],
 [AC_LANG_PUSH([C++])dnl
   boost_cv_lib_tag=unknown
@@ -859,9 +881,17 @@ AC_LANG_POP([C++])dnl
     # to "gcc41" for instance.
     *-gcc | *'-gcc ') :;; #(  Don't re-add -gcc: it's already in there.
     gcc*)
+      boost_tag_x=
+      case $host_os in #(
+        darwin*)
+          if test $boost_major_version -ge 136; then
+            # The `x' added in r46793 of Boost.
+            boost_tag_x=x
+          fi;;
+      esac
       # We can specify multiple tags in this variable because it's used by
       # BOOST_FIND_LIB that does a `for tag in -$boost_cv_lib_tag' ...
-      boost_cv_lib_tag="$boost_cv_lib_tag -gcc"
+      boost_cv_lib_tag="$boost_tag_x$boost_cv_lib_tag -${boost_tag_x}gcc"
       ;; #(
     unknown)
       AC_MSG_WARN([[could not figure out which toolset name to use for $CXX]])
