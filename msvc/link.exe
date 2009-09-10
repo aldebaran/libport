@@ -561,6 +561,23 @@ compiler_verbose_message ()
 '
 }
 
+# Look for, and load, `msvc_env.sh'.
+load_msvc_env ()
+{
+  local i
+  # Skip if we can't run it.
+  for i in ~/share/wine ~/.wine/drive_c
+  do
+    local f=$i/msvc_env.sh
+    verbose "trying to load $f"
+    if test -f $f; then
+      . $f
+      verbose "loaded $f"
+      return 0
+    fi
+  done
+  return 1
+}
 
 
 ## ------ ##
@@ -586,12 +603,8 @@ stdout=$tmp/stdout
 stderr=$tmp/stderr
 
 test -n "$VCINSTALLDIR" ||
-{
-  # Skip if we can't run it.
-  test -f ~/share/wine/msvc_env.sh ||
-    error 176 "cannot load msvc_env.sh"
-  . ~/share/wine/msvc_env.sh
-}
+  load_msvc_env ||
+  error 176 "cannot load msvc_env.sh"
 
 winepath --version >/dev/null 2>&1 ||
   error 176 "cannot run winepath"
