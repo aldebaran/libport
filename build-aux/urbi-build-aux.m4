@@ -1,6 +1,6 @@
 #
 # urbi-build-aux.m4: This file is part of build-aux.
-# Copyright (C) 2006-2008, Gostai S.A.S.
+# Copyright (C) 2006-2009, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -24,8 +24,7 @@ AC_DEFUN([URBI_BUILD_AUX],
 # AC_CONFIG_AUX_DIR([build-aux])
 
 # Use install-sh -C for headers.
-AC_SUBST([install_sh_c_DATA], ['$(install_sh)-c -c -m 644'])
-AC_SUBST([INSTALL_HEADER], ['$(install_sh_c_DATA) -C'])
+AC_SUBST([INSTALL_HEADER], ['$(install_sh_DATA) -C'])
 
 # Default value.
 AC_SUBST([SVN], [svn])
