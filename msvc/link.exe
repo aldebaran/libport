@@ -311,6 +311,7 @@ get_options ()
     (-link) ;;
     (-dll)  linkargs "/DLL";;
     (-L*)   linkargs -LIBPATH:$(transform ${1#-L});;
+    (-L )   linkargs -LIBPATH:$(transform $2)     ; shift;;
     (-l*)   linkargs $(handle_lib $1);;
 
     # Preprocessor options.
@@ -338,10 +339,8 @@ get_options ()
           cppoutput=cppoutput;;
 
     (-c)  mode=compile; outargs $1;;
-    (-o)  shift
-          get_options__o "$1"
-          ;;
-    (-o*) get_options__o $(echo "$1" | sed -e 's/^-o//');;
+    (-o)  get_options__o "$2"; shift;;
+    (-o*) get_options__o ${1#-o};;
     (-Wno-unused-parameter)
          # Flags passed by careless tools, such as Bjam.
         ;;

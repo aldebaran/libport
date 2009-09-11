@@ -94,6 +94,7 @@ namespace std
 #   define LIBPORT_HASH_NAMESPACE std
 #  endif
 #  include <hash_map>
+#  include <hash_set>
 
 namespace LIBPORT_HASH_NAMESPACE
 {
@@ -190,7 +191,7 @@ namespace LIBPORT_HASH_NAMESPACE
 } // namespace LIBPORT_HASH_NAMESPACE
 
 # else
-#  error Do not know where hash_map is.
+#  error "Do not know where hash_map/hash_set are."
 # endif
 
 

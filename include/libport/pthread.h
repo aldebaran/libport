@@ -40,9 +40,9 @@ int pthread_join(pthread_t thread, void** retval);
 
 // On POSIX, pthread_* functions *return* the error code, but don't
 // change errno.
-#  define PTHREAD_RUN(Function, Args...)        \
+#  define PTHREAD_RUN(Function, ...)            \
   do {                                          \
-    if (int err = Function (Args))              \
+    if (int err = Function (## __VA_ARGS__))    \
       {                                         \
         (void) err;                             \
         errabort(err, #Function);               \

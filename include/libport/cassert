@@ -11,8 +11,8 @@
 /// \file libport/cassert
 /// \brief Provide nice assert-like macros.
 
-#ifndef LIBPORT_ASSERT_HH
-# define LIBPORT_ASSERT_HH
+#ifndef LIBPORT_CASSERT
+# define LIBPORT_CASSERT
 
 # include <cassert>
 # include <libport/cerrno>
@@ -125,16 +125,16 @@ static inline int zero()
   errabort(errno, Msg)
 
 
-/// \def ERRNO_RUN(Function, Args...)
-/// Run Function(Args...) and use errnoabort on errors.
+/// \def ERRNO_RUN(Function, ...)
+/// Run Function(...) and use errnoabort on errors.
 ///
 /// It is considered that there is an error when Function returns a
 /// negative value.  Alternatively we could set errno to 0 before
 /// calling the function, and checking it afterwards, but it's more
 /// expensive.
-# define ERRNO_RUN(Function, Args...)           \
+# define ERRNO_RUN(Function, ...)               \
   do {                                          \
-    if (Function (Args) < 0)                    \
+    if (Function (## __VA_ARGS__) < 0)          \
       errnoabort(#Function);                    \
   } while (false)
 
@@ -221,4 +221,8 @@ namespace libport                                                       \
 #  define assert_ne(A, B) assert(A != B)
 # endif
 
-#endif // !LIBPORT_ASSERT_HH
+#endif // !LIBPORT_CASSERT
+
+// Local Variables:
+// mode: C++
+// End:
