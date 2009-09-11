@@ -35,6 +35,8 @@ sys_libport_include_HEADERS =			\
 
 # C++ headers.
 libport_include_HEADERS +=				\
+  include/libport/algorithm				\
+  include/libport/algorithm.hxx				\
   include/libport/asio.hh				\
   include/libport/asio.hxx				\
   include/libport/assert.hh				\

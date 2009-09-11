@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 2009, Gostai S.A.S.
+ *
+ * This software is provided "as is" without warranty of any kind,
+ * either expressed or implied, including but not limited to the
+ * implied warranties of fitness for a particular purpose.
+ *
+ * See the LICENSE file for more information.
+ */
+
+#ifndef LIBPORT_ALGORITHM
+# define LIBPORT_ALGORITHM
+
+# include <algorithm>
+
+namespace libport
+{
+  template <typename T>
+  inline
+  T
+  between(const T& min, const T& value, const T& max);
+
+}
+
+# include <libport/algorithm.hxx>
+
+#endif // !LIBPORT_ALGORITHM
+
+// Local Variables:
+// mode: C++
+// End:
