@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
-#include <libport/cstdio>
+
 #include <cerrno>
 #include <fstream>
 #include <iostream>
@@ -17,6 +17,8 @@
 #include <boost/utility/value_init.hpp>
 
 #include <libport/cli.hh>
+#include <libport/cstdio>
+#include <libport/cstdlib>
 
 namespace libport
 {

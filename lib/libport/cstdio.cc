@@ -16,6 +16,7 @@
 #include <iostream>
 
 #include <libport/cstdio>
+#include <libport/cstdlib>
 #include <libport/cstring>
 
 namespace libport

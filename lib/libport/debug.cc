@@ -12,6 +12,7 @@
 
 #include <libport/cassert>
 #include <libport/containers.hh>
+#include <libport/cstdio>
 #include <libport/debug.hh>
 #include <libport/escape.hh>
 #include <libport/foreach.hh>
