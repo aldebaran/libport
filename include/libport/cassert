@@ -134,7 +134,7 @@ static inline int zero()
 /// expensive.
 # define ERRNO_RUN(Function, ...)               \
   do {                                          \
-    if (Function (## __VA_ARGS__) < 0)          \
+    if (Function (__VA_ARGS__) < 0)             \
       errnoabort(#Function);                    \
   } while (false)
 

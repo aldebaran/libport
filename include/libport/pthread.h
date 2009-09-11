@@ -42,7 +42,7 @@ int pthread_join(pthread_t thread, void** retval);
 // change errno.
 #  define PTHREAD_RUN(Function, ...)            \
   do {                                          \
-    if (int err = Function (## __VA_ARGS__))    \
+    if (int err = Function (__VA_ARGS__))       \
       {                                         \
         (void) err;                             \
         errabort(err, #Function);               \
