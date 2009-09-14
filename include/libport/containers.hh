@@ -80,12 +80,7 @@ namespace libport
   void
   erase_if(Container& c, const Functor& f);
 
-
-  // Compare two containers.
-  template <template <typename, typename> class Cont, typename E, typename A>
-  bool operator==(const Cont<E, A>& lhs, const Cont<E, A>& rhs);
 } // namespace libport
-
 
 
 namespace std
@@ -96,9 +91,9 @@ namespace std
   `---------------------*/
 
 #define APPLY_ON_BACK_INSERTION_CONTAINERS(Macro)       \
-  Macro(deque);                                         \
-  Macro(list);                                          \
-  Macro(vector);
+  Macro(::std::deque);                                  \
+  Macro(::std::list);                                   \
+  Macro(::std::vector);
 
   // Push back with '<<'.
 #define INSERT(Container)                               \
@@ -117,7 +112,7 @@ namespace std
   `---------------------------------*/
 
 #define APPLY_ON_ASSOCIATIVE_CONTAINERS(Macro)  \
-  Macro(set);
+  Macro(::std::set);
 
   // Insert with '<<'.
 #define INSERT(Container)                               \
@@ -132,17 +127,37 @@ namespace std
 
 
   /*-------------------------.
+  | Container == Container.  |
+  `-------------------------*/
+
+namespace libport
+{
+#define APPLY_ON_CONTAINERS(Macro)              \
+  APPLY_ON_ASSOCIATIVE_CONTAINERS(Macro)        \
+  APPLY_ON_BACK_INSERTION_CONTAINERS(Macro)
+
+  // Compare two containers.
+#define LIBPORT_CONTAINERS_DECLARE_EQUAL(Container)                     \
+  template <typename E, typename A>                                     \
+  bool operator==(const Container<E, A>& lhs,                           \
+                  const Container<E, A>& rhs);
+
+  APPLY_ON_CONTAINERS(LIBPORT_CONTAINERS_DECLARE_EQUAL)
+#undef LIBPORT_CONTAINERS_DECLARE_EQUAL
+}
+
+  /*-------------------------.
   | Container << Container.  |
   `-------------------------*/
 
 #define APPLY_ON_CONTAINERS_CONTAINERS(Macro)   \
-  Macro(deque, deque);                          \
-  Macro(list, list);                            \
-  Macro(list, set);                             \
-  Macro(set, set);                              \
-  Macro(set, vector);                           \
-  Macro(vector, set);                           \
-  Macro(vector, vector);
+  Macro(::std::deque,  ::std::deque);           \
+  Macro(::std::list,   ::std::list);            \
+  Macro(::std::list,   ::std::set);             \
+  Macro(::std::set,    ::std::set);             \
+  Macro(::std::set,    ::std::vector);          \
+  Macro(::std::vector, ::std::set);             \
+  Macro(::std::vector, ::std::vector);
 
   // Concatenate with '<<'.
   // Arguably concatenation should be `+='.  Consider the case

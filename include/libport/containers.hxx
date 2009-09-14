@@ -139,19 +139,30 @@ namespace libport
     c.erase(std::remove_if(begin(c), end_c, f), end_c);
   }
 
-  template <template <typename, typename> class Cont, typename E, typename A>
-  bool operator==(const Cont<E, A>& lhs, const Cont<E, A>& rhs)
-  {
-    typedef Cont<E, A> C;
-    typename C::const_iterator l = lhs.begin();
-    typename C::const_iterator r = rhs.begin();
 
-    for (; l != lhs.end() && r != rhs.end(); ++l, ++r)
-      if (*l != *r)
-        return false;
+  /*-------------------------.
+  | Container == Container.  |
+  `-------------------------*/
 
-    return l == lhs.end() && r == rhs.end();
+# define LIBPORT_CONTAINERS_DEFINE_EQUAL(Container)     \
+  template <typename E, typename A>                     \
+  bool operator==(const Container<E, A>& lhs,           \
+                  const Container<E, A>& rhs)           \
+  {                                                     \
+    typedef Container<E, A> C;                          \
+    typename C::const_iterator l = lhs.begin();         \
+    typename C::const_iterator r = rhs.begin();         \
+                                                        \
+    for (; l != lhs.end() && r != rhs.end(); ++l, ++r)  \
+      if (*l != *r)                                     \
+        return false;                                   \
+                                                        \
+    return l == lhs.end() && r == rhs.end();            \
   }
+
+  APPLY_ON_CONTAINERS(LIBPORT_CONTAINERS_DEFINE_EQUAL)
+# undef LIBPORT_CONTAINERS_DEFINE_EQUAL
+
 } // namespace libport
 
 namespace std
@@ -196,11 +207,11 @@ namespace std
     return c;                                   \
   }
 
-  INSERT(deque, deque);
-  INSERT(list, list);
-  INSERT(list, set);
-  INSERT(vector, set);
-  INSERT(vector, vector);
+  INSERT(::std::deque,  ::std::deque);
+  INSERT(::std::list,   ::std::list);
+  INSERT(::std::list,   ::std::set);
+  INSERT(::std::vector, ::std::set);
+  INSERT(::std::vector, ::std::vector);
 
 #undef INSERT
 
@@ -222,8 +233,8 @@ namespace std
     return c;                                   \
   }
 
-  INSERT(set, set);
-  INSERT(set, vector);
+  INSERT(::std::set, ::std::set);
+  INSERT(::std::set, ::std::vector);
 
 #undef INSERT
 

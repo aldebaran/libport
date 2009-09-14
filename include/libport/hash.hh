@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 // Hash maps, depending on the environment
 
 #ifndef LIBPORT_HASH_HH
@@ -75,7 +76,7 @@ namespace std
   {
     bool operator()(const char* s1, const char* s2) const
     {
-      return libport::streq(s1, s2);
+      return ::libport::streq(s1, s2);
     }
   };
 
