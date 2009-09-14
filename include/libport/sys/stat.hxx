@@ -12,6 +12,7 @@
 
 # include <direct.h>
 
+inline
 int
 mkdir(const char *path, mode_t)
 {

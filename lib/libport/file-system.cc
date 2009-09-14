@@ -34,16 +34,12 @@ namespace libport
   }
 
   bool
- is_dir(const std::string& f)
+  is_dir(const std::string& f)
   {
     struct stat st;
     if (stat(f.c_str(), &st))
       return false;
-# ifdef _MSC_VER
-    return st.st_mode & _S_IFDIR;
-# else
     return S_ISDIR(st.st_mode);
-# endif
   }
 
   std::string

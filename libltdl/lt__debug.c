@@ -99,7 +99,12 @@ lt_dllog (unsigned level, const char* format, ...)
         for (l = lt_logs; l; l = l->next)
           {
             va_list as;
+#if _MSC_VER
+            // FIXME: Make this nice looking.
+            as = args;
+#else
             va_copy(as, args);
+#endif
             errors += (*l->function) (l->data, level, format, as);
             va_end(as);
           }
