@@ -26,11 +26,22 @@ namespace libport
     template <class Exact>
     template <typename T>
     void
-    OSerializer<Exact>::serialize(const std::string& name, typename traits::Arg<T>::res v)
+    OSerializer<Exact>::serialize(const std::string& name,
+                                  typename traits::Arg<T>::res v)
     {
-      Exact::template Impl<T>::put(name, v, stream_, static_cast<Exact&>(*this));
+      Exact::template Impl<T>::put(name, v, stream_,
+                                   static_cast<Exact&>(*this));
+    }
+
+    template <typename T>
+    inline
+    void
+    write_(std::ostream& o, T t)
+    {
+      o.write(reinterpret_cast<char*>(&t), sizeof t);
     }
   }
+
 }
 
 #endif

@@ -24,9 +24,9 @@ namespace libport
 {
   namespace serialize
   {
-    /*--------------.
-    | Generic class |
-    `--------------*/
+    /*----------------.
+    | Generic class.  |
+    `----------------*/
     template <typename T>
     struct ICImpl
     {
@@ -37,9 +37,9 @@ namespace libport
       }
     };
 
-    /*----------.
-    | Hierarchy |
-    `----------*/
+    /*------------.
+    | Hierarchy.  |
+    `------------*/
     template <typename T>
     struct ISerialize
     {
@@ -66,9 +66,9 @@ namespace libport
       }
     };
 
-    /*---------.
-    | Fallback |
-    `---------*/
+    /*-----------.
+    | Fallback.  |
+    `-----------*/
     template <typename T>
     struct BinaryISerializer::Impl
     {
@@ -82,9 +82,9 @@ namespace libport
       }
     };
 
-    /*-----.
-    | char |
-    `-----*/
+    /*-------.
+    | char.  |
+    `-------*/
     template <>
     struct BinaryISerializer::Impl<char>
     {
@@ -97,39 +97,30 @@ namespace libport
       }
     };
 
-    /*----.
-    | int |
-    `----*/
-    template <>
-    struct BinaryISerializer::Impl<int>
-    {
-      static int get(const std::string&, std::istream& input,
-                      BinaryISerializer&)
-      {
-        int normalized;
-        input.read(reinterpret_cast<char*>(&normalized), sizeof(int));
-        return ntohl(normalized);
-      }
+    /*---------------------.
+    | unsigned int/short.  |
+    `---------------------*/
+# define SERIALIZE_NET_INTEGRAL(Type, Function)                         \
+    template <>                                                         \
+    struct BinaryISerializer::Impl<Type>                                \
+    {                                                                   \
+      static Type                                                       \
+      get(const std::string&, std::istream& input,                      \
+          BinaryISerializer&)                                           \
+      {                                                                 \
+        Type normalized;                                                \
+        input.read(reinterpret_cast<char*>(&normalized), sizeof(Type)); \
+        return Function(normalized);                                    \
+      }                                                                 \
     };
 
-    /*------.
-    | short |
-    `------*/
-    template <>
-    struct BinaryISerializer::Impl<short>
-    {
-      static short get(const std::string&, std::istream& input,
-                       BinaryISerializer&)
-      {
-        short normalized;
-        input.read(reinterpret_cast<char*>(&normalized), sizeof(short));
-        return ntohs(normalized);
-      }
-    };
+    SERIALIZE_NET_INTEGRAL(unsigned int,   ntohl);
+    SERIALIZE_NET_INTEGRAL(unsigned short, ntohs);
+#undef SERIALIZE_NET_INTEGRAL
 
-    /*-------.
-    | double |
-    `-------*/
+    /*---------.
+    | double.  |
+    `---------*/
     template <>
     struct BinaryISerializer::Impl<double>
     {
@@ -152,18 +143,17 @@ namespace libport
       {                                                                 \
         return static_cast<To>(Impl<To>::get(name, input, ser));        \
       }                                                                 \
-    };                                                                  \
+    }
 
-    BOUNCE(unsigned, int);
-    BOUNCE(unsigned short, short);
+    BOUNCE(bool,          char);
     BOUNCE(unsigned char, char);
-    BOUNCE(bool, char);
-
+    BOUNCE(int,           unsigned);
+    BOUNCE(short,         unsigned short);
 #undef BOUNCE
 
-    /*---------.
-    | Pointers |
-    `---------*/
+    /*-----------.
+    | Pointers.  |
+    `-----------*/
     template <typename T>
     struct BinaryISerializer::PCImpl
     {
@@ -222,9 +212,9 @@ namespace libport
       }
     };
 
-    /*------------.
-    | std::string |
-    `------------*/
+    /*--------------.
+    | std::string.  |
+    `--------------*/
     template <>
     struct BinaryISerializer::Impl<std::string>
     {
@@ -241,9 +231,9 @@ namespace libport
       }
     };
 
-    /*------------.
-    | std::vector |
-    `------------*/
+    /*--------------.
+    | std::vector.  |
+    `--------------*/
     template <typename T, typename A>
     struct BinaryISerializer::Impl<std::vector<T, A> >
     {
@@ -263,9 +253,9 @@ namespace libport
     // Hash and Symbol serialization is defined here because of
     // serialization/hash/symbol dependency loop.
 
-    /*----------------.
-    | libport::Symbol |
-    `----------------*/
+    /*------------------.
+    | libport::Symbol.  |
+    `------------------*/
     template <>
     struct BinaryISerializer::Impl<libport::Symbol>
     {
@@ -285,9 +275,9 @@ namespace libport
       }
     };
 
-    /*--------------.
-    | libport::hash |
-    `--------------*/
+    /*----------------.
+    | libport::hash.  |
+    `----------------*/
     template <typename K, typename V>
     struct BinaryISerializer::Impl<libport::hash_map<K, V> >
     {

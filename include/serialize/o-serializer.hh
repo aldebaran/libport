@@ -27,11 +27,16 @@ namespace libport
       ~OSerializer();
       template <typename T>
       void serialize(const std::string& name, typename traits::Arg<T>::res v);
-
     private:
       std::ostream& stream_;
     };
   }
+
+  /// Output \a t of primitive type T.
+  /// Uses sizeof t.
+  template <typename T>
+  void
+  write_(std::ostream& o, T t);
 }
 
 # include <serialize/o-serializer.hxx>

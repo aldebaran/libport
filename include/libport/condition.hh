@@ -7,12 +7,13 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_CONDITION_HH
 # define LIBPORT_CONDITION_HH
 
 # include <libport/lockable.hh>
 # include <libport/semaphore.hh>
-# include <libport/utime.hh>
+# include <libport/unistd.h>
 
 namespace libport
 {
@@ -43,7 +44,7 @@ namespace libport
     /// Release lock, wait until condition is signaled, acquire lock.
     void wait();
     /// Same as above, but only wait for \b duration. Return true if signaled.
-    bool tryWait(utime_t duration);
+    bool tryWait(useconds_t duration);
     /// Signal one thread wating on the condition.
     void signal();
     /// Signal all the threads waiting on the condition

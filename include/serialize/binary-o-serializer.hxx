@@ -91,37 +91,29 @@ namespace libport
       static void put(const std::string&, char c, std::ostream& output,
                       BinaryOSerializer&)
       {
-        output.write(&c, sizeof(char));
+        write_(output, c);
       }
     };
 
-    /*------.
-    | int.  |
-    `------*/
-    template <>
-    struct BinaryOSerializer::Impl<int>
-    {
-      static void put(const std::string&, int i, std::ostream& output,
-                      BinaryOSerializer&)
-      {
-        int normalized = htonl(i);
-        output.write(reinterpret_cast<char*>(&normalized), sizeof(int));
-      }
-    };
+    /*---------------------.
+    | unsigned int/short.  |
+    `---------------------*/
+# define SERIALIZE_NET_INTEGRAL(Type, Function) \
+    template <>                                 \
+    struct BinaryOSerializer::Impl<Type>        \
+    {                                           \
+      static void                               \
+      put(const std::string&,                   \
+          Type i, std::ostream& output,         \
+          BinaryOSerializer&)                   \
+      {                                         \
+        write_(output, Function(i));            \
+      }                                         \
+    }
 
-    /*--------.
-    | short.  |
-    `--------*/
-    template <>
-    struct BinaryOSerializer::Impl<short>
-    {
-      static void put(const std::string&, short i, std::ostream& output,
-                      BinaryOSerializer&)
-      {
-        short normalized = htons(i);
-        output.write(reinterpret_cast<char*>(&normalized), sizeof(short));
-      }
-    };
+    SERIALIZE_NET_INTEGRAL(unsigned int,   htonl);
+    SERIALIZE_NET_INTEGRAL(unsigned short, htons);
+#undef SERIALIZE_NET_INTEGRAL
 
     /*---------.
     | double.  |
@@ -133,7 +125,7 @@ namespace libport
                       BinaryOSerializer&)
       {
         // FIXME: non-portable
-        output.write(reinterpret_cast<char*>(&d), sizeof(double));
+        write_(output, d);
       }
     };
 
@@ -148,10 +140,10 @@ namespace libport
       }                                                                 \
     };                                                                  \
 
-    BOUNCE(unsigned, int);
-    BOUNCE(unsigned short, short);
-    BOUNCE(unsigned char, char);
-    BOUNCE(bool, char);
+    BOUNCE(bool,           char);
+    BOUNCE(unsigned char,  char);
+    BOUNCE(int,            unsigned int);
+    BOUNCE(short,          unsigned short);
 
 #undef BOUNCE
 

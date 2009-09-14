@@ -42,7 +42,7 @@ namespace libport
   }
 
   inline bool
-  Condition::tryWait(utime_t duration)
+  Condition::tryWait(useconds_t duration)
   {
     struct timeval now;
     gettimeofday(&now, 0);
@@ -123,7 +123,7 @@ namespace libport
   }
 
   inline bool
-  Condition::tryWait(utime_t duration)
+  Condition::tryWait(useconds_t duration)
   {
     // We are locked at this point.
     ++readers_count_;

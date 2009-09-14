@@ -18,7 +18,8 @@ namespace libport
 {
   namespace serialize
   {
-    class SERIALIZE_API BinaryOSerializer: public OSerializer<BinaryOSerializer>
+    class SERIALIZE_API BinaryOSerializer
+      : public OSerializer<BinaryOSerializer>
     {
     public:
       BinaryOSerializer(std::ostream& output);
