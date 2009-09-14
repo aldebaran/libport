@@ -224,7 +224,7 @@ sub compute_mode ()
             && ($Config{osvers} =~ /^10\..*/
                 # I don't know how PPC displays, so check it is not i386
                 # instead.
-                || $Config{uname} !~ /i386/)))
+                || $Config{myuname} !~ /i386/)))
     {
       $mode = mode_valgrind;
       $valgrind_log_file = '--log-file-exactly'
