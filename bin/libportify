@@ -16,6 +16,61 @@ sub contents ($)
 }
 
 
+## ------------- ##
+## fix headers.  ##
+## ------------- ##
+
+# fix_headers ($FILE, \$CONTENTS)
+# ------------------------------
+# Normalize the use of libport and system headers.
+sub fix_headers ($\$)
+{
+  my ($file, $contents_ref) = @_;
+  local $_ = $$contents_ref;
+
+  # System headers.
+  s{include\s*<(stdlib|stdio|string).h>}
+   {include <c$2>}g;
+
+  # Libport headers.
+  # FIXME: Compute this list.
+  s{<(cassert
+      |cerrno
+      |cmath
+      |csignal
+      |cstdio
+      |cstdlib
+      |cstring
+      |cstring.hxx
+      |fcntl.h
+      |pthread.h
+      |pthread.hxx
+      |semaphore.h
+      |time.h
+      |unistd.h
+      |sys/param.h
+      |sys/prctl.h
+      |sys/select.h
+      |sys/socket.h
+      |sys/stat.h
+      |sys/stat.hxx
+      |sys/time.h
+      |sys/time.hxx
+      |sys/types.h)>}
+  {
+    my $header = $1;
+    # System header wrappers must include system headers, they must not
+    # be converted to including themselves.
+    $file =~ $header ? "<$header>" : "<libport/$header>"
+  }gxe;
+
+  $$contents_ref = $_;
+}
+
+## --------------- ##
+## libport.debug.  ##
+## --------------- ##
+
 # to_format $STREAM
 # -----------------
 # Take a C++ stream content sequence without the stream itself
@@ -76,14 +131,13 @@ sub trace_num_to_category ($)
   return "INFO_" . uc $res;
 }
 
-# libportify ($STRING)
-# --------------------
-sub libportify ($)
+# libport_debug ($FILE, \$CONTENTS)
+# --------------------------------
+# Convert from gdebug.hh to Libport.Debug.
+sub libport_debug ($\$)
 {
-  local ($_) = @_;
-
-  s{include\s*<(string).h>}
-   {include <c$2>}g;
+  my ($file, $contents_ref) = @_;
+  local $_ = $$contents_ref;
 
   # TRACE(0, "foo: " << foo);
   s{TRACE\s*\((\d),\s*(.*?)\)}
@@ -95,12 +149,28 @@ sub libportify ($)
   s{DEBUG_LOG\s*\((.*?)\)(.*?)(?:\s*<<\s*std::endl)?\s*;}
    {gdebug("INFO_LOG", to_format("'[' << $1 << \"] \" $2")) . ";";}ges;
 
-  return $_;
+  $$contents_ref = $_;
 }
 
 
-# transform_file ($FILE)
-# -----------------------
+
+## ----------- ##
+## transform.  ##
+## ----------- ##
+
+
+# libportify ($FILE, $CONTENTS_REF)
+# ---------------------------------
+sub libportify ($\$)
+{
+  my ($file, $contents_ref) = @_;
+  fix_headers $file, $contents_ref;
+  libport_debug $file, $contents_ref;
+  return $contents_ref;
+}
+
+# transform_file (&TRANSFORM, $FILE)
+# ----------------------------------
 sub transform_file (\&$)
 {
   my ($transform, $file) = @_;
@@ -123,10 +193,16 @@ sub transform_file (\&$)
   rename ($file, $bak) or die "cannot rename $file as $bak: $!";
   my $contents = contents ($bak);
   my $out = new IO::File(">$file") or die;
-  print $out (&$transform($contents));
+  print $out (&$transform($file, $contents));
   $out->close;
   system("colordiff -u $bak $file");
 }
+
+
+
+## ------ ##
+## main.  ##
+## ------ ##
 
 map { transform_file &libportify, $_ } @ARGV;
 
