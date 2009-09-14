@@ -8,8 +8,4 @@
  * See the LICENSE file for more information.
  */
 
-#ifdef _MSC_VER
-
-# pragma warning( pop )
-
-#endif
+# include <libport/warning-pop.hh>

@@ -13,7 +13,9 @@ print '''\
 #ifndef LIBPORT_FORMAT_HH
 # define LIBPORT_FORMAT_HH
 
+# include <libport/system-warning-push.hh>
 # include <boost/format.hpp>
+# include <libport/system-warning-pop.hh>
 
 namespace libport
 {

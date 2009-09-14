@@ -139,6 +139,8 @@ libport_include_HEADERS +=				\
   include/libport/symbol.hh				\
   include/libport/symbol.hxx				\
   include/libport/sysexits.hh				\
+  include/libport/system-warning-pop.hh			\
+  include/libport/system-warning-push.hh		\
   include/libport/thread.hh				\
   include/libport/thread.hxx				\
   include/libport/throw-exception.hh			\

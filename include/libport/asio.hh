@@ -16,6 +16,8 @@
 # include <libport/sys/socket.h>
 # include <libport/iostream>
 
+# include <libport/system-warning-push.hh>
+
 // At least on OS X, many symbols are not available where we expect
 // them.  And it is clearly connected to our using
 // -fvisibility=hidden.  I (AD) could not exactly pinpoint the
@@ -33,6 +35,8 @@
 # endif
 
 # include <boost/function.hpp>
+
+# include <libport/system-warning-pop.hh>
 
 # include <libport/destructible.hh>
 # include <libport/export.hh>

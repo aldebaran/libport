@@ -37,17 +37,19 @@ namespace libport
       static categories_type categories;
       return categories;
     }
-    int& categories_largest()
+
+    size_t&
+    categories_largest()
     {
-      static int res = 0;
+      static size_t res = 0;
       return res;
     }
 
     int add_category(const std::string& name)
     {
       get_categories()[name] = true;
-      int size = name.size();
-      if (size > categories_largest())
+      size_t size = name.size();
+      if (categories_largest() < size)
         categories_largest() = size;
       return 42;
     }
@@ -203,11 +205,11 @@ namespace libport
     std::string res = (categories_stack_.empty()
                        ? "NONE"
                        : categories_stack_.back());
-    int size = res.size();
-    int largest = debug::categories_largest();
+    size_t size = res.size();
+    size_t largest = debug::categories_largest();
     if (size < largest)
     {
-      int diff = largest - size;
+      size_t diff = largest - size;
       res = std::string(diff / 2, ' ')
         + res
         + std::string(diff / 2 + diff % 2, ' ');
