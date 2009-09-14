@@ -12,7 +12,7 @@
 # define LIBPORT_SYS_STAT_H
 
 # include <sys/stat.h>
-# include <libport/sys/stat.h>
+# include <libport/sys/types.h>
 # include <libport/detect-win32.h>
 
 # ifdef WIN32

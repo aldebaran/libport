@@ -14,11 +14,13 @@
 #ifndef LIBPORT_CMATH
 # define LIBPORT_CMATH
 
-
 # include <libport/config.h>
 # include <libport/detect-win32.h>
 
-// Ask MSVC++ to define M_PI and the like.
+// Ask MSVC++ to define M_PI and the like.  Be sure to define this
+// very early in the series of includes, otherwise we might include
+// cmath indirectly before this defin.  In which case it is too late
+// to get the symbol.
 # define _USE_MATH_DEFINES
 # include <cmath>
 

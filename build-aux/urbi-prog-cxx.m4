@@ -180,12 +180,13 @@ case $CXX_FLAVOR in
 
   # Unfortunately there are many files that do not use config.h, so it
   # is safer, but adds clutter, to add this to the CPPFLAGS rather
-  # than in config.h.
+  # than in config.h.  See libport/cmath for _USE_MATH_DEFINES.
   for ac_flag in                                \
-     _CRT_SECURE_NO_DEPRECATE                   \
-     _CRT_NONSTDC_NO_DEPRECATE                  \
      _AFX_SECURE_NO_WARNINGS                    \
-     _ATL_SECURE_NO_WARNINGS
+     _ATL_SECURE_NO_WARNINGS                    \
+     _CRT_NONSTDC_NO_DEPRECATE                  \
+     _CRT_SECURE_NO_DEPRECATE                   \
+     _USE_MATH_DEFINES
   do
     URBI_APPEND_CPPFLAGS([-D$ac_flag=1])
   done
