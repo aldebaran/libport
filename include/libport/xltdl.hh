@@ -44,7 +44,8 @@ namespace libport
     xlt_handle open(const std::string& s) throw(exception);
 
     /// Throw an exception, or exit with exit_status_ if nonnull.
-    static void fail(std::string msg) throw (exception) ATTRIBUTE_NORETURN;
+    ATTRIBUTE_NORETURN
+    static void fail(std::string msg) throw (exception);
 
   private:
     /// Does not use the search path.  Can return 0.
@@ -77,8 +78,8 @@ namespace libport
     T sym(const std::string& s) throw (exception);
 
     /// Bounce to xlt_advise::fail.
-    static void fail(const std::string& msg) throw (exception)
-      ATTRIBUTE_NORETURN;
+    ATTRIBUTE_NORETURN
+    static void fail(const std::string& msg) throw (exception);
 
     /// The handle.
     /// Exposed, as currently we don't cover the whole lt_ interface.

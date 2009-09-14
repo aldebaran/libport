@@ -180,7 +180,13 @@ case $CXX_FLAVOR in
 
   # Unfortunately there are many files that do not use config.h, so it
   # is safer, but adds clutter, to add this to the CPPFLAGS rather
-  # than in config.h.  See libport/cmath for _USE_MATH_DEFINES.
+  # than in config.h.
+  #
+  # _USE_MATH_DEFINES to ask MSVC++ to define M_PI and the like.  Be
+  # sure to define this very early in the series of includes,
+  # otherwise we might include cmath indirectly before this define.
+  # In which case it is too late to get the symbol.
+    See libport/cmath for _USE_MATH_DEFINES.
   for ac_flag in                                \
      _AFX_SECURE_NO_WARNINGS                    \
      _ATL_SECURE_NO_WARNINGS                    \

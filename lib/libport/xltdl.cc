@@ -89,7 +89,7 @@ namespace libport
       fail("failed to destroy dladvise");
   }
 
-  xlt_advise::xlt_advise&
+  xlt_advise&
   xlt_advise::global(bool global)
     throw(xlt_advise::exception)
   {
@@ -99,7 +99,7 @@ namespace libport
     return *this;
   }
 
-  xlt_advise::xlt_advise&
+  xlt_advise&
   xlt_advise::ext()
     throw(xlt_advise::exception)
   {
