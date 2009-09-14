@@ -30,15 +30,15 @@ namespace libport
   inline Rs232::endpoint
   Rs232::remote_endpoint()
   {
-    throw std::runtime_error("Dummy fonction, remote_endpoint does not make sense in rs232.");
-    return endpoint();
+    throw std::runtime_error
+      ("Dummy fonction, remote_endpoint does not make sense in rs232.");
   }
 
   inline Rs232::endpoint
   Rs232::local_endpoint()
   {
-    throw std::runtime_error("Dummy fonction, remote_endpoint does not make sense in rs232.");
-    return endpoint();
+    throw std::runtime_error
+      ("Dummy fonction, local_endpoint does not make sense in rs232.");
   }
 
   inline Rs232&

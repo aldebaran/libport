@@ -16,7 +16,10 @@
 # define LIBPORT_LEXICAL_CAST_HH
 
 # include <string>
-# include <boost/lexical_cast.hpp>
+
+# include <libport/system-warning-push.hh>
+#  include <boost/lexical_cast.hpp>
+# include <libport/system-warning-pop.hh>
 
 // dynamic_cast and so forth are not in some scope.  So put these casts
 // here too.
