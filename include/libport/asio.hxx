@@ -756,7 +756,7 @@ namespace libport
   boost::system::error_code
   Socket::connectProto(const std::string& host,
                        const std::string& port,
-                       utime_t timeout,
+                       useconds_t timeout,
                        bool async,
                        BaseFactory bf)
   {
@@ -826,10 +826,9 @@ namespace libport
   Socket::connect(const std::string& host,
                   const std::string& port,
                   bool udp,
-                  utime_t timeout,
+                  useconds_t timeout,
                   bool async)
   {
-    assert(0 <= timeout);
     if (udp)
       return connectProto<boost::asio::ip::udp>(
         host, port, timeout, async,
@@ -844,7 +843,7 @@ namespace libport
   Socket::connect(const std::string& host,
                   unsigned port,
                   bool udp,
-                  utime_t timeout,
+                  useconds_t timeout,
                   bool async)
   {
     return connect(host, string_cast(port), udp, timeout, async);
@@ -973,7 +972,7 @@ namespace libport
   }
 
   inline AsyncCallHandler
-  asyncCall(boost::function0<void> callback, utime_t usDelay,
+  asyncCall(boost::function0<void> callback, useconds_t usDelay,
             boost::asio::io_service& io)
   {
     AsyncCallHandler

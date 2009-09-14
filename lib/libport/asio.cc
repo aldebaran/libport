@@ -185,7 +185,7 @@ namespace libport
   }
 
   void
-  Socket::sleep(utime_t duration)
+  Socket::sleep(useconds_t duration)
   {
     //FIXME: implement for real
     if (isPollThread())
@@ -198,7 +198,7 @@ namespace libport
   {
     io.stop();
   }
-  void pollFor(utime_t duration, bool once, boost::asio::io_service& io)
+  void pollFor(useconds_t duration, bool once, boost::asio::io_service& io)
   {
     boost::asio::io_service::work work(io);
     io.reset();

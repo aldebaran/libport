@@ -41,7 +41,7 @@
 # include <libport/destructible.hh>
 # include <libport/export.hh>
 # include <libport/finally.hh>
-# include <libport/utime.hh>
+# include <libport/unistd.h>
 
 # include <boost/version.hpp>
 # if BOOST_VERSION >= 103600
@@ -206,12 +206,12 @@ namespace libport
      */
     boost::system::error_code connect(const std::string& host,
                                       const std::string& port,
-                                      bool udp=false, utime_t usTimeout = 0,
+                                      bool udp=false, useconds_t usTimeout = 0,
                                       bool asynchronous = false);
 
     boost::system::error_code connect(const std::string& host,
                                       unsigned port,
-                                      bool udp=false, utime_t usTimeout = 0,
+                                      bool udp=false, useconds_t usTimeout = 0,
                                       bool asynchronous = false);
 
 # if BOOST_VERSION >= 103600
@@ -230,7 +230,7 @@ namespace libport
      */
     void async_connect(const std::string& host,
                        const std::string& port,
-                       bool udp=false, utime_t usTimeout = 0)
+                       bool udp=false, useconds_t usTimeout = 0)
     {
       connect(host, port, udp, usTimeout, true);
     }
@@ -282,7 +282,7 @@ namespace libport
     /** Sleep for specified amount of time, polling if current thread is
      * the asio worker thread
      */
-    static void sleep(utime_t duration);
+    static void sleep(useconds_t duration);
     boost::asio::io_service& get_io_service();
   protected:
     bool onRead_(boost::asio::streambuf&);
@@ -294,7 +294,7 @@ namespace libport
                 const std::string&port, BaseFactory bf);
     template<typename Proto, typename BaseFactory> boost::system::error_code
     connectProto(const std::string& host, const std::string& port,
-                 utime_t timeout, bool async, BaseFactory bf);
+                 useconds_t timeout, bool async, BaseFactory bf);
     boost::asio::io_service& io_;
   };
 
@@ -361,7 +361,7 @@ namespace libport
    *  @param once process at most one handler before returning if true
    */
   LIBPORT_API void
-  pollFor(utime_t duration, bool once = false,
+  pollFor(useconds_t duration, bool once = false,
           boost::asio::io_service& io = get_io_service());
 
   typedef boost::shared_ptr<boost::asio::deadline_timer> AsyncCallHandler;
@@ -371,7 +371,7 @@ namespace libport
    *  called.
    */
   AsyncCallHandler
-  asyncCall(boost::function0<void> callback, utime_t usDelay,
+  asyncCall(boost::function0<void> callback, useconds_t usDelay,
             boost::asio::io_service& io = get_io_service());
 }
 
