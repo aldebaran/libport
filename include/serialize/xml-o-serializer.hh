@@ -14,6 +14,7 @@
 
 # include <tinyxml/tinyxml.h>
 
+# include <serialize/export.hh>
 # include <serialize/o-serializer.hh>
 
 namespace libport
