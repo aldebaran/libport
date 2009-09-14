@@ -186,7 +186,6 @@ case $CXX_FLAVOR in
   # sure to define this very early in the series of includes,
   # otherwise we might include cmath indirectly before this define.
   # In which case it is too late to get the symbol.
-    See libport/cmath for _USE_MATH_DEFINES.
   for ac_flag in                                \
      _AFX_SECURE_NO_WARNINGS                    \
      _ATL_SECURE_NO_WARNINGS                    \
