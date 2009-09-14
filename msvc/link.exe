@@ -490,7 +490,7 @@ while (<>)
      # For some (bad) reason, cl.exe dumps on STDOUT the name of the
      # file being compiled.  This makes ccache believe something went
      # wrong, in which case it does not cache.
-     if (m/\.(c|cc|cpp|i|ii|S|o)$)
+     if (m/\.(c|cc|cpp|i|ii|S|o)$/)
      {
        print STDERR "Ignoring: {{{$_}}} which should be {{{$source}}}\n";
      }
