@@ -18,12 +18,39 @@
 
 # include <libport/warning-push.hh>
 
+// vcxx8/VC/PlatformSDK/Include/WSPiApi.h:893:
+// warning C4191: 'type cast' : unsafe conversion from 'int
+// (__stdcall *)(const char *,const char *,const addrinfo *,addrinfo **)'
+// to 'FARPROC'
+// Calling this function through the result pointer may cause your
+// program to fail.
+
+// boost/asio/detail/socket_ops.hpp:1274:
+// warning C4242: '=' : conversion from 'int' to 'u_short',
+//                possible loss of data
+
 // boost/asio/detail/win_thread.hpp:100:
 // warning C4365: 'argument' : conversion from 'DWORD' to 'int',
 //                             signed/unsigned mismatch
 
+// vcxx8/VC/include/xhash:657:
+// warning C4628: digraphs not supported with -Ze.
+// Character sequence '<:' not interpreted as alternate token for '['
+
+// boost/system/error_code.hpp:486:
+// warning C4640: 's' : construction of local static object is not thread-safe
+
+// vcxx8/VC/PlatformSDK/Include/BaseTsd.h:363:
+// warning C4826: Conversion from 'const void *' to 'void *'
+//                is sign-extended. This may cause unexpected runtime behavior.
+
 # pragma warning(disable:                       \
+                 4191                           \
+                 4242                           \
                  4365                           \
+                 4628                           \
+                 4640                           \
+                 4826                           \
   )
 
 #endif
