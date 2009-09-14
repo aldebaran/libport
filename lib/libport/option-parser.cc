@@ -11,7 +11,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <libport/foreach.hh>
-#include <libport/format.hpp>
+#include <libport/format.hh>
 #include <libport/markup-ostream.hh>
 #include <libport/option-parser.hh>
 
