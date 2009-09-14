@@ -216,7 +216,15 @@ sub compute_mode ()
 {
   my $valgrind_help = `valgrind --help 2>/dev/null`;
 
-  if ($valgrind_help)
+  use Config;
+  if ($valgrind_help
+      && ! ($Config{osname} eq 'darwin'
+            # Valgrind does not work with Snow Leopard (Darwin 10),
+            # nor Darwin PPC.
+            && ($Config{osvers} =~ /^10\..*/
+                # I don't know how PPC displays, so check it is not i386
+                # instead.
+                || $Config{uname} !~ /i386/)))
     {
       $mode = mode_valgrind;
       $valgrind_log_file = '--log-file-exactly'
