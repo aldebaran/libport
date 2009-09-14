@@ -80,10 +80,17 @@ handle_lib ()
   {
     # The libs we produce are called libfoo.lib, whereas the system
     # libs are called foo.lib.
-    # FIXME: Use external variables.
-    local lib_dirs="$HOME/local/usr/lib" # Path to Boost.
-    lib_dirs+=" $VCXX_PATH/lib"
-    lib_dirs+=" $VCXX_PATH/PlatformSDK/Lib"
+    # FIXME: Use external variables.  Need to find Boost and the like.
+    local i
+    local lib_dirs
+    for "$HOME/local/usr/lib" \
+        "$HOME/local" \
+        "$VCXX_PATH/lib" \
+        "$VCXX_PATH/PlatformSDK/Lib"
+    do
+      test ! -d $i ||
+        libdirs+=" $i"
+    done
 
     # On one line to make it easier to read set -x.
     systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' |
@@ -482,8 +489,8 @@ while (<>)
      # For some (bad) reason, cl.exe dumps on STDOUT the name of the
      # file being compiled.  This makes ccache believe something went
      # wrong, in which case it does not cache.
-     print STDERR "Unexpected output: {{{$_}}}\n"
-       unless m/\.(c|cc|cpp|i|ii|S|o)$/;
+#     print STDERR "Unexpected output: {{{$_}}}\n"
+#       unless m/\.(c|cc|cpp|i|ii|S|o)$/;
   }
   # cl : Command line warning D9024 : unrecognized source file type '"'"'FOO.o'"'"', object file assumed
   elsif (/Command line warning D9024 : unrecognized source file type '"'"'.*\.o'"'"'/)

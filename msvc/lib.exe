@@ -1,13 +1,18 @@
 #! /bin/bash
 
-
-
 PROG=lib.exe
 
-VCXX_BIN=$(winepath -u $VCINSTALLDIR)/bin/
-if ! test -x $VCXX_BIN/cl.exe; then
-  echo cl.exe not found in $VCXX_BIN 1>&2; exit 1
-fi
+for i in $(winepath -u $VCINSTALLDIR)/bin /home/build/.wine/drive_c/vcxx8/VC/bin
+do
+  if test -x $i/cl.exe; then
+    VCXX_BIN=$i
+    break
+  fi
+done
+
+test -n "$VCXX_BIN" ||
+  { echo cl.exe not found 1>&2; exit 1; }
+
 
 outargs=
 linkargs=
@@ -26,7 +31,7 @@ case $1 in
    lib=$(winepath -w $2)
    for f in $($VCXX_BIN/lib.exe /LIST $lib |tail -n +4 |sed -e 's/\r//g'); do
      mkdir -p $(dirname $f)
-     $VCXX_BIN/lib.exe  "/EXTRACT:$f"   "/OUT:$f" $lib
+     $VCXX_BIN/lib.exe "/EXTRACT:$f" "/OUT:$f" $lib
    done
    exit ;;
  t) shift
@@ -35,6 +40,7 @@ case $1 in
     exit;;
  *) ;;
 esac
+
 while ! test -z $1; do
   larg=
   carg=
