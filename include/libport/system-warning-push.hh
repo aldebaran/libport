@@ -13,10 +13,10 @@
 ///        afterards using libport/system-warning-pop.hh.
 
 #ifdef _MSC_VER
-
 # pragma warning( push )
+#endif
 
-# include <libport/warning-push.hh>
+#include <libport/warning-push.hh>
 
 // vcxx8/VC/PlatformSDK/Include/WSPiApi.h:893:
 // warning C4191: 'type cast' : unsafe conversion from 'int
@@ -44,6 +44,7 @@
 // warning C4826: Conversion from 'const void *' to 'void *'
 //                is sign-extended. This may cause unexpected runtime behavior.
 
+#ifdef _MSC_VER
 # pragma warning(disable:                       \
                  4191                           \
                  4242                           \
@@ -52,5 +53,4 @@
                  4640                           \
                  4826                           \
   )
-
 #endif
