@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /// \file libport/ufloat.hh
 /// \brief Definition of the ufloat classes.
 
@@ -54,7 +55,8 @@ namespace libport
 
 namespace libport
 {
-  static const ufloat PI(3.14159265358979323846264338327950288);
+  // FIXME: remove.
+  static const ufloat PI(M_PI);
   static const ufloat UINFINITY(999999999999999.0);
 }
 
