@@ -14,14 +14,17 @@
 #ifndef LIBPORT_CMATH
 # define LIBPORT_CMATH
 
-# include <cmath>
 
 # include <libport/config.h>
 # include <libport/detect-win32.h>
 
+// Ask MSVC++ to define M_PI and the like.
+# define _USE_MATH_DEFINES
+# include <cmath>
+
 # if defined _MSC_VER
 
-#  include <float.h>
+#  include <cfloat>
 namespace std
 {
 
