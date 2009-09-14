@@ -10,6 +10,8 @@
 #ifndef LIBPORT_SERIALIZE_XML_I_SERIALIZER_HH
 # define LIBPORT_SERIALIZE_XML_I_SERIALIZER_HH
 
+# include <serialize/export.hh>
+
 # include <serialize/i-serializer.hh>
 
 # include <tinyxml/tinyxml.h>

@@ -17,6 +17,7 @@
 # include <libport/config.h>
 # include <libport/export.hh>
 
+# include <libport/cmath> // M_PI
 # include <cfloat>
 # include <exception>
 # include <typeinfo> // bad_cast
@@ -97,7 +98,6 @@ namespace libport
 /* round is not C++ standard (not even POSIX) and neither gnulib nor Boost
  * provide one.  So here is my quick replacement.  */
 # ifndef LIBPORT_HAVE_ROUND
-#  include <libport/cmath>
 namespace libport
 {
   inline float round (float d);

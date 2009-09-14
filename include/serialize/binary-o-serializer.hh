@@ -11,6 +11,7 @@
 # define LIBPORT_SERIALIZE_BINARY_O_SERIALIZER_HH
 
 # include <libport/hash.hh>
+# include <serialize/export.hh>
 # include <serialize/o-serializer.hh>
 
 namespace libport
