@@ -19,22 +19,39 @@
 
 namespace libport
 {
+
+  namespace
+  {
+    static
+    inline
+    __int64
+    get_performance_counter()
+    {
+      LARGE_INTEGER res;
+      QueryPerformanceCounter(&res);
+      return *reinterpret_cast<const __int64*>(&res);
+    }
+
+    static
+    inline
+    __int64
+    get_performance_frequency()
+    {
+      LARGE_INTEGER res;
+      QueryPerformanceFrequency(&res);
+      return *reinterpret_cast<const __int64*>(&res);
+    }
+
+  }
+
   utime_t
   utime()
   {
     // NOTE: casting an __int64 in a LARGE_INTEGER is "safe" according to MSDN.
-    static __int64 pfreq = 0;
-    static __int64 base = 0;
-
-    if (!pfreq)
-    {
-      QueryPerformanceFrequency((LARGE_INTEGER*) &pfreq);
-      QueryPerformanceCounter ((LARGE_INTEGER*) &base);
-      // std::cerr << "perfcounter at frequency of " << pfreq << "\n";
-    }
-    __int64 val;
-    QueryPerformanceCounter((LARGE_INTEGER*) &val);
-    return (utime_t) ((val - base) * 1000000LL) / pfreq;
+    static __int64 freq = get_performance_frequency();
+    __int64 now = get_performance_counter();
+    static __int64 base = now;
+    return (utime_t) ((now - base) * 1000000LL) / freq;
   }
 }
 
