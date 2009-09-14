@@ -23,9 +23,9 @@ namespace libport
 {
   namespace serialize
   {
-    /*--------------.
-    | Generic class |
-    `--------------*/
+    /*----------------.
+    | Generic class.  |
+    `----------------*/
     template <typename T>
     struct CImpl
     {
@@ -36,9 +36,9 @@ namespace libport
       }
     };
 
-    /*----------.
-    | Hierarchy |
-    `----------*/
+    /*------------.
+    | Hierarchy.  |
+    `------------*/
     typedef std::pair<const meta::BaseHierarchy*, BinaryOSerializer*> ICookie;
     template <typename T>
     struct Serialize
@@ -67,9 +67,9 @@ namespace libport
       }
     };
 
-    /*---------.
-    | Fallback |
-    `---------*/
+    /*-----------.
+    | Fallback.  |
+    `-----------*/
     template <typename T>
     struct BinaryOSerializer::Impl
     {
@@ -82,9 +82,9 @@ namespace libport
       }
     };
 
-    /*-----.
-    | char |
-    `-----*/
+    /*-------.
+    | char.  |
+    `-------*/
     template <>
     struct BinaryOSerializer::Impl<char>
     {
@@ -95,9 +95,9 @@ namespace libport
       }
     };
 
-    /*----.
-    | int |
-    `----*/
+    /*------.
+    | int.  |
+    `------*/
     template <>
     struct BinaryOSerializer::Impl<int>
     {
@@ -109,9 +109,9 @@ namespace libport
       }
     };
 
-    /*------.
-    | short |
-    `------*/
+    /*--------.
+    | short.  |
+    `--------*/
     template <>
     struct BinaryOSerializer::Impl<short>
     {
@@ -123,9 +123,9 @@ namespace libport
       }
     };
 
-    /*-------.
-    | double |
-    `-------*/
+    /*---------.
+    | double.  |
+    `---------*/
     template <>
     struct BinaryOSerializer::Impl<double>
     {
@@ -155,21 +155,23 @@ namespace libport
 
 #undef BOUNCE
 
-    /*---------.
-    | Pointers |
-    `---------*/
+    /*-----------.
+    | Pointers.  |
+    `-----------*/
     template <typename T>
     struct BinaryOSerializer::Impl<T*>
     {
-      static void put(const std::string&, const T* ptr, std::ostream& output,
-                      BinaryOSerializer& ser)
+      static void
+      put(const std::string&, const T* ptr, std::ostream& output,
+          BinaryOSerializer& ser)
       {
         if (!ptr)
         {
           Impl<char>::put("opt", null, output, ser);
           return;
         }
-        ptr_map_type::iterator it = ser.ptr_map_.find(reinterpret_cast<long>(ptr));
+        ptr_map_type::iterator it =
+          ser.ptr_map_.find(reinterpret_cast<long>(ptr));
         if (it != ser.ptr_map_.end())
         {
           Impl<char>::put("opt", cached, output, ser);
@@ -185,14 +187,16 @@ namespace libport
       }
     };
 
-    /*------------.
-    | std::string |
-    `------------*/
+    /*--------------.
+    | std::string.  |
+    `--------------*/
     template <>
     struct BinaryOSerializer::Impl<std::string>
     {
-      static void put(const std::string& name, const std::string& s, std::ostream& output,
-                      BinaryOSerializer& ser)
+      static void
+      put(const std::string& name,
+          const std::string& s, std::ostream& output,
+          BinaryOSerializer& ser)
       {
         size_t size = s.size();
         // FIXME: throw in case of overflow
@@ -201,14 +205,16 @@ namespace libport
       }
     };
 
-    /*------------.
-    | std::vector |
-    `------------*/
+    /*--------------.
+    | std::vector.  |
+    `--------------*/
     template <typename T, typename A>
     struct BinaryOSerializer::Impl<std::vector<T, A> >
     {
-      static void put(const std::string& name, const std::vector<T, A>& v, std::ostream& output,
-                      BinaryOSerializer& ser)
+      static void
+      put(const std::string& name,
+          const std::vector<T, A>& v, std::ostream& output,
+          BinaryOSerializer& ser)
       {
         // FIXME: raise if overflow
         Impl<unsigned short>::put(name, v.size(), output, ser);
@@ -220,14 +226,16 @@ namespace libport
     // Hash and Symbol serialization is defined here because of
     // serialization/hash/symbol dependency loop.
 
-    /*----------------.
-    | libport::Symbol |
-    `----------------*/
+    /*------------------.
+    | libport::Symbol.  |
+    `------------------*/
     template <>
     struct BinaryOSerializer::Impl<libport::Symbol>
     {
-      static void put(const std::string& name, libport::Symbol s, std::ostream& output,
-                      BinaryOSerializer& ser)
+      static void
+      put(const std::string& name,
+          libport::Symbol s, std::ostream& output,
+          BinaryOSerializer& ser)
       {
         symbol_map_type::iterator it = ser.symbol_map_.find(s);
         if (it == ser.symbol_map_.end())
@@ -244,15 +252,16 @@ namespace libport
       }
     };
 
-    /*--------------.
-    | libport::hash |
-    `--------------*/
+    /*----------------.
+    | libport::hash.  |
+    `----------------*/
     template <typename K, typename V>
     struct BinaryOSerializer::Impl<libport::hash_map<K, V> >
     {
-      static void put(const std::string&,
-                      const libport::hash_map<K, V>& m, std::ostream&,
-                      BinaryOSerializer& ser)
+      static void
+      put(const std::string&,
+          const libport::hash_map<K, V>& m, std::ostream&,
+          BinaryOSerializer& ser)
       {
         typedef typename libport::hash_map<K, V>::value_type Value;
         // FIXME: raise if overflow
