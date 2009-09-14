@@ -7,7 +7,10 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifdef _MSC_VER
+
+# include <direct.h>
 
 int
 mkdir(const char *path, mode_t)

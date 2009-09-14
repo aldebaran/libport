@@ -11,7 +11,9 @@
 # define LIBPORT_META_TYPELIST_HH
 
 // Avoid numerous unrelevant warnings triggered by metaprogramming
-# pragma GCC system_header
+# if defined __GNUC__
+#  pragma GCC system_header
+# endif
 
 # include <libport/meta.hh>
 

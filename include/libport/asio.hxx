@@ -14,7 +14,9 @@
 // the warnings in this header.  The cure might be worse than the
 // disease, and maybe fixing the headers on our machines would be a
 // better option.
-# pragma GCC system_header
+# if defined __GNUC__
+#  pragma GCC system_header
+# endif
 #endif
 
 #include <boost/asio.hpp>

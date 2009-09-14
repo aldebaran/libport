@@ -14,14 +14,13 @@
 # include <string>
 
 # include <libport/traits.hh>
-# include <serialize/export.hh>
 
 namespace libport
 {
   namespace serialize
   {
     template <class Exact>
-    class SERIALIZE_API OSerializer
+    class OSerializer
     {
     public:
       OSerializer(std::ostream& output);

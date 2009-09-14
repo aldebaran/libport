@@ -31,7 +31,9 @@ sys_libport_include_HEADERS =			\
   include/libport/sys/stat.h			\
   include/libport/sys/stat.hxx			\
   include/libport/sys/time.h			\
-  include/libport/sys/time.hxx
+  include/libport/sys/time.hxx			\
+  include/libport/sys/types.h
+
 
 # C++ headers.
 libport_include_HEADERS +=				\

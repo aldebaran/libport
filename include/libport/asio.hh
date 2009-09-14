@@ -21,14 +21,14 @@
 // -fvisibility=hidden.  I (AD) could not exactly pinpoint the
 // problem, but at least I know one cure: do not play dirty visibility
 // tricks with Asio.
-# if ! defined WIN32
+# if defined __GNUC__ && ! defined WIN32
 #  pragma GCC visibility push(default)
 # endif
 # include <boost/asio.hpp>
 # if defined LIBPORT_ENABLE_SSL
 #   include <boost/asio/ssl.hpp>
 # endif
-# if ! defined WIN32
+# if defined __GNUC__ && ! defined WIN32
 #  pragma GCC visibility pop
 # endif
 

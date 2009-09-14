@@ -14,14 +14,13 @@
 # include <string>
 
 # include <libport/hierarchy.hh>
-# include <serialize/export.hh>
 
 namespace libport
 {
   namespace serialize
   {
     template <class Exact>
-    class SERIALIZE_API ISerializer
+    class ISerializer
     {
     public:
       ISerializer(std::istream& input);
