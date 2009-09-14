@@ -203,7 +203,6 @@ namespace libport
     mutable std::stringstream stream_;
   };
 
-  extern boost::function0<Debug*> make_debugger;
 
   namespace opts
   {
