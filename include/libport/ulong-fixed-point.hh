@@ -28,7 +28,7 @@
 #ifndef LIBPORT_ULONG_FIXED_POINT_HH
 # define LIBPORT_ULONG_FIXED_POINT_HH
 # include <iostream>
-# include <cmath>
+# include <libport/cmath>
 # include <algorithm>
 
 namespace libport

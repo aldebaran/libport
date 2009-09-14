@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 #ifndef WIN32
-# include <sys/time.h>
+# include <libport/sys/time.h>
 # include <errno.h>
 #endif
 

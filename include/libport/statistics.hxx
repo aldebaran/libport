@@ -10,7 +10,7 @@
 #ifndef LIBPORT_STATISTICS_HXX
 # define LIBPORT_STATISTICS_HXX
 
-# include <cmath>
+# include <libport/cmath>
 
 namespace libport
 {

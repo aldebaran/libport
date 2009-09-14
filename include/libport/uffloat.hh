@@ -28,7 +28,7 @@
 #ifndef LIBPORT_UFFLOAT_HH
 # define LIBPORT_UFFLOAT_HH
 # include <iostream>
-# include <cmath>
+# include <libport/cmath>
 # include <algorithm>
 
 namespace libport

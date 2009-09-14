@@ -9,7 +9,7 @@
  */
 #ifndef LIBPORT_SMART_ALLOCATED_HH
 # define LIBPORT_SMART_ALLOCATED_HH
-#include <cstdlib>
+#include <libport/cstdlib>
 #include <stdexcept>
 namespace libport
 {

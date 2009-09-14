@@ -10,7 +10,7 @@
 #ifndef LIBPORT_SEMAPHORE_HH
 # define LIBPORT_SEMAPHORE_HH
 
-# include <cassert>
+# include <libport/cassert>
 # include <cstddef> // size_t
 
 # include <boost/noncopyable.hpp>

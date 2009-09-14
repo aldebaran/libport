@@ -25,7 +25,7 @@ namespace libport
   typedef HANDLE Lock;
 }
 # elif LIBPORT_HAVE_PTHREAD_H
-# include <pthread.h>
+# include <libport/pthread.h>
 namespace libport
 {
   typedef pthread_mutex_t Lock;

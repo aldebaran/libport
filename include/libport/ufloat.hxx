@@ -43,7 +43,7 @@ namespace libport
 /* round is not C++ standard (not even POSIX) and neither gnulib nor Boost
  * provide one.  So here is my quick replacement.  */
 # ifndef LIBPORT_HAVE_ROUND
-#  include <cmath>
+#  include <libport/cmath>
 namespace libport
 {
   inline float round(float d)
@@ -68,7 +68,7 @@ namespace libport
  * provides a replacement in its manual, in fact it doesn't, nor does Boost.
  * So here is my quick replacement.  */
 # ifndef LIBPORT_HAVE_TRUNC
-#  include <cmath>
+#  include <libport/cmath>
 namespace libport
 {
   inline double trunc (double d)

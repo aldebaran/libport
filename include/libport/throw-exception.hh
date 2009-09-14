@@ -14,7 +14,7 @@
 #ifndef LIBPORT_THROW_EXCEPTION_HH
 # define LIBPORT_THROW_EXCEPTION_HH
 
-# include <cstdlib>
+# include <libport/cstdlib>
 
 # include <boost/throw_exception.hpp>
 

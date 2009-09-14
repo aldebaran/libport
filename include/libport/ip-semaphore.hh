@@ -15,8 +15,8 @@
 # ifdef LIBPORT_HAVE_SEMGET
 #  define LIBPORT_HAVE_IP_SEMAPHORE
 
-#  include <sys/types.h>
-#  include <unistd.h>
+#  include <libport/sys/types.h>
+#  include <libport/unistd.h>
 
 namespace libport
 {

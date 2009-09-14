@@ -15,7 +15,7 @@
 #ifndef LIBPORT_BOOST_INTRUSIVE_PTR_HXX
 # define LIBPORT_BOOST_INTRUSIVE_PTR_HXX
 
-# include <cassert>
+# include <libport/cassert>
 
 # include <libport/compiler.hh>
 

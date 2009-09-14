@@ -47,7 +47,7 @@ extern "C"
 }
 
 # else
-#  include <sys/types.h>
+#  include <libport/sys/types.h>
 #  include <dirent.h>
 # endif
 
