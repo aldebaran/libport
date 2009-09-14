@@ -40,7 +40,7 @@ namespace libport
 
 #else /* !WIN32 */
 
-# include <time.h>
+# include <ctime>
 
 namespace libport
 {

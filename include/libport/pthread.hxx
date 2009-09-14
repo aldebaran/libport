@@ -10,7 +10,7 @@
 #ifndef LIBPORT_PTHREAD_HXX
 # define LIBPORT_PTHREAD_HXX
 
-# include <assert.h>
+# include <libport/cassert>
 # include <boost/function.hpp>
 
 typedef HANDLE (WINAPI *OT)(DWORD, BOOL, DWORD);

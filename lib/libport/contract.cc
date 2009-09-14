@@ -12,7 +12,7 @@
  */
 
 #include <iostream>
-#include <cstdlib>
+#include <libport/cstdlib>
 
 #include <libport/contract.hh>
 

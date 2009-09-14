@@ -15,7 +15,7 @@
 # include <libport/cstdlib>
 # include <sys/ipc.h>
 # include <sys/sem.h>
-# include <sys/types.h>
+# include <libport/sys/types.h>
 
 # include <libport/cassert>
 # include <libport/ip-semaphore.hh>

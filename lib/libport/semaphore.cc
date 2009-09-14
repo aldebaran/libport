@@ -29,9 +29,9 @@
 #ifdef __APPLE__
 # include <fstream>
 # include <sstream>
-# include <sys/stat.h>
-# include <sys/time.h>
-# include <signal.h>
+# include <libport/sys/stat.h>
+# include <libport/sys/time.h>
+# include <libport/csignal>
 #endif
 
 namespace libport

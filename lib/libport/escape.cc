@@ -13,7 +13,7 @@
  **/
 
 #include <cctype>
-#include <cstdlib>
+#include <libport/cstdlib>
 #include <iomanip>
 #include <ios>
 #include <stdexcept>

@@ -15,8 +15,8 @@
 #include <iostream>
 #include <libport/fcntl.h>
 #include <libport/unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <libport/sys/stat.h>
+#include <libport/sys/types.h>
 #include <cctype>
 
 #include <libport/contract.hh>

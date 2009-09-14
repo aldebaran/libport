@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
-#include <cassert>
+#include <libport/cassert>
 #include <iostream>
 
 #include <libport/cassert>

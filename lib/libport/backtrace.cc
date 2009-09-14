@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
-#include <cstdlib>
+#include <libport/cstdlib>
 #include <iostream>
 
 #include <libport/backtrace.hh>
@@ -17,7 +17,7 @@
 #ifdef WIN32
 # include <windows.h>
 # include <winbase.h>
-# include <cassert>
+# include <libport/cassert>
 
 typedef USHORT (WINAPI *CSBT)(ULONG, ULONG, PVOID*, PULONG);
 
@@ -43,7 +43,7 @@ namespace libport
 
 #elif LIBPORT_HAVE_EXECINFO_H
 # include <execinfo.h>
-# include <cstdlib>
+# include <libport/cstdlib>
 
 namespace libport
 {

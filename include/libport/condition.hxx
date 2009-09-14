@@ -9,7 +9,7 @@
  */
 #ifndef WIN32
 # include <libport/sys/time.h>
-# include <errno.h>
+# include <libport/cerrno>
 #endif
 
 #include <libport/cassert>

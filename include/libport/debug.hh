@@ -15,7 +15,7 @@
 
 # ifndef LIBPORT_DEBUG_DISABLE
 
-#  include <signal.h>
+#  include <libport/csignal>
 
 #  include <list>
 #  include <map>

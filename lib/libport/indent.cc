@@ -14,7 +14,7 @@
 
 #include <iomanip>
 #include <ostream>
-#include <cassert>
+#include <libport/cassert>
 
 #include <libport/indent.hh>
 

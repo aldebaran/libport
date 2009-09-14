@@ -7,7 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
-#include <cassert>
+#include <libport/cassert>
 
 #include <libport/program-name.hh>
 
