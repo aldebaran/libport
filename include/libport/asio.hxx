@@ -19,11 +19,13 @@
 # endif
 #endif
 
-#include <boost/asio.hpp>
-#include <boost/bind.hpp>
-#include <boost/system/error_code.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/construct.hpp>
+#include <libport/system-warning-push.hh>
+#  include <boost/asio.hpp>
+#  include <boost/bind.hpp>
+#  include <boost/system/error_code.hpp>
+#  include <boost/lambda/lambda.hpp>
+#  include <boost/lambda/construct.hpp>
+#include <libport/system-warning-pop.hh>
 
 #include <libport/lexical-cast.hh>
 #include <libport/lockable.hh>

@@ -138,10 +138,10 @@ namespace libport
     template <>                                                         \
     struct BinaryISerializer::Impl<From>                                \
     {                                                                   \
-      static From get(const std::string& name,                          \
-                      std::istream& input, BinaryISerializer& ser)      \
+      static To get(const std::string& name,                            \
+                    std::istream& input, BinaryISerializer& ser)        \
       {                                                                 \
-        return static_cast<To>(Impl<To>::get(name, input, ser));        \
+        return static_cast<To>(Impl<From>::get(name, input, ser));      \
       }                                                                 \
     }
 

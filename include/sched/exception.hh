@@ -43,20 +43,20 @@ namespace sched
  private:								\
    boost::optional<Type> Name ## _;
 
-#define COMPLETE_EXCEPTION(Name)				\
- public:							\
+#define COMPLETE_EXCEPTION(Name)                        \
+ public:                                                \
  virtual ::sched::exception_ptr clone() const		\
- {								\
-   return ::sched::exception_ptr(new Name(*this));		\
- };								\
- virtual std::string what() const throw()			\
- {								\
-   return #Name;						\
- }								\
-private:							\
-  ATTRIBUTE_NORETURN virtual void rethrow_() const		\
-  {								\
-    throw *this;						\
+ {                                                      \
+   return ::sched::exception_ptr(new Name(*this));      \
+ };                                                     \
+ virtual std::string what() const throw()               \
+ {                                                      \
+   return #Name;                                        \
+ }                                                      \
+private:                                                \
+  ATTRIBUTE_NORETURN virtual void rethrow_() const      \
+  {                                                     \
+    throw *this;                                        \
   };
 
 } // namespace sched

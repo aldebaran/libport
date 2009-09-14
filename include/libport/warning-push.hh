@@ -38,6 +38,12 @@
 // eg in: while (true) ...
 //
 
+// C4251: 'urbi::UList::array' : class 'std::vector<_Ty>' needs
+// to have dll-interface to be used by clients of class 'urbi::UList'
+//
+// In practice, I (Akim) have not seen any problems with this.
+
+
 // C4290: http://msdn.microsoft.com/en-us/library/sa28fef8.aspx
 //
 // A function is declared using exception specification, which Visual
@@ -54,16 +60,17 @@
 // template function.".  So this is basically a backward compatibility
 // warning that we can ignore.
 
+// C4350
+// sched/job.hh:438:
+// warning C4350: behavior change:
+// 'std::auto_ptr<_Ty>::auto_ptr(std::auto_ptr_ref<_Ty>) throw()'
+// called instead of
+// 'std::auto_ptr<_Ty>::auto_ptr(std::auto_ptr<_Ty> &) throw()'
+
 // C4355: 'this' : used in base member initializer list
 //
 // For instance: UVar::UVar() : rangemin(*this, ...)
 //                                       ^^^^^^
-
-
-// C4251: 'urbi::UList::array' : class 'std::vector<_Ty>' needs
-// to have dll-interface to be used by clients of class 'urbi::UList'
-//
-// In practice, I (Akim) have not seen any problems with this.
 
 
 // C4512: 'classname' : assignment operator could not be generated
@@ -115,7 +122,7 @@
                  4003 4061 4099                 \
                  4121 4127                      \
                  4251 4290                      \
-                 4347 4355                      \
+                 4347 4350 4355                 \
                  4512 4514 4571                 \
                  4619 4625 4626 4628 4668       \
                  4710 4711                      \
