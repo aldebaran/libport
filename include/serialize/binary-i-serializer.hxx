@@ -134,14 +134,15 @@ namespace libport
       }
     };
 
+/// Define the handling of To using the implementation for From.
 #define BOUNCE(From, To)                                                \
     template <>                                                         \
     struct BinaryISerializer::Impl<From>                                \
     {                                                                   \
-      static To get(const std::string& name,                            \
-                    std::istream& input, BinaryISerializer& ser)        \
+      static From get(const std::string& name,                          \
+                      std::istream& input, BinaryISerializer& ser)      \
       {                                                                 \
-        return static_cast<To>(Impl<From>::get(name, input, ser));      \
+        return static_cast<From>(Impl<To>::get(name, input, ser));      \
       }                                                                 \
     }
 
