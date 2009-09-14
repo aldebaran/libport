@@ -33,10 +33,6 @@
 // warning C4365: 'argument' : conversion from 'DWORD' to 'int',
 //                             signed/unsigned mismatch
 
-// vcxx8/VC/include/xhash:657:
-// warning C4628: digraphs not supported with -Ze.
-// Character sequence '<:' not interpreted as alternate token for '['
-
 // boost/system/error_code.hpp:486:
 // warning C4640: 's' : construction of local static object is not thread-safe
 

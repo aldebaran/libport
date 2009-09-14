@@ -91,6 +91,10 @@
 // "An assignment operator was not accessible in a base class and was therefore
 //  not generated for a derived class."
 
+// vcxx8/VC/include/xhash:657:
+// warning C4628: digraphs not supported with -Ze.
+// Character sequence '<:' not interpreted as alternate token for '['
+
 // C4668, level 4: http://msdn.microsoft.com/en-us/library/4dt9kyhy(VS.80).aspx
 //        'MACRO' is not defined as a preprocessor macro, replacing
 //                 with '0' for '#if/#elif'
@@ -113,7 +117,7 @@
                  4251 4290                      \
                  4347 4355                      \
                  4512 4514 4571                 \
-                 4619 4625 4626 4668            \
+                 4619 4625 4626 4628 4668       \
                  4710 4711                      \
                  4800 4820)
 
