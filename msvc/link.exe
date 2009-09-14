@@ -492,13 +492,12 @@ while (<>)
      # wrong, in which case it does not cache.
      if (m/\.(c|cc|cpp|i|ii|S|o)$)
      {
-       print STDERR "Ignoring: {{{$_}}} which should be {{{$source}}}\n"
+       print STDERR "Ignoring: {{{$_}}} which should be {{{$source}}}\n";
      }
      else
      {
-       print STDERR "Unexpected output: {{{$_}}}\n"
+       print STDERR "Unexpected output: {{{$_}}}\n";
      }
-#       unless m/\.(c|cc|cpp|i|ii|S|o)$/;
   }
   # cl : Command line warning D9024 : unrecognized source file type '"'"'FOO.o'"'"', object file assumed
   elsif (/Command line warning D9024 : unrecognized source file type '"'"'.*\.o'"'"'/)
