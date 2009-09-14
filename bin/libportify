@@ -29,8 +29,24 @@ sub fix_headers ($\$)
   local $_ = $$contents_ref;
 
   # System headers.
-  s{include\s*<(stdlib|stdio|string).h>}
-   {include <c$2>}g;
+  s{include\s*<
+    (assert
+    |ctype
+    |errno
+    |limits
+    |locale
+    |math
+    |setjmp
+    |signal
+    |stdarg
+    |stddef
+    |stdio
+    |stdint
+    |stdlib
+    |string
+    |time
+    ).h>}
+   {include <c$1>}gx;
 
   # Libport headers.
   # FIXME: Compute this list.
