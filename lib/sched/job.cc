@@ -67,7 +67,7 @@ namespace sched
 	check_for_pending_exception();
       work();
     }
-    catch (TerminateException& e)
+    catch (TerminateException&)
     {
       // Normal termination requested.
     }

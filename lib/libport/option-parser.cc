@@ -7,10 +7,11 @@
  *
  * See the LICENSE file for more information.
  */
-#include <boost/format.hpp>
+
 #include <boost/algorithm/string.hpp>
 
 #include <libport/foreach.hh>
+#include <libport/format.hpp>
 #include <libport/markup-ostream.hh>
 #include <libport/option-parser.hh>
 
@@ -241,8 +242,7 @@ namespace libport
       else
       {
         if (args.size() < 2)
-          throw Error(str(boost::format("--%s takes one argument")
-                          % name_long_));
+          throw Error(format("--%s takes one argument", name_long_));
         args.erase(args.begin());
         res = args[0];
       }
