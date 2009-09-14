@@ -82,10 +82,11 @@ handle_lib ()
     # libs are called foo.lib.
     # FIXME: Use external variables.  Need to find Boost and the like.
     local i
-    local lib_dirs
-    for "$HOME/local/usr/lib" \
-        "$HOME/local" \
-        "$VCXX_PATH/lib" \
+    local libdirs
+    for i in                                    \
+        "$HOME/local/usr/lib"                   \
+        "$HOME/local"                           \
+        "$VCXX_PATH/lib"                        \
         "$VCXX_PATH/PlatformSDK/Lib"
     do
       test ! -d $i ||
@@ -93,7 +94,7 @@ handle_lib ()
     done
 
     # On one line to make it easier to read set -x.
-    systemlibs=$(find $lib_dirs -iname '*.lib' -exec basename {} ';' |
+    systemlibs=$(find $libdirs -iname '*.lib' -exec basename {} ';' |
                   # We tried to keep the original case, but it was a
                   # PITA, since, at least in our environment, some
                   # libraries (ws2_32) as two different cases: WS2_32
