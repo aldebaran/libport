@@ -16,8 +16,6 @@
 #ifndef LIBPORT_FOREACH_HH
 # define LIBPORT_FOREACH_HH
 
-# include <libport/range.hh>
-
 # include <libport/system-warning-push.hh>
 #  include <boost/foreach.hpp>
 # include <libport/system-warning-pop.hh>
@@ -31,9 +29,8 @@
 # define foreach BOOST_FOREACH
 #endif
 
-/// \def rforeach(VarDec, Sequence)
-/// \brief Same as foreach, but in reversed order.
-# define rforeach(Variable, Container)                                  \
-  BOOST_FOREACH(Variable, libport::make_reverse_iterator_range(Container))
+/// \def rforeach
+/// \brief Shortcut for \a BOOST_REVERSE_FOREACH
+# define rforeach BOOST_REVERSE_FOREACH
 
 #endif // !LIBPORT_FOREACH_HH
