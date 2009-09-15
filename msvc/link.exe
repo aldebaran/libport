@@ -496,6 +496,9 @@ while (<>)
       # cl : Command line warning D9024 :
       # unrecognized source file type '"'"'FOO.o'"'"', object file assumed
       /Command line warning D9024 : unrecognized source file type '"'"'.*\.o'"'"'/
+      ||
+      # LINK : warning LNK4068: /MACHINE not specified; defaulting to X86
+      m{LINK : warning LNK4068: /MACHINE not specified; defaulting to X86}
       )
   {
     print STDERR "Ignoring: {{{$_}}}\n"
@@ -646,9 +649,9 @@ esac
 
 # Compiler verbosity (-v).
 compiler_verbose=false
-# The program/function used to dump the result of CPP.
-# cppoutput=cppoutput to convert #lines from Windows to Unix file
-# names (this is needed to depcomp).
+# The program/function used to dump the result of CPP.  Set $cppoutput
+# to "cppoutput" to convert #lines from Windows to Unix file names
+# (this is needed to depcomp).
 cppoutput=dos2unix
 # File containing the dependencies.
 deps_file=
@@ -725,9 +728,9 @@ case $mode:$output in
      $cppoutput <$stdout >$(transform $output);;
   (*:)
      dump_log $stderr
-     dos2unix $stdout >&2;;
+     dump_log $stdout >&2;;
   (*:*)
-     dos2unix $stderr >&2
+     dump_log $stderr >&2
      dump_log $stdout;;
 esac
 
@@ -754,7 +757,11 @@ case $output in
 1 RT_MANIFEST {"$(cat $output.escaped.manifest)"}
 EOF
   run $VCXX_BIN/rc.exe -r "$(transform $output).auto.rc"
-  eval run "$VCXX_BIN/$PROG $outargs $linkargs \"$(transform $output).auto.RES\""
+  cmd="$VCXX_BIN/$PROG $outargs $linkargs \"$(transform $output).auto.RES\""
+  verbose "Running: $cmd"
+  eval "$cmd" >$stdout 2>$stderr
+  dump_log $stderr
+  dump_log $stdout
   rm -f "$output".{auto.{manifest,rc,RES},{escaped,intermediate}.manifest,manifest}
   ;;
 esac
