@@ -1,5 +1,5 @@
 #
-# urbi-with-webots.m4: This file is part of build-aux.
+# urbi-with-telispeech.m4: This file is part of build-aux.
 # Copyright (C) 2006-2008, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
@@ -10,14 +10,14 @@
 # For comments, bug reports and feedback: http://www.urbiforge.com
 #
 
-# WITH_TELISPEECH
+# URBI_WITH_TELISPEECH
 # ----------
 # Look for teliSpeech.  Support --with-telispeech=PATH. Check the software
 # location.
 #
 # Output variable TELISPEECH_PATH point to the installation location.
 # Set "$telispeech" to "true" or "false".
-AC_DEFUN([WITH_TELISPEECH],
+AC_DEFUN([URBI_WITH_TELISPEECH],
 [AC_ARG_WITH([telispeech],
 	     [AC_HELP_STRING([--with-telispeech=telispeech-path],
 			     [set the path to teliSpeech [/opt/telisma/teliSpeech]])],
@@ -51,7 +51,7 @@ fi
 
 if $telispeech; then
   # More tools for teliSpeecj.
-  AC_SUBST([TELISPEECH_CPPFLAGS], ['-I$(TELISPEECH_PATH)/include'])
+  AC_SUBST([TELISPEECH_CPPFLAGS], ['-I$(TELISPEECH_PATH)/inc'])
   AC_SUBST([TELISPEECH_LDFLAGS],  ['-L$(TELISPEECH_PATH)/bin -ltasr_so -lTLogger_so -lxsystem_so -licudata -licuuc -lxerces-c -lsisr_so -lAcousticTool_so -laudio_processing_so -lxml2'])
 fi
 
@@ -59,9 +59,9 @@ AM_CONDITIONAL([WITH_TELISPEECH], [$telispeech])
 AC_SUBST([TELISPEECH_PATH])
 ])
 
-AC_DEFUN([TELISPEECH_REQUIRED],
+AC_DEFUN([URBI_TELISPEECH_REQUIRED],
 [
-   AC_REQUIRE([WITH_TELISPEECH])
+   AC_REQUIRE([URBI_WITH_TELISPEECH])
 
    case $telispeech in
      '' | false)
