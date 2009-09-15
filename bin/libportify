@@ -230,7 +230,6 @@ sub transform_things (\&@)
   for my $thing (@thing)
     {
       use Cwd;
-      print STDERR getcwd, "->", $thing, "\n";
       if (-f $thing
           && basename($thing) =~ m{ (?:\.(?:cc|hh|h|hxx)$)
                                   | (?:^c\w+$)}x)
