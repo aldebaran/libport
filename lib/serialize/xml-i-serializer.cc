@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 #include <boost/bind.hpp>
-#include <boost/format.hpp>
+#include <libport/format.hh>
 #include <boost/lexical_cast.hpp>
 
 #include <serialize/xml-i-serializer.hh>

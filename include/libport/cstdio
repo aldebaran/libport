@@ -35,7 +35,7 @@ extern "C"
 # endif
 
 # ifdef WIN32
-#  include <stdarg.h>
+#  include <cstdarg>
 
 int asprintf(char **strp, const char *fmt, ...);
 int vasprintf(char **strp, const char *fmt, va_list ap);

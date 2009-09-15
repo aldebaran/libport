@@ -12,7 +12,7 @@
 
 #if defined LIBPORT_SCHED_CORO_OSTHREAD
 
-#  include <cerrno>
+#  include <libport/cerrno>
 
 #  include <libport/config.h>
 #  include <libport/cassert>

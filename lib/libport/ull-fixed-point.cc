@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 #include <iostream>
-#include <cmath>
+#include <libport/cmath>
 #include <libport/ull-fixed-point.hh>
 
 namespace libport

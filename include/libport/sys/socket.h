@@ -45,7 +45,7 @@ typedef int socklen_t;
  * this type.  See: http://msdn2.microsoft.com/en-us/library/ms738571.aspx  */
 typedef UINT32 in_addr_t;
 #  elif defined __GNUC__
-#   include <stdint.h>
+#   include <cstdint>
 typedef uint32_t in_addr_t;
 #  else
 // Neither VC++ nor GCC: Let's try to continue ...

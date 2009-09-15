@@ -11,7 +11,7 @@
 
 #include <fstream>
 
-#include <boost/format.hpp>
+#include <libport/format.hh>
 #include <boost/optional.hpp>
 
 #include <libport/cassert>
