@@ -80,6 +80,10 @@ sub fix_headers ($\$)
     $file =~ $header ? "<$header>" : "<libport/$header>"
   }gxe;
 
+  # Some Boost headers have a version in Libport that avoids warnings.
+  s{<boost/(format).hpp>}
+   {<libport/$1.hh>}g;
+
   $$contents_ref = $_;
 }
 
