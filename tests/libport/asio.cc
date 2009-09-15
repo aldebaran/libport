@@ -84,7 +84,7 @@ class TestSocket: public libport::Socket
     //assert(false);
   }
 
-  int onRead(const void* data, size_t size)
+  size_t onRead(const void* data, size_t size)
   {
     nRead++;
     //BOOST_TEST_MESSAGE(this << " read " << size);
@@ -101,7 +101,7 @@ class TestSocket: public libport::Socket
     destroy();
   }
   // Number of times read callback was called
-  int nRead;
+  size_t nRead;
   // Echo back what is received.
   bool echo;
   // Store what is received in received.
@@ -116,21 +116,21 @@ class TestSocket: public libport::Socket
     {
       return lastInstance = new TestSocket(echo, dump);
     }
-  static int nInstance;
+  static size_t nInstance;
   // Last factory-created instance.
   static TestSocket* lastInstance;
 };
 
 
-int TestSocket::nInstance = 0;
+size_t TestSocket::nInstance = 0;
 TestSocket* TestSocket::lastInstance = 0;
 
 // Delay in microseconds used to sleep when something asynchronous
 // is happening.
-static const int delay = 200000;
+static const useconds_t delay = 200000;
 
 static const int AVAIL_PORT = 7890;
-static const std::string S_AVAIL_PORT = "7890";
+static const std::string S_AVAIL_PORT = string_cast(AVAIL_PORT);
 
 void test_one(bool proto)
 {
