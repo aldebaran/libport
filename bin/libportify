@@ -1,6 +1,8 @@
 #! /usr/bin/perl -w
+
 use strict;
 use IO::File;
+use File::Basename;
 
 # contents ($FILE_NAME)
 # ---------------------
@@ -193,7 +195,7 @@ sub libportify ($\$)
 # ----------------------------------
 sub transform_file (\&$)
 {
-  my ($transform, $file) = @_;
+  my ($transform_ref, $file) = @_;
 
   # When using globbing, we sometimes find directories.
   if (! -f $file)
@@ -213,18 +215,52 @@ sub transform_file (\&$)
   rename ($file, $bak) or die "cannot rename $file as $bak: $!";
   my $contents = contents ($bak);
   my $out = new IO::File(">$file") or die;
-  print $out (&$transform($file, $contents));
+  print $out ($transform_ref->($file, $contents));
   $out->close;
   system("colordiff -u $bak $file");
 }
 
+# transform_things (&TRANSFORM, @THING)
+# ------------------------------------
+# Work on file-system entities.
+sub transform_things (\&@)
+{
+  my ($transform_ref, @thing) = @_;
 
+  for my $thing (@thing)
+    {
+      use Cwd;
+      print STDERR getcwd, "->", $thing, "\n";
+      if (-f $thing
+          && basename($thing) =~ m{ (?:\.(?:cc|hh|h|hxx)$)
+                                  | (?:^c\w+$)}x)
+        {
+          transform_file &$transform_ref, $thing;
+        }
+      elsif (-d $thing)
+        {
+          use File::Find;
+          find
+            ({
+              wanted => sub { transform_things ($transform_ref,
+                                                $File::Find::name)
+                                unless $File::Find::name eq $thing; },
+              no_chdir => 1,
+             },
+             $thing);
+        }
+      else
+        {
+          warn "skipping $thing\n";
+        }
+    }
+}
 
 ## ------ ##
 ## main.  ##
 ## ------ ##
 
-map { transform_file &libportify, $_ } @ARGV;
+transform_things &libportify, @ARGV;
 
 
 ### Setup "GNU" style for perl-mode and cperl-mode.
