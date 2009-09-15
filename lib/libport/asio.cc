@@ -173,7 +173,7 @@ namespace libport
       buffer.resize(oldBufferLength + len);
     }
     // Call onRead until it eats 0 characters.
-    int r;
+    size_t r;
     do
     {
       r = onRead(buffer.c_str(), buffer.length());
