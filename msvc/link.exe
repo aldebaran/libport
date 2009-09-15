@@ -411,6 +411,7 @@ dump_log ()
        -e "my \$deps_target = '$deps_target';" \
        -e "my \$medir = '$medir';" \
        -e "my \$source = '$source';" \
+       -e "my \$verbose = '$verbose' eq 'true';" \
        -e '
 #! /usr/bin/perl
 
@@ -418,6 +419,7 @@ use Cwd (getcwd);
 use English;
 use Fcntl;   # For O_RDWR, O_CREAT, etc.
 use File::Path (mkpath);
+use File::Basename;
 use NDBM_File;
 
 # A hash table that saves from repeated calls to winepath.
@@ -485,24 +487,19 @@ while (<>)
 {
   chop;
   s/\r$//;
-  if ($INPUT_LINE_NUMBER == 1)
+  if (
+      # For some (bad) reason, cl.exe dumps on STDOUT the name of the
+      # file being compiled.  This makes ccache believe something went
+      # wrong, in which case it does not cache.
+      ($INPUT_LINE_NUMBER == 1 && $_ eq basename $source)
+      ||
+      # cl : Command line warning D9024 :
+      # unrecognized source file type '"'"'FOO.o'"'"', object file assumed
+      /Command line warning D9024 : unrecognized source file type '"'"'.*\.o'"'"'/
+      )
   {
-     # For some (bad) reason, cl.exe dumps on STDOUT the name of the
-     # file being compiled.  This makes ccache believe something went
-     # wrong, in which case it does not cache.
-     if (m/\.(c|cc|cpp|i|ii|S|o)$/)
-     {
-       print STDERR "Ignoring: {{{$_}}} which should be {{{$source}}}\n";
-     }
-     else
-     {
-       print STDERR "Unexpected output: {{{$_}}}\n";
-     }
-  }
-  # cl : Command line warning D9024 : unrecognized source file type '"'"'FOO.o'"'"', object file assumed
-  elsif (/Command line warning D9024 : unrecognized source file type '"'"'.*\.o'"'"'/)
-  {
-     # All is well.
+    print STDERR "Ignoring: {{{$_}}}\n"
+      if $verbose;
   }
   # Note: including file: C:\\vcxx8\\VC\\INCLUDE\iostream
   # Note: including file:  C:\\vcxx8\\VC\\INCLUDE\istream
