@@ -17,9 +17,11 @@
 #  define BOOST_TEST_DYN_LINK
 # endif
 
-# include <boost/config.hpp>
-# include <boost/test/detail/config.hpp>
-# include <boost/test/unit_test.hpp>
+# include <libport/system-warning-push.hh>
+#  include <boost/config.hpp>
+#  include <boost/test/detail/config.hpp>
+#  include <boost/test/unit_test.hpp>
+# include <libport/system-warning-pop.hh>
 
 namespace libport
 {
