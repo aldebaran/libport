@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/foreach.hh
  ** \brief Syntactic sugar for \a BOOST_FOREACH.
@@ -17,7 +18,9 @@
 
 # include <libport/range.hh>
 
-# include <boost/foreach.hpp>
+# include <libport/system-warning-push.hh>
+#  include <boost/foreach.hpp>
+# include <libport/system-warning-pop.hh>
 
 /// \def foreach
 /// \brief A shortcut for \a BOOST_FOREACH.

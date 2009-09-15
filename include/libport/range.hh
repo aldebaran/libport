@@ -7,11 +7,15 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_RANGE_HH
 # define LIBPORT_RANGE_HH
 
-# include <boost/range/iterator_range.hpp>
-# include <boost/range.hpp>
+# include <libport/system-warning-push.hh>
+#  include <boost/range/iterator_range.hpp>
+#  include <boost/range.hpp>
+# include <libport/system-warning-pop.hh>
+
 namespace libport
 {
 
