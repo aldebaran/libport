@@ -20,6 +20,16 @@ namespace libport
   T
   between(const T& min, const T& value, const T& max);
 
+  template <typename T>
+  inline
+  T
+  rad2deg(const T& value);
+
+  template <typename T>
+  inline
+  T
+  deg2rad(const T& value);
+
 }
 
 # include <libport/algorithm.hxx>

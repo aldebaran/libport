@@ -11,6 +11,7 @@
 namespace libport
 {
   template <typename T>
+  inline
   T
   between(const T& min, const T& value, const T& max)
   {
@@ -20,6 +21,22 @@ namespace libport
       return max;
     else
       return value;
+  }
+
+  template <typename T>
+  inline
+  T
+  rad2deg(const T& value)
+  {
+    return value * (180.0 / M_PI);
+  }
+
+  template <typename T>
+  inline
+  T
+  deg2rad(const T& value)
+  {
+    return value * (M_PI / 180.0);
   }
 
 }
