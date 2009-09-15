@@ -29,7 +29,7 @@ if $windows; then
   [sed -i -r                                                    \
        -e 's/^archive_cmds=""/#&/'                              \
        -e 's/^(deplibs_check_method)=.*/#&\n\1=pass_all/'       \
-       -e 's/^fix_srcfile_path="..*"/#&/                        \
+       -e 's/^fix_srcfile_path="..*"/#&/'                       \
        libtool])
 fi
 ])
