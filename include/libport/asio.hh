@@ -44,7 +44,7 @@
 # include <libport/unistd.h>
 
 # include <boost/version.hpp>
-# if BOOST_VERSION >= 103600
+# if 103600 <= BOOST_VERSION
 #  include <libport/rs232.hh>
 # endif
 
@@ -52,8 +52,8 @@ namespace libport
 {
   class LIBPORT_API AsioDestructible: public Destructible
   {
-    protected:
-      virtual void doDestroy();
+  protected:
+    virtual void doDestroy();
   };
 
   //FIXME: extend to provide a way to ensure workerThread not started.
@@ -204,20 +204,20 @@ namespace libport
      * \return an error code if the connection failed.
      *
      */
-    boost::system::error_code connect(const std::string& host,
-                                      const std::string& port,
-                                      bool udp=false, useconds_t usTimeout = 0,
-                                      bool asynchronous = false);
+    boost::system::error_code
+    connect(const std::string& host, const std::string& port,
+            bool udp=false, useconds_t usTimeout = 0,
+            bool asynchronous = false);
 
-    boost::system::error_code connect(const std::string& host,
-                                      unsigned port,
-                                      bool udp=false, useconds_t usTimeout = 0,
-                                      bool asynchronous = false);
+    boost::system::error_code
+    connect(const std::string& host, unsigned port,
+            bool udp=false, useconds_t usTimeout = 0,
+            bool asynchronous = false);
 
-# if BOOST_VERSION >= 103600
+# if 103600 <= BOOST_VERSION
 
-    boost::system::error_code open_serial(const std::string& device,
-                                          unsigned int rate);
+    boost::system::error_code
+    open_serial(const std::string& device, unsigned int rate);
 
 # endif
 
@@ -228,8 +228,7 @@ namespace libport
      * \param port port to connect to, as a service name or an int.
      * \param usTimeout timeout in microseconds, 0 meaning none.
      */
-    void async_connect(const std::string& host,
-                       const std::string& port,
+    void async_connect(const std::string& host, const std::string& port,
                        bool udp=false, useconds_t usTimeout = 0)
     {
       connect(host, port, udp, usTimeout, true);
@@ -252,10 +251,13 @@ namespace libport
      * \param f a socket factory. For each new connection the function will
      * be called and the resulting socket object bound to the new connection.
      */
-    boost::system::error_code listen(SocketFactory f, const std::string& host,
-                                     const std::string& port, bool udp = false);
-    boost::system::error_code listen(SocketFactory f, const std::string& host,
-                                     unsigned port, bool udp = false);
+    boost::system::error_code
+    listen(SocketFactory f, const std::string& host,
+           const std::string& port, bool udp = false);
+
+    boost::system::error_code
+    listen(SocketFactory f, const std::string& host,
+           unsigned port, bool udp = false);
 
 #if defined LIBPORT_ENABLE_SSL
     boost::system::error_code
@@ -314,7 +316,7 @@ namespace libport
       , onconnect_(boost::bind(&super_type::onConnect, this))
       , onerror_(boost::bind(&super_type::onError, this, _1))
       , onread_(boost::bind(&super_type::onRead, this, _1, _2))
-      {}
+    {}
 
     ConcreteSocket& onConnect(onconnect_type cb)
     {

@@ -143,7 +143,7 @@ namespace libport
         netdetail::errorcodes::make_error_code(
           netdetail::errorcodes::bad_address);
     return Handle();
-    ok:
+  ok:
     s->start_receive();
     return Handle();
   }
