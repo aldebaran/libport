@@ -76,7 +76,7 @@ namespace libport
     virtual ~BaseSocket(){}
     libport::Finally deletor;
     /// Write data asynchronously to the socket.
-    virtual void write(const void* data, unsigned int length) = 0;
+    virtual void write(const void* data, size_t length) = 0;
     /// Alias on write() for API compatibility.
     void send(const void* addr, size_t len)
     {
@@ -152,7 +152,7 @@ namespace libport
      *   be passed again to this function as soon as at least an extra byte
      *   is available.
      */
-    virtual int onRead(const void*, size_t length)
+    virtual size_t onRead(const void*, size_t length)
     {
       return length;
     }
@@ -169,7 +169,7 @@ namespace libport
     /// Ask for the asynchronous destruction of this object.
     virtual void destroy();
 
-    void write(const void* data, unsigned int length)
+    void write(const void* data, size_t length)
     {
       base_->write(data, length);
     }
@@ -242,7 +242,7 @@ namespace libport
      * to reply to the sender through its UDPLink::reply() method.
      */
     static Handle listenUDP(const std::string& host, const std::string& port,
-                            boost::function3<void, const void*, int,
+                            boost::function3<void, const void*, size_t,
                             boost::shared_ptr<UDPLink> > onRead,
                             boost::system::error_code& erc);
 
@@ -306,7 +306,7 @@ namespace libport
   class LIBPORT_API ConcreteSocket: public Socket
   {
   public:
-    typedef boost::function2<int, const void*, size_t> onread_type;
+    typedef boost::function2<size_t, const void*, size_t> onread_type;
     typedef boost::function1<void, boost::system::error_code> onerror_type;
     typedef boost::function0<void> onconnect_type;
     typedef Socket super_type;
@@ -344,7 +344,7 @@ namespace libport
     {
       onerror_(erc);
     }
-    virtual int onRead(const void* data, size_t length)
+    virtual size_t onRead(const void* data, size_t length)
     {
       return onread_(data, length);
     }

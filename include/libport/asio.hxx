@@ -98,7 +98,7 @@ namespace libport
         delete base_;
       }
 
-      void write(const void* data, unsigned int length);
+      void write(const void* data, size_t length);
       void close();
 
       unsigned short getRemotePort() const;
@@ -158,7 +158,7 @@ namespace libport
       void close();
 #define ACCEPTOR_FAIL                                                   \
     {throw std::runtime_error("Call not implemented for Acceptors");}
-      void write(const void*, unsigned int) ACCEPTOR_FAIL
+      void write(const void*, size_t) ACCEPTOR_FAIL
       unsigned short getRemotePort() const ACCEPTOR_FAIL
       std::string getRemoteHost() const ACCEPTOR_FAIL
 #undef ACCEPTOR_FAIL
@@ -238,7 +238,7 @@ namespace libport
     {
     public:
       UDPSocket();
-      typedef boost::function3<void, const void*, int,
+      typedef boost::function3<void, const void*, size_t,
                                boost::shared_ptr<UDPLink> > onread_type;
       onread_type onRead;
       void start_receive();
@@ -436,7 +436,7 @@ namespace libport
 
     template<typename Stream>
     void
-    SocketImpl<Stream>::write(const void* buffer, unsigned int length)
+    SocketImpl<Stream>::write(const void* buffer, size_t length)
     {
       send_bounce(this, buffer, length);
     }
