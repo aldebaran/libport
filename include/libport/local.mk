@@ -46,6 +46,7 @@ libport_include_HEADERS +=				\
   include/libport/backtrace.hh				\
   include/libport/backtrace.hxx				\
   include/libport/base64.hh				\
+  include/libport/bind.hh				\
   include/libport/boost-error.hh			\
   include/libport/boost-error.hxx			\
   include/libport/buffer-stream.hh			\
