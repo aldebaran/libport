@@ -18,6 +18,7 @@
 
 # else // !LIBPORT_HAVE_SYS_PRCTL_H
 
+#  include <libport/cerrno>
 #  define PR_SET_PDEATHSIG 0
 
 extern "C"

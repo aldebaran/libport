@@ -30,7 +30,7 @@ sub fix_headers ($\$)
   my ($file, $contents_ref) = @_;
   local $_ = $$contents_ref;
 
-  # System headers.
+  # C-system headers.
   s{include\s*<
     (assert
     |ctype
@@ -53,28 +53,25 @@ sub fix_headers ($\$)
   # Libport headers.
   # FIXME: Compute this list.
   s{<(cassert
-      |cerrno
-      |cmath
-      |csignal
-      |cstdio
-      |cstdlib
-      |cstring
-      |cstring.hxx
-      |fcntl.h
-      |pthread.h
-      |pthread.hxx
-      |semaphore.h
-      |time.h
-      |unistd.h
-      |sys/param.h
-      |sys/prctl.h
-      |sys/select.h
-      |sys/socket.h
-      |sys/stat.h
-      |sys/stat.hxx
-      |sys/time.h
-      |sys/time.hxx
-      |sys/types.h)>}
+     |cerrno
+     |cmath
+     |csignal
+     |cstdio
+     |cstdlib
+     |cstring
+     |fcntl.h
+     |pthread.h
+     |semaphore.h
+     |time.h
+     |unistd.h
+     |sys/param.h
+     |sys/prctl.h
+     |sys/select.h
+     |sys/socket.h
+     |sys/stat.h
+     |sys/time.h
+     |sys/wait.h
+     |sys/types.h)>}
   {
     my $header = $1;
     # System header wrappers must include system headers, they must not

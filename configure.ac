@@ -64,11 +64,15 @@ fi
 # libport/backtrace.
 AC_CHECK_HEADERS([execinfo.h])
 
-AC_CHECK_HEADERS([sys/prctl.h])
-
 # libport/semaphore.
 AC_CHECK_LIB([rt], [clock_gettime],
              [AC_SUBST([CLOCK_LIBS], [-lrt])])
+
+# libport/sys/prctl.h
+AC_CHECK_HEADERS([sys/prctl.h])
+
+# libport/sys/wait.h
+AC_CHECK_HEADERS([sys/wait.h])
 
 # libport/valgrind.
 AC_CHECK_HEADERS([valgrind/valgrind.h])
