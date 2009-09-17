@@ -73,6 +73,21 @@
 //                                       ^^^^^^
 
 
+// C4503: 'identifier' : decorated name length exceeded, name was
+// truncated
+//
+// boost/bind/bind.hpp:118: warning C4503:
+// 'boost::asio::detail::handler_ptr<Alloc_Traits>::handler_ptr' :
+// decorated name length exceeded, name was truncated
+//        with
+//        [
+//            Alloc_Traits=alloc_traits
+//        ]
+//
+// See http://msdn.microsoft.com/en-us/library/074af4b6(VS.80).aspx,
+// it is might understanding that it affects only human readable
+// messages, but not correctness.
+
 // C4512: 'classname' : assignment operator could not be generated
 
 // C4514: 'strchr' : unreferenced inline function has been removed
@@ -123,7 +138,7 @@
                  4121 4127                      \
                  4251 4290                      \
                  4347 4350 4355                 \
-                 4512 4514 4571                 \
+                 4503 4512 4514 4571            \
                  4619 4625 4626 4628 4668       \
                  4710 4711                      \
                  4800 4820)
