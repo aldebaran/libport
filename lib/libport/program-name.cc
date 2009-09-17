@@ -7,8 +7,9 @@
  *
  * See the LICENSE file for more information.
  */
-#include <libport/cassert>
 
+#include <libport/cassert>
+#include <libport/containers.hh>
 #include <libport/program-name.hh>
 
 namespace libport
@@ -36,7 +37,7 @@ namespace libport
   void program_initialize(const std::string& program_name)
   {
     cli_args_type args;
-    args.push_back(program_name);
+    args << program_name;
     program_initialize(args);
   }
 
