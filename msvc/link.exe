@@ -514,8 +514,11 @@ while (<>)
   else
   {
     # Convert paths to ease debugging under Unix.
+    # Convert the "notes" syntax from MSVC to GCC: put the indentation
+    # after the location, and insert "note:" so that Emacs know that
+    # this is not another error, but a single multi-line error.
     s{^(\s*)([:\-\w\\\\/.]+)\((\d+)\)\s*:}
-     {$1 . convert_path ($2) . ":$3:"}e;
+     {convert_path ($2) . ":$3:" . ($1 ? " note:$1" : "")}e;
     print STDERR "$_\n";
   }
 }
