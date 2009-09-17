@@ -10,7 +10,7 @@
 #ifndef LIBPORT_THREAD_HXX
 # define LIBPORT_THREAD_HXX
 
-# include <boost/bind.hpp>
+# include <libport/bind.hh>
 # include <libport/cassert>
 # include <libport/cerrno>
 # include <libport/config.h>

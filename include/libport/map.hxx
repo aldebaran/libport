@@ -18,7 +18,7 @@
 # include <iostream>
 # include <sstream>
 
-# include <boost/lexical_cast.hpp>
+# include <libport/lexical-cast.hh>
 
 # include <libport/contract.hh>
 # include <libport/deref.hh>

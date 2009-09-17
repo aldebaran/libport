@@ -10,7 +10,7 @@
 #ifndef OPTION_PARSER_HXX
 # define OPTION_PARSER_HXX
 
-# include <boost/lexical_cast.hpp>
+# include <libport/lexical-cast.hh>
 
 namespace libport
 {

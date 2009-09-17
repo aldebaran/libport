@@ -10,7 +10,7 @@
 #ifndef SCHED_CONFIGURATION_HH
 # define SCHED_CONFIGURATION_HH
 
-# include <cstdlib>
+# include <libport/cstdlib>
 # include <sched/export.hh>
 
 namespace sched

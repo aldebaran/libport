@@ -15,7 +15,7 @@
 #ifndef LIBPORT_TIMER_HXX
 # define LIBPORT_TIMER_HXX
 
-# include <boost/bind.hpp>
+# include <libport/bind.hh>
 # include <boost/ref.hpp>
 
 # include <libport/contract.hh>

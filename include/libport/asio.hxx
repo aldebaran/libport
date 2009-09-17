@@ -21,7 +21,7 @@
 
 #include <libport/system-warning-push.hh>
 #  include <boost/asio.hpp>
-#  include <boost/bind.hpp>
+#  include <libport/bind.hh>
 #  include <boost/system/error_code.hpp>
 #  include <boost/lambda/lambda.hpp>
 #  include <boost/lambda/construct.hpp>

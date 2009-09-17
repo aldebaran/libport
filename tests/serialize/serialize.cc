@@ -10,7 +10,7 @@
 #include <fstream>
 #include <string>
 
-#include <boost/bind.hpp>
+#include <libport/bind.hh>
 
 #include <libport/export.hh>
 #include <libport/hierarchy.hh>

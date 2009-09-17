@@ -10,7 +10,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/assign/list_of.hpp>
-#include <boost/bind.hpp>
+#include <libport/bind.hh>
 using namespace boost::assign;
 
 #include <libport/file-library.hh>

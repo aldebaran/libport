@@ -7,8 +7,8 @@
  *
  * See the LICENSE file for more information.
  */
-#include <boost/bind.hpp>
-#include <boost/lexical_cast.hpp>
+#include <libport/bind.hh>
+#include <libport/lexical-cast.hh>
 
 #include <serialize/serializable.hh>
 #include <serialize/xml-o-serializer.hh>

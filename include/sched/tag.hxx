@@ -10,7 +10,7 @@
 #ifndef SCHED_TAG_HXX
 # define SCHED_TAG_HXX
 
-# include <boost/bind.hpp>
+# include <libport/bind.hh>
 
 # include <sched/scheduler.hh>
 

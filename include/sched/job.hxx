@@ -15,9 +15,9 @@
 #ifndef SCHED_JOB_HXX
 # define SCHED_JOB_HXX
 
-# include <cassert>
+# include <libport/cassert>
 
-# include <boost/bind.hpp>
+# include <libport/bind.hh>
 
 # include <sched/scheduler.hh>
 # include <sched/coroutine.hh>

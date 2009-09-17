@@ -10,7 +10,7 @@
 #include <libport/cstdlib>
 #include <iostream>
 
-#include <boost/bind.hpp>
+#include <libport/bind.hh>
 #include <boost/lambda/lambda.hpp>
 #include <boost/mem_fn.hpp>
 

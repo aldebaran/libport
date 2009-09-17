@@ -14,7 +14,7 @@
 
 # include <boost/function.hpp>
 // Not required by libport/finally.hh, but by 90% of its users.
-# include <boost/bind.hpp>
+# include <libport/bind.hh>
 # include <vector>
 
 # include <libport/foreach.hh>

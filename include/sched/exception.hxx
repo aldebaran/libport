@@ -10,7 +10,7 @@
 #ifndef SCHED_EXCEPTION_HXX
 # define SCHED_EXCEPTION_HXX
 
-# include <cstdlib>
+# include <libport/cstdlib>
 # include <libport/cassert>
 
 namespace sched

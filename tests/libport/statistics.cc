@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 #include <iostream>
-#include <boost/bind.hpp>
+#include <libport/bind.hh>
 #include <libport/unit-test.hh>
 
 using boost::bind;

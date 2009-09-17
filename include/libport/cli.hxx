@@ -13,7 +13,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <boost/lexical_cast.hpp>
+#include <libport/lexical-cast.hh>
 #include <boost/utility/value_init.hpp>
 
 #include <libport/cli.hh>

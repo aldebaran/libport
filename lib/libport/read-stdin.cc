@@ -9,7 +9,7 @@
  */
 #include <libport/config.h>
 
-#include <boost/lexical_cast.hpp>
+#include <libport/lexical-cast.hh>
 
 #include <libport/cstdio>
 #include <libport/cstring>

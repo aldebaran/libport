@@ -12,7 +12,7 @@
 
 #include <libport/cstdlib>
 
-#include <boost/bind.hpp>
+#include <libport/bind.hh>
 #include <boost/function.hpp>
 
 #include <libport/cstdio>
