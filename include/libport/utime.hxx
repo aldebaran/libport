@@ -7,8 +7,8 @@
  *
  * See the LICENSE file for more information.
  */
-#ifndef LIBPORT_UTIME_HXX
-# define LIBPORT_UTIME_HXX
+
+#include <libport/sys/types.h>
 
 namespace libport
 {
@@ -40,5 +40,3 @@ namespace libport
   }
 
 }
-
-#endif
