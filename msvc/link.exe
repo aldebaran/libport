@@ -358,6 +358,7 @@ get_options ()
     (-g|-ggdb) ;; # outargs "-Zi";;
 
     # Optimizations.
+    (-fno-strict-aliasing);;
     (-O2) outargs $1;;
     (-O3) outargs -Ox;;
 
