@@ -13,7 +13,7 @@
 #include <libport/detect-win32.h>
 #include <libport/exception.hh>
 #include <libport/format.hh>
-#include <libport/sys/wait.hh>
+#include <libport/sys/wait.h>
 #include <string>
 
 #if defined _MSC_VER || defined __MINGW32__
