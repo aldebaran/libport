@@ -83,8 +83,13 @@ sub fix_headers ($\$)
   }gxe;
 
   # Some Boost headers have a version in Libport that avoids warnings.
-  s{<boost/(format).hpp>}
-   {<libport/$1.hh>}g;
+  s{<boost/(bind|lexical_cast|format).hpp>}
+   {
+     my $header = $1;
+     # We use -, they use _.
+     (my $dash_header = $header) =~ tr/_/-/;
+     $file =~ $dash_header ? "<boost/$header.hpp>" : "<libport/$dash_header.hh>";
+   }gxe;
 
   $$contents_ref = $_;
 }
