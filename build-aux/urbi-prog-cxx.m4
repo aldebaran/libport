@@ -239,7 +239,7 @@ esac
 # C4668, which is about the preprocessor: the warnings in preprocessor
 # mode (-E) are not affected by #pragma (see warning-push.hh for a
 # description of this warning).  It does matter to us, since we use
-# ccache, which uses -E first.
+# ccache, which uses -E first.  Likewise for C4003.
 #
 # We don't check for support of "-include libport/warning-push.hh",
 # because we know it supports it, but will fail as the -I needed
@@ -249,7 +249,7 @@ esac
 # Check for this in last resort, as it does break the use of
 # WARNING_CXXFLAGS without paths to libport headers.
 case $CXX_FLAVOR in
- (msvc) TC_CXX_WARNINGS([-wd4668])
+ (msvc) TC_CXX_WARNINGS([-wd4003 -wd4668])
         URBI_APPEND_FLAGS([WARNING_CXXFLAGS],
                           [-include libport/warning-push.hh]);;
 esac
