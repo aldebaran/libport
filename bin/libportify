@@ -186,14 +186,14 @@ sub libport_debug ($\$)
 ## ----------- ##
 
 
-# libportify ($FILE, $CONTENTS_REF)
-# ---------------------------------
-sub libportify ($\$)
+# libportify ($FILE, $CONTENTS)
+# -----------------------------
+sub libportify ($$)
 {
-  my ($file, $contents_ref) = @_;
-  fix_headers $file, $contents_ref;
-  libport_debug $file, $contents_ref;
-  return $contents_ref;
+  my ($file, $contents) = @_;
+  fix_headers $file, $contents;
+  libport_debug $file, $contents;
+  return $contents;
 }
 
 # transform_file (&TRANSFORM, $FILE)
@@ -216,13 +216,21 @@ sub transform_file (\&$)
     return;
   }
 
-  my ($bak) = "$file.bak";
-  rename ($file, $bak) or die "cannot rename $file as $bak: $!";
-  my $contents = contents ($bak);
-  my $out = new IO::File(">$file") or die;
-  print $out ($transform_ref->($file, $contents));
-  $out->close;
-  system("colordiff -u $bak $file");
+  my $contents = contents ($file);
+  my $updated = $transform_ref->($file, $contents);
+  if ($contents ne $updated)
+    {
+      my ($bak) = "$file.bak";
+      rename ($file, $bak) or die "cannot rename $file as $bak: $!";
+      my $out = new IO::File(">$file") or die;
+      print $out $updated;
+      $out->close;
+      system("colordiff -u $bak $file");
+    }
+  else
+    {
+      warn "no changes: $file\n";
+    }
 }
 
 # transform_things (&TRANSFORM, @THING)
