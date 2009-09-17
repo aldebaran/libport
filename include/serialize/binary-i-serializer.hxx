@@ -225,7 +225,7 @@ namespace libport
         size_t l = Impl<unsigned short>::get(name, input, ser);
         // FIXME: alloca
         char* buf = new char[l];
-        input.read(buf, l);
+        input.read(buf, std::streamsize(l));
         std::string res(buf, l);
         delete [] buf;
         return res;

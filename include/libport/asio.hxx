@@ -396,7 +396,7 @@ namespace libport
     {
       libport::BlockLock bl(s);
       std::ostream stream(&s->buffers_[s->current_==-1 ? 0:1-s->current_]);
-      stream.write((const char*)buffer, length);
+      stream.write((const char*)buffer, std::streamsize(length));
       s->pending_ = true;
       if (s->current_ == -1)
       {
@@ -486,7 +486,7 @@ namespace libport
                 boost::system::error_code erc, size_t recv)
     {
       std::ostream stream(&s->readBuffer_);
-      stream.write(&s->udpBuffer_[0], recv);
+      stream.write(&s->udpBuffer_[0], std::streamsize(recv));
       s->onReadDemux(lock, erc);
     }
 
