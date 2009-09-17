@@ -34,11 +34,11 @@
 #   define NOMINMAX 1
 #  endif
 
-#  include <system-warning-push.hh>
+#  include <libport/system-warning-push.hh>
 #   include <io.h>
 #   include <process.h>
 #   include <windows.h>
-#  include <system-warning-pop.hh>
+#  include <libport/system-warning-pop.hh>
 
 /* If we defined _WINSOCKAPI_ to prevent WinSock1 stuff to be imported,
  * restore the situation since the user might really want to import WinSock.h
