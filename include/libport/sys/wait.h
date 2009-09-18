@@ -13,7 +13,7 @@
 
 # include <libport/config.h>
 
-# if HAVE_SYS_WAIT_H
+# if LIBPORT_HAVE_SYS_WAIT_H
 #  include <sys/wait.h>
 # endif
 
