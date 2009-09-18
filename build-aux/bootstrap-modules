@@ -65,8 +65,8 @@ do
 
     sed -e  "s/@MODULENAME@/$modulename/g" \
         -e  "s/@MODULENORMNAME@/$modulenormname/g" \
-        -e  "s/@MODULEDIR@/$moduledir/g"   \
-	-e  "s/@MODULENORMDIR@/$modulenormdir/g"   \
+        -e  "s!@MODULEDIR@!$moduledir!g"   \
+	-e  "s!@MODULENORMDIR@!$modulenormdir!g"   \
 	-e  "s!@MODULESOURCES@!$modulesources!g" \
       "$buildauxdir/module.mk.skel" > "$moduledir/modules.mk.auto"
     echo "include $moduledir/modules.mk.auto" >> modules.mk
