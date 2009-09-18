@@ -32,4 +32,16 @@ if $windows; then
        -e 's/^fix_srcfile_path="..*"/#&/'                       \
        libtool])
 fi
+
+case $host_alias in
+     (*mingw*)
+       # Let the compiler handle the standard libraries itself
+       AC_CONFIG_COMMANDS([mingw-hacks],
+           [sed -i -r                           \
+               -e 's/^predep_objects=/#&/'      \
+               -e 's/^postdeps=/#&/'            \
+               -e 's/-nostdlib//g'              \
+            libtool])
+     ;;
+esac
 ])
