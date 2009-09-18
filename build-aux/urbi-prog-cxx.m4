@@ -86,20 +86,29 @@ esac
 # headers such as hash_map.h.  We should use ext/hash_map.
 TC_CXX_WARNINGS([-Wno-deprecated])
 
-#		 [-Wcast-align],
-#		 [-Wcast-qual],
-#		 [-Wmissing-prototypes],   C only
-#		 [-Wstrict-prototypes],    C only
-#		 [-Wwrite-strings],
-#		 [-Wbad-function-cast],    C only
-#		 [-Wnested-externs],       C only
-#		 [-Wmissing-declarations], C only
-#		 [-Wold-style-cast],
-# Use good warnings.
-TC_CXX_WARNINGS([[-Wall],
-		 [-W],
-		 [-Woverloaded-virtual],
-		 [-Wformat]])
+case $CXX_FLAVOR in
+  (msvc)
+    # There are way too many warnings with MSVC.  They are not just a
+    # visual nuisance, they also prevent ccache from caching, which is
+    # really too much of a problem for the build-farm.
+    ;;
+  (*)
+    #            [-Wcast-align],
+    #            [-Wcast-qual],
+    #            [-Wmissing-prototypes],   C only
+    #            [-Wstrict-prototypes],    C only
+    #            [-Wwrite-strings],
+    #            [-Wbad-function-cast],    C only
+    #            [-Wnested-externs],       C only
+    #            [-Wmissing-declarations], C only
+    #            [-Wold-style-cast],
+    # Use good warnings.
+    TC_CXX_WARNINGS([[-Wall],
+                     [-W],
+                     [-Woverloaded-virtual],
+                     [-Wformat]])
+    ;;
+esac
 
 # Pacify g++ on Boost Variants.
 # TC_CXX_WARNINGS([[-Wno-shadow]])
@@ -218,11 +227,7 @@ esac
 # Warnings are errors.  #
 # --------------------- #
 
-# There are too many warnings in OPEN-R (its fault).
-# If we're building on Windows with GCC, it's likely to be gcc 3.4.5 which has
-# *many* false positive when it comes to uninitialized variable use.
-# Generally speaking, once there will be a decent version of GCC for MinGW,
-# we'll remove this.
+# Let's be strict only on decent architectures.
 case $GXX:$host in
   ( yes:cygwin* | yes:*mingw* | yes:mipsel-*linux-* | yes:*arm*) :;;
   ( yes:*) # for other occurrences of G++, it's fine to use -Werror.
