@@ -12,7 +12,10 @@
 #ifndef LIBPORT_FINALLY_HH
 # define LIBPORT_FINALLY_HH
 
-# include <boost/function.hpp>
+# include <libport/system-warning-push.hh>
+#  include <boost/function.hpp>
+# include <libport/system-warning-pop.hh>
+
 // Not required by libport/finally.hh, but by 90% of its users.
 # include <libport/bind.hh>
 # include <vector>
@@ -29,24 +32,68 @@
 # define FINALLY_ATTR_FETCH(Attr)               \
   LIBPORT_SECOND(Attr)
 
-# define FINALLY(Vars, Action)                                          \
-    struct Finally                                                      \
+// MSVC 8.0 has a problem with structures declared in inline functions.
+//
+//    $ cat foo.hh
+//    inline
+//    void foo()
+//    {
+//      struct Foo { Foo() {} };
+//      Foo foo;
+//    }
+//
+//    $ cat foo-int.cc
+//    #include <foo.hh>
+//    void foo_int()
+//    {
+//      foo();
+//    }
+//    $ cat foo-float.cc
+//    #include <foo.hh>
+//    void foo_float ()
+//    {
+//      foo();
+//    }
+//
+// cl.exe -O2 -I.  -c -o foo-float.o foo-float.cc
+// cl.exe -O2 -I.  -c -o foo-int.o foo-int.cc
+// cl.exe -o foo.dll foo-float.o foo-int.o -link -dll
+// foo-int.o : error LNK2005:
+//    "public: __thiscall `void __cdecl foo(void)'::`2'::Foo::Foo(void)"
+//    (??0Foo@?1??foo@@YAXXZ@QAE@XZ) already defined in foo-float.o
+// foo.dll : fatal error LNK1169: one or more multiply defined symbols found
+//
+// The problem is that it believes the structure was declared several
+// times.  One way out is to remove the "inline", which comes with a
+// penalty.  Another way out is to pull the structure out of the
+// function.  This is why you are encouraged to use FINALLY, but if
+// you use it in an inline function, you need to use FINALLY_DECLARE
+// outside the function, and FINALLY_USE afterwards.
+
+# define FINALLY_DECLARE(Name, Vars, Action)                            \
+  struct Finally ## Name                                                \
+  {                                                                     \
+    ATTRIBUTE_ALWAYS_INLINE                                             \
+    Finally ## Name(LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_ARG, Vars))) \
+      : LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_INIT, Vars))          \
+    {}                                                                  \
+                                                                        \
+    ATTRIBUTE_ALWAYS_INLINE                                             \
+    ~Finally ## Name()                                                  \
     {                                                                   \
-      ATTRIBUTE_ALWAYS_INLINE                                           \
-        Finally(LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_ARG, Vars)))  \
-        : LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_INIT, Vars))        \
-      {}                                                                \
+      Action;                                                           \
+    }                                                                   \
                                                                         \
-      ATTRIBUTE_ALWAYS_INLINE                                           \
-      ~Finally()                                                        \
-      {                                                                 \
-        Action;                                                         \
-      }                                                                 \
-                                                                        \
-      LIBPORT_APPLY(FINALLY_ATTR_DECLARE, Vars);                        \
-    };                                                                  \
-    Finally finally                                                     \
-    (LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_FETCH, Vars)));          \
+    LIBPORT_APPLY(FINALLY_ATTR_DECLARE, Vars);                          \
+  }
+
+# define FINALLY_USE(Name, Vars, Action)                                \
+  Finally ## Name finally ## Name                                       \
+  (LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_FETCH, Vars)))
+
+# define FINALLY(Vars, Action)                                          \
+  FINALLY_DECLARE(Libport, Vars, Action);                               \
+  FINALLY_USE(Libport, Vars, Action)
 
 namespace libport
 {
@@ -71,7 +118,7 @@ namespace libport
     ~Finally();
 
     /// Register \a a to be executed add destruction.
-    Finally& operator <<(const action_type& a);
+    Finally& operator<<(const action_type& a);
 
   private:
 
