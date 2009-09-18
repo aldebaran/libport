@@ -14,11 +14,15 @@
 # include <sys/types.h>
 # include <libport/detect-win32.h>
 
-# ifdef WIN32
+# ifdef _MSC_VER
 
 typedef short mode_t;
 
 typedef int pid_t;
+
+# endif
+
+# ifdef WIN32
 
 // http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/types.h.html
 // The type suseconds_t shall be a signed integer type capable of
