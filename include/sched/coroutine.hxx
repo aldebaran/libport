@@ -32,10 +32,10 @@ coroutine_bytes_left_on_stack(Coro* self)
   if (stack_moves_up) // like PPC
   {
     char* end = start + coroutine_stack_size(self);
-    return end - p1;
+    return size_t(end - p1);
   }
   else // like x86
-    return p1 - start;
+    return size_t(p1 - start);
 }
 
 inline bool

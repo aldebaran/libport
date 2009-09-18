@@ -20,6 +20,8 @@
 #  ifndef ETIMEDOUT
 #   define ETIMEDOUT 110
 #  endif
+
+#  define ENOTSUP 111
 # endif
 
 #endif // ! LIBPORT_CERRNO
@@ -27,4 +29,3 @@
 // Local Variables:
 // mode: C++
 // End:
-

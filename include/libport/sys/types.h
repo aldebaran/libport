@@ -18,6 +18,8 @@
 
 typedef short mode_t;
 
+typedef int pid_t;
+
 // http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/types.h.html
 // The type suseconds_t shall be a signed integer type capable of
 // storing values at least in the range [-1, 1000000].
