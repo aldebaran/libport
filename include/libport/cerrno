@@ -11,18 +11,11 @@
 #ifndef LIBPORT_CERRNO
 # define LIBPORT_CERRNO
 
-# include <libport/detect-win32.h>
-
-# include <cerrno>
-
-# if defined WIN32
-// Boost itself redefines ETIMEDOUT. Do not do it if Boost did.
-#  ifndef ETIMEDOUT
-#   define ETIMEDOUT 110
-#  endif
-
-#  define ENOTSUP 111
-# endif
+// boost/cerrno.hpp covers portability issues for us.  We could use
+// our how numbering scheme, but given that we talk about #define
+// here, the risks of having mysterious incompatibilities is way too
+// high.
+# include <boost/cerrno.hpp>
 
 #endif // ! LIBPORT_CERRNO
 
