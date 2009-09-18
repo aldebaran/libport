@@ -246,17 +246,13 @@ sub transform_things (\&@)
         {
           transform_file &$transform_ref, $thing;
         }
-      elsif (-d $thing)
+      elsif (-d $thing
+             && $thing !~ /(\.git|\.dsym)$/)
         {
-          use File::Find;
-          find
-            ({
-              wanted => sub { transform_things ($transform_ref,
-                                                $File::Find::name)
-                                unless $File::Find::name eq $thing; },
-              no_chdir => 1,
-             },
-             $thing);
+          opendir (my $dir, $thing) ||
+            die "cannot opendir $thing: $!";
+          transform_things ($transform_ref, readdir $dir);
+          closedir $dir;
         }
       else
         {
