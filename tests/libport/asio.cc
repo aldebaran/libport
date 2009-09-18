@@ -122,7 +122,7 @@ class TestSocket: public libport::Socket
 };
 
 
-size_t TestSocket::nInstance = 0;
+size_t TestSocket::nInstance = 0u;
 TestSocket* TestSocket::lastInstance = 0;
 
 // Delay in microseconds used to sleep when something asynchronous
@@ -140,7 +140,7 @@ void test_one(bool proto)
   BOOST_REQUIRE_MESSAGE(!err, err.message());
   BOOST_CHECK_NO_THROW(client->send(msg));
   usleep(delay);
-  BOOST_CHECK_EQUAL(TestSocket::nInstance, proto ? 1 : 2);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, proto ? 1u : 2u);
   BOOST_CHECK_EQUAL(client->received, msg);
   if (!proto)
     BOOST_CHECK_EQUAL(TestSocket::lastInstance->received,
@@ -155,7 +155,7 @@ void test_one(bool proto)
   // Close client-end. Should send error both ways and destroy all sockets.
   client->close();
   usleep(delay);
-  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 }
 
 
@@ -207,7 +207,7 @@ test()
     usleep(delay);
   }
   usleep(delay*2);
-  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 
   test_one(false);
   BOOST_TEST_MESSAGE("##many clients");
@@ -221,14 +221,14 @@ test()
     clients.push_back(client);
   }
   usleep(delay*3);
-  BOOST_CHECK_EQUAL(TestSocket::nInstance, 20);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, 20u);
   foreach(TestSocket* s, clients)
   {
     BOOST_CHECK_EQUAL(s->received, msg);
     s->close();
   }
   usleep(delay*3);
-  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 
   BOOST_TEST_MESSAGE("##Failing connections");
   {
@@ -245,7 +245,7 @@ test()
     // Destroy without closing.
     client->destroy();
     usleep(delay);
-    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
   }
 
   // Timeout
@@ -277,7 +277,7 @@ test()
     // alive because of the lock, but server might have died.
     BOOST_CHECK_MESSAGE(TestSocket::nInstance, TestSocket::nInstance);
     usleep(500000+delay);
-    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
   }
 
   BOOST_TEST_MESSAGE("Destroy listener");
@@ -318,7 +318,7 @@ test()
     // Destroy without closing.
     client->destroy();
     usleep(delay);
-    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0);
+    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 
     // Check one-write-one-packet semantic
     client = new TestSocket(false, true);
