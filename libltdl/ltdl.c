@@ -233,10 +233,12 @@ lt_dlinit (void)
       /* Now open all the preloaded module loaders, so the application
 	 can use _them_ to lt_dlopen its own modules.  */
 #ifdef HAVE_LIBDLLOADER
+# if !defined(WIN32) || defined(_MSC_VER)
       if (!errors)
 	{
 	  errors += lt_dlpreload (&preloaded_symbols);
 	}
+# endif
 
       if (!errors)
 	{
