@@ -328,7 +328,7 @@ test()
     client->send("pan");
     usleep(delay*2);
     BOOST_CHECK_EQUAL(client->received, "coinpan");
-    BOOST_CHECK_EQUAL(client->nRead, 2);
+    BOOST_CHECK_EQUAL(client->nRead, 2u);
 
     enable_delay = true;
     client = new TestSocket(false, true);
