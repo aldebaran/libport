@@ -67,10 +67,10 @@
 // times.  One way out is to remove the "inline", which comes with a
 // penalty.  Another way out is to pull the structure out of the
 // function.  This is why you are encouraged to use FINALLY, but if
-// you use it in an inline function, you need to use FINALLY_DECLARE
+// you use it in an inline function, you need to use FINALLY_DEFINE
 // outside the function, and FINALLY_USE afterwards.
 
-# define FINALLY_DECLARE(Name, Vars, Action)                            \
+# define FINALLY_DEFINE(Name, Vars, Action)                             \
   struct Finally ## Name                                                \
   {                                                                     \
     ATTRIBUTE_ALWAYS_INLINE                                             \
@@ -90,9 +90,8 @@
 # define FINALLY_USE(Name, Vars, Action)                                \
   Finally ## Name finally ## Name                                       \
   (LIBPORT_SEPARATE(LIBPORT_MAP(FINALLY_ATTR_FETCH, Vars)))
-
 # define FINALLY(Vars, Action)                                          \
-  FINALLY_DECLARE(Libport, Vars, Action);                               \
+  FINALLY_DEFINE(Libport, Vars, Action);                               \
   FINALLY_USE(Libport, Vars, Action)
 
 namespace libport
