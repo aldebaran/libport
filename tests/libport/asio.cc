@@ -80,8 +80,9 @@ class TestSocket: public libport::Socket
   virtual ~TestSocket()
   {
     nInstance--;
-    //BOOST_TEST_MESSAGE(this <<" dying, in " << K_get() << " lasterror=" << lastError.message());
-    //assert(false);
+    // BOOST_TEST_MESSAGE(this << " dying, in " << K_get()
+    //                    << " lasterror=" << lastError.message());
+    // assert(false);
   }
 
   size_t onRead(const void* data, size_t size)

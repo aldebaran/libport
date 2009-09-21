@@ -35,6 +35,7 @@ void
 check()
 {
   BOOST_CHECK_EQUAL(0, libport::utime());
+  usleep(1);
   BOOST_CHECK_LT(0, libport::utime());
   sleep(1);
   std::cerr << "Now: " << utime() << std::endl;
