@@ -17,5 +17,16 @@
 AC_DEFUN([URBI_WIN32],
 [AC_CHECK_HEADERS([windows.h], [windows=true], [windows=false])
 AM_CONDITIONAL([WIN32], [$windows])
+
+case $host_alias in
+     (*mingw*)
+       # Remove windows-style paths from dependencies files
+       AC_CONFIG_COMMANDS([mingw-fix-path],
+           [sed -i \
+              "/mv.*Pl\?o$/{;s/$/;\\\\/;p;s/;\\$//;s,.*\.Tpo \(.*\),	sed -i s/c:\\\\\\\\\\\\\\\\/\\\\\\\\\\\\\\\\/g \1,;};" \
+              Makefile
+            ])
+     ;;
+esac
 ])
 
