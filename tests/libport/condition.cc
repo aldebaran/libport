@@ -39,19 +39,19 @@ static void cond_thread(int idx,
                         libport::Condition& cond,
                         libport::Semaphore& sem)
 {
-  BlockLock bl(cond);
-  while (true)
   {
-    sem++;
-    cond.wait();
-    if (targetId == idx || targetId == -1)
-      output[idx]++;
-    if (die)
+    BlockLock bl(cond);
+    while (true)
     {
       sem++;
-      break;
+      cond.wait();
+      if (targetId == idx || targetId == -1)
+        output[idx]++;
+      if (die)
+        break;
     }
   }
+  sem++;
 }
 
 static void start_threads(std::vector<int>& output,
