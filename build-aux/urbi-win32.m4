@@ -23,7 +23,7 @@ case $host_alias in
        # Remove windows-style paths from dependencies files
        AC_CONFIG_COMMANDS([mingw-fix-path],
            [sed -i \
-              "/mv.*Pl\?o$/{;s/$/;\\\\/;p;s/;\\$//;s,.*\.Tpo \(.*\),	sed -i s/c:\\\\\\\\\\\\\\\\/\\\\\\\\\\\\\\\\/g \1,;};" \
+              "/mv.*Pl\?o$/{;h;s/$/ \\&\\&\\\\/;p;g;s,.*\.Tpo \(.*\),	sed -i s/c:\\\\\\\\\\\\\\\\/\\\\\\\\\\\\\\\\/g \1,;};" \
               Makefile
             ])
      ;;
