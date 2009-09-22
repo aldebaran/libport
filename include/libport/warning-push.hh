@@ -38,6 +38,39 @@
 // eg in: while (true) ...
 //
 
+// C4150: deletion of pointer to incomplete type
+// On the following simple code, MSVC 2005 incorrectly produces a warning.
+//
+// #include <memory>
+// struct Foo;
+// struct __declspec(dllexport) Bar
+// {
+//   ~Bar();
+//   std::auto_ptr<Foo> foo_;
+// };
+//
+// /VC/include/memory:604: warning C4150: deletion of pointer to incomplete type
+//                         'Foo'; no destructor called
+// foo.cc:2: note:         see declaration of 'Foo'
+// /VC/include/memory:603: note:
+//        while compiling class template member function
+//        'std::auto_ptr<_Ty>::~auto_ptr(void)'
+//         with
+//         [
+//             _Ty=Foo
+//         ]
+// foo.cc:6: note:         see reference to class template instantiation
+//        'std::auto_ptr<_Ty>' being compiled
+//         with
+//         [
+//             _Ty=Foo
+//         ]
+//
+// Without the __declspec(dllexport), it works properly.  I don't know
+// how to work around the problem, but anyway, GCC works properly on
+// this issue, so we can rely on GCC only to catch such genuine errors.
+// See also libport/msvc/pimpl/.
+
 // C4251: 'urbi::UList::array' : class 'std::vector<_Ty>' needs
 // to have dll-interface to be used by clients of class 'urbi::UList'
 //
@@ -151,7 +184,7 @@
 
 # pragma warning(disable:                       \
                  4003 4061 4099                 \
-                 4121 4127                      \
+                 4121 4127 4150                 \
                  4251 4275 4290                 \
                  4347 4350 4355                 \
                  4503 4512 4514 4571            \
