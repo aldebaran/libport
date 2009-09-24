@@ -27,7 +27,7 @@ struct tm *
 localtime_r(const time_t *clock, struct tm *res)
 {
   if (res)
-    *res = localtime(clock);
+    *res = *localtime(clock);
   return res;
 }
 
