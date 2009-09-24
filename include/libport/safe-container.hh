@@ -10,9 +10,8 @@
 #ifndef LIBPORT_SAFE_CONTAINER_HH
 # define LIBPORT_SAFE_CONTAINER_HH
 
-#include <libport/export.hh>
-
-namespace libport {
+namespace libport
+{
   /** Container wrapper providing iteration robust to removal of any element.
    *
    * To function properly, only a subset of container operations are supported,
@@ -31,7 +30,8 @@ namespace libport {
    *
    * No support for const_iterators is provided.
    */
-  template<template<class U, class V>class C, class T> class SafeContainer
+  template<template<class U, class V>class C, class T>
+  class SafeContainer
   {
   public:
     typedef SafeContainer<C, T> this_type;
@@ -93,13 +93,14 @@ namespace libport {
     void pop_front();
     void pop_back();
     void clear();
-    size_t size();
-    template<typename I> void insert(base_iterator where, I beg, I end);
+    size_t size() const;
+    template<typename I>
+    void insert(base_iterator where, I beg, I end);
   private:
-    /* How it works: each element has a bitmask to keep track of wether each
+    /* How it works: each element has a bitmask to keep track of whether each
      * iterator passed through it. Each iterator is associated with a bit
      * number, and transition direction (from 0 to 1 or 1 to 0).
-     * getFlag() is used to retrived an unused bit number. Transition direction
+     * getFlag() is used to retreive an unused bit number. Transition direction
      * is reversed each time the same bit is reused.
      * When iterator++ is called, the iterator looks for the next element with
      * its bit in the 'before transition' state, switches it and returns it.
@@ -128,6 +129,6 @@ namespace libport {
   };
 }
 
-#include "libport/safe-container.hxx"
+# include "libport/safe-container.hxx"
 
 #endif

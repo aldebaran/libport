@@ -23,12 +23,17 @@ namespace libport
    , inUse(0)
   {
   }
-#define CONTAINER_METHOD(ret)  \
-  template<template<class U, class V>class C, class T>  \
-  typename SafeContainer<C, T>::ret SafeContainer<C, T>::
-#define CONTAINER_SMETHOD(ret)  \
-  template<template<class, class>class C, class T>  \
-  ret SafeContainer<C, T>::
+
+#define CONTAINER                               \
+  SafeContainer<C, T>
+
+#define CONTAINER_SMETHOD(Ret)                          \
+  template<template<class, class>class C, class T>      \
+  Ret                                                   \
+  CONTAINER::
+
+#define CONTAINER_METHOD(Ret)                           \
+  CONTAINER_SMETHOD(typename CONTAINER::Ret)
 
   CONTAINER_METHOD(iterator::value_type&) iterator::operator*()
   {
@@ -40,38 +45,38 @@ namespace libport
     return & (base_iterator::operator*().v);
   }
 
-  CONTAINER_SMETHOD(/**/) real_value_type::real_value_type(const value_type &v,
-                                                           this_type& owner)
+  CONTAINER_SMETHOD() real_value_type::real_value_type(const value_type &v,
+                                                       this_type& owner)
     : v(v)
   {
     mask = owner.currentMask;
   }
 
-  CONTAINER_SMETHOD(/**/) iterator::iterator()
+  CONTAINER_SMETHOD() iterator::iterator()
    : owner(0)
    , copy(true)
   {
   }
 
-  CONTAINER_SMETHOD(/**/) iterator::iterator(const iterator& b)
-  : base_iterator(b)
-  , owner(b.owner)
-  , copy(true)
+  CONTAINER_SMETHOD() iterator::iterator(const iterator& b)
+    : base_iterator(b)
+    , owner(b.owner)
+    , copy(true)
   {
-    (*this) = b;
+    *this = b;
   }
 
-  CONTAINER_SMETHOD(/**/) iterator::iterator(const base_iterator& b,
-                                SafeContainer<C, T>& owner, Flag f)
-  : base_iterator(b)
-  , flag(f)
-  , owner(&owner)
-  , copy(false)
+  CONTAINER_SMETHOD() iterator::iterator(const base_iterator& b,
+                                         CONTAINER& owner, Flag f)
+    : base_iterator(b)
+    , flag(f)
+    , owner(&owner)
+    , copy(false)
   {
   }
 
 
-  CONTAINER_SMETHOD(/**/) iterator::~iterator()
+  CONTAINER_SMETHOD() iterator::~iterator()
   {
     destroy();
   }
@@ -125,7 +130,7 @@ namespace libport
     {
       base_iterator i;
       //Find first non-marked element
-      for(i = owner->container.begin(); i != owner->container.end(); ++i)
+      for (i = owner->container.begin(); i != owner->container.end(); ++i)
       {
         if ((i->mask & flag.mask) != flag.val)
           break;
@@ -213,17 +218,17 @@ namespace libport
     invalidationMask = -1;
   }
 
-  CONTAINER_SMETHOD(size_t) size()
+  CONTAINER_SMETHOD(size_t) size() const
   {
     return container.size();
   }
 
   template<template<class, class>class C, class T>
   template<typename I>
-  void SafeContainer<C,T>::insert(base_iterator where, I beg, I end)
+  void CONTAINER::insert(base_iterator where, I beg, I end)
   {
     base_iterator l = where;
-    for (I i=beg; i!= end; ++i)
+    for (I i = beg; i != end; ++i)
     {
       l = container.insert(l, real_value_type(*i, *this));
       l++;

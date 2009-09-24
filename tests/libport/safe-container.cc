@@ -69,8 +69,8 @@ void test()
   check_list(tv, expect);
 
   BOOST_CHECK(check_list(s, tolist(12, (1,2,3,4,5,6,7,8,9,10,11,13))));
-  for ( libport::SafeContainer<std::list, int>::iterator i = s.begin();
-       i!= s.end(); ++i)
+  for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
+       i != s.end(); ++i)
   {
     if (*i == 9)
       s.erase(std::find(s.begin(), s.end(), 9));
@@ -174,7 +174,7 @@ void test2()
   BOOST_CHECK(check_list(s, tolist(12, (3,4,5,100,101,102,6,7,8,9,10,11))));
   s.clear();
   foreach(int i, s)
-   ;
+    (void) i;
 }
 
 // Interrupt iteration
