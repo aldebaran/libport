@@ -7,23 +7,20 @@
  *
  * See the LICENSE file for more information.
  */
-#include <libport/time.h>
+
+#include <libport/ctime>
 
 # if defined WIN32
 
-namespace libport
+int
+clock_gettime(int, struct timespec* t)
 {
-
-  int
-  clock_gettime(int, struct timespec* t)
+  if (t)
   {
-    if (t)
-    {
-      t->tv_sec = 0;
-      t->tv_nsec = 0;
-    }
-    return 0;
+    t->tv_sec = 0;
+    t->tv_nsec = 0;
   }
+  return 0;
 }
 
 struct tm *

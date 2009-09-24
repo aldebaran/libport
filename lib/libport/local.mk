@@ -31,6 +31,7 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/cstdio.cc				\
   lib/libport/cstdlib.cc			\
   lib/libport/cstring.cc			\
+  lib/libport/ctime.cc				\
   lib/libport/damerau-levenshtein-distance.cc   \
   lib/libport/debug.cc				\
   lib/libport/deref.cc				\
@@ -54,7 +55,6 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/semaphore.cc			\
   lib/libport/symbol.cc				\
   lib/libport/sysexits.cc			\
-  lib/libport/time.cc				\
   lib/libport/timer.cc				\
   lib/libport/tokenizer.cc			\
   lib/libport/ufloat.cc				\

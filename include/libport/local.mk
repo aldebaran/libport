@@ -9,11 +9,11 @@ libport_include_HEADERS =			\
   include/libport/cstdlib			\
   include/libport/cstring			\
   include/libport/cstring.hxx			\
+  include/libport/ctime				\
   include/libport/fcntl.h			\
   include/libport/pthread.h			\
   include/libport/pthread.hxx			\
   include/libport/semaphore.h			\
-  include/libport/time.h			\
   include/libport/unistd.h
 
 # arpa/ headers
