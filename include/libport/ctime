@@ -11,6 +11,8 @@
 #ifndef LIBPORT_CTIME
 # define LIBPORT_CTIME
 
+# include <ctime>
+
 # include <libport/detect-win32.h>
 # include <libport/export.hh>
 
@@ -18,8 +20,6 @@
 #  include <libport/windows.hh>
 
 #  define CLOCK_REALTIME 0
-
-typedef unsigned int time_t;
 
 struct timespec
 {
