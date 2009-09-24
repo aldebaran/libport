@@ -126,6 +126,8 @@ libport_include_HEADERS +=				\
   include/libport/reserved-vector.hxx			\
   include/libport/rs232.hh				\
   include/libport/rs232.hxx				\
+  include/libport/safe-container.hh                     \
+  include/libport/safe-container.hxx                    \
   include/libport/sched.hh				\
   include/libport/select-const.hh			\
   include/libport/select-ref.hh				\

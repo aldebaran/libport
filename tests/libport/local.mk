@@ -37,6 +37,7 @@ TESTS_BINARIES =                                \
   tests/libport/path.cc                         \
   tests/libport/pid-file.cc                     \
   tests/libport/pthread.cc                      \
+  tests/libport/safe-container.cc               \
   tests/libport/semaphore.cc                    \
   tests/libport/separate.cc                     \
   tests/libport/singleton-ptr.cc                \
@@ -107,6 +108,7 @@ tests_libport_markup_ostream_SOURCES                    = tests/libport/markup-o
 tests_libport_path_SOURCES                              = tests/libport/path.cc
 tests_libport_pid_file_SOURCES                          = tests/libport/pid-file.cc
 tests_libport_pthread_SOURCES                           = tests/libport/pthread.cc
+tests_libport_safe_container_SOURCES                    = tests/libport/safe-container.cc
 tests_libport_semaphore_SOURCES                         = tests/libport/semaphore.cc
 tests_libport_separate_SOURCES                          = tests/libport/separate.cc
 tests_libport_singleton_ptr_SOURCES                     = tests/libport/singleton-ptr.cc
