@@ -84,6 +84,7 @@ namespace libport
       bool copy;
     };
     typedef iterator const_iterator;
+
     SafeContainer();
     iterator begin();
     iterator end();

@@ -14,25 +14,37 @@ using libport::test_suite;
 
 template<typename T>
 std::vector<T>
-tov(boost::assign_detail::generic_list<T> &l)
+tov(boost::assign_detail::generic_list<T>& l)
 {
   return std::vector<T>(l.begin(), l.end());
 }
 
 #define tolist(a, b) tov(list_of BOOST_PP_TUPLE_TO_SEQ(a, b))
-template<typename T, typename U>bool check_list(T&l1, U l2)
+
+template<typename T, typename U>
+bool
+check_list(T& l1, U l2)
 {
   typename U::iterator i2 = l2.begin();
-  foreach(typename T::value_type& v, l1)
+  foreach (typename T::value_type& v, l1)
   {
     if (i2 == l2.end())
+    {
+      BOOST_TEST_MESSAGE("second list too short");
       goto fail;
+    }
     if (v != *i2)
+    {
+      BOOST_TEST_MESSAGE("item differ: " << v << " vs. " << *i2);
       goto fail;
+    }
     ++i2;
   }
   if (i2 != l2.end())
+  {
+    BOOST_TEST_MESSAGE("first list too short");
     goto fail;
+  }
   return true;
 fail:
   foreach(typename T::value_type& v, l1)
@@ -58,8 +70,8 @@ void test()
 
   BOOST_CHECK(check_list(s, tolist(13, (1,2,3,4,5,6,7,8,9,10,11,12,13))));
   std::vector<int> tv;
-  for ( libport::SafeContainer<std::list, int>::iterator i = s.begin();
-       i!= s.end(); ++i)
+  for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
+       i != s.end(); ++i)
   {
     tv.push_back(*i);
     if (*i == 12)
@@ -77,8 +89,8 @@ void test()
   }
 
   BOOST_CHECK(check_list(s, tolist(11, (1,2,3,4,5,6,7,8,10,11,13))));
-  for ( libport::SafeContainer<std::list, int>::iterator i = s.begin();
-       i!= s.end(); ++i)
+  for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
+       i != s.end(); ++i)
   {
     if (*i == 8)
     {
@@ -88,16 +100,16 @@ void test()
     }
   }
   BOOST_CHECK(check_list(s, tolist(8, (1,2,3,4,5,6,11,13))));
-  for ( libport::SafeContainer<std::list, int>::iterator i = s.begin();
-       i!= s.end(); ++i)
+  for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
+       i != s.end(); ++i)
   {
     if (*i == 1)
       s.erase(i);
   }
   BOOST_CHECK(check_list(s, tolist(7, (2,3,4,5,6,11,13))));
   tv.clear();
-  for ( libport::SafeContainer<std::list, int>::iterator i = s.begin();
-       i!= s.end(); ++i)
+  for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
+       i != s.end(); ++i)
   {
     tv.push_back(*i);
     if (*i == 13)
@@ -127,8 +139,8 @@ void test2()
   for(int i=0; i<100; ++i)
   {
     tv.clear();
-    for ( libport::SafeContainer<std::list, int>::iterator i = s.begin();
-         i!= s.end(); ++i)
+    for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
+         i != s.end(); ++i)
     {
       tv.push_back(*i);
       if (*i == 11) s.erase(i);
@@ -144,8 +156,8 @@ void test2()
     int item = rand()% v.size();
     int p = 0;
     tv.clear();
-    for ( libport::SafeContainer<std::list, int>::iterator i = s.begin();
-         i!= s.end(); ++i, ++p)
+    for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
+         i != s.end(); ++i, ++p)
     {
       tv.push_back(*i);
       if (p == item) s.erase(i);
@@ -174,7 +186,7 @@ void test2()
   BOOST_CHECK(check_list(s, tolist(12, (3,4,5,100,101,102,6,7,8,9,10,11))));
   s.clear();
   foreach(int i, s)
-    (void) i;
+   ;
 }
 
 // Interrupt iteration
@@ -191,8 +203,8 @@ void test3()
     int item = rand()% b.size();
     int p = 0;
     tv.clear();
-    for ( libport::SafeContainer<std::list, int>::iterator i = s.begin();
-         i!= s.end(); ++i, ++p)
+    for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
+         i != s.end(); ++i, ++p)
     {
       if (p == item) break;
       tv.push_back(*i);
@@ -227,7 +239,7 @@ void test4()
       iters[piter] = s.begin();
       BOOST_CHECK(true);
       libport::SafeContainer<std::list, int>::iterator &i = iters[piter];
-      for (; i!= s.end(); ++i, ++p)
+      for (; i != s.end(); ++i, ++p)
       {
         effective[piter].push_back(*i);
         if (p == item) break;
@@ -238,9 +250,9 @@ void test4()
 
     // Remove random elements
     std::vector<int> removed;
-    for (int n = 0; n < 5; ++n)
+    for (int i=0; i<5; ++i)
     {
-      int item = rand() % b.size();
+      int item = rand()% b.size();
       int p = 0;
       for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
            i != s.end(); ++i, ++p)
