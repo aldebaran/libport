@@ -239,7 +239,6 @@ sub transform_things (\&@)
 
   for my $thing (@thing)
     {
-      use Cwd;
       if (-f $thing
           && basename($thing) =~ m{ (?:\.(?:cc|hh|h|hxx)$)
                                   | (?:^c\w+$)}x)
@@ -251,7 +250,8 @@ sub transform_things (\&@)
         {
           opendir (my $dir, $thing) ||
             die "cannot opendir $thing: $!";
-          transform_things ($transform_ref, readdir $dir);
+          my @e = map { "$thing/$_" } grep { !/^\.\.?$/ } readdir($dir);
+          transform_things ($transform_ref, @e);
           closedir $dir;
         }
       else
