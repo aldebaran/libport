@@ -27,6 +27,12 @@ namespace libport
   LIBPORT_API
   int clock_gettime(int, struct timespec* t);
 }
+
+// Warning: this implementation is not thread safe.
+LIBPORT_API
+struct tm *
+localtime_r(const time_t *clock, struct tm *result);
+
 # endif
 
 #endif // ! LIBPORT_TIME_H

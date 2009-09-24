@@ -24,8 +24,14 @@ namespace libport
     }
     return 0;
   }
-
 }
+
+struct tm *
+localtime_r(const time_t *clock, struct tm *res)
+{
+  if (res)
+    *res = localtime(clock);
+  return res;
+}
+
 #endif // !defined WIN32
-
-
