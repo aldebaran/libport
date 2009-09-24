@@ -256,7 +256,9 @@ sub transform_things (\&@)
         }
       else
         {
-          warn "skipping $thing\n";
+          warn (-e $thing
+                ? "skipping $thing\n"
+                : "ignoring $thing: does not exist\n");
         }
     }
 }
