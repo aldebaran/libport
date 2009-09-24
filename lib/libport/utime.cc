@@ -57,7 +57,7 @@ namespace libport
 
 #else /* !WIN32 */
 
-# include <ctime>
+# include <libport/ctime>
 
 namespace libport
 {

@@ -1,5 +1,5 @@
 #include <boost/assign/list_of.hpp>
-#include <boost/lexical_cast.hpp>
+#include <libport/lexical-cast.hh>
 
 #include <boost/preprocessor.hpp>
 
