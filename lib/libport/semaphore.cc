@@ -14,7 +14,7 @@
 #include <libport/program-name.hh>
 #include <libport/semaphore.hh>
 #include <libport/sysexits.hh>
-#include <libport/time.h>
+#include <libport/ctime>
 
 /* Darwin doesn't implement sem_init/sem_close (although the functions exists
  * and is defined, in fact it just returns ENOSYS). That's why we need to use

@@ -3,7 +3,7 @@
 
 # include <libport/detect-win32.h>
 # include <libport/export.hh>
-# include <libport/time.h>
+# include <libport/ctime>
 
 // Get sem_t.
 # if defined WIN32
