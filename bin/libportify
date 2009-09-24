@@ -59,10 +59,10 @@ sub fix_headers ($\$)
      |cstdio
      |cstdlib
      |cstring
+     |ctime
      |fcntl.h
      |pthread.h
      |semaphore.h
-     |time.h
      |unistd.h
      |sys/param.h
      |sys/prctl.h
@@ -246,7 +246,12 @@ sub transform_things (\&@)
           transform_file &$transform_ref, $thing;
         }
       elsif (-d $thing
-             && $thing !~ /(\.git|\.dsym)$/)
+             && $thing !~ m{(?:libltdl
+                              |libcoroutine
+                              |\.git
+                              |\.dsym
+                              |bison
+                              |jpeg)$}x)
         {
           opendir (my $dir, $thing) ||
             die "cannot opendir $thing: $!";
