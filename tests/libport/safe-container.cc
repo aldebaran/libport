@@ -12,9 +12,9 @@
 using boost::assign::list_of;
 using libport::test_suite;
 
-template<typename T> std::vector<T> tov(boost::assign_detail::generic_list<T>
-                                        &l
-                                        )
+template<typename T>
+std::vector<T>
+tov(boost::assign_detail::generic_list<T> &l)
 {
   return std::vector<T>(l.begin(), l.end());
 }
@@ -35,9 +35,11 @@ template<typename T, typename U>bool check_list(T&l1, U l2)
     goto fail;
   return true;
 fail:
-  foreach(typename T::value_type& v, l1) std::cerr << v << " ";
+  foreach(typename T::value_type& v, l1)
+    std::cerr << v << " ";
   std::cerr << std::endl;
-  foreach(typename U::value_type v, l2) std::cerr << v << " ";
+  foreach(typename U::value_type v, l2)
+    std::cerr << v << " ";
   std::cerr << std::endl;
   return false;
 }
@@ -236,12 +238,12 @@ void test4()
 
     // Remove random elements
     std::vector<int> removed;
-    for (int p=0; p<5; ++p)
+    for (int n = 0; n < 5; ++n)
     {
-      int item = rand()% b.size();
+      int item = rand() % b.size();
       int p = 0;
       for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
-           i!= s.end(); ++i, ++p)
+           i != s.end(); ++i, ++p)
         if (p == item)
         {
           removed.push_back(*i);
