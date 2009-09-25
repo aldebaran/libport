@@ -52,7 +52,7 @@ namespace libport
                 boost::asio::datagram_socket_service<boost::asio::ip::udp> >
             udpsock;
 
-    class SocketImplBase
+    class LIBPORT_API SocketImplBase
       : public BaseSocket
       , protected libport::Lockable
     {
