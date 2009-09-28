@@ -196,10 +196,14 @@ pids_wait ()
   timeout=$(($timeout * $timeout_factor))
   local count_down=$timeout
 
+  # True iff we did not time out.
+  pids_wait_result=true
+
   while pids_alive "$][@"; do
     if test $count_down -le 0; then
-      echo "Timeout (${timeout}s) expired"
+      echo "Timeout (${timeout}s * $timeout_factor) expired"
       pids_kill "$][@"
+      pids_wait_result=false
       break
     fi
     sleep 1
@@ -401,6 +405,7 @@ children_wait ()
   local pids
   pids=$(children_pid "$][@")
   pids_wait $timeout $pids
+  children_wait_result=$pids_wait_result
 }
 
 ]])

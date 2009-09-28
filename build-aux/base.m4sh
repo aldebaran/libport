@@ -235,8 +235,8 @@ ex_to_string ()
      (177) echo ' (EX_HARD: hard error that cannot be saved)';;
      (242) echo ' (killed by Valgrind)';;
      (  *) if test 127 -lt $[1]; then
-            echo " (SIG$(kill -l $[1] || true))"
-          fi;;
+             echo " (SIG$(kill -l $[1] || true))"
+           fi;;
   esac
 }
 
