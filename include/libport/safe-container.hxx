@@ -116,7 +116,9 @@ namespace libport
   {
     if (!flag.mask && !b.flag.mask)
       return true;
-    return base_iterator::operator==(b);
+    // Do not assume the parent operator is a method and write
+    // something like base_iterator::operator ==.
+    return *static_cast<const base_iterator*>(this) == b;
   }
 
   CONTAINER_SMETHOD(void) iterator::next()
