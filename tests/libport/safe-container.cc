@@ -172,7 +172,7 @@ void test2()
   s.clear();
   foreach(int i, b)
     s.push_back(i);
-  BOOST_CHECK_EQUAL(s.size(), 9);
+  BOOST_CHECK_EQUAL(s.size(), 9u);
   std::list<int> ins = list_of(100)(101)(102);
   libport::SafeContainer<std::list, int>::iterator i = s.begin();
   i++;i++;i++;
@@ -185,8 +185,9 @@ void test2()
   s.insert(s.begin(), iv.begin(), iv.end());
   BOOST_CHECK(check_list(s, tolist(12, (3,4,5,100,101,102,6,7,8,9,10,11))));
   s.clear();
+  // Check we can iterate on an empty list.
   foreach(int i, s)
-   ;
+    (void)i;
 }
 
 // Interrupt iteration
