@@ -501,3 +501,99 @@
    fun:tryall_dlopen_module
    fun:try_dlopen
 }
+
+# Syscall param socketcall.sendto(msg) points to uninitialised byte(s)
+#    at 0x42CDF3E: sendto (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B6384: getaddrinfo (in /lib/tls/libc-2.3.6.so)
+#    by 0x8078B19: boost::asio::ip::tcp::endpoint libport::resolve<boost::asio::ip::tcp>(std::string const&, std::string const&, boost::system::error_code&) (socket_ops.hpp:1827)
+#    by 0x808FBC0: boost::system::error_code libport::Socket::connectProto<boost::asio::ip::tcp, libport::BaseSocket* (*)(boost::asio::basic_stream_socket<boost::asio::ip::tcp, boost::asio::stream_socket_service<boost::asio::ip::tcp> >*)>(std::string const&, std::string const&, unsigned int, bool, libport::BaseSocket* (*)(boost::asio::basic_stream_socket<boost::asio::ip::tcp, boost::asio::stream_socket_service<boost::asio::ip::tcp> >*)) (asio.hxx:775)
+#    by 0x8055772: test() (asio.hxx:841)
+#    by 0x805BF9B: boost::unit_test::ut_detail::callback0_impl_t<boost::unit_test::ut_detail::unused, void (*)()>::invoke() (callback.hpp:56)
+#    by 0x80B6A4C: boost::unit_test::ut_detail::callback0_impl_t<int, boost::unit_test::(anonymous namespace)::zero_return_wrapper_t<boost::unit_test::callback0<boost::unit_test::ut_detail::unused> > >::invoke() (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/lt-asio)
+#    by 0x80B8B0C: boost::execution_monitor::catch_signals(boost::unit_test::callback0<int> const&) (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/lt-asio)
+#    by 0x80B8B94: boost::execution_monitor::execute(boost::unit_test::callback0<int> const&) (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/lt-asio)
+#    by 0x80B67BF: boost::unit_test::unit_test_monitor_t::execute_and_translate(boost::unit_test::test_case const&) (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/lt-asio)
+#    by 0x80B2400: boost::unit_test::framework_impl::visit(boost::unit_test::test_case const&) (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/lt-asio)
+#    by 0x80A9CBD: boost::unit_test::traverse_test_tree(boost::unit_test::test_suite const&, boost::unit_test::test_tree_visitor&) (in /home/build/libport_x86_gcc4_release-dynamic/work/build/tests/libport/.libs/lt-asio)
+#  Address 0xbea4d5c9 is on thread 1's stack
+{
+   sendto in asio
+   Memcheck:Param
+   socketcall.sendto(msg)
+   fun:sendto
+   fun:getaddrinfo
+   ...
+}
+
+# Conditional jump or move depends on uninitialised value(s)
+#    at 0x4010C4E: (within /lib/ld-2.3.6.so)
+#    by 0x430321F: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x4302C8E: _dl_open (in /lib/tls/libc-2.3.6.so)
+#    by 0x43054BC: (within /lib/tls/libc-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x430551D: __libc_dlopen_mode (in /lib/tls/libc-2.3.6.so)
+#    by 0x42DF26C: __nss_lookup_function (in /lib/tls/libc-2.3.6.so)
+#    by 0x42B62EA: (within /lib/tls/libc-2.3.6.so)
+#    by 0x42B6FF8: getaddrinfo (in /lib/tls/libc-2.3.6.so)
+#    by 0x8078B19: boost::asio::ip::tcp::endpoint libport::resolve<boost::asio::ip::tcp>(std::string const&, std::string const&, boost::system::error_code&) (socket_ops.hpp:1827)
+#    by 0x808FBC0: boost::system::error_code libport::Socket::connectProto<boost::asio::ip::tcp, libport::BaseSocket* (*)(boost::asio::basic_stream_socket<boost::asio::ip::tcp, boost::asio::stream_socket_service<boost::asio::ip::tcp> >*)>(std::string const&, std::string const&, unsigned int, bool, libport::BaseSocket* (*)(boost::asio::basic_stream_socket<boost::asio::ip::tcp, boost::asio::stream_socket_service<boost::asio::ip::tcp> >*)) (asio.hxx:775)
+{
+   getaddrinfo in asio
+   Memcheck:Cond
+   ...
+   fun:_dl_open
+   ...
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   ...
+   fun:getaddrinfo
+   ...
+}
+{
+   getaddrinfo in asio
+   Memcheck:Addr4
+   ...
+   fun:_dl_open
+   ...
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   ...
+   fun:getaddrinfo
+   ...
+}
+{
+   getservbyname_r in asio
+   Memcheck:Cond
+   ...
+   fun:_dl_open
+   ...
+   fun:__libc_dlopen_mode
+   fun:__nss_lookup_function
+   ...
+   fun:getservbyname_r
+   ...
+}
+
+# Conditional jump or move depends on uninitialised value(s)
+#    at 0x4010DF3: (within /lib/ld-2.3.6.so)
+#    by 0x400B729: (within /lib/ld-2.3.6.so)
+#    by 0x4008202: (within /lib/ld-2.3.6.so)
+#    by 0x430568C: (within /lib/tls/libc-2.3.6.so)
+#    by 0x43057C9: _dl_sym (in /lib/tls/libc-2.3.6.so)
+#    by 0x40E9EE7: (within /lib/tls/libdl-2.3.6.so)
+#    by 0x400B44E: (within /lib/ld-2.3.6.so)
+#    by 0x40EA42C: (within /lib/tls/libdl-2.3.6.so)
+#    by 0x40E9E7A: dlsym (in /lib/tls/libdl-2.3.6.so)
+#    by 0x40AD078: vm_sym (dlopen.c:239)
+#    by 0x40AA025: lt_dlsym (ltdl.c:2057)
+{
+   lt_dlsym
+   Memcheck:Cond
+   ...
+   fun:_dl_sym
+   ...
+   fun:dlsym
+   fun:vm_sym
+   fun:lt_dlsym
+}
