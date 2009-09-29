@@ -25,7 +25,7 @@ namespace libport
   class separator
   {
   public:
-    separator (const Container& r, const Separator& s);
+    separator(const Container& r, const Separator& s);
     /// Output the separated elements on \a o.
     std::ostream& operator() (std::ostream& o) const;
   private:
@@ -36,7 +36,7 @@ namespace libport
   /// Shorthand to create \a separator(c, s).
   template <typename Container, typename Separator>
   separator<Container, Separator>
-  separate (const Container& c, const Separator& s);
+  separate(const Container& c, const Separator& s);
 
   /// Output the separator object \a s on \a ostr.
   template <typename Container, typename Separator>

@@ -29,8 +29,8 @@ namespace libport
   template <typename R, typename S>
   inline
   separator<R, S>::separator (const R& r, const S& s)
-    : container_ (r),
-      separator_ (s)
+    : container_ (r)
+    , separator_ (s)
   {
   }
 
@@ -51,7 +51,7 @@ namespace libport
 
   template <typename R, typename S>
   separator<R, S>
-  separate (const R& r, const S& s)
+  separate(const R& r, const S& s)
   {
     return separator<R, S> (r, s);
   }
