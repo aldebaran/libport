@@ -52,6 +52,11 @@ namespace libport
     mask = owner.currentMask;
   }
 
+  CONTAINER_SMETHOD() Flag::Flag()
+    : mask(0)
+    , val(0) 
+  {}
+
   CONTAINER_SMETHOD() iterator::iterator()
    : owner(0)
    , copy(true)

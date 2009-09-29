@@ -46,7 +46,7 @@ namespace libport
     typedef T& reference_type;
     struct Flag
     {
-      Flag():mask(0), val(0) {}
+      Flag();
       unsigned long mask;
       unsigned long val;
     };

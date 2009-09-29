@@ -189,7 +189,7 @@ void test2()
   s.clear();
   // Check we can iterate on an empty list.
   foreach(int i, s)
-    (void)i;
+    (void) i;
 }
 
 // Interrupt iteration
