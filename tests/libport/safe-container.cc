@@ -1,5 +1,6 @@
 #include <boost/assign/list_of.hpp>
 #include <libport/lexical-cast.hh>
+#include <libport/cstdlib>
 
 #include <boost/preprocessor.hpp>
 
@@ -302,16 +303,9 @@ void test4()
 test_suite*
 init_test_suite()
 {
-#ifndef NDEBUG
-  // Safe containers do not work with _GLIBCXX_DEBUG. Matthieu should
-  // fix this as soon as he gets the time (somewhere around 2013).
-  exit(EX_SKIP);
-#endif
-  int t = time(0);
-  if (getenv("SEED"))
-    t = boost::lexical_cast<int>(getenv("SEED"));
-  std::cerr <<"seed is " << t << std::endl;
-  srand(t);
+  int seed = lexical_cast<int>(libport::xgetenv("SEED", "0"));
+  BOOST_MESSAGE("seed: "<< seed);
+  srand(seed);
   libport::program_initialize("safe-container");
   test_suite* suite = BOOST_TEST_SUITE("libport::SafeContainer test suite");
   suite->add(BOOST_TEST_CASE(test));

@@ -50,7 +50,7 @@ namespace libport
       unsigned long mask;
       unsigned long val;
     };
-    typedef C<real_value_type, std::allocator<value_type> > container_type;
+    typedef C<real_value_type, std::allocator<real_value_type> > container_type;
 
     typedef typename container_type::iterator base_iterator;
 
