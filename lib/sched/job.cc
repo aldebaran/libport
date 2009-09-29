@@ -274,10 +274,7 @@ namespace sched
   std::ostream&
   operator<< (std::ostream& o, const jobs_type& js)
   {
-    // Template parameters needed for gcc-3.
-    return o << libport::separate<const jobs_type,
-                                  std::ostream&(*)(std::ostream&)>
-                                 (js, libport::iendl);
+    return o << libport::separate(js, libport::iendl);
   }
 
 

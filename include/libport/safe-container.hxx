@@ -46,7 +46,7 @@ namespace libport
   }
 
   CONTAINER_SMETHOD() real_value_type::real_value_type(const value_type &v,
-                                                       this_type& owner)
+                                                       self_type& owner)
     : v(v)
   {
     mask = owner.currentMask;
@@ -189,6 +189,16 @@ namespace libport
   CONTAINER_METHOD(iterator) end()
   {
     return iterator(container.end(), *this, Flag());
+  }
+
+  CONTAINER_METHOD(iterator) begin() const
+  {
+    return const_cast<self_type*>(this)->begin();
+  }
+
+  CONTAINER_METHOD(iterator) end() const
+  {
+    return const_cast<self_type*>(this)->end();
   }
 
   CONTAINER_SMETHOD(void) erase(iterator v)

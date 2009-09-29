@@ -8,6 +8,7 @@
 #include <libport/foreach.hh>
 #include <libport/program-name.hh>
 #include <libport/safe-container.hh>
+#include <libport/separate.hh>
 #include <libport/sysexits.hh>
 #include <libport/time.hh>
 #include <libport/unit-test.hh>
@@ -50,12 +51,8 @@ check_list(T& l1, U l2)
   }
   return true;
 fail:
-  foreach(typename T::value_type& v, l1)
-    std::cerr << v << " ";
-  std::cerr << std::endl;
-  foreach(typename U::value_type v, l2)
-    std::cerr << v << " ";
-  std::cerr << std::endl;
+  BOOST_TEST_MESSAGE("l1: " << libport::separate(l1, " "));
+  BOOST_TEST_MESSAGE("l2: " << libport::separate(l2, " "));
   return false;
 }
 
@@ -236,7 +233,7 @@ void test4()
     BOOST_CHECK(true);
     for (int piter=0; piter<10; ++piter)
     {
-      std::cerr << "start iteration " << piter << std::endl;
+      BOOST_TEST_MESSAGE("start iteration " << piter);
       effective.push_back(std::vector<int>());
       int item = rand()% b.size();
       int p = 0;
@@ -273,7 +270,7 @@ void test4()
     // Finish iteration
     for (int piter=0; piter<10; ++piter)
     {
-      std::cerr <<"finish iteration " << piter << std::endl;
+      BOOST_TEST_MESSAGE("finish iteration " << piter);
       effective[piter].push_back(-1);
       libport::SafeContainer<std::list, int>::iterator &i = iters[piter];
       if (i != s.end())
@@ -304,7 +301,7 @@ test_suite*
 init_test_suite()
 {
   int seed = lexical_cast<int>(libport::xgetenv("SEED", "0"));
-  BOOST_MESSAGE("seed: "<< seed);
+  BOOST_TEST_MESSAGE("seed: "<< seed);
   srand(seed);
   libport::program_initialize("safe-container");
   test_suite* suite = BOOST_TEST_SUITE("libport::SafeContainer test suite");

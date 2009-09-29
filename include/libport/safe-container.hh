@@ -34,10 +34,10 @@ namespace libport
   class SafeContainer
   {
   public:
-    typedef SafeContainer<C, T> this_type;
+    typedef SafeContainer<C, T> self_type;
     struct real_value_type
     {
-      real_value_type(const T &v, this_type& owner);
+      real_value_type(const T &v, self_type& owner);
       unsigned mask;
       T v;
     };
@@ -88,6 +88,8 @@ namespace libport
     SafeContainer();
     iterator begin();
     iterator end();
+    const_iterator begin() const;
+    const_iterator end() const;
     void erase(iterator v);
     void push_back(const T& t);
     void push_front(const T& t);
