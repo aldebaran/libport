@@ -39,8 +39,11 @@
 # define LIBPORT_SEPARATE(Seq)                                          \
   LIBPORT_HEAD(Seq) LIBPORT_APPLY(LIBPORT_SEPARATE_HELPER, LIBPORT_TAIL(Seq))
 
-/// Concatenate the two arguments
+/// Concatenate the two arguments.
 # define LIBPORT_CAT BOOST_PP_CAT
 
+/// __FILE__:__LINE__ as a string.
+# define __HERE__				\
+  __FILE__ ":" BOOST_PP_STRINGIZE(__LINE__)
 
 #endif
