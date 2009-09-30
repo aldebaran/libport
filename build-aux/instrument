@@ -1,4 +1,4 @@
-#! /usr/bin/perl -w
+#! /usr/bin/env perl
 
 use strict;
 use English;
@@ -165,14 +165,15 @@ sub help ($)
 
 ######################################################################
 
-sub getopt ()
+=item C<getopt(\@args)>
+
+Process the options in C<@args>.  Leave the arguments in C<@args>.
+
+=cut
+
+sub getopt (\@)
 {
-  use Getopt::Long;
-
-  my $envvar = 'INSTRUMENTFLAGS';
-  unshift @ARGV, split(/ /, $ENV{$envvar})
-    if exists $ENV{$envvar};
-
+  use Getopt::Long qw(GetOptionsFromArray);
   my %option = (
     "f|force"       => \$force,
     "h|help"        => sub { help ($verbose) },
@@ -197,8 +198,16 @@ sub getopt ()
     "V|valgrind-option=s" => \@valgrind_option,
     );
   Getopt::Long::Configure ("bundling", "pass_through");
-  GetOptions (%option)
+  GetOptionsFromArray $_[0], %option
     or exit 1;
+}
+
+sub getargs ()
+{
+  my $envvar = 'INSTRUMENTFLAGS';
+  my @flags = split(/ /, $ENV{$envvar} || '');
+  getopt @flags;
+  getopt @ARGV;
 
   # Can't be verbose before processing --force...
   verbose 2, "prepended arguments $envvar=$ENV{$envvar}\n"
@@ -407,7 +416,7 @@ push @valgrind_option, '--dsymutil=yes'
     if -f $supp;
 }
 
-getopt;
+getargs;
 
 compute_mode
   if $mode == mode_auto;
