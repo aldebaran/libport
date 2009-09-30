@@ -9,6 +9,24 @@
  */
 #include <libport/cstdlib>
 #include <libport/unit-test.hh>
+#include <libport/instrument.hh>
+
+// For some reason, on the Mac, using Valgrind, system lets SIGCHLD
+// pass through, which results in a failure.
+//
+//   Entering test case "test_system"
+//   --86515:0:syswrap- WARNING: Ignoring sigreturn( ..., UC_RESET_ALT_STACK );
+//   ==86515== Warning: client switching stacks?
+//                      SP change: 0x685940 --> 0xbffff400
+//   ==86515==          to suppress, use: --max-stackframe=1080583488 or greater
+//   unknown location:0: fatal error in "test_system":
+//       signal: SIGCHLD,
+//       si_code: 0 (child process has terminated; pid: 0; uid: 0; exit value: 0)
+//   ../source/tests/libport/cstdlib.cc:43: last checkpoint
+//   Leaving test case "test_system"; testing time: 246259mks
+#ifdef __APPLE__
+INSTRUMENTFLAGS(--mode=osx);
+#endif
 
 using libport::test_suite;
 
