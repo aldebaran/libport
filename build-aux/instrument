@@ -17,7 +17,31 @@ Instrument the PROGRAM when possible.
 =head1 OPTIONS
 
 The environment variable INSTRUMENTFLAGS is prepended to the command
-line arguments before option parsing.
+line arguments before option parsing.  If the program includes flags
+for instrument, they are treated last, after the command line options.
+(This is considered a bug, but won't be fixed unless there is demand.).
+
+The executable must contain strings as follows:
+
+  INSTRUMENTFLAGS=<where>:<flags>
+
+for instance
+
+  INSTRUMENTFLAGS=foo.cc:14:--mode=none
+
+i.e., the source should contain something like:
+
+  const char* instrumentflags_14 = "INSTRUMENTFLAGS=foo.cc:14:--mode=none"
+
+There can be several C<flags>, following the shell syntax for word
+splitting.  There can be several such lines.  Use C<libport/instrument.hh>
+which features C<INSTRUMENTFLAGS> which can be used as follows:
+
+  INSTRUMENTFLAGS(<flags>)
+
+for instance
+
+  INSTRUMENTFLAGS(--mode=none)
 
 General options:
 
@@ -166,14 +190,15 @@ sub help ($)
 
 ######################################################################
 
-=item C<getopt(\@args)>
+=item C<getopt($where, $accept_args, \@args)>
 
 Process the options in C<@args>.  Leave the arguments in C<@args>.
 
 =cut
 
-sub getopt (\@)
+sub getopt ($$\@)
 {
+  my ($where, $accept_args, $args) = @_;
   use Getopt::Long qw(GetOptionsFromArray);
   my %option = (
     "f|force"       => \$force,
@@ -199,9 +224,11 @@ sub getopt (\@)
     "V|valgrind-option=s" => \@valgrind_option,
     );
   Getopt::Long::Configure ("bundling", "pass_through");
-  GetOptionsFromArray $_[0], %option
-    or exit 1;
-  verbose 3, "Remains: @{$_[0]}\n";
+  verbose 3, "getopt $where: @{$args}\n";
+  GetOptionsFromArray $args, %option
+    or die "while processing $where\n";
+  die "$where: arguments are not accepted: @{$args}\n"
+    if scalar @$args && ! $accept_args;
 }
 
 =item C<getargs>
@@ -215,9 +242,9 @@ sub getargs ()
 {
   my $envvar = 'INSTRUMENTFLAGS';
   my @flags = shellwords ($ENV{$envvar} || '');
-  getopt @flags;
+  getopt "\$$envvar", 0, @flags;
 
-  getopt @ARGV;
+  getopt "command line", 1, @ARGV;
 
   # Can't be verbose before processing --force...
   verbose 2, "prepended arguments: @flags\n"
@@ -364,20 +391,25 @@ sub find_gnu_libtool ()
   verbose 2, "did not find GNU Libtool as: @libtool\n";
 }
 
-sub file_flags ($@)
+sub file_flags ($$$)
 {
+  use IO::File;
   my ($file, $type, $libtool) = @_;
 
   # Really instrument here.
   verbose 2, "extracting INSTRUMENTFLAGS\n";
   $libtool .= ' --mode=execute'
     if $libtool;
-  my $strings = `$libtool strings $file | grep INSTRUMENTFLAGS`;
-  chop $strings;
-  verbose 2, "strings: $strings\n";
-  my @flags = map { shellwords ($_) } ($strings =~ m/^INSTRUMENTFLAGS=(.*)/mg);
-  verbose 2, "embedded INSTRUMENTFLAGS: @flags\n";
-  getopt @flags;
+  my $in = IO::File->new("$libtool strings $file|")
+    or die;
+  while (my $line = $in->getline)
+    {
+      if ($line =~ m/^INSTRUMENTFLAGS=(.*):(.*)/mg)
+	{
+	  my @flag = shellwords($2);
+	  getopt $1, 0, @flag;
+	}
+    }
 }
 
 
