@@ -13,14 +13,17 @@
 
 using libport::test_suite;
 
-static void check_delta(libport::Duration expected,
-                        libport::Duration effective,
-                        libport::Duration delta)
+// effective must not be smaller that expected.
+static
+void
+check_delta(libport::Duration expected,
+            libport::Duration effective,
+            libport::Duration delta)
 {
   // Does not work: BOOST_CHECK_CLOSE(effective, expected, delta);
   if (RUNNING_ON_VALGRIND)
     delta *= 4;
-  BOOST_CHECK_LT(expected - delta, effective);
+  BOOST_CHECK_LT(expected, effective);
   BOOST_CHECK_LT(effective, expected + delta);
 }
 
@@ -38,8 +41,9 @@ static void test_duration()
 static void test_sleep()
 {
   libport::Duration wait = libport::time::ms(500);
-  // With 50, under heavy load, some machines don't make it.
-  libport::Duration delta = libport::time::ms(100);
+  // With 50, and even 100, under heavy load, some machines don't make
+  // it.
+  libport::Duration delta = libport::time::ms(250);
   libport::Time start = libport::time::now();
   libport::time::sleep(wait);
   libport::Duration elapsed = libport::time::now() - start;

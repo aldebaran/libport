@@ -24,8 +24,11 @@
 //       si_code: 0 (child process has terminated; pid: 0; uid: 0; exit value: 0)
 //   ../source/tests/libport/cstdlib.cc:43: last checkpoint
 //   Leaving test case "test_system"; testing time: 246259mks
+//
+// And since Boost.Test is no malloc-clean, we really need to disable
+// the checks here.
 #ifdef __APPLE__
-INSTRUMENTFLAGS(--mode=osx);
+INSTRUMENTFLAGS(--mode=none);
 #endif
 
 using libport::test_suite;
