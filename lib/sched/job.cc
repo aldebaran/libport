@@ -274,7 +274,10 @@ namespace sched
   std::ostream&
   operator<< (std::ostream& o, const jobs_type& js)
   {
-    return o << libport::separate(js, libport::iendl);
+    // Explicit parameters required by MSWC 2005.
+    return o << libport::separate<const jobs_type,
+                                  std::ostream&(*)(std::ostream&)>
+                                 (js, libport::iendl);
   }
 
 
