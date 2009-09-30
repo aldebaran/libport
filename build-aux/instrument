@@ -1,7 +1,8 @@
-#! /usr/bin/env perl
+#! /usr/bin/env perl -w
 
 use strict;
 use English;
+require 'shellwords.pl';
 
 =head1 NAME
 
@@ -200,17 +201,26 @@ sub getopt (\@)
   Getopt::Long::Configure ("bundling", "pass_through");
   GetOptionsFromArray $_[0], %option
     or exit 1;
+  verbose 3, "Remains: @{$_[0]}\n";
 }
+
+=item C<getargs>
+
+Process options in C<$ENV{INSTRUMENTFLAGS}> and C<@ARGV>.  Leave
+arguments in C<@ARGV>.
+
+=cut
 
 sub getargs ()
 {
   my $envvar = 'INSTRUMENTFLAGS';
-  my @flags = split(/ /, $ENV{$envvar} || '');
+  my @flags = shellwords ($ENV{$envvar} || '');
   getopt @flags;
+
   getopt @ARGV;
 
   # Can't be verbose before processing --force...
-  verbose 2, "prepended arguments $envvar=$ENV{$envvar}\n"
+  verbose 2, "prepended arguments: @flags\n"
     if exists $ENV{$envvar};
 
   # If there is one, do not keep the --.
@@ -268,12 +278,23 @@ sub file_type ($)
 
 ######################################################################
 
-# instrument_prefix($mode)
-# ------------------------
+=item C<instrument_prefix($libtool)>
+
+Read the current C<$mode> (and maybe resolve it if it is still
+C<mode_auto>), and based on it, return what must be prepended to the
+command to instrument.  If C<$libtool> is non empty, use it to run
+valgrind.
+
+=cut
+
 sub instrument_prefix ($)
 {
-  my ($mode) = @_;
+  my ($libtool) = @_;
   my @res = ();
+
+  compute_mode
+    if $mode == mode_auto;
+
   if ($mode == mode_osx)
     {
       @res = (
@@ -298,6 +319,9 @@ sub instrument_prefix ($)
       push @res, "$valgrind_log_file=$output"
         if $output;
       push @res, "--";
+      # Now, if this requires libtool, pass it.
+      unshift @res, $libtool, "--mode=execute"
+	if $libtool;
     }
   return @res;
 }
@@ -340,42 +364,58 @@ sub find_gnu_libtool ()
   verbose 2, "did not find GNU Libtool as: @libtool\n";
 }
 
-
-# instrument($mode, @argv)
-# ------------------------
-sub instrument ($@)
+sub file_flags ($@)
 {
-  my ($mode, @argv) = @_;
-  my @res = @argv;
+  my ($file, $type, $libtool) = @_;
 
-  # No instrumentation required.
-  return @res
-    if $mode == mode_none;
+  # Really instrument here.
+  verbose 2, "extracting INSTRUMENTFLAGS\n";
+  $libtool .= ' --mode=execute'
+    if $libtool;
+  my $strings = `$libtool strings $file | grep INSTRUMENTFLAGS`;
+  chop $strings;
+  verbose 2, "strings: $strings\n";
+  my @flags = map { shellwords ($_) } ($strings =~ m/^INSTRUMENTFLAGS=(.*)/mg);
+  verbose 2, "embedded INSTRUMENTFLAGS: @flags\n";
+  getopt @flags;
+}
+
+
+# instrument(@argv)
+# -----------------
+sub instrument (@)
+{
+  my (@argv) = @_;
+
+  # The file to instrument.
+  my $file = $argv[0];
 
   # The type of the program to instrument.
-  my $type = exists $argv[0] ? file_type $argv[0] : '';
+  my $type = $file ? file_type $file : '';
+
+  # If it's a libtool wrapper, don't instrument it unless we can find
+  # libtool.
+  my $libtool = $type =~ /libtool wrapper/ ? find_gnu_libtool : undef;
+
+  # Process possible additional flags in the file itself.
+  file_flags $file, $type, $libtool;
+
+  # Now that we have processed the envvar, the cli, and the file
+  # itself, instrument if needed.
 
   # Don't instrument if this is a shell-script, or a Windows
   # executable (since in that case, we need wine to run it, which is
   # something Valgrind does not know about).
   #
   # If the user asked for troubles (--force), instrument anyway.
-  return @res
+  $mode = mode_none
     unless $force || $type !~ /script|PE\s+for MS Windows/;
-
-  # If it's a libtool wrapper, don't instrument it unless we can find
-  # libtool.
-  my $libtool = $type =~ /libtool wrapper/ ? find_gnu_libtool : undef;
 
   # Really instrument here.
   verbose 2, "mode: $mode: $mode_name{$mode}\n";
-  unshift @res, instrument_prefix($mode);
+  unshift @argv, instrument_prefix($libtool);
 
-  # Now, if this requires libtool, pass it.
-  unshift @res, $libtool, "--mode=execute"
-    if $libtool;
-
-  return @res;
+  return @argv;
 }
 
 ######################################################################
@@ -418,9 +458,7 @@ push @valgrind_option, '--dsymutil=yes'
 
 getargs;
 
-compute_mode
-  if $mode == mode_auto;
-my @res = instrument($mode, @ARGV);
+my @res = instrument(@ARGV);
 @res = map { shellescape($_); } @res;
 verbose 2, "result: @res\n";
 if ($dry_run)
