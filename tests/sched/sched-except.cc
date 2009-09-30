@@ -7,9 +7,13 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <iostream>
 #include <sched/coroutine.hh>
 #include <libport/unit-test.hh>
+#include <libport/instrument.hh>
+
+INSTRUMENTFLAGS(--mode=none);
 
 using libport::test_suite;
 static size_t STACK_SIZE = 0;
