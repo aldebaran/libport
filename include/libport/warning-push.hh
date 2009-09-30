@@ -100,6 +100,7 @@
 // treated the nontemplate function as a specialization of the
 // template function.".  So this is basically a backward compatibility
 // warning that we can ignore.
+# pragma warning(disable: 4347)
 
 // C4350
 // sched/job.hh:438:
@@ -107,11 +108,34 @@
 // 'std::auto_ptr<_Ty>::auto_ptr(std::auto_ptr_ref<_Ty>) throw()'
 // called instead of
 // 'std::auto_ptr<_Ty>::auto_ptr(std::auto_ptr<_Ty> &) throw()'
+# pragma warning(disable: 4350)
+
+// C4351
+// libport/io-stream.cc:30:
+// warning C4351: new behavior:
+// elements of array 'libport::StreamBuffer::ibuf_' will be default initialized
+// libport/io-stream.cc:30:
+// warning C4351: new behavior:
+// elements of array 'libport::StreamBuffer::obuf_' will be default initialized
+//
+// with:
+//   class LIBPORT_API StreamBuffer: public std::streambuf
+//   {
+//      StreamBuffer()
+//        : ibuf_()     // <= Warning.
+//        , obuf_()     // <= Warning.
+//      {}
+//     ...
+//     char ibuf_[BUFSIZ];
+//     char obuf_[BUFSIZ];
+# pragma warning(disable: 4351)
+
 
 // C4355: 'this' : used in base member initializer list
 //
 // For instance: UVar::UVar() : rangemin(*this, ...)
 //                                       ^^^^^^
+# pragma warning(disable: 4355)
 
 
 // C4503: 'identifier' : decorated name length exceeded, name was
@@ -186,7 +210,6 @@
                  4003 4061 4099                 \
                  4121 4127 4150                 \
                  4251 4275 4290                 \
-                 4347 4350 4355                 \
                  4503 4512 4514 4571            \
                  4619 4625 4626 4628 4640 4668  \
                  4710 4711                      \
