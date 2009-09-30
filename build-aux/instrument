@@ -1,4 +1,4 @@
-#! /usr/bin/env perl -w
+#! /usr/bin/perl -w
 
 use strict;
 use English;
@@ -199,7 +199,7 @@ Process the options in C<@args>.  Leave the arguments in C<@args>.
 sub getopt ($$\@)
 {
   my ($where, $accept_args, $args) = @_;
-  use Getopt::Long qw(GetOptionsFromArray);
+  use Getopt::Long;
   my %option = (
     "f|force"       => \$force,
     "h|help"        => sub { help ($verbose) },
@@ -225,10 +225,25 @@ sub getopt ($$\@)
     );
   Getopt::Long::Configure ("bundling", "pass_through");
   verbose 3, "getopt $where: @{$args}\n";
-  GetOptionsFromArray $args, %option
+
+  # We would like to use GetOptionsFromArray, but it does not seem to
+  # be wide-spread enough.  GetOptions works on @ARGV, so save and
+  # restore it.  Unless precisely we are working on it.
+  my @ARGV_save;
+  if ($args != \@ARGV)
+    {
+      @ARGV_save = @ARGV;
+      @ARGV = @{$args};
+    }
+  GetOptions %option
     or die "while processing $where\n";
-  die "$where: arguments are not accepted: @{$args}\n"
-    if scalar @$args && ! $accept_args;
+  die "$where: arguments are not accepted: @ARGV\n"
+    if scalar @ARGV && ! $accept_args;
+  if ($args != \@ARGV)
+    {
+      @{$args} = @ARGV;
+      @ARGV = @ARGV_save;
+    }
 }
 
 =item C<getargs>
