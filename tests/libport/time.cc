@@ -9,7 +9,7 @@
  */
 #include <libport/time.hh>
 #include <libport/unit-test.hh>
-#include <libport/valgrind.hh>
+#include <libport/instrument.hh>
 
 using libport::test_suite;
 

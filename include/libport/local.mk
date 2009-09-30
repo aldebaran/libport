@@ -90,6 +90,7 @@ libport_include_HEADERS +=				\
   include/libport/indent.hh				\
   include/libport/instance-tracker.hh			\
   include/libport/instance-tracker.hxx			\
+  include/libport/instrument.hh				\
   include/libport/intrusive-ptr.hh			\
   include/libport/intrusive-ptr.hxx			\
   include/libport/iostream				\
