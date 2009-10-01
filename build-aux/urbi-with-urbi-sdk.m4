@@ -20,14 +20,14 @@
 AC_DEFUN([URBI_WITH_URBI_SDK],
 [AC_ARG_WITH([urbi_sdk],
 	     [AC_HELP_STRING([--with-urbi-sdk=urbi-sdk-path],
-			     [enable urbi-sdk support [/usr/local]])],
+			     [enable urbi-sdk support [/usr/local/gostai]])],
 	     [], [with_urbi_sdk=yes])
 
 case $with_urbi_sdk in
    no) urbi_sdk=false
        ;;
   yes) urbi_sdk=true
-       URBI_SDK_PATH=/usr/local
+       URBI_SDK_PATH=/usr/local/gostai
        ;;
     *) urbi_sdk=true
        URBI_SDK_PATH=$with_urbi_sdk
