@@ -73,8 +73,8 @@ getopt ()
       (-*)  fatal "unexpected option: $1";;
       (.)  # Since git is recursive, "git ls-files ." returns
            # everything, which is what "find -name '*'" does.
-           args+=" '*'";;
-      (*)  args+=" '$1'";;
+           args="$args '*'";;
+      (*)  args="$args '$1'";;
     esac
     shift
   done
@@ -123,7 +123,7 @@ else
     # catch 1.-/uob/*.chk).  So prefix with "./".  There should not be
     # absolute path given as argument, so prepend "./" should be
     # harmless.
-    find_args+="$sep-path './$pattern'"
+    find_args="$find_args $sep-path './$pattern'"
     sep=" -or "
   done
 
@@ -131,7 +131,7 @@ else
   find_args="'(' $find_args ')' -and -not -type d"
 
   # And of course it does not list .git.
-  find_args+=" -and -not -path './.git/*'"
+  find_args="$find_args -and -not -path './.git/*'"
 
   find="${FIND:-find} . $find_args"
   stderr "running $find"
