@@ -14,21 +14,24 @@ namespace libport
 {
   /** Container wrapper providing iteration robust to removal of any element.
    *
-   * To function properly, only a subset of container operations are supported,
-   * and incrementing a copy of an iterator different than begin() is not
-   * allowed. Furthermore, the number of iterators to not-the-end that can
-   * be present at the same time is limited(to at least 32).
+   * To function properly, only a subset of container operations are
+   * supported, and incrementing a copy of an iterator different than
+   * begin() is not allowed. Furthermore, the number of iterators to
+   * not-the-end that can be present at the same time is limited(to at
+   * least 32).
    *
-   * Usage is simple: Instanciate with container type C (std::list) and
-   * element type T. Obtain an iterator by calling begin(). Each call
-   * to operator++() on the iterator will give you access to the next element
-   * that was present at the time of the begin() call. The call to
-   * erase() invalidates *no* iterator (with the exception that you must not
-   * try to dereference iterators to removed elements).
+   * Usage is simple: Instanciate with container type C (std::list)
+   * and element type T. Obtain an iterator by calling begin(). Each
+   * call to operator++() on the iterator will give you access to the
+   * next element that was present at the time of the begin()
+   * call. The call to erase() invalidates *no* iterator (with the
+   * exception that you must not try to dereference iterators to
+   * removed elements).
    *
    * This implementation is *not* thread-safe.
    *
-   * No support for const_iterators is provided.
+   * Support for const_iterators is incomplete (we actually return
+   * iterators).
    */
   template<template<class U, class V>class C, class T>
   class SafeContainer

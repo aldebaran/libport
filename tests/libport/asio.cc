@@ -7,6 +7,25 @@
  *
  * See the LICENSE file for more information.
  */
+
+// If you experience failures in debug mode (singular iterator used),
+// then you probably have a problem with Boost.  See
+// http://groups.google.com/group/boost-list/browse_thread/thread/5eecec53397d0c52/05b272fb9a9000c5:
+//
+//   The code can be fixed (although there may be other occurrences of
+//   similar problems) by changing around line 220 on asio/detail/
+//   hash_map.hpp from:
+//        // Update number of buckets and initialise all buckets to empty.
+//        buckets_.resize(num_buckets);
+//        for (std::size_t i = 0; i < buckets_.size(); ++i)
+//          buckets_[i].first = buckets_[i].last = end;
+//   to:
+//        // Update number of buckets and initialise all buckets to empty.
+//        bucket_type bucket;
+//        bucket.first = bucket.last = end;
+//        buckets_.resize(num_buckets, bucket);
+//
+
 #include <libport/unit-test.hh>
 #include <libport/sysexits.hh>
 using libport::test_suite;
