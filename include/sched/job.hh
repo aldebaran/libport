@@ -433,6 +433,7 @@ namespace sched
   struct SCHED_API StopException : public SchedulerException
   {
     StopException(unsigned int, boost::any);
+    ~StopException() throw() {}
     ADD_FIELD(unsigned int, depth)
     ADD_FIELD(boost::any, payload)
     COMPLETE_EXCEPTION(StopException)
@@ -443,6 +444,7 @@ namespace sched
   {
     ChildException(exception_ptr);
     ChildException(const ChildException&);
+    ~ChildException() throw() {}
     virtual exception_ptr clone() const;
     ATTRIBUTE_NORETURN void rethrow_child_exception() const;
   protected:

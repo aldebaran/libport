@@ -17,11 +17,11 @@ namespace sched
 {
 
   inline
-  exception::~exception()
+  exception::~exception() throw()
   {
   }
 
-  inline std::string
+  inline const char*
   exception::what() const throw()
   {
     return "unknown exception";

@@ -22,11 +22,11 @@ namespace sched
   class exception;
   typedef std::auto_ptr<exception> exception_ptr;
 
-  class SCHED_API exception
+  class SCHED_API exception: public std::exception
   {
   public:
-    virtual ~exception();
-    virtual std::string what() const throw ();
+    virtual ~exception() throw();
+    virtual const char* what() const throw();
     virtual exception_ptr clone() const = 0;
     ATTRIBUTE_NORETURN void rethrow() const;
   protected:
@@ -43,21 +43,25 @@ namespace sched
  private:								\
    boost::optional<Type> Name ## _;
 
-#define COMPLETE_EXCEPTION(Name)                        \
+#define PARTIAL_COMPLETE_EXCEPTION(Name)                \
  public:                                                \
  virtual ::sched::exception_ptr clone() const		\
  {                                                      \
    return ::sched::exception_ptr(new Name(*this));      \
- };                                                     \
- virtual std::string what() const throw()               \
- {                                                      \
-   return #Name;                                        \
- }                                                      \
+ };                                           		\
 private:                                                \
   ATTRIBUTE_NORETURN virtual void rethrow_() const      \
   {                                                     \
     throw *this;                                        \
   };
+#define COMPLETE_EXCEPTION(Name)			\
+  PARTIAL_COMPLETE_EXCEPTION(Name)			\
+public:							\
+ virtual const char* what() const throw()               \
+ {                                                      \
+   return #Name;                                        \
+ }                                                      \
+private:
 
 } // namespace sched
 
