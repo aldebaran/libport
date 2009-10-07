@@ -442,7 +442,7 @@ sub instrument (@)
 
   # If it's a libtool wrapper, don't instrument it unless we can find
   # libtool.
-  my $libtool = $type =~ /libtool wrapper/ ? find_gnu_libtool : undef;
+  my $libtool = $type =~ /libtool wrapper/ ? find_gnu_libtool : "";
 
   # Process possible additional flags in the file itself.
   file_flags $file, $type, $libtool;
