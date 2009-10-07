@@ -34,6 +34,29 @@
 # include <libport/csignal>
 #endif
 
+#ifdef __XENO__
+# ifndef LIBPORT_HAVE_MLOCKALL
+#  error "LIBPORT_HAVE_MLOCKALL is required when building for xenomai."
+# endif
+
+#include <sys/mman.h>
+namespace {
+  class MLInit
+  {
+    public:
+    MLInit()
+    {
+      std::cerr <<"locking all memory" << std::endl;
+      if (!mlockall(MCL_CURRENT | MCL_FUTURE))
+        perror("mlockall");
+    }
+  };
+
+  MLInit mlinit;
+}
+
+#endif
+
 namespace libport
 {
 
