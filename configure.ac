@@ -107,6 +107,7 @@ if test x$enable_boost_serialization = xyes; then
   BOOST_SERIALIZATION
 fi
 
+WITH_XENOMAI
 
 AC_CONFIG_FILES([Makefile])
 
