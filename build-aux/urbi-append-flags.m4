@@ -33,7 +33,7 @@ urbi_append_flags ()
     case " $val " in
       (*" $v "*) ;;
       ("  ")    val=$v;;
-      (*)       val+=" $v";;
+      (*)       val="$val $v";;
     esac
   done
   eval "$var=\$val"

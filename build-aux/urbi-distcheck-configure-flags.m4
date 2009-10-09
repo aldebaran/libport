@@ -35,7 +35,7 @@ distcheck_configure_flags ()
           # particular, escape $ as $$.
           #
           # FIXME: Currently we are unsafe wrt shell metacharacters.
-          ac_cv_distcheck_configure_flags+=" '${i//\$/\$\$}'";;
+          ac_cv_distcheck_configure_flags="$ac_cv_distcheck_configure_flags '${i//\$/\$\$}'";;
     esac
   done
 }

@@ -61,9 +61,9 @@ AC_DEFUN([URBI_MODULE_CONDITIONAL],
   AM_CONDITIONAL([BUILD_$1], [$2])
   urbi_module_$1_enabled=$2
   if $2; then
-    urbi_enabled_modules+=" $1"
+    urbi_enabled_modules="$urbi_enabled_modules $1"
   else
-    urbi_disabled_modules+=" $1"
+    urbi_disabled_modules="$urbi_disabled_modules $1"
   fi
 ])
 

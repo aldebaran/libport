@@ -102,7 +102,7 @@ windir ()
     # Add all the directories, some might not yet exist (e.g. .libs)
     # but will be created when running wine.  Nonexisting directories
     # are not a problem anyway.
-    windirs+=";$(winepath -w "$i")"
+    windirs="$windirs;$(winepath -w "$i")"
   done
 }
 

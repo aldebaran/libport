@@ -68,9 +68,9 @@ instrument ()
   # Additional flags for instrument.
   local flags='--dry-run'
   if $INSTRUMENTATION; then
-    flags+=" --libtool=$abs_top_builddir/libtool"
+    flags="$flags --libtool=$abs_top_builddir/libtool"
   else
-    flags+=' --mode=none'
+    flags="$flags --mode=none"
   fi
   instrument_result=$($abs_top_srcdir/build-aux/instrument $flags "$[@]")
 }

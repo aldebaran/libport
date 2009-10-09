@@ -42,7 +42,7 @@ do
 
     (-I|--ignore-matching-lines)
       shift
-      diff+=" -I $1";;
+      diff="$diff -I $1";;
 
     (-s|--silent)
       echo=:

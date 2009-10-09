@@ -19,5 +19,5 @@ if $windows; then
   AC_SUBST([SOCKETS_LIBS], ['-lws2_32 -lMsWSock'])
 fi
 
-SDK_LIBS+=" $SOCKETS_LIBS"
+SDK_LIBS="$SDK_LIBS $SOCKETS_LIBS"
 ])

@@ -146,7 +146,7 @@ find_urbi_server ()
 
   # Now, append the arguments.
   if test -n "$URBI_SERVER_ARGS"; then
-    URBI_SERVER+=" $URBI_SERVER_ARGS"
+    URBI_SERVER="$URBI_SERVER $URBI_SERVER_ARGS"
   fi
 
   # Check its version.

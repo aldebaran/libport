@@ -56,7 +56,7 @@ quote_for_eval ()
   for i
   do
     quote_for_eval_arg "$i"
-    res+=$sep$quote_for_eval_arg_result
+    res=$res$sep$quote_for_eval_arg_result
     sep=" "
   done
   quote_for_eval_result=$res
@@ -90,7 +90,7 @@ run ()
     sta=0
   else
     sta=$?
-    title+=" FAIL ($sta)"
+    title="$title FAIL ($sta)"
   fi
   echo $sta >$run_prefix.sta
 
@@ -226,7 +226,7 @@ rst_run_report ()
 {
   local title=$][1
   case $title in
-    (?*) title+=" ";;
+    (?*) title="$title ";;
   esac
 
   rst_pre "${title}Command"          $][2.cmd
@@ -299,7 +299,7 @@ children_register ()
 {
   test $][# -eq 1
   rm -f $][1.sta
-  children+=" $][1"
+  children="$children $][1"
   echo $! >$][1.pid
   echo $][1 >$!.name
 }
