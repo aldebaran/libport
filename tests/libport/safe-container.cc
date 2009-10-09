@@ -226,7 +226,6 @@ void test4()
     foreach(int i, b)
     s.push_back(i);
     std::vector<libport::SafeContainer<std::list, int>::iterator> iters;
-    iters.resize(20);
     std::vector<int> ipos;
     std::vector<std::vector<int> > effective;
     // Store some iterators at various positions.
@@ -237,7 +236,7 @@ void test4()
       effective.push_back(std::vector<int>());
       int item = rand()% b.size();
       int p = 0;
-      iters[piter] = s.begin();
+      iters.push_back(s.begin());
       BOOST_CHECK(true);
       libport::SafeContainer<std::list, int>::iterator &i = iters[piter];
       for (; i != s.end(); ++i, ++p)

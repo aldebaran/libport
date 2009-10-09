@@ -45,6 +45,13 @@ namespace libport
     return & (base_iterator::operator*().v);
   }
 
+  template<template<class, class>class C, class T>
+  const typename SafeContainer<C, T>::iterator::value_type*
+  SafeContainer<C, T>::iterator::operator->() const
+  {
+    return & (base_iterator::operator*().v);
+  }
+
   CONTAINER_SMETHOD() real_value_type::real_value_type(const value_type &v,
                                                        self_type& owner)
     : v(v)
@@ -59,14 +66,12 @@ namespace libport
 
   CONTAINER_SMETHOD() iterator::iterator()
    : owner(0)
-   , copy(true)
   {
   }
 
   CONTAINER_SMETHOD() iterator::iterator(const iterator& b)
     : base_iterator(b)
     , owner(b.owner)
-    , copy(true)
   {
     *this = b;
   }
@@ -76,7 +81,6 @@ namespace libport
     : base_iterator(b)
     , flag(f)
     , owner(&owner)
-    , copy(false)
   {
   }
 
@@ -88,13 +92,9 @@ namespace libport
 
   CONTAINER_SMETHOD(void) iterator::destroy()
   {
-    if (!copy)
-    {
-      // We must iterate until the end to fix flags
-      while ((base_iterator&)(*this) != owner->container.end())
-        next();
-    }
-    copy = true;
+    // We must iterate until the end to fix flags
+    while (flag.mask)
+      next();
   }
 
   CONTAINER_METHOD(iterator&) iterator::operator=(const iterator& b)
@@ -110,17 +110,34 @@ namespace libport
     {
       flag = owner->getFlag();
       bi->mask ^= flag.mask;
-      copy = false;
     }
     else
-      copy = (bi != owner->container.end());
+    {
+      if (flag.mask)
+      {
+        // Get us a new flag, and advance to be at the same position as b.
+        // It would not be safe to use b.base_iterator::operator== as it
+        // might have been invalidated.
+        flag = owner->getFlag();
+        foreach(real_value_type& v, owner->container)
+          if ( (v.mask & b.flag.mask) != b.flag.val)
+            break;
+          else
+            v.mask ^= flag.mask;
+      }
+    }
     return *this;
+  }
+
+  CONTAINER_SMETHOD(bool) iterator::operator != (const iterator& b) const
+  {
+    return ! ((*this) == b);
   }
 
   CONTAINER_SMETHOD(bool) iterator::operator == (const iterator& b) const
   {
-    if (!flag.mask && !b.flag.mask)
-      return true;
+    if (!flag.mask || !b.flag.mask)
+      return (!flag.mask && !b.flag.mask);
     // Do not assume the parent operator is a method and write
     // something like base_iterator::operator ==.
     return *static_cast<const base_iterator*>(this) == b;
@@ -130,9 +147,6 @@ namespace libport
   {
     if (!flag.mask)
       return; // already at end
-    if (copy)
-      throw std::runtime_error(
-          "attempt to increment a copy of a SafeContainer iterator");
     if (owner->invalidationMask & flag.mask)
     {
       base_iterator i;

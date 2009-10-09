@@ -70,11 +70,13 @@ namespace libport
 
       value_type& operator*();
       value_type* operator->();
+      const value_type* operator->() const;
       iterator();
       iterator(const iterator&);
       iterator(const base_iterator&, owner_type& owner, Flag f);
       ~iterator();
       iterator& operator=(const iterator&);
+      bool operator!=(const iterator&)const;
       bool operator==(const iterator&)const;
       void operator++();
       void operator++(int);
@@ -84,7 +86,6 @@ namespace libport
       friend class SafeContainer<C, T>;
       Flag flag;
       SafeContainer<C, T>* owner;
-      bool copy;
     };
     typedef iterator const_iterator;
 
