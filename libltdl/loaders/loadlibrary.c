@@ -191,7 +191,8 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
                      0, last_error, 0,
                      buf, sizeof buf,
                      0);
-      LT_LOG3 (2, "LoadLibrary (%s): failed with error %d: %s\n",
+      /* FormatMessage adds the eol.  */
+      LT_LOG3 (2, "LoadLibrary (%s): failed with error %d: %s",
                wpath, last_error, buf);
     }
 #endif
