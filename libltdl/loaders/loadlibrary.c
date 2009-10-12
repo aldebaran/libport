@@ -181,7 +181,7 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
 
 #if LT_DEBUG_LOADERS
     if (module)
-      LT_LOG1 (1, "LoadLibrary (%s): sucess\n", wpath);
+      LT_LOG1 (1, "LoadLibrary (%s): success\n", wpath);
     else
     {
       static char buf[1024];
