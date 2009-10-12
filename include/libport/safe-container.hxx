@@ -37,19 +37,19 @@ namespace libport
 
   CONTAINER_METHOD(iterator::value_type&) iterator::operator*()
   {
-    return base_iterator::operator*().v;
+    return base->v;
   }
 
   CONTAINER_METHOD(iterator::value_type*) iterator::operator->()
   {
-    return & (base_iterator::operator*().v);
+    return & base->v;
   }
 
   template<template<class, class>class C, class T>
   const typename SafeContainer<C, T>::iterator::value_type*
   SafeContainer<C, T>::iterator::operator->() const
   {
-    return & (base_iterator::operator*().v);
+    return &base->v;
   }
 
   CONTAINER_SMETHOD() real_value_type::real_value_type(const value_type &v,
@@ -61,7 +61,7 @@ namespace libport
 
   CONTAINER_SMETHOD() Flag::Flag()
     : mask(0)
-    , val(0) 
+    , val(0)
   {}
 
   CONTAINER_SMETHOD() iterator::iterator()
@@ -70,17 +70,17 @@ namespace libport
   }
 
   CONTAINER_SMETHOD() iterator::iterator(const iterator& b)
-    : base_iterator(b)
-    , owner(b.owner)
+    : owner(b.owner)
+    , base(b.base)
   {
     *this = b;
   }
 
-  CONTAINER_SMETHOD() iterator::iterator(const base_iterator& b,
+  CONTAINER_SMETHOD() iterator::iterator(const base_iterator_& b,
                                          CONTAINER& owner, Flag f)
-    : base_iterator(b)
-    , flag(f)
+    : flag(f)
     , owner(&owner)
+    , base(b)
   {
   }
 
@@ -102,10 +102,10 @@ namespace libport
     destroy();
     if (!b.owner)
       return *this;
-    base_iterator::operator=(b);
+    base = b.base;
     owner = b.owner;
     flag = b.flag;
-    base_iterator& bi = (base_iterator&)b;
+    const base_iterator_& bi = b.base;
     if (bi == owner->container.begin() && bi != owner->container.end())
     {
       flag = owner->getFlag();
@@ -116,7 +116,7 @@ namespace libport
       if (flag.mask)
       {
         // Get us a new flag, and advance to be at the same position as b.
-        // It would not be safe to use b.base_iterator::operator== as it
+        // It would not be safe to use b.base_iterator_::operator== as it
         // might have been invalidated.
         flag = owner->getFlag();
         foreach(real_value_type& v, owner->container)
@@ -139,8 +139,8 @@ namespace libport
     if (!flag.mask || !b.flag.mask)
       return (!flag.mask && !b.flag.mask);
     // Do not assume the parent operator is a method and write
-    // something like base_iterator::operator ==.
-    return *static_cast<const base_iterator*>(this) == b;
+    // something like base_iterator_::operator ==.
+    return base == b.base;
   }
 
   CONTAINER_SMETHOD(void) iterator::next()
@@ -149,14 +149,14 @@ namespace libport
       return; // already at end
     if (owner->invalidationMask & flag.mask)
     {
-      base_iterator i;
+      base_iterator_ i;
       //Find first non-marked element
       for (i = owner->container.begin(); i != owner->container.end(); ++i)
       {
         if ((i->mask & flag.mask) != flag.val)
           break;
       }
-      base_iterator::operator=(i);
+      base = i;
       owner->invalidationMask &= ~flag.mask;
     }
     else
@@ -164,17 +164,17 @@ namespace libport
        * added elements.
        */
       do {
-        base_iterator::operator++();
-      } while ( ((base_iterator)(*this)!= owner->container.end()
-                 && (flag.mask & base_iterator::operator*().mask) == flag.val));
-    if ((base_iterator)(*this) == owner->container.end())
+        base++;
+      } while  (base != owner->container.end()
+                 && (flag.mask & base->mask) == flag.val);
+    if (base == owner->container.end())
     {
       owner->inUse &= ~flag.mask;
       flag.val = flag.mask = 0;
     }
     else
     {
-      base_iterator::operator*().mask ^= flag.mask;
+      base->mask ^= flag.mask;
     }
   }
 
@@ -218,7 +218,7 @@ namespace libport
   CONTAINER_SMETHOD(void) erase(iterator v)
   {
     invalidationMask = -1;
-    container.erase(v);
+    container.erase(v.base);
   }
 
   CONTAINER_SMETHOD(void) push_back(const value_type& t)
@@ -256,9 +256,9 @@ namespace libport
 
   template<template<class, class>class C, class T>
   template<typename I>
-  void CONTAINER::insert(base_iterator where, I beg, I end)
+  void CONTAINER::insert(iterator where, I beg, I end)
   {
-    base_iterator l = where;
+    base_iterator_ l = where.base;
     for (I i = beg; i != end; ++i)
     {
       l = container.insert(l, real_value_type(*i, *this));

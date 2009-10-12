@@ -53,11 +53,11 @@ namespace libport
       unsigned long mask;
       unsigned long val;
     };
-    typedef C<real_value_type, std::allocator<real_value_type> > container_type;
+    typedef C<real_value_type, std::allocator<real_value_type> > container_type_;
 
-    typedef typename container_type::iterator base_iterator;
+    typedef typename container_type_::iterator base_iterator_;
 
-    class iterator: public base_iterator
+    class iterator
     {
     public:
       typedef SafeContainer<C, T> owner_type;
@@ -67,13 +67,15 @@ namespace libport
       typedef T* pointer;
       typedef T& reference_type;
       typedef T& reference;
+      // Whatever the base container is, we only have forward_iterator support.
+      typedef std::forward_iterator_tag iterator_category;
 
       value_type& operator*();
       value_type* operator->();
       const value_type* operator->() const;
       iterator();
       iterator(const iterator&);
-      iterator(const base_iterator&, owner_type& owner, Flag f);
+      iterator(const base_iterator_&, owner_type& owner, Flag f);
       ~iterator();
       iterator& operator=(const iterator&);
       bool operator!=(const iterator&)const;
@@ -86,6 +88,7 @@ namespace libport
       friend class SafeContainer<C, T>;
       Flag flag;
       SafeContainer<C, T>* owner;
+      base_iterator_ base;
     };
     typedef iterator const_iterator;
 
@@ -102,7 +105,7 @@ namespace libport
     void clear();
     size_t size() const;
     template<typename I>
-    void insert(base_iterator where, I beg, I end);
+    void insert(iterator where, I beg, I end);
   private:
     /* How it works: each element has a bitmask to keep track of whether each
      * iterator passed through it. Each iterator is associated with a bit
@@ -132,7 +135,7 @@ namespace libport
     // Mask of bits currently in use.
     unsigned long inUse;
     friend class iterator;
-    container_type container;
+    container_type_ container;
   };
 }
 
