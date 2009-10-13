@@ -26,8 +26,9 @@
 //        buckets_.resize(num_buckets, bucket);
 //
 
-#include <libport/unit-test.hh>
+#include <libport/test.hh>
 #include <libport/sysexits.hh>
+
 using libport::test_suite;
 
 #include <libport/asio.hh>
@@ -363,15 +364,8 @@ test()
 test_suite*
 init_test_suite()
 {
-  // This test cannot run properly with current versions of WineHQ,
-  // because they only provide a stub for acceptex.
-  const char* running_wine = getenv("RUNNING_WINE");
-  const char* running_qemu = getenv("RUNNING_QEMU");
-  if ((running_wine && *running_wine) || (running_qemu && *running_qemu))
-    std::cerr << "running under Wine, skipping this test"
-              << std::endl
-              << libport::exit(EX_SKIP);
-
+  skip_if_qemu();
+  skip_if_wine();
   test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
   suite->add(BOOST_TEST_CASE(test));
   return suite;
