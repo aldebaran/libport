@@ -73,8 +73,8 @@ namespace libport
       return std::string();
     }
     BlockLock bl(data.second);
-    std::string res = data.first;
-    data.first.clear();
+    std::string res;
+    swap(data.first, res);
     return res;
   }
 
