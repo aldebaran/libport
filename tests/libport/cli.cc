@@ -14,20 +14,16 @@
 #include <sstream>
 
 #include <libport/cli.hh>
-#include <libport/cstdlib>
 #include <libport/option-parser.hh>
-#include <libport/sysexits.hh>
-#include <libport/unit-test.hh>
+#include <libport/test.hh>
 
 using libport::test_suite;
 using namespace libport;
 
-std::string srcdir = libport::xgetenv("SRCDIR");
-
 void
 check_file_contents_get()
 {
-  const std::string input = srcdir + "/tests/libport/666.txt";
+  const std::string input = srcdir() + "/tests/libport/666.txt";
 # define CHECK(Type, Value)                             \
   do {                                                  \
     Type v = libport::file_contents_get<Type>(input);   \
@@ -224,10 +220,6 @@ check_usage()
 test_suite*
 init_test_suite()
 {
-  if (srcdir.empty())
-    std::cerr << "SRCDIR is not defined" << std::endl
-              << libport::exit(EX_USAGE);
-
   libport::program_initialize("test_suite");
   test_suite* suite = BOOST_TEST_SUITE("libport::cli");
   suite->add(BOOST_TEST_CASE(check_program_name));
