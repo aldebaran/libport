@@ -7,15 +7,22 @@
  *
  * See the LICENSE file for more information.
  */
+
+#include <fstream>
+#include <iterator>
+#include <libport/cassert>
+#include <libport/cerrno>
+#include <libport/compiler.hh>
 #include <libport/config.h>
-
-#include <libport/lexical-cast.hh>
-
 #include <libport/cstdio>
 #include <libport/cstring>
 #include <libport/detect-win32.h>
+#include <libport/exception.hh>
+#include <libport/format.hh>
+#include <libport/lexical-cast.hh>
+#include <libport/read-stdin.hh>
 #include <libport/sys/select.h>
-#include <libport/cerrno>
+#include <libport/sys/stat.h>
 
 #if defined LIBPORT_WIN32 || defined WIN32
 # include <libport/windows.hh>
@@ -23,10 +30,11 @@
 # include <iostream>
 #endif
 
-#include <libport/compiler.hh>
-#include <libport/read-stdin.hh>
-#include <libport/exception.hh>
+#define FAIL_(Format, ...)                                      \
+  throw libport::Exception(libport::format(Format, ## __VA_ARGS__))
 
+#define FAIL(Format, ...)                                       \
+  FAIL_(Format ": %s", ## __VA_ARGS__, strerror(errno))
 
 namespace libport
 {
@@ -86,22 +94,50 @@ namespace libport
     tv.tv_sec = tv.tv_usec = 0;
     int r = select(1, &fd, 0, 0, &tv);
     if (r < 0)
-      throw exception::Exception(std::string("select error on stdin: ")
-                                 + strerror(errno));
-    else if (0 < r)
+      FAIL("select error on stdin");
+    else if (r == 0)
+      return std::string();
+    else
     {
       char buf[BUFSIZ];
       r = read(0, buf, sizeof buf);
-      if (r <= 0) // EOF counts as an 'error'.
-        throw exception::Exception(std::string("read error on stdin: ")
-                                   + (r ? strerror(errno) : "EOF"));
+      if (r < 0)
+        FAIL("read error on stdin");
+      else if (r == 0) // EOF counts as an 'error'.
+        FAIL_("read error on stdin: EOF");
       else
 	return std::string(buf, r);
     }
-    else
-      return std::string();
   }
 
 #endif
+
+  std::string
+  read_file(const std::string& file)
+  {
+    if (file == "/dev/stdin")
+      return read_stdin();
+    else
+    {
+      // Or should we simply use tellg to get the size?
+      struct stat st;
+      if (stat(file.c_str(), &st) < 0)
+        FAIL("cannot stat `%s'", file);
+
+      std::string res;
+      res.reserve(st.st_size);
+      std::ifstream is(file.c_str(), std::ios::binary);
+      if (is.fail())
+        FAIL("cannot open `%s' for reading", file);
+      std::copy(std::istreambuf_iterator<char>(is.rdbuf()),
+                std::istreambuf_iterator<char>(),
+                std::back_inserter(res));
+
+      if (is.fail())
+        FAIL("cannot read `%s'", file);
+      // FIXME: We need to check for more error kinds.
+      return res;
+    }
+  }
 
 }

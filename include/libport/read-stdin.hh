@@ -21,8 +21,12 @@
 namespace libport
 {
   /*! Read available data from stdin without blocking.
-   *  Throws exception::Exception on error.
+   *  \throw exception::Exception on error, including EOF.
    */
   LIBPORT_API std::string read_stdin();
+
+  /// Return the whole content of \a file.
+  /// \param file special case for "/dev/stdin".
+  LIBPORT_API std::string read_file(const std::string& file);
 }
 #endif // !LIBPORT_READ_STDIN_HH
