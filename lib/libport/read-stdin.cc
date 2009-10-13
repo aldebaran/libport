@@ -30,11 +30,14 @@
 # include <iostream>
 #endif
 
-#define FAIL_(Format, ...)                                      \
+#define FAIL_(Format, ...)						\
   throw libport::Exception(libport::format(Format, ## __VA_ARGS__))
 
-#define FAIL(Format, ...)                                       \
-  FAIL_(Format ": %s", ## __VA_ARGS__, strerror(errno))
+#define FAIL(Format, ...)                                               \
+  do {                                                                  \
+    /* LIBPORT_ECHO(libport::format(Format, ## __VA_ARGS__)); */        \
+    FAIL_(Format ": %s", ## __VA_ARGS__, strerror(errno));              \
+  } while (false)
 
 namespace libport
 {
@@ -48,43 +51,57 @@ namespace libport
   struct ConsumerData
   {
     int fd;
-    std::string read;
+    std::string buffer;
     Lockable lock;
+    // If set, an exception to throw.
+    libport::Exception *exception;
   };
 
   static DWORD WINAPI
   readThread(void* d)
   {
-    data_type&data = *reinterpret_cast<ConsumerData*>(d);
-    while (true)
+    ConsumerData& data = *reinterpret_cast<ConsumerData*>(d);
+    try
     {
-      static char buf[BUFSIZ];
-      int r = read(data.fd, buf, sizeof buf);
-      if (r < 0)
-        FAIL("read error on fd = %s", data.fd);
-      else if (r == 0) // EOF counts as an 'error'.
-        FAIL_("read error on fd = %s: EOF", data.fd);
-      BlockLock bl(data.lock);
-      data.read.append(buf, r);
+      while (true)
+      {
+	static char buf[BUFSIZ];
+	int r = read(data.fd, buf, sizeof buf);
+	if (r < 0)
+	  FAIL("read error on fd = %s", data.fd);
+	else if (r == 0) // EOF counts as an 'error'.
+	  FAIL_("read error on fd = %s: EOF", data.fd);
+	BlockLock bl(data.lock);
+	data.buffer.append(buf, r);
+      }
     }
+    catch (const libport::Exception& e)
+    {
+      // Don't let exceptions get out of a thread.
+      data.exception = new libport::Exception(e);
+    }
+    return 0;
   }
 
   std::string
   read_fd(int fd)
   {
     static bool started = false;
-    static data_type data;
+    static ConsumerData data;
     if (!started)
     {
-      data.handle = handle;
+      data.fd = fd;
       started = true;
       unsigned long id;
       CreateThread(NULL, 0, &readThread, &data, 0, &id);
       return std::string();
     }
+
     BlockLock bl(data.lock);
+    if (data.exception && !data.buffer.empty())
+      throw *data.exception;
     std::string res;
-    swap(data.first, res);
+    swap(data.buffer, res);
     return res;
   }
 
@@ -115,7 +132,7 @@ namespace libport
 
     // Read.
     {
-      int r = read(0, buf, len);
+      int r = read(fd, buf, len);
       if (r < 0)
         FAIL("read error on fd = %s", fd);
       else if (r == 0) // EOF counts as an 'error'.
