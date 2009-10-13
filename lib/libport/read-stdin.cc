@@ -45,34 +45,44 @@ namespace libport
   | Windows.  |
   `----------*/
 
-  typedef std::pair<std::string, Lockable> data_type;
+  struct ConsumerData
+  {
+    int fd;
+    std::string read;
+    Lockable lock;
+  };
+
   static DWORD WINAPI
   readThread(void* d)
   {
-    data_type&data = *reinterpret_cast<data_type*>(d);
+    data_type&data = *reinterpret_cast<ConsumerData*>(d);
     while (true)
     {
       static char buf[BUFSIZ];
-      DWORD count = 0;
-      ReadFile(GetStdHandle(STD_INPUT_HANDLE), buf, sizeof buf, &count, 0);
-      BlockLock bl(data.second);
-      data.first.append(buf, count);
+      int r = read(data.fd, buf, sizeof buf);
+      if (r < 0)
+        FAIL("read error on fd = %s", data.fd);
+      else if (r == 0) // EOF counts as an 'error'.
+        FAIL_("read error on fd = %s: EOF", data.fd);
+      BlockLock bl(data.lock);
+      data.read.append(buf, r);
     }
   }
 
   std::string
-  read_stdin()
+  read_fd(int fd)
   {
     static bool started = false;
     static data_type data;
     if (!started)
     {
+      data.handle = handle;
       started = true;
       unsigned long id;
       CreateThread(NULL, 0, &readThread, &data, 0, &id);
       return std::string();
     }
-    BlockLock bl(data.second);
+    BlockLock bl(data.lock);
     std::string res;
     swap(data.first, res);
     return res;
@@ -84,33 +94,52 @@ namespace libport
   | Unix.  |
   `-------*/
 
-  std::string
-  read_stdin()
+  size_t
+  read_fd(int fd, char* buf, size_t len)
   {
-    fd_set fd;
-    FD_ZERO(&fd);
-    FD_SET(0,&fd);
-    struct timeval tv;
-    tv.tv_sec = tv.tv_usec = 0;
-    int r = select(1, &fd, 0, 0, &tv);
-    if (r < 0)
-      FAIL("select error on stdin");
-    else if (r == 0)
-      return std::string();
-    else
+    // Select.
     {
-      char buf[BUFSIZ];
-      r = read(0, buf, sizeof buf);
+      fd_set fds;
+      FD_ZERO(&fds);
+      FD_SET(fd, &fds);
+
+      struct timeval tv;
+      tv.tv_sec = tv.tv_usec = 0;
+
+      int r = select(fd + 1, &fds, 0, 0, &tv);
       if (r < 0)
-        FAIL("read error on stdin");
+        FAIL("select error on fd=%d", fd);
+      else if (r == 0)
+        return 0;
+    }
+
+    // Read.
+    {
+      int r = read(0, buf, len);
+      if (r < 0)
+        FAIL("read error on fd = %s", fd);
       else if (r == 0) // EOF counts as an 'error'.
-        FAIL_("read error on stdin: EOF");
+        FAIL_("read error on fd = %s: EOF", fd);
       else
-	return std::string(buf, r);
+	return r;
     }
   }
 
+  std::string
+  read_fd(int fd)
+  {
+    char buf[BUFSIZ];
+    size_t len = read_fd(fd, buf, sizeof buf);
+    return std::string(buf, len);
+  }
+
 #endif
+
+  std::string
+  read_stdin()
+  {
+    return read_fd(STDIN_FILENO);
+  }
 
   std::string
   read_file(const std::string& file)
