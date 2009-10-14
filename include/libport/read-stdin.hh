@@ -21,12 +21,11 @@
 namespace libport
 {
   /// Read available data from \a fd without blocking.
-  /// \throw exception::Exception on error, including EOF.
+  /// \throw libport::Exception on error, including EOF.
   LIBPORT_API std::string read_fd(int fd);
 
-  /*! Read available data from stdin without blocking.
-   *  \throw exception::Exception on error, including EOF.
-   */
+  /// Read available data from stdin without blocking.
+  /// \throw libport::Exception on error, including EOF.
   LIBPORT_API std::string read_stdin();
 
   /// Return the whole content of \a file.
