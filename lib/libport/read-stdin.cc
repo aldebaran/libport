@@ -31,13 +31,14 @@
 #endif
 
 #define FAIL_(Format, ...)						\
-  throw libport::Exception(libport::format(Format, ## __VA_ARGS__))
-
-#define FAIL(Format, ...)                                               \
   do {                                                                  \
-    /* LIBPORT_ECHO(libport::format(Format, ## __VA_ARGS__)); */        \
-    FAIL_(Format ": %s", ## __VA_ARGS__, strerror(errno));              \
+    LIBPORT_ECHO(libport::format(Format, ## __VA_ARGS__));              \
+    throw libport::Exception(libport::format(Format, ## __VA_ARGS__));  \
   } while (false)
+
+#define FAIL(Format, ...)                                       \
+  FAIL_(Format ": %s", ## __VA_ARGS__, strerror(errno))
+
 
 namespace libport
 {
@@ -98,7 +99,7 @@ namespace libport
     }
 
     BlockLock bl(data.lock);
-    if (data.exception && !data.buffer.empty())
+    if (data.exception && data.buffer.empty())
       throw *data.exception;
     std::string res;
     swap(data.buffer, res);
