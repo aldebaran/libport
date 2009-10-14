@@ -36,6 +36,7 @@ file_content(const std::string& input)
   }
   catch (...)
   {}
+  BOOST_CHECK_NE(close(fd), -1);
   return content;
 }
 

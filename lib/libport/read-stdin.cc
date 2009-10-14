@@ -51,6 +51,24 @@ namespace libport
 
   struct ConsumerData
   {
+    ConsumerData()
+      : fd(-1)
+      , buffer()
+      , lock()
+      , exception(0)
+    {}
+
+    bool started()
+    {
+      return fd != -1;
+    }
+
+    void clear()
+    {
+      delete exception;
+      exception = 0;
+      fd = -1;
+    }
     int fd;
     std::string buffer;
     Lockable lock;
@@ -87,20 +105,22 @@ namespace libport
   std::string
   read_fd(int fd)
   {
-    static bool started = false;
     static ConsumerData data;
-    if (!started)
-    {
-      data.fd = fd;
-      started = true;
-      unsigned long id;
-      CreateThread(NULL, 0, &readThread, &data, 0, &id);
-      return std::string();
-    }
 
     BlockLock bl(data.lock);
+    if (!data.started())
+    {
+      data.fd = fd;
+      unsigned long id;
+      CreateThread(NULL, 0, &readThread, &data, 0, &id);
+    }
+
     if (data.exception && data.buffer.empty())
-      throw *data.exception;
+    {
+      libport::Exception exception = *data.exception;
+      data.clear();
+      throw exception;
+    }
     std::string res;
     swap(data.buffer, res);
     return res;
