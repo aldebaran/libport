@@ -1,6 +1,6 @@
 /*
  * This file is part of libport
- * Copyright (C) 2007, Gostai S.A.S.
+ * Copyright (C) 2007, 2009, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -26,11 +26,27 @@ namespace libport
     Exception::~Exception() throw ()
     {}
 
-    inline const char*
+    inline
+    const char*
     Exception::what() const throw ()
     {
       return msg_.c_str();
     }
+
+    inline
+    const std::string&
+    Exception::message() const throw ()
+    {
+      return msg_;
+    }
+
+    inline
+    std::ostream&
+    operator<<(std::ostream& o, const Exception& e)
+    {
+      return o << e.message();
+    }
+
   }
 }
 

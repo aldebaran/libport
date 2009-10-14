@@ -29,12 +29,21 @@ namespace libport
        */
       Exception (const std::string& msg);
       virtual ~Exception () throw ();
+      /// The exception message.
+      virtual const std::string& message() const throw();
+      /// Same as message(), but with char *.
       virtual const char* what() const throw();
 
     private:
       std::string msg_;
     };
   }
+
+  inline
+  std::ostream&
+  operator<<(std::ostream& o, const exception::Exception& e);
+
+
   using exception::Exception;
 }
 
