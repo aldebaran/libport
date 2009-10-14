@@ -22,7 +22,9 @@ static void test_read_file()
   BOOST_CHECK_EQUAL(libport::read_file(input), "666\n");
 }
 
-static void test_read_fd(const std::string& input)
+static
+std::string
+file_content(const std::string& input)
 {
   int fd = open(input.c_str(), O_RDONLY);
   BOOST_CHECK_NE(fd, -1);
@@ -34,7 +36,13 @@ static void test_read_fd(const std::string& input)
   }
   catch (...)
   {}
+  return content;
+}
+
+static void test_read_fd(const std::string& input)
+{
   std::string reference = libport::read_file(input);
+  std::string content = file_content(input);
   BOOST_CHECK_EQUAL(reference.size(), content.size());
   BOOST_CHECK_EQUAL(reference, content);
 }
@@ -47,6 +55,8 @@ init_test_suite()
 
   test_suite* suite = BOOST_TEST_SUITE("libport::read-stdin test suite");
   suite->add(BOOST_TEST_CASE(test_read_file));
+  suite->add(BOOST_TEST_CASE(boost::bind(test_read_fd, short_file)));
+  // Make sure we can read the same file several times.
   suite->add(BOOST_TEST_CASE(boost::bind(test_read_fd, short_file)));
   suite->add(BOOST_TEST_CASE(boost::bind(test_read_fd, long_file)));
   return suite;
