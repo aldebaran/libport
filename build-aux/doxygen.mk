@@ -31,7 +31,7 @@ user-doc:
 	rm -rf $(DOCDIR).tmp $(builddir)/$(DOCDIR)
 	$(MAKE) $(AM_MAKEFLAGS) DOC_INTERNAL=NO doc-builder
 
-EXTRA_DIST += $(builddir)/$(DOCDIR)
+EXTRA_DIST += $(builddir)/$(DOCDIR) $(top_srcdir)/build-aux/Doxyfile.in
 
 $(builddir)/$(DOCDIR):
 	$(mkdir_p) $(builddir)/$(DOCDIR)
