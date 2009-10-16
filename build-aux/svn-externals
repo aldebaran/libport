@@ -89,7 +89,7 @@ url_aliases ()
     http* )
       echo "$1";;
     *)
-      local loc=$1
+      local loc="$1"
       local alias=$(echo "$loc" | sed 's,/.*,,')
       local ext=$(echo   "$loc" | sed -n 's,^[^/]*/\(.*\),\1,p')
       local url=$(usage |
@@ -128,8 +128,8 @@ svn_youngest ()
 svn_externals_update_stream ()
 {
   # "all" means, any directory here.
-  local hostdir=$1
-  local request=$2
+  local hostdir="$1"
+  local request="$2"
   test x"$request" != xall ||
     request=""
 
@@ -187,8 +187,8 @@ svn_externals_update ()
 # -------------------------------
 svn_externals_subscribe ()
 {
-  local host=$1
-  local url=$2
+  local host="$1"
+  local url="$2"
   local dir=$(echo "$url" | sed -e 's,/$,,;s,.*/,,')
   local rev=$(svn_youngest "$url")
   externals=$(svn propget svn:externals "$host" |

@@ -58,7 +58,7 @@ run()
   local desc="$1"
   shift
   $@ 2>&1 > /dev/null
-  local res=$?
+  local res="$?"
   if test $res -ne 0; then
     if test $res -eq 127; then
       warn "Not making $desc (missing $1)"

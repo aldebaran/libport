@@ -15,7 +15,7 @@ stderr ()
 tmp=/tmp/urbi-semaphores
 generate_semaphore_clean ()
 {
-  local clean=/tmp/$me
+  local clean="/tmp/$me"
    cat >$clean.cc.tmp <<EOF
 #include <semaphore.h>
 #include <cassert>

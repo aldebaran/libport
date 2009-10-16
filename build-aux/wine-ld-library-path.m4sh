@@ -60,7 +60,7 @@ EOF
 # -----------------------
 process_ldflags ()
 {
-  local ldflags=$1
+  local ldflags="$1"
   local i
   for i in $ldflags
   do
@@ -79,9 +79,9 @@ process_ldflags ()
 # in the output path.
 process_wrapper ()
 {
-  local wrapper=$1
+  local wrapper="$1"
   if test -f "$wrapper"; then
-    local save_IFS=$IFS
+    local save_IFS="$IFS"
     IFS=:
     windir $(sed -ne 's/^ *PATH=//p' "$wrapper")
     IFS=$save_IFS
@@ -110,11 +110,11 @@ windir ()
 # -------------------------
 create_wine_directory ()
 {
-  local dir=$1
+  local dir="$1"
   verbose "creating $dir"
   rm -rf "$dir"
   mkdir -p "$dir"
-  local winehome=$HOME/.wine
+  local winehome="$HOME/.wine"
   cp -a $winehome/dosdevices $winehome/*.reg $winehome/config "$dir"
   # Symlink everything from the .wine directory just in case.
   local f

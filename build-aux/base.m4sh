@@ -78,7 +78,7 @@ find_file ()
 cannot_find ()
 {
   local path="$[3]"
-  local save_IFS=$IFS
+  local save_IFS="$IFS"
   IFS=:
   set "$[1]" "$[2]" $path
   IFS=$save_IFS
@@ -105,7 +105,7 @@ xfind_file ()
 # nothing if not found.
 find_prog ()
 {
-  local path=$PATH
+  local path="$PATH"
   test -z "$[2]" || path=$[2]
 
   _AS_PATH_WALK([$path],
@@ -118,7 +118,7 @@ find_prog ()
 # Same as xfind_prog, but don't take "no" for an answer.
 xfind_prog ()
 {
-  local path=$PATH
+  local path="$PATH"
   test -z "$[2]" || path=$[2]
   local res
   res=$(find_prog "$[1]" "$path")
@@ -131,9 +131,9 @@ xfind_prog ()
 # --------------------------------------------------
 require_thing ()
 {
-  local flag=$[1]
+  local flag="$[1]"
   local error="$[2]: $[3]"
-  local thing=$[3]
+  local thing="$[3]"
   shift 3
   test $flag "$thing" ||
     error OSFILE "$error" "$[@]"
@@ -187,7 +187,7 @@ verbose ()
 # -------------------
 error ()
 {
-  local exit=$[1]
+  local exit="$[1]"
   shift
   stderr "$[@]"
   ex_exit $exit
@@ -245,7 +245,7 @@ ex_to_string ()
 # Decode the CODE and return the corresponding int.
 ex_to_int ()
 {
-  local code=$[1]
+  local code="$[1]"
   case ${code#EX_} in
     (OK)          echo 0;;
     (USAGE)       echo 64;;
@@ -311,7 +311,7 @@ m4_defun([_URBI_PREPARE],
 # Remove, create, and cd into DIR.
 mkcd ()
 {
-  local dir=$[1]
+  local dir="$[1]"
   if test -d "$dir"; then
     chmod -R 700 "$dir"
     rm -rf "$dir"

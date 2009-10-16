@@ -43,7 +43,7 @@ run ()
 
 error ()
 {
-  local exit=$1
+  local exit="$1"
   shift
   stderr "$@"
   exit $exit
@@ -125,7 +125,7 @@ handle_lib ()
 # escapes.  Separates with spaces.
 append ()
 {
-  local var=$1
+  local var="$1"
   shift
   local val
   for val
@@ -405,7 +405,7 @@ dos2unix ()
 # deps_file if requested.  Send to stderr what remains.
 dump_log ()
 {
-  local file=$1
+  local file="$1"
   verbose "processing log file $file"
   perl -e "my \$deps_file = '$deps_file';" \
        -e "my \$deps_phony = '$deps_phony';" \
@@ -599,7 +599,7 @@ load_msvc_env ()
   # Skip if we can't run it.
   for i in ~/share/wine ~/.wine/drive_c
   do
-    local f=$i/msvc_env.sh
+    local f="$i/msvc_env.sh"
     verbose "trying to load $f"
     if test -f $f; then
       . $f

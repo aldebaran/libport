@@ -136,7 +136,7 @@ stderr ()
 
 error ()
 {
-  local exit=$1
+  local exit="$1"
   shift
   stderr "$@"
   exit $exit
@@ -270,8 +270,8 @@ attributes ()
 # Install a link FROM that goes to TO.
 link_symbolic ()
 {
-  local from=$1
-  local to=$2
+  local from="$1"
+  local to="$2"
   # If we have an empty directory, we may have had a submodule
   # here in the past, so remove it. It is empty, so nothing
   # will be lost anyway.
@@ -354,8 +354,8 @@ link_copy ()
 # Install a link FROM that provides the contents of TO.
 link ()
 {
-  local from=$1
-  local to=$2
+  local from="$1"
+  local to="$2"
 
   stderr "Installing $from -> $to"
   mkdir -p $(dirname "$from")

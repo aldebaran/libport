@@ -19,7 +19,7 @@ AC_DEFUN([URBI_COMPILATION_MODE],
 [# Compilation mode.
 urbi_compilation_mode_set ()
 {
-  local stacksize=128
+  local stacksize="128"
   local mode
   for mode
   do

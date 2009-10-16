@@ -23,7 +23,7 @@ AC_DEFUN([_URBI_APPEND_FLAGS],
 # includes it.
 urbi_append_flags ()
 {
-  local var=$[1]
+  local var="$[1]"
   local var
   eval "val=\$$var"
   shift

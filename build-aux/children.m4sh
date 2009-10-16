@@ -74,7 +74,7 @@ run_counter=0
 run_prefix=
 run ()
 {
-  local title=$][1
+  local title="$][1"
   run_prefix=$run_counter-$(echo $][1 |
 			     sed -e 's/[^a-zA-Z0-9][^a-zA-Z0-9]*/-/g;s/-$//')
   run_counter=$(($run_counter + 1))
@@ -189,12 +189,12 @@ timeout_factor ()
 # ----------------------
 pids_wait ()
 {
-  local timeout=$][1
+  local timeout="$][1"
   shift
 
   : ${timeout_factor:=1}
   timeout=$(($timeout * $timeout_factor))
-  local count_down=$timeout
+  local count_down="$timeout"
 
   # True iff we did not time out.
   pids_wait_result=true
@@ -224,7 +224,7 @@ pids_wait ()
 # Report the input and output for $FILE-PREFIX.
 rst_run_report ()
 {
-  local title=$][1
+  local title="$][1"
   case $title in
     (?*) title="$title ";;
   esac
@@ -376,7 +376,7 @@ children_status ()
   test $][# -ne 0 ||
     { set x $children; shift; }
 
-  local res=0
+  local res="0"
   local i
   for i
   do
@@ -400,7 +400,7 @@ children_status ()
 # ones.
 children_wait ()
 {
-  local timeout=$][1
+  local timeout="$][1"
   shift
   local pids
   pids=$(children_pid "$][@")

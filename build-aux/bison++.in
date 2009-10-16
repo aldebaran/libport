@@ -76,7 +76,7 @@ set -e
 # Fixes in place.
 fix_bison_output ()
 {
-  local file=$1
+  local file="$1"
   local base=$(basename "$file")
   local base_noext=$(echo "$file" | sed -e 's/\..*//')
   perl -pi -e "
@@ -110,8 +110,8 @@ s/[ \t]+\$//;
 # "Needed" means FILE.OUT-EXT does not exist, or XML was updated.
 compile_xml_file ()
 {
-  local xml=$1
-  local xsl=$2.xsl
+  local xml="$1"
+  local xsl="$2.xsl"
   local out=$(basename "$xml" ".xml").$3
 
   # "cmp NON-EXISTENT FILE" does what we want: fail.

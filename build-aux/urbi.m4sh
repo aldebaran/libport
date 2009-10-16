@@ -20,8 +20,8 @@ m4_divert_text([URBI-INIT],
 # Check that VARIABLE contains a directory name that contains WITNESS.
 check_dir ()
 {
-  local var=$[1]
-  local witness=$[2]
+  local var="$[1]"
+  local witness="$[2]"
   local dir
   eval "dir=\$$[1]"
   test x"$dir" != x ||
@@ -42,8 +42,8 @@ check_dir ()
 # Check that $VAR/WITNESS exists, and set VAR to $(absolute $VAR).
 check_and_abs_dir ()
 {
-  local var=$[1]
-  local witness=$[2]
+  local var="$[1]"
+  local witness="$[2]"
   check_dir "$[@]"
   # Normalize the directory name, and as safety belts, run the same
   # tests on it.  But save time if possible.  So put in "$@" the dirs
@@ -181,10 +181,10 @@ spawn_urbi_server ()
 
   # Wait for the port file to be completed: it must have one full line
   # (with \n to be sure it is complete).
-  local t=0
+  local t="0"
   : ${timeout_factor:=1}
   local tmax=$((10 * $timeout_factor))
-  local dt=0.5
+  local dt="0.5"
   # 0 if we stop, 1 to continue sleeping.
   local cont
   while children_alive server &&

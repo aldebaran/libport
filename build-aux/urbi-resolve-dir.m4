@@ -52,11 +52,11 @@ m4_divert_once([M4SH-INIT],
 # Return the DIR with all inner variables expanded.
 urbi_resolve_dir ()
 {
-  local dir=$1
-  local res=
-  local prefix_NONE=
-  local exec_prefix_NONE=
-  test "x$prefix" = xNONE &&
+  local dir="$1"
+  local res="
+"  local prefix_NONE="
+"  local exec_prefix_NONE="
+"  test "x$prefix" = xNONE &&
      exec_prefix_NONE=yes &&
      prefix=$ac_default_prefix
   test "x$exec_prefix" = xNONE &&

@@ -30,7 +30,7 @@ rst_title ()
 # ------------------------
 rst_section_ ()
 {
-   local liner=$[1]
+   local liner="$[1]"
    shift
    echo "$[@]" | sed "p;s/./$liner/g;p;g"
    echo
