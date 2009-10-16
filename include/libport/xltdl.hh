@@ -26,7 +26,7 @@ namespace libport
   {
   public:
     /// Exceptions thrown on errors.
-    struct exception : std::runtime_error
+    struct LIBPORT_API exception : std::runtime_error
     {
       exception(const std::string& msg);
     };
