@@ -4,7 +4,8 @@
 
 stderr ()
 {
-  local me=$(basename "$0")
+  local me
+  me=$(basename "$0")
   local i
   for i
   do

@@ -107,7 +107,8 @@ handle_lib ()
     verbose "systemlibs=$systemlibs"
   }
 
-  local base=$(echo "${1#-l}.lib" | tr A-Z a-z)
+  local base
+  base=$(echo "${1#-l}.lib" | tr A-Z a-z)
   local res
   # If $base is not in $systemlibs, prepend "lib".
   case " $systemlibs " in

@@ -127,7 +127,8 @@ getopt ()
 stderr ()
 {
   local i
-  local me=$(basename "$0")
+  local me
+  me=$(basename "$0")
   for i
   do
     echo >&2 "$me: $i"
@@ -240,7 +241,8 @@ require ()
   envvar_name=$(echo $1 | tr '[:lower:]' '[:upper:]')
   local tool
   tool=$(printenv $envvar_name || echo $1)
-  local version=$($tool --version | \
+  local version
+  version=$($tool --version | \
     sed -n 's/.*[^0-9.]\([0-9][0-9.]*\).*/\1/p;' | head -n1)
   local error="${3:-error}"
 
@@ -289,7 +291,8 @@ link_symbolic ()
       (*CYGWIN*)
 	  return 1;;
   esac
-  local morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
+  local morf
+  morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
 
   # It is a nightmare to have incorrect links, diagnose this.
   if test -L $from; then

@@ -90,9 +90,12 @@ url_aliases ()
       echo "$1";;
     *)
       local loc="$1"
-      local alias=$(echo "$loc" | sed 's,/.*,,')
-      local ext=$(echo   "$loc" | sed -n 's,^[^/]*/\(.*\),\1,p')
-      local url=$(usage |
+      local alias
+      alias=$(echo "$loc" | sed 's,/.*,,')
+      local ext
+      ext=$(echo   "$loc" | sed -n 's,^[^/]*/\(.*\),\1,p')
+      local url
+      url=$(usage |
 		  sed -n "/^URL aliases:/,/^# *\$/{
 			     /^ *$alias *\\([^ ].*\\)/{s//\1/;p;q;};
 			 }")
@@ -114,7 +117,8 @@ url_aliases ()
 svn_youngest ()
 {
   # Beware not to ignore the failure: pipes are not good.
-  local info=$(svn info "$1")
+  local info
+  info=$(svn info "$1")
   test -n "$info" ||
     fatal "cannot get youngest revision number"
   echo "$info" | sed -n '/Revision: /{s///;p;q;}'
@@ -177,7 +181,8 @@ svn_externals_update_stream ()
 # Update all the pinned svn:externals to the most recent version.
 svn_externals_update ()
 {
-  local externals=$(svn propget svn:externals "$1" |
+  local externals
+  externals=$(svn propget svn:externals "$1" |
 		    svn_externals_update_stream "$1" "$2")
   $run svn propset svn:externals "$externals" "$1"
 }
@@ -189,8 +194,10 @@ svn_externals_subscribe ()
 {
   local host="$1"
   local url="$2"
-  local dir=$(echo "$url" | sed -e 's,/$,,;s,.*/,,')
-  local rev=$(svn_youngest "$url")
+  local dir
+  dir=$(echo "$url" | sed -e 's,/$,,;s,.*/,,')
+  local rev
+  rev=$(svn_youngest "$url")
   externals=$(svn propget svn:externals "$host" |
 	      sed -e "/^$dir /d")
   externals="$externals

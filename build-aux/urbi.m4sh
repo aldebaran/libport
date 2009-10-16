@@ -183,7 +183,8 @@ spawn_urbi_server ()
   # (with \n to be sure it is complete).
   local t="0"
   : ${timeout_factor:=1}
-  local tmax=$((10 * $timeout_factor))
+  local tmax
+  tmax=$((10 * $timeout_factor))
   local dt="0.5"
   # 0 if we stop, 1 to continue sleeping.
   local cont
