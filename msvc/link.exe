@@ -87,7 +87,8 @@ handle_lib ()
         "$HOME/local/usr/lib"                   \
         "$HOME/local"                           \
         "$VCXX_PATH/lib"                        \
-        "$VCXX_PATH/PlatformSDK/Lib"
+        "$VCXX_PATH/PlatformSDK/Lib"		\
+        "$VS_PATH/PlatformSDK/Lib"
     do
       test ! -d $i ||
         libdirs+=" $i"
@@ -652,6 +653,7 @@ done
 test -n "$repath" ||
   error 176 "program not found: $repaths"
 
+VS_PATH=$($repath -u $VSINSTALLDIR)
 VCXX_PATH=$($repath -u $VCINSTALLDIR)
 VCXX_BIN=$VCXX_PATH/bin
 
