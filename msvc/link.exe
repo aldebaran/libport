@@ -115,7 +115,7 @@ handle_lib ()
     (*" $base "*) res=$base;;
     (*)           res=lib$base;;
   esac
-  res=$(transform $res)
+  res=$(transform "$res")
   verbose "handle_lib: $1 -> $res"
   echo "$res"
 }
@@ -134,16 +134,11 @@ append ()
     case $val in
       (*[''""\\\\\<\>\*\;\|]*)
         # We use printf to avoid backslash-interpolation.
-        val='"'$(printf '%s' "$val" | sed -e 's/[''""\\\\]/\\&/g')'"'
+        val="'"$(printf '%s' "$val" | sed -e 's/[''""\\\\]/\\&/g')"'"
         ;;
     esac
     # Avoid useless spaces.
-    local sep
-    case $var:$val in
-        (*:|:*) sep=;;
-        (*)     sep=' ';;
-    esac
-    eval "$var+=\$sep\$val"
+    eval "$var+=\${$var:+ }\$val"
   done
 #  eval verbose "$var=\$$var"
 }
@@ -311,20 +306,22 @@ get_options ()
   while test $# -ne 0
   do
     case $1 in
-    (--help) usage;;
+    (--help)    usage;;
     (--version) version;;
     (--verbose) verbose=true;;
-    (-v) compiler_verbose=true;;
+    (-v)        compiler_verbose=true;;
 
     # Libraries.
     (-link) ;;
     (-dll)  linkargs "/DLL";;
-    (-L*)   linkargs -LIBPATH:$(transform ${1#-L});;
-    (-L )   linkargs -LIBPATH:$(transform $2)     ; shift;;
-    (-l*)   linkargs $(handle_lib $1);;
+    (-L )   linkargs "-LIBPATH:$(transform "$2")"     ; shift;;
+    (-L*)   linkargs "-LIBPATH:$(transform "${1#-L}")";;
+    (-l*)   linkargs "$(handle_lib "$1")";;
 
     # Preprocessor options.
-    (-E)  mode=preprocess; outargs $1;;
+    (-E)  mode=preprocess; outargs "$1";;
+    (-I ) outargs "-I$(transform "$2")"     ; shift;;
+    (-I*) outargs "-I$(transform "${1#-I}")";;
 
     # Dependencies.
     # Automake invocations look like:
@@ -347,9 +344,9 @@ get_options ()
     (--convert-windows-path)
           cppoutput=cppoutput;;
 
-    (-c)  mode=compile; outargs $1;;
+    (-c)  mode=compile; outargs "$1";;
     (-o)  get_options__o "$2"; shift;;
-    (-o*) get_options__o ${1#-o};;
+    (-o*) get_options__o "${1#-o}";;
     (-Wno-unused-parameter)
          # Flags passed by careless tools, such as Bjam.
         ;;
@@ -360,34 +357,34 @@ get_options ()
 
     # Optimizations.
     (-fno-strict-aliasing);;
-    (-O2) outargs $1;;
+    (-O2) outargs "$1";;
     (-O3) outargs -Ox;;
 
     # Language selection.
     (-x) shift
       case $1 in
-        (c) outargs "-TC";;
+        (c)   outargs "-TC";;
         (c++) outargs "-TP";;
       esac;;
 
-    (*.lib) linkargs $(transform $1);;
-    (*.a)   linkargs $(transform "$1" | sed -e 's/.a$/.lib/');;
+    (*.lib) linkargs "$(transform "$1")";;
+    (*.a)   linkargs "$(transform "$1" | sed -e 's/.a$/.lib/')";;
     (*.dll)
-      outargs $(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/');;
+      outargs "$(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/')";;
 
     # Sources.
-    (-include)  shift; outargs "-FI$(transform $1)";;
-    (*.S)       source=$1; outargs "-Tp$(transform $source)";;
-    (*.c|*.cc)  source=$1; outargs    "$(transform $source)";;
-    (*.i)       source=$1; outargs "-Tc$(transform $source)"
+    (-include)  shift; outargs "-FI$(transform "$1")";;
+    (*.S)       source=$1; outargs "-Tp$(transform "$source")";;
+    (*.c|*.cc)  source=$1; outargs    "$(transform "$source")";;
+    (*.i)       source=$1; outargs "-Tc$(transform "$source")"
                 preprocessed=true;;
-    (*.ii)      source=$1; outargs "-Tp$(transform $source)"
+    (*.ii)      source=$1; outargs "-Tp$(transform "$source")"
                 preprocessed=true;;
     (/dev/null) source=$tmp/null-input
                 touch $source
-                outargs "$(transform $source)";;
+                outargs "$(transform "$source")";;
     # Unknown stuff.
-    (*)        outargs $1;;
+    (*)        outargs "$1";;
     esac
     shift
   done
@@ -681,13 +678,13 @@ case $mode in
     # -c without -o.
     test -n "$output" ||
       output=$(basename "$source" | sed -re 's/\.[^.]+$/.obj/')
-    outargs -Fo$(transform $output);;
+    outargs "-Fo$(transform "$output")";;
   (preprocess)  ;;
   (*) # Probably linking.
     mode=link
     case $PROG in
-      (link.exe) outargs -OUT:$(transform $output);;
-      (*)        outargs -Fe$(transform $output);;
+      (link.exe) outargs "-OUT:$(transform "$output")";;
+      (*)        outargs "-Fe$(transform "$output")";;
     esac
     linkargs "-SUBSYSTEM:console" "-MANIFEST" "Kernel32.Lib"
     ;;
@@ -696,7 +693,8 @@ esac
 if test "$PROG" = cl.exe && test -n "$linkargs"; then
 #  test -z "$mode"
 #  mode=link
-  outargs "-link" $linkargs
+  outargs "-link"
+  outargs+=" $linkargs"
   linkargs=
 fi
 
@@ -730,7 +728,7 @@ case $mode:$output in
      $cppoutput <$stdout;;
   (preprocess:*)
      dump_log $stderr
-     $cppoutput <$stdout >$(transform $output);;
+     $cppoutput <$stdout >"$(transform "$output")";;
   (*:)
      dump_log $stderr
      dump_log $stdout >&2;;
