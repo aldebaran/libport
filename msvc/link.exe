@@ -67,7 +67,7 @@ transform ()
 {
   case $1 in
     ('') verbose "warning: empty argument passed to transform";;
-    (/*) winepath -w "$1";;
+    (/*) $repath -w "$1";;
     (*)  echo "$1";;
   esac
 }
@@ -409,6 +409,7 @@ dump_log ()
        -e "my \$deps_phony = '$deps_phony';" \
        -e "my \$deps_target = '$deps_target';" \
        -e "my \$medir = '$medir';" \
+       -e "my \$repath = '$repath';" \
        -e "my \$source = '$source';" \
        -e "my \$verbose = '$verbose' eq 'true';" \
        -e '
@@ -421,7 +422,7 @@ use File::Path (mkpath);
 use File::Basename;
 use NDBM_File;
 
-# A hash table that saves from repeated calls to winepath.
+# A hash table that saves from repeated calls to path conversion.
 # A significant improvement.
 my %converted_path;
 
@@ -432,7 +433,7 @@ my %converted_path;
 # "clean" rules should be educated to handle (including foreign
 # packages such as libjpeg).  A useless burden.
 my $cache_dir = "$medir/" . getcwd;
-my $cache_file = "$cache_dir/winepath.cache";
+my $cache_file = "$cache_dir/$repath.cache";
 
 if (! -d $cache_dir)
 {
@@ -473,7 +474,7 @@ sub convert_path ($)
     if ($res =~ /^\w:/)
     {
       # Convert them to Linux format.
-      $res = `winepath -u $res`;
+      $res = `$repath -u $res`;
       chomp $res;
     }
     $converted_path{$path} = $res;
@@ -584,7 +585,7 @@ compiler_verbose_message ()
     print "#include <...> search starts here:\n";
     for my $d (split (";", $ENV{"INCLUDE"}))
     {
-      print " " . `winepath -u $d`;
+      print " " . `$repath -u $d`;
     }
     print "End of search list.\n";
 '
@@ -595,12 +596,12 @@ load_msvc_env ()
 {
   local i
   # Skip if we can't run it.
-  for i in ~/share/wine ~/.wine/drive_c
+  for i in ~/share/wine ~/.wine/drive_c "$(dirname "$0")" ~/bin
   do
     local f="$i/msvc_env.sh"
     verbose "trying to load $f"
-    if test -f $f; then
-      . $f
+    if test -f "$f"; then
+      . "$f"
       verbose "loaded $f"
       return 0
     fi
@@ -635,10 +636,16 @@ test -n "$VCINSTALLDIR" ||
   load_msvc_env ||
   error 176 "cannot load msvc_env.sh"
 
-winepath --version >/dev/null 2>&1 ||
-  error 176 "cannot run winepath"
+repaths='cygpath winepath'
+for repath in $repaths ''
+do
+  $repath --version >/dev/null 2>&1 &&
+    break
+done
+test -n "$repath" ||
+  error 176 "program not found: $repaths"
 
-VCXX_PATH=$(winepath -u $VCINSTALLDIR)
+VCXX_PATH=$($repath -u $VCINSTALLDIR)
 VCXX_BIN=$VCXX_PATH/bin
 
 test -x $VCXX_BIN/cl.exe ||
