@@ -41,9 +41,9 @@ static void test_duration()
 static void test_sleep()
 {
   libport::Duration wait = libport::time::ms(500);
-  // With 50, and even 100, under heavy load, some machines don't make
-  // it.
-  libport::Duration delta = libport::time::ms(250);
+  // With 50, 100, and even 250, under heavy load, some machines (Mac
+  // Mini) don't make it.
+  libport::Duration delta = libport::time::ms(500);
   libport::Time start = libport::time::now();
   libport::time::sleep(wait);
   libport::Duration elapsed = libport::time::now() - start;
