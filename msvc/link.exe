@@ -115,9 +115,8 @@ handle_lib ()
     (*" $base "*) res=$base;;
     (*)           res=lib$base;;
   esac
-  res=$(transform "$res")
-  verbose "handle_lib: $1 -> $res"
-  echo "$res"
+  handle_lib_res=$(transform "$res")
+  verbose "handle_lib: $1 -> $handle_lib_res"
 }
 
 # append VARIABLE VALUES...
@@ -316,7 +315,8 @@ get_options ()
     (-dll)  linkargs "/DLL";;
     (-L )   linkargs "-LIBPATH:$(transform "$2")"     ; shift;;
     (-L*)   linkargs "-LIBPATH:$(transform "${1#-L}")";;
-    (-l*)   linkargs "$(handle_lib "$1")";;
+    (-l*)   handle_lib "$1"
+            linkargs "$handle_lib_res";;
 
     # Preprocessor options.
     (-E)  mode=preprocess; outargs "$1";;
@@ -373,7 +373,7 @@ get_options ()
       outargs "$(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/')";;
 
     # Sources.
-    (-include)  shift; outargs "-FI$(transform "$1")";;
+    (-include)  shift;     outargs "-FI$(transform "$1")";;
     (*.S)       source=$1; outargs "-Tp$(transform "$source")";;
     (*.c|*.cc)  source=$1; outargs    "$(transform "$source")";;
     (*.i)       source=$1; outargs "-Tc$(transform "$source")"
