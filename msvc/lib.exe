@@ -2,7 +2,69 @@
 
 PROG=lib.exe
 
-for i in $(winepath -u $VCINSTALLDIR)/bin /home/build/.wine/drive_c/vcxx8/VC/bin
+me=$(basename "$0")
+
+stderr ()
+{
+  local i
+  for i
+  do
+    echo >&2 "$me (wrapper): $i"
+  done
+}
+
+error ()
+{
+  local exit=$1
+  shift
+  stderr "$@"
+  exit $exit
+}
+
+verbose ()
+{
+  case "$verbose: $VERBOSE " in
+    (true:* | *" cl.exe "* | *" link.exe "* | " x ")
+      stderr "$@"
+      ;;
+  esac
+}
+
+fatal ()
+{
+  error 1 "$@"
+}
+
+# Look for, and load, `msvc_env.sh'.
+load_msvc_env ()
+{
+  local i
+  # Skip if we can't run it.
+  for i in ~/share/wine ~/.wine/drive_c $(dirname $0) ~/bin
+  do
+    local f=$i/msvc_env.sh
+    verbose "trying to load $f"
+    if test -f $f; then
+      . $f
+      verbose "loaded $f"
+      return 0
+    fi
+  done
+ return 1
+}
+
+load_msvc_env
+
+repaths='cygpath winepath'
+for repath in $repaths ''
+do
+  $repath --version >/dev/null 2>&1 &&
+    break
+done
+test -n "$repath" ||
+  error 176 "program not found: $repaths"
+
+for i in $($repath -u "$VCINSTALLDIR")/bin /home/build/.wine/drive_c/vcxx8/VC/bin
 do
   if test -x $i/cl.exe; then
     VCXX_BIN=$i
@@ -21,42 +83,45 @@ source=
 transform()
 {
   # winepath -w $1
-  echo $1
+  echo "$1"
 }
 
 case $1 in
-  cru) shift
-    outargs="/OUT:$(transform $1)" ; shift ;;
-  x)  #gnah, we have to remove them one by one
-   lib=$(winepath -w $2)
-   for f in $($VCXX_BIN/lib.exe /LIST $lib |tail -n +4 |sed -e 's/\r//g'); do
-     mkdir -p $(dirname $f)
-     $VCXX_BIN/lib.exe "/EXTRACT:$f" "/OUT:$f" $lib
-   done
-   exit ;;
- t) shift
-    lib=$(winepath -w $1)
+  (cru)
+    shift
+    outargs="/OUT:$(transform "$1")" ; shift
+    ;;
+  (x)  #gnah, we have to remove them one by one
+    shift
+    lib=$($repath -w $1)
+    for f in $($VCXX_BIN/lib.exe /LIST $lib |tail -n +4 |sed -e 's/\r//g'); do
+      mkdir -p $(dirname "$f")
+      $VCXX_BIN/lib.exe "/EXTRACT:$f" "/OUT:$f" $lib
+    done
+    exit
+    ;;
+ (t)
+    shift
+    lib=$($repath -w $1)
     $VCXX_BIN/lib.exe /LIST $lib |tail -n +4 |sed -e 's/\r//g'
-    exit;;
- *) ;;
+    exit
+    ;;
 esac
 
 while ! test -z $1; do
   larg=
   carg=
   case $1 in
-  -L*)  larg=/LIBPATH:$(transform ${1#-L}) ;;
-  -l*)  larg=${1#-l}.lib ;;
-  *.lib) larg=$1 ;;
-  *)  carg=$1 # $(echo $1 | sed -e 's@/@\\@g');;
+    (-L*)   larg=/LIBPATH:$(transform "${1#-L}") ;;
+    (-l*)   larg=${1#-l}.lib ;;
+    (*.lib) larg=$1;;
+    (*)     carg=$1;; # $(echo $1 | sed -e 's@/@\\@g');;
   esac
-  outargs="$outargs $carg"
-  linkargs="$linkargs $larg"
+  outargs+=" $carg"
+  linkargs+=" $larg"
   shift
 done
 
-if test x$WRAP_VERBOSE != x; then
-  echo command: $PROG "$outargs $linkargs" >/dev/stderr
-fi
+verbose command: $PROG "$outargs $linkargs"
 
 $VCXX_BIN/$PROG $outargs $linkargs
