@@ -119,6 +119,14 @@ handle_lib ()
   verbose "handle_lib: $1 -> $handle_lib_res"
 }
 
+# dll_2_lib ()
+# ------------
+# Return the name of the corresponding *.lib.
+dll_2_lib ()
+{
+  echo "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/'
+}
+
 # append VARIABLE VALUES...
 # -------------------------
 # Append the VALUES to $VARIABLE, making sure it has all the needed
@@ -368,9 +376,8 @@ get_options ()
       esac;;
 
     (*.lib) linkargs "$(transform "$1")";;
-    (*.a)   linkargs "$(transform "$1" | sed -e 's/.a$/.lib/')";;
-    (*.dll)
-      outargs "$(transform "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/')";;
+    (*.a)   linkargs "$(transform "${1%.a}.lib")";;
+    (*.dll) outargs "$(transform "$(dll_2_lib "$1")")";;
 
     # Sources.
     (-include)  shift;     outargs "-FI$(transform "$1")";;
@@ -779,9 +786,9 @@ esac
 # Rename .lib with a versioned name.
 case $output in
  (*-[0-9.]*.dll)
-  libname=$(echo $output | sed -e 's/dll$/lib/')
+  libname=${output%.dll}.lib
   if test -f "$libname"; then
-    run mv -f $libname $(echo $output | sed -re 's/-[0-9.]+\.dll/.lib/')
+    run mv -f $libname $(dll_2_lib "$output")
   fi
   ;;
 esac
