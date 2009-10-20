@@ -31,10 +31,11 @@ GIT_VERSION_GEN = $(build_aux_dir)/git-version-gen
 #
 # We have a nasty problem here: it seems that GNU Make does not behave
 # the same way on all hosts (especially GNU/Linux vs. OSX).  As a rule
-# of thumb, files once qualified with $(top_srcdir) should as be.  But
-# in my case (Akim), VPATH is ../.., and it turns out I also have a
-# package in ../../$(top_srcdir), so it actually looks in ../../../..
-# and finds a .version.stamp there :(  I don't know what to do.
+# of thumb, files once qualified with $(top_srcdir) should always be.
+# But in my case (Akim), VPATH is ../.., and it turns out I also have
+# a package in ../../$(top_srcdir), so it actually looks in
+# ../../../..  and finds a .version.stamp there :( I don't know what
+# to do.
 #
 # The BF seems to prefer the solution below.
 $(VERSION_FILE).stamp: $(GIT_VERSION_GEN)
@@ -51,16 +52,14 @@ $(VERSION_FILE).stamp: $(GIT_VERSION_GEN)
 
 $(VERSION_FILE): $(VERSION_FILE).stamp
 	@if test -f $(VERSION_FILE); then :; else	\
-	  rm -f $(VERSION_FILE_STAMP);			\
+	  rm -f $(VERSION_FILE).stamp;			\
 	  $(MAKE) $(AM_MAKEFLAGS) $<;			\
 	fi
 
 # Force the update of the file if its value differs.
 .PHONY: update-version
 update-version:
-	$(GIT_VERSION_GEN)				\
-		--srcdir=$(top_srcdir)			\
-		--cache=$(VERSION_FILE)
+	rm -f $(VERSION_FILE).stamp
 
 .PHONY: debug debug-version
 debug: debug-version
