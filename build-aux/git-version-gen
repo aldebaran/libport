@@ -168,6 +168,24 @@ sub ensure_parent_dir ($)
     }
 }
 
+=item C<%comment>
+
+The comment associated to a give revision field.
+
+=cut
+
+my %comment =
+  (
+   Date => 'The SCM date string',
+   Delta => 'The number of changes since the Version.',
+   Description => 'The SCM complete description string, with slashes',
+   Id => 'The SCM identification string',
+   Rev => 'The SCM revision string',
+   TarballVersion => 'The SCM complete version string, with dashes',
+   Version => 'The SCM version string',
+   VersionRev => 'Version and revision together',
+  );
+
 ######################################################################
 
 sub getopt ()
@@ -237,10 +255,18 @@ sub fetch_keywords ()
 
       # Description, Version, TarballVersion.
       $log =~ s{^(\w+):\s*(.*)$}{ $res{$1} = $2; ''; }emg;
+
+      # "preview/1.6/beta-1-747-g6cb67e3".
       $res{Description} = git 'describe';
-      # In "preview/1.6/beta-1-747-g6cb67e3", strip "-747-g6cb67e3".
-      ($res{Version} = $res{Description}) =~ s/-\d+-g[\da-f]+$//;
+
+      # "preview/1.6/beta-1".
+      ($res{Version} = $res{Description}) =~ s/^(.*)-(\d+)-g[\da-f]+$/$1/;
+
+      # "preview-1.6-beta-1-747-g6cb67e3".
       ($res{TarballVersion} = $res{Description}) =~ s,/,-,g;
+
+      # "747".
+      ($res{Delta} = $res{Description})  =~ s/^(.*)-(\d+)-g[\da-f]+$/$2/;
 
       # Cache the result, only if needed.
       my $cached = '';
@@ -329,31 +355,34 @@ sub generate_header(%)
 #ifndef $guard
 # define $guard
 
-// The SCM date string.
+// $comment{Date}.
 # define ${prefix}DATE "$keyword{Date}"
 
-// The SCM complete description string, with slashes.
+// $comment{Delta}.
+# define ${prefix}DELTA "$keyword{Delta}"
+
+// $comment{Description}.
 # define ${prefix}DESCRIPTION "$keyword{Description}"
 
-// The SCM identification string.
+// $comment{Id}
 # define ${prefix}ID \\
   "$keyword{Id}"
 
-// The SCM complete version string, with dashes.
+// $comment{TarballVersion}.
 # define ${prefix}TARBALL_VERSION \\
   "$keyword{TarballVersion}"
 
-// The SCM revision string.
+// $comment{Rev}.
 # define ${prefix}REVISION "$keyword{Rev}"
 
-// The SCM version string.
+// $comment{Version}.
 // Overrides that from config.h.
 # ifdef ${prefix}VERSION
 #  undef ${prefix}VERSION
 # endif
 # define ${prefix}VERSION "$keyword{Version}"
 
-// Version and revision together.
+// $comment{VersionRev}.
 # define ${prefix}VERSION_REV \\
   "version " ${prefix}VERSION " rev. " ${prefix}REVISION
 
@@ -387,27 +416,30 @@ sub generate_latex(%)
   my (%keyword) = @_;
   latex_escape %keyword;
   return <<EOF;
-% The SCM date string.
+% $comment{Date}.
 \\newcommand{\\VcsDate}{$keyword{Date}\\xspace}
 
-% The SCM complete description string, with slashes.
+% $comment{Delta}.
+\\newcommand{\\VcsDelta}{$keyword{Delta}\\xspace}
+
+% $comment{Description}.
 \\newcommand{\\VcsDescription}{$keyword{Description}\\xspace}
 
-% The SCM identification string.
+% $comment{Id}.
 \\newcommand{\\VcsId}{$keyword{Id}\\xspace}
 
-% The SCM revision string.
+% $comment{Rev}.
 \\newcommand{\\VcsRevision}{$keyword{Rev}\\xspace}
 
-% The SCM complete version string, with dashes.
+% $comment{TarballVersion}.
 \\newcommand{\\VcsTarballVersion}{%
   $keyword{TarballVersion}\\xspace%
 }
 
-% The SCM version string.
+% $comment{Version}.
 \\newcommand{\\VcsVersion}{$keyword{Version}\\xspace}
 
-% Version and revision together.
+% $comment{VersionRev}.
 \\newcommand{\\VcsVersionRev}{%
   version \\VcsVersion rev. \\VcsRevision%
 }
@@ -427,25 +459,28 @@ sub generate_urbi(%)
   return <<EOF;
 class System.PackageInfo
 {
-  // The SCM date string.
+  // $comment{Date}.
   var date = "$keyword{Date}";
 
-  // The SCM complete description string, with slashes.
+  // $comment{Delta}.
+  var delta = "$keyword{Delta}";
+
+  // $comment{Description}.
   var description = "$keyword{Description}";
 
-  // The SCM identification string.
+  // $comment{Id}.
   var id = "$keyword{Id}";
 
-  // The SCM revision string.
+  // $comment{Rev}.
   var revision = "$keyword{Rev}";
 
-  // The SCM complete version string, with dashes.
+  // $comment{TarballVersion}.
   var tarball_version = "$keyword{TarballVersion}";
 
-  // The SCM version string.
+  // $comment{Version}.
   var version = "$keyword{Version}";
 
-  // Version and revision together.
+  // $comment{VersionRev}.
   function version_rev
   {
     "version " + version + " rev. " + revision
