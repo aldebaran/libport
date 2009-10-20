@@ -176,14 +176,14 @@ The comment associated to a give revision field.
 
 my %comment =
   (
-   Date => 'The SCM date string',
-   Delta => 'The number of changes since the Version.',
-   Description => 'The SCM complete description string, with slashes',
-   Id => 'The SCM identification string',
-   Revision => 'The SCM revision string',
+   Date           => 'The SCM date string',
+   Description    => 'The SCM complete description string, with slashes',
+   Id             => 'The SCM identification string',
+   Patch          => 'The number of changes since the Version.',
+   Revision       => 'The SCM revision string',
    TarballVersion => 'The SCM complete version string, with dashes',
-   Version => 'The SCM version string',
-   VersionRev => 'Version and revision together',
+   Version        => 'The SCM version string',
+   VersionRev     => 'Version and revision together',
   );
 
 ######################################################################
@@ -266,11 +266,11 @@ sub fetch_keywords ()
       ($res{TarballVersion} = $res{Description}) =~ s,/,-,g;
 
       # "747".
-      ($res{Delta} = $res{Description})  =~ s/^(.*)-(\d+)-g[\da-f]+$/$2/;
+      ($res{Patch} = $res{Description})  =~ s/^(.*)-(\d+)-g[\da-f]+$/$2/;
 
       # "preview/1.6/beta-1 patch 747 revision 6cb67e3".
       $res{VersionRev} =
-        "version $res{Version} patch $res{Delta} revision $res{Revision}";
+        "version $res{Version} patch $res{Patch} revision $res{Revision}";
 
       # Cache the result, only if needed.
       my $cached = '';
