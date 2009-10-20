@@ -57,17 +57,18 @@ namespace libport
 /// Define \a Var using information from config.h and version.hh.
 # define LIBPORT_PACKAGE_INFO_INIT_(Prefix, Var)                \
   do {                                                          \
-    (Var)["bug-report"]		= Prefix ## BUGREPORT;		\
-    (Var)["copyright-holder"]	= Prefix ## COPYRIGHT_HOLDER;	\
-    (Var)["copyright-years"]	= Prefix ## COPYRIGHT_YEARS;	\
-    (Var)["date"]		= Prefix ## DATE;               \
-    (Var)["id"]			= Prefix ## ID;			\
-    (Var)["name"]		= Prefix ## NAME;               \
-    (Var)["revision"]		= Prefix ## REVISION;		\
-    (Var)["string"]		= Prefix ## STRING;		\
-    (Var)["tarname"]		= Prefix ## TARNAME;		\
-    (Var)["version"]		= Prefix ## VERSION;		\
-    (Var)["version-rev"]	= Prefix ## VERSION_REV;        \
+    (Var)["bug-report"]         = Prefix ## BUGREPORT;          \
+    (Var)["copyright-holder"]   = Prefix ## COPYRIGHT_HOLDER;   \
+    (Var)["copyright-years"]    = Prefix ## COPYRIGHT_YEARS;    \
+    (Var)["date"]               = Prefix ## DATE;               \
+    (Var)["id"]                 = Prefix ## ID;                 \
+    (Var)["name"]               = Prefix ## NAME;               \
+    (Var)["patch"]              = Prefix ## PATCH;              \
+    (Var)["revision"]           = Prefix ## REVISION;           \
+    (Var)["string"]             = Prefix ## STRING;             \
+    (Var)["tarname"]            = Prefix ## TARNAME;            \
+    (Var)["version"]            = Prefix ## VERSION;            \
+    (Var)["version-rev"]        = Prefix ## VERSION_REV;        \
   } while (0)
 
 /// Define \a Var using information from config.h and version.hh.
