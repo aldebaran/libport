@@ -262,6 +262,10 @@ sub fetch_keywords ()
       # "preview/1.6/beta-1".
       ($res{Version} = $res{Description}) =~ s/^(.*)-(\d+)-g[\da-f]+$/$1/;
 
+      # "preview/1.6/beta-1 patch 747 revision 6cb67e3".
+      $res{VersionRev} = \
+        "version $res{Version} patch $res{Delta} revision $res{Revision}";
+
       # "preview-1.6-beta-1-747-g6cb67e3".
       ($res{TarballVersion} = $res{Description}) =~ s,/,-,g;
 
@@ -355,6 +359,11 @@ sub generate_header(%)
 #ifndef $guard
 # define $guard
 
+// Override ${prefix}VERSION from config.h.
+# ifdef ${prefix}VERSION
+#  undef ${prefix}VERSION
+# endif
+
 // $comment{Date}.
 # define ${prefix}DATE "$keyword{Date}"
 
@@ -376,15 +385,11 @@ sub generate_header(%)
 # define ${prefix}REVISION "$keyword{Rev}"
 
 // $comment{Version}.
-// Overrides that from config.h.
-# ifdef ${prefix}VERSION
-#  undef ${prefix}VERSION
-# endif
 # define ${prefix}VERSION "$keyword{Version}"
 
 // $comment{VersionRev}.
 # define ${prefix}VERSION_REV \\
-  "version " ${prefix}VERSION " rev. " ${prefix}REVISION
+  "$keyword{VersionRev}"
 
 #endif // !$guard
 EOF
@@ -441,7 +446,7 @@ sub generate_latex(%)
 
 % $comment{VersionRev}.
 \\newcommand{\\VcsVersionRev}{%
-  version \\VcsVersion rev. \\VcsRevision%
+  $keyword{VersionRev}\\xspace%
 }
 EOF
 }
@@ -481,10 +486,7 @@ class System.PackageInfo
   var version = "$keyword{Version}";
 
   // $comment{VersionRev}.
-  function version_rev
-  {
-    "version " + version + " rev. " + revision
-  };
+  var version_rev = "$keyword{VersionRev}";
 };
 EOF
 }
