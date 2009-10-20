@@ -180,7 +180,7 @@ my %comment =
    Delta => 'The number of changes since the Version.',
    Description => 'The SCM complete description string, with slashes',
    Id => 'The SCM identification string',
-   Rev => 'The SCM revision string',
+   Revision => 'The SCM revision string',
    TarballVersion => 'The SCM complete version string, with dashes',
    Version => 'The SCM version string',
    VersionRev => 'Version and revision together',
@@ -249,9 +249,9 @@ sub fetch_keywords ()
     {
       verbose 2, "in a git repository\n";
 
-      # Date, Rev, and Id.
+      # Date, Revision, and Id.
       my $log = git 'log', '-1',
-      '--pretty="format:Date: %ai%nId: %h (%ai %ae: %s)%nRev: %h%n"';
+      '--pretty="format:Date: %ai%nId: %h (%ai %ae: %s)%nRevision: %h%n"';
 
       # Description, Version, TarballVersion.
       $log =~ s{^(\w+):\s*(.*)$}{ $res{$1} = $2; ''; }emg;
@@ -262,15 +262,15 @@ sub fetch_keywords ()
       # "preview/1.6/beta-1".
       ($res{Version} = $res{Description}) =~ s/^(.*)-(\d+)-g[\da-f]+$/$1/;
 
-      # "preview/1.6/beta-1 patch 747 revision 6cb67e3".
-      $res{VersionRev} = \
-        "version $res{Version} patch $res{Delta} revision $res{Revision}";
-
       # "preview-1.6-beta-1-747-g6cb67e3".
       ($res{TarballVersion} = $res{Description}) =~ s,/,-,g;
 
       # "747".
       ($res{Delta} = $res{Description})  =~ s/^(.*)-(\d+)-g[\da-f]+$/$2/;
+
+      # "preview/1.6/beta-1 patch 747 revision 6cb67e3".
+      $res{VersionRev} =
+        "version $res{Version} patch $res{Delta} revision $res{Revision}";
 
       # Cache the result, only if needed.
       my $cached = '';
@@ -297,6 +297,14 @@ sub fetch_keywords ()
         }
     }
   return %res;
+}
+
+sub format_keywords (\&\%)
+{
+  my ($routine, $keyword) = @_;
+  join ("\n\n",
+        map { generate_header_entry($_, ${$keyword}{$_}) }
+        (sort keys %{$keyword}));
 }
 
 =item C<escape(\%hashref)>
@@ -343,6 +351,19 @@ sub generate_file(%)
   return $res;
 }
 
+sub generate_header_entry($$)
+{
+  my ($keyword, $value) = @_;
+  my $entry = $keyword;
+  # Insert an underscore between lc and uc.
+  $entry =~ s/(?<=[[:lower:]])(?=[[:upper:]])/_/g;
+  $entry = "${prefix}" . uc $entry;
+
+  "// $comment{$keyword}.
+# define $entry \\
+  \"$value\"";
+}
+
 =item C<generate_header(%keyword)>
 
 Generate a C/C++ header.
@@ -355,6 +376,7 @@ sub generate_header(%)
   my $guard = uc $output;
   $guard =~ s/\W/_/g;
   escape %keyword;
+  my $keywords = format_keywords(&generate_header_entry, %keyword);
   return <<EOF;
 #ifndef $guard
 # define $guard
@@ -364,32 +386,7 @@ sub generate_header(%)
 #  undef ${prefix}VERSION
 # endif
 
-// $comment{Date}.
-# define ${prefix}DATE "$keyword{Date}"
-
-// $comment{Delta}.
-# define ${prefix}DELTA "$keyword{Delta}"
-
-// $comment{Description}.
-# define ${prefix}DESCRIPTION "$keyword{Description}"
-
-// $comment{Id}
-# define ${prefix}ID \\
-  "$keyword{Id}"
-
-// $comment{TarballVersion}.
-# define ${prefix}TARBALL_VERSION \\
-  "$keyword{TarballVersion}"
-
-// $comment{Rev}.
-# define ${prefix}REVISION "$keyword{Rev}"
-
-// $comment{Version}.
-# define ${prefix}VERSION "$keyword{Version}"
-
-// $comment{VersionRev}.
-# define ${prefix}VERSION_REV \\
-  "$keyword{VersionRev}"
+$keywords
 
 #endif // !$guard
 EOF
@@ -433,8 +430,8 @@ sub generate_latex(%)
 % $comment{Id}.
 \\newcommand{\\VcsId}{$keyword{Id}\\xspace}
 
-% $comment{Rev}.
-\\newcommand{\\VcsRevision}{$keyword{Rev}\\xspace}
+% $comment{Revision}.
+\\newcommand{\\VcsRevision}{$keyword{Revision}\\xspace}
 
 % $comment{TarballVersion}.
 \\newcommand{\\VcsTarballVersion}{%
@@ -476,8 +473,8 @@ class System.PackageInfo
   // $comment{Id}.
   var id = "$keyword{Id}";
 
-  // $comment{Rev}.
-  var revision = "$keyword{Rev}";
+  // $comment{Revision}.
+  var revision = "$keyword{Revision}";
 
   // $comment{TarballVersion}.
   var tarball_version = "$keyword{TarballVersion}";
