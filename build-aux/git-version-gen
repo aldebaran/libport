@@ -303,7 +303,7 @@ sub format_keywords (\&\%)
 {
   my ($routine, $keyword) = @_;
   join ("\n\n",
-        map { generate_header_entry($_, ${$keyword}{$_}) }
+        map { &$routine($_, ${$keyword}{$_}) }
         (sort keys %{$keyword}));
 }
 
@@ -407,6 +407,15 @@ sub generate_raw(%)
   return $res;
 }
 
+sub generate_latex_entry($$)
+{
+  my ($keyword, $value) = @_;
+  "% $comment{$keyword}.
+\\newcommand{\\Vcs$keyword}{%
+  $value\\xspace%
+}";
+}
+
 =item C<generate_latex(%keyword)>
 
 Generate a LaTeX file.
@@ -417,35 +426,20 @@ sub generate_latex(%)
 {
   my (%keyword) = @_;
   latex_escape %keyword;
-  return <<EOF;
-% $comment{Date}.
-\\newcommand{\\VcsDate}{$keyword{Date}\\xspace}
-
-% $comment{Delta}.
-\\newcommand{\\VcsDelta}{$keyword{Delta}\\xspace}
-
-% $comment{Description}.
-\\newcommand{\\VcsDescription}{$keyword{Description}\\xspace}
-
-% $comment{Id}.
-\\newcommand{\\VcsId}{$keyword{Id}\\xspace}
-
-% $comment{Revision}.
-\\newcommand{\\VcsRevision}{$keyword{Revision}\\xspace}
-
-% $comment{TarballVersion}.
-\\newcommand{\\VcsTarballVersion}{%
-  $keyword{TarballVersion}\\xspace%
+  format_keywords(&generate_latex_entry, %keyword) . "\n";
 }
 
-% $comment{Version}.
-\\newcommand{\\VcsVersion}{$keyword{Version}\\xspace}
+sub generate_urbi_entry($$)
+{
+  my ($keyword, $value) = @_;
+  my $entry = $keyword;
+  # Insert an underscore between lc and uc.
+  $entry =~ s/(?<=[[:lower:]])(?=[[:upper:]])/_/g;
+  $entry = "${prefix}" . lc $entry;
 
-% $comment{VersionRev}.
-\\newcommand{\\VcsVersionRev}{%
-  $keyword{VersionRev}\\xspace%
-}
-EOF
+  "  // $comment{$keyword}.
+  var $entry =
+    \"$value\";";
 }
 
 =item C<generate_urbi(%keyword)>
@@ -458,32 +452,11 @@ sub generate_urbi(%)
 {
   my (%keyword) = @_;
   escape %keyword;
+  my $keywords = format_keywords(&generate_urbi_entry, %keyword);
   return <<EOF;
 class System.PackageInfo
 {
-  // $comment{Date}.
-  var date = "$keyword{Date}";
-
-  // $comment{Delta}.
-  var delta = "$keyword{Delta}";
-
-  // $comment{Description}.
-  var description = "$keyword{Description}";
-
-  // $comment{Id}.
-  var id = "$keyword{Id}";
-
-  // $comment{Revision}.
-  var revision = "$keyword{Revision}";
-
-  // $comment{TarballVersion}.
-  var tarball_version = "$keyword{TarballVersion}";
-
-  // $comment{Version}.
-  var version = "$keyword{Version}";
-
-  // $comment{VersionRev}.
-  var version_rev = "$keyword{VersionRev}";
+$keywords
 };
 EOF
 }
