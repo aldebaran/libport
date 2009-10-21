@@ -23,8 +23,8 @@ check_delta(libport::Duration expected,
   // Does not work: BOOST_CHECK_CLOSE(effective, expected, delta);
   if (RUNNING_ON_VALGRIND)
     delta *= 4;
-  BOOST_CHECK_LT(expected, effective);
-  BOOST_CHECK_LT(effective, expected + delta);
+  BOOST_CHECK_LE(expected, effective);
+  BOOST_CHECK_LE(effective, expected + delta);
 }
 
 static void test_duration()
