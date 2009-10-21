@@ -7,8 +7,10 @@
  *
  * See the LICENSE file for more information.
  */
-#include <libport/debug.hh>
 
+#include <libport/containers.hh>
+#include <libport/debug.hh>
+#include <libport/thread.hh>
 #include <libport/unit-test.hh>
 
 using libport::test_suite;
@@ -17,7 +19,7 @@ GD_INIT();
 GD_ADD_CATEGORY(TEST);
 
 void
-check ()
+dynamic_level()
 {
   GD_CATEGORY(TEST);
 
@@ -41,10 +43,47 @@ check ()
   BOOST_CHECK_NO_THROW(GD_QUIT());
 }
 
+static const unsigned concurrent_categories_niter = 4;
+static const unsigned concurrent_categories_nthread = 16;
+GD_ADD_CATEGORY(Thread);
+
+void* concurrent_categories_thread(void*)
+{
+  GD_CATEGORY(TEST);
+  for (unsigned i = 0; i < concurrent_categories_niter; ++i)
+  {
+    GD_CATEGORY(Thread);
+    GD_INFO("OK.");
+  }
+  return 0;
+}
+
+void
+concurrent_categories()
+{
+  std::vector<pthread_t> threads;
+
+  for (unsigned i = 0; i < concurrent_categories_nthread; ++i)
+  {
+    pthread_t t;
+    pthread_create(&t, 0, concurrent_categories_thread, 0);
+    threads << t;
+  }
+  foreach (const pthread_t& thread, threads)
+    pthread_join(thread, 0);
+}
+
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::debug");
-  suite->add(BOOST_TEST_CASE(check));
+  suite->add(BOOST_TEST_CASE(dynamic_level));
+
+  // For some spurious reason, this test doesn't work with
+  // boost::unit_test. I'm not sure whether it's an actual problem
+  // with GD. For now, run it directly.
+
+  // suite->add(BOOST_TEST_CASE(concurrent_categories));
+  concurrent_categories();
   return suite;
 }

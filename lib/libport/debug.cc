@@ -17,6 +17,7 @@
 #include <libport/escape.hh>
 #include <libport/foreach.hh>
 #include <libport/ip-semaphore.hh>
+#include <libport/lockable.hh>
 #include <libport/pthread.h>
 #include <libport/windows.hh>
 #include <libport/unistd.h>
@@ -466,6 +467,7 @@ namespace libport
   // dtors, and the order to destruction is not specified.  Using a
   // dynamically allocated object protects us from this.
   static map_type* pdebuggers = new map_type;
+  libport::Lockable debugger_mutex_;
 
   namespace debug
   {
@@ -486,6 +488,7 @@ namespace libport
 
   Debug* debugger()
   {
+    libport::BlockLock lock(debugger_mutex_);
     map_type& debuggers = *pdebuggers;
     pthread_t id = pthread_self();
     if (!libport::mhas(debuggers, id))
