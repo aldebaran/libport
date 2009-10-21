@@ -767,7 +767,7 @@ case $mode:$output in
      dump_log $stdout;;
 esac
 
-test $status = 0 ||
+test $status -eq 0 ||
   exit $status
 
 #embed manifest
@@ -792,10 +792,13 @@ EOF
   run $VCXX_BIN/rc.exe -r "$(transform $output).auto.rc"
   cmd="$VCXX_BIN/$PROG $outargs $linkargs \"$(transform $output).auto.RES\""
   verbose "Running: $cmd"
-  eval "$cmd" >$stdout 2>$stderr
+  status=0
+  eval "$cmd" >$stdout 2>$stderr || status $?
   dump_log $stderr
   dump_log $stdout
   rm -f "$output".{auto.{manifest,rc,RES},{escaped,intermediate}.manifest,manifest}
+  test $status -eq 0 ||
+    error $status "$cmd failed with status = $status"
   ;;
 esac
 
