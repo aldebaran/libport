@@ -132,6 +132,20 @@ sub verbose($@)
     if $level <= $verbose;
 }
 
+=item C<caml_score($str)>
+
+Insert an underscore between lower case and upper case letters.
+For instance C<FooBarBaz> gives C<Foo_Bar_Baz>.
+
+=cut
+
+sub caml_score($)
+{
+  my ($str) = @_;
+  $str =~ s/(?<=[[:lower:]])(?=[[:upper:]])/_/g;
+  $str;
+}
+
 
 sub help ($)
 {
@@ -299,6 +313,14 @@ sub fetch_keywords ()
   return %res;
 }
 
+=item C<format_keyword(&formatter, %keyword)>
+
+Return a string that contains the definition for each revision
+keyword.  Invoke C<&formatter($key, $value)> to generate each entry
+from C<%keyword>.
+
+=cut
+
 sub format_keywords (\&\%)
 {
   my ($routine, $keyword) = @_;
@@ -351,13 +373,16 @@ sub generate_file(%)
   return $res;
 }
 
+=item C<generate_header_entry($key, $value)>
+
+Generate the C/C++ preprocessor definition for C<$key>/C<$value>.
+
+=cut
+
 sub generate_header_entry($$)
 {
   my ($keyword, $value) = @_;
-  my $entry = $keyword;
-  # Insert an underscore between lc and uc.
-  $entry =~ s/(?<=[[:lower:]])(?=[[:upper:]])/_/g;
-  $entry = "${prefix}" . uc $entry;
+  my $entry = "${prefix}" . uc caml_score $keyword;
 
   "// $comment{$keyword}.
 # define $entry \\
@@ -407,6 +432,12 @@ sub generate_raw(%)
   return $res;
 }
 
+=item C<generate_latex_entry($key, $value)>
+
+Generate the LaTeX definition for C<$key>/C<$value>.
+
+=cut
+
 sub generate_latex_entry($$)
 {
   my ($keyword, $value) = @_;
@@ -429,14 +460,16 @@ sub generate_latex(%)
   format_keywords(&generate_latex_entry, %keyword) . "\n";
 }
 
+=item C<generate_urbi_entry($key, $value)>
+
+Generate the urbiScript definition for C<$key>/C<$value>.
+
+=cut
+
 sub generate_urbi_entry($$)
 {
   my ($keyword, $value) = @_;
-  my $entry = $keyword;
-  # Insert an underscore between lc and uc.
-  $entry =~ s/(?<=[[:lower:]])(?=[[:upper:]])/_/g;
-  $entry = "${prefix}" . lc $entry;
-
+  my $entry = lc caml_score $keyword;
   "  // $comment{$keyword}.
   var $entry =
     \"$value\";";
