@@ -780,8 +780,8 @@ test $status -eq 0 ||
 # -outputresource when using Wine
 # Following procedure described at:
 # http://msdn.microsoft.com/fr-fr/library/ms235591.aspx
-case $output in
-  (*.exe|*.dll)
+case $repath:$output in
+  (winepath:*.exe|winepath:*.dll)
   #$VCXX_BIN/mt.exe -manifest "$(transform $output).manifest" "-out:$(transform $output).auto.manifest"
   # Escape quotes
   sed -e 's/"/""/g' < "$output.manifest" > "$output.escaped.manifest"
