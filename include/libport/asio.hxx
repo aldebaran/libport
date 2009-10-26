@@ -862,8 +862,14 @@ namespace libport
     typename Proto::endpoint ep = resolve<Proto>(host, port, erc);
     if (erc)
       return erc;
-    typename Proto::acceptor* a =
-      new typename Proto::acceptor(get_io_service(), ep);
+    typename Proto::acceptor* a;
+    try {
+      a = new typename Proto::acceptor(get_io_service(), ep);
+    }
+    catch(const boost::system::system_error& se)
+    {
+      return se.code();
+    }
     BaseSocket* impl =
       new netdetail::AcceptorImpl<typename Proto::acceptor>(a);
     setBase(impl);

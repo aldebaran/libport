@@ -202,6 +202,11 @@ test()
   usleep(delay);
   RESOLVE();
   libport::Socket* h = new libport::Socket();
+  // Try listening on an IP that is not ours.
+  BOOST_TEST_MESSAGE("Invalid IP in listen()");
+  err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
+	"1.2.3.4", "1212", false);
+  BOOST_CHECK(err);
   err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
                   listen_host, S_AVAIL_PORT, false);
   BOOST_CHECK_MESSAGE(!err, err.message());
