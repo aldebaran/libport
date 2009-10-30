@@ -13,10 +13,10 @@ stderr ()
 }
 
 tmp=/tmp/urbi-semaphores
+clean="/tmp/$me.$USERNAME"
 generate_semaphore_clean ()
 {
-  local clean="/tmp/$me"
-   cat >$clean.cc.tmp <<EOF
+  cat >$clean.cc.tmp <<EOF
 #include <semaphore.h>
 #include <cassert>
 #include <cerrno>
@@ -100,7 +100,7 @@ if test -d $tmp; then
 
   if test -e all.$$; then
     generate_semaphore_clean
-    /tmp/$me all.$$
+    $clean all.$$
     rm -f all.$$
   fi
 fi
