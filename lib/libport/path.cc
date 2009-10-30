@@ -9,7 +9,7 @@
  */
 /**
  ** \file libport/path.cc
- ** \brief path: implements file libport/path.hh
+ ** \brief Implement libport::path.
  */
 
 #include <iostream>
@@ -20,15 +20,18 @@
 #include <cctype>
 
 #include <libport/contract.hh>
+#include <libport/debug.hh>
 #include <libport/detect-win32.h>
 #include <libport/finally.hh>
 #include <libport/foreach.hh>
 #include <libport/path.hh>
 #include <libport/tokenizer.hh>
 
-// Implementation detail: if path_ is empty and absolute_ is false,
-// then the path is '.'
+GD_ADD_CATEGORY(path);
 
+
+// Implementation detail: if path_ is empty and absolute_ is false,
+// then the path is '.'.
 
 namespace libport
 {
@@ -235,7 +238,12 @@ namespace libport
   bool path::exists() const
   {
     struct stat buf;
-    return 0 == stat(to_string().c_str(), &buf);
+    bool res = 0 == stat(to_string().c_str(), &buf);
+    GD_CATEGORY(path);
+    GD_FINFO_DUMP("%5s: exists(%s)",
+                  ((res ? "true" : "false"))
+                  ((to_string())));
+    return res;
   }
 
   bool path::create() const
