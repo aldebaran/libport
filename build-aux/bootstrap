@@ -285,12 +285,6 @@ link_symbolic ()
 	    "Please remove and restart."
     fi
   fi
-  # Under cygwin, we will end up doing a copy anyway, so do not
-  # even pretend to try to create a link.
-  case $(uname) in
-      (*CYGWIN*)
-	  return 1;;
-  esac
   local morf
   morf=$(dirname $(echo "$from" | sed 's,[^\\/]*,..,g'))
 
@@ -315,20 +309,6 @@ link_symbolic ()
     # All is good, install the symlink.
     run ln -sf $morf/$to $from
   fi
-}
-
-
-# link_hard FROM TO
-# -----------------
-# We no longer use hard links, since this is invalid for directories.
-# This is dead code.
-link_hard ()
-{
-  case $(uname) in
-     (*CYGWIN*)
-	  return 1;;
-  esac
-  run ln "$2" "$1"
 }
 
 
