@@ -13,6 +13,7 @@
 
 #include <sstream>
 
+#include <libport/containers.hh>
 #include <libport/option-parser.hh>
 #include <libport/test.hh>
 
@@ -30,7 +31,7 @@ check_option_flag()
   // Test long version
   {
     args_type args;
-    args.push_back("--flag");
+    args << "--flag";
 
     p(args);
     BOOST_CHECK(flag.get());
@@ -39,9 +40,7 @@ check_option_flag()
   // Test absence
   {
     args_type args;
-    args.push_back("junk");
-    args.push_back("junk");
-    args.push_back("junk");
+    args << "junk" << "junk" << "junk";
 
     p(args);
     BOOST_CHECK(!flag.get());
@@ -50,9 +49,7 @@ check_option_flag()
   // Test short version
   {
     args_type args;
-    args.push_back("junk");
-    args.push_back("-f");
-    args.push_back("junk");
+    args << "junk" << "-f" << "junk";
 
     p(args);
     BOOST_CHECK(flag.get());
@@ -72,8 +69,7 @@ check_option_combined()
   p << f1 << f2 << f3 << f4 << f5;
 
   args_type args;
-  args.push_back("-135");
-  args.push_back("-4");
+  args<< "-135" << "-4";
   p(args);
 
   BOOST_CHECK(f1.get());
@@ -92,11 +88,7 @@ check_option_end()
   p << end;
 
   args_type args;
-  args.push_back("1");
-  args.push_back("2");
-  args.push_back("--");
-  args.push_back("3");
-  args.push_back("4");
+  args<< "1" << "2" << "--" << "3" << "4";
   args = p(args);
 
   BOOST_CHECK_EQUAL(args.size(), 2u);
@@ -119,10 +111,7 @@ check_option_value()
   // Test presence
   {
     args_type args;
-    args.push_back("junk");
-    args.push_back("--value");
-    args.push_back("42");
-    args.push_back("junk");
+    args << "junk" << "--value" << "42" << "junk";
 
     p(args);
     BOOST_CHECK(val.filled());
@@ -132,9 +121,7 @@ check_option_value()
   // Test presence with equal
   {
     args_type args;
-    args.push_back("junk");
-    args.push_back("--value=51");
-    args.push_back("junk");
+    args << "junk" << "--value=51" << "junk";
 
     p(args);
     BOOST_CHECK(val.filled());
@@ -144,8 +131,7 @@ check_option_value()
   // Test absence
   {
     args_type args;
-    args.push_back("junk");
-    args.push_back("junk");
+    args << "junk" << "junk";
 
     p(args);
     BOOST_CHECK(!val.filled());
@@ -154,8 +140,7 @@ check_option_value()
   // Test parse error
   {
     args_type args;
-    args.push_back("junk");
-    args.push_back("--value");
+    args << "junk" << "--value";
 
     try
     {
