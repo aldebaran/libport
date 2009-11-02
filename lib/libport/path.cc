@@ -240,7 +240,7 @@ namespace libport
     struct stat buf;
     bool res = 0 == stat(to_string().c_str(), &buf);
     GD_CATEGORY(path);
-    GD_FINFO_DUMP("%5s: exists(%s)",
+    GD_FINFO_DUMP("exists: %-5s: %s",
                   ((res ? "true" : "false"))
                   ((to_string())));
     return res;
