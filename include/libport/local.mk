@@ -88,6 +88,8 @@ libport_include_HEADERS +=				\
   include/libport/hash.hh				\
   include/libport/hierarchy.hh				\
   include/libport/indent.hh				\
+  include/libport/input-arguments.hh			\
+  include/libport/input-arguments.hxx			\
   include/libport/instance-tracker.hh			\
   include/libport/instance-tracker.hxx			\
   include/libport/instrument.hh				\

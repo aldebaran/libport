@@ -31,6 +31,7 @@ TESTS_BINARIES =                                \
   tests/libport/foreach.cc                      \
   tests/libport/has-if.cc                       \
   tests/libport/indent.cc                       \
+  tests/libport/input-arguments.cc		\
   tests/libport/intrusive-ptr.cc                \
   tests/libport/io-stream.cc                    \
   tests/libport/markup-ostream.cc               \
@@ -105,6 +106,7 @@ tests_libport_finally_SOURCES                           = tests/libport/finally.
 tests_libport_foreach_SOURCES                           = tests/libport/foreach.cc
 tests_libport_has_if_SOURCES                            = tests/libport/has-if.cc
 tests_libport_indent_SOURCES                            = tests/libport/indent.cc
+tests_libport_input_arguments_SOURCES                   = tests/libport/input-arguments.cc
 tests_libport_intrusive_ptr_SOURCES                     = tests/libport/intrusive-ptr.cc
 tests_libport_intrusive_ptr_serialize_SOURCES           = tests/libport/intrusive-ptr-serialize.cc
 tests_libport_io_stream_SOURCES                         = tests/libport/io-stream.cc

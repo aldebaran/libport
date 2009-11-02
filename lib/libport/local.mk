@@ -41,6 +41,7 @@ dist_lib_libport_libport_la_SOURCES = 		\
   lib/libport/file-library.cc			\
   lib/libport/file-system.cc			\
   lib/libport/indent.cc				\
+  lib/libport/input-arguments.cc		\
   lib/libport/io-stream.cc			\
   lib/libport/ip-semaphore.cc			\
   lib/libport/markup-ostream.cc			\

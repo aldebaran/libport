@@ -1,0 +1,124 @@
+#include <libport/bind.hh>
+#include <libport/compiler.hh>
+#include <libport/foreach.hh>
+#include <libport/input-arguments.hh>
+
+namespace libport
+{
+  namespace opts
+  {
+
+    /*-------.
+    | Data.  |
+    `-------*/
+    Data::~Data()
+    {}
+
+    /*-----------.
+    | TextData.  |
+    `-----------*/
+    TextData::TextData(const std::string& s)
+      : command_(s)
+    {}
+
+    void
+    TextData::accept(visitor_type& e) const
+    {
+      e.operator()(*this);
+    }
+
+    std::ostream&
+    TextData::dump(std::ostream& o) const
+    {
+      return o << "expression {{{" << command_ << "}}}";
+    }
+
+    /*-----------.
+    | FileData.  |
+    `-----------*/
+    FileData::FileData(const std::string& s)
+      : filename_(s)
+    {}
+
+    void
+    FileData::accept(visitor_type& e) const
+    {
+      e.operator()(*this);
+    }
+
+    std::ostream&
+    FileData::dump(std::ostream& o) const
+    {
+      return o << "file `" << filename_ << "'";
+    }
+
+
+    /*-----------.
+    | DataList.  |
+    `-----------*/
+
+    DataList::DataList()
+      : super_type()
+      , cb_exp_(boost::bind(&DataList::add_exp,
+                            &input_arguments, _1))
+      , cb_file_(boost::bind(&DataList::add_file,
+                             &input_arguments, _1))
+    {
+      arg_exp.set_callback(&cb_exp_);
+      arg_file.set_callback(&cb_file_);
+    }
+
+    DataList::~DataList()
+    {}
+
+
+    void
+    DataList::add_exp(const std::string& arg)
+    {
+      push_back(new TextData(arg));
+    }
+
+    void
+    DataList::add_file(const std::string& arg)
+    {
+      push_back(new FileData(arg == "-" ? "/dev/stdin" : arg));
+    }
+
+    void
+    DataList::clear()
+    {
+      foreach (Data* d, *this)
+        delete d;
+      super_type::clear();
+    }
+
+
+    /*--------------.
+    | DataVisitor.  |
+    `--------------*/
+
+    void
+    DataVisitor::operator()(const DataList& l)
+    {
+      foreach (Data* d, l)
+        operator()(*d);
+    }
+
+    void
+    DataVisitor::operator()(const Data& d)
+    {
+      d.accept(*this);
+    }
+
+    /*---------------------.
+    | Predefined options.  |
+    `---------------------*/
+
+    OptionValues arg_exp("send SCRIPT to the server",
+                         "expression", 'e', "SCRIPT");
+    OptionValues arg_file("send the contents of FILE to the server",
+                          "file", 'f', "FILE");
+
+    DataList input_arguments;
+  }
+}

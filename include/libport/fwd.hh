@@ -76,6 +76,14 @@ namespace libport
   // lockable.hh.
   class Lockable;
 
+  // input-arguments.
+  namespace opts
+  {
+    struct DataVisitor;
+    struct Data;
+    struct DataList;
+  }
+
   // package-info.hh;
   class PackageInfo;
 
@@ -102,6 +110,7 @@ namespace libport
   class xlt_advise;
   class xlt_handle;
 }
+
 namespace boost
 {
   namespace asio
