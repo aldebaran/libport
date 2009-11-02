@@ -97,6 +97,9 @@ namespace libport
     | DataVisitor.  |
     `--------------*/
 
+    DataVisitor::~DataVisitor()
+    {}
+
     void
     DataVisitor::operator()(const DataList& l)
     {

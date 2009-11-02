@@ -55,6 +55,7 @@ namespace libport
 
     struct LIBPORT_API DataVisitor
     {
+      virtual ~DataVisitor();
       virtual void operator()(const Data& d);
       virtual void operator()(const DataList& l);
       virtual void operator()(const TextData& d) = 0;
