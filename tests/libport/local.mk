@@ -34,6 +34,7 @@ TESTS_BINARIES =                                \
   tests/libport/intrusive-ptr.cc                \
   tests/libport/io-stream.cc                    \
   tests/libport/markup-ostream.cc               \
+  tests/libport/option-parser.cc		\
   tests/libport/path.cc                         \
   tests/libport/pid-file.cc                     \
   tests/libport/pthread.cc                      \
@@ -108,6 +109,7 @@ tests_libport_intrusive_ptr_SOURCES                     = tests/libport/intrusiv
 tests_libport_intrusive_ptr_serialize_SOURCES           = tests/libport/intrusive-ptr-serialize.cc
 tests_libport_io_stream_SOURCES                         = tests/libport/io-stream.cc
 tests_libport_markup_ostream_SOURCES                    = tests/libport/markup-ostream.cc
+tests_libport_option_parser_SOURCES                     = tests/libport/option-parser.cc
 tests_libport_path_SOURCES                              = tests/libport/path.cc
 tests_libport_pid_file_SOURCES                          = tests/libport/pid-file.cc
 tests_libport_pthread_SOURCES                           = tests/libport/pthread.cc
