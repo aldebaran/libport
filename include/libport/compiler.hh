@@ -7,12 +7,14 @@
  *
  * See the LICENSE file for more information.
  */
+
 /// \file libport/compiler.hh
 /// \brief Specific features from some compilers.
 
 #ifndef LIBPORT_COMPILER_HH
 # define LIBPORT_COMPILER_HH
 
+# include <iostream>
 # include <string>
 # include <libport/config.h>
 # include <libport/export.hh>
