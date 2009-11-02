@@ -103,6 +103,7 @@ namespace libport
     void pop_front();
     void pop_back();
     void clear();
+    bool empty() const;
     size_t size() const;
     template<typename I>
     void insert(iterator where, I beg, I end);

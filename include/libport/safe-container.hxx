@@ -13,6 +13,8 @@
 #include <stdexcept>
 #include <iostream>
 
+#include <boost/foreach.hpp>
+
 namespace libport
 {
 
@@ -119,7 +121,7 @@ namespace libport
         // It would not be safe to use b.base_iterator_::operator== as it
         // might have been invalidated.
         flag = owner->getFlag();
-        foreach(real_value_type& v, owner->container)
+        BOOST_FOREACH(real_value_type& v, owner->container)
           if ( (v.mask & b.flag.mask) != b.flag.val)
             break;
           else
@@ -254,6 +256,11 @@ namespace libport
     return container.size();
   }
 
+  CONTAINER_SMETHOD(bool) empty() const
+  {
+    return container.empty();
+  }
+
   template<template<class, class>class C, class T>
   template<typename I>
   void CONTAINER::insert(iterator where, I beg, I end)
@@ -284,6 +291,9 @@ namespace libport
     return res;
   }
 }
+#undef CONTAINER
+#undef CONTAINER_METHOD
+#undef CONTAINER_SMETHOD
 
 
 #endif
