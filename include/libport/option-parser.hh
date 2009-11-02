@@ -292,14 +292,14 @@ namespace libport
 
   namespace opts
   {
-    extern LIBPORT_API libport::OptionValues files;
-    extern LIBPORT_API libport::OptionFlag   help;
-    extern LIBPORT_API libport::OptionValue  host;
-    extern LIBPORT_API libport::OptionValue  port;
-    extern LIBPORT_API libport::OptionValue  host_l;
-    extern LIBPORT_API libport::OptionValue  port_l;
-    extern LIBPORT_API libport::OptionFlag   verbose;
-    extern LIBPORT_API libport::OptionFlag   version;
+    extern LIBPORT_API OptionValues files;
+    extern LIBPORT_API OptionFlag   help;
+    extern LIBPORT_API OptionValue  host;
+    extern LIBPORT_API OptionValue  port;
+    extern LIBPORT_API OptionValue  host_l;
+    extern LIBPORT_API OptionValue  port_l;
+    extern LIBPORT_API OptionFlag   verbose;
+    extern LIBPORT_API OptionFlag   version;
   }
 }
 
