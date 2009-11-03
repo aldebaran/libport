@@ -18,7 +18,9 @@ LIBPORT_CPPFLAGS = -I$(LIBPORT_SRCDIR)/include -I$(LIBPORT_BUILDPREFIX)include -
 LIBPORT_LIBS = $(LIBPORT_BUILDPREFIX)lib/libport/libport.la
 
 LTDL_CPPFLAGS = -I$(LIBPORT_SRCDIR) -I$(LIBPORT_SRCDIR)/libltdl
-LTDL_LIBS = $(LIBPORT_BUILDPREFIX)libltdl/libltdl.la
+## Note that libltdl is linked in libport, so you should not try to
+## link against libltdl.
+LTDL_LIBS = $(LIBPORT_BUILDPREFIX)libltdl/libltdlc.la
 
 SCHED_CPPFLAGS = $(LIBPORT_CPPFLAGS)
 SCHED_LIBS = $(LIBPORT_BUILDPREFIX)lib/sched/libsched.la
