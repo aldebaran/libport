@@ -1,0 +1,3 @@
+[submodule "doc/document-aux"]
+	path = doc/document-aux
+	url = git@git.gostai.com:document-aux

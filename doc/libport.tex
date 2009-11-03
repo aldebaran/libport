@@ -1,0 +1,61 @@
+\documentclass{gostai-report}
+
+\newenvironment{workaround}{\paragraph{Workaround}}{}
+
+\title{Gostai Libport}
+\subtitle{Version \VcsDescription}
+\author{Gostai}
+
+\begin{document}
+\maketitle
+
+\chapter{Portability issues}
+
+\section{MSVC}
+
+\subsection{error C2883}
+MSVC 2005 dies on the following piece of code:
+
+\begin{cxx}
+#include <iostream>
+#define ECHO(S) std::cerr << #S << std::endl
+
+namespace libport
+{
+  struct Top
+  {
+    virtual ~Top() {}
+    virtual void foo(int)    { ECHO(Top::foo(int)); }
+    virtual void foo(double) { ECHO(Top::foo(double)); }
+  };
+}
+
+int
+main ()
+{
+  struct Bot : libport::Top
+  {
+    using Top::foo;
+    virtual ~Bot() {}
+    virtual void foo(double) { ECHO(Bot::foo(double)); }
+  };
+
+  Bot b;
+  b.foo(12);
+  b.foo(1.2);
+}
+\end{cxx}
+
+\begin{shell}
+$ cl.exe using.cc -o using
+using.cc:21: error C2883: 'main::Bot::foo' :
+                           function declaration conflicts with
+                           'libport::Top::foo'
+                           introduced by using-declaration
+using.cc:10: note:         see declaration of 'libport::Top::foo'
+\end{shell}
+
+\begin{workaround}
+  Extract the struct from the function.
+\end{workaround}
+\end{document}
