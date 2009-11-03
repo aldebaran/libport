@@ -124,6 +124,11 @@ static inline int zero()
 # define errnoabort(Msg)                        \
   errabort(errno, Msg)
 
+/// \def unreachable()
+///
+/// This call should never be reached, just abort.
+# define unreachable()                          \
+  pabort("unreachable code reached")
 
 /// \def ERRNO_RUN(Function, ...)
 /// Run Function(...) and use errnoabort on errors.
