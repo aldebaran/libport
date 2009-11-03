@@ -456,7 +456,7 @@ sub instrument (@)
   #
   # If the user asked for troubles (--force), instrument anyway.
   $mode = mode_none
-    unless $force || $type !~ /script|PE\s+for MS Windows/;
+    unless $force || $type !~ /script|(?:PE|PE32 executable)\s+for MS Windows/;
 
   # Really instrument here.
   verbose 2, "mode: $mode: $mode_name{$mode}\n";
