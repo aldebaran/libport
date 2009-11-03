@@ -9,7 +9,7 @@
  */
 
 /**
- ** Test command line interface tools.
+ ** Test -e/-f support.
  */
 
 #include <sstream>
@@ -22,33 +22,35 @@
 using libport::test_suite;
 using namespace libport;
 
+// A cl.exe bug prevents the definition of DataCollector in a
+// function.
+struct DataCollector : libport::opts::DataVisitor
+{
+  typedef libport::opts::DataVisitor super_type;
+  using super_type::operator();
+
+  void
+  operator()(const libport::opts::TextData& d)
+  {
+    value += string_cast(d);
+  }
+
+  virtual
+  void
+  operator()(const libport::opts::FileData& d)
+  {
+    value += string_cast(d);
+  }
+
+  std::string value;
+};
+
 void
 check_arg_exp_and_file()
 {
   OptionParser p;
   p << libport::opts::arg_file
     << libport::opts::arg_exp;
-
-  struct DataCollector : libport::opts::DataVisitor
-  {
-    typedef libport::opts::DataVisitor super_type;
-    using super_type::operator();
-
-    void
-    operator()(const libport::opts::TextData& d)
-    {
-      value += string_cast(d);
-    }
-
-    virtual
-    void
-    operator()(const libport::opts::FileData& d)
-    {
-      value += string_cast(d);
-    }
-
-    std::string value;
-  };
 
   // Test presence
   {
