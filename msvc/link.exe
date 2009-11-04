@@ -448,7 +448,7 @@ use DBI;
 # this file in the current directory: trailing files that all our
 # "clean" rules should be educated to handle (including foreign
 # packages such as libjpeg).  A useless burden.
-my $cache_dir = "$medir/" . getcwd;
+my $cache_dir = $medir;
 my $cache_file = "$cache_dir/$repath.cache";
 
 if (! -d $cache_dir)
