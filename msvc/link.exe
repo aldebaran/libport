@@ -618,9 +618,12 @@ $dbh->disconnect;
 # GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 # Compiler executable checksum: 26a07d3b4fce49bea6ac55e876df1aa9
 #  /usr/libexec/gcc/i686-apple-darwin9/4.0.1/as -arch i386 -force_cpusubtype_ALL -o /dev/null /var/folders/hy/hy4Qz3qs2RWPcU+8ZQWaqU+++TI/-Tmp-//cczPgOv5.s
+#
+# FIXME: support the SQLite DB here too.
 compiler_verbose_message ()
 {
-  perl -e '
+  perl -e "my \$repath = '$repath';" \
+    -e '
     print "#include \"...\" search starts here:\n";
     print "#include <...> search starts here:\n";
     for my $d (split (";", $ENV{"INCLUDE"}))
