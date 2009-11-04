@@ -26,7 +26,8 @@ namespace libport
 
   void program_initialize(const cli_args_type& args)
   {
-    assert(!program_initialized_);
+    if (program_initialized_)
+      return;
     assert(args.size() >= 1);
     program_name_ = args[0];
     program_arguments_.insert(program_arguments_.end(),
