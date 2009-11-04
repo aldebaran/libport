@@ -177,10 +177,6 @@ Options:
   --help      display this message  that of MSVC and exit
   --version   display the version of this script and that of MSVC and exit
   --verbose   display debugging information about this script
-  --convert-windows-path
-              when preprocessing (-E), outut only the #line, with
-              Unix paths, not Windows paths.
-              This is broken, to be removed in the future.
 
 MSVC help:
                          C/C++ COMPILER OPTIONS
@@ -363,10 +359,6 @@ get_options ()
     (-MF) # -MF DEPENDENCY-FILE.
           shift
           deps_file=$1;;
-    (--convert-windows-path)
-          # See --help for information.
-          cppoutput=cppoutput;;
-
     (-c)  mode=compile; outargs "$1";;
     (-o)  get_options__o "$2"; shift;;
     (-o*) get_options__o "${1#-o}";;
@@ -707,10 +699,6 @@ esac
 
 # Compiler verbosity (-v).
 compiler_verbose=false
-# The program/function used to dump the result of CPP.  Set $cppoutput
-# to "cppoutput" to convert #lines from Windows to Unix file names
-# (this is needed to depcomp).
-cppoutput=dos2unix
 # File containing the dependencies.
 deps_file=
 # Target of the dependencies (i.e., lhs in the make rule).
@@ -781,10 +769,10 @@ set -e
 case $mode:$output in
   (preprocess:)
      dump_log $stderr
-     $cppoutput <$stdout;;
+     dos2unix <$stdout;;
   (preprocess:*)
      dump_log $stderr
-     $cppoutput <$stdout >"$(transform "$output")";;
+     dos2unix <$stdout >"$(transform "$output")";;
   (*:)
      dump_log $stderr
      dump_log $stdout >&2;;

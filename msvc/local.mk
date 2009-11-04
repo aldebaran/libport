@@ -2,7 +2,6 @@ include $(top_srcdir)/build-aux/m4sh.mk
 
 EXTRA_DIST +=					\
   msvc/cl.exe					\
-  msvc/cppoutput				\
   msvc/cygpath					\
   msvc/lib					\
   msvc/lib.exe					\
