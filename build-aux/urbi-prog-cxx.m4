@@ -72,9 +72,9 @@ case $CXX_FLAVOR in
   # Use -Werror since using -fvisibility under MinGW is only a warning.
   # (The option is ignored anyway since this does not make sense under windows).
   TC_COMPILER_OPTION_IF([-Werror -fvisibility=hidden],
-    [URBI_APPEND_CXXFLAGS([-fvisibility=hidden])
+    [URBI_APPEND_FLAGS([VISIBILITY_CXXFLAGS], [-fvisibility=hidden])
     TC_COMPILER_OPTION_IF([-fvisibility-inlines-hidden],
-      [URBI_APPEND_CXXFLAGS([-fvisibility-inlines-hidden])])])
+      [URBI_APPEND_FLAGS([VISIBILITY_CXXFLAGS], [-fvisibility=hidden])])])
   ;;
 esac
 
