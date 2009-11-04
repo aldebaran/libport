@@ -510,7 +510,7 @@ sub convert_path ($)
     if ($res =~ /^\w:/)
     {
       # Convert them to Linux format.
-      $res = `$repath -u $res`;
+      $res = `$repath -u "$res"`;
       chomp $res;
     }
     # Save in SQLite.
@@ -628,7 +628,7 @@ compiler_verbose_message ()
     print "#include <...> search starts here:\n";
     for my $d (split (";", $ENV{"INCLUDE"}))
     {
-      print " " . `$repath -u $d`;
+      print " " . `$repath -u "$d"`;
     }
     print "End of search list.\n";
 '
