@@ -442,16 +442,10 @@ use English;
 use Fcntl;   # For O_RDWR, O_CREAT, etc.
 use File::Path (mkpath);
 use File::Basename;
-use NDBM_File;
+use DBI;
 
-# A hash table that saves from repeated calls to path conversion.
-# A significant improvement.
-my %converted_path;
-
-# A file into which we store the hash table.  Because NDBM does not
-# support concurrent changes, it is pointless to use a single global
-# cache.  Would be nice though.  Yet we do not leave this file in
-# the current directory, as it results trailing files that all our
+# A file into which we store the conversion table.  We do not leave
+# this file in the current directory: trailing files that all our
 # "clean" rules should be educated to handle (including foreign
 # packages such as libjpeg).  A useless burden.
 my $cache_dir = "$medir/" . getcwd;
@@ -463,15 +457,43 @@ if (! -d $cache_dir)
     or warn "cannot create $cache_dir";
 }
 
-tie(%converted_path, "NDBM_File", $cache_file, O_RDWR|O_CREAT, 0666)
-  or warn "cannot tie NDBM file $cache_file: $!; aborting";
+# Do not let errors show up: they cause ccache to not cache.
+my $dbh = DBI->connect("dbi:SQLite:$cache_file", "", "",
+                       {
+                         PrintError => 0,
+                         RaiseError => 0,
+                       }) ||
+  die "cannot connect: $DBI::errstr";
+
+# It will fail if the db exists.
+eval {
+  $dbh->do("CREATE TABLE files
+            (
+               windows VARCHAR NOT NULL PRIMARY KEY,
+               unix VARCHAR NOT NULL
+            )");
+};
 
 # Convert a set of paths from Windows to linux.
 sub convert_path ($)
 {
   my ($path) = @_;
-  if (! defined $converted_path{$path})
+  my $res;
+
+  # Check whether SQLite knows it.
+  my $rows =
+    $dbh->selectrow_arrayref("SELECT unix FROM files WHERE windows = ?",
+                             {},
+                             $path);
+
+  if (defined $rows)
   {
+    $res = $rows->[0];
+  }
+  else
+  {
+    # Not yet cached.
+    #
     # Do not convert files that do not need it, as it makes them
     # longer (from relative to absolute).
     #
@@ -488,7 +510,7 @@ sub convert_path ($)
     # apparently there is no problem with using slashes instead of
     # backslashes, let us first use only slashes.
 
-    my $res = $path;
+    $res = $path;
     # For some reason, the outcome looks like
     # "C:\\vcxx8\\VC\\INCLUDE\istream", with some backslashes escaped,
     # and not others.
@@ -499,9 +521,11 @@ sub convert_path ($)
       $res = `$repath -u $res`;
       chomp $res;
     }
-    $converted_path{$path} = $res;
+    # Save in SQLite.
+    $dbh->do("INSERT INTO files VALUES (?,?)", {},
+             $path, $res);
   }
-  return $converted_path{$path};
+  return $res;
 }
 
 my %res;
@@ -565,7 +589,9 @@ if ($deps_file)
   }
 }
 
-untie(%converted_path);
+print STDERR "DB errors: $DBI::errstr\n"
+  if $verbose && $dbh->err;
+$dbh->disconnect;
 ' < $file
   ! $compiler_verbose ||
     compiler_verbose_message >&2
@@ -793,7 +819,7 @@ EOF
   cmd="$VCXX_BIN/$PROG $outargs $linkargs \"$(transform $output).auto.RES\""
   verbose "Running: $cmd"
   status=0
-  eval "$cmd" >$stdout 2>$stderr || status $?
+  eval "$cmd" >$stdout 2>$stderr || status=$?
   dump_log $stderr
   dump_log $stdout
   rm -f "$output".{auto.{manifest,rc,RES},{escaped,intermediate}.manifest,manifest}
