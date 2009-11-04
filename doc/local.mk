@@ -61,5 +61,3 @@ libport_deps =					\
   $(libport_sources)
 #   $(call ls_files,doc/*.sty doc/*.cls)
 $(PDF): $(libport_deps)
-
-
