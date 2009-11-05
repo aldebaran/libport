@@ -450,12 +450,24 @@ if (! -d $cache_dir)
 }
 
 # Do not let errors show up: they cause ccache to not cache.
-my $dbh = DBI->connect("dbi:SQLite:$cache_file", "", "",
+#
+# On Cygwin the directory component of the dbname is ignored.  To work
+# around this issue, look for Win32.pm (something like
+# /usr/lib/perl5/5.10/i686-cygwin/Win32.pm), and replace
+#
+# $real = join '', grep { defined } Win32::GetShortPathName($dir), $file, $suffix;
+
+# with
+#
+# $real = join '', Win32::GetShortPathName($dir), $file, $suffix
+#   if defined Win32::GetShortPathName($dir);
+#
+my $dbh = DBI->connect("dbi:SQLite:dbname=$cache_file", "", "",
                        {
                          PrintError => 0,
                          RaiseError => 0,
-                       }) ||
-  die "cannot connect: $DBI::errstr";
+                       })
+  || die "cannot connect to $cache_file: $DBI::errstr";
 
 # It will fail if the db exists.
 eval {
@@ -466,7 +478,7 @@ eval {
             )");
 };
 
-# Convert a set of paths from Windows to linux.
+# Convert a single path from Windows to linux.
 sub convert_path ($)
 {
   my ($path) = @_;
@@ -517,6 +529,8 @@ sub convert_path ($)
     $dbh->do("INSERT INTO files VALUES (?,?)", {},
              $path, $res);
   }
+  print STDERR "convert: $path -> $res\n"
+    if $verbose;
   return $res;
 }
 
@@ -572,7 +586,8 @@ if ($deps_file)
   @files = map { s/:/\\:/g; $_ } @files;
 
   use IO::File;
-  my $deps = new IO::File ">$deps_file" or die;
+  my $deps = new IO::File ">$deps_file"
+    or die "cannot create $deps_file: $!\n";
   print $deps join ("\t\\\n  ", "$deps_target: $source", @files), "\n";
 
   if ($deps_phony)
