@@ -321,7 +321,7 @@ namespace sched
       /// \param parent Parent of the child to collect
       ///
       /// \param size Approximative previsional number of children.
-      Collector(rJob parent, size_t);
+      Collector(rJob parent, size_t = 0);
       /// Terminate all children.
       ~Collector();
 
