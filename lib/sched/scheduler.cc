@@ -164,7 +164,7 @@ namespace sched
       libport::utime_t current_time = get_time_();
 
       LIBPORT_DEBUG("Considering " << *job
-                    << " in state " << state_name(job->state_get()));
+                    << " in state " << job->state_get());
 
       switch (job->state_get())
       {
@@ -318,7 +318,7 @@ namespace sched
       assert(current_job_ == job);
       LIBPORT_DEBUG(*job << " has "
                     << (job->terminated() ? "" : "not ") << "terminated\n\t"
-                    << "state: " << state_name(job->state_get()));
+                    << "state: " << job->state_get());
       Coro* current_coro = job->coro_get();
       if (job->terminated())
 	job = 0;

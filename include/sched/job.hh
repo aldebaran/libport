@@ -41,6 +41,12 @@ namespace sched
     zombie,              ///< Job wants to be dead but isn't really yet
   };
 
+  /// State names to string, for debugging purpose.
+  const char* name(job_state);
+
+  /// Dump \a s on \a o for debugging purpose.
+  std::ostream& operator<<(std::ostream& o, job_state s);
+
   /// A Job represents a thread of control, implemented using coroutines.
   /// The scheduler decides which job to launch and resumes its execution.
   /// The lifetime of a job is the following
@@ -452,10 +458,6 @@ namespace sched
   private:
     mutable exception_ptr child_exception_;
   };
-
-  /// State names to string, for debugging purpose.
-  SCHED_API
-  const char* state_name(job_state);
 
   /// Terminate all jobs present in container and empty it.
   SCHED_API

@@ -25,6 +25,39 @@
 namespace sched
 {
 
+  /*------------.
+  | job_state.  |
+  `------------*/
+
+  inline const char*
+  name(job_state state)
+  {
+#define CASE(State) case State: return #State;
+    switch (state)
+    {
+      CASE(to_start)
+      CASE(running)
+      CASE(sleeping)
+      CASE(waiting)
+      CASE(joining)
+      CASE(zombie)
+    }
+#undef CASE
+    return "<unknown state>";
+  }
+
+  inline
+  std::ostream&
+  operator<<(std::ostream& o, job_state s)
+  {
+    return o << name(s);
+  }
+
+
+  /*------.
+  | Job.  |
+  `------*/
+
   inline void
   Job::init_common(const libport::Symbol& name)
   {
@@ -240,22 +273,10 @@ namespace sched
     return j.dump(o);
   }
 
-  inline const char*
-  state_name(job_state state)
-  {
-#define CASE(State) case State: return #State;
-    switch (state)
-    {
-      CASE(to_start)
-      CASE(running)
-      CASE(sleeping)
-      CASE(waiting)
-      CASE(joining)
-      CASE(zombie)
-    }
-#undef CASE
-    return "<unknown state>";
-  }
+
+  /*-----------------.
+  | ChildException.  |
+  `-----------------*/
 
   inline
   ChildException::ChildException(exception_ptr exc)
