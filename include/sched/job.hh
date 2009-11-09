@@ -290,8 +290,8 @@ namespace sched
     /// \param tag The tag that has been stopped.
     ///
     /// \param payload The data to embed in the StopException.
-    virtual void register_stopped_tag
-      (const Tag& tag, const boost::any& payload);
+    virtual void register_stopped_tag(const Tag& tag,
+                                      const boost::any& payload);
 
     /// Check whether the job has a pending exception.
     ///
@@ -312,7 +312,7 @@ namespace sched
     static unsigned int alive_jobs();
 
     /// Helper to unregister all children upon destruction.
-    class Collector: public jobs_type
+    class SCHED_API Collector: public jobs_type
     {
     public:
       typedef jobs_type super_type;
