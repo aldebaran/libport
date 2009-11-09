@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 /**
- ** \file scheduler/job.hxx
+ ** \file sched/job.hxx
  ** \brief Inline implementation of Job.
  */
 

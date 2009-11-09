@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 /**
- ** \file scheduler/job.hh
+ ** \file sched/job.hh
  ** \brief Definition of Job.
  */
 
@@ -38,7 +38,7 @@ namespace sched
     sleeping,            ///< Job is sleeping until a specified deadline
     waiting,             ///< Job is waiting for changes to happen
     joining,             ///< Job is waiting for another job to terminate
-    zombie               ///< Job wants to be dead but isn't really yet
+    zombie,              ///< Job wants to be dead but isn't really yet
   };
 
   /// A Job represents a thread of control, implemented using coroutines.

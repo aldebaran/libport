@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 /**
- ** \file scheduler/scheduler.hxx
+ ** \file sched/scheduler.hxx
  ** \brief Inline implementation of sched::Scheduler.
  */
 

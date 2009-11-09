@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 /**
- ** \file scheduler/fwd.hh
+ ** \file sched/fwd.hh
  ** \brief Forward declarations for the namespace sched.
  */
 
