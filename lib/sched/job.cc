@@ -137,7 +137,7 @@ namespace sched
   }
 
   void
-  Job::register_child(const rJob& child, ChildrenCollecter& children)
+  Job::register_child(const rJob& child, ChildrenCollector& children)
   {
     assert(!child->parent_);
     child->parent_ = this;

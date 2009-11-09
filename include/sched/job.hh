@@ -306,17 +306,17 @@ namespace sched
     static unsigned int alive_jobs();
 
     /// Helper to unregister all children upon destruction.
-    class ChildrenCollecter: public std::vector<rJob>
+    class ChildrenCollector: public std::vector<rJob>
     {
     public:
-      /// Construct a child collecter.
+      /// Construct a child collector.
       ///
       /// \param parent Parent of the child to collect
       ///
       /// \param size Approximative previsional number of children.
-      ChildrenCollecter(rJob parent, size_t size);
+      ChildrenCollector(rJob parent, size_t size);
       /// Terminate all childrens.
-      ~ChildrenCollecter();
+      ~ChildrenCollector();
 
     private:
       rJob parent_;
@@ -328,7 +328,7 @@ namespace sched
     ///
     /// \param children Children will be automatically terminated
     ///                 when this object is destroyed.
-    void register_child(const rJob& child, ChildrenCollecter& children);
+    void register_child(const rJob& child, ChildrenCollector& children);
 
     /// Terminate child and remove it from our children list.
     void terminate_child(const rJob& child);

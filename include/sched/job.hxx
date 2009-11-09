@@ -289,7 +289,7 @@ namespace sched
   }
 
   ATTRIBUTE_ALWAYS_INLINE
-  Job::ChildrenCollecter::ChildrenCollecter(rJob parent, size_t s)
+  Job::ChildrenCollector::ChildrenCollector(rJob parent, size_t s)
     : std::vector<rJob>()
     , parent_(parent)
   {
@@ -297,7 +297,7 @@ namespace sched
   }
 
   ATTRIBUTE_ALWAYS_INLINE
-  Job::ChildrenCollecter::~ChildrenCollecter()
+  Job::ChildrenCollector::~ChildrenCollector()
   {
     foreach (rJob& child, *this)
       parent_->terminate_child(child);
