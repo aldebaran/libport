@@ -27,20 +27,64 @@ GD_ADD_CATEGORY(sched);
 
 namespace sched
 {
-  unsigned int Job::alive_jobs_ = 0;
-
   StopException::StopException(unsigned depth, boost::any payload)
     : depth_(depth)
     , payload_(payload)
   {
   }
 
+  /*-------------------------.
+  | Job::ChildrenCollector.  |
+  `-------------------------*/
+
+  Job::ChildrenCollector::~ChildrenCollector()
+  {
+    foreach (rJob& child, *this)
+      parent_->terminate_child(child);
+  }
+
+  void
+  Job::ChildrenCollector::collect()
+  {
+    for (iterator i = begin(); i != end(); /* nothing. */)
+      if ((*i)->terminated())
+        {
+          parent_->terminate_child(*i);
+          i = erase(i);
+        }
+      else
+        ++i;
+  }
+
+  std::ostream&
+  Job::ChildrenCollector::dump(std::ostream& o) const
+  {
+    // Explicit parameters required by MSWC 2005.
+    return o << "{" << libport::incendl
+             << libport::separate(*this, libport::iendl)
+             << libport::decendl << "}";
+  }
+
+  std::ostream&
+  operator<< (std::ostream& o, const Job::ChildrenCollector& c)
+  {
+    return c.dump(o);
+  }
+
+
+  /*------.
+  | Job.  |
+  `------*/
+
+  unsigned int Job::alive_jobs_ = 0;
+
   std::ostream&
   Job::dump(std::ostream& o) const
   {
     o << "Job(" << name_ << ")"
       << " "
-      << (child_job() ? "child job" : "root job");
+      << (child_job() ? "child job" : "root job")
+      << " state: " << state_;
     if (!children_.empty())
       o << " Children:" << libport::incendl
         << "{" << libport::incendl
@@ -262,6 +306,10 @@ namespace sched
   {
     return alive_jobs_;
   }
+
+  /*------------.
+  | jobs_type.  |
+  `------------*/
 
   void
   terminate_jobs(jobs_type& jobs)

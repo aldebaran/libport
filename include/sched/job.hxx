@@ -309,19 +309,16 @@ namespace sched
     child_exception_->rethrow();
   }
 
-  ATTRIBUTE_ALWAYS_INLINE
-  Job::ChildrenCollector::ChildrenCollector(rJob parent, size_t s)
-    : std::vector<rJob>()
-    , parent_(parent)
-  {
-    reserve(s);
-  }
+
+  /*--------------------.
+  | ChildrenCollector.  |
+  `--------------------*/
 
   ATTRIBUTE_ALWAYS_INLINE
-  Job::ChildrenCollector::~ChildrenCollector()
+  Job::ChildrenCollector::ChildrenCollector(rJob parent, size_t)
+    : super_type()
+    , parent_(parent)
   {
-    foreach (rJob& child, *this)
-      parent_->terminate_child(child);
   }
 
 } // namespace sched
