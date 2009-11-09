@@ -361,9 +361,10 @@ namespace sched
     // really dead.
     ready_to_die_ = true;
 
-    // Since killing the current job (the one requesting the
-    // termination) will result in its immediate termination
-    // (including its children).
+    // Killing the current job (the one requesting the termination)
+    // will result in its immediate termination (including its
+    // children), so it won't be given a chance to kill the unrelated
+    // jobs.
     //
     // So first kill all jobs which death will not terminate this one.
     //
@@ -374,6 +375,8 @@ namespace sched
     if (current_job_)
     {
       ancester = current_job_;
+      // FIXME: How can this work?  What guarantee do we have to have
+      // the oldest ancester?
       foreach (const rJob& job, jobs_get())
         if (job->ancester_of(ancester))
           ancester = job;
