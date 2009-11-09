@@ -33,18 +33,18 @@ namespace sched
   {
   }
 
-  /*-------------------------.
-  | Job::ChildrenCollector.  |
-  `-------------------------*/
+  /*-----------------.
+  | Job::Collector.  |
+  `-----------------*/
 
-  Job::ChildrenCollector::~ChildrenCollector()
+  Job::Collector::~Collector()
   {
     foreach (rJob& child, *this)
       parent_->terminate_child(child);
   }
 
   void
-  Job::ChildrenCollector::collect()
+  Job::Collector::collect()
   {
     for (iterator i = begin(); i != end(); /* nothing. */)
       if ((*i)->terminated())
@@ -57,18 +57,18 @@ namespace sched
   }
 
   std::ostream&
-  Job::ChildrenCollector::dump(std::ostream& o) const
+  Job::Collector::dump(std::ostream& o) const
   {
     return o << "{" << libport::incendl
              // Explicit parameters required by MSWC 2005.
-             << libport::separate<const ChildrenCollector,
+             << libport::separate<const Collector,
                                   std::ostream&(*)(std::ostream&)>
                                   (*this, libport::iendl)
              << libport::decendl << "}";
   }
 
   std::ostream&
-  operator<< (std::ostream& o, const Job::ChildrenCollector& c)
+  operator<< (std::ostream& o, const Job::Collector& c)
   {
     return c.dump(o);
   }
@@ -183,7 +183,7 @@ namespace sched
   }
 
   void
-  Job::register_child(const rJob& child, ChildrenCollector& children)
+  Job::register_child(const rJob& child, Collector& children)
   {
     assert(!child->parent_);
     child->parent_ = this;

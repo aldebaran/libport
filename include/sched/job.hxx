@@ -310,12 +310,12 @@ namespace sched
   }
 
 
-  /*--------------------.
-  | ChildrenCollector.  |
-  `--------------------*/
+  /*------------.
+  | Collector.  |
+  `------------*/
 
   ATTRIBUTE_ALWAYS_INLINE
-  Job::ChildrenCollector::ChildrenCollector(rJob parent, size_t)
+  Job::Collector::Collector(rJob parent, size_t)
     : super_type()
     , parent_(parent)
   {

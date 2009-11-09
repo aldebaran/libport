@@ -312,7 +312,7 @@ namespace sched
     static unsigned int alive_jobs();
 
     /// Helper to unregister all children upon destruction.
-    class ChildrenCollector: public jobs_type
+    class Collector: public jobs_type
     {
     public:
       typedef jobs_type super_type;
@@ -321,9 +321,9 @@ namespace sched
       /// \param parent Parent of the child to collect
       ///
       /// \param size Approximative previsional number of children.
-      ChildrenCollector(rJob parent, size_t);
+      Collector(rJob parent, size_t);
       /// Terminate all children.
-      ~ChildrenCollector();
+      ~Collector();
 
       /// If there are terminated children, collect them.
       void collect();
@@ -341,7 +341,7 @@ namespace sched
     ///
     /// \param collector Children will be automatically terminated
     ///                  when this object is destroyed.
-    void register_child(const rJob& child, ChildrenCollector& collector);
+    void register_child(const rJob& child, Collector& collector);
 
     /// Terminate child and remove it from our children list.
     void terminate_child(const rJob& child);
@@ -441,7 +441,7 @@ namespace sched
   std::ostream& operator<< (std::ostream& o, const jobs_type& js);
 
   SCHED_API
-  std::ostream& operator<< (std::ostream& o, const Job::ChildrenCollector& c);
+  std::ostream& operator<< (std::ostream& o, const Job::Collector& c);
 
   /// This exception will be raised to tell the job that it is currently
   /// stopped and must try to unwind tags from its tag stack until it
