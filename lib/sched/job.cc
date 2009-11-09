@@ -59,9 +59,11 @@ namespace sched
   std::ostream&
   Job::ChildrenCollector::dump(std::ostream& o) const
   {
-    // Explicit parameters required by MSWC 2005.
     return o << "{" << libport::incendl
-             << libport::separate(*this, libport::iendl)
+             // Explicit parameters required by MSWC 2005.
+             << libport::separate<const ChildrenCollector,
+                                  std::ostream&(*)(std::ostream&)>
+                                  (*this, libport::iendl)
              << libport::decendl << "}";
   }
 
