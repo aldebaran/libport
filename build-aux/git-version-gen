@@ -22,6 +22,13 @@ use IO::File;
 
   git-version-gen [OPTIONS...]
 
+=head1 DESCRIPTION
+
+Generate timestamp files related to git metadata.  Support a cache
+system so that we don't recompile the world each time something is
+checked in.  Bear in mind that a change in libport, for instance, can
+result in numerous relinking, which is extremely costly.
+
 =head1 OPTIONS
 
 General options:
@@ -147,6 +154,13 @@ sub caml_score($)
 }
 
 
+=item C<help>
+
+Generate the B<--help> message.  Generates the full man page when
+C<$verbose>.
+
+=cut
+
 sub help ($)
 {
   my ($verbose) = @_;
@@ -177,7 +191,7 @@ sub ensure_parent_dir ($)
         {
           use File::Path;
           mkpath ($dir, { verbose => $verbose, })
-            or die "cannot create $dir: $!";
+            or die "$0: cannot create $dir: $!";
         }
     }
 }
@@ -228,10 +242,22 @@ sub getopt ()
 
 ######################################################################
 
+=item C<git(@command)>
+
+Run C<git @command>.  Expects C<$command[0]> to be the git command,
+e.g., "describe".
+
+=cut
+
 sub git
 {
+  my ($verb) = $_[0];
+  my $error = "$0: failed command: git @_";
+  $error .= "\n$0: A tag is needed for `git describe' to succeed.\n"
+    . "$0: Something like `git tag -a Initial'\n"
+    if $verb eq "describe";
   my $res = `git --git-dir=$srcdir/.git @_`
-    or die "cannot run git";
+    or die $error;
   chomp $res;
   return $res;
 }
@@ -243,7 +269,8 @@ sub save ($$)
     {
       verbose 1, "Updating $file\n";
       ensure_parent_dir $file;
-      my $out = new IO::File ">$file" or die;
+      my $out = new IO::File ">$file"
+        or die "$0: cannot create $file: $!";
       print $out $contents;
     }
   else
@@ -297,7 +324,8 @@ sub fetch_keywords ()
   else
     {
       verbose 2, "not in a git repository: no $srcdir/.git\n";
-      my $in = new IO::File $cache or die "cannot open $cache: $!";
+      my $in = new IO::File $cache
+        or die "$0: cannot open $cache: $!";
       while ($_ = $in->getline)
         {
           s{(\w+):\s*(.*)}{ $res{$1} = $2; ''; }e;
