@@ -11,6 +11,40 @@
 
 \chapter{Portability issues}
 
+\section{Windows}
+
+\subsection{Killing processes}
+\label{sec:win:kill}
+Beware that the \command{kill} builtin from shells cannot kill Windows
+processes, use \command{/bin/kill}.  Use the following shell function
+for \command{killall}.
+
+\begin{shell}
+killall ()
+{
+  ps -W |
+    perl -ne '
+    BEGIN { $re = join "|", qw ('"$*"'); };
+    /\s*(\d+).*(?:$re)/ && push @res, $1;
+    END { print "@res\n"; print STDERR "$re: @res\n"; };' |
+    xargs /bin/kill -f
+}
+\end{shell}
+
+\subsection{Crashes}
+
+Windows features an ``automatic bug reporting'' system that pops-up a
+windows and expects user interaction.  Many such windows can stack up
+and consume resources (and the guilty process is still present).
+
+To prevent such windows:
+
+panneau de config; System; Advanced; Error Report; desactivate +
+disable "But Notify...".
+
+The process that displays the window is \command{dwwin.exe}.  It can
+be killed (\autoref{sec:win:kill}).
+
 \section{MSVC}
 
 \subsection{error C2883}
