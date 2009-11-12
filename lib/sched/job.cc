@@ -98,48 +98,51 @@ namespace sched
   void
   Job::run()
   {
-    GD_CATEGORY(sched);
-    assert(state_ == to_start);
-    LIBPORT_DEBUG("In Job::run for " << this);
+    // This function never terminates properly: it yields and is never
+    // called back. So perform RAII in a subblock to ensure that GD_CATEGORY
+    // releases its memory.
+    {
+      GD_CATEGORY(sched);
+      assert(state_ == to_start);
+      LIBPORT_DEBUG("In Job::run for " << this);
 
-    // We may get interrupted during our first run, in which case
-    // we better not be in the to_start state while we are executing
-    // or we would get removed abruptly from the scheduler pending_
-    // list.
-    state_ = running;
-    try {
-      if (has_pending_exception() &&
-	  dynamic_cast<SchedulerException*>(pending_exception_.get()))
+      // We may get interrupted during our first run, in which case
+      // we better not be in the to_start state while we are executing
+      // or we would get removed abruptly from the scheduler pending_
+      // list.
+      state_ = running;
+      try {
+        if (has_pending_exception() &&
+            dynamic_cast<SchedulerException*>(pending_exception_.get()))
 	check_for_pending_exception();
-      work();
-    }
-    catch (TerminateException&)
-    {
+        work();
+      }
+      catch (TerminateException&)
+      {
       // Normal termination requested.
-    }
-    catch (StopException&)
-    {
-      // Termination through "stop" or "block" on a top-level tag,
-      // that is a tag inherited at the job creation time.
-    }
-    catch (const exception& e)
-    {
-      // Rethrow the exception into the parent job if it exists.
-      if (parent_)
-	parent_->async_throw(ChildException(e.clone()));
-    }
-    catch (const std::exception& e)
-    {
-      // Exception is lost and cannot be propagated properly but can
-      // be printed onto the console for diagnostic purpose.
-      GD_FERROR("job %s: Exception `%s' caught, losing it",
-                (this)(e.what()));
-    }
-    catch (...)
-    {
-      // Exception is lost and cannot be propagated properly.
-      GD_FERROR("job %s: Unknown exception caught, losing it",
-                (this));
+      }
+      catch (StopException&)
+      {
+        // Termination through "stop" or "block" on a top-level tag,
+        // that is a tag inherited at the job creation time.
+      }
+      catch (const exception& e)
+      {
+        // Rethrow the exception into the parent job if it exists.
+        if (parent_)
+          parent_->async_throw(ChildException(e.clone()));
+      }
+      catch (const std::exception& e)
+      {
+        GD_FERROR("job %s: Exception `%s' caught, losing it",
+                  (this)(e.what()));
+      }
+      catch (...)
+      {
+        // Exception is lost and cannot be propagated properly.
+        GD_FERROR("job %s: Unknown exception caught, losing it",
+                  (this));
+      }
     }
 
     terminate_cleanup();
