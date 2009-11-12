@@ -1,9 +1,0 @@
-Hi all,
-
-@PROJECT_STRING@ has been released.
-
-You can download it at:
-
-@GATE_UPLOAD_PACKAGE_URL@/@CPACK_PACKAGE_FULL_FILE_NAME@
-
-Have fun,

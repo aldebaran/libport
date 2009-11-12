@@ -1,3 +1,0 @@
-@c This file holds common variables used in texinfo file.
-
-@set outext ${MAKEINFO_OUTEXT}

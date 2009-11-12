@@ -1,5 +1,0 @@
-#!/bin/sh
-set -x
-ulimit -c unlimited
-export PATH="@CMAKE_PROGRAM_PATH_in@;@CMAKE_LIBRARY_PATH_in@;@cmake_prefix_path_in@;$PATH"
-@exec_cmd@ "@binary_path@/@binary_name@" "$@"
