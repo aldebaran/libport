@@ -27,6 +27,9 @@
 #  pragma GCC visibility push(default)
 # endif
 # include <boost/asio.hpp>
+# if defined LIBPORT_ENABLE_SSL && defined LIBPORT_NO_SSL
+#  undef LIBPORT_ENABLE_SSL
+# endif
 # if defined LIBPORT_ENABLE_SSL
 #   include <boost/asio/ssl.hpp>
 # endif
