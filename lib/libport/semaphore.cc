@@ -28,10 +28,11 @@
  */
 #ifdef __APPLE__
 # include <fstream>
-# include <sstream>
+# include <libport/csignal>
+# include <libport/format.hh>
 # include <libport/sys/stat.h>
 # include <libport/sys/time.h>
-# include <libport/csignal>
+# include <sstream>
 #endif
 
 #ifdef __XENO__
@@ -68,10 +69,8 @@ namespace libport
 
     do
     {
-      std::stringstream s;
+      name_ = format("sema/%s/%s", getpid(), counter++);
       errno = 0;
-      s << "sema/" << getpid() << "/" << counter++;
-      name_ = s.str();
       sem_ = sem_open(name_.c_str(), O_CREAT | O_EXCL, 0777, value);
       sem_open_errno = errno;
     } while (sem_ == SEM_FAILED && errno == EEXIST);
@@ -83,10 +82,10 @@ namespace libport
       //
       // If you change this file name, update
       // build-aux/semaphores-clean.sh.
-      mkdir("/tmp/urbi-semaphores", 0777);
-      std::stringstream f;
-      f << "/tmp/urbi-semaphores/" << getpid();
-      std::ofstream o(f.str().c_str(), std::ios_base::app);
+      std::string dir = "/tmp/urbi-semaphores." + xgetenv("USER");
+      mkdir(dir.c_str(), 0777);
+      std::string file = format("%s/%s", dir, getpid());
+      std::ofstream o(file.c_str(), std::ios_base::app);
       o << name_;
       if (sem_ == SEM_FAILED)
         o << ": " << strerror(sem_open_errno);
