@@ -75,14 +75,15 @@ namespace libport
 // Unfortunately, some old compilers (namely gcc 3) complain when the
 // last operand of the comma operator has 'no effect' - which is otherwise
 // perfectly legitimate. Work around them with this function.
-static inline int zero()
+ATTRIBUTE_NORETURN static inline int
+_libport_die_hard()
 {
-  return 0;
+  libport::abort();
 }
 
 # define pabort(Msg)                                      \
   (ASSERT_ECHO(__FILE__, __LINE__, "abort: " << Msg),     \
-   libport::abort(), zero())
+   _libport_die_hard())
 
 
 /*-----------------------------------------------------.
