@@ -23,6 +23,7 @@ namespace libport
   // Initialize libport/program-name. One and only one of these
   // function must be called at the beginning of the main function.
   // Calling it twice is an error.
+  LIBPORT_API void program_initialize(int argc, const char** argv);
   LIBPORT_API void program_initialize(int argc, char** argv);
   LIBPORT_API void program_initialize(const cli_args_type& args);
   LIBPORT_API void program_initialize(const std::string& program_name);

@@ -18,10 +18,15 @@ namespace libport
   static cli_args_type program_arguments_;
   static bool program_initialized_;
 
-  void program_initialize(int argc, char** argv)
+  void program_initialize(int argc, const char** argv)
   {
     assert(argc >= 1);
     program_initialize(cli_args_type(argv, argv + argc));
+  }
+
+  void program_initialize(int argc, char** argv)
+  {
+    program_initialize(argc, const_cast<const char**>(argv));
   }
 
   void program_initialize(const cli_args_type& args)
