@@ -77,7 +77,10 @@ namespace libport
     /// \return true iff no error.
     bool remove() const;
     bool create() const;
+    bool rename(const std::string& dst);
     /// \}
+
+    static std::string createTemp();
 
     /// \name Printing and converting.
     /// \{
@@ -102,6 +105,10 @@ namespace libport
 
     /// Init object with path \a p.
     void init(std::string p);
+
+    /// Reset object to empty, and then init
+    /// to path \a p
+    void reset(const std::string& p);
 
     /// Represented path.
     path_type path_;

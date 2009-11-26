@@ -98,6 +98,13 @@ namespace libport
       append_dir(component);
   }
 
+  void
+  path::reset (const std::string& p)
+  {
+    path_.clear ();
+    init (p);
+  }
+
   path&
   path::operator=(const path& rhs)
   {
@@ -256,9 +263,43 @@ namespace libport
     return true;
   }
 
+  std::string path::createTemp()
+  {
+#ifdef WIN32
+    /// Partie non testé sous windobe
+
+    /// Get the path to the temporary folder
+    char tmp_path[MAX_PATH];
+    memset (tmp_path, 0, MAX_PATH);
+    GetTempPath(MAX_PATH, tmp_path);
+    char tmpfile[MAX_PATH];
+    memset (tmpfile, 0, MAX_PATH);
+    GetTempFileName (tmp_path, "", 0, tmpfile);
+#else
+    char tmpfile[] = "/tmp/tmp.XXXXXXXXXX";
+#endif
+
+    int fd = mkstemp(tmpfile);
+    close (fd);
+    return tmpfile;
+  }
+
   bool path::remove() const
   {
-    return !unlink(to_string().c_str());
+    bool res = !unlink(to_string().c_str());
+    if (!res)
+      perror("");
+    return res;
+  }
+
+  bool path::rename(const std::string& dst)
+  {
+    bool res = !::rename(to_string().c_str(), dst.c_str());
+    if (res)
+      reset (dst);
+    else
+      perror("");
+    return res;
   }
 
   const path::path_type& path::components() const
