@@ -60,7 +60,7 @@ namespace libport
 	&& isalpha(p[0]) && p[1] == ':')
     {
       volume_ = p.substr(0, 2);
-      absolute_ = p.length() >= 3 && p[2] == '\\';
+      absolute_ = p.length() >= 3 && (p[2] == '\\' || p[2] == '/');
       p.erase(0, absolute_ ? 3 : 2);
     }
     // Network share, such as "\\shared volume\foo\bar"
