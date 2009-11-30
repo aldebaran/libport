@@ -10,41 +10,36 @@
 #include <iostream>
 
 #include <libport/cli.hh>
+#include <libport/format.hh>
 #include <libport/program-name.hh>
 
 namespace libport
 {
 
   void
-  usage_error(const std::string& opt, const std::string& err)
+  usage_error(const std::string& err)
   {
-    throw(std::runtime_error
-          (opt + ": " + err + "\n"
-           + "Try `" + program_name() + " --help' for more information."));
+    throw std::runtime_error(format("%s\n"
+                                    "Try `%s --help' for more information.",
+                                    err, program_name()));
   }
 
   void
   required_argument(const std::string& opt)
   {
-    usage_error(opt, "requires an argument");
-  }
-
-  void
-  missing_argument(const std::string& opt)
-  {
-    usage_error(opt, "missing argument");
+    usage_error(format("option `%s' requires an argument", opt));
   }
 
   void
   invalid_option(const std::string& opt)
   {
-    usage_error(opt, "invalid option");
+    usage_error(format("invalid option: %s", opt));
   }
 
   void
   invalid_option_val(const std::string& opt, const std::string& arg)
   {
-    usage_error(opt, "invalid argument: " + arg);
+    usage_error(format("invalid argument for option `%s': %s", opt, arg));
   }
 
 }

@@ -21,18 +21,22 @@
 namespace libport
 {
   LIBPORT_API ATTRIBUTE_NORETURN
-  void usage_error(const std::string& opt, const std::string& err);
+  /// \throw std::runtime_error
+  void usage_error(const std::string& err);
 
   LIBPORT_API ATTRIBUTE_NORETURN
+  /// An option \a opt was called with its required argument.
+  /// \throw std::runtime_error
   void required_argument(const std::string& opt);
 
   LIBPORT_API ATTRIBUTE_NORETURN
-  void missing_argument(const std::string& opt);
-
-  LIBPORT_API ATTRIBUTE_NORETURN
+  /// An invalid option \a opt was invoked.
+  /// \throw std::runtime_error
   void invalid_option(const std::string& opt);
 
   LIBPORT_API ATTRIBUTE_NORETURN
+  /// An option \a opt was given an improper value \a arg.
+  /// \throw std::runtime_error
   void invalid_option_val(const std::string& opt, const std::string& arg);
 
   /// Can be used on with T = const char* to simply require that \a arg
