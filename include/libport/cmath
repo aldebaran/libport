@@ -21,11 +21,15 @@
 
 # if defined _MSC_VER
 
-#  if ! defined _USE_MATH_DEFINES
-#    error "define _USE_MATH_DEFINES before any system header inclusion."
+#  define _USE_MATH_DEFINES
+#  include <cfloat>
+
+#  if ! defined M_PI
+#   error "<cfloat> did not defined M_PI."                              \
+  "You probably included <cfloat> or <cmath> before <libport/cmath>."   \
+  "Either include <libport/cfloat> first, or #define _USE_MATH_DEFINES before yourself."
 #  endif
 
-#  include <cfloat>
 namespace std
 {
 
