@@ -17,17 +17,21 @@
 # include <libport/config.h>
 # include <libport/detect-win32.h>
 
-# include <cmath>
 
-# if defined _MSC_VER
+# if ! defined _MSC_VER
+
+#  include <cmath>
+
+# else
 
 #  define _USE_MATH_DEFINES
+#  include <cmath>
 #  include <cfloat>
 
 #  if ! defined M_PI
-#   error "<cfloat> did not defined M_PI."                              \
-  "You probably included <cfloat> or <cmath> before <libport/cmath>."   \
-  "Either include <libport/cfloat> first, or #define _USE_MATH_DEFINES before yourself."
+#   error "<cmath> did not defined M_PI."                       \
+  "You probably included <cmath> before <libport/cmath>."       \
+  "Either include <libport/cmath> first, or #define _USE_MATH_DEFINES before yourself."
 #  endif
 
 namespace std
@@ -50,7 +54,7 @@ namespace std
 
 }
 
-# endif // defined WIN32
+# endif // ! defined _MSC_VER
 
 #endif // !LIBPORT_CMATH
 
