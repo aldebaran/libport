@@ -57,12 +57,6 @@ namespace libport
   //>>
 
   Symbol
-  Symbol::fresh ()
-  {
-    return fresh (Symbol("a"));
-  }
-
-  Symbol
   Symbol::fresh (const std::string& s)
   {
     // Counter for unique symbols.
