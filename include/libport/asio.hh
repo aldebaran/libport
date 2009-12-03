@@ -102,6 +102,8 @@ namespace libport
     virtual unsigned short getLocalPort() const = 0;
     /// Get IP address of local endpoint
     virtual std::string getLocalHost() const = 0;
+    // For internal use
+    virtual void startReader() = 0;
 #if ! defined WIN32
     virtual int stealFD() = 0;
     virtual int getFD() = 0;

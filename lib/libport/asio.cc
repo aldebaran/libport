@@ -7,12 +7,245 @@
  *
  * See the LICENSE file for more information.
  */
+// This compilation unit must not have any ssl-dependent code.
+// Said code goes in asio-ssl.cc
+#define LIBPORT_NO_SSL
 
+#include <libport/thread.hh>
 #include <libport/asio.hh>
+#include "asio-impl.hxx"
 
 namespace libport
 {
 
+  namespace netdetail
+  {
+
+    class UDPLinkImpl: public UDPLink
+    {
+    public:
+      UDPLinkImpl(boost::asio::ip::udp::socket& socket,
+                  boost::asio::ip::udp::endpoint endpoint,
+                  Destructible::DestructionLock destructionLock)
+        : socket_(socket)
+        , endpoint_(endpoint)
+        , destructionLock_(destructionLock)
+      {}
+      virtual void reply(const void* data, size_t length);
+    private:
+      boost::asio::ip::udp::socket& socket_;
+      boost::asio::ip::udp::endpoint endpoint_;
+      Destructible::DestructionLock destructionLock_;
+    };
+
+    class UDPSocket: public Destructible
+    {
+    public:
+      UDPSocket();
+      typedef boost::function3<void, const void*, size_t,
+                               boost::shared_ptr<UDPLink> > onread_type;
+      onread_type onRead;
+      void start_receive();
+      void handle_receive(const boost::system::error_code& error, size_t sz);
+    private:
+      boost::array<char, 2000> recv_buffer_;
+      boost::asio::ip::udp::endpoint remote_endpoint_;
+      boost::asio::ip::udp::socket socket_;
+      friend class libport::Socket;
+    };
+
+    UDPSocket::UDPSocket()
+      :socket_(get_io_service())
+    {
+    }
+
+    void
+    UDPSocket::start_receive()
+    {
+      socket_.async_receive_from(
+        boost::asio::buffer(recv_buffer_),
+        remote_endpoint_,
+        boost::bind(&UDPSocket::handle_receive, this,
+                    boost::asio::placeholders::error,
+                    boost::asio::placeholders::bytes_transferred));
+    }
+
+    void
+    UDPSocket::handle_receive(const boost::system::error_code&,
+                              size_t sz)
+    {
+      boost::shared_ptr<UDPLink> l(new UDPLinkImpl(socket_, remote_endpoint_,
+                                                   getDestructionLock()));
+      onRead(&recv_buffer_[0], sz, l);
+      start_receive();
+    }
+
+    void
+    UDPLinkImpl::reply(const void* data, size_t length)
+    {
+      socket_.send_to(boost::asio::buffer(data, length), endpoint_);
+    }
+
+
+    void
+    delete_check(boost::system::error_code erc,
+                 SocketImpl<udpsock>*s,
+                 Destructible::DestructionLock,
+                 std::string* buf)
+    {
+      if (erc)
+      {
+        std::cerr <<"Socket error: " << erc.message() << std::endl;
+        BlockLock bl(s->callbackLock);
+        if (s->onErrorFunc)
+          s->onErrorFunc(erc);
+      }
+      delete buf;
+    }
+
+    template<>
+    inline void
+    send_bounce(SocketImpl<udpsock>* s, const void* buffer, size_t length)
+    {
+      std::string* buf = new std::string(static_cast<const char*>(buffer),
+                                         length);
+      s->base_->async_send(
+        boost::asio::buffer(*buf),
+        boost::bind(&delete_check, _1, s, s->getDestructionLock(), buf));
+    }
+
+
+
+    void
+    recv_bounce(SocketImpl<udpsock>*s,
+                SocketImpl<udpsock>::DestructionLock lock,
+                boost::system::error_code erc, size_t recv)
+    {
+      std::ostream stream(&s->readBuffer_);
+      stream.write(&s->udpBuffer_[0], std::streamsize(recv));
+      s->onReadDemux(lock, erc);
+    }
+
+    template<>
+    inline void
+    read_or_recv(SocketImpl<udpsock>*s,
+                 SocketImpl<udpsock>::DestructionLock lock)
+    {
+      s->udpBuffer_.resize(2000);
+      s->base_->async_receive(boost::asio::buffer(&s->udpBuffer_[0], 2000),
+                              boost::bind(&recv_bounce, s, lock, _1, _2));
+    }
+
+    void
+    onConnect(boost::system::error_code erc,
+              boost::asio::deadline_timer & timer,
+              libport::Semaphore& sem,
+              boost::system::error_code& caller_erc)
+    {
+      caller_erc = erc;
+      // If timer was allready canceled, cancel is a noop and does no harm.
+      timer.cancel();
+      sem++;
+    }
+  }
+
+  boost::asio::io_service&
+  Socket::get_io_service()
+  {
+    return io_;
+  }
+
+
+
+  boost::system::error_code
+  Socket::connect(const std::string& host,
+                  const std::string& port,
+                  bool udp,
+                  useconds_t timeout,
+                  bool async)
+  {
+    if (udp)
+      return connectProto<boost::asio::ip::udp>(
+        host, port, timeout, async,
+        &netdetail::SocketImpl<boost::asio::ip::udp::socket>::create);
+    else
+      return connectProto<boost::asio::ip::tcp>(
+        host, port, timeout, async,
+        &netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
+  }
+
+  boost::system::error_code
+  Socket::connect(const std::string& host,
+                  unsigned port,
+                  bool udp,
+                  useconds_t timeout,
+                  bool async)
+  {
+    return connect(host, string_cast(port), udp, timeout, async);
+  }
+
+
+  boost::system::error_code
+  Socket::listen(SocketFactory f,
+                 const std::string& host,
+                 const std::string& port,
+                 bool udp)
+  {
+    (void)udp;
+    assert(!udp);
+    boost::system::error_code erc;
+    erc = Socket::listenProto<boost::asio::ip::tcp>(
+      f, host, port,
+      &netdetail::SocketImpl<boost::asio::ip::tcp::socket>::create);
+    return erc;
+  }
+
+  boost::system::error_code
+  Socket::listen(SocketFactory f,
+                 const std::string& host,
+                 unsigned port,
+                 bool udp)
+  {
+    return listen(f, host, string_cast(port), udp);
+  }
+
+  void
+  AsioDestructible::doDestroy()
+  {
+    get_io_service().post(boost::bind(netdetail::deletor<AsioDestructible>,
+                                      this));
+  }
+
+  void
+  Socket::onError(boost::system::error_code)
+  {
+    // Nothing
+  }
+
+  namespace netdetail
+  {
+
+    void
+    timer_trigger(boost::shared_ptr<boost::asio::deadline_timer>,
+                  boost::function0<void> callback,
+                  boost::system::error_code erc)
+    {
+      if (!erc)
+        callback();
+    }
+
+  }
+
+  AsyncCallHandler
+  asyncCall(boost::function0<void> callback, useconds_t usDelay,
+            boost::asio::io_service& io)
+  {
+    AsyncCallHandler
+      res(new boost::asio::deadline_timer(io));
+    res->expires_from_now(boost::posix_time::microseconds(usDelay));
+    res->async_wait(boost::bind(&netdetail::timer_trigger, res, callback, _1));
+    return res;
+  }
   void
   runIoService(boost::asio::io_service* io)
   {
@@ -44,7 +277,7 @@ namespace libport
       {
         hasWorkerThread = true;
         asio_worker_thread =
-          libport::startThread(boost::bind(&runIoService, io));
+          startThread(boost::bind(&runIoService, io));
       }
       else
         asio_worker_thread = pthread_self();
@@ -124,7 +357,7 @@ namespace libport
      * if this protocol is not supported by the system. So try to bind using all
      * the endopints until one succeeds, and not just the first. */
     udp::resolver::query query(host, port);
-    udp::resolver resolver(libport::get_io_service());
+    udp::resolver resolver(libport::get_io_service(true));
     udp::resolver::iterator iter = resolver.resolve(query, erc);
     if (erc)
       return Handle();
@@ -226,7 +459,7 @@ namespace libport
     Rs232& sp = *new Rs232(get_io_service());
     sp.open(device, erc);
     sp.set_option(boost::asio::serial_port::baud_rate(rate), erc);
-    typedef libport::netdetail::SocketImpl<Rs232> SerBase;
+    typedef netdetail::SocketImpl<Rs232> SerBase;
     SerBase* sb = (SerBase*)SerBase::create(&sp);
     this->setBase(sb);
     sb->startReader();
