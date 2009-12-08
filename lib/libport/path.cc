@@ -13,6 +13,8 @@
  */
 
 #include <iostream>
+#include <libport/cstdio>
+#include <libport/exception.hh>
 #include <libport/fcntl.h>
 #include <libport/unistd.h>
 #include <libport/sys/stat.h>
@@ -256,9 +258,41 @@ namespace libport
     return true;
   }
 
-  bool path::remove() const
+#ifndef WIN32
+  path
+  path::temporary_file()
   {
-    return !unlink(to_string().c_str());
+    char tmpfile[] = "/tmp/tmp.XXXXXX";
+    int fd = mkstemp(tmpfile);
+    close (fd);
+    return path(tmpfile);
+  }
+#else
+  // Implementation pieces for windows
+
+  // // Get the path to the temporary folder
+  // char tmp_path[MAX_PATH];
+  // memset (tmp_path, 0, MAX_PATH);
+  // GetTempPath(MAX_PATH, tmp_path);
+  // char tmpfile[MAX_PATH];
+  // memset (tmpfile, 0, MAX_PATH);
+  // GetTempFileName (tmp_path, "", 0, tmpfile);
+#endif
+
+  void
+  path::remove() const
+  {
+    if (unlink(to_string().c_str()))
+      throw Exception(libport::format("unable to unlink file: %s", *this));
+  }
+
+  void
+  path::rename(const std::string& dst)
+  {
+    if (::rename(to_string().c_str(), dst.c_str()))
+      throw Exception(libport::format("unable to rename file: %s", *this));
+    else
+      *this = dst;
   }
 
   const path::path_type& path::components() const

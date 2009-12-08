@@ -75,9 +75,14 @@ namespace libport
     bool exists() const;
     /// Remove the file.
     /// \return true iff no error.
-    bool remove() const;
+    void remove() const;
     bool create() const;
+    void rename(const std::string& dst);
     /// \}
+
+#ifndef WIN32
+    static path temporary_file();
+#endif
 
     /// \name Printing and converting.
     /// \{
@@ -102,6 +107,10 @@ namespace libport
 
     /// Init object with path \a p.
     void init(std::string p);
+
+    /// Reset object to empty, and then init
+    /// to path \a p
+    void reset(const std::string& p);
 
     /// Represented path.
     path_type path_;
