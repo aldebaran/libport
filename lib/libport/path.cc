@@ -99,13 +99,6 @@ namespace libport
       append_dir(component);
   }
 
-  void
-  path::reset (const std::string& p)
-  {
-    path_.clear ();
-    init (p);
-  }
-
   path&
   path::operator=(const path& rhs)
   {
@@ -297,7 +290,7 @@ namespace libport
   {
     bool res = !::rename(to_string().c_str(), dst.c_str());
     if (res)
-      reset (dst);
+      *this = dst;
     else
       perror("");
     return res;
