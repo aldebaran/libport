@@ -49,6 +49,7 @@ TESTS_BINARIES =                                \
   tests/libport/time.cc                         \
   tests/libport/timer.cc                        \
   tests/libport/tokenizer.cc                    \
+  tests/libport/traits.cc			\
   tests/libport/ufloat-double.cc                \
   tests/libport/unescape.cc                     \
   tests/libport/utime.cc			\
