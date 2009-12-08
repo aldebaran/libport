@@ -13,22 +13,24 @@
 
 # include <algorithm>
 
+# include <libport/traits.hh>
+
 namespace libport
 {
   template <typename T>
   inline
   T
-  between(const T& min, const T& value, const T& max);
+  between(const traits::Arg<T>::res min, const traits::Arg<T>::res value, const traits::Arg<T>::res max);
 
   template <typename T>
   inline
   T
-  rad2deg(const T& value);
+  rad2deg(const traits::Arg<T>::res value);
 
   template <typename T>
   inline
   T
-  deg2rad(const T& value);
+  deg2rad(const traits::Arg<T>::res value);
 
 }
 
