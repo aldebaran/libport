@@ -126,6 +126,7 @@ tests_libport_symbol_SOURCES                            = tests/libport/symbol.c
 tests_libport_time_SOURCES                              = tests/libport/time.cc
 tests_libport_timer_SOURCES                             = tests/libport/timer.cc
 tests_libport_tokenizer_SOURCES                         = tests/libport/tokenizer.cc
+tests_libport_traits_SOURCES                            = tests/libport/traits.cc
 tests_libport_ufloat_double_SOURCES                     = tests/libport/ufloat-double.cc
 tests_libport_unescape_SOURCES                          = tests/libport/unescape.cc
 tests_libport_utime_SOURCES                             = tests/libport/utime.cc
