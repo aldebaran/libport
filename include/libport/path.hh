@@ -75,9 +75,9 @@ namespace libport
     bool exists() const;
     /// Remove the file.
     /// \return true iff no error.
-    bool remove() const;
+    void remove() const;
     bool create() const;
-    bool rename(const std::string& dst);
+    void rename(const std::string& dst);
     /// \}
 
 #ifndef WIN32

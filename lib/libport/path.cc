@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <libport/cstdio>
+#include <libport/exception.hh>
 #include <libport/fcntl.h>
 #include <libport/unistd.h>
 #include <libport/sys/stat.h>
@@ -278,22 +279,20 @@ namespace libport
   // GetTempFileName (tmp_path, "", 0, tmpfile);
 #endif
 
-  bool path::remove() const
+  void
+  path::remove() const
   {
-    bool res = !unlink(to_string().c_str());
-    if (!res)
-      perror("");
-    return res;
+    if (unlink(to_string().c_str()))
+      throw Exception(libport::format("unable to unlink file: %s", *this));
   }
 
-  bool path::rename(const std::string& dst)
+  void
+  path::rename(const std::string& dst)
   {
-    bool res = !::rename(to_string().c_str(), dst.c_str());
-    if (res)
-      *this = dst;
+    if (::rename(to_string().c_str(), dst.c_str()))
+      throw Exception(libport::format("unable to rename file: %s", *this));
     else
-      perror("");
-    return res;
+      *this = dst;
   }
 
   const path::path_type& path::components() const

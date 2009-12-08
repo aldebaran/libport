@@ -70,11 +70,11 @@ void create(const path& p)
 {
   // If the file exists, remove it.
   if (p.exists())
-    BOOST_CHECK(p.remove());
+    BOOST_CHECK_NO_THROW(p.remove());
   exist(p, false);
   p.create();
   exist(p, true);
-  BOOST_CHECK(p.remove());
+  BOOST_CHECK_NO_THROW(p.remove());
   exist(p, false);
 }
 
