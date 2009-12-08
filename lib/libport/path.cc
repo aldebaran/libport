@@ -13,6 +13,7 @@
  */
 
 #include <iostream>
+#include <libport/cstdio>
 #include <libport/fcntl.h>
 #include <libport/unistd.h>
 #include <libport/sys/stat.h>
