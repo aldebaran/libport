@@ -80,7 +80,9 @@ namespace libport
     bool rename(const std::string& dst);
     /// \}
 
-    static std::string createTemp();
+#ifndef WIN32
+    static path temporary_file();
+#endif
 
     /// \name Printing and converting.
     /// \{

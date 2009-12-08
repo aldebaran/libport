@@ -264,26 +264,26 @@ namespace libport
     return true;
   }
 
-  std::string path::createTemp()
+#ifndef WIN32
+  path
+  path::temporary_file()
   {
-#ifdef WIN32
-    /// Partie non testé sous windobe
-
-    /// Get the path to the temporary folder
-    char tmp_path[MAX_PATH];
-    memset (tmp_path, 0, MAX_PATH);
-    GetTempPath(MAX_PATH, tmp_path);
-    char tmpfile[MAX_PATH];
-    memset (tmpfile, 0, MAX_PATH);
-    GetTempFileName (tmp_path, "", 0, tmpfile);
-#else
-    char tmpfile[] = "/tmp/tmp.XXXXXXXXXX";
-#endif
-
+    char tmpfile[] = "/tmp/tmp.XXXXXX";
     int fd = mkstemp(tmpfile);
     close (fd);
-    return tmpfile;
+    return path(tmpfile);
   }
+#else
+  // Implementation pieces for windows
+
+  // // Get the path to the temporary folder
+  // char tmp_path[MAX_PATH];
+  // memset (tmp_path, 0, MAX_PATH);
+  // GetTempPath(MAX_PATH, tmp_path);
+  // char tmpfile[MAX_PATH];
+  // memset (tmpfile, 0, MAX_PATH);
+  // GetTempFileName (tmp_path, "", 0, tmpfile);
+#endif
 
   bool path::remove() const
   {
