@@ -375,7 +375,7 @@ namespace libport
    *  expiration of the delay, the call is aborted and callback() is not
    *  called.
    */
-  AsyncCallHandler
+  LIBPORT_API AsyncCallHandler
   asyncCall(boost::function0<void> callback, useconds_t usDelay,
             boost::asio::io_service& io = get_io_service());
 }
