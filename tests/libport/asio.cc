@@ -32,6 +32,8 @@
 using libport::test_suite;
 
 #include <libport/asio.hh>
+#include <libport/lexical-cast.hh>
+#include <libport/thread.hh>
 #include <libport/utime.hh>
 #include <libport/unistd.h>
 
@@ -180,15 +182,6 @@ void test_one(bool proto)
 }
 
 
-#define RESOLVE()                                                       \
-  do {                                                                  \
-    libport::resolve<boost::asio::ip::tcp>(connect_host,                \
-                                           S_AVAIL_PORT, err);          \
-    BOOST_TEST_MESSAGE("Resolve: "                                      \
-                       + (err ? err.message() : "No error"));           \
-  } while (0)
-
-
 static
 void
 test()
@@ -200,7 +193,6 @@ test()
   s->connect(connect_host, S_AVAIL_PORT, false);
   s->destroy();
   usleep(delay);
-  RESOLVE();
   libport::Socket* h = new libport::Socket();
   // Try listening on an IP that is not ours.
   BOOST_TEST_MESSAGE("Invalid IP in listen()");
@@ -213,16 +205,10 @@ test()
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
 
   BOOST_TEST_MESSAGE("##One client");
-  RESOLVE();
-  RESOLVE();
-  RESOLVE();
-  RESOLVE();
   test_one(false);
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
-  RESOLVE();
   test_one(false);
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
-  RESOLVE();
   test_one(false);
   BOOST_TEST_MESSAGE("Socket on stack");
   {
