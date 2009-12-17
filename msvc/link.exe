@@ -52,7 +52,7 @@ error ()
 verbose ()
 {
   case "$verbose: $VERBOSE " in
-    (true:* | *" cl.exe "* | *" link.exe "* | " x ")
+    (true:* | *" cl.exe "* | *" link.exe "* | *" x "* | *" 1 "*)
       stderr "$@"
       ;;
   esac
@@ -300,7 +300,7 @@ MS VC++ wrapper.
 EOF
   # Simply don't pass /nologo.
   # The version info is on stderr.
-  $VCXX_BIN/cl.exe 2>&1 >/dev/null
+  "$VCXX_BIN/cl.exe" 2>&1 >/dev/null
   exit 0
 }
 
@@ -703,11 +703,11 @@ done
 test -n "$repath" ||
   error 176 "program not found: $repaths"
 
-VS_PATH=$($repath -u $VSINSTALLDIR)
-VCXX_PATH=$($repath -u $VCINSTALLDIR)
+VS_PATH=$($repath -u "$VSINSTALLDIR")
+VCXX_PATH=$($repath -u "$VCINSTALLDIR")
 VCXX_BIN=$VCXX_PATH/bin
 
-test -x $VCXX_BIN/cl.exe ||
+test -x "$VCXX_BIN/cl.exe" ||
   error 176 "cl.exe not found in $VCXX_BIN"
 
 outargs=-MD
@@ -821,8 +821,8 @@ case $repath:$output in
 #include <winuser.h>
 1 RT_MANIFEST {"$(cat $output.escaped.manifest)"}
 EOF
-  run $VCXX_BIN/rc.exe -r "$(transform $output).auto.rc"
-  cmd="$VCXX_BIN/$PROG $outargs $linkargs \"$(transform $output).auto.RES\""
+  run "$VCXX_BIN/rc.exe" -r "$(transform $output).auto.rc"
+  cmd="\"$VCXX_BIN/$PROG\" $outargs $linkargs \"$(transform $output).auto.RES\""
   verbose "Running: $cmd"
   status=0
   eval "$cmd" >$stdout 2>$stderr || status=$?
