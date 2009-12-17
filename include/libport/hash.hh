@@ -88,9 +88,16 @@ namespace std
 | VC++ part.  |
 `------------*/
 
-#  if (_MSC_VER >= 1400)
+// Since Visual 2003 .NET, hash_compare changed of namespace ( std to
+// stdext ).
+//
+// 1300: Visual 2002
+// 1310: Visual 2003
+// 1400: Visual 2005
+// 1500: Visual 2008
+#  if 1310 <= _MSC_VER
 #   define LIBPORT_HASH_NAMESPACE stdext
-#   pragma warning( disable : 4355 4996)
+#   pragma warning(disable : 4355 4996)
 #  else
 #   define LIBPORT_HASH_NAMESPACE std
 #  endif
@@ -99,7 +106,7 @@ namespace std
 
 namespace LIBPORT_HASH_NAMESPACE
 {
-  //msc does not define a hash function for hash_compare
+  // MSVC does not define a hash function for hash_compare.
 
   /*--------.
   | char*.  |
@@ -118,7 +125,7 @@ namespace LIBPORT_HASH_NAMESPACE
     size_t operator ()(const char *c) const
     {
       size_t r = 0;
-      while (*c!=0)
+      while (*c)
       {
 	r = (*c)+31*r;
 	c++;
