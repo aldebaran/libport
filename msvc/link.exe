@@ -93,7 +93,7 @@ handle_lib ()
       "$VS_PATH/Lib"                            \
       "$VCXX_PATH/Lib"                          \
       "$VCXX_PATH/PlatformSDK/Lib"              \
-      "$VS_PATH/PlatformSDK/Lib"                \
+      "$VS_PATH/PlatformSDK/Lib"
     do
       test ! -d "$i" ||
         set "$@" "$i"
