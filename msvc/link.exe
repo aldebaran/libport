@@ -74,48 +74,53 @@ transform ()
 
 handle_lib ()
 {
+  local lib=$1
+
   # If $systemlibs is not defined, set it up.  It saves time (and
   # traces) to do it only on demand instead of always.
-  test "${systemlibs+set}" = set ||
+  list=$medir/system-libs.txt
+  test -f $list ||
   {
     # The libs we produce are called libfoo.lib, whereas the system
     # libs are called foo.lib.
     # FIXME: Use external variables.  Need to find Boost and the like.
     local i
     local libdirs
+    set x
     for i in                                    \
-        "$HOME/local/usr/lib"                   \
-        "$HOME/local"                           \
-        "$VCXX_PATH/lib"                        \
-        "$VCXX_PATH/PlatformSDK/Lib"		\
-        "$VS_PATH/PlatformSDK/Lib"
+      "$HOME/local/usr/lib"                     \
+      "$HOME/local"                             \
+      "$VS_PATH/Lib"                            \
+      "$VCXX_PATH/Lib"                          \
+      "$VCXX_PATH/PlatformSDK/Lib"              \
+      "$VS_PATH/PlatformSDK/Lib"                \
     do
-      test ! -d $i ||
-        libdirs+=" $i"
+      test ! -d "$i" ||
+        set "$@" "$i"
     done
+    shift
 
-    # On one line to make it easier to read set -x.
-    systemlibs=$(find $libdirs -iname '*.lib' -exec basename {} ';' |
-                  # We tried to keep the original case, but it was a
-                  # PITA, since, at least in our environment, some
-                  # libraries (ws2_32) as two different cases: WS2_32
-                  # for Visual, and ws2_32 for mingw.  Keep it stupid
-                  # simple.
-                    tr A-Z a-z |
-                    sort -u |
-                    tr -d '\r' |
-                    tr '\n' ' ')
-    verbose "systemlibs=$systemlibs"
+    find "$@" -iname '*.lib' |
+      # We tried to keep the original case, but it was a PITA, since,
+      # at least in our environment, some libraries (ws2_32) as two
+      # different cases: WS2_32 for Visual, and ws2_32 for mingw.
+      # Keep it stupid simple.
+        tr A-Z a-z |
+        sort -u |
+        tr -d '\r' >$list.tmp
+    mv -f $list.tmp $list
+    verbose "systemlibs:" "$(cat $list)"
   }
 
   local base
-  base=$(echo "${1#-l}.lib" | tr A-Z a-z)
+  base=$(echo "${lib#-l}.lib" | tr A-Z a-z)
   local res
   # If $base is not in $systemlibs, prepend "lib".
-  case " $systemlibs " in
-    (*" $base "*) res=$base;;
-    (*)           res=lib$base;;
-  esac
+  if grep "$base" <$list; then
+    res=$base
+  else
+    res=lib$base
+  fi
   handle_lib_res=$(transform "$res")
   verbose "handle_lib: $1 -> $handle_lib_res"
 }
