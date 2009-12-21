@@ -680,10 +680,16 @@ load_msvc_env ()
 ## Main.  ##
 ## ------ ##
 
-# Make it easier use under a regular host.
-case $1 in
-  (--help) usage;;
-esac
+# Make it easier use under a regular host.  Process our own options
+# early enough.
+for i
+do
+  case $i in
+    (--help) usage;;
+    (--verbose) verbose=true;;
+    (--version) version;;
+  esac
+done
 
 PROG=$me
 
