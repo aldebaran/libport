@@ -93,7 +93,8 @@ handle_lib ()
       "$VS_PATH/Lib"                            \
       "$VCXX_PATH/Lib"                          \
       "$VCXX_PATH/PlatformSDK/Lib"              \
-      "$VS_PATH/PlatformSDK/Lib"
+      "$VS_PATH/PlatformSDK/Lib"                \
+      "$($repath -u "$LIBPATH")"
     do
       test ! -d "$i" ||
         set "$@" "$i"
