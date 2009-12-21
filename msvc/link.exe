@@ -180,9 +180,11 @@ This MSVC++ wrapper presents a CC-like interface.  It adds some options
 of its own.
 
 Options:
-  --help      display this message  that of MSVC and exit
-  --version   display the version of this script and that of MSVC and exit
-  --verbose   display debugging information about this script
+  --help          display this message and that of MSVC and exit
+  --runtime=KIND  specify whether using "debug" or "release" runtime
+                  [$runtime]
+  --version       display the version of this script and that of MSVC and exit
+  --verbose       display debugging information about this script
 
 MSVC help:
                          C/C++ COMPILER OPTIONS
@@ -333,6 +335,8 @@ get_options ()
     (--version) version;;
     (--verbose) verbose=true;;
     (-v)        compiler_verbose=true;;
+    (--runtime=*) runtime=${1#--runtime=};;
+    (--runtime)   runtime=$2             ; shift;;
 
     # Libraries.
     (-link) ;;
@@ -680,6 +684,29 @@ load_msvc_env ()
 ## Main.  ##
 ## ------ ##
 
+# Compiler verbosity (-v).
+compiler_verbose=false
+# File containing the dependencies.
+deps_file=
+# Target of the dependencies (i.e., lhs in the make rule).
+deps_target=
+deps_phony=false
+linkargs=
+# mode=compile|link|preprocess
+mode=
+# Output file name.
+output=
+# Whether the source was already preprocessed (i.e., *.i or *.ii).
+preprocessed=false
+# The kind of runtime we use: debug|release.
+runtime=release
+# Input file name.
+source=
+# Wrapper verbosity.
+verbose=false
+
+PROG=$me
+
 # Make it easier use under a regular host.  Process our own options
 # early enough.
 for i
@@ -690,8 +717,6 @@ do
     (--version) version;;
   esac
 done
-
-PROG=$me
 
 : ${TMPDIR=/tmp}
 medir=$TMPDIR/$me.dir
@@ -723,30 +748,17 @@ VCXX_BIN=$VCXX_PATH/bin
 test -x "$VCXX_BIN/cl.exe" ||
   error 176 "cl.exe not found in $VCXX_BIN"
 
-outargs=-MD
 case $PROG in
   (cl.exe) outargs "-nologo" "-EHsc";;
 esac
 
-# Compiler verbosity (-v).
-compiler_verbose=false
-# File containing the dependencies.
-deps_file=
-# Target of the dependencies (i.e., lhs in the make rule).
-deps_target=
-deps_phony=false
-linkargs=
-# mode=compile|link|preprocess
-mode=
-# Output file name.
-output=
-# Whether the source was already preprocessed (i.e., *.i or *.ii).
-preprocessed=false
-source=
-# Wrapper verbosity.
-verbose=false
-
 get_options "$@"
+
+case $runtime in
+  (debug)   outargs '-MDd';;
+  (release) outargs '-MD';;
+  (*) fatal "invalid \$runtime: $runtime";;
+esac
 
 case $mode in
   (compile)
