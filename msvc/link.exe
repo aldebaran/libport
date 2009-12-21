@@ -587,8 +587,10 @@ if ($deps_file)
   # Make does not like colons in file names, which is something that
   # does happen with cl.exe
   # (/home/build/.wine/dosdevices/c:/vcxx8/VC/include/stdio.h).
-  # Escape them.
-  @files = map { s/:/\\:/g; $_ } @files;
+  # Escape them.  Spaces are a problem too.  They seem to be well
+  # accepted by GNU Make on Cygwin.
+  map { s/[\s:]/\\$&/g } @files;
+  $source =~ s/[\s:]/\\$1/g;
 
   use IO::File;
   my $deps = new IO::File ">$deps_file"
