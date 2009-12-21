@@ -714,7 +714,6 @@ do
   case $i in
     (--help) usage;;
     (--verbose) verbose=true;;
-    (--version) version;;
   esac
 done
 
