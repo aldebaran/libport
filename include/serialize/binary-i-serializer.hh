@@ -39,9 +39,9 @@ namespace libport
       symbol_map_type sym_map_;
 
       template <typename T>
-      friend class PCImpl;
+      friend struct PCImpl;
       template <typename T>
-      friend class PHImpl;
+      friend struct PHImpl;
     };
   }
 }
