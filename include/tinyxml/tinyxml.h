@@ -35,11 +35,11 @@ distribution.
 #pragma warning( disable : 4786 )
 #endif
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include <cctype>
+#include <libport/cstdio>
+#include <libport/cstdlib>
+#include <libport/cstring>
+#include <libport/cassert>
 
 // Help out windows:
 #if defined( _DEBUG ) && !defined( DEBUG )

@@ -134,14 +134,13 @@ namespace sched
       }
       catch (const std::exception& e)
       {
-        GD_FERROR("job %s: Exception `%s' caught, losing it",
-                  (this)(e.what()));
+        GD_FERROR("job %s: Exception `%s' caught, losing it", this,
+                  e.what());
       }
       catch (...)
       {
         // Exception is lost and cannot be propagated properly.
-        GD_FERROR("job %s: Unknown exception caught, losing it",
-                  (this));
+        GD_FERROR("job %s: Unknown exception caught, losing it", this);
       }
     }
 

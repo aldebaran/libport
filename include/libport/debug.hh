@@ -23,8 +23,6 @@
 
 #  include <libport/format.hh>
 #  include <boost/function.hpp>
-#  include <boost/preprocessor/seq/for_each.hpp>
-
 #  include <libport/export.hh>
 #  include <libport/finally.hh>
 #  include <libport/option-parser.hh>
@@ -220,11 +218,8 @@ namespace libport
 
 #  define GD_DEBUGGER libport::debugger()
 
-#  define GD_FORMAT_ELEM(R, Data, Elem) % Elem
-
-#  define GD_FORMAT(Msg, Seq)                           \
-  str(boost::format(Msg)                                \
-      BOOST_PP_SEQ_FOR_EACH(GD_FORMAT_ELEM, , Seq))
+#  define GD_FORMAT(Msg, ...)                   \
+  libport::format(Msg, __VA_ARGS__)
 
 #  define GD_STREAM(Msg)                        \
   (libport::StreamWrapper() << Msg).str()
@@ -241,14 +236,14 @@ namespace libport
   GD_DEBUGGER->debug(Message, ::libport::Debug::types::info,    \
                     GD_FUNCTION, __FILE__, __LINE__)
 
-#  define GD_FINFO(Msg, Seq)                    \
-  GD_INFO(GD_FORMAT(Msg, Seq))
+#  define GD_FINFO(Msg, ...)                    \
+  GD_INFO(GD_FORMAT(Msg, __VA_ARGS__))
 
 #  define GD_SINFO(Msg)                         \
   GD_INFO(GD_STREAM(Msg))
 
 #  define GD_VINFO(Msg, Exp)                    \
-  GD_FINFO("%s: %s = %s", (Msg) (#Exp) (Exp))
+  GD_FINFO("%s: %s = %s", Msg, #Exp, Exp)
 
 
 #  define GD_INFO_LOG(Msg)                      \
@@ -263,17 +258,17 @@ namespace libport
 #  define GD_INFO_DUMP(Msg)                     \
   do { GD_DUMP(); GD_INFO(Msg); } while (0)
 
-#  define GD_FINFO_LOG(Msg, Seq)                        \
-  do { GD_LOG(); GD_FINFO(Msg, Seq); } while (0)
+#  define GD_FINFO_LOG(Msg, ...)                        \
+  do { GD_LOG(); GD_FINFO(Msg, __VA_ARGS__); } while (0)
 
-#  define GD_FINFO_TRACE(Msg, Seq)                      \
-  do { GD_TRACE(); GD_FINFO(Msg, Seq); } while (0)
+#  define GD_FINFO_TRACE(Msg, ...)                      \
+  do { GD_TRACE(); GD_FINFO(Msg, __VA_ARGS__); } while (0)
 
-#  define GD_FINFO_DEBUG(Msg, Seq)                      \
-  do { GD_DEBUG(); GD_FINFO(Msg, Seq); } while (0)
+#  define GD_FINFO_DEBUG(Msg, ...)                      \
+  do { GD_DEBUG(); GD_FINFO(Msg, __VA_ARGS__); } while (0)
 
-#  define GD_FINFO_DUMP(Msg, Seq)                       \
-  do { GD_DUMP(); GD_FINFO(Msg, Seq); } while (0)
+#  define GD_FINFO_DUMP(Msg, ...)                       \
+  do { GD_DUMP(); GD_FINFO(Msg, __VA_ARGS__); } while (0)
 
 #  define GD_SINFO_LOG(Msg)                        \
   do { GD_LOG(); GD_SINFO(Msg); } while (0)
@@ -303,28 +298,28 @@ namespace libport
   GD_DEBUGGER->debug(Message, ::libport::Debug::types::warn,    \
                     GD_FUNCTION, __FILE__, __LINE__)
 
-#  define GD_FWARN(Msg, Seq)                 \
-  GD_WARN(GD_FORMAT(Msg, Seq))
+#  define GD_FWARN(Msg, ...)                 \
+  GD_WARN(GD_FORMAT(Msg, __VA_ARGS__))
 
 #  define GD_SWARN(Msg)                 \
   GD_WARN(GD_STREAM(Msg))
 
 #  define GD_VWARN(Msg, Exp)                    \
-  GD_FWARN("%s: %s = %s", (Msg) (#Exp) (Exp))   \
+  GD_FWARN("%s: %s = %s", Msg, #Exp, Exp)
 
 
 #  define GD_ERROR(Message)                                     \
   GD_DEBUGGER->debug(Message, ::libport::Debug::types::error,   \
                     GD_FUNCTION, __FILE__, __LINE__)
 
-#  define GD_FERROR(Msg, Seq)               \
-  GD_ERROR(GD_FORMAT(Msg, Seq))
+#  define GD_FERROR(Msg, ...)               \
+  GD_ERROR(GD_FORMAT(Msg, __VA_ARGS__))
 
 #  define GD_SERROR(Msg)               \
   GD_ERROR(GD_STREAM(Msg))
 
-#  define GD_VERROR(Msg, Exp)                    \
-  GD_FERROR("%s: %s = %s", (Msg) (#Exp) (Exp))
+#  define GD_VERROR(Msg, Exp)                   \
+  GD_FERROR("%s: %s = %s", Msg, #Exp, Exp)
 
 
 #  define GD_PUSH(Message)                              \
@@ -332,8 +327,8 @@ namespace libport
   (GD_DEBUGGER->push(Message,                           \
                      GD_FUNCTION, __FILE__, __LINE__))
 
-#  define GD_FPUSH(Message, Seq)                \
-  GD_PUSH(GD_FORMAT(Message, Seq))              \
+#  define GD_FPUSH(Message, ...)                \
+  GD_PUSH(GD_FORMAT(Message, __VA_ARGS__))              \
                                                 \
 /*-------------.
 | Categories.  |
@@ -432,8 +427,8 @@ namespace libport
 #  define GD_ABORT(Msg)                         \
   libport::Debug::abort(Msg)
 
-#  define GD_FABORT(Msg, Seq)                   \
-  GD_ABORT(GD_FORMAT(Msg, Seq))
+#  define GD_FABORT(Msg, ...)                   \
+  GD_ABORT(GD_FORMAT(Msg, __VA_ARGS__))
 
 #  define GD_UNREACHABLE()                      \
   GD_ABORT("Unreachable code reached")
@@ -498,34 +493,34 @@ namespace libport
 
 #  define GD_DEBUGGER
 #  define GD_FORMAT_ELEM(R, Data, Elem)
-#  define GD_FORMAT(Msg, Seq)
+#  define GD_FORMAT(Msg, ...)
 #  define GD_INFO(Message)
-#  define GD_FINFO(Msg, Seq)
+#  define GD_FINFO(Msg, ...)
 #  define GD_VINFO(Msg, Exp)
 #  define GD_INFO_LOG(Msg)
 #  define GD_INFO_TRACE(Msg)
 #  define GD_INFO_DEBUG(Msg)
 #  define GD_INFO_DUMP(Msg)
-#  define GD_FINFO_LOG(Msg, Seq)
-#  define GD_FINFO_TRACE(Msg, Seq)
-#  define GD_FINFO_DEBUG(Msg, Seq)
-#  define GD_FINFO_DUMP(Msg, Seq)
-#  define GD_SINFO_LOG(Msg, Seq)
-#  define GD_SINFO_TRACE(Msg, Seq)
-#  define GD_SINFO_DEBUG(Msg, Seq)
-#  define GD_SINFO_DUMP(Msg, Seq)
+#  define GD_FINFO_LOG(Msg, ...)
+#  define GD_FINFO_TRACE(Msg, ...)
+#  define GD_FINFO_DEBUG(Msg, ...)
+#  define GD_FINFO_DUMP(Msg, ...)
+#  define GD_SINFO_LOG(Msg, ...)
+#  define GD_SINFO_TRACE(Msg, ...)
+#  define GD_SINFO_DEBUG(Msg, ...)
+#  define GD_SINFO_DUMP(Msg, ...)
 #  define GD_VINFO_LOG(Msg, Val)
 #  define GD_VINFO_TRACE(Msg, Val)
 #  define GD_VINFO_DEBUG(Msg, Val)
 #  define GD_VINFO_DUMP(Msg, Val)
 #  define GD_WARN(Message)
-#  define GD_FWARN(Msg, Seq)
+#  define GD_FWARN(Msg, ...)
 #  define GD_VWARN(Msg, Exp)
 #  define GD_ERROR(Message)
-#  define GD_FERROR(Msg, Seq)
+#  define GD_FERROR(Msg, ...)
 #  define GD_VERROR(Msg, Exp)
 #  define GD_PUSH(Message)
-#  define GD_FPUSH(Message, Seq)
+#  define GD_FPUSH(Message, ...)
 #  define GD_CATEGORY(Cat)
 #  define GD_DISABLE_CATEGORY(Cat)
 #  define GD_ENABLE_CATEGORY(Cat)
@@ -549,7 +544,7 @@ namespace libport
 #  define GD_SHOW_DEBUG()
 #  define GD_SHOW_DUMP()
 #  define GD_ABORT(Msg)
-#  define GD_FABORT(Msg, Seq)
+#  define GD_FABORT(Msg, ...)
 #  define GD_UNREACHABLE()
 #  define GD_IHEXDUMP(Data, Size)
 #  define GD_INIT()

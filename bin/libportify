@@ -4,6 +4,39 @@ use strict;
 use IO::File;
 use File::Basename;
 
+# A regexp that matches 0 or more repetitions of either a
+# non-backtracking word with no parens/braces, or a braced group, or a
+# parenthezied group.
+#
+# Note that since it is greedy and non-backtracking, it might eat too
+# much.  Use $braced instead.
+my $balanced;
+$balanced =
+  qr{
+       (?:
+          (?> [^(){}\[\]]+ )         # Non-parens/braces without backtracking
+        |
+          \( (??{ $balanced }) \)     # Group with matching parens
+        |
+          \{ (??{ $balanced }) \}     # Group with matching braces
+        |
+          \[ (??{ $balanced }) \]     # Group with matching brackets
+       )*
+    }x;
+
+# Same as above, but allow backtracking on non-braced parts, so that
+# we don't eat places where we want to catch operators.
+my $braced =
+  qr{
+      (?:
+          \{ $balanced \}
+        | \( $balanced \)
+        | \[ $balanced \]
+        | [^(){}\[\]]+        # Non-parens/braces with backtracking
+      )*
+    }x;
+
+
 # contents ($FILE_NAME)
 # ---------------------
 sub contents ($)
@@ -125,7 +158,7 @@ sub to_format ($)
           push @arg, $c
       }
   }
-  my $args = join '', map { "($_)" } @arg;
+  my $args = join ', ', @arg;
   return ("\"$res\"", $args);
 }
 
@@ -172,6 +205,33 @@ sub libport_debug ($\$)
   # DEBUG_LOG(session_id) << "parseRTSPUrl: "<< e.what ();
   s{DEBUG_LOG\s*\((.*?)\)(.*?)(?:\s*<<\s*std::endl)?\s*;}
    {gdebug("INFO_LOG", to_format("'[' << $1 << \"] \" $2")) . ";";}ges;
+
+  # Move from "Format, (Arg1)(Arg2)" to "Format, Arg1, Arg2"...
+  s{
+    ([ \t]*)
+    (GD_F(?:INFO(?:_LOG|_TRACE|_DEBUG|_DUMP)?|WARN|ERROR|PUSH|ABORT))
+    \(
+      (".*?"),\s*
+      ((?:\($balanced+\)\s*)+)
+    \)
+   }
+   {
+     my $spaces = $1;
+     my $channel = $2;
+     my $format = $3;
+     my $args = $4;
+     my @arg = ($format);
+     $args =~ s/\(($balanced+)\)\s*/push @arg, $1/ges;
+
+     # Chose the separator: if fits on a single line, simply ','.
+     # Otherwise, indeed each argument on its line.
+     my $tab = $spaces . " " x length("$channel(");
+     my $res = $spaces . "$channel(" . (join ", ", @arg) . ")";
+     $res = $spaces . "$channel(" . (join ",\n$tab", @arg) . ")"
+       if 76 < length $res;
+     $res;
+   }xges;
+
 
   $$contents_ref = $_;
 }
@@ -240,9 +300,15 @@ sub transform_things (\&@)
 
   for my $thing (@thing)
     {
-      if (-f $thing
+      if (
+          -f $thing
+          # We libportify source files.  They have an extension,
+          # except cstdio and so forth...
           && basename($thing) =~ m{ (?:\.(?:cc|hh|h|hxx)$)
-                                  | (?:^c\w+$)}x)
+                                  | (?:^c\w+$)}x
+          # but then configure matches that regexp.
+          && basename($thing) !~ m{configure}x
+        )
         {
           transform_file &$transform_ref, $thing;
         }
@@ -252,6 +318,7 @@ sub transform_things (\&@)
                               |\.git
                               |\.dsym
                               |bison
+                              |_build
                               |jpeg)$}x)
         {
           opendir (my $dir, $thing) ||
