@@ -20,7 +20,9 @@ namespace libport
   template <typename T>
   inline
   T
-  between(const typename traits::Arg<T>::res min, const typename traits::Arg<T>::res value, const typename traits::Arg<T>::res max);
+  between(const typename traits::Arg<T>::res min,
+          const typename traits::Arg<T>::res value,
+          const typename traits::Arg<T>::res max);
 
   template <typename T>
   inline
