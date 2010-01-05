@@ -22,7 +22,7 @@
 
 // Normalize to 1
 #  undef WIN32
-#  define WIN32
+#  define WIN32 1
 
 #  ifndef _WIN32_WINNT
 #   define _WIN32_WINNT 0x0400
