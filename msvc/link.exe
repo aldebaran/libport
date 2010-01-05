@@ -337,6 +337,7 @@ get_options ()
     (-v)        compiler_verbose=true;;
     (--runtime=*) runtime=${1#--runtime=};;
     (--runtime)   runtime=$2             ; shift;;
+    (-Wl,--runtime=*) runtime=${1#-Wl,--runtime=};;
 
     # Libraries.
     (-link) ;;
