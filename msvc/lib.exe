@@ -72,7 +72,7 @@ lib_exe=$VCXX_BIN/$PROG
 test -x "$lib_exe" ||
   error 176 "$PROG not found in $VCXX_BIN"
 
-outargs=
+outargs=/nologo
 linkargs=
 got_output_arg=false
 source=
@@ -85,21 +85,21 @@ transform()
 case $1 in
   (cru)
     shift
-    outargs="/OUT:$(transform "$1")" ; shift
+    outargs+=" /OUT:$(transform "$1")" ; shift
     ;;
   (x)  #gnah, we have to remove them one by one
     shift
     lib=$($repath -w $1)
     for f in $("$lib_exe" /LIST $lib |tail -n +4 |sed -e 's/\r//g'); do
       mkdir -p $(dirname "$f")
-      "$lib_exe" "/EXTRACT:$f" "/OUT:$f" $lib
+      "$lib_exe" $outargs "/EXTRACT:$f" "/OUT:$f" $lib
     done
     exit
     ;;
  (t)
     shift
     lib=$($repath -w $1)
-    "$lib_exe" /LIST $lib |tail -n +4 |sed -e 's/\r//g'
+    "$lib_exe" $outargs /LIST $lib |tail -n +4 |sed -e 's/\r//g'
     exit
     ;;
 esac
