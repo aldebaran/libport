@@ -19,6 +19,7 @@ AM_INIT_AUTOMAKE([1.10.2 foreign -Wall nostdinc subdir-objects])
 ## Tool/Compilers setup ##
 ## -------------------- ##
 
+URBI_COMPILATION_MODE
 # Look for a C++ compiler.
 URBI_PROG_CXX
 
@@ -47,7 +48,6 @@ fi
 BOOST_TEST([$boost_rt_opt])
 BOOST_SYSTEM([$boost_rt_opt])
 
-URBI_COMPILATION_MODE
 
 ## --------- ##
 ## Libport.  ##
