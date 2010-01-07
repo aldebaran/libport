@@ -505,17 +505,17 @@ namespace libport
                       unsigned int rate)
   {
     boost::system::error_code erc;
-
-    Rs232& sp = *new Rs232(get_io_service());
+    typedef netdetail::SocketWrapper<boost::asio::serial_port>
+      SerialPortWrapper;
+    SerialPortWrapper& sp = *new SerialPortWrapper(get_io_service());
     sp.open(device, erc);
     if (erc)
       return erc;
     sp.set_option(boost::asio::serial_port::baud_rate(rate), erc);
     if (erc)
       return erc;
-    typedef netdetail::SocketImpl<Rs232> SerBase;
-    SerBase* sb = (SerBase*)SerBase::create(&sp);
-    this->setBase(sb);
+    BaseSocket* sb = netdetail::SocketImpl<SerialPortWrapper>::create(&sp);
+    setBase(sb);
     sb->startReader();
     onConnect();
 

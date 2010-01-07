@@ -47,9 +47,6 @@
 # include <libport/unistd.h>
 
 # include <boost/version.hpp>
-# if 103600 <= BOOST_VERSION
-#  include <libport/rs232.hh>
-# endif
 
 namespace libport
 {
