@@ -111,8 +111,8 @@ namespace LIBPORT_HASH_NAMESPACE
   /*--------.
   | char*.  |
   `--------*/
-  template<>
-  class hash_compare<const char*>
+  template<typename T>
+  class hash_compare<const char*, T>
   {
     public:
     enum
@@ -142,8 +142,8 @@ namespace LIBPORT_HASH_NAMESPACE
   /*--------------.
   | std::string.  |
   `--------------*/
-  template<>
-  class hash_compare<std::string>
+  template<typename T>
+  class hash_compare<std::string, T>
   {
     public:
     enum
@@ -170,8 +170,8 @@ namespace LIBPORT_HASH_NAMESPACE
   /*------------------.
   | libport::Symbol.  |
   `------------------*/
-  template<>
-  class hash_compare<libport::Symbol>
+  template<typename T>
+  class hash_compare<libport::Symbol, T>
   {
     public:
     enum
