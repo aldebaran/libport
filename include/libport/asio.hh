@@ -380,6 +380,12 @@ namespace libport
   LIBPORT_API AsyncCallHandler
   asyncCall(boost::function0<void> callback, useconds_t usDelay,
             boost::asio::io_service& io = get_io_service());
+
+  /** Return a pair of connected sockets. First is read-only, second write-only.
+   */
+  LIBPORT_API void
+  makePipe(std::pair<Socket*, Socket*>,
+           boost::asio::io_service& io = get_io_service());
 }
 
 # include "libport/asio.hxx"

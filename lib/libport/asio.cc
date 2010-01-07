@@ -11,6 +11,7 @@
 // Said code goes in asio-ssl.cc
 #define LIBPORT_NO_SSL
 
+#include <libport/detect-win32.h>
 #include <libport/thread.hh>
 #include <libport/asio.hh>
 #include "asio-impl.hxx"
@@ -20,7 +21,56 @@ namespace libport
 
   namespace netdetail
   {
+    // Wrap a boost::asio stream adding Socket interface
+    template<typename T> class SocketWrapper: public T
+    {
+    public:
+      typedef SocketWrapper<T> lowest_layer_type;
+      struct addr
+      {
+        std::string to_string()
+        {
+          return std::string();
+        }
+      };
 
+      struct endpoint
+      {
+        std::string host()
+        {
+          return std::string();
+        };
+
+        unsigned short port()
+        {
+          return 0;
+        };
+
+        addr address()
+        {
+          return addr();
+        };
+
+        int protocol()
+        {
+          return 0;
+        }
+
+      };
+      SocketWrapper(boost::asio::io_service& s)
+      :T(s) {}
+      SocketWrapper(boost::asio::io_service& s, int f)
+      :T(s, f) {}
+      void shutdown(int, boost::system::error_code&)
+      {
+        T::close();
+      }
+      endpoint remote_endpoint() { return endpoint();}
+      endpoint local_endpoint() { return endpoint();}
+      SocketWrapper<T>& lowest_layer() {return *this;}
+      void assign(int, int);
+      static const int shutdown_both = 0;
+    };
     class UDPLinkImpl: public UDPLink
     {
     public:
@@ -143,7 +193,7 @@ namespace libport
               boost::system::error_code& caller_erc)
     {
       caller_erc = erc;
-      // If timer was allready canceled, cancel is a noop and does no harm.
+      // If timer was already canceled, cancel is a noop and does no harm.
       timer.cancel();
       sem++;
     }
@@ -267,7 +317,7 @@ namespace libport
     static bool hasWorkerThread = false;
     if (!startWorkerThread && hasWorkerThread)
     {
-      std::cerr <<"fatal, worker thread allready running" << std::endl;
+      std::cerr <<"fatal, worker thread already running" << std::endl;
       abort();
     }
     if (!io)
@@ -473,4 +523,50 @@ namespace libport
   }
 
 # endif
+
+  void
+  makePipe(std::pair<Socket*, Socket*> s, boost::asio::io_service& io)
+  {
+    using namespace boost::asio;
+    using namespace netdetail;
+#ifdef WIN32
+    // Implement using named pipes.
+    std::string name = "\\\\.\\liburbi-pipe-"
+      + string_cast(getpid())
+      + string_cast(utime()) + string_cast(rand());
+    HANDLE h1 = CreateNamedPipe(name.c_str(), PIPE_ACCESS_INBOUND,
+                               PIPE_TYPE_BYTE| PIPE_READMODE_BYTE,
+                               2, 512 ,0, NULL);
+    if (h1 == INVALID_HANDLE_VALUE)
+      throw std::runtime_error(std::string("CreateNamedPipe:") + strerror(0));
+    HANDLE h2 = CreateNamedPipe(name.c_str(), PIPE_ACCESS_OUTBOUND,
+                               PIPE_TYPE_BYTE| PIPE_READMODE_BYTE,
+                               2, 512 ,0, NULL);
+    if (h2 == INVALID_HANDLE_VALUE)
+      throw std::runtime_error(std::string("CreateNamedPipe:") + strerror(0));
+    BaseSocket b1 =
+      SocketImpl<SocketWrapper<windows::stream_handle> >::create(
+        new SocketWrapper<windows::stream_handle>(io, h1));
+    BaseSocket b2 =
+      SocketImpl<SocketWrapper<windows::stream_handle> >::create(
+        new SocketWrapper<windows::stream_handle>(io, h2));
+#else
+    // implement using POSIX pipe()
+    int fd[2];
+    if (pipe(fd) == -1)
+      throw std::runtime_error(std::string("pipe:") + strerror(errno));
+    BaseSocket* b1 =
+      SocketImpl<SocketWrapper<posix::stream_descriptor> >::create(
+       new SocketWrapper<posix::stream_descriptor>(io, fd[0]));
+    BaseSocket* b2 =
+      SocketImpl<SocketWrapper<posix::stream_descriptor> >::create(
+      new SocketWrapper<posix::stream_descriptor>(io, fd[1]));
+#endif
+    s.first->setBase(b1);
+    s.second->setBase(b2);
+    b1->startReader();
+    //No reader at b2 end.
+    s.first->onConnect();
+    s.second->onConnect();
+  }
 }

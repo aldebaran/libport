@@ -352,6 +352,23 @@ test()
   }
 }
 
+static void test_pipe()
+{
+  TestSocket* s1 = new TestSocket(false, true), *s2 = new TestSocket(false, true);
+  libport::makePipe(std::make_pair(s2, s1));
+  // First element is reader, second is writer.
+  s1->send("canard");
+  usleep(delay*2);
+  BOOST_CHECK_EQUAL("canard", s2->received);
+  s1->send("coin");
+  usleep(delay*2);
+  BOOST_CHECK_EQUAL(s2->received, "canardcoin");
+  usleep(delay);
+  s1->destroy();
+  s2->destroy();
+  usleep(delay*2);
+}
+
 test_suite*
 init_test_suite()
 {
@@ -359,5 +376,6 @@ init_test_suite()
   skip_if_wine();
   test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
   suite->add(BOOST_TEST_CASE(test));
+  suite->add(BOOST_TEST_CASE(test_pipe));
   return suite;
 }
