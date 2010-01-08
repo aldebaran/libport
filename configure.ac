@@ -9,7 +9,6 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux])
 URBI_DISTCHECK_CONFIGURE_FLAGS
 URBI_PACKAGE_KIND([sdk])
-URBI_DIRS([libport])
 
 # Automake 1.10 generates incomplete "clean-libtool" targets which
 # result in the end in failing distchecks.
@@ -22,6 +21,7 @@ AM_INIT_AUTOMAKE([1.10.2 foreign -Wall nostdinc subdir-objects])
 URBI_COMPILATION_MODE
 # Look for a C++ compiler.
 URBI_PROG_CXX
+URBI_DIRS([libport])
 
 # We have some assembly for coroutine support.
 AM_PROG_AS
