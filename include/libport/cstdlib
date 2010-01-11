@@ -85,6 +85,8 @@ namespace libport
   void xsystem(const std::string& cmd);
 }
 
+# include <libport/cstdlib.hxx>
+
 #endif // ! LIBPORT_CSTDLIB
 
 // Local Variables:

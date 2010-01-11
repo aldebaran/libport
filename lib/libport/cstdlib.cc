@@ -16,25 +16,6 @@
 #include <libport/sys/wait.h>
 #include <string>
 
-#if defined _MSC_VER || defined __MINGW32__
-
-extern "C"
-{
-  int
-  setenv(const char* key, const char* value, int overwrite)
-  {
-    if (!overwrite && getenv(key))
-      return 0;
-#if defined __MINGW32__ // MinGW has no _putenv_s
-    return _putenv((std::string(key) + "=" + value).c_str());
-#else
-    return _putenv_s(key, value);
-#endif
-  }
-}
-
-#endif
-
 #ifdef _MSC_VER
 
 extern "C"
@@ -62,33 +43,6 @@ extern "C"
 }
 
 #endif
-
-/*----------.
-| xgetenv.  |
-`----------*/
-
-extern "C"
-{
-  // It makes sense for this function to live in the C world, but it
-  // is also put there so that our test suite can load libport.so and
-  // look for "xgetenv" in it without worrying about mangling.
-  const char*
-  xgetenv(const char* c, const char* deflt)
-  {
-    const char* res = getenv(c);
-    return res ? res : deflt;
-  }
-}
-
-namespace libport
-{
-  std::string
-  xgetenv(const char* c, const std::string& deflt)
-  {
-    const char* res = getenv(c);
-    return res ? res : deflt;
-  }
-}
 
 /*--------.
 | xsystem |
