@@ -17,6 +17,8 @@
 #  define RTLD_NOW 0
 #  define RTLD_GLOBAL 0
 
+typedef HMODULE RTLD_HANDLE;
+
 static inline RTLD_HANDLE
 dlopen(const char* name, int)
 {
@@ -51,6 +53,7 @@ dlerror(DWORD err = GetLastError())
 
 # else
 #  include <dlfcn.h>
+typedef void* RTLD_HANDLE;
 # endif
 
 /*-----------------------------.
