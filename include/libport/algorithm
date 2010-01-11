@@ -13,6 +13,7 @@
 
 # include <algorithm>
 
+# include <libport/cmath>
 # include <libport/traits.hh>
 
 namespace libport
