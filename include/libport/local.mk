@@ -144,6 +144,8 @@ libport_include_HEADERS +=				\
   include/libport/statistics.hxx			\
   include/libport/symbol.hh				\
   include/libport/symbol.hxx				\
+  include/libport/synchronizer.hh			\
+  include/libport/synchronizer.hxx			\
   include/libport/sysexits.hh				\
   include/libport/system-warning-pop.hh			\
   include/libport/system-warning-push.hh		\
