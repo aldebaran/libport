@@ -19,6 +19,15 @@
 
 GD_ADD_CATEGORY(XLTDL);
 
+extern "C"
+{
+  int
+  libport_xlt_details_identity(int i)
+  {
+    return i;
+  }
+}
+
 namespace libport
 {
   namespace xlt

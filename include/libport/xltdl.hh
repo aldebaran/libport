@@ -94,6 +94,13 @@ namespace libport
 
 }
 
+// This function is here only for the testsuite; it opens libport.so,
+// and try to fetch and use this symbol.
+extern "C"
+{
+  int libport_xlt_details_identity(int i);
+}
+
 # include <libport/xltdl.hxx>
 
 #endif // ! LIBPORT_XLTDL_HH

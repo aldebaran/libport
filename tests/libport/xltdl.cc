@@ -26,11 +26,11 @@ check()
   BOOST_CHECK(h.handle);
 
   // Load xgetenv, and use it.
-  typedef const char* (*getenv_type) (const char*);
-  getenv_type g = 0;
-  BOOST_CHECK_NO_THROW(g = h.sym<getenv_type>("xgetenv"));
-  BOOST_CHECK(g);
-  BOOST_CHECK_EQUAL(g("PATH"), getenv("PATH"));
+  typedef int (*identity_type) (int);
+  identity_type id = 0;
+  BOOST_CHECK_NO_THROW(id = h.sym<identity_type>("libport_xlt_details_identity"));
+  BOOST_CHECK(id);
+  BOOST_CHECK_EQUAL(id(123456), 123456);
 
   // Close libport.la.
   BOOST_CHECK_NO_THROW(h.close());
