@@ -17,6 +17,7 @@
 # include <libport/foreach.hh>
 # include <libport/hierarchy.hh>
 # include <libport/meta.hh>
+# include <libport/symbol.hh>
 # include <serialize/fwd.hh>
 
 
@@ -280,9 +281,9 @@ namespace libport
     | libport::hash.  |
     `----------------*/
     template <typename K, typename V>
-    struct BinaryISerializer::Impl<libport::hash_map<K, V> >
+    struct BinaryISerializer::Impl<boost::unordered_map<K, V> >
     {
-      typedef libport::hash_map<K, V> result_type;
+      typedef boost::unordered_map<K, V> result_type;
       static result_type
       get(const std::string&, std::istream&, BinaryISerializer& ser)
       {

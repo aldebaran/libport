@@ -11,6 +11,7 @@
 # define LIBPORT_SERIALIZE_BINARY_O_SERIALIZER_HH
 
 # include <libport/hash.hh>
+# include <libport/symbol.hh>
 # include <serialize/export.hh>
 # include <serialize/o-serializer.hh>
 
@@ -28,11 +29,11 @@ namespace libport
       struct Impl;
 
     private:
-      typedef libport::hash_map<long, unsigned> ptr_map_type;
+      typedef boost::unordered_map<long, unsigned> ptr_map_type;
       unsigned ptr_id_;
       ptr_map_type ptr_map_;
 
-      typedef libport::hash_map<Symbol, unsigned> symbol_map_type;
+      typedef boost::unordered_map<Symbol, unsigned> symbol_map_type;
       unsigned symbol_id_;
       symbol_map_type symbol_map_;
     };

@@ -18,7 +18,7 @@ namespace libport
     /// The Data.
     typedef std::string data_type;
     /// The map Key -> Data.
-    typedef libport::hash_map<key_type, data_type> map_type;
+    typedef boost::unordered_map<key_type, data_type> map_type;
     /// Pair Key x Data.
     typedef map_type::value_type value_type;
 

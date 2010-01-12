@@ -11,6 +11,7 @@
 # define LIBPORT_SERIALIZE_BINARY_I_SERIALIZER_HH
 
 # include <libport/hash.hh>
+# include <libport/symbol.hh>
 # include <serialize/export.hh>
 # include <serialize/i-serializer.hh>
 

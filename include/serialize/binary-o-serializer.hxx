@@ -248,14 +248,14 @@ namespace libport
     | libport::hash.  |
     `----------------*/
     template <typename K, typename V>
-    struct BinaryOSerializer::Impl<libport::hash_map<K, V> >
+    struct BinaryOSerializer::Impl<boost::unordered_map<K, V> >
     {
       static void
       put(const std::string&,
-          const libport::hash_map<K, V>& m, std::ostream&,
+          const boost::unordered_map<K, V>& m, std::ostream&,
           BinaryOSerializer& ser)
       {
-        typedef typename libport::hash_map<K, V>::value_type Value;
+        typedef typename boost::unordered_map<K, V>::value_type Value;
         // FIXME: raise if overflow
         ser.serialize<unsigned short>("size", m.size());
         foreach (const Value& elt, m)

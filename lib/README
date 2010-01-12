@@ -18,9 +18,7 @@ Output values, references and pointers equally on a stream: they all
 print the value.
 
 ** hash.hh
-libport::hash_map<K, V>, Hash tables.  Relies on either G++'s or MS'.
-We should check for ext/hash_map and hash_map.h instead of relying on
-!Windows.
+boost::unordered_map<K, V>.
 
 ** indent.hh
 Function objects to implement indented pretty-printing on an ostream.

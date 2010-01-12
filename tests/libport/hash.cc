@@ -20,7 +20,7 @@ template <typename T>
 void
 test_hash_map()
 {
-  libport::hash_map<T, std::string> map;
+  boost::unordered_map<T, std::string> map;
 
   BOOST_CHECK(map.empty());
   BOOST_CHECK_EQUAL(map.size(), 0u);
