@@ -30,6 +30,7 @@ TESTS_BINARIES =                                \
   tests/libport/finally.cc                      \
   tests/libport/foreach.cc                      \
   tests/libport/has-if.cc                       \
+  tests/libport/hash.cc                         \
   tests/libport/indent.cc                       \
   tests/libport/input-arguments.cc		\
   tests/libport/intrusive-ptr.cc                \
@@ -82,55 +83,56 @@ LDADD +=                                        \
   $(BOOST_UNIT_TEST_FRAMEWORK_LIBS)
 
 
-tests_libport_asio_SOURCES                        = tests/libport/asio.cc
+tests_libport_asio_SOURCES = tests/libport/asio.cc
 tests_libport_asio_LDADD = $(BOOST_SYSTEM_LIBS)  $(LDADD)
 tests_libport_asio_LDFLAGS = $(BOOST_SYSTEM_LDFLAGS) $(AM_LDFLAGS)
 tests_libport_asio_CXXFLAGS = $(PTHREAD_CFLAGS) $(AM_CXXFLAGS)
 
-tests_libport_assert_SOURCES                            = tests/libport/assert.cc
-tests_libport_base64_SOURCES                            = tests/libport/base64.cc
-tests_libport_backtrace_SOURCES                         = tests/libport/backtrace.cc
-tests_libport_cli_SOURCES                               = tests/libport/cli.cc
-tests_libport_condition_SOURCES                         = tests/libport/condition.cc
-tests_libport_containers_SOURCES                        = tests/libport/containers.cc
-tests_libport_cstdlib_SOURCES                           = tests/libport/cstdlib.cc
-tests_libport_damerau_levenshtein_distance_SOURCES      = tests/libport/damerau-levenshtein-distance.cc
-tests_libport_debug_SOURCES                             = tests/libport/debug.cc
-tests_libport_deref_SOURCES                             = tests/libport/deref.cc
-tests_libport_dirent_SOURCES                            = tests/libport/dirent.cc
-tests_libport_erase_if_SOURCES                          = tests/libport/erase-if.cc
-tests_libport_escape_SOURCES                            = tests/libport/escape.cc
-tests_libport_fd_stream_SOURCES                         = tests/libport/fd-stream.cc
-tests_libport_fifo_SOURCES                              = tests/libport/fifo.cc
-tests_libport_file_library_SOURCES                      = tests/libport/file-library.cc
-tests_libport_finally_SOURCES                           = tests/libport/finally.cc
-tests_libport_foreach_SOURCES                           = tests/libport/foreach.cc
-tests_libport_has_if_SOURCES                            = tests/libport/has-if.cc
-tests_libport_indent_SOURCES                            = tests/libport/indent.cc
-tests_libport_input_arguments_SOURCES                   = tests/libport/input-arguments.cc
-tests_libport_intrusive_ptr_SOURCES                     = tests/libport/intrusive-ptr.cc
-tests_libport_intrusive_ptr_serialize_SOURCES           = tests/libport/intrusive-ptr-serialize.cc
-tests_libport_io_stream_SOURCES                         = tests/libport/io-stream.cc
-tests_libport_markup_ostream_SOURCES                    = tests/libport/markup-ostream.cc
-tests_libport_option_parser_SOURCES                     = tests/libport/option-parser.cc
-tests_libport_path_SOURCES                              = tests/libport/path.cc
-tests_libport_pid_file_SOURCES                          = tests/libport/pid-file.cc
-tests_libport_pthread_SOURCES                           = tests/libport/pthread.cc
-tests_libport_read_stdin_SOURCES                        = tests/libport/read-stdin.cc
-tests_libport_safe_container_SOURCES                    = tests/libport/safe-container.cc
-tests_libport_semaphore_SOURCES                         = tests/libport/semaphore.cc
-tests_libport_separate_SOURCES                          = tests/libport/separate.cc
-tests_libport_singleton_ptr_SOURCES                     = tests/libport/singleton-ptr.cc
-tests_libport_statistics_SOURCES                        = tests/libport/statistics.cc
-tests_libport_symbol_SOURCES                            = tests/libport/symbol.cc
-tests_libport_time_SOURCES                              = tests/libport/time.cc
-tests_libport_timer_SOURCES                             = tests/libport/timer.cc
-tests_libport_tokenizer_SOURCES                         = tests/libport/tokenizer.cc
-tests_libport_traits_SOURCES                            = tests/libport/traits.cc
-tests_libport_ufloat_double_SOURCES                     = tests/libport/ufloat-double.cc
-tests_libport_unescape_SOURCES                          = tests/libport/unescape.cc
-tests_libport_utime_SOURCES                             = tests/libport/utime.cc
-tests_libport_xltdl_SOURCES                             = tests/libport/xltdl.cc
+tests_libport_assert_SOURCES                       = tests/libport/assert.cc
+tests_libport_base64_SOURCES                       = tests/libport/base64.cc
+tests_libport_backtrace_SOURCES                    = tests/libport/backtrace.cc
+tests_libport_cli_SOURCES                          = tests/libport/cli.cc
+tests_libport_condition_SOURCES                    = tests/libport/condition.cc
+tests_libport_containers_SOURCES                   = tests/libport/containers.cc
+tests_libport_cstdlib_SOURCES                      = tests/libport/cstdlib.cc
+tests_libport_damerau_levenshtein_distance_SOURCES = tests/libport/damerau-levenshtein-distance.cc
+tests_libport_debug_SOURCES                        = tests/libport/debug.cc
+tests_libport_deref_SOURCES                        = tests/libport/deref.cc
+tests_libport_dirent_SOURCES                       = tests/libport/dirent.cc
+tests_libport_erase_if_SOURCES                     = tests/libport/erase-if.cc
+tests_libport_escape_SOURCES                       = tests/libport/escape.cc
+tests_libport_fd_stream_SOURCES                    = tests/libport/fd-stream.cc
+tests_libport_fifo_SOURCES                         = tests/libport/fifo.cc
+tests_libport_file_library_SOURCES                 = tests/libport/file-library.cc
+tests_libport_finally_SOURCES                      = tests/libport/finally.cc
+tests_libport_foreach_SOURCES                      = tests/libport/foreach.cc
+tests_libport_hash_SOURCES                         = tests/libport/hash.cc
+tests_libport_has_if_SOURCES                       = tests/libport/has-if.cc
+tests_libport_indent_SOURCES                       = tests/libport/indent.cc
+tests_libport_input_arguments_SOURCES              = tests/libport/input-arguments.cc
+tests_libport_intrusive_ptr_SOURCES                = tests/libport/intrusive-ptr.cc
+tests_libport_intrusive_ptr_serialize_SOURCES      = tests/libport/intrusive-ptr-serialize.cc
+tests_libport_io_stream_SOURCES                    = tests/libport/io-stream.cc
+tests_libport_markup_ostream_SOURCES               = tests/libport/markup-ostream.cc
+tests_libport_option_parser_SOURCES                = tests/libport/option-parser.cc
+tests_libport_path_SOURCES                         = tests/libport/path.cc
+tests_libport_pid_file_SOURCES                     = tests/libport/pid-file.cc
+tests_libport_pthread_SOURCES                      = tests/libport/pthread.cc
+tests_libport_read_stdin_SOURCES                   = tests/libport/read-stdin.cc
+tests_libport_safe_container_SOURCES               = tests/libport/safe-container.cc
+tests_libport_semaphore_SOURCES                    = tests/libport/semaphore.cc
+tests_libport_separate_SOURCES                     = tests/libport/separate.cc
+tests_libport_singleton_ptr_SOURCES                = tests/libport/singleton-ptr.cc
+tests_libport_statistics_SOURCES                   = tests/libport/statistics.cc
+tests_libport_symbol_SOURCES                       = tests/libport/symbol.cc
+tests_libport_time_SOURCES                         = tests/libport/time.cc
+tests_libport_timer_SOURCES                        = tests/libport/timer.cc
+tests_libport_tokenizer_SOURCES                    = tests/libport/tokenizer.cc
+tests_libport_traits_SOURCES                       = tests/libport/traits.cc
+tests_libport_ufloat_double_SOURCES                = tests/libport/ufloat-double.cc
+tests_libport_unescape_SOURCES                     = tests/libport/unescape.cc
+tests_libport_utime_SOURCES                        = tests/libport/utime.cc
+tests_libport_xltdl_SOURCES                        = tests/libport/xltdl.cc
 
 tests_libport_xltdl_LDADD = $(LDADD) $(LTDL_LIBS)
 
