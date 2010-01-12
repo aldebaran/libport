@@ -7,6 +7,7 @@ libport_include_HEADERS =			\
   include/libport/csignal			\
   include/libport/cstdio			\
   include/libport/cstdlib			\
+  include/libport/cstdlib.hxx			\
   include/libport/cstring			\
   include/libport/cstring.hxx			\
   include/libport/ctime				\
