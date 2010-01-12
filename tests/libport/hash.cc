@@ -23,32 +23,33 @@ test_hash_map()
   libport::hash_map<T, std::string> map;
 
   BOOST_CHECK(map.empty());
+  BOOST_CHECK_EQUAL(map.size(), 0u);
 
   BOOST_CHECK_NO_THROW(map[T("foo")] = "foo");
   BOOST_CHECK(!map.empty());
-  BOOST_CHECK_EQUAL(map.size(), 1);
+  BOOST_CHECK_EQUAL(map.size(), 1u);
   BOOST_CHECK_EQUAL(map[T("foo")], "foo");
 
   BOOST_CHECK_NO_THROW(map[T("bar")] = "bar");
   BOOST_CHECK(!map.empty());
-  BOOST_CHECK_EQUAL(map.size(), 2);
+  BOOST_CHECK_EQUAL(map.size(), 2u);
   BOOST_CHECK_EQUAL(map[T("foo")], "foo");
   BOOST_CHECK_EQUAL(map[T("bar")], "bar");
 
   BOOST_CHECK_NO_THROW(map[T("bar")] = "baz");
   BOOST_CHECK(!map.empty());
-  BOOST_CHECK_EQUAL(map.size(), 2);
+  BOOST_CHECK_EQUAL(map.size(), 2u);
   BOOST_CHECK_EQUAL(map[T("foo")], "foo");
   BOOST_CHECK_EQUAL(map[T("bar")], "baz");
 
   BOOST_CHECK_NO_THROW(map.erase(T("foo")));
   BOOST_CHECK(!map.empty());
-  BOOST_CHECK_EQUAL(map.size(), 1);
+  BOOST_CHECK_EQUAL(map.size(), 1u);
   BOOST_CHECK_EQUAL(map[T("bar")], "baz");
 
   BOOST_CHECK_NO_THROW(map.erase(T("bar")));
   BOOST_CHECK(map.empty());
-  BOOST_CHECK_EQUAL(map.size(), 0);
+  BOOST_CHECK_EQUAL(map.size(), 0u);
 }
 
 
