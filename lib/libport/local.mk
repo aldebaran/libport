@@ -1,8 +1,10 @@
-lib_LTLIBRARIES += lib/libport/libport.la
-lib_libport_libport_la_LDFLAGS =		\
+
+
+lib_LTLIBRARIES += lib/libport/libport@LIBSFX@.la
+lib_libport_libport@LIBSFX@_la_LDFLAGS =		\
   -avoid-version -no-undefined
 
-lib_libport_libport_la_LIBADD =			\
+lib_libport_libport@LIBSFX@_la_LIBADD =			\
   $(LIBADD)					\
   $(BOOST_SYSTEM_LIBS)				\
   $(CLOCK_LIBS)					\
@@ -12,13 +14,13 @@ lib_libport_libport_la_LIBADD =			\
   $(PTHREAD_LIBS)				\
   $(SSL_LIBS)
 
-lib_libport_libport_la_CPPFLAGS =		\
+lib_libport_libport@LIBSFX@_la_CPPFLAGS =		\
   $(AM_CPPFLAGS)				\
   -Ilib						\
   -DBUILDING_LIBPORT
 
 # Sources to compile to use libport.
-dist_lib_libport_libport_la_SOURCES = 		\
+dist_lib_libport_libport@LIBSFX@_la_SOURCES = 		\
   lib/libport/asio.cc                           \
   lib/libport/asio-impl.hxx                     \
   lib/libport/asio-ssl.cc                       \
@@ -85,4 +87,4 @@ include $(top_srcdir)/build-aux/revision.mk
 # GNU Make 3.80 does not recognize that `!' is a shell builtin, and
 # tries to call it via exec.  So help GNU Make understand it should
 # call the shell.
-#	: && ! grep -E '[<"]config.h[">]' $(dist_lib_libport_libport_la_SOURCES)
+#	: && ! grep -E '[<"]config.h[">]' $(dist_lib_libport_libport@LIBSFX@_la_SOURCES)

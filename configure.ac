@@ -111,7 +111,7 @@ if test x$enable_boost_serialization = xyes; then
 fi
 
 WITH_XENOMAI
-
+URBI_LIB_SUFFIX
 AC_CONFIG_FILES([Makefile])
 
 AC_CONFIG_FILES([doc/doxygen.sh],    [chmod a=rx doc/doxygen.sh])

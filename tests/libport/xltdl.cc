@@ -7,6 +7,8 @@
  *
  * See the LICENSE file for more information.
  */
+
+#include <libport/config.h>
 #include <libport/xltdl.hh>
 #include <libport/unit-test.hh>
 
@@ -22,7 +24,7 @@ check()
   xlt_handle h;
 
   // Open libport.la.
-  BOOST_CHECK_NO_THROW(h = a.open("lib/libport/libport.la"));
+  BOOST_CHECK_NO_THROW(h = a.open("lib/libport/libport" LIBPORT_LIBSFX ".la"));
   BOOST_CHECK(h.handle);
 
   // Load xgetenv, and use it.
