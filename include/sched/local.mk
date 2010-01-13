@@ -10,12 +10,9 @@ sched_include_HEADERS =					\
   include/sched/fwd.hh					\
   include/sched/job.hh					\
   include/sched/job.hxx					\
-  include/sched/libcoroutine/Common.h			\
-  include/sched/libcoroutine/Coro.h			\
-  include/sched/libcoroutine/PortableUContext.h		\
-  include/sched/libcoroutine/PortableUContext386.h	\
-  include/sched/libcoroutine/PortableUContextPPC.h	\
   include/sched/scheduler.hh				\
   include/sched/scheduler.hxx				\
   include/sched/tag.hh					\
   include/sched/tag.hxx
+
+include include/sched/libcoroutine/local.mk

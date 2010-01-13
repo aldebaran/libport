@@ -1,16 +1,13 @@
-/*
- docCopyright("Steve Dekorte", 2002)
- docLicense("BSD revised")
- docDescription("This is a header that all other source files should include.")
+//metadoc Common copyright Steve Dekorte 2002
+//metadoc Common license BSD revised
+/*metadoc Common description
+This is a header that all other source files should include.
+These defines are helpful for doing OS specific checks in the code.
  */
 
-/*
- These defines are helpful for doing OS specific checks in the code
- */
 
 #ifndef IOCOMMON_DEFINED
 #define IOCOMMON_DEFINED 1
-
 
 /*#define LOW_MEMORY_SYSTEM 1*/
 #include <stdlib.h>
@@ -50,12 +47,13 @@ typedef long long int64_t;
 
 #define ON_WINDOWS 1
 
-// Enable fibers
-#define _WIN32_WINNT 0x0400
-
-#include <libport/windows.hh>
 // this also includes windows.h
 #include <winsock2.h>
+
+// Enable fibers
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0400
+#endif
 
 #if !defined(__MINGW32__)
 #if defined(BUILDING_BASEKIT_DLL) || defined(BUILDING_IOVMALL_DLL)
@@ -68,7 +66,7 @@ typedef long long int64_t;
 #endif
 /*
 #ifndef _SYS_STDINT_H_
-#include <sched/libcoroutine/PortableStdint.h>
+#include "PortableStdint.h"
 #endif
  */
 
@@ -78,6 +76,12 @@ as errors in my dev settings */
 
 #pragma warning( disable : 4244 )
 /* warning C4244: 'function' : conversion from 'double ' to 'int ', possible loss of data */
+
+#pragma warning( disable : 4996 )
+/* warning C4996: 'function' : This function or variable may be unsafe. Consider using 'function_s' instead */
+
+#pragma warning( disable : 4018 )
+/* warning C4018: 'operator' : signed/unsigned mismatch */
 
 /*#pragma warning( disable : 4090 ) */
 /* warning C4090: 'function' : different 'const' qualifiers  */
@@ -178,6 +182,9 @@ extern "C" {
 
 BASEKIT_API void *cpalloc(const void *p, size_t size);
 BASEKIT_API void *io_freerealloc(void *p, size_t size);
+
+int io_isBigEndian(void);
+BASEKIT_API uint32_t io_uint32InBigEndian(uint32_t i);
 
 #ifdef __cplusplus
 }

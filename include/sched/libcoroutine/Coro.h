@@ -1,61 +1,56 @@
-/*
-*/
-
 #ifndef CORO_DEFINED
 #define CORO_DEFINED 1
 
-#include <sched/libcoroutine/Common.h>
-#include <sched/libcoroutine/PortableUContext.h>
+#if defined(__linux__)
+	#define HAS_UCONTEXT 1
+#endif
+
+#if defined(__amd64__) && !defined(__x86_64__)
+        #define __x86_64__ 1
+#endif
+
+#include "Common.h"
+//#include "PortableUContext.h"
+#include "taskimpl.h"
 
 #if defined(__SYMBIAN32__)
 	#define CORO_STACK_SIZE     8192
 	#define CORO_STACK_SIZE_MIN 1024
 #else
-	 //#define CORO_DEFAULT_STACK_SIZE     (65536/2)
-	 #define CORO_DEFAULT_STACK_SIZE  (65536*4)
+	//#define CORO_DEFAULT_STACK_SIZE     (65536/2)
+	//#define CORO_DEFAULT_STACK_SIZE  (65536*4)
+
 	//128k needed on PPC due to parser
+	#define CORO_DEFAULT_STACK_SIZE (128*1024)
+	//#define CORO_DEFAULT_STACK_SIZE (256*1024)
 	#define CORO_STACK_SIZE_MIN 8192
 #endif
 
-// These changes are Gostai specific.  Because of cascades of
-// "inline", these functions need to be exported, we match
-#define GOSTAI
-#ifdef GOSTAI
-
-# include <sched/export.hh>
-# define CORO_API SCHED_API
-
-#else // !GOSTAI
-
 #if !defined(__MINGW32__) && defined(WIN32)
-# if defined(BUILDING_CORO_DLL) || defined(BUILDING_IOVMALL_DLL)
-#  define CORO_API __declspec(dllexport)
-# else
-#  define CORO_API __declspec(dllimport)
-# endif
+#if defined(BUILDING_CORO_DLL) || defined(BUILDING_IOVMALL_DLL)
+#define CORO_API __declspec(dllexport)
 #else
-# define CORO_API
+#define CORO_API __declspec(dllimport)
 #endif
 
-#endif // !GOSTAI
-
-/*
-#if defined(__amd64__) && !defined(__x86_64__)
-	#define __x86_64__ 1
+#else
+#define CORO_API
 #endif
-*/
+
 
 // Pick which coro implementation to use
 // The make file can set -DUSE_FIBERS, -DUSE_UCONTEXT or -DUSE_SETJMP to force this choice.
 #if !defined(USE_FIBERS) && !defined(USE_UCONTEXT) && !defined(USE_SETJMP)
 
 #if defined(WIN32) && defined(HAS_FIBERS)
-#define USE_FIBERS
+#	define USE_FIBERS
 #elif defined(HAS_UCONTEXT)
 //#elif defined(HAS_UCONTEXT) && !defined(__x86_64__)
-#define USE_UCONTEXT
+#	if !defined(USE_UCONTEXT)
+#		define USE_UCONTEXT
+#	endif
 #else
-#define USE_SETJMP
+#	define USE_SETJMP
 #endif
 
 #endif
@@ -63,25 +58,16 @@
 #if defined(USE_FIBERS)
 	#define CORO_IMPLEMENTATION "fibers"
 #elif defined(USE_UCONTEXT)
-// OSX (at least 10.5.4) does define all the function (swapcontext
-// etc.) we want, but the currently this library still wants to define
-// (and declare) them.  Since they are declared, with different
-// prototypes, in <ucontext.h>, there is a clash.  So instead of
-// pulling the definition of these functions from <ucontext.h>, just
-// pull the definition of the structures we need from <sys/ucontext.h>
-// and let this library provide its functions.
-# if defined __APPLE__
 	#include <sys/ucontext.h>
-# else
-	#include <ucontext.h>
-#endif
 	#define CORO_IMPLEMENTATION "ucontext"
 #elif defined(USE_SETJMP)
 	#include <setjmp.h>
 	#define CORO_IMPLEMENTATION "setjmp"
 #endif
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct Coro Coro;
 
@@ -113,7 +99,6 @@ CORO_API void Coro_free(Coro *self);
 
 CORO_API void *Coro_stack(Coro *self);
 CORO_API size_t Coro_stackSize(Coro *self);
-CORO_API size_t Coro_stackSize(Coro *self);
 CORO_API uint8_t *Coro_CurrentStackPointer(void)
 #if __GNUC__ == 4
   __attribute__ ((noinline))
@@ -131,4 +116,7 @@ CORO_API void Coro_startCoro_(Coro *self, Coro *other, void *context, CoroStartC
 CORO_API void Coro_switchTo_(Coro *self, Coro *next);
 CORO_API void Coro_setup(Coro *self, void *arg); // private
 
+#ifdef __cplusplus
+}
+#endif
 #endif

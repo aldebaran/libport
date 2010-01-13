@@ -21,12 +21,13 @@ dist_lib_sched_libsched@LIBSFX@_la_SOURCES =		\
   lib/sched/pthread-coro.hxx			\
   lib/sched/scheduler.cc			\
   lib/sched/tag.cc				\
-  lib/sched/uclibc-workaround.cc		\
-  lib/sched/libcoroutine/Base.h			\
-  lib/sched/libcoroutine/Coro.cc		\
-  lib/sched/libcoroutine/PortableUContext.c	\
-  lib/sched/libcoroutine/PortableUContext_asm.S
+  lib/sched/uclibc-workaround.cc
+
+lib_sched_libsched_la_CPPFLAGS +=               \
+  -I$(top_srcdir)/include/sched/libcoroutine
 
 # This is distributed, but not compiled directly: it is included by
 # Coro.cc.
 EXTRA_DIST += lib/sched/libcoroutine/Coro.c
+
+include lib/sched/libcoroutine/local.mk
