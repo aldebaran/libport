@@ -58,7 +58,11 @@
 #if defined(USE_FIBERS)
 	#define CORO_IMPLEMENTATION "fibers"
 #elif defined(USE_UCONTEXT)
-	#include <sys/ucontext.h>
+	#ifdef __APPLE__
+	#  include <sys/ucontext.h>
+	#else
+	#  include <ucontext.h>
+	#endif
 	#define CORO_IMPLEMENTATION "ucontext"
 #elif defined(USE_SETJMP)
 	#include <setjmp.h>
