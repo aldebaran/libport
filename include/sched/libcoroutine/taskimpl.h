@@ -37,19 +37,33 @@ extern "C"
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
+#ifndef _MSC_VER
+# include <unistd.h>
+#endif
 #include <string.h>
 #include <assert.h>
 #include <time.h>
 #include <sys/time.h>
+#ifndef _MSC_VER
+# include <sys/time.h>
+#endif
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sched.h>
+#ifndef _MSC_VER
+# include <sys/wait.h>
+# include <sched.h>
+#endif
 #include <signal.h>
 #if USE_UCONTEXT
 #include <ucontext.h>
 #endif
 #include <sys/utsname.h>
 #include <inttypes.h>
+#ifndef _MSC_VER
+# include <sys/utsname.h>
+# include <inttypes.h>
+#endif
 //#include "task.h"
 
 // #define nil ((void*)0)
