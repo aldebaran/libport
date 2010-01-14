@@ -59,8 +59,13 @@ namespace libport
       };
       SocketWrapper(boost::asio::io_service& s)
       :T(s) {}
+#ifdef WIN32
+      SocketWrapper(boost::asio::io_service& s, HANDLE f)
+      :T(s, f) {}
+#else
       SocketWrapper(boost::asio::io_service& s, int f)
       :T(s, f) {}
+#endif
       void shutdown(int, boost::system::error_code&)
       {
         T::close();
@@ -536,18 +541,18 @@ namespace libport
       + string_cast(utime()) + string_cast(rand());
     HANDLE h1 = CreateNamedPipe(name.c_str(), PIPE_ACCESS_INBOUND,
                                PIPE_TYPE_BYTE| PIPE_READMODE_BYTE,
-                               2, 512 ,0, NULL);
+                               2, 512 ,512, 0, NULL);
     if (h1 == INVALID_HANDLE_VALUE)
       throw std::runtime_error(std::string("CreateNamedPipe:") + strerror(0));
     HANDLE h2 = CreateNamedPipe(name.c_str(), PIPE_ACCESS_OUTBOUND,
                                PIPE_TYPE_BYTE| PIPE_READMODE_BYTE,
-                               2, 512 ,0, NULL);
+                               2, 512 ,512, 0, NULL);
     if (h2 == INVALID_HANDLE_VALUE)
       throw std::runtime_error(std::string("CreateNamedPipe:") + strerror(0));
-    BaseSocket b1 =
+    BaseSocket* b1 =
       SocketImpl<SocketWrapper<windows::stream_handle> >::create(
         new SocketWrapper<windows::stream_handle>(io, h1));
-    BaseSocket b2 =
+    BaseSocket* b2 =
       SocketImpl<SocketWrapper<windows::stream_handle> >::create(
         new SocketWrapper<windows::stream_handle>(io, h2));
 #else
