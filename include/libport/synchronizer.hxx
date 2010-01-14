@@ -11,12 +11,14 @@
 namespace libport
 {
 
+  inline
   Synchronizer::Synchronizer()
   : waiting_count_(0)
   , signaled_count_(0)
   {
   }
 
+  inline
   void Synchronizer::check()
   {
     if (waiting_count_)
@@ -31,6 +33,7 @@ namespace libport
     }
   }
 
+  inline
   Synchronizer::SynchroPoint::SynchroPoint(Synchronizer& src)
   : sync_(src)
   {
@@ -39,6 +42,7 @@ namespace libport
     sync_.cond_.wait();
   }
 
+  inline
   Synchronizer::SynchroPoint::~SynchroPoint()
   {
     sync_.signaled_count_--;

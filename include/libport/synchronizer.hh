@@ -11,6 +11,7 @@
 #ifndef LIBPORT_SYNCHRONIZER_HH
 # define LIBPORT_SYNCHRONIZER_HH
 
+# include <libport/export.hh>
 # include <libport/condition.hh>
 # include <libport/semaphore.hh>
 
@@ -31,12 +32,12 @@ namespace libport
    *     Its constructor will block until the master thread reaches check().
    *     The master thread will then be blocked until destructor is called.
    */
-  class Synchronizer
+  class LIBPORT_API Synchronizer
   {
   public:
     Synchronizer();
     void check();
-    class SynchroPoint
+    class LIBPORT_API SynchroPoint
     {
     public:
       SynchroPoint(Synchronizer& src);
