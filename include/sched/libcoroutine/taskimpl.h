@@ -36,7 +36,6 @@ extern "C"
 
 #include <errno.h>
 #include <stdlib.h>
-#include <unistd.h>
 #ifndef _MSC_VER
 # include <unistd.h>
 #endif
