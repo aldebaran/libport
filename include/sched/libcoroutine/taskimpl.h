@@ -42,13 +42,10 @@ extern "C"
 #include <string.h>
 #include <assert.h>
 #include <time.h>
-#include <sys/time.h>
 #ifndef _MSC_VER
 # include <sys/time.h>
 #endif
 #include <sys/types.h>
-#include <sys/wait.h>
-#include <sched.h>
 #ifndef _MSC_VER
 # include <sys/wait.h>
 # include <sched.h>
@@ -57,8 +54,6 @@ extern "C"
 #if USE_UCONTEXT
 #include <ucontext.h>
 #endif
-#include <sys/utsname.h>
-#include <inttypes.h>
 #ifndef _MSC_VER
 # include <sys/utsname.h>
 # include <inttypes.h>
