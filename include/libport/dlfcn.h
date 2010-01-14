@@ -6,7 +6,7 @@
 #ifndef LIBPORT_DLFCN_H
 # define LIBPORT_DLFCN_H
 
-
+# include <libport/windows.hh>
 
 /*---------------------------------.
 | dlopen and dlsym under windows.  |
