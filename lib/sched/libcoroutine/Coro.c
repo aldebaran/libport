@@ -164,14 +164,10 @@ size_t Coro_bytesLeftOnStack(Coro *self)
 	ptrdiff_t start = ((ptrdiff_t)self->stack);
 	ptrdiff_t end   = start + self->requestedStackSize;
 
-	if (stackMovesUp) // like x86
-	{
+	if (stackMovesUp) // like PPC
 		return end - p1;
-	}
-	else // like OSX on PPC
-	{
+	else // like x86
 		return p1 - start;
-	}
 }
 
 int Coro_stackSpaceAlmostGone(Coro *self)
