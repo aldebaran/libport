@@ -203,8 +203,9 @@ void Coro_startCoro_(Coro *self, Coro *other, void *context, CoroStartCallback *
 
 #ifdef USE_FIBERS
 	globalCallbackBlock.associatedCoro = other;
-#endif
+#else
 	Coro_allocStackIfNeeded(other);
+#endif
 	Coro_setup(other, block);
 	Coro_switchTo_(self, other);
 }
