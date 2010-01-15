@@ -236,6 +236,19 @@ sub libport_debug ($\$)
   $$contents_ref = $_;
 }
 
+# libport_renamings ($FILE, \$CONTENTS)
+# -------------------------------------
+# Convert old symbol names to new names.
+sub libport_debug ($\$)
+{
+  my ($file, $contents_ref) = @_;
+  local $_ = $$contents_ref;
+
+  # We are now simply using Boost.Unordered.
+  s/libport::hash/boost::unordered_map/g;
+
+  $$contents_ref = $_;
+}
 
 
 ## ----------- ##
