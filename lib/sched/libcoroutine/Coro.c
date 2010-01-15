@@ -80,8 +80,9 @@ Coro *Coro_new(void)
 
 #ifdef USE_FIBERS
 	self->fiber = NULL;
-#endif
+#else
 	self->stack = NULL;
+#endif
 	return self;
 }
 
@@ -202,7 +203,7 @@ void Coro_startCoro_(Coro *self, Coro *other, void *context, CoroStartCallback *
 	block->func    = callback;
 
 #ifdef USE_FIBERS
-	globalCallbackBlock.associatedCoro = other;
+	block->associatedCoro = other;
 #else
 	Coro_allocStackIfNeeded(other);
 #endif
