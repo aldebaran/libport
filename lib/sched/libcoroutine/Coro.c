@@ -182,7 +182,8 @@ void Coro_initializeMainCoro(Coro *self)
 	self->isMain = 1;
 #ifdef USE_FIBERS
 	// We must convert the current thread into a fiber if it hasn't already been done.
-	if ((LPVOID) 0x1e00 == GetCurrentFiber()) // value returned when not a fiber
+        LPVOID currentFiber = GetCurrentFiber();
+        if (currentFiber == (LPVOID) 0x1e00 || !currentFiber) // value returned when not a fiber, 0 under wine.
 	{
 		// Make this thread a fiber and set its data field to the main coro's address
 		ConvertThreadToFiber(self);
