@@ -63,6 +63,9 @@ typedef struct CallbackBlock
 {
 	void *context;
 	CoroStartCallback *func;
+#ifdef USE_FIBERS
+	Coro* associatedCoro;
+#endif
 } CallbackBlock;
 
 #if !defined(USE_UCONTEXT) || !defined(__x86_64__)
@@ -77,9 +80,8 @@ Coro *Coro_new(void)
 
 #ifdef USE_FIBERS
 	self->fiber = NULL;
-#else
-	self->stack = NULL;
 #endif
+	self->stack = NULL;
 	return self;
 }
 
@@ -201,6 +203,9 @@ void Coro_startCoro_(Coro *self, Coro *other, void *context, CoroStartCallback *
 	block->context = context;
 	block->func    = callback;
 
+#ifdef USE_FIBERS
+	globalCallbackBlock.associatedCoro = other;
+#endif
 	Coro_allocStackIfNeeded(other);
 	Coro_setup(other, block);
 	Coro_switchTo_(self, other);
@@ -238,6 +243,23 @@ void Coro_Start(void)
 #else
 void Coro_StartWithArg(CallbackBlock *block)
 {
+#ifdef USE_FIBERS
+	if (block->associatedCoro->fiber != GetCurrentFiber())
+		abort();
+	// Set the start of the stack for future comparaison. According to
+	// http://msdn.microsoft.com/en-us/library/ms686774(VS.85).aspx,
+	// some part of the stack is reserved for running an handler if
+	// the fiber exhaust its stack, but we have no way of retrieving
+	// this information (SetThreadStackGuarantee() is not supported
+	// on WindowsXP), so we have to assume that it is the default
+	// 64kB.
+	MEMORY_BASIC_INFORMATION meminfo;
+	// Look at the descriptors of the meminfo structure, which is
+	// conveniently located on the stack we are interested into.
+	VirtualQuery(&meminfo, &meminfo, sizeof meminfo);
+	block->associatedCoro->stack =
+		(char*)meminfo.AllocationBase + 64 * 1024;
+#endif
 	(block->func)(block->context);
 	printf("Scheduler error: returned from coro start function\n");
 	exit(-1);
