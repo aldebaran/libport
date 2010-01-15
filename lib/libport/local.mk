@@ -1,29 +1,27 @@
-
-
 lib_LTLIBRARIES += lib/libport/libport@LIBSFX@.la
-lib_libport_libport@LIBSFX@_la_LDFLAGS =		\
+lib_libport_libport@LIBSFX@_la_LDFLAGS =	\
   -avoid-version -no-undefined
 
-lib_libport_libport@LIBSFX@_la_LIBADD =			\
+lib_libport_libport@LIBSFX@_la_LIBADD =		\
   $(LIBADD)					\
   $(BOOST_SYSTEM_LIBS)				\
   $(CLOCK_LIBS)					\
-  $(LTDL_LIBS)                                  \
+  $(LTDL_LIBS)					\
   $(SOCKETS_LIBS)				\
   $(PTHREAD_LDFLAGS)				\
   $(PTHREAD_LIBS)				\
   $(SSL_LIBS)
 
-lib_libport_libport@LIBSFX@_la_CPPFLAGS =		\
+lib_libport_libport@LIBSFX@_la_CPPFLAGS =	\
   $(AM_CPPFLAGS)				\
   -Ilib						\
   -DBUILDING_LIBPORT
 
 # Sources to compile to use libport.
-dist_lib_libport_libport@LIBSFX@_la_SOURCES = 		\
-  lib/libport/asio.cc                           \
-  lib/libport/asio-impl.hxx                     \
-  lib/libport/asio-ssl.cc                       \
+dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
+  lib/libport/asio.cc				\
+  lib/libport/asio-impl.hxx			\
+  lib/libport/asio-ssl.cc			\
   lib/libport/assert.cc				\
   lib/libport/backtrace.cc			\
   lib/libport/base64.cc				\
@@ -36,7 +34,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES = 		\
   lib/libport/cstdlib.cc			\
   lib/libport/cstring.cc			\
   lib/libport/ctime.cc				\
-  lib/libport/damerau-levenshtein-distance.cc   \
+  lib/libport/damerau-levenshtein-distance.cc	\
   lib/libport/debug.cc				\
   lib/libport/deref.cc				\
   lib/libport/dirent.cc				\
@@ -59,6 +57,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES = 		\
   lib/libport/semaphore-rpl.cc			\
   lib/libport/semaphore.cc			\
   lib/libport/symbol.cc				\
+  lib/libport/synchronizer.cc			\
   lib/libport/sysexits.cc			\
   lib/libport/timer.cc				\
   lib/libport/tokenizer.cc			\

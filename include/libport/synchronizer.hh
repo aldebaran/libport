@@ -36,7 +36,10 @@ namespace libport
   {
   public:
     Synchronizer();
+    ~Synchronizer();
+
     void check();
+
     class LIBPORT_API SynchroPoint
     {
     public:
@@ -45,19 +48,20 @@ namespace libport
     private:
       Synchronizer& sync_;
     };
+
   private:
     friend class SynchroPoint;
     libport::Condition cond_;
     libport::Semaphore done_;
-    /* We must use two counters, since when we are in check(), once we signal,
-    * new waiting threads might insert themselve before check finishes.
-    * So incoming waiting threads increase waiting_count, and check() copies
-    * waiting into signaled, and reset waiting to 0 (safe since we own the lock).
-    * Unblocked threads decrement signaled_count (safe, lock is owned), and
-    * signal the main thread when it reaches 0.
-    * This approch is better than once sem++/sem-- per blocked thread
-    * (less syscalls).
-    */
+    /* We must use two counters, since when we are in check(), once we
+     * signal, new waiting threads might insert themselve before check
+     * finishes.  So incoming waiting threads increase waiting_count,
+     * and check() copies waiting into signaled, and reset waiting to
+     * 0 (safe since we own the lock).  Unblocked threads decrement
+     * signaled_count (safe, lock is owned), and signal the main
+     * thread when it reaches 0.  This approch is better than once
+     * sem++/sem-- per blocked thread (less syscalls).
+     */
     size_t waiting_count_;
     size_t signaled_count_;
   };
