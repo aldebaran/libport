@@ -13,6 +13,16 @@
 
 \section{Windows}
 
+\subsection{Test suite}
+
+The Libport test suite uses Boost.UnitTest.  While our builds (that
+aim for a static linking of the Boost libraries) rely on the absence
+of the Boost dlls in the library directory, this breaks the UnitTest
+framework.
+
+So we need \file{boost_unit_test_framework-vc*.*} files, not just
+\file{libboost_unit_test_framework-vc.lib}.
+
 \subsection{Killing processes}
 \label{sec:win:kill}
 Beware that the \command{kill} builtin from shells cannot kill Windows
@@ -34,7 +44,7 @@ killall ()
 \subsection{Crashes}
 
 Windows features an ``automatic bug reporting'' system that pops-up a
-windows and expects user interaction.  Many such windows can stack up
+window and expects user interaction.  Many such windows can stack up
 and consume resources (and the guilty process is still present).
 
 To prevent such windows:
