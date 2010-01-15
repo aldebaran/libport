@@ -117,6 +117,7 @@ handle_lib ()
   base=$(echo "${lib#-l}.lib" | tr A-Z a-z)
   local res
   # If $base is not in $system_libs, prepend "lib".
+  verbose "consulting $system_libs for $base"
   if grep -q "/$base\$" <$system_libs; then
     res=$base
   else
