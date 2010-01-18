@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, Gostai S.A.S.
+ * Copyright (C) 2009, 2010, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -27,12 +27,37 @@ check()
   BOOST_CHECK_NO_THROW(h = a.open("lib/libport/libport" LIBPORT_LIBSFX ".la"));
   BOOST_CHECK(h.handle);
 
-  // Load xgetenv, and use it.
+  // The test function, and its type.
   typedef int (*identity_type) (int);
-  identity_type id = 0;
-  BOOST_CHECK_NO_THROW(id = h.sym<identity_type>("libport_xlt_details_identity"));
-  BOOST_CHECK(id);
-  BOOST_CHECK_EQUAL(id(123456), 123456);
+  const char* idname = "libport_xlt_details_identity";
+
+  // Load libport_xlt_details_identity, untyped.
+  {
+    void* id = 0;
+    BOOST_CHECK_NO_THROW(id = lt_dlsym(h.handle, idname));
+    BOOST_CHECK_MESSAGE(id,
+                        libport::format("failed to dlsym %s",
+                                        idname));
+    BOOST_CHECK_MESSAGE(id,
+                        libport::format("error message: %s",
+                                        lt_dlerror()));
+
+    unsigned long idl = reinterpret_cast<unsigned long>(id);
+    BOOST_CHECK_MESSAGE(idl, "failed to cast to unsigned long");
+
+    identity_type idtyped = reinterpret_cast<identity_type>(idl);
+    BOOST_CHECK_MESSAGE(idtyped, "failed to cast to function type");
+
+    BOOST_CHECK_EQUAL(idtyped(123), 123);
+  }
+
+  // Load libport_xlt_details_identity, typed, and use it.
+  {
+    identity_type id = 0;
+    BOOST_CHECK_NO_THROW(id = h.sym<identity_type>(idname));
+    BOOST_CHECK(id);
+    BOOST_CHECK_EQUAL(id(123456), 123456);
+  }
 
   // Close libport.la.
   BOOST_CHECK_NO_THROW(h.close());
