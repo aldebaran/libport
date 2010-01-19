@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, Gostai S.A.S.
+ * Copyright (C) 2009, 2010, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -315,9 +315,9 @@ namespace libport
 
     ConcreteSocket(boost::asio::io_service& io = libport::get_io_service())
       : Socket(io)
-      , onconnect_(boost::bind(&super_type::onConnect, this))
-      , onerror_(boost::bind(&super_type::onError, this, _1))
-      , onread_(boost::bind(&super_type::onRead, this, _1, _2))
+      , onconnect_(0)
+      , onerror_(0)
+      , onread_(0)
     {}
 
     ConcreteSocket& onConnect(onconnect_type cb)
@@ -340,15 +340,20 @@ namespace libport
 
     virtual void onConnect()
     {
-      onconnect_();
+      if (onconnect_)
+        onconnect_();
     }
     virtual void onError(boost::system::error_code erc)
     {
-      onerror_(erc);
+      if (onerror_)
+        onerror_(erc);
     }
     virtual size_t onRead(const void* data, size_t length)
     {
-      return onread_(data, length);
+      if (onread_)
+        return onread_(data, length);
+      else
+        return length;
     }
 
   private:
