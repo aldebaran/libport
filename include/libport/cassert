@@ -16,12 +16,12 @@
 
 # include <cassert>
 # include <libport/cerrno>
+# include <libport/config.h>
 # include <libport/cstdlib>
 
-// We have mysterious random aborts on OSX which is compiled with
-// NDEBUG.  Temporarily disable NDEBUG to have verbose paborts.
+// Remove abort messages only if the compilation mode space is enabled.
 # ifndef LIBPORT_ASSERT_VERBOSE
-#  if defined NDEBUG
+#  if defined LIBPORT_COMPILATION_MODE_SPACE
 #   define LIBPORT_ASSERT_VERBOSE 0
 #  else
 #   define LIBPORT_ASSERT_VERBOSE 1
