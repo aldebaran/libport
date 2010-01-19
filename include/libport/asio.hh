@@ -50,6 +50,12 @@
 
 namespace libport
 {
+#ifdef WIN32
+    typedef HANDLE native_handle_type;
+#else
+    typedef int native_handle_type;
+#endif
+
   class LIBPORT_API AsioDestructible: public Destructible
   {
   protected:
@@ -103,8 +109,9 @@ namespace libport
     virtual void startReader() = 0;
 #if ! defined WIN32
     virtual int stealFD() = 0;
-    virtual int getFD() = 0;
 #endif
+    virtual native_handle_type getFD() = 0;
+
     /// Callback function called each time new data is available.
     boost::function1<bool, boost::asio::streambuf&> onReadFunc;
     /// Callback function called in case of error on the socket.
@@ -277,12 +284,12 @@ namespace libport
 #endif
 
     /// Steal file descriptor from Socket. Return the file descriptor.
-    int stealFD();
+    native_handle_type stealFD();
     /// Get file descriptor from Socket.
-    int getFD();
+    native_handle_type getFD();
     /// Set file descriptor
     template<class Sock>
-    void setFD(int fd, typename Sock::protocol_type proto);
+    void setFD(native_handle_type fd, typename Sock::protocol_type proto);
     /** Sleep for specified amount of time, polling if current thread is
      * the asio worker thread
      */

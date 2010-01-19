@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, Gostai S.A.S.
+ * Copyright (C) 2009, 2010, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -286,7 +286,7 @@ namespace libport
     }
 
     template<typename Stream>
-    int
+    native_handle_type
     SocketImpl<Stream>::getFD()
     {
       return base_->lowest_layer().native();

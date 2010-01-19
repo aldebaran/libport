@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, Gostai S.A.S.
+ * Copyright (C) 2009, 2010, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -57,7 +57,7 @@ namespace libport
   }
   template<class Sock>
   inline void
-  Socket::setFD(int fd, typename Sock::protocol_type proto)
+  Socket::setFD(native_handle_type  fd, typename Sock::protocol_type proto)
   {
     if (base_ && base_->isConnected())
     {
