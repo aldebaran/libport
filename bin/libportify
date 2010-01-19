@@ -274,7 +274,11 @@ sub libport_copyright ($\$)
   local $_ = $$contents_ref;
 
   s{
-      (Copyright\s\(C\)\s\d{4}(?:,\s\d{4})*)
+      (Copyright\s\(C\)\s
+      # A series of four-digit dates.
+      \d{4}(?:,\s\d{4})*)
+      # Don't change Copyright lines that are not about Gostai.
+      (?=,\ Gostai)
    }
    {
      my $orig = $1;
