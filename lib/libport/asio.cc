@@ -357,7 +357,7 @@ namespace libport
     if (base_)
       return base_->getFD();
     else
-      return -1;
+      return static_cast<native_handle_type>(-1);
   }
 
   void
