@@ -36,7 +36,7 @@ void* thread1(void* data)
   return 0;
 }
 
-#if not defined __APPLE__ && not defined WIN32
+#if ! defined __APPLE__ && ! defined WIN32
 # define CHECK_SEM(N) BOOST_CHECK_EQUAL(sem.value(), N)
 #else
 # define CHECK_SEM(N) (void)0
