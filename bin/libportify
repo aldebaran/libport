@@ -265,6 +265,26 @@ sub libport_spaces ($\$)
 }
 
 
+# libport_copyright ($FILE, \$CONTENTS)
+# -------------------------------------
+# Update the copyright years.
+sub libport_copyright ($\$)
+{
+  my ($file, $contents_ref) = @_;
+  local $_ = $$contents_ref;
+
+  s{
+      (Copyright\s\(C\)\s\d{4}(?:,\s\d{4})*)
+   }
+   {
+     my $orig = $1;
+     $orig . ($orig =~ /2010$/ ? "" : ", 2010")
+   }gex;
+
+  $$contents_ref = $_;
+}
+
+
 ## ----------- ##
 ## transform.  ##
 ## ----------- ##
@@ -275,10 +295,11 @@ sub libport_spaces ($\$)
 sub libportify ($$)
 {
   my ($file, $contents) = @_;
+  libport_spaces    $file, $contents;
   fix_headers       $file, $contents;
   libport_debug     $file, $contents;
   libport_renamings $file, $contents;
-  libport_spaces    $file, $contents;
+  libport_copyright $file, $contents;
   return $contents;
 }
 
@@ -323,6 +344,7 @@ sub transform_file (\&$)
 # transform_things (&TRANSFORM, @THING)
 # ------------------------------------
 # Work on file-system entities.
+sub transform_things (\&@);
 sub transform_things (\&@)
 {
   my ($transform_ref, @thing) = @_;
@@ -353,7 +375,7 @@ sub transform_things (\&@)
           opendir (my $dir, $thing) ||
             die "cannot opendir $thing: $!";
           my @e = map { "$thing/$_" } grep { !/^\.\.?$/ } readdir($dir);
-          transform_things ($transform_ref, @e);
+          transform_things (&$transform_ref, @e);
           closedir $dir;
         }
       else
