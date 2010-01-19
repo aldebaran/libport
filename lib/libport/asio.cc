@@ -225,11 +225,16 @@ namespace libport
 
     Rs232& sp = *new Rs232(get_io_service());
     sp.open(device, erc);
+    if (erc)
+      return erc;
     sp.set_option(boost::asio::serial_port::baud_rate(rate), erc);
+    if (erc)
+      return erc;
     typedef libport::netdetail::SocketImpl<Rs232> SerBase;
     SerBase* sb = (SerBase*)SerBase::create(&sp);
     this->setBase(sb);
     sb->startReader();
+    onConnect();
 
     return erc;
   }
