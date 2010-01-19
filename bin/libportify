@@ -251,6 +251,20 @@ sub libport_renamings ($\$)
 }
 
 
+# libport_space ($FILE, \$CONTENTS)
+# ---------------------------------
+# Nuke trailing white spaces.  Convert from DOS to Unix if needed.
+sub libport_spaces ($\$)
+{
+  my ($file, $contents_ref) = @_;
+  local $_ = $$contents_ref;
+
+  s/[ \t\r]+$//gm;
+
+  $$contents_ref = $_;
+}
+
+
 ## ----------- ##
 ## transform.  ##
 ## ----------- ##
@@ -261,9 +275,10 @@ sub libport_renamings ($\$)
 sub libportify ($$)
 {
   my ($file, $contents) = @_;
-  fix_headers $file, $contents;
-  libport_debug $file, $contents;
+  fix_headers       $file, $contents;
+  libport_debug     $file, $contents;
   libport_renamings $file, $contents;
+  libport_spaces    $file, $contents;
   return $contents;
 }
 
