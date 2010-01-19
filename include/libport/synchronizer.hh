@@ -11,6 +11,8 @@
 #ifndef LIBPORT_SYNCHRONIZER_HH
 # define LIBPORT_SYNCHRONIZER_HH
 
+# include <boost/function.hpp>
+
 # include <libport/export.hh>
 # include <libport/condition.hh>
 # include <libport/semaphore.hh>
@@ -39,14 +41,29 @@ namespace libport
     ~Synchronizer();
 
     void check();
-
+    void lock();
+    void unlock();
+    void setMasterThread(pthread_t threadId);
+    pthread_t getMasterThread();
+    /** Set a callback to call when a lock() is attempted.
+     *  The call is made *before* waiting on the condition, but *after*
+     *  locking it.
+     */
+    void setOnLock(boost::function0<void> func);
     class LIBPORT_API SynchroPoint
     {
     public:
-      SynchroPoint(Synchronizer& src);
+      /** Hold the lock until the object is destroyed.
+       *
+       * @param checkIfMasterThread if true, nothing is performed if current
+       * thread is the master thread.
+       */
+      SynchroPoint(Synchronizer& src, bool checkIfMasterThread = false);
       ~SynchroPoint();
+      bool isNoop() const;
     private:
       Synchronizer& sync_;
+      bool noop_;
     };
 
   private:
@@ -64,6 +81,8 @@ namespace libport
      */
     size_t waiting_count_;
     size_t signaled_count_;
+    pthread_t master_thread_;
+    boost::function0<void> on_lock_;
   };
 
 }
