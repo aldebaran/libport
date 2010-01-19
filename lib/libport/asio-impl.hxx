@@ -102,8 +102,9 @@ namespace libport
       void startReader();
 #if ! defined WIN32
       int stealFD();
-      int getFD();
 #endif
+      int getFD();
+
     private:
       Stream* base_;
       void continueWrite(DestructionLock lock, boost::system::error_code erc,
