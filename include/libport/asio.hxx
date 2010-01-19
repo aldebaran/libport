@@ -87,7 +87,7 @@ namespace libport
     size_t pos = 0;
 #ifdef WIN32
     BOOL ok;
-    size_t written;
+    DWORD written;
     while (length-pos
            && (ok=WriteFile(getFD(), cdata+pos, length-pos, &written, NULL)))
       pos += written;
