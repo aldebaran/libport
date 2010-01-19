@@ -284,6 +284,7 @@ namespace libport
       base_->lowest_layer().close();
       return fd;
     }
+#endif
 
     template<typename Stream>
     native_handle_type
@@ -291,7 +292,7 @@ namespace libport
     {
       return base_->lowest_layer().native();
     }
-#endif
+
 
     template<class T>
     void
