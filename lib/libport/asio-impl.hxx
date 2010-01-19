@@ -103,7 +103,7 @@ namespace libport
 #if ! defined WIN32
       int stealFD();
 #endif
-      int getFD();
+      native_handle_type getFD();
 
     private:
       Stream* base_;

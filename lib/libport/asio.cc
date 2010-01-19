@@ -347,7 +347,7 @@ namespace libport
     if (base_)
       return base_->stealFD();
     else
-      return -1;
+      return invalid_handle;
   }
 #endif
 
@@ -357,7 +357,7 @@ namespace libport
     if (base_)
       return base_->getFD();
     else
-      return reinterpret_cast<native_handle_type>(-1);
+      return invalid_handle;
   }
 
   void

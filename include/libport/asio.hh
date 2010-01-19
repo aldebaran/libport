@@ -52,8 +52,10 @@ namespace libport
 {
 #ifdef WIN32
     typedef HANDLE native_handle_type;
+    static const native_handle_type invalid_handle = INVALID_HANDLE_VALUE;
 #else
     typedef int native_handle_type;
+    static const native_handle_type invalid_handle = -1;
 #endif
 
   class LIBPORT_API AsioDestructible: public Destructible
