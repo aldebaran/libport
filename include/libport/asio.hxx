@@ -73,4 +73,37 @@ namespace libport
     setBase(b);
     b->startReader();
   }
+
+  inline void
+  Socket::syncWrite(const std::string& s)
+  {
+    syncWrite(s.c_str(), s.length());
+  }
+
+  inline void
+  Socket::syncWrite(const void* data, size_t length)
+  {
+    const char* cdata = static_cast<const char*>(data);
+    size_t pos = 0;
+#ifdef WIN32
+    BOOL ok;
+    size_t written;
+    while (length-pos
+           && (ok=WriteFile(getFD(), cdata+pos, length-pos, &written, NULL)))
+      pos += written;
+    if (!ok)
+      throw std::runtime_error(std::string("WriteFile: ")
+                               + libport::strerror(0));
+#else
+    ssize_t written;
+    while (length-pos
+           && (written = ::write(getFD(), cdata+pos, length-pos)))
+    {
+      if (written == -1)
+        throw std::runtime_error(std::string("write: ")
+                                 + libport::strerror(errno));
+      pos += written;
+    }
+#endif
+  }
 }

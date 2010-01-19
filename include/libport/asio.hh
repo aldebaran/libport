@@ -178,6 +178,7 @@ namespace libport
     /// Ask for the asynchronous destruction of this object.
     virtual void destroy();
 
+    /// Asynchronous write
     void write(const void* data, size_t length)
     {
       base_->write(data, length);
@@ -191,6 +192,9 @@ namespace libport
     {
       write(s.c_str(), s.length());
     }
+
+    void syncWrite(const void* data, size_t length);
+    void syncWrite(const std::string& s);
     void close()
     {
       if (base_)
