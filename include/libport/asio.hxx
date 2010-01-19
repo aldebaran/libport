@@ -89,7 +89,8 @@ namespace libport
     BOOL ok;
     DWORD written;
     while (length-pos
-           && (ok=WriteFile(getFD(), cdata+pos, length-pos, &written, NULL)))
+           && (ok=WriteFile((HANDLE)getFD(), cdata+pos, length-pos,
+                            &written, NULL)))
       pos += written;
     if (!ok)
       throw std::runtime_error(std::string("WriteFile: ")

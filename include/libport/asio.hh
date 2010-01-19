@@ -51,11 +51,12 @@
 namespace libport
 {
 #ifdef WIN32
-    typedef HANDLE native_handle_type;
-    static const native_handle_type invalid_handle = INVALID_HANDLE_VALUE;
+  typedef boost::asio::detail::socket_type native_handle_type;
+  static const native_handle_type invalid_handle =
+    (native_handle_type)INVALID_HANDLE_VALUE;
 #else
-    typedef int native_handle_type;
-    static const native_handle_type invalid_handle = -1;
+  typedef int native_handle_type;
+  static const native_handle_type invalid_handle = -1;
 #endif
 
   class LIBPORT_API AsioDestructible: public Destructible
@@ -110,7 +111,7 @@ namespace libport
     // For internal use
     virtual void startReader() = 0;
 #if ! defined WIN32
-    virtual int stealFD() = 0;
+    virtual native_handle_type stealFD() = 0;
 #endif
     virtual native_handle_type getFD() = 0;
 

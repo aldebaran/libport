@@ -147,11 +147,11 @@ namespace libport
 #undef ACCEPTOR_FAIL
       unsigned short getLocalPort() const;
       std::string getLocalHost() const;
-      int stealFD()
+      native_handle_type stealFD()
       {
-        return -1;
+        return invalid_handle;
       }
-      int getFD();
+      native_handle_type getFD();
     private:
       Acceptor* base_;
     };
@@ -194,7 +194,7 @@ namespace libport
     }
 
     template<class Acceptor>
-    int
+    native_handle_type
     AcceptorImpl<Acceptor>::getFD()
     {
       return base_->native();
@@ -276,7 +276,7 @@ namespace libport
 
 #if ! defined WIN32
     template<typename Stream>
-    int
+    native_handle_type
     SocketImpl<Stream>::stealFD()
     {
       size_t fd = base_->lowest_layer().native();
@@ -291,7 +291,8 @@ namespace libport
     native_handle_type
     SocketImpl<Stream>::getFD()
     {
-      return base_->lowest_layer().native();
+      // We need the C-cast here, because underlying type changes with Stream.
+      return (native_handle_type)base_->lowest_layer().native();
     }
 
 
