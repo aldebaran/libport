@@ -40,12 +40,12 @@ AC_CONFIG_HEADERS([include/config.h])
 
 # Basically, the following lines states we install in prefix.
 URBI_PACKAGE_KIND([sdk])
-URBI_LIBPORT
 
 URBI_BOOST_REQUIRE([1.38])
 URBI_BOOST([TEST])
 URBI_BOOST([SYSTEM])
 
+URBI_LIBPORT
 
 ## --------- ##
 ## Libport.  ##
