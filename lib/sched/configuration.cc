@@ -13,14 +13,18 @@
 namespace sched
 {
 
-#if defined LIBPORT_COMPILATION_MODE_SPACE
-# define STACK_SIZE 128
-#else
-# define STACK_SIZE 512
-#endif
-
 #if defined LIBPORT_COMPILATION_MODE_DEBUG
-# define STACK_SIZE (STACK_SIZE * 4)
+# if defined LIBPORT_COMPILATION_MODE_SPACE
+#   define STACK_SIZE 256           // space, debug
+# else
+#   define STACK_SIZE 2048          // !space, debug
+# endif
+#else // ! DEBUG
+# if defined LIBPORT_COMPILATION_MODE_SPACE
+#   define STACK_SIZE 128           // space, !debug
+# else
+#   define STACK_SIZE 512           // !space, !debug
+# endif
 #endif
 
   Configuration configuration =
