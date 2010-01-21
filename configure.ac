@@ -42,11 +42,9 @@ AC_CONFIG_HEADERS([include/config.h])
 URBI_PACKAGE_KIND([sdk])
 URBI_LIBPORT
 
-if $COMPILATION_MODE_DEBUG; then
-  boost_rt_opt=gd
-fi
-BOOST_TEST([$boost_rt_opt])
-BOOST_SYSTEM([$boost_rt_opt])
+URBI_BOOST_REQUIRE([1.38])
+URBI_BOOST([TEST])
+URBI_BOOST([SYSTEM])
 
 
 ## --------- ##
@@ -107,7 +105,7 @@ AM_CONDITIONAL([WITH_BOOST_SERIALIZATION],
 if test x$enable_boost_serialization = xyes; then
   AC_DEFINE([WITH_BOOST_SERIALIZATION], [1],
             [Define to enable boost::serialization support.])
-  BOOST_SERIALIZATION([$boost_rt_opt])
+  URBI_BOOST([SERIALIZATION])
 fi
 
 WITH_XENOMAI
