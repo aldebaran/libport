@@ -72,6 +72,14 @@ transform ()
   esac
 }
 
+# handle_lib -lLIB
+# ----------------
+# Convert a cc-like link-option (such a -lboost-date-time) into a library
+# name against which we will link.
+#
+# One issue is whether to link against libLIB.lib or LIB.lib.  It appears
+# that LIB.lib seems to be used for dlls, and libLIB.lib for static libs.
+# So since we now support dlls, if both are present, prefer LIB.lib.
 handle_lib ()
 {
   local lib=$1
@@ -100,8 +108,9 @@ handle_lib ()
         set "$@" "$i"
     done
     shift
+    verbose "systemlib dirs:" "$@"
 
-    find "$@" -iname '*.lib' |
+    find -L "$@" -iname '*.lib' |
       # We tried to keep the original case, but it was a PITA, since,
       # at least in our environment, some libraries (ws2_32) as two
       # different cases: WS2_32 for Visual, and ws2_32 for mingw.
@@ -124,7 +133,7 @@ handle_lib ()
     res=lib$base
   fi
   handle_lib_res=$(transform "$res")
-  verbose "handle_lib: $1 -> $handle_lib_res"
+  verbose "handle_lib: $lib -> $handle_lib_res"
 }
 
 # dll_2_lib ()
