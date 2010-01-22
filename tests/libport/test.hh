@@ -37,12 +37,29 @@ skip(const std::string& why)
 }
 
 inline
+bool
+running(const char* envvar, const char* message)
+{
+  const char* cp = getenv(envvar);
+  bool res = cp && *cp;
+  if (res)
+    std::cerr << message << std::endl;
+  return res;
+}
+
+inline
+void
+skip_if(const var* envvar, const char* message)
+{
+  if (skip(envvar, message)
+    skip(message);
+}
+
+inline
 void
 skip_if_qemu()
 {
-  const char* running_qemu = getenv("RUNNING_QEMU");
-  if (running_qemu && *running_qemu)
-    skip("running under qemu");
+  skip("RUNNING_QEMU", "running under qemu");
 }
 
 // Some tests cannot run properly with current versions of WineHQ,
@@ -51,8 +68,6 @@ inline
 void
 skip_if_wine()
 {
-  const char* running_wine = getenv("RUNNING_WINE");
-  if (running_wine && *running_wine)
-    skip("running under Wine");
+  skip("RUNNING_WINE", "running under qemu");
 }
 

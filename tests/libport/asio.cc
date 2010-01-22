@@ -375,10 +375,9 @@ static void test_pipe()
 test_suite*
 init_test_suite()
 {
-  skip_if_qemu();
-  skip_if_wine();
   test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
   suite->add(BOOST_TEST_CASE(test_pipe));
-  suite->add(BOOST_TEST_CASE(test));
+  if (!running_qemu() && !running_wine())
+    suite->add(BOOST_TEST_CASE(test));
   return suite;
 }
