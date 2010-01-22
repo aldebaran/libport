@@ -13,6 +13,7 @@
 
 #include <libport/asio.hh>
 #include <libport/detect-win32.h>
+#include <libport/format.hh>
 #include <libport/thread.hh>
 
 #include "asio-impl.hxx"
@@ -539,9 +540,9 @@ namespace libport
     using namespace netdetail;
 #ifdef WIN32
     // Implement using named pipes.
-    std::string name = "\\\\.\\liburbi-pipe-"
-      + string_cast(getpid())
-      + string_cast(utime()) + string_cast(rand());
+    std::string name =
+      libport::format("\\\\.\\liburbi-pipe-%s-%s-%s",
+                      getpid(), utime(), rand());
     HANDLE h1 = CreateNamedPipe(name.c_str(), PIPE_ACCESS_INBOUND,
                                PIPE_TYPE_BYTE| PIPE_READMODE_BYTE,
                                2, 512, 512, 0, NULL);
