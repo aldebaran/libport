@@ -11,9 +11,10 @@
 // Said code goes in asio-ssl.cc
 #define LIBPORT_NO_SSL
 
+#include <libport/asio.hh>
 #include <libport/detect-win32.h>
 #include <libport/thread.hh>
-#include <libport/asio.hh>
+
 #include "asio-impl.hxx"
 
 namespace libport
@@ -58,13 +59,16 @@ namespace libport
 
       };
       SocketWrapper(boost::asio::io_service& s)
-      :T(s) {}
+        : T(s)
+      {}
 #ifdef WIN32
       SocketWrapper(boost::asio::io_service& s, HANDLE f)
-      :T(s, f) {}
+        : T(s, f)
+      {}
 #else
       SocketWrapper(boost::asio::io_service& s, int f)
-      :T(s, f) {}
+        : T(s, f)
+      {}
 #endif
       void shutdown(int, boost::system::error_code&)
       {
@@ -540,12 +544,12 @@ namespace libport
       + string_cast(utime()) + string_cast(rand());
     HANDLE h1 = CreateNamedPipe(name.c_str(), PIPE_ACCESS_INBOUND,
                                PIPE_TYPE_BYTE| PIPE_READMODE_BYTE,
-                               2, 512 ,512, 0, NULL);
+                               2, 512, 512, 0, NULL);
     if (h1 == INVALID_HANDLE_VALUE)
       throw std::runtime_error(std::string("CreateNamedPipe:") + strerror(0));
     HANDLE h2 = CreateNamedPipe(name.c_str(), PIPE_ACCESS_OUTBOUND,
                                PIPE_TYPE_BYTE| PIPE_READMODE_BYTE,
-                               2, 512 ,512, 0, NULL);
+                               2, 512, 512, 0, NULL);
     if (h2 == INVALID_HANDLE_VALUE)
       throw std::runtime_error(std::string("CreateNamedPipe:") + strerror(0));
     BaseSocket* b1 =
