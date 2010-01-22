@@ -40,7 +40,7 @@ check()
                                         idname));
     BOOST_CHECK_MESSAGE(id,
                         libport::format("error message: %s",
-                                        lt_dlerror()));
+                                        lt_dlerror() ? lt_dlerror() : "NULL"));
 
     unsigned long idl = reinterpret_cast<unsigned long>(id);
     BOOST_CHECK_MESSAGE(idl, "failed to cast to unsigned long");
