@@ -10,7 +10,7 @@
 
 #if defined LIBPORT_ENABLE_SSL
 // There are many warnings in asio/ssl.  We support GCC 4.1 which does
-// not supproted "#pragma GCC diagnostics", so we have to disable all
+// not support "#pragma GCC diagnostics", so we have to disable all
 // the warnings in this header.  The cure might be worse than the
 // disease, and maybe fixing the headers on our machines would be a
 // better option.
