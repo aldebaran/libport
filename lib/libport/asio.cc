@@ -539,26 +539,28 @@ namespace libport
     using namespace boost::asio;
     using namespace netdetail;
 #ifdef WIN32
-    // Implement using named pipes.
+    // Implement using named pipes.  The format name is specified:
+    // http://msdn.microsoft.com/en-us/library/aa365150(VS.85).aspx
     std::string name =
-      libport::format("\\\\.\\liburbi-pipe-%s-%s-%s",
+      libport::format("\\\\.\\pipe\\libport-%s-%s-%s",
                       getpid(), utime(), rand());
-    HANDLE h1 = CreateNamedPipe(name.c_str(), PIPE_ACCESS_INBOUND,
-                               PIPE_TYPE_BYTE| PIPE_READMODE_BYTE,
-                               2, 512, 512, 0, NULL);
-    if (h1 == INVALID_HANDLE_VALUE)
-      throw std::runtime_error(std::string("CreateNamedPipe:") + strerror(0));
-    HANDLE h2 = CreateNamedPipe(name.c_str(), PIPE_ACCESS_OUTBOUND,
-                               PIPE_TYPE_BYTE| PIPE_READMODE_BYTE,
-                               2, 512, 512, 0, NULL);
-    if (h2 == INVALID_HANDLE_VALUE)
-      throw std::runtime_error(std::string("CreateNamedPipe:") + strerror(0));
-    BaseSocket* b1 =
-      SocketImpl<SocketWrapper<windows::stream_handle> >::create(
-        new SocketWrapper<windows::stream_handle>(io, h1));
-    BaseSocket* b2 =
-      SocketImpl<SocketWrapper<windows::stream_handle> >::create(
-        new SocketWrapper<windows::stream_handle>(io, h2));
+
+#define CREATE_PIPE(SocketVar, HandleVar, PipeAccess)                   \
+    HANDLE HandleVar =                                                  \
+      CreateNamedPipe(name.c_str(), PipeAccess,                         \
+                      PIPE_TYPE_BYTE | PIPE_READMODE_BYTE,              \
+                      2, 512, 512, 0, NULL);                            \
+    if (HandleVar == INVALID_HANDLE_VALUE)                              \
+      throw std::runtime_error                                          \
+        (libport::format("CreateNamedPipe(%s): %s",                     \
+                         name, strerror(0)));                           \
+    BaseSocket* SocketVar =                                             \
+      SocketImpl<SocketWrapper<windows::stream_handle> >::create        \
+      (new SocketWrapper<windows::stream_handle>(io, HandleVar));
+
+    CREATE_PIPE(b1, h1, PIPE_ACCESS_INBOUND);
+    CREATE_PIPE(b2, h2, PIPE_ACCESS_OUTBOUND);
+#undef CREATE_PIPE
 #else
     // implement using POSIX pipe()
     int fd[2];
