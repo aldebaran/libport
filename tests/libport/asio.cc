@@ -354,8 +354,11 @@ test()
 
 static void test_pipe()
 {
-  TestSocket* s1 = new TestSocket(false, true), *s2 = new TestSocket(false, true);
+  TestSocket* s1 = new TestSocket(false, true);
+  TestSocket* s2 = new TestSocket(false, true);
+
   libport::makePipe(std::make_pair(s2, s1));
+
   // First element is reader, second is writer.
   s1->send("canard");
   usleep(delay*2);
@@ -375,7 +378,7 @@ init_test_suite()
   skip_if_qemu();
   skip_if_wine();
   test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
-  suite->add(BOOST_TEST_CASE(test));
   suite->add(BOOST_TEST_CASE(test_pipe));
+  suite->add(BOOST_TEST_CASE(test));
   return suite;
 }
