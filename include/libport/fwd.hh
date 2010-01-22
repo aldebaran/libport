@@ -13,8 +13,8 @@
 namespace libport
 {
   // asio.hh;
-  struct ConcreteSocket;
-  struct Socket;
+  class ConcreteSocket;
+  class Socket;
 
   // lockable.hh.
   class Lockable;
@@ -31,7 +31,7 @@ namespace libport
   class PackageInfo;
 
   // path.hh;
-  struct path;
+  class path;
 
   // ref-pt.hh
   template <class T> class RefPt;
