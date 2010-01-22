@@ -507,7 +507,7 @@ namespace libport
     return pthread_self() == asio_worker_thread;
   }
 
-# if BOOST_VERSION >= 103600
+# if 103600 <= BOOST_VERSION
 
   boost::system::error_code
   Socket::open_serial(const std::string& device,
