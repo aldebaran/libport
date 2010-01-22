@@ -24,8 +24,14 @@
 
 // C4099: 'symbol' : type name first seen using 'class' now seen using
 //                           'struct'
-// (which prints lots of useless warnings when forward declarations are
-// specified with "class" while the real definition uses "struct")
+//
+// Old comment: (which prints lots of useless warnings when forward
+// declarations are specified with "class" while the real definition
+// uses "struct").
+//
+// New comment: this is actually very important, since it does make a
+// difference when exporting the symbols in the DLLs.  If defined as
+// "class" and forward declared as "struct", then linking will fail.
 
 // C4121: 'symbol' : alignment of a member was sensitive to packing
 // "A structure member is aligned on a memory offset whose value is not a
@@ -207,7 +213,7 @@
 // C4820: 'classname' : 'N' bytes padding added after data member 'foo'
 
 # pragma warning(disable:                       \
-                 4003 4061 4099                 \
+                 4003 4061                      \
                  4121 4127 4150                 \
                  4251 4275 4290                 \
                  4503 4512 4514 4571            \
