@@ -98,6 +98,7 @@ namespace libport
 // and try to fetch and use this symbol.
 extern "C"
 {
+  LIBPORT_API
   int libport_xlt_details_identity(int i);
 }
 
