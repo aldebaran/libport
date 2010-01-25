@@ -70,6 +70,10 @@ namespace libport
   /// Return getenv(c) if defined, \a deflt otherwise.
   LIBPORT_API
   std::string xgetenv(const char* c, const std::string& deflt = "");
+
+  /// Return getenv(c) if defined, \a deflt otherwise.
+  LIBPORT_API
+  std::string xgetenv(const std::string& c, const std::string& deflt = "");
 }
 
 /*--------.

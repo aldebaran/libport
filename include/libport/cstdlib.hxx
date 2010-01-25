@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2009, 2010, Gostai S.A.S.
+ *
+ * This software is provided "as is" without warranty of any kind,
+ * either expressed or implied, including but not limited to the
+ * implied warranties of fitness for a particular purpose.
+ *
+ * See the LICENSE file for more information.
+ */
+
 #ifndef LIBPORT_CSTDLIB_HXX
 # define LIBPORT_CSTDLIB_HXX
 
@@ -46,8 +56,13 @@ namespace libport
   inline std::string
   xgetenv(const char* c, const std::string& deflt)
   {
-    const char* res = getenv(c);
-    return res ? res : deflt;
+    return ::xgetenv(c, deflt.c_str());
+  }
+
+  inline std::string
+  xgetenv(const std::string& c, const std::string& deflt)
+  {
+    return xgetenv(c.c_str(), deflt);
   }
 }
 
