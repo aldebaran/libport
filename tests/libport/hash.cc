@@ -59,7 +59,7 @@ init_test_suite()
   // This test does not pass under Wine, for unknown reasons.  It did
   // not pass when we were on top of stdext::hash_map, it does not
   // pass either when we use Boost.Unordered.
-  skip_if_wine();
+  skip_if("Wine");
 
   test_suite* suite = BOOST_TEST_SUITE("libport::hash test suite");
 

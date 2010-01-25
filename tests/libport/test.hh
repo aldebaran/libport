@@ -8,8 +8,10 @@
  * See the LICENSE file for more information.
  */
 
+#include <boost/algorithm/string.hpp>
 #include <libport/compiler.hh>
 #include <libport/cstdlib>
+#include <libport/format.hh>
 #include <libport/unit-test.hh>
 #include <libport/sysexits.hh>
 #include <iostream>
@@ -20,54 +22,40 @@ srcdir()
 {
   static std::string res = libport::xgetenv("SRCDIR");
   if (res.empty())
-    std::cerr << "SRCDIR is not defined" << std::endl
-              << libport::exit(EX_USAGE);
+  {
+    BOOST_TEST_MESSAGE("SRCDIR is not defined");
+    exit(EX_USAGE);
+  }
   return res;
 }
 
 ATTRIBUTE_NORETURN
-void skip(const std::string& why);
+void skip(const std::string& env);
 
 inline
 void
-skip(const std::string& why)
+skip(const std::string& env)
 {
-  std::cerr << "skipping this test: " << why << std::endl
-            << libport::exit(EX_SKIP);
+  BOOST_TEST_MESSAGE("skipping this test, running " << env);
+  exit(EX_SKIP);
 }
 
 inline
 bool
-running(const char* envvar, const char* message)
+running(const std::string& env)
 {
-  const char* cp = getenv(envvar);
-  bool res = cp && *cp;
+  const std::string val =
+    libport::xgetenv(libport::format("RUNNING_%s", boost::to_upper_copy(env)));
+  bool res = !val.empty();
   if (res)
-    std::cerr << message << std::endl;
+    BOOST_TEST_MESSAGE("Running under " << env);
   return res;
 }
 
 inline
 void
-skip_if(const var* envvar, const char* message)
+skip_if(const char* env)
 {
-  if (skip(envvar, message)
-    skip(message);
+  if (running(env))
+    skip(env);
 }
-
-inline
-void
-skip_if_qemu()
-{
-  skip("RUNNING_QEMU", "running under qemu");
-}
-
-// Some tests cannot run properly with current versions of WineHQ,
-// because they only provide a stub for acceptex.
-inline
-void
-skip_if_wine()
-{
-  skip("RUNNING_WINE", "running under qemu");
-}
-
