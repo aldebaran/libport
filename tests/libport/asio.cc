@@ -376,14 +376,10 @@ static void test_pipe()
 test_suite*
 init_test_suite()
 {
-  test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
   skip_if("Qemu");
   skip_if("Wine");
-  /*
-  if (!running("Qemu") && !running("Wine"))
-  {
-    suite->add(BOOST_TEST_CASE(test));
-    suite->add(BOOST_TEST_CASE(test_pipe));
-  }*/
+  test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
+  suite->add(BOOST_TEST_CASE(test));
+  suite->add(BOOST_TEST_CASE(test_pipe));
   return suite;
 }
