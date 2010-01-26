@@ -368,8 +368,8 @@ static void test_pipe()
   BOOST_CHECK_EQUAL(s2->received, "canardcoin");
   usleep(delay);
   // FIXME: fix the bug that SEGV when a pipe socket is destroyed.
-  //s1->destroy();
-  //s2->destroy();
+  s1->destroy();
+  s2->destroy();
   usleep(delay*2);
 }
 
@@ -377,8 +377,10 @@ test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
-  suite->add(BOOST_TEST_CASE(test_pipe));
   if (!running("Qemu") && !running("Wine"))
+  {
     suite->add(BOOST_TEST_CASE(test));
+    suite->add(BOOST_TEST_CASE(test_pipe));
+  }
   return suite;
 }
