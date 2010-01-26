@@ -82,6 +82,7 @@ namespace libport
     size_t waiting_count_;
     size_t signaled_count_;
     pthread_t master_thread_;
+    pthread_t owner_thread_; // thread id that owns the lock
     boost::function0<void> on_lock_;
   };
 

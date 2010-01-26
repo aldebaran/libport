@@ -16,6 +16,7 @@ namespace libport
     : waiting_count_(0)
     , signaled_count_(0)
   , master_thread_(pthread_self())
+  , owner_thread_(master_thread_)
   {
   }
 
@@ -61,6 +62,7 @@ namespace libport
     if (on_lock_)
       on_lock_();
     cond_.wait();
+    owner_thread_ = pthread_self(); // must be after locking.
   }
 
   inline void
@@ -71,23 +73,30 @@ namespace libport
     {
       done_++;
     }
+    owner_thread_ = master_thread_; // must be before unlocking
     cond_.unlock();
   }
 
   inline
   Synchronizer::SynchroPoint::SynchroPoint(Synchronizer& src, bool check)
     : sync_(src)
-  , noop_(check && pthread_self() == src.getMasterThread())
+  , noop_(check &&
+          (pthread_self() == src.getMasterThread()
+           || pthread_self() == src.owner_thread_))
   {
     if (!noop_)
+    {
       sync_.lock();
+    }
   }
 
   inline
   Synchronizer::SynchroPoint::~SynchroPoint()
   {
     if (!noop_)
+    {
       sync_.unlock();
+    }
   }
 
   inline bool Synchronizer::SynchroPoint::isNoop() const
