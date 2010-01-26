@@ -545,22 +545,33 @@ namespace libport
       libport::format("\\\\.\\pipe\\libport-%s-%s-%s",
                       getpid(), utime(), rand());
 
-#define CREATE_PIPE(SocketVar, HandleVar, PipeAccess)                   \
-    HANDLE HandleVar =                                                  \
-      CreateNamedPipe(name.c_str(), PipeAccess,                         \
-                      PIPE_TYPE_BYTE | PIPE_READMODE_BYTE,              \
-                      2, 512, 512, 0, NULL);                            \
-    if (HandleVar == INVALID_HANDLE_VALUE)                              \
-      throw std::runtime_error                                          \
-        (libport::format("CreateNamedPipe(%s): %s",                     \
-                         name, strerror(0)));                           \
-    BaseSocket* SocketVar =                                             \
-      SocketImpl<SocketWrapper<windows::stream_handle> >::create        \
-      (new SocketWrapper<windows::stream_handle>(io, HandleVar));
+    // Do not forget the OVERLAPPED flag as boost::asio does...asio.
+    HANDLE h1 =
+      CreateNamedPipe(name.c_str(),
+        PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
+        PIPE_TYPE_BYTE | PIPE_READMODE_BYTE,
+        2, 512, 512, 0, NULL);
+    if (h1 == INVALID_HANDLE_VALUE)
+      throw std::runtime_error
+        (libport::format("CreateNamedPipe(%s): %s",
+                         name, strerror(0)));
+    BaseSocket* b1 =
+      SocketImpl<SocketWrapper<windows::stream_handle> >::create
+      (new SocketWrapper<windows::stream_handle>(io, h1));
 
-    CREATE_PIPE(b1, h1, PIPE_ACCESS_INBOUND);
-    CREATE_PIPE(b2, h2, PIPE_ACCESS_OUTBOUND);
-#undef CREATE_PIPE
+    // Calling CreatePipe should work for the second end but it fails with
+    // 'access denied'.
+    HANDLE h2 = CreateFile(name.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE,
+                           NULL, OPEN_EXISTING,
+                           SECURITY_ANONYMOUS | FILE_FLAG_OVERLAPPED,
+                           NULL);
+   if (h2 == INVALID_HANDLE_VALUE)
+         throw std::runtime_error
+           (libport::format("CreateFile(%s): %s",
+                            name, strerror(0)));
+    BaseSocket* b2 =
+          SocketImpl<SocketWrapper<windows::stream_handle> >::create
+          (new SocketWrapper<windows::stream_handle>(io, h2));
 #else
     // implement using POSIX pipe()
     int fd[2];
