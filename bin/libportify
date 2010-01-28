@@ -275,8 +275,8 @@ sub libport_copyright ($\$)
 
   s{
       (Copyright\s\(C\)\s
-      # A series of four-digit dates.
-      \d{4}(?:,\s\d{4})*)
+      # A series of four-digit dates.  Possibly intervals.
+      \d{4}(?:-\d{4})?(?:,\s\d{4}(?:-\d{4})?)*)
       # Don't change Copyright lines that are not about Gostai.
       (?=,\ Gostai)
    }
