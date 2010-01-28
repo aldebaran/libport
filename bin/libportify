@@ -1,8 +1,12 @@
 #! /usr/bin/perl -w
 
+# We need a fairly recent version of Perl to have powerful regexps.
+use 5.10.0;
+
 use strict;
 use IO::File;
 use File::Basename;
+
 
 # A regexp that matches 0 or more repetitions of either a
 # non-backtracking word with no parens/braces, or a braced group, or a
@@ -268,9 +272,162 @@ sub libport_spaces ($\$)
 }
 
 
-# libport_copyright ($FILE, \$CONTENTS)
-# -------------------------------------
-# Update the copyright years.
+## ---------- ##
+## Licenses.  ##
+## ---------- ##
+
+my @license_re =
+(
+q{(?:\\\\file <file>)?
+This file is part of <project>
+<copyright> <years> <holder>
+
+Permission to use, copy, modify, and redistribute this software for
+non-commercial use is hereby granted.
+
+This software is provided "as is" without warranty of any kind,
+either expressed or implied, including but not limited to the
+implied warranties of fitness for a particular purpose.
+
+For more information, comments, bug reports: http://www.urbiforge.com},
+
+q{<copyright> (?:<years>, <holder>|<holder>, <years>.)
+
+This software is provided "as is" without warranty of any kind,
+either expressed or implied, including but not limited to the
+implied warranties of fitness for a particular purpose.
+
+See the LICENSE file for more information.
+For comments, bug reports and feedback: http://www.urbiforge.com},
+
+q{\\\\file <file>
+
+ File: .*
+ (?<brief>Implementation.*)
+
+ This file is part of
+ <project>
+ <copyright> <years>.*
+
+ Permission to use, copy, modify, and redistribute this software for
+ non-commercial use is hereby granted.
+
+ This software is provided "as is" without warranty of any kind,
+ either expressed or implied, including but not limited to the
+ implied warranties of fitness for a particular purpose.
+
+ For more information, comments, bug reports: http://www.urbiforge.net},
+
+q{(?:\\\\file <file>)?
+
+(?<brief>.*\.)?
+
+<copyright> <years> <holder>.  All rights reserved.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or \(at your option\) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
+);
+
+# The "syntax" of some interesting fields.
+my %license_field =
+(
+  'copyright' => q{Copyright \([cC]\)},
+  'file'      => q{[\\-\\w\\./]+},
+  'holder'    => q{(?:Gostai (?:SAS|S.A.S.?)?|Jean-Christophe Baillie)},
+  'project'   => q{[^\\n]*},
+  'years'     => q{[\\d\\-]+(?:, [\\d\\-]+)*},
+);
+
+# Make the regexps more flexible.
+for my $re (@license_re)
+{
+  for my $field (keys %license_field)
+    {
+      $re =~ s{<$field>}{(?<$field>$license_field{$field})}g;
+    }
+  # Accept arbitrary comment closing.
+#  print STDERR "$re\n";
+  $re .= ' [\*\\s]*\*/\s';
+  $re =~ s{^\s*}{^[\\s/*!]*}gm;
+  $re =~ s/\s+/\\s+/gm;
+  $re .= '\s*';
+#  print STDERR "$re\n";
+}
+
+=item C<libport_license(%group)>
+
+The proper license notice based on the C<%group>.
+
+=cut
+
+sub libport_license (%)
+{
+  my (%group) = @_;
+  for my $key (sort keys %group)
+    {
+      print "$key => {{$group{$key}}}\n";
+    }
+
+  my $res;
+  $res .= <<EOF;
+/*
+ * Copyright (C) $group{years}, Gostai S.A.S.
+ *
+ * This software is provided \"as is\" without warranty of any kind,
+ * either expressed or implied, including but not limited to the
+ * implied warranties of fitness for a particular purpose.
+ *
+ * See the LICENSE file for more information.
+ */
+
+EOF
+
+  $res .= "/// \\file $group{file}\n"
+    if defined $group{file};
+
+  $res .= "/// \\brief $group{brief}\n"
+    if defined $group{brief};
+
+  $res;
+}
+
+
+=item C<libport_relicense($file, \$contents)>
+
+Update the license notice.
+
+=cut
+
+sub libport_relicense ($\$)
+{
+  my ($file, $contents_ref) = @_;
+
+  for my $re (@license_re)
+    {
+      print STDERR $$contents_ref, "\n";
+      $$contents_ref =~ s{$re}{libport_license(%+)}smeg;
+    }
+}
+
+
+
+=item C<libport_copyright($file, \$contents)>
+
+Update the copyright years.
+
+=cut
+
 sub libport_copyright ($\$)
 {
   my ($file, $contents_ref) = @_;
@@ -306,6 +463,8 @@ sub libportify ($$)
   fix_headers       $file, $contents;
   libport_debug     $file, $contents;
   libport_renamings $file, $contents;
+  # First normalize the license, then update the year.
+  libport_relicense $file, $contents;
   libport_copyright $file, $contents;
   return $contents;
 }
