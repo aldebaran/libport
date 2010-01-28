@@ -1,5 +1,6 @@
-#! /usr/bin/perl -w
+#! /usr/bin/env perl5.10 -w
 
+use 5.10.1;
 
 # contents ($FILE_NAME)
 # ---------------------
@@ -34,7 +35,7 @@ sub transform_file (\&$)
     return;
   }
 
-  my ($bak) = "$file.bak";
+  my $bak = "$file.bak";
   rename ($file, $bak) or die "cannot rename $file as $bak: $!";
   my $contents = contents ($bak);
   my $out = new IO::File(">$file") or die;
@@ -47,7 +48,7 @@ my @re =
 (
 q{(?:\\\\file <file>)?
 This file is part of <project>
-Copyright \(c\) <years> Gostai S.A.S.
+<copyright> <years> <holder>
 
 Permission to use, copy, modify, and redistribute this software for
 non-commercial use is hereby granted.
@@ -58,6 +59,15 @@ implied warranties of fitness for a particular purpose.
 
 For more information, comments, bug reports: http://www.urbiforge.com},
 
+q{<copyright> (?:<years>, <holder>|<holder>, <years>.)
+
+This software is provided "as is" without warranty of any kind,
+either expressed or implied, including but not limited to the
+implied warranties of fitness for a particular purpose.
+
+See the LICENSE file for more information.
+For comments, bug reports and feedback: http://www.urbiforge.com},
+
 q{\\\\file <file>
 
  File: .*
@@ -65,7 +75,7 @@ q{\\\\file <file>
 
  This file is part of
  <project>
- Copyright \(c\) <years>.*
+ <copyright> <years>.*
 
  Permission to use, copy, modify, and redistribute this software for
  non-commercial use is hereby granted.
@@ -80,7 +90,7 @@ q{(?:\\\\file <file>)?
 
 (?<brief>.*\.)?
 
-Copyright \(C\) <years> Jean-Christophe Baillie.  All rights reserved.
+<copyright> <years> <holder>.  All rights reserved.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -149,9 +159,11 @@ sub convert ($)
 # The "syntax" of some interesting fields.
 my %field =
 (
-  'file' =>    q{[\\-\\w\\./]+},
-  'project' => q{[^\\n]*},
-  'years' =>   q{[\\d-]+(?:, [\\d-]+)*},
+  'copyright' => q{Copyright \([cC]\)},
+  'file'      => q{[\\-\\w\\./]+},
+  'holder'    => q{(?:Gostai (?:SAS|S.A.S.?)?|Jean-Christophe Baillie)},
+  'project'   => q{[^\\n]*},
+  'years'     => q{[\\d\\-]+(?:, [\\d\\-]+)*},
 );
 
 # Make the regexps more flexible.
@@ -162,11 +174,12 @@ for my $re (@re)
       $re =~ s{<$field>}{(?<$field>$field{$field})}g;
     }
   # Accept arbitrary comment closing.
+  print STDERR "$re\n";
   $re .= ' [\*\\s]*\*/\s';
   $re =~ s{^\s*}{^[\\s/*!]*}gm;
-  print STDERR $re, "\n";
   $re =~ s/\s+/\\s+/gm;
-  $re .= '\s+';
+  $re .= '\s*';
+  print STDERR $re, "\n";
 }
 
 map { transform_file &convert, $_ } @ARGV;
