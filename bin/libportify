@@ -247,6 +247,9 @@ sub libport_renamings ($\$)
   # We are now simply using Boost.Unordered.
   s/libport::hash_map/boost::unordered_map/g;
 
+  # Denottalify.
+  s/allready/already/g;
+
   $$contents_ref = $_;
 }
 
