@@ -7,6 +7,93 @@ use strict;
 use IO::File;
 use File::Basename;
 
+=head1 NAME
+
+  libportify - sanitize sources/upgrade libport usage
+
+=head1 SYNOPSIS
+
+  libportify [OPTIONS...] DIR|FILE...
+
+=head1 DESCRIPTION
+
+Traverse all the DIR and FILE... and process them.
+
+The steps are:
+
+=over 4
+
+=item spaces
+
+Clean up trailing spaces.
+
+=item relicense
+
+Make the various license header standard, and update the copyright
+years.
+
+=item copyright
+
+Update copyright years.  Works only on valid license notices.
+
+=item headers
+
+Fix headers (e.g., when libport provides replacement headers, use them
+instead of system headers).
+
+=item debug
+
+Update C<GD_DEBUG> calls.
+
+=item renamings
+
+Fix names and bad spelling.
+
+=back
+
+=head1 OPTIONS
+
+General options:
+
+=over 4
+
+=item B<-h>, B<--help>
+
+Display this message and exit.
+
+=item B<-f>, B<--foreign>
+
+This package is foreign, run only the steps that make sense for
+non-libport packages.
+
+=item B<-s>, B<--step>=I<step>
+
+Run the step C<step>.  Accumulates.  If B<-s> is not used at all, run
+all the steps in the order the are presented in above.
+
+=item B<-q>, B<--quiet>
+
+Be less verbose.  Accumulates.
+
+=item B<-v>, B<--verbose>
+
+Be more verbose.  Accumulates.
+
+=back
+
+=cut
+
+# The prefix for the log messages.
+my $me = basename($0);
+
+# Whether a foreign package.
+my $foreign = 0;
+
+# Steps to run, in order.
+my @step;
+
+# Verbosity level.
+my $verbose = 1;
 
 # A regexp that matches 0 or more repetitions of either a
 # non-backtracking word with no parens/braces, or a braced group, or a
@@ -51,9 +138,26 @@ sub contents ($)
   my $f = new IO::File "< $file" or die "cannot open $file: $!";
   my $contents = $f->getline or die "cannot read $file: $!";
   $f->close;
-  return $contents;
+  $contents;
 }
 
+
+=head1 FUNCTIONS
+
+=over 4
+
+=item C<verbose($level, @message)>
+
+Report the C<@message> is C<$level> E<lt>= C<$verbose>.
+
+=cut
+
+sub verbose($@)
+{
+  my ($level, @message) = @_;
+  map { print STDERR "$me: " . "  " x $level . "$_\n" } @message
+    if $level <= $verbose;
+}
 
 ## ------------- ##
 ## fix headers.  ##
@@ -258,17 +362,14 @@ sub libport_renamings ($\$)
 }
 
 
-# libport_space ($FILE, \$CONTENTS)
+# libport_spaces ($FILE, \$CONTENTS)
 # ---------------------------------
 # Nuke trailing white spaces.  Convert from DOS to Unix if needed.
 sub libport_spaces ($\$)
 {
   my ($file, $contents_ref) = @_;
-  local $_ = $$contents_ref;
 
-  s/[ \t\r]+$//gm;
-
-  $$contents_ref = $_;
+  $$contents_ref =~ s/[ \t\r]+$//gm;
 }
 
 
@@ -415,7 +516,7 @@ sub libport_relicense ($\$)
 
   for my $re (@license_re)
     {
-      print STDERR $$contents_ref, "\n";
+      verbose 2, $$contents_ref;
       $$contents_ref =~ s{$re}{libport_license(%+)}smeg;
     }
 }
@@ -459,14 +560,32 @@ sub libport_copyright ($\$)
 sub libportify ($$)
 {
   my ($file, $contents) = @_;
-  libport_spaces    $file, $contents;
-  fix_headers       $file, $contents;
-  libport_debug     $file, $contents;
-  libport_renamings $file, $contents;
-  # First normalize the license, then update the year.
-  libport_relicense $file, $contents;
-  libport_copyright $file, $contents;
-  return $contents;
+  my %step =
+    (
+     spaces    => \&libport_spaces,
+     headers   => \&fix_headers,
+     debug     => \&libport_debug,
+     renamings => \&libport_renamings,
+     relicense => \&libport_relicense,
+     copyright => \&libport_copyright,
+    );
+
+  for my $step (@step)
+  {
+    die "$me: invalid step: $step\n"
+      unless exists $step{$step};
+    verbose 3, "Step: $step", split("\n", $contents);
+    $step{$step}->($file, \$contents);
+  }
+
+#   libport_spaces    $file, $contents;
+#   fix_headers       $file, $contents;
+#   libport_debug     $file, $contents;
+#   libport_renamings $file, $contents;
+#   # First normalize the license, then update the year.
+#   libport_relicense $file, $contents;
+#   libport_copyright $file, $contents;
+  $contents;
 }
 
 # transform_file (&TRANSFORM, $FILE)
@@ -553,10 +672,58 @@ sub transform_things (\&@)
     }
 }
 
+=item C<help>
+
+Generate the B<--help> message.  Generates the full man page when
+C<$verbose>.
+
+=cut
+
+sub help ($)
+{
+  my ($verbose) = @_;
+  use Pod::Usage;
+  # See <URL:http://perldoc.perl.org/pod2man.html#NOTES>.
+  pod2usage( { -message => "Relocate shlib deps when possible, check remaing deps",
+               -exitval => 0,
+               -verbose => $verbose,
+               -output  => \*STDOUT });
+}
+
+=item C<getopt>
+
+Process the command line options.
+
+=cut
+
+sub getopt ()
+{
+  use Getopt::Long;
+  my %option = (
+    "f|foreign"     => \$foreign,
+    "h|help"        => sub { help ($verbose) },
+    "s|step=s"      => \@step,
+    "q|quiet"       => sub { --$verbose },
+    "v|verbose"     => sub { ++$verbose },
+    );
+  Getopt::Long::Configure ("bundling", "pass_through");
+  GetOptions (%option)
+    or exit 1;
+
+  @step =
+    $foreign
+    ? qw(spaces relicense copyright)
+    : qw(spaces relicense copyright headers debug renamings)
+    unless @step;
+  verbose 2, "Steps: @step";
+}
+
+
 ## ------ ##
 ## main.  ##
 ## ------ ##
 
+getopt;
 transform_things &libportify, @ARGV;
 
 
