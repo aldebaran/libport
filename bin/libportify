@@ -379,6 +379,18 @@ sub libport_spaces ($\$)
 
 my @license_re =
 (
+
+q{<file>: This file is part of UrbiStudio.
+<copyright> <holder>, <year>.
+
+This software is provided "as is" without warranty of any kind,
+either expressed or implied, including but not limited to the
+implied warranties of fitness for a particular purpose.
+
+See the LICENSE file for more information.
+For comments, bug reports and feedback: http://www.urbiforge.com},
+
+
 q{(?:\\\\file <file>)?
 This file is part of <project>
 <copyright> <years> <holder>
@@ -458,12 +470,12 @@ for my $re (@license_re)
       $re =~ s{<$field>}{(?<$field>$license_field{$field})}g;
     }
   # Accept arbitrary comment closing.
-#  print STDERR "$re\n";
-  $re .= ' [\*\\s]*\*/\s';
+  verbose 1, $re;
+  $re .= ' (?:[\*\\s]*\*/\s)?';
   $re =~ s{^\s*}{^[\\s/*!]*}gm;
   $re =~ s/\s+/\\s+/gm;
   $re .= '\s*';
-#  print STDERR "$re\n";
+  verbose 1, $re;
 }
 
 =item C<libport_license(%group)>
