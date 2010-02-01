@@ -83,11 +83,14 @@ Be more verbose.  Accumulates.
 
 =cut
 
-# The prefix for the log messages.
-my $me = basename($0);
+# The program to use to display diffs.
+my $diff;
 
 # Whether a foreign package.
 my $foreign = 0;
+
+# The prefix for the log messages.
+my $me = basename($0);
 
 # Steps to run, in order.
 my @step;
@@ -624,12 +627,16 @@ sub transform_file (\&$)
   my $updated = $transform_ref->($file, $contents);
   if ($contents ne $updated)
     {
-      my ($bak) = "$file.bak";
-      rename ($file, $bak) or die "cannot rename $file as $bak: $!";
+      my $mode = (stat($file))[2] & 0777;
+      my $bak = "$file.bak";
+      rename ($file, $bak)
+        or die "$0: cannot rename $file as $bak: $!\n";
       my $out = new IO::File(">$file") or die;
       print $out $updated;
       $out->close;
-      system("colordiff -u $bak $file");
+      chmod ($mode, $file)
+        or die "$me: cannot chmod $file: $!\n";
+      system("$diff -u $bak $file");
     }
   else
     {
@@ -736,6 +743,9 @@ sub getopt ()
 ## ------ ##
 
 getopt;
+$diff = (`colordiff --version 2>/dev/null` ne ''
+         ? 'colordiff'
+         : 'diff');
 transform_things &libportify, @ARGV;
 
 
