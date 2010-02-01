@@ -547,7 +547,9 @@ sub libport_copyright ($\$)
    }
    {
      my $orig = $1;
-     $orig . ($orig =~ /2010$/ ? "" : ", 2010")
+     $orig .= ($orig =~ /2010$/ ? "" : ", 2010");
+     $orig =~ s/-2009, 2010/-2010/g;
+     $orig;
    }gex;
 
   $$contents_ref = $_;
