@@ -276,6 +276,20 @@ namespace libport
            unsigned port, bool udp = false);
 
 #if defined LIBPORT_ENABLE_SSL
+
+    boost::system::error_code
+    connectSSL(const std::string& host, const std::string& port,
+               useconds_t usTimeout = 0,
+               bool asynchronous = false,
+               boost::asio::ssl::context_base::method ctx
+                = boost::asio::ssl::context::sslv23_client,
+               boost::asio::ssl::context::options options
+                = boost::asio::ssl::context::verify_none,
+               const std::string& privateKeyFile = "",
+               const std::string& certChainFile = "",
+               const std::string& tmpDHFile = "" ,
+               const std::string& cipherList = ""
+               );
     boost::system::error_code
     listenSSL(SocketFactory f,
               const std::string& host,

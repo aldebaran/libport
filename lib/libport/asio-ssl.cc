@@ -20,13 +20,15 @@ namespace libport
   {
     template<typename Stream>
     BaseSocket*
-    SSLLayer(SSLSettings settings, Stream* s)
+    SSLLayer(SSLSettings settings, Stream* s, bool isServer)
     {
       if (ssl_debug) std::cerr <<"SSLLayer" << std::endl;
       using namespace boost::asio;
       boost::system::error_code erc;
       ssl::context context(s->get_io_service(),
-                           boost::asio::ssl::context::sslv23_server);
+                           isServer?
+                           boost::asio::ssl::context::sslv23_server:
+                           boost::asio::ssl::context::sslv23_client);
       context.set_options(settings.options);
       if (!settings.cipherList.empty())
       {
@@ -57,8 +59,8 @@ namespace libport
       // Create a SSL stream taking its underlying stream by ref.
       typedef boost::asio::ssl::stream<Stream&> SSLStream;
       SSLStream *sslStream = new SSLStream(*s, context);
-      if (ssl_debug) std::cerr <<"handshake" << std::endl;
-      sslStream->handshake(sslStream->server, erc);
+      if (ssl_debug) std::cerr <<"handshake " << isServer << std::endl;
+      sslStream->handshake(isServer?sslStream->server:sslStream->client, erc);
       if (ssl_debug) std::cerr <<"handshake done: " << erc.message()
          << std::endl;
       if (erc)
@@ -72,9 +74,10 @@ namespace libport
       return bs;
     }
     BaseSocket* makeSSLLayer(SSLSettings settings,
-                             boost::asio::ip::tcp::socket* s)
+                             boost::asio::ip::tcp::socket* s,
+                             bool server)
     {
-      SSLLayer(settings, s);
+      return SSLLayer(settings, s, server);
     }
   }
 
@@ -100,8 +103,33 @@ namespace libport
       f, host, port,
       (boost::function1<BaseSocket*, boost::asio::ip::tcp::socket*>)
       boost::bind(&netdetail::SSLLayer<boost::asio::ip::tcp::socket>,
-                  settings, _1));
+                  settings, _1, true));
     return erc;
+  }
+
+  boost::system::error_code
+  Socket::connectSSL(const std::string& host, const std::string& port,
+                     useconds_t usTimeout,
+                     bool asynchronous,
+                     boost::asio::ssl::context_base::method ctx,
+                     boost::asio::ssl::context::options options,
+                     const std::string& privateKeyFile,
+                     const std::string& certChainFile,
+                     const std::string& tmpDHFile,
+                     const std::string& cipherList
+                     )
+  {
+    netdetail::SSLSettings settings;
+    settings.context = ctx;
+    settings.options = options;
+    settings.privateKeyFile = privateKeyFile;
+    settings.certChainFile = certChainFile;
+    settings.tmpDHFile = tmpDHFile;
+    settings.cipherList = cipherList;
+    return connectProto<boost::asio::ip::tcp>(host, port, usTimeout, asynchronous,
+      (boost::function1<BaseSocket*, boost::asio::ip::tcp::socket*>)
+        boost::bind(&netdetail::SSLLayer<boost::asio::ip::tcp::socket>,
+                  settings, _1, false));
   }
 }
 #endif
