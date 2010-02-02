@@ -11,6 +11,13 @@
 #ifndef LIBPORT_HASH_HH
 # define LIBPORT_HASH_HH
 
+# include <boost/version.hpp>
+# include <libport/config.h>
+
+# if BOOST_VERSION <= 103800 && LIBPORT_HAVE_PRAGMA_GCC_DIAGNOSTIC
+#  pragma GCC diagnostic warning "-Wunused-parameter"
+# endif
+
 # include <boost/unordered_map.hpp>
 
 #endif // !LIBPORT_HASH_HH
