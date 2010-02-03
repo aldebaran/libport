@@ -1,7 +1,7 @@
 #! /usr/bin/perl -w
 
 # We need a fairly recent version of Perl to have powerful regexps.
-use 5.10.0;
+use v5.10.0;
 
 use strict;
 use IO::File;
@@ -503,6 +503,9 @@ EOF
 
   $res .= "/// \\brief $group{brief}\n"
     if defined $group{brief};
+
+  $res .= "// This file is part of $group{project}.\n"
+    if defined $group{project};
 
   $res;
 }
