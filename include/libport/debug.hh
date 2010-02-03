@@ -27,6 +27,9 @@
 #  include <libport/finally.hh>
 #  include <libport/option-parser.hh>
 
+#  include <libport/local-data.hh>
+#  include <libport/thread-data.hh>
+
 namespace libport
 {
   namespace debug
@@ -178,6 +181,7 @@ namespace libport
 #  endif
 
   LIBPORT_API extern boost::function0<Debug*> make_debugger;
+  LIBPORT_API extern AbstractLocalData<Debug>* debugger_data;
   LIBPORT_API Debug* debugger();
 
   LIBPORT_API std::string gd_ihexdump(const unsigned char* data, unsigned size);
@@ -442,15 +446,25 @@ namespace libport
 | Configure.  |
 `------------*/
 
+#  ifndef GD_LOCAL_INSTANCES
+#   define GD_LOCAL_INSTANCES ::libport::localdata::Thread
+#  endif
+
 #  define GD__INIT_                                                     \
   static int                                                            \
   _libport_initdebug_()                                                 \
   {                                                                     \
     make_debugger = _libport_mkdebug_;                                  \
+    debugger_data = new LocalData<Debug, GD_LOCAL_INSTANCES>;           \
     return 42;                                                          \
   }                                                                     \
                                                                         \
   static int _libport_debug_initialized_ = _libport_initdebug_();
+
+#  define GD_MAKE_DEBUG(ALLOC)                  \
+  Debug* d = ALLOC;                             \
+  d->push_category("NONE");                     \
+  return d;
 
 // Must be called before any use.
 #  define GD_INIT()                             \
@@ -465,7 +479,7 @@ namespace libport
   {                                                                     \
     static Debug* _libport_mkdebug_()                                   \
     {                                                                   \
-      return new ConsoleDebug();                                        \
+      return new ConsoleDebug;                                          \
     }                                                                   \
     GD__INIT_;                                                          \
   }
@@ -475,7 +489,7 @@ namespace libport
   {                                                                     \
     static Debug* _libport_mkdebug_()                                   \
     {                                                                   \
-      return new SyslogDebug(#Program);                                 \
+      new SyslogDebug(#Program);                                        \
     }                                                                   \
     GD__INIT_;                                                          \
   }
