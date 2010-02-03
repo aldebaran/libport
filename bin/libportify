@@ -398,7 +398,7 @@ For more information, comments, bug reports: http://www.urbiforge.com},
 q{(?:<file>: )?(?:This file is part of <project>\\.)?
 <copyright> (?:<years>, <holder>|<holder>, <years>\.)
 
-This software is provided "as is" without warranty of any kind,
+This software is provided "?as is"? without warranty of any kind,
 either expressed or implied, including but not limited to the
 implied warranties of fitness for a particular purpose.
 
