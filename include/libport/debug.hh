@@ -446,53 +446,55 @@ namespace libport
 | Configure.  |
 `------------*/
 
-#  ifndef GD_LOCAL_INSTANCES
-#   define GD_LOCAL_INSTANCES ::libport::localdata::Thread
-#  endif
+#  define GD_DEFAULT_DATA_ENCAPSULATION ::libport::localdata::Thread
 
-#  define GD__INIT_                                                     \
+#  define GD__INIT_(DataEncapsulation)                                  \
   static int                                                            \
   _libport_initdebug_()                                                 \
   {                                                                     \
     make_debugger = _libport_mkdebug_;                                  \
-    debugger_data = new LocalData<Debug, GD_LOCAL_INSTANCES>;           \
+    debugger_data = new LocalData<Debug, DataEncapsulation>;            \
     return 42;                                                          \
   }                                                                     \
                                                                         \
   static int _libport_debug_initialized_ = _libport_initdebug_();
 
-#  define GD_MAKE_DEBUG(ALLOC)                  \
-  Debug* d = ALLOC;                             \
-  d->push_category("NONE");                     \
-  return d;
-
 // Must be called before any use.
 #  define GD_INIT()                             \
   GD_INIT_CONSOLE()
+
+#  define GD_INIT_DEBUG_PER(DataEncapsulation)  \
+  GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)
 
 // Should be called before quitting to reclaim memory.
 #  define GD_QUIT()                             \
   ::libport::debug::clear()
 
-#  define GD_INIT_CONSOLE()                                             \
+#  define GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)                  \
   namespace libport                                                     \
   {                                                                     \
     static Debug* _libport_mkdebug_()                                   \
     {                                                                   \
       return new ConsoleDebug;                                          \
     }                                                                   \
-    GD__INIT_;                                                          \
+    GD__INIT_(DataEncapsulation);                                       \
   }
 
-#  define GD_INIT_SYSLOG(Program)                                       \
+#  define GD_INIT_SYSLOG_DEBUG_PER(Program, DataEncapsulation)          \
   namespace libport                                                     \
   {                                                                     \
     static Debug* _libport_mkdebug_()                                   \
     {                                                                   \
       new SyslogDebug(#Program);                                        \
     }                                                                   \
-    GD__INIT_;                                                          \
+    GD__INIT_(DataEncapsulation);                                       \
   }
+
+#  define GD_INIT_CONSOLE()                                             \
+  GD_INIT_CONSOLE_DEBUG_PER(GD_DEFAULT_DATA_ENCAPSULATION)
+
+#  define GD_INIT_SYSLOG(Program, DataEncapsulation)                    \
+  GD_INIT_SYSLOG_DEBUG_PER(Program, GD_DEFAULT_DATA_ENCAPSULATION)
 
 #  define GD_ENABLE(Name)                       \
   GD_DEBUGGER->Name(true)
