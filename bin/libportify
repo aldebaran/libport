@@ -524,7 +524,7 @@ sub libport_relicense ($\$)
   for my $re (@license_re)
     {
       verbose 2, $$contents_ref;
-      $$contents_ref =~ s{$re}{libport_license(%+)}smeg;
+      $$contents_ref =~ s{$re}{libport_license(%+)}smegi;
     }
 }
 
