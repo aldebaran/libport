@@ -160,7 +160,7 @@ namespace libport
     return l == lhs.end() && r == rhs.end();            \
   }
 
-  APPLY_ON_CONTAINERS(LIBPORT_CONTAINERS_DEFINE_EQUAL)
+  APPLY_ON_EQUAL_CONTAINERS(LIBPORT_CONTAINERS_DEFINE_EQUAL)
 # undef LIBPORT_CONTAINERS_DEFINE_EQUAL
 
 } // namespace libport
