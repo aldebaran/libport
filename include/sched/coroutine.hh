@@ -25,6 +25,7 @@
 #  define SCHED_CORO_API
 # endif
 
+# include <sched/coroutine-hooks.hh>
 
 /// This package provides an interface to the \c libcoroutine. Using this
 /// interface allows for various checks and instrumentations to be

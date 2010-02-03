@@ -15,6 +15,7 @@ endif
 
 dist_lib_sched_libsched@LIBSFX@_la_SOURCES =	\
   lib/sched/configuration.cc			\
+  lib/sched/coroutine-hooks.cc			\
   lib/sched/job.cc				\
   lib/sched/pthread-coro.cc			\
   lib/sched/pthread-coro.hh			\

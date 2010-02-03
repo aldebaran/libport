@@ -10,8 +10,8 @@
 /* This file contains workarounds for two problems:
  *   - pthread_getspecific implementations relying on the stack adress to get
  *     a thread identifier, and not coping well with custom stacks.
- *   - Exception handling code relying on pthread_getspecific, and thus requiring
- *     one slot per coroutine.
+ *   - Exception handling code relying on pthread_getspecific, and thus
+ *     requiring one slot per coroutine.
  *
  * Those workarounds are currently enabled on arm uclibc, and disabled on all
  * other platforms, but this activation conditions might require adjustment.
@@ -112,8 +112,9 @@ extern "C" volatile int __pthread_handles_num;
 static bool isInCoro()
 {
    char * sp = CURRENT_STACK_FRAME;
-  /* __pthread_handles[0] is the initial thread, __pthread_handles[1] is
-   *      the manager threads handled specially in thread_self(), so start at 2 */
+  /* __pthread_handles[0] is the initial thread, __pthread_handles[1] is the
+   *      manager threads handled specially in thread_self(), so start at
+   *      2 */
   for (int i = 2; i < __pthread_handles_num /*PTHREAD_THREADS_MAX*/; i++)
   {
     pthread_handle h = __pthread_handles + i;
@@ -190,7 +191,8 @@ extern "C" SCHED_API int pthread_setspecific(pthread_key_t k, const void* ptr)
 
   if (!isInCoro())
     return pss(k, ptr);
-  CoroInfo& i = *std::find(coroList.begin(), coroList.end(), coroutine_current());
+  CoroInfo& i = *std::find(coroList.begin(), coroList.end(),
+                           coroutine_current());
   i.specific[k] = (void*)ptr;
   return 0;
 }
@@ -200,8 +202,9 @@ extern "C"  SCHED_API pthread_descr __pthread_find_self (void)
 {
 
   char * sp = CURRENT_STACK_FRAME;
-  /* __pthread_handles[0] is the initial thread, __pthread_handles[1] is
-   *      the manager threads handled specially in thread_self(), so start at 2 */
+  /* __pthread_handles[0] is the initial thread, __pthread_handles[1] is the
+   *      manager threads handled specially in thread_self(), so start at
+   *      2 */
   for (int i = 2; i < __pthread_handles_num /*PTHREAD_THREADS_MAX*/; i++)
   {
     pthread_handle h = __pthread_handles + i;
@@ -222,8 +225,9 @@ namespace {
       // __pthread_find_self
       __pthread_nonstandard_stacks = 1;
       // Hook coroutine creation and destruction api
-      coroutine_new_hook = new_hook;
-      coroutine_free_hook = free_hook;
+
+      add_coroutine_new_hook(new_hook);
+      add_coroutine_free_hook(free_hook);
     }
   };
   StaticInit static__init__;
