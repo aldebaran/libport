@@ -60,6 +60,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/synchronizer.cc			\
   lib/libport/sysexits.cc			\
   lib/libport/timer.cc				\
+  lib/libport/thread-pool.cc			\
   lib/libport/tokenizer.cc			\
   lib/libport/ufloat.cc				\
   lib/libport/unique-pointer.cc			\

@@ -151,6 +151,7 @@ libport_include_HEADERS +=				\
   include/libport/system-warning-push.hh		\
   include/libport/thread.hh				\
   include/libport/thread.hxx				\
+  include/libport/thread-pool.hh                        \
   include/libport/throw-exception.hh			\
   include/libport/time.hh				\
   include/libport/time.hxx				\

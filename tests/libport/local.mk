@@ -48,6 +48,7 @@ TESTS_BINARIES =                                \
   tests/libport/statistics.cc                   \
   tests/libport/symbol.cc                       \
   tests/libport/synchronizer.cc			\
+  tests/libport/thread-pool.cc			\
   tests/libport/time.cc                         \
   tests/libport/timer.cc                        \
   tests/libport/tokenizer.cc                    \
@@ -127,6 +128,7 @@ tests_libport_singleton_ptr_SOURCES                = tests/libport/singleton-ptr
 tests_libport_statistics_SOURCES                   = tests/libport/statistics.cc
 tests_libport_symbol_SOURCES                       = tests/libport/symbol.cc
 tests_libport_synchronizer_SOURCES                 = tests/libport/synchronizer.cc
+tests_libport_thread_pool_SOURCES		   = tests/libport/thread-pool.cc
 tests_libport_time_SOURCES                         = tests/libport/time.cc
 tests_libport_timer_SOURCES                        = tests/libport/timer.cc
 tests_libport_tokenizer_SOURCES                    = tests/libport/tokenizer.cc
