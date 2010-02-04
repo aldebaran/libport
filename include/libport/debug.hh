@@ -123,6 +123,7 @@ namespace libport
     levels::Level level() const;
     bool disabled();
 
+    bool test_category(const std::string &c) const;
   protected:
     std::string category();
     virtual void pop() = 0;
@@ -354,6 +355,9 @@ namespace libport
   static int _gd_category_enable_##Cat =         \
   ::libport::debug::enable_category(#Cat)
 
+#  define GD_CHECK_CATEGORY(Cat)                \
+  GD_DEBUGGER->test_category(#Cat)
+
 /*--------.
 | Level.  |
 `--------*/
@@ -540,6 +544,7 @@ namespace libport
 #  define GD_CATEGORY(Cat)
 #  define GD_DISABLE_CATEGORY(Cat)
 #  define GD_ENABLE_CATEGORY(Cat)
+#  define GD_CHECK_CATEGORY(Cat)
 #  define GD_LEVEL(Lvl)
 #  define GD_LOG()
 #  define GD_TRACE()
@@ -564,8 +569,12 @@ namespace libport
 #  define GD_UNREACHABLE()
 #  define GD_IHEXDUMP(Data, Size)
 #  define GD_INIT()
+#  define GD_INIT_DEBUG_PER(DataEncapsulation)
 #  define GD_QUIT()
 #  define GD_INIT_CONSOLE()
+#  define GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)
+#  define GD_INIT_SYSLOG(Program, DataEncapsulation)
+#  define GD_INIT_SYSLOG_DEBUG_PER(Program, DataEncapsulation)
 #  define GD_ADD_CATEGORY(Name)
 #  define GD_ENABLE(Name)
 #  define GD_ENABLE_LOCATIONS()

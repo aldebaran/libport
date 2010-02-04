@@ -200,6 +200,14 @@ namespace libport
     level_stack_.pop_back();
   }
 
+  bool
+  Debug::test_category(const std::string &c) const
+  {
+    return (categories_stack_.empty()
+            ? "NONE" == c
+            : categories_stack_.back() == c);
+  }
+
   std::string
   Debug::category()
   {
