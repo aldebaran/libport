@@ -18,6 +18,8 @@ using libport::test_suite;
 GD_INIT();
 GD_ADD_CATEGORY(TEST);
 
+#ifndef LIBPORT_DEBUG_DISABLE
+
 void
 dynamic_level()
 {
@@ -42,6 +44,16 @@ dynamic_level()
 
   BOOST_CHECK_NO_THROW(GD_QUIT());
 }
+
+#else
+
+void
+dynamic_level()
+{
+  BOOST_CHECK(true);
+}
+
+#endif
 
 static const unsigned concurrent_categories_niter = 4;
 static const unsigned concurrent_categories_nthread = 16;
