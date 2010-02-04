@@ -13,7 +13,7 @@
 
 namespace libport
 {
-
+  /// Register the hook for the process.
   template <typename T, typename Key>
   SpecificPtr<T, Key>::SpecificPtr()
     : map_(), key_(), cleaner_(0)
@@ -22,6 +22,7 @@ namespace libport
                                         this, _1));
   }
 
+  /// Register the hook for the process and save the \a cleaner.
   template <typename T, typename Key>
   SpecificPtr<T, Key>::SpecificPtr(cleanFunction cleaner)
     : map_(), key_(), cleaner_(cleaner)
@@ -30,6 +31,8 @@ namespace libport
                                         this, _1));
   }
 
+  /// iterate on all elements mapped to clean them with the cleaner
+  /// function.
   template <typename T, typename Key>
   SpecificPtr<T, Key>::~SpecificPtr()
   {
@@ -47,6 +50,8 @@ namespace libport
     }
   }
 
+  /// Fetch the current process ID and lookup if the value is mapped.
+  /// Otherwise it returns the default point value which is 0.
   template <typename T, typename Key>
   T*
   SpecificPtr<T, Key>::get()
@@ -55,6 +60,7 @@ namespace libport
     return map_[current];
   }
 
+  /// Similar to \fn get.
   template <typename T, typename Key>
   T*
   SpecificPtr<T, Key>::operator->()
@@ -62,13 +68,20 @@ namespace libport
     return get();
   }
 
+  /// Similar to \fn get except that the mapped value must be initialized.
   template <typename T, typename Key>
   T&
   SpecificPtr<T, Key>::operator*()
   {
-    return *get();
+    T* e = get();
+    assert(e);
+    return *e;
   }
 
+  /// Get the \a current value before mapping the \a new_value.  Clean the
+  /// previous value if it is not 0 and if the \a clean argument is set.
+  /// This function return the previous value, and it returns 0 if it has
+  /// been cleaned.
   template <typename T, typename Key>
   T*
   SpecificPtr<T, Key>::reset(T* new_value, bool clean,
@@ -91,6 +104,7 @@ namespace libport
     return current_value;
   }
 
+  /// Shortcut on top of \fn reset.
   template <typename T, typename Key>
   void
   SpecificPtr<T, Key>::remove(typename Key::type current)

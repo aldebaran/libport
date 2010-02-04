@@ -19,6 +19,7 @@ namespace libport
 
   namespace localdata
   {
+    /// \brief Handle data with only one encapsulation.
     template <typename T>
     struct DataType
     {
@@ -44,6 +45,7 @@ namespace libport
       c.reset(e);
     }
 
+    /// \brief Handle data with multiple local data encapsulation.
     template <typename T>
     struct LocalDataType
     {
