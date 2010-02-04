@@ -26,6 +26,7 @@
 #include <libport/detect-win32.h>
 #include <libport/finally.hh>
 #include <libport/foreach.hh>
+#include <libport/format.hh>
 #include <libport/path.hh>
 #include <libport/tokenizer.hh>
 
