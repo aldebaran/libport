@@ -15,6 +15,8 @@ namespace libport
 {
   namespace _impl
   {
+    /// Function registered as thread hook to clean up specific pointers
+    /// which are no longer associated to a process.
     template <typename T>
     void
     call_thread_key_cleanup(void* tk)
@@ -24,6 +26,7 @@ namespace libport
     }
   }
 
+  /// Create the identity of the thread key.
   template <typename T>
   ThreadKey<T>::ThreadKey()
   {
@@ -31,6 +34,7 @@ namespace libport
     pthread_key_create(&key, &_impl::call_thread_key_cleanup<T>);
   }
 
+  /// Remove the identity of the thread key.
   template <typename T>
   ThreadKey<T>::~ThreadKey()
   {
@@ -38,6 +42,7 @@ namespace libport
     pthread_key_delete(key);
   }
 
+  /// Return the pthread identifier.
   template <typename T>
   typename ThreadKey<T>::type
   ThreadKey<T>::current()
@@ -52,6 +57,8 @@ namespace libport
     free_ = free;
   }
 
+  /// Declare the free hook for the current thread.  because free hooks are
+  /// thread dependent.
   template <typename T>
   void
   ThreadKey<T>::set_hook()
