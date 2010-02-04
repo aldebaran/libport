@@ -23,6 +23,8 @@ GD_ADD_CATEGORY(MAIN);
 GD_ADD_CATEGORY(C1);
 GD_ADD_CATEGORY(C2);
 
+#ifndef LIBPORT_DEBUG_DISABLE
+
 #define ECHO(S)                                 \
   std::cerr << S << std::endl
 
@@ -140,6 +142,15 @@ void test_debug()
   ECHO("(11) Main done");
   BOOST_CHECK_NO_THROW(GD_QUIT());
 }
+
+#else
+
+void test_debug()
+{
+  BOOST_CHECK(true);
+}
+
+#endif
 
 test_suite*
 init_test_suite()
