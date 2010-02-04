@@ -29,6 +29,11 @@ namespace sched
   typename CoroutineKey<T>::type
   CoroutineKey<T>::current()
   {
+    type t = coroutine_current();
+    // Handle when the main coroutine is changing its identity from
+    // Anonymous (null pointer) to a known coroutine.
+    if (t == coroutine_main())
+      return type();
     return coroutine_current();
   }
 
