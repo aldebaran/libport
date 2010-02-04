@@ -15,7 +15,7 @@
 #ifndef LIBPORT_SPECIFIC_PTR_HH
 # define LIBPORT_SPECIFIC_PTR_HH
 
-# include <map>
+# include <libport/hash.hh>
 
 # include <boost/function.hpp>
 
@@ -62,7 +62,7 @@ namespace libport
   private:
     // Do not use libport::map because its dump method expect to
     // serialized the key and the value.
-    std::map<typename Key::type, T *> map_;
+    boost::unordered_map<typename Key::type, T *> map_;
     Key key_;
     cleanFunction cleaner_;
 
