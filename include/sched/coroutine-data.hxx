@@ -25,6 +25,8 @@ namespace sched
   {
   }
 
+  /// Return the unmutable identity of coroutines and handle the case where
+  /// the main coroutine is changing its identity.
   template <typename T>
   typename CoroutineKey<T>::type
   CoroutineKey<T>::current()
