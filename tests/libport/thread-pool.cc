@@ -113,7 +113,7 @@ static void test_lock()
                  v[lockid]);
   }
   boost::uint32_t val;
-  for (int i=0; i<20; ++i)
+  for (int i=0; i<40; ++i)
   {
     val = atomic_read32(&counter);
     if (val == nTasks)
