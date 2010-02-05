@@ -30,6 +30,9 @@ typedef libport::ThreadPool ThreadPool;
 */
 volatile boost::uint32_t counter;
 
+// Divisor for number of iterations
+static boost::uint32_t dfactor = 1;
+
 static void task_sleep_inc(int delay)
 {
   usleep(delay);
@@ -46,7 +49,7 @@ static void test_many(bool slowInject)
   for(int i=0; i<10; ++i)
     v.push_back(new ThreadPool::TaskLock);
   // Start many tasks with random delay and lock
-  static const boost::uint32_t nTasks = 8000;
+  static const boost::uint32_t nTasks = 8000 / dfactor;
   for (unsigned i=0; i<nTasks; ++i)
   {
     ThreadPool::rTaskLock lock;
@@ -101,7 +104,7 @@ static void test_lock()
   for(int i=0; i<10; ++i)
     v.push_back(new ThreadPool::TaskLock);
   lockCheck.resize(v.size());
-  static const boost::uint32_t nTasks = 4000;
+  static const boost::uint32_t nTasks = 4000 / dfactor;
   for (unsigned i=0; i<nTasks; ++i)
   {
     unsigned lockid = rand()%v.size();
@@ -128,6 +131,8 @@ init_test_suite()
     seed = boost::lexical_cast<unsigned int>(sseed);
   test_suite* suite = BOOST_TEST_SUITE("libport::ThreadPool test suite");
   BOOST_TEST_MESSAGE("Seed is " << seed);
+  if (running("Wine"))
+    dfactor = 10;
   srand(seed);
   suite->add(BOOST_TEST_CASE(test_many_slow));
   suite->add(BOOST_TEST_CASE(test_many_fast));
