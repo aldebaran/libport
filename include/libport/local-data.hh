@@ -30,6 +30,7 @@ namespace libport
   public:
     virtual T* get() = 0;
     virtual void set(T* v) = 0;
+    virtual ~AbstractLocalData();
   };
 
   /// \brief Map a value of type \p T for each encapsulation corresponding
@@ -60,6 +61,7 @@ namespace libport
     /// Type of the function used to build the value.
     typedef boost::function0<T*> builder;
     virtual T& instance(builder b) = 0;
+    virtual ~AbstractLocalSingleton();
   };
 
   /// \brief Map a value of type \p T for each encapsulation corresponding

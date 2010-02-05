@@ -110,6 +110,11 @@ namespace libport
     };
   }
 
+  template <typename T>
+  AbstractLocalData<T>::~AbstractLocalData()
+  {
+  }
+
   template <typename T, typename Enc>
   T*
   LocalData<T, Enc>::get()
@@ -122,6 +127,11 @@ namespace libport
   LocalData<T, Enc>::set(T* v)
   {
     localdata::WrapperFuns<traits>::set(container_, v);
+  }
+
+  template <typename T>
+  AbstractLocalSingleton<T>::~AbstractLocalSingleton()
+  {
   }
 
 
