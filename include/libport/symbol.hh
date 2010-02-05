@@ -15,7 +15,6 @@
 #ifndef LIBPORT_SYMBOL_HH
 # define LIBPORT_SYMBOL_HH
 
-# include <set>
 # include <string>
 # include <iosfwd>
 
@@ -25,6 +24,8 @@
 #  include <boost/serialization/serialization.hpp>
 #  include <boost/serialization/tracking.hpp>
 # endif // WITH_BOOST_SERIALIZATION
+
+# include <boost/unordered_set.hpp>
 
 # include <libport/export.hh>
 
@@ -40,7 +41,7 @@ namespace libport
   class LIBPORT_API Symbol
   {
     /// The type "set of strings".
-    typedef std::set<std::string> string_set_type;
+    typedef boost::unordered_set<std::string> string_set_type;
     /// The type for the size of string map.
     typedef string_set_type::size_type string_size_type;
 
