@@ -78,7 +78,7 @@ static void test_many_fast()
   test_many(false);
 }
 
-std::vector<int> lockCheck;
+std::vector<unsigned> lockCheck;
 
 static void task_sleep_check_lock(int delay, unsigned lockid, unsigned lockval)
 {
