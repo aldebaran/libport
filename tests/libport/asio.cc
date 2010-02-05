@@ -88,13 +88,13 @@ class TestSocket: public libport::Socket
 {
   public:
   TestSocket()
-    : nRead(0), echo(false), dump(false)
+    : nRead(0), echo(false), dump(false), destroyOnError(true)
     {
       BOOST_CHECK(!abort_ctor);
       nInstance++;
     }
   TestSocket(bool echo, bool dump)
-    : nRead(0), echo(echo), dump(dump)
+    : nRead(0), echo(echo), dump(dump), destroyOnError(true)
     {
       BOOST_CHECK(!abort_ctor);
       nInstance++;
@@ -121,7 +121,8 @@ class TestSocket: public libport::Socket
   void onError(boost::system::error_code erc)
   {
     lastError = erc;
-    destroy();
+    if (destroyOnError)
+      destroy();
   }
   // Number of times read callback was called
   size_t nRead;
@@ -129,6 +130,8 @@ class TestSocket: public libport::Socket
   bool echo;
   // Store what is received in received.
   bool dump;
+  // Destroy socket onError.
+  bool destroyOnError;
   std::string received;
   boost::system::error_code lastError;
   static TestSocket* factory()
@@ -356,7 +359,8 @@ static void test_pipe()
 {
   TestSocket* s1 = new TestSocket(false, true);
   TestSocket* s2 = new TestSocket(false, true);
-
+  s1->destroyOnError = false;
+  s2->destroyOnError = false;
   libport::makePipe(std::make_pair(s2, s1));
 
   // First element is reader, second is writer.
