@@ -73,7 +73,9 @@ namespace libport
 #endif
       void shutdown(int, boost::system::error_code&)
       {
-        T::close();
+        boost::system::error_code erc;
+        if (T::is_open())
+          T::close(erc);
       }
       endpoint remote_endpoint() { return endpoint();}
       endpoint local_endpoint() { return endpoint();}
