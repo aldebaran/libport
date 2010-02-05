@@ -156,7 +156,6 @@ libport_include_HEADERS +=				\
   include/libport/thread.hh				\
   include/libport/thread.hxx				\
   include/libport/thread-data.hh			\
-  include/libport/thread-data.hxx			\
   include/libport/thread-pool.hh                        \
   include/libport/throw-exception.hh			\
   include/libport/time.hh				\

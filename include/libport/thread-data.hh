@@ -12,40 +12,16 @@
 # define LIBPORT_THREAD_DATA_HH
 
 # include <libport/local-data.hh>
-# include <libport/specific-ptr.hh>
-# include <libport/pthread.h>
+
+// smallest header for thread_specific_ptr
+# include <boost/thread/tss.hpp>
 
 namespace libport
 {
-  /// \brief Add a Key class which define how to a register free hook and
-  /// how to get the current pthread identity.
+  /// \class shortcut to boost implementation.
   template <typename T>
-  class ThreadKey
-  {
-  public:
-    ThreadKey();
-    ~ThreadKey();
-
-    typedef pthread_t type;
-    /// Return the unmutable identity of threads.
-    static type current();
-    /// Register the function \a free inside the hooks of the threads.
-    void register_free_hook(boost::function1<void, type> free);
-    /// Hook to manipulate thread data after the definition of a new value.
-    void set_hook();
-    /// internal function used to be called by thread delete hook.
-    void cleanup();
-  private:
-    /// Key identity.
-    pthread_key_t key;
-    /// Free hook function.
-    boost::function1<void, type> free_;
-  };
-
-  /// \brief Define specific thread pointers.
-  template <typename T>
-  struct ThreadSpecificPtr
-    : SpecificPtr<T, ThreadKey<T> >
+  class ThreadSpecificPtr
+    : public boost::thread_specific_ptr<T>
   {
   };
 
@@ -65,7 +41,5 @@ namespace libport
   }
 
 }
-
-# include <libport/thread-data.hxx>
 
 #endif
