@@ -16,11 +16,13 @@ SCHED_API extern void (*coroutine_free_hook)(Coro*);
 namespace sched
 {
   template <typename T>
+  inline
   CoroutineKey<T>::CoroutineKey()
   {
   }
 
   template <typename T>
+  inline
   CoroutineKey<T>::~CoroutineKey()
   {
   }
@@ -28,6 +30,7 @@ namespace sched
   /// Return the unmutable identity of coroutines and handle the case where
   /// the main coroutine is changing its identity.
   template <typename T>
+  inline
   typename CoroutineKey<T>::type
   CoroutineKey<T>::current()
   {
@@ -40,6 +43,7 @@ namespace sched
   }
 
   template <typename T>
+  inline
   void
   CoroutineKey<T>::register_free_hook(boost::function1<void, type> free)
   {
@@ -47,6 +51,7 @@ namespace sched
   }
 
   template <typename T>
+  inline
   void
   CoroutineKey<T>::set_hook()
   {
