@@ -33,7 +33,7 @@ namespace libport
 
     template <typename T>
     typename DataType<T>::target*
-    DataType<T>::get(container& c, bool create)
+    DataType<T>::get(container& c, bool)
     {
       return c.get();
     }
