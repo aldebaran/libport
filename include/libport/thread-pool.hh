@@ -40,7 +40,7 @@ namespace libport
     typedef libport::intrusive_ptr<TaskLock> rTaskLock;
 
     /// Class representing a task.
-    class TaskHandle: public RefCounted
+    class LIBPORT_API TaskHandle: public RefCounted
     {
     public:
       TaskFunc taskFunc;
@@ -60,7 +60,7 @@ namespace libport
     };
 
     /// Class storing a set of tasks that must not run in parallel.
-    class TaskLock: public RefCounted
+    class LIBPORT_API TaskLock: public RefCounted
     {
     public:
       TaskLock();
@@ -97,7 +97,7 @@ namespace libport
     /// Cached number of locked tasks.
     size_t nLockedTasks_;
 
-    class Thread: public RefCounted
+    class LIBPORT_API Thread: public RefCounted
     {
     public:
       /// Must have a dtor to avoid a g++ 'sorry, unimplemented' inlining error
