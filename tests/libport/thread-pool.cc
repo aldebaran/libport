@@ -104,7 +104,7 @@ static void test_lock()
   for(int i=0; i<10; ++i)
     v.push_back(new ThreadPool::TaskLock);
   lockCheck.resize(v.size());
-  static const boost::uint32_t nTasks = 4000 / dfactor;
+  static const boost::uint32_t nTasks = 4000 / (dfactor * ((dfactor!=1)+1));
   for (unsigned i=0; i<nTasks; ++i)
   {
     unsigned lockid = rand()%v.size();
