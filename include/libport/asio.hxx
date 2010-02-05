@@ -38,6 +38,8 @@ namespace libport
         : current_(-1)
         , pending_(false)
       {}
+      /// Return ammount of data in write buffer
+      size_t getWriteBufferContentSize();
     protected:
       /// Write double-buffer.
       boost::asio::streambuf buffers_[2];
@@ -53,6 +55,13 @@ namespace libport
     template<typename T> SocketImplBase* create(T* s)
     {
       return SocketImpl<T>::create(s);
+    }
+    inline size_t SocketImplBase::getWriteBufferContentSize()
+    {
+      if (!pending_)
+        return 0;
+      else
+        return buffers_[1-current_].size();
     }
   }
   template<class Sock>
