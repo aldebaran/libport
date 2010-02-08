@@ -130,7 +130,7 @@ namespace libport
 
   const char *bad_numeric_cast::what() const throw()
   {
-    return "bad numeric conversion: overflow";
+    return "bad numeric conversion: overflow or non empty fractional part";
   }
 
   const char *negative_overflow::what() const throw()
