@@ -28,7 +28,7 @@ namespace libport
       bool b2 = size > (i + 1);
       // Whether there are at least three characters left
       bool b3 = size > (i + 2);
-      char chunk[3];
+      unsigned char chunk[3];
 
       chunk[0] =      input[i    ]      ;
       chunk[1] = b2 ? input[i + 1] : 0x0;
