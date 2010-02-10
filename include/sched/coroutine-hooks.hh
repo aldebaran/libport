@@ -12,11 +12,12 @@
 # define SCHED_COROUTINE_HOOK_HH
 
 # include <boost/function.hpp>
+# include <sched/export.hh>
 # include <sched/coroutine.hh>
 
 typedef boost::function1<void, Coro*> coroutine_hook;
 
-void add_coroutine_new_hook(coroutine_hook hook);
-void add_coroutine_free_hook(coroutine_hook hook);
+SCHED_API void add_coroutine_new_hook(coroutine_hook hook);
+SCHED_API void add_coroutine_free_hook(coroutine_hook hook);
 
 #endif
