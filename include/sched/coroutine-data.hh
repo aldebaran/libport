@@ -23,7 +23,7 @@ namespace sched
   /// \brief Add a Key class which define how to a register free hook and
   /// how to get the current coroutine identity.
   template <typename T>
-  class SCHED_API CoroutineKey
+  class CoroutineKey
   {
   public:
     CoroutineKey();
@@ -43,7 +43,7 @@ namespace sched
 
   /// \brief Define specific coroutine pointers.
   template <typename T>
-  struct SCHED_API CoroutineSpecificPtr
+  struct CoroutineSpecificPtr
     : ::libport::SpecificPtr<T, CoroutineKey<T> >
   {
   };
