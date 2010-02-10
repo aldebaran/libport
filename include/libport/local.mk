@@ -88,6 +88,7 @@ libport_include_HEADERS +=				\
   include/libport/fwd.hh				\
   include/libport/hash.hh				\
   include/libport/hierarchy.hh				\
+  include/libport/hmac-sha1.hh				\
   include/libport/indent.hh				\
   include/libport/input-arguments.hh			\
   include/libport/input-arguments.hxx			\

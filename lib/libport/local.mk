@@ -42,6 +42,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/fd-stream.cc			\
   lib/libport/file-library.cc			\
   lib/libport/file-system.cc			\
+  lib/libport/hmac-sha1.cc			\
   lib/libport/indent.cc				\
   lib/libport/input-arguments.cc		\
   lib/libport/io-stream.cc			\

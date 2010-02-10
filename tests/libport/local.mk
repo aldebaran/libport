@@ -31,6 +31,7 @@ TESTS_BINARIES =                                \
   tests/libport/foreach.cc                      \
   tests/libport/has-if.cc                       \
   tests/libport/hash.cc                         \
+  tests/libport/hmac-sha1.cc			\
   tests/libport/indent.cc                       \
   tests/libport/input-arguments.cc		\
   tests/libport/intrusive-ptr.cc                \
