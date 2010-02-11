@@ -42,6 +42,7 @@ namespace sched
     , cycle_(0)
     , ready_to_die_(false)
     , real_time_behaviour_(false)
+    , keep_terminated_jobs_(false)
   {
     LIBPORT_DEBUG("Initializing main coroutine");
     coroutine_initialize_main(&coro_);
@@ -311,6 +312,9 @@ namespace sched
       // already terminated.
       if (!job->terminated())
 	jobs_.push_back(job);
+      else if (keep_terminated_jobs_)
+        terminated_jobs_.push_back(job);
+
 
       // Switch back to the scheduler. But in the case this job has been
       // destroyed, erase the local variable first so that it doesn't keep

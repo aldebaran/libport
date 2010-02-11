@@ -147,6 +147,12 @@ namespace sched
     /// Check whether we want real-time behaviour or not.
     bool real_time_behaviour_get() const;
 
+    /// Sets whether to keep the list of jobs in the terminated state
+    void keep_terminated_jobs_set(bool keep);
+    /// Get the list of terminated jobs
+    jobs_type terminated_jobs_get();
+    /// Clear the list of terminated jobs
+    void terminated_jobs_clear();
   private:
     /// Execute one round in the scheduler.
     ///
@@ -189,6 +195,10 @@ namespace sched
 
     /// Is real-time behavior desired?
     bool real_time_behaviour_;
+
+    /// List of terminated jobs (kept if keep_terminated_jobs_ is true)
+    jobs_type terminated_jobs_;
+    bool keep_terminated_jobs_;
   };
 
 } // namespace sched

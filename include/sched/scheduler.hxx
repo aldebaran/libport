@@ -63,6 +63,24 @@ namespace sched
     return real_time_behaviour_;
   }
 
+  inline void
+  Scheduler::keep_terminated_jobs_set(bool keep)
+  {
+    keep_terminated_jobs_ = keep;
+  }
+
+  inline jobs_type
+  Scheduler::terminated_jobs_get()
+  {
+    return terminated_jobs_;
+  }
+
+  inline void
+  Scheduler::terminated_jobs_clear()
+  {
+    terminated_jobs_.clear();
+  }
+
 } // namespace sched
 
 #endif // !SCHED_SCHEDULER_HXX
