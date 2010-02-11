@@ -110,6 +110,7 @@ tests_libport_file_library_SOURCES                 = tests/libport/file-library.
 tests_libport_finally_SOURCES                      = tests/libport/finally.cc
 tests_libport_foreach_SOURCES                      = tests/libport/foreach.cc
 tests_libport_hash_SOURCES                         = tests/libport/hash.cc
+tests_libport_hmac_sha1_SOURCES                    = tests/libport/hmac-sha1.cc
 tests_libport_has_if_SOURCES                       = tests/libport/has-if.cc
 tests_libport_indent_SOURCES                       = tests/libport/indent.cc
 tests_libport_input_arguments_SOURCES              = tests/libport/input-arguments.cc
