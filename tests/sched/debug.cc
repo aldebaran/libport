@@ -15,6 +15,12 @@
 
 #include <sched/coroutine-data.hh>
 
+// do not test coroutine with valgrind if it is not enabled.
+#if ! defined(USE_VALGRIND) || defined(NVALGRIND)
+# include <libport/instrument.hh>
+
+INSTRUMENTFLAGS(--mode=none);
+#endif
 
 using libport::test_suite;
 
