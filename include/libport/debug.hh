@@ -27,6 +27,7 @@
 #  include <libport/export.hh>
 #  include <libport/finally.hh>
 #  include <libport/option-parser.hh>
+#  include <libport/symbol.hh>
 
 #  include <libport/local-data.hh>
 #  include <libport/thread-data.hh>
@@ -35,16 +36,16 @@ namespace libport
 {
   namespace debug
   {
-    typedef std::map<std::string, unsigned long long> categories_type;
+    typedef std::map<Symbol, bool> categories_type;
 
     categories_type& get_categories();
-    LIBPORT_API int add_category(const std::string& name);
-    LIBPORT_API int enable_category(const std::string& name);
-    LIBPORT_API int disable_category(const std::string& name);
+    LIBPORT_API const Symbol& add_category(const Symbol& name);
+    LIBPORT_API int enable_category(const Symbol& name);
+    LIBPORT_API int disable_category(const Symbol& name);
 
     /// Reclaim the allocated memory.
     LIBPORT_API void clear();
-    bool test_category(const std::string& name);
+    bool test_category(const Symbol& name);
   }
 
   class LIBPORT_API Debug
@@ -108,7 +109,7 @@ namespace libport
                               const std::string& file = "",
                               unsigned line = 0) = 0;
 
-    libport::Finally::action_type push_category(const std::string& name);
+    libport::Finally::action_type push_category(const Symbol& name);
 
     libport::Finally::action_type push_level(levels::Level lvl);
 
@@ -124,7 +125,7 @@ namespace libport
     levels::Level level() const;
     bool disabled();
 
-    bool test_category(const std::string &c) const;
+    bool test_category(const Symbol& c) const;
   protected:
     std::string category();
     virtual void pop() = 0;
@@ -133,7 +134,7 @@ namespace libport
     void pop_category();
     void pop_level();
 
-    std::list<std::string> categories_stack_;
+    std::list<Symbol> categories_stack_;
     std::list<levels::Level> level_stack_;
     bool locations_;
     bool timestamps_;
@@ -341,23 +342,27 @@ namespace libport
 `-------------*/
 
 #  define GD_ADD_CATEGORY(Name)                                         \
-  static int _gd_category_##Name =                                      \
-    ::libport::debug::add_category(#Name)
+  static ::libport::Symbol _gd_category_##Name =                        \
+    ::libport::debug::add_category(::libport::Symbol(#Name))
+
+#  define GD_GET_CATEGORY(Name)                  \
+  _gd_category_##Name
+
 
 #  define GD_CATEGORY(Cat)                                              \
-  libport::Finally _gd_pop_category_##__LINE__                          \
-  (GD_DEBUGGER->push_category(#Cat))
+  libport::Finally BOOST_PP_CAT(_gd_pop_category_, __LINE__)            \
+  (GD_DEBUGGER->push_category(GD_GET_CATEGORY(Cat)))
 
 #  define GD_DISABLE_CATEGORY(Cat)                                      \
   static int _gd_category_disable_##Cat =                               \
-  ::libport::debug::disable_category(#Cat)
+    ::libport::debug::disable_category(GD_GET_CATEGORY(Cat))
 
 #  define GD_ENABLE_CATEGORY(Cat)                \
   static int _gd_category_enable_##Cat =         \
-  ::libport::debug::enable_category(#Cat)
+    ::libport::debug::enable_category(GD_GET_CATEGORY(Cat))
 
 #  define GD_CHECK_CATEGORY(Cat)                \
-  GD_DEBUGGER->test_category(#Cat)
+  GD_DEBUGGER->test_category(GD_GET_CATEGORY(Cat))
 
 /*--------.
 | Level.  |

@@ -27,15 +27,21 @@
 using libport::Symbol;
 using libport::test_suite;
 
+
 // Checking symbol.
 void
 check_symbols()
 {
+  // This value is used to get the size of Symbol map because the libport
+  // library may use some for itself.  We just hope that the dummy names
+  // used in this test do not collide with the name used in the library.
+  const unsigned int init_map_size = Symbol::string_map_size ();
+
   const Symbol toto1("toto");
   const Symbol toto2("toto");
   const Symbol titi1("titi");
 
-  BOOST_CHECK_EQUAL(Symbol::string_map_size (), 2u);
+  BOOST_CHECK_EQUAL(Symbol::string_map_size () - init_map_size, 2u);
   BOOST_CHECK_EQUAL(toto1.name_get (), "toto");
 
   BOOST_CHECK_EQUAL(toto1, Symbol("toto"));

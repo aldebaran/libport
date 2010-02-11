@@ -29,6 +29,8 @@
 
 #ifndef LIBPORT_DEBUG_DISABLE
 
+GD_ADD_CATEGORY(NONE);
+
 namespace libport
 {
 
@@ -47,28 +49,29 @@ namespace libport
       return res;
     }
 
-    int add_category(const std::string& name)
+    const Symbol&
+    add_category(const Symbol& name)
     {
       get_categories()[name] = true;
-      size_t size = name.size();
+      size_t size = name.name_get().size();
       if (categories_largest() < size)
         categories_largest() = size;
-      return 42;
+      return name;
     }
 
-    int enable_category(const std::string& name)
+    int enable_category(const Symbol& name)
     {
       get_categories()[name] = true;
       return 42;
     }
 
-    int disable_category(const std::string& name)
+    int disable_category(const Symbol& name)
     {
       get_categories()[name] = false;
       return 42;
     }
 
-    bool test_category(const std::string& name)
+    bool test_category(const Symbol& name)
     {
       return get_categories()[name];
     }
@@ -152,7 +155,7 @@ namespace libport
   }
 
   libport::Finally::action_type
-  Debug::push_category(const std::string& category)
+  Debug::push_category(const Symbol& category)
   {
     categories_stack_.push_back(category);
     return boost::bind(&Debug::pop_category, this);
@@ -202,10 +205,10 @@ namespace libport
   }
 
   bool
-  Debug::test_category(const std::string &c) const
+  Debug::test_category(const Symbol &c) const
   {
     return (categories_stack_.empty()
-            ? "NONE" == c
+            ? GD_GET_CATEGORY(NONE) == c
             : categories_stack_.back() == c);
   }
 
@@ -213,8 +216,8 @@ namespace libport
   Debug::category()
   {
     std::string res = (categories_stack_.empty()
-                       ? "NONE"
-                       : categories_stack_.back());
+                       ? GD_GET_CATEGORY(NONE).name_get()
+                       : categories_stack_.back().name_get());
     size_t size = res.size();
     size_t largest = debug::categories_largest();
     if (size < largest)
@@ -522,23 +525,21 @@ namespace libport
       else
         d = make_debugger();
       debugger_data->set(d);
-      d->push_category("NONE");
+      d->push_category(GD_GET_CATEGORY(NONE));
     }
 
     if (no_gd_init)
     {
-#define _GD_WARN(Message)                               \
+# define _GD_WARN(Message)                              \
   d->debug(Message, ::libport::Debug::types::warn,      \
            GD_FUNCTION, __FILE__, __LINE__)
 
       _GD_WARN("GD_INIT was not invoked, defaulting to console logs");
-#undef _GD_WARN
+# undef _GD_WARN
     }
 
     return d;
   }
-
-  GD_ADD_CATEGORY(NONE);
 
 }
 
