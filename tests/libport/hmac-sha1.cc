@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+#include <libport/config.h>
 #include <libport/base64.hh>
 #include <libport/hmac-sha1.hh>
 #include <libport/unit-test.hh>
@@ -15,12 +16,14 @@ using libport::test_suite;
 #include <iostream>
 static void test()
 {
+#ifdef LIBPORT_ENABLE_SSL
   std::string msg =
     "GET\n\n\nTue, 27 Mar 2007 19:36:42 +0000\n"
     "/johnsmith/photos/puppy.jpg";
   std::string key = "uV3F3YluFJax1cknvbcGwgjvx4QpvB+leU8dUj2o";
   BOOST_CHECK_EQUAL(libport::base64(libport::hmac_sha1(msg, key)),
 		    "xXjDGYUmKxnwqr5KXNPGldn5LbA=");
+#endif
 }
 
 test_suite*
