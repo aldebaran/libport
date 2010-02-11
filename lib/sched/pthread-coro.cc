@@ -30,6 +30,9 @@
 Coro* coro_current_;
 Coro* coro_main_;
 
+SCHED_API extern void (*coroutine_free_hook)(Coro*);
+SCHED_API extern void (*coroutine_new_hook) (Coro*);
+
 Coro::Coro()
   : started_(false)
   , die_(false)
@@ -38,7 +41,10 @@ Coro::Coro()
 Coro*
 coroutine_new(size_t)
 {
-  return new Coro;
+  Coro *res = new Coro;
+  if (coroutine_new_hook)
+    coroutine_new_hook(res);
+  return res;
 }
 
 void
@@ -52,6 +58,8 @@ coroutine_free(Coro* c)
     c->sem_++;
     PTHREAD_RUN(pthread_join, c->thread_, 0);
     // Actually free it
+    if (coroutine_free_hook)
+      coroutine_free_hook(coro);
     delete c;
   }
 }

@@ -101,6 +101,8 @@ libport_include_HEADERS +=				\
   include/libport/io-stream.hh				\
   include/libport/ip-semaphore.hh			\
   include/libport/lexical-cast.hh			\
+  include/libport/local-data.hh				\
+  include/libport/local-data.hxx			\
   include/libport/lockable.hh				\
   include/libport/lockable.hxx				\
   include/libport/map.hh				\
@@ -141,6 +143,8 @@ libport_include_HEADERS +=				\
   include/libport/separator.hh				\
   include/libport/singleton-ptr.hh			\
   include/libport/singleton-ptr.hxx			\
+  include/libport/specific-ptr.hh			\
+  include/libport/specific-ptr.hxx			\
   include/libport/statistics.hh				\
   include/libport/statistics.hxx			\
   include/libport/symbol.hh				\
@@ -152,6 +156,7 @@ libport_include_HEADERS +=				\
   include/libport/system-warning-push.hh		\
   include/libport/thread.hh				\
   include/libport/thread.hxx				\
+  include/libport/thread-data.hh			\
   include/libport/thread-pool.hh                        \
   include/libport/throw-exception.hh			\
   include/libport/time.hh				\

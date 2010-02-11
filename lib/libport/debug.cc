@@ -200,6 +200,14 @@ namespace libport
     level_stack_.pop_back();
   }
 
+  bool
+  Debug::test_category(const std::string &c) const
+  {
+    return (categories_stack_.empty()
+            ? "NONE" == c
+            : categories_stack_.back() == c);
+  }
+
   std::string
   Debug::category()
   {
@@ -461,6 +469,7 @@ namespace libport
 #endif
 
   boost::function0<Debug*> make_debugger;
+  AbstractLocalData<Debug>* debugger_data;
 
   typedef std::map<pthread_t, Debug*> map_type;
   // Do not make it an actual object, as it is sometimes used on
@@ -489,20 +498,41 @@ namespace libport
   Debug* debugger()
   {
     libport::BlockLock lock(debugger_mutex_);
-    map_type& debuggers = *pdebuggers;
-    pthread_t id = pthread_self();
-    if (!libport::mhas(debuggers, id))
+    bool no_gd_init = false;
+    Debug* d;
+
+    if (!debugger_data)
+    {
+      debugger_data =
+        new LocalData<Debug, ::libport::localdata::Thread>;
+      no_gd_init = true;
+    }
+
+    d = debugger_data->get();
+    if (!d)
     {
       if (make_debugger.empty())
       {
-        debuggers[id] = new ConsoleDebug;
-        GD_WARN("GD_INIT was not invoked, defaulting to console logs");
+        d = new ConsoleDebug;
+        no_gd_init = true;
       }
       else
-        debuggers[id] = make_debugger();
-      debuggers[id]->push_category("NONE");
+        d = make_debugger();
+      debugger_data->set(d);
+      d->push_category("NONE");
     }
-    return debuggers[id];
+
+    if (no_gd_init)
+    {
+#define _GD_WARN(Message)                               \
+  d->debug(Message, ::libport::Debug::types::warn,      \
+           GD_FUNCTION, __FILE__, __LINE__)
+
+      _GD_WARN("GD_INIT was not invoked, defaulting to console logs");
+#undef _GD_WARN
+    }
+
+    return d;
   }
 
   GD_ADD_CATEGORY(NONE);
