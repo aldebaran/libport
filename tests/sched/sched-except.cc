@@ -11,9 +11,13 @@
 #include <iostream>
 #include <sched/coroutine.hh>
 #include <libport/unit-test.hh>
-#include <libport/instrument.hh>
+
+// do not test coroutine with valgrind if it is not enabled.
+#if ! defined(USE_VALGRIND) || defined(NVALGRIND)
+# include <libport/instrument.hh>
 
 INSTRUMENTFLAGS(--mode=none);
+#endif
 
 using libport::test_suite;
 static size_t STACK_SIZE = 0;
