@@ -90,26 +90,23 @@ namespace libport
   Socket::syncWrite(const void* data, size_t length)
   {
     const char* cdata = static_cast<const char*>(data);
-    size_t pos = 0;
 #ifdef WIN32
-    BOOL ok;
     DWORD written;
-    while (length-pos
-           && (ok=WriteFile((HANDLE)getFD(), cdata+pos, length-pos,
-                            &written, NULL)))
-      pos += written;
-    if (!ok)
-      throw std::runtime_error(std::string("WriteFile: ")
-                               + libport::strerror(0));
+    for (size_t pos = 0; pos < length; pos += written)
+    {
+      if (!WriteFile((HANDLE)getFD(), cdata+pos, length-pos,
+                     &written, NULL))
+        throw std::runtime_error(std::string("WriteFile: ")
+                                 + libport::strerror(0));
+    }
 #else
     ssize_t written;
-    while (length-pos
-           && (written = ::write(getFD(), cdata+pos, length-pos)))
+    for (size_t pos = 0; pos < length; pos += written)
     {
+      written = ::write(getFD(), cdata+pos, length-pos);
       if (written == -1)
         throw std::runtime_error(std::string("write: ")
                                  + libport::strerror(errno));
-      pos += written;
     }
 #endif
   }
