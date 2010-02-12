@@ -154,18 +154,18 @@ namespace libport
     }
   }
 
-  libport::Finally::action_type
+  Debug*
   Debug::push_category(Symbol category)
   {
     categories_stack_.push_back(category);
-    return boost::bind(&Debug::pop_category, this);
+    return this;
   }
 
-  libport::Finally::action_type
+  Debug*
   Debug::push_level(levels::Level lvl)
   {
     level_stack_.push_back(lvl);
-    return boost::bind(&Debug::pop_level, this);
+    return this;
   }
 
   bool
@@ -176,19 +176,16 @@ namespace libport
             || !debug::test_category(categories_stack_.back()));
   }
 
-  static void noop()
-  {}
-
-  libport::Finally::action_type
+  Debug*
   Debug::push(const std::string& msg,
               const std::string& fun,
               const std::string& file,
               unsigned line)
   {
     if (disabled())
-      return noop;
+      return 0;
     message_push(msg, fun, file, line);
-    return boost::bind(&Debug::pop, this);
+    return this;
   }
 
   void

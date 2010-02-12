@@ -48,6 +48,12 @@ namespace libport
     bool test_category(Symbol name);
   }
 
+  // Declare Finally classes to add them as friend of Debug.  This avoid
+  // adding pop* methods as public.
+  struct FinallyDebugCategory;
+  struct FinallyDebugLevel;
+  struct FinallyDebugIndent;
+
   class LIBPORT_API Debug
   {
   public:
@@ -94,10 +100,10 @@ namespace libport
                const std::string& fun = "",
                const std::string& file = "",
                unsigned line = 0);
-    libport::Finally::action_type push(const std::string& msg,
-                                       const std::string& fun = "",
-                                       const std::string& file = "",
-                                       unsigned line = 0);
+    Debug* push(const std::string& msg,
+                const std::string& fun = "",
+                const std::string& file = "",
+                unsigned line = 0);
 
     virtual void message(const std::string& msg,
                          types::Type type,
@@ -109,9 +115,9 @@ namespace libport
                               const std::string& file = "",
                               unsigned line = 0) = 0;
 
-    libport::Finally::action_type push_category(Symbol name);
+    Debug* push_category(Symbol name);
 
-    libport::Finally::action_type push_level(levels::Level lvl);
+    Debug* push_level(levels::Level lvl);
 
     void locations(bool value);
     bool locations();
@@ -139,6 +145,10 @@ namespace libport
     bool locations_;
     bool timestamps_;
     levels::Level filter_;
+
+    friend struct FinallyDebugCategory;
+    friend struct FinallyDebugLevel;
+    friend struct FinallyDebugIndent;
   };
 
   class LIBPORT_API ConsoleDebug: public Debug
@@ -216,6 +226,10 @@ namespace libport
 
   }
 
+  // Define FinallyDebug* classes.
+  FINALLY_DEFINE(DebugCategory, ((Debug*, debug)), debug->pop_category());
+  FINALLY_DEFINE(DebugLevel, ((Debug*, debug)), debug->pop_level());
+  FINALLY_DEFINE(DebugIndent, ((Debug*, debug)), if (debug) debug->pop());
 }
 
 
@@ -330,7 +344,7 @@ namespace libport
 
 
 #  define GD_PUSH(Message)                              \
-  libport::Finally _gd_pop_                             \
+  libport::FinallyDebugIndent _gd_pop_                  \
   (GD_DEBUGGER->push(Message,                           \
                      GD_FUNCTION, __FILE__, __LINE__))
 
@@ -350,7 +364,7 @@ namespace libport
 
 
 #  define GD_CATEGORY(Cat)                                              \
-  libport::Finally BOOST_PP_CAT(_gd_pop_category_, __LINE__)            \
+  libport::FinallyDebugCategory BOOST_PP_CAT(_gd_pop_category_, __LINE__) \
   (GD_DEBUGGER->push_category(GD_GET_CATEGORY(Cat)))
 
 #  define GD_DISABLE_CATEGORY(Cat)                                      \
@@ -368,8 +382,8 @@ namespace libport
 | Level.  |
 `--------*/
 
-#  define GD_LEVEL(Lvl)                         \
-  libport::Finally _gd_pop_level_##__LINE__     \
+#  define GD_LEVEL(Lvl)                                 \
+  libport::FinallyDebugLevel _gd_pop_level_##__LINE__   \
   (GD_DEBUGGER->push_level(Lvl))
 
 #  define GD_LOG()						  \
