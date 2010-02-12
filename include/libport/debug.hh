@@ -39,13 +39,13 @@ namespace libport
     typedef std::map<Symbol, bool> categories_type;
 
     categories_type& get_categories();
-    LIBPORT_API const Symbol& add_category(const Symbol& name);
-    LIBPORT_API int enable_category(const Symbol& name);
-    LIBPORT_API int disable_category(const Symbol& name);
+    LIBPORT_API Symbol add_category(Symbol name);
+    LIBPORT_API int enable_category(Symbol name);
+    LIBPORT_API int disable_category(Symbol name);
 
     /// Reclaim the allocated memory.
     LIBPORT_API void clear();
-    bool test_category(const Symbol& name);
+    bool test_category(Symbol name);
   }
 
   class LIBPORT_API Debug
@@ -109,7 +109,7 @@ namespace libport
                               const std::string& file = "",
                               unsigned line = 0) = 0;
 
-    libport::Finally::action_type push_category(const Symbol& name);
+    libport::Finally::action_type push_category(Symbol name);
 
     libport::Finally::action_type push_level(levels::Level lvl);
 
@@ -125,7 +125,7 @@ namespace libport
     levels::Level level() const;
     bool disabled();
 
-    bool test_category(const Symbol& c) const;
+    bool test_category(Symbol c) const;
   protected:
     std::string category();
     virtual void pop() = 0;

@@ -49,8 +49,8 @@ namespace libport
       return res;
     }
 
-    const Symbol&
-    add_category(const Symbol& name)
+    Symbol
+    add_category(Symbol name)
     {
       get_categories()[name] = true;
       size_t size = name.name_get().size();
@@ -59,19 +59,19 @@ namespace libport
       return name;
     }
 
-    int enable_category(const Symbol& name)
+    int enable_category(Symbol name)
     {
       get_categories()[name] = true;
       return 42;
     }
 
-    int disable_category(const Symbol& name)
+    int disable_category(Symbol name)
     {
       get_categories()[name] = false;
       return 42;
     }
 
-    bool test_category(const Symbol& name)
+    bool test_category(Symbol name)
     {
       return get_categories()[name];
     }
@@ -155,7 +155,7 @@ namespace libport
   }
 
   libport::Finally::action_type
-  Debug::push_category(const Symbol& category)
+  Debug::push_category(Symbol category)
   {
     categories_stack_.push_back(category);
     return boost::bind(&Debug::pop_category, this);
@@ -205,7 +205,7 @@ namespace libport
   }
 
   bool
-  Debug::test_category(const Symbol &c) const
+  Debug::test_category(Symbol c) const
   {
     return (categories_stack_.empty()
             ? GD_GET_CATEGORY(NONE) == c
