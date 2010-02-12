@@ -247,6 +247,11 @@ namespace libport
 
 #  define GD_FUNCTION __FUNCTION__
 
+#  define GD_FINALLY(Type)                              \
+  libport::FinallyDebug ## Type                         \
+    BOOST_PP_CAT(_gd_pop_ ## Type ## _, __LINE__)
+
+
 /*--------.
 | Print.  |
 `--------*/
@@ -344,7 +349,7 @@ namespace libport
 
 
 #  define GD_PUSH(Message)                              \
-  libport::FinallyDebugIndent _gd_pop_                  \
+  GD_FINALLY(Indent)                                    \
   (GD_DEBUGGER->push(Message,                           \
                      GD_FUNCTION, __FILE__, __LINE__))
 
@@ -363,8 +368,8 @@ namespace libport
   _gd_category_##Name
 
 
-#  define GD_CATEGORY(Cat)                                              \
-  libport::FinallyDebugCategory BOOST_PP_CAT(_gd_pop_category_, __LINE__) \
+#  define GD_CATEGORY(Cat)                              \
+  GD_FINALLY(Category)                                  \
   (GD_DEBUGGER->push_category(GD_GET_CATEGORY(Cat)))
 
 #  define GD_DISABLE_CATEGORY(Cat)                                      \
@@ -382,8 +387,8 @@ namespace libport
 | Level.  |
 `--------*/
 
-#  define GD_LEVEL(Lvl)                                 \
-  libport::FinallyDebugLevel _gd_pop_level_##__LINE__   \
+#  define GD_LEVEL(Lvl)                         \
+  GD_FINALLY(Level)                             \
   (GD_DEBUGGER->push_level(Lvl))
 
 #  define GD_LOG()						  \
