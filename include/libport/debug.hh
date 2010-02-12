@@ -48,12 +48,6 @@ namespace libport
     bool test_category(Symbol name);
   }
 
-  // Declare Finally classes to add them as friend of Debug.  This avoid
-  // adding pop* methods as public.
-  struct FinallyDebugCategory;
-  struct FinallyDebugLevel;
-  struct FinallyDebugIndent;
-
   class LIBPORT_API Debug
   {
   public:
@@ -146,9 +140,11 @@ namespace libport
     bool timestamps_;
     levels::Level filter_;
 
-    friend struct FinallyDebugCategory;
-    friend struct FinallyDebugLevel;
-    friend struct FinallyDebugIndent;
+  public:
+    // Define Finally* classes.
+    FINALLY_DEFINE(Category, ((Debug*, debug)), debug->pop_category());
+    FINALLY_DEFINE(Level, ((Debug*, debug)), debug->pop_level());
+    FINALLY_DEFINE(Indent, ((Debug*, debug)), if (debug) debug->pop());
   };
 
   class LIBPORT_API ConsoleDebug: public Debug
@@ -225,11 +221,6 @@ namespace libport
     extern LIBPORT_API libport::OptionValue debug;
 
   }
-
-  // Define FinallyDebug* classes.
-  FINALLY_DEFINE(DebugCategory, ((Debug*, debug)), debug->pop_category());
-  FINALLY_DEFINE(DebugLevel, ((Debug*, debug)), debug->pop_level());
-  FINALLY_DEFINE(DebugIndent, ((Debug*, debug)), if (debug) debug->pop());
 }
 
 
@@ -248,7 +239,7 @@ namespace libport
 #  define GD_FUNCTION __FUNCTION__
 
 #  define GD_FINALLY(Type)                              \
-  libport::FinallyDebug ## Type                         \
+  libport::Debug::Finally ## Type                       \
     BOOST_PP_CAT(_gd_pop_ ## Type ## _, __LINE__)
 
 
