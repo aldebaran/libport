@@ -15,6 +15,10 @@ use File::Basename;
 
   libportify [OPTIONS...] DIR|FILE...
 
+   git ls-files --no-empty-directory |
+        perl -ne 'chomp; print "$_\n" if -f' |
+        xargs libportify
+
 =head1 DESCRIPTION
 
 Traverse all the DIR and FILE... and process them.
