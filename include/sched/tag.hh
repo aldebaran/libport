@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef SCHED_TAG_HH
 # define SCHED_TAG_HH
 

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef SCHED_EXPORT_HH
 # define SCHED_EXPORT_HH
 

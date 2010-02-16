@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file sched/scheduler.hh
  ** \brief Definition of sched::Scheduler.

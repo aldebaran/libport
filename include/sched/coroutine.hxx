@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef SCHED_COROUTINE_HXX
 # define SCHED_COROUTINE_HXX
 

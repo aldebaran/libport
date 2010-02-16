@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /* This file contains workarounds for two problems:
  *   - pthread_getspecific implementations relying on the stack adress to get
  *     a thread identifier, and not coping well with custom stacks.

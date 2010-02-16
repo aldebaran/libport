@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file sched/scheduler.cc
  ** \brief Implementation of sched::Scheduler.

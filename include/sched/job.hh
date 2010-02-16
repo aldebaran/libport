@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file sched/job.hh
  ** \brief Definition of Job.

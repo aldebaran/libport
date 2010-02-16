@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef SCHED_CONFIGURATION_HH
 # define SCHED_CONFIGURATION_HH
 

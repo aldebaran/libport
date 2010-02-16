@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef SCHED_EXCEPTION_HXX
 # define SCHED_EXCEPTION_HXX
 
