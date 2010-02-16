@@ -320,42 +320,44 @@ namespace libport
                         const std::string& file,
                         unsigned line)
   {
+    std::ostringstream ostr;
     Debug::colors::Color c = msg_color(type);
     if (timestamps())
     {
       color(c);
       show_time();
-      std::cerr << "    ";
+      ostr << "    ";
     }
     color(colors::purple);
-    std::cerr << "[" << category() << "] ";
+    ostr << "[" << category() << "] ";
     {
       static bool pid = getenv("GD_PID");
       if (pid)
-        std::cerr << "[" << getpid() << "] ";
+        ostr << "[" << getpid() << "] ";
     }
 #ifndef WIN32
     {
       static bool thread = getenv("GD_THREAD");
       if (thread)
-        std::cerr << "[" << pthread_self() << "] ";
+        ostr << "[" << pthread_self() << "] ";
     }
 #endif
     color(c);
     for (unsigned i = 0; i < indent_; ++i)
-      std::cerr << " ";
+      ostr << " ";
     // As syslog would do, don't issue the users' \n.
     if (!msg.empty() && msg[msg.size() - 1] == '\n')
-      std::cerr.write(msg.c_str(), msg.size() - 1);
+      ostr.write(msg.c_str(), msg.size() - 1);
     else
-      std::cerr << msg;
+      ostr << msg;
     if (locations())
     {
       color(colors::blue);
-      std::cerr << "    (" << fun << ", " << file << ":" << line << ")";
+      ostr << "    (" << fun << ", " << file << ":" << line << ")";
     }
     color(colors::white);
-    std::cerr << std::endl;
+    ostr << std::endl;
+    std::cerr << ostr.rdbuf();
   }
 
   void
