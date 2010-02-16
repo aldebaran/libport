@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef TINYXML_EXPORT_HH
 # define TINYXML_EXPORT_HH
 
