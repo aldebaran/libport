@@ -537,7 +537,7 @@ sub libport_relicense ($\$)
 
   # Do not alter files not from us.
   return
-    if $file =~ /(?:flex-lexer\.hh)$/;
+    if $file =~ m{(?:flex-lexer\.hh|gui/lcdrange\.h)$};
 
   my $updated = 0;
   for my $re (@license_re)
@@ -625,6 +625,13 @@ sub libportify ($$)
 sub transform_file (\&$)
 {
   my ($transform_ref, $file) = @_;
+
+  # Do not alter files we don't own.
+  if ($file =~ m{libcoroutine|libltdl})
+  {
+    warn "ignoring foreign file: $file";
+    return;
+  }
 
   # When using globbing, we sometimes find directories.
   if (! -f $file)
