@@ -36,7 +36,7 @@ Clean up trailing spaces.
 =item relicense
 
 Make the various license header standard, and update the copyright
-years.
+years.  If there is no license, include the default one.
 
 =item copyright
 
@@ -388,6 +388,14 @@ sub libport_spaces ($\$)
 
 my @license_re =
 (
+q{<copyright> <years>, <holder>
+
+This software is provided \"as is\" without warranty of any kind,
+either expressed or implied, including but not limited to the
+implied warranties of fitness for a particular purpose.
+
+See the LICENSE file for more information.},
+
 q{(?:\\\\file <file>)?
 This file is part of <project>\.?
 <copyright> (?:<years>, <holder>|<holder>, <years>\.)
@@ -519,7 +527,7 @@ EOF
 
 =item C<libport_relicense($file, \$contents)>
 
-Update the license notice.
+Update the license notice.  Add one if there was none.
 
 =cut
 
@@ -527,10 +535,25 @@ sub libport_relicense ($\$)
 {
   my ($file, $contents_ref) = @_;
 
+  # Do not alter files not from us.
+  return
+    if $file =~ /(?:flex-lexer\.hh)$/;
+
+  my $updated = 0;
   for my $re (@license_re)
     {
       verbose 2, $$contents_ref;
-      $$contents_ref =~ s{$re}{libport_license(%+)}smegi;
+      $$contents_ref =~ s{$re}{$updated = 1; libport_license(%+)}smegi;
+    }
+  # If the license was not seen (the right license model is also in
+  # the set of recognized licenses), then add it.
+  if (!$updated)
+    {
+      my %group =
+        (
+         years => $year,
+        );
+      $$contents_ref = libport_license(%group) . $$contents_ref;
     }
 }
 
