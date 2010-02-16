@@ -357,7 +357,7 @@ namespace libport
     }
     color(colors::white);
     ostr << std::endl;
-    std::cerr << ostr.rdbuf();
+    std::cerr << ostr.str();
   }
 
   void
