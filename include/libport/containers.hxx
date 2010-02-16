@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/containers.hxx
  ** \brief Some syntactic sugar to look for things in STL containers.

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_MARKUP_OSTREAM_HH
 # define LIBPORT_MARKUP_OSTREAM_HH
 

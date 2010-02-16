@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIPBORT_HIERARCHY_HH
 # define LIPBORT_HIERARCHY_HH
 

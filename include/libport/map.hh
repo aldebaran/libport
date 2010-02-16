@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/map.hh
  ** \brief Declaration of libport::Map.

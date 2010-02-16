@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBORT_RESERVED_VECTOR_HH
 # define LIBPORT_RESERVED_VECTOR_HH
 

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_STATISTICS_HH
 # define LIBPORT_STATISTICS_HH
 

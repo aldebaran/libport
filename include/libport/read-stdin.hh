@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/read-stdin.hh
  ** \brief Declaration of read_stdin.

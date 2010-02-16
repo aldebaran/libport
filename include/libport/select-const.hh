@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/select-const.hh
  ** \brief Select between a non const or a const type.

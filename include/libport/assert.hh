@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #warning "please, use <libport/cassert> instead"
 #warning "run git grep -l assert.hh | xargs perl -pi -e 's{<libport/assert.hh>}{<libport/cassert>}g'"
 #include <libport/cassert>

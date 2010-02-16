@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 namespace libport
 {
   template<class T, int R>

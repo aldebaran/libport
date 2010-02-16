@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_TYPE_INFO_HH
 # define LIBPORT_TYPE_INFO_HH
 

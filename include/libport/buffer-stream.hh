@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_BUFFER_STREAM_HH
 # define LIBPORT_BUFFER_STREAM_HH
 

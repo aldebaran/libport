@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file  libport/escape.hh
  ** \brief Escape: escaping special characters for output.

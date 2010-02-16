@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_DAMERAU_LEVENSHTEIN_DISTANCE_HH
 # define LIBPORT_DAMERAU_LEVENSHTEIN_DISTANCE_HH
 

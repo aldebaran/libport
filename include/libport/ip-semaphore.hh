@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef IP_SEMAPHORE_HH
 # define IP_SEMAPHORE_HH
 

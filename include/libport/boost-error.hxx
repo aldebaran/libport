@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_BOOST_ERROR_HXX
 # define LIBPORT_BOOST_ERROR_HXX
 

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**							-*- C++ -*-
  ** \file libport/map.hxx
  ** \brief Implementation of libport::map.

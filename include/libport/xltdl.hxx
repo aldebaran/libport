@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <boost/static_assert.hpp>
 #include <libport/format.hh>
 

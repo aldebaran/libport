@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /// \file libport/version.hh
 /// \brief Version of Libport as a package info.
 

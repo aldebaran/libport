@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/separate.hxx
  ** \brief Output containers with a separator between items.

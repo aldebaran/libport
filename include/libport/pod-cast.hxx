@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /// \file libport/pod-cast.hxx
 /// \brief Wrap C++ objects into PODs.
 

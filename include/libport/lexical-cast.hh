@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/lexical-cast.hh
  ** \brief Syntactic sugar for \a boost::lexical_cast.

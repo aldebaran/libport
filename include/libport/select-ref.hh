@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/select-ref.hh
  ** \brief Select between a non ref or a ref type.

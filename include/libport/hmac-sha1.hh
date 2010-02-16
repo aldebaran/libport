@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_HMAC_SHA1_HH
 # define LIBPORT_HMAC_SHA1_HH
 # include <libport/config.h>

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_REF_COUNTED_HXX
 # define LIBPORT_REF_COUNTED_HXX
 

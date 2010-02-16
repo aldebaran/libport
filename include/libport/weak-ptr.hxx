@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/weak-ptr.hxx
  ** \brief Implementation of libport::weak_ptr.

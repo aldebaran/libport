@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/intrusive-ptr.hxx
  ** \brief Implementation of libport::intrusive_ptr.

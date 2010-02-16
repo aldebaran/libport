@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file  libport/contract.hh
  ** \brief Replacement for cassert.

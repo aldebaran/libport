@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_SAFE_CONTAINER_HH
 # define LIBPORT_SAFE_CONTAINER_HH
 

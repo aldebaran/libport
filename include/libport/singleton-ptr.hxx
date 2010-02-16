@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_SINGLETON_PTR_HXX
 # define LIBPORT_SINGLETON_PTR_HXX
 

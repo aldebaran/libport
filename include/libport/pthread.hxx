@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_PTHREAD_HXX
 # define LIBPORT_PTHREAD_HXX
 

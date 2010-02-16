@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/timer.hxx
  ** \brief Inline methods for libport/timer.hh.

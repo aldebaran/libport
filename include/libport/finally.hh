@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /// \file libport/finally.hh
 
 #ifndef LIBPORT_FINALLY_HH

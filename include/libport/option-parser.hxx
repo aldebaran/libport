@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef OPTION_PARSER_HXX
 # define OPTION_PARSER_HXX
 

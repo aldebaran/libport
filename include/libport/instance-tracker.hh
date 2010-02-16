@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_INSTANCE_TRACKER_HH
 # define LIBPORT_INSTANCE_TRACKER_HH
 

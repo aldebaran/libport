@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_CLI_HH
 # define LIBPORT_CLI_HH
 

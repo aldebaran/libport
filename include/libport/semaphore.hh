@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_SEMAPHORE_HH
 # define LIBPORT_SEMAPHORE_HH
 

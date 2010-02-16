@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_BASE64_HH
 # define LIBPORT_BASE64_HH
 

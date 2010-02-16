@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_SMART_ALLOCATED_HH
 # define LIBPORT_SMART_ALLOCATED_HH
 #include <libport/cstdlib>

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_DESTRUCTIBLE_HXX
 # define LIBORT_DESTRUCTIBLE_HXX
 

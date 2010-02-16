@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_FWD_HH
 # define LIBPORT_FWD_HH
 

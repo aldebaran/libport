@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /// \file libport/throw-exception.hh
 /// \brief Provide a wrapper which cannot return to avoid incorrect
 /// compiler warnings.

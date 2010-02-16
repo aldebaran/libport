@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/path.hxx
  ** \brief Inline implementation of libport::path.

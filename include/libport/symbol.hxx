@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/symbol.hxx
  ** \brief Inline implementation of libport::Symbol.

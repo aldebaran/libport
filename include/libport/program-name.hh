@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_PROGRAM_NAME_HH
 # define LIBPORT_PROGRAM_NAME_HH
 

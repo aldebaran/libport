@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_UNIQUE_POINTER_HXX
 # define LIBPORT_UNIQUE_POINTER_HXX
 

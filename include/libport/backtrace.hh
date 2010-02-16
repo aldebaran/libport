@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_BACKTRACE_HH
 # define LIBPORT_BACKTRACE_HH
 

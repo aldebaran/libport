@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/file-library.hxx
  ** \brief implements inline function of libport/file-library.hh

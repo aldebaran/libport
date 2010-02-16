@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_COMPILATION_HH
 # define LIBPORT_COMPILATION_HH
 

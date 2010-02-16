@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_WINDOWS_HH
 # define LIBPORT_WINDOWS_HH
 

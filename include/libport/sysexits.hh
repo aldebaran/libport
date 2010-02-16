@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /// \file libport/sysexits.hh
 /// \brief Provide sysexits.h portably, and in C++ rather than in Cpp.
 

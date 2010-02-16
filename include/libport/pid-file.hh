@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_PID_FILE_HH
 # define LIBPORT_PID_FILE_HH
 

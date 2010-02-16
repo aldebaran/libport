@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_META_VISITOR_HH
 # define LIBPORT_META_VISITOR_HH
 

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_FIFO_HXX
 # define LIBPORT_FIFO_HXX
 

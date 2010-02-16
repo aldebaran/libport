@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file  libport/deref.hxx
  ** \brief Inline methods for libport/deref.hh.

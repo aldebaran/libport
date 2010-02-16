@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /// \file libport/ufloat.hxx
 /// \brief Inline implementations for ufloat.
 

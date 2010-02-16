@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/file-library.hh
  ** \brief Manage sets of inclusion paths.

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/timer.hh
  ** \brief timer: Timing nested tasks.
