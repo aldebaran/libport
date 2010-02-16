@@ -42,6 +42,7 @@ namespace libport
   public:
     /// Access the local value independently of the encapsulation.
     T* get();
+
     /// Define the local value independently of the encapsulation.
     void set(T* v);
 
@@ -52,30 +53,16 @@ namespace libport
     container container_;
   };
 
-  /// \brief Abstract class to handle local singleton from a piece of code
-  /// which is not aware of the encapsulation.
-  template <typename T>
-  class AbstractLocalSingleton
-  {
-  public:
-    /// Type of the function used to build the value.
-    typedef boost::function0<T*> builder;
-    virtual T& instance(builder b) = 0;
-    virtual ~AbstractLocalSingleton();
-  };
-
   /// \brief Map a value of type \p T for each encapsulation corresponding
   /// to \p Enc.  The instance is uniq per process and will not change
   /// during the whole process.
   template <typename T, typename Enc>
   class LocalSingleton
-    : public AbstractLocalSingleton<T>
   {
   public:
-    typedef typename AbstractLocalSingleton<T>::builder builder;
-    /// Get the instance of the current process and build it with \a b if
-    /// its does not exists yet.
-    T& instance(builder b);
+    T& instance();
+    operator T&();
+    LocalSingleton<T, Enc>& operator =(T& v);
 
   private:
     LocalData<T, Enc> data_;

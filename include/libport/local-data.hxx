@@ -115,6 +115,7 @@ namespace libport
   {
   }
 
+
   template <typename T, typename Enc>
   T*
   LocalData<T, Enc>::get()
@@ -129,24 +130,32 @@ namespace libport
     localdata::WrapperFuns<traits>::set(container_, v);
   }
 
-  template <typename T>
-  AbstractLocalSingleton<T>::~AbstractLocalSingleton()
-  {
-  }
-
 
   template <typename T, typename Enc>
   T&
-  LocalSingleton<T, Enc>::instance(builder b)
+  LocalSingleton<T, Enc>::instance()
   {
     T* e = data_.get();
     if (!e)
     {
-      assert(!b.empty());
-      e = b();
+      e = new T();
       data_.set(e);
     }
     return *e;
+  }
+
+  template <typename T, typename Enc>
+  LocalSingleton<T, Enc>::operator T&()
+  {
+    return instance();
+  }
+
+  template <typename T, typename Enc>
+  LocalSingleton<T, Enc>&
+  LocalSingleton<T, Enc>::operator =(T& v)
+  {
+    instance() = v;
+    return *this;
   }
 }
 
