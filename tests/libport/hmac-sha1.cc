@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <libport/config.h>
 #include <libport/base64.hh>
 #include <libport/hmac-sha1.hh>

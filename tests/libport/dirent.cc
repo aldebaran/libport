@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <libport/detect-win32.h>
 #include <libport/dirent.h>
 #include <libport/unit-test.hh>

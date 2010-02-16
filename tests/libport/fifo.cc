@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <libport/fifo.hh>
 #include <libport/unit-test.hh>
 
