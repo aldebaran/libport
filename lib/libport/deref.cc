@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/deref.cc
  ** \brief Implementation for libport/deref.hh.

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/cstring.cc
  ** \brief Implements file libport/cstring.

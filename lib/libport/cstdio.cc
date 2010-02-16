@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/cstdio.cc
  ** \brief Implements file libport/cstdio.

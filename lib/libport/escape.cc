@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file  libport/escape.cc
  ** \brief Implementation for libport/escape.hh.

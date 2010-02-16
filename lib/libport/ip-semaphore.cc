@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <libport/config.h>
 #ifdef LIBPORT_HAVE_SEMGET
 

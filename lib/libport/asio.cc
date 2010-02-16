@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 // This compilation unit must not have any ssl-dependent code.
 // Said code goes in asio-ssl.cc
 #define LIBPORT_NO_SSL

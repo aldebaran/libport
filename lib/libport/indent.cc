@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/indent.cc
  ** \brief Implementation of indentation relative functions.

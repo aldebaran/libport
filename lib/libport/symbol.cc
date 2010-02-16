@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /**
  ** \file libport/symbol.cc
  ** \brief Implementation of libport::Symbol.

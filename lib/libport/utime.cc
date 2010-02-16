@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <libport/config.h>
 #include <libport/detect-win32.h>
 #include <libport/sys/time.h>

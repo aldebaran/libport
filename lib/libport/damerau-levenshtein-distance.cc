@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <boost/multi_array.hpp>
 #include <libport/export.hh>
 #include <libport/damerau-levenshtein-distance.hh>

@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 /** \file libport/contract.cc
  ** \brief Implementation for contract.hh
  */
