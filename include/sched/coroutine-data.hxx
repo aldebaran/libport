@@ -39,7 +39,7 @@ namespace sched
     // Anonymous (null pointer) to a known coroutine.
     if (t == coroutine_main())
       return type();
-    return coroutine_current();
+    return t;
   }
 
   template <typename T>
