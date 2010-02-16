@@ -683,7 +683,7 @@ sub transform_things (\&@)
           -f $thing
           # We libportify source files.  They have an extension,
           # except cstdio and so forth...
-          && basename($thing) =~ m{ (?:\.(?:cc|hh|h|hxx)$)
+          && basename($thing) =~ m{ (?:\.(?:cc|h|hh|hxx|u)(?:\.in)?$)
                                   | (?:^c\w+$)}x
           # but then configure matches that regexp.
           && basename($thing) !~ m{configure}x
