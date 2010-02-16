@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef O_SERIALIZER_HXX
 # define O_SERIALIZER_HXX
 

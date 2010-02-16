@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef SERIALIZE_EXPORT_HH
 # define SERIALIZE_EXPORT_HH
 

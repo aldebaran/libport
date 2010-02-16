@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #ifndef LIBPORT_SERIALIZE_BINARY_O_SERIALIZER_HXX
 # define LIBPORT_SERIALIZE_BINARY_O_SERIALIZER_HXX
 

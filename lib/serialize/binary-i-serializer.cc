@@ -7,6 +7,7 @@
  *
  * See the LICENSE file for more information.
  */
+
 #include <serialize/binary-i-serializer.hh>
 
 namespace libport
