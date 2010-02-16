@@ -617,13 +617,6 @@ sub libportify ($$)
     $step{$step}->($file, \$contents);
   }
 
-#   libport_spaces    $file, $contents;
-#   fix_headers       $file, $contents;
-#   libport_debug     $file, $contents;
-#   libport_renamings $file, $contents;
-#   # First normalize the license, then update the year.
-#   libport_relicense $file, $contents;
-#   libport_copyright $file, $contents;
   $contents;
 }
 
