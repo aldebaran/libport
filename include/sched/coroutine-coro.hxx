@@ -10,8 +10,14 @@
 #ifndef SCHED_COROUTINE_CORO_HXX
 # define SCHED_COROUTINE_CORO_HXX
 
+# include <libport/local-data.hh>
+# include <libport/thread-data.hh>
+
+typedef ::libport::LocalSingleton<Coro*, ::libport::localdata::Thread>
+  LocalCoroPtr;
+
 // Hook stuff for uclibc-workaround
-SCHED_API extern Coro* coroutine_current_;
+SCHED_API extern LocalCoroPtr coroutine_current_;
 SCHED_API extern Coro* coroutine_main_;
 SCHED_API extern void (*coroutine_free_hook)(Coro*);
 SCHED_API extern void (*coroutine_new_hook) (Coro*);
