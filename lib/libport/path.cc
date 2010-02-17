@@ -25,87 +25,50 @@
 #include <libport/contract.hh>
 #include <libport/debug.hh>
 #include <libport/detect-win32.h>
-#include <libport/finally.hh>
 #include <libport/foreach.hh>
 #include <libport/format.hh>
 #include <libport/path.hh>
-#include <libport/tokenizer.hh>
 
 GD_ADD_CATEGORY(path);
 
 
-// Implementation detail: if path_ is empty and absolute_ is false,
+// Implementation detail: if path_ is empty and not absolute
 // then the path is '.'.
 
 namespace libport
 {
   path::path(const std::string& p)
+    : boost_path_(p)
   {
-    init(p);
+    init();
   }
 
   path::path(const char* p)
+    : boost_path_(p)
   {
-    init(p);
+    init();
   }
 
   void
-  path::init(std::string p)
+  path::init()
   {
-    if (p.empty())
+    if (boost_path_.empty())
       throw invalid_path("Path can't be empty.");
 
-    // Compute volume_ and absolute_.
 #if defined WIN32
-    // Under Win32, absolute paths start with a letter followed by
-    // ":\". If the trailing slash is missing, this is a relative
-    // path.
-    if (2 <= p.length()
-	&& isalpha(p[0]) && p[1] == ':')
-    {
-      volume_ = p.substr(0, 2);
-      absolute_ = p.length() >= 3 && (p[2] == '\\' || p[2] == '/');
-      p.erase(0, absolute_ ? 3 : 2);
-    }
-    // Network share, such as "\\shared volume\foo\bar"
-    else if (3 <= p.length()
-	     && p[0] == '\\' && p[1] == '\\')
-    {
-      absolute_ = true;
-      std::string::size_type pos = p.find('\\', 3);
-      if (pos == std::string::npos)
-      {
-	volume_ = p;
-	p.clear();
-      }
-      else
-      {
-	volume_ = p.substr(0, pos);
-	p = p.erase(0, pos);
-      }
-    }
-    // Fallback to Unix cases for subsystems such as cygwin
-    else
-#endif // WIN32
-    if (!p.empty() && (p[0] == '/' || p[0] == separator_))
-    {
-      absolute_ = true;
-      p = p.erase(0, 0);
-    }
-    else
-      absolute_ = false;
-
+    volume_ = boost_path_.root_name();
+#endif
 
     // Cut directories on / and \.
-    foreach (const std::string& component,
-             make_tokenizer(p, WIN32_IF("/\\", "/")))
-      append_dir(component);
+    foreach (const std::string& component, boost_path_)
+      if (component != "/")
+        append_dir(component);
   }
 
   path&
   path::operator=(const path& rhs)
   {
-    absolute_ = rhs.absolute_;
+    boost_path_ = rhs.boost_path_;
     path_ = rhs.path_;
 #if defined WIN32
     volume_ = rhs.volume_;
@@ -124,10 +87,9 @@ namespace libport
       throw invalid_path("concatenation of path with volume: " +
 			 rhs.to_string());
 #endif
-    for (path_type::const_iterator dir = rhs.path_.begin();
-	 dir != rhs.path_.end();
-	 ++dir)
-      append_dir(*dir);
+    boost_path_ /= rhs.boost_path_;
+    foreach (const std::string& dir, rhs.path_)
+      append_dir(dir);
 
     return *this;
   }
@@ -139,28 +101,13 @@ namespace libport
     return res /= rhs;
   }
 
-  path::operator std::string() const
-  {
-    return to_string();
-  }
-
   std::string
   path::to_string() const
   {
-    if (!absolute_ && path_.empty())
+    if (!boost_path_.is_complete() && path_.empty())
       return WIN32_IF(volume_.empty() ? "." : volume_, ".");
 
-    std::string res = WIN32_IF(volume_, "");
-    if (absolute_)
-      res += separator_;
-    bool tail = false;
-    foreach (const std::string& dir, path_)
-    {
-      if (tail++)
-	res += separator_;
-      res += dir;
-    }
-    return res;
+    return boost_path_.string();
   }
 
   bool
@@ -198,29 +145,6 @@ namespace libport
     }
   }
 
-
-  std::string
-  path::basename() const
-  {
-    // basename of / is /, basename of . is .
-    if (path_.empty())
-      return *this;
-
-    return path_.back();
-  }
-
-  std::string
-  path::extension() const
-  {
-    std::string name = basename();
-    size_t pos = name.rfind(".");
-
-    if (pos == std::string::npos || pos == name.size() - 1)
-      return "";
-
-    return name.substr(pos + 1);
-  }
-
   path
   path::dirname() const
   {
@@ -228,21 +152,13 @@ namespace libport
     if (path_.empty())
       return *this;
 
-    std::string last = path_.back();
-    // The const cast here is justified since the modification is
-    // systematically reverted
-    const_cast<path*>(this)->path_.pop_back();
-    libport::Finally finally(
-      boost::bind(&path_type::push_back,
-		  boost::ref(const_cast<path*>(this)->path_), last));
-    path res = path_.empty() ? "." : *this;
-    return res;
+    std::string res = boost_path_.branch_path().string();
+    return path(res.empty() ? "." : res);
   }
 
   bool path::exists() const
   {
-    struct stat buf;
-    bool res = 0 == stat(to_string().c_str(), &buf);
+    bool res = fs::exists(boost_path_);
     GD_CATEGORY(path);
     GD_FINFO_DUMP("exists: %-5s: %s", res ? "true" : "false", to_string());
     return res;
@@ -282,21 +198,21 @@ namespace libport
   void
   path::remove() const
   {
-    if (unlink(to_string().c_str()))
+    if (!fs::remove(boost_path_))
       throw Exception(libport::format("unable to unlink file: %s", *this));
   }
 
   void
   path::rename(const std::string& dst)
   {
-    if (::rename(to_string().c_str(), dst.c_str()))
-      throw Exception(libport::format("unable to rename file: %s", *this));
-    else
-      *this = dst;
-  }
+    try {
+      fs::rename(boost_path_, dst);
+    }
+    catch (Exception& e) {
+      throw Exception(libport::format(
+        "unable to rename file %s (%s)", *this, e.what()));
+    }
 
-  const path::path_type& path::components() const
-  {
-    return path_;
+    *this = dst;
   }
 }

@@ -20,6 +20,10 @@
 # include <list>
 # include <libport/export.hh>
 # include <libport/detect-win32.h>
+# include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
+
 namespace libport
 {
   /** \brief Paths in filesystems, i.e., file names.
@@ -107,17 +111,17 @@ namespace libport
     void append_dir(const std::string& dir);
 
     /// Init object with path \a p.
-    void init(std::string p);
+    void init();
 
     /// Reset object to empty, and then init
     /// to path \a p
     void reset(const std::string& p);
 
+    /// Boost Object.
+    fs::path boost_path_;
+
     /// Represented path.
     path_type path_;
-
-    /// Whether an absolute path.
-    bool absolute_;
 
 #ifdef WIN32
     /// Path separator

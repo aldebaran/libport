@@ -55,7 +55,7 @@ include msvc/local.mk
 # /opt/local headers would take precedence over ours (e.g., in the
 # case of an installed libltdl).
 AM_CPPFLAGS += $(BOOST_CPPFLAGS)
-
+AM_LDFLAGS += -lboost_filesystem
 
 ## ------- ##
 ## Tests.  ##
