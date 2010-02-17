@@ -146,7 +146,10 @@ namespace libport
 
       int r = select(fd + 1, &fds, 0, 0, &tv);
       if (r < 0)
-        FAIL("select error on fd=%d", fd);
+       if (errno != EINTR)
+          FAIL("select error on fd=%d", fd);
+       else
+         return 0;
       else if (r == 0)
         return 0;
     }
@@ -155,7 +158,10 @@ namespace libport
     {
       int r = read(fd, buf, len);
       if (r < 0)
-        FAIL("read error on fd = %s", fd);
+       if (errno != EINTR)
+          FAIL("read error on fd = %s", fd);
+       else
+         return 0;
       else if (r == 0) // EOF counts as an 'error'.
         FAIL_("read error on fd = %s: EOF", fd);
       else
