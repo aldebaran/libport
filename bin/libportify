@@ -51,6 +51,10 @@ instead of system headers).
 
 Update C<GD_DEBUG> calls.
 
+=item gdcategory
+
+Add missing C<GD_ADD_CATEGORY> calls after the last include.
+
 =item renamings
 
 Fix names and bad spelling.
@@ -353,6 +357,49 @@ sub libport_debug ($\$)
   $$contents_ref = $_;
 }
 
+# libport_gdcategory ($FILE, \$CONTENTS)
+# --------------------------------------
+# Add missing GD_ADD_CATEGORY at the top of each file using a GD_CATEGORY
+sub libport_gdcategory ($\$)
+{
+  my ($file, $contents_ref) = @_;
+  my %categories = ();
+  my $text;
+  my $category;
+  local $_ = $$contents_ref;
+
+  # Do not alter files dedicated to handle debug.
+  return
+    if $file =~ m{(?:debug\.hh|debug\.hxx|debug\.cc)$};
+
+  foreach $category ($_ =~ m{GD_CATEGORY\s*\(\s*(\w+)\s*\)}g)
+  {
+    print STDERR "use category: $category\n";
+    $categories{$category} = 1;
+  };
+
+  foreach $category ($_ =~ m{GD_ADD_CATEGORY\s*\(\s*(\w+)\s*\)}g)
+  {
+    print STDERR "def category: $category\n";
+    $categories{$category} = 0;
+  };
+
+  # The file should at least have a header otherwise it won't be able to
+  # access the macro.
+  s{(.*#\s*include\s+[<"][^">]+(?<!\.hxx)[">])}
+  {
+    $text = $1;
+    foreach $category (sort keys %categories)
+    {
+      $text = $text . "\n\n" . "GD_ADD_CATEGORY(" . $category . ");"
+        if $categories{$category} == 1
+    }
+    $text
+  }mes;
+
+  $$contents_ref = $_;
+}
+
 # libport_renamings ($FILE, \$CONTENTS)
 # -------------------------------------
 # Convert old symbol names to new names.
@@ -604,6 +651,7 @@ sub libportify ($$)
      spaces    => \&libport_spaces,
      headers   => \&fix_headers,
      debug     => \&libport_debug,
+     gdcategory=> \&libport_gdcategory,
      renamings => \&libport_renamings,
      relicense => \&libport_relicense,
      copyright => \&libport_copyright,
@@ -756,7 +804,7 @@ sub getopt ()
   @step =
     $foreign
     ? qw(spaces relicense copyright)
-    : qw(spaces relicense copyright headers debug renamings)
+    : qw(spaces relicense copyright headers debug gdcategory renamings)
     unless @step;
   verbose 2, "Steps: @step";
 }
