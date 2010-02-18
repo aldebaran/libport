@@ -93,6 +93,13 @@ namespace libport
   {
     return path_;
   }
+
+  inline
+  fs::path&
+  path::get_boostpath()
+  {
+    return boost_path_;
+  }
 }
 
 #endif // !LIBPORT_PATH_HXX

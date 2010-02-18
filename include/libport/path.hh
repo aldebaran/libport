@@ -105,6 +105,9 @@ namespace libport
     /// Whether is absolute.
     bool absolute_get() const;
 
+    /// Get boost::filesystem::path object.
+    fs::path& get_boostpath();
+
   private:
 
     /// Append a single directory \a dir.

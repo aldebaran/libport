@@ -13,21 +13,20 @@
  ** \brief Implement libport::path.
  */
 
-#include <iostream>
-#include <libport/cstdio>
-#include <libport/exception.hh>
-#include <libport/fcntl.h>
-#include <libport/unistd.h>
-#include <libport/sys/stat.h>
-#include <libport/sys/types.h>
 #include <cctype>
-
+#include <iostream>
 #include <libport/contract.hh>
+#include <libport/cstdio>
 #include <libport/debug.hh>
 #include <libport/detect-win32.h>
+#include <libport/exception.hh>
+#include <libport/fcntl.h>
 #include <libport/foreach.hh>
 #include <libport/format.hh>
 #include <libport/path.hh>
+#include <libport/sys/stat.h>
+#include <libport/sys/types.h>
+#include <libport/unistd.h>
 
 GD_ADD_CATEGORY(path);
 
@@ -107,7 +106,7 @@ namespace libport
     if (!boost_path_.is_complete() && path_.empty())
       return WIN32_IF(volume_.empty() ? "." : volume_, ".");
 
-    return boost_path_.string();
+    return boost_path_.file_string();
   }
 
   bool
@@ -152,7 +151,7 @@ namespace libport
     if (path_.empty())
       return *this;
 
-    std::string res = boost_path_.branch_path().string();
+    std::string res = boost_path_.branch_path().directory_string();
     return path(res.empty() ? "." : res);
   }
 
