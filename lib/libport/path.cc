@@ -56,6 +56,9 @@ namespace libport
 
 #if defined WIN32
     volume_ = boost_path_.root_name();
+    // root_name() returns "//" for shares.
+    if (volume_.find("//") == 0)
+      volume_.replace(0,2,"\\\\");
 #endif
 
     // Cut directories on / and \.

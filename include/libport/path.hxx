@@ -71,7 +71,7 @@ namespace libport
   std::string
   path::basename() const
   {
-    return boost_path_.leaf();
+    return boost_path_.filename();
   }
 
   inline
