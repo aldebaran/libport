@@ -184,7 +184,7 @@ namespace libport
     }
     catch (...)
     {
-      res = false; 
+      res = false;
     }
     GD_CATEGORY(path);
     GD_FINFO_DUMP("exists: %-5s: %s", res ? "true" : "false", to_string());
@@ -201,26 +201,23 @@ namespace libport
     return true;
   }
 
-#ifndef WIN32
   path
   path::temporary_file()
   {
-    char tmpfile[] = "/tmp/tmp.XXXXXX";
-    int fd = mkstemp(tmpfile);
+#ifndef WIN32
+    char tmp_name[] = "/tmp/tmp.XXXXXX";
+    int fd = mkstemp(tmp_name);
     close (fd);
-    return path(tmpfile);
-  }
 #else
-  // Implementation pieces for windows
+    char tmp_dir[MAX_PATH];
+    char tmp_name[MAX_PATH];
 
-  // // Get the path to the temporary folder
-  // char tmp_path[MAX_PATH];
-  // memset (tmp_path, 0, MAX_PATH);
-  // GetTempPath(MAX_PATH, tmp_path);
-  // char tmpfile[MAX_PATH];
-  // memset (tmpfile, 0, MAX_PATH);
-  // GetTempFileName (tmp_path, "", 0, tmpfile);
+    if(GetTempPathA(sizeof(tmp_dir), tmp_dir) == 0
+       || GetTempFileNameA(tmp_dir, "$$$", 0, tmp_name) == 0)
+      throw Exception("unable to generate path for temporary file");
 #endif
+    return path(tmp_name);
+  }
 
   void
   path::remove() const

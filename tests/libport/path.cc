@@ -101,6 +101,14 @@ void create(const path& p)
   exist(p, false);
 }
 
+void temporary_files(void)
+{
+  path temp = path::temporary_file();
+  exist(temp, true);
+  BOOST_CHECK_NO_THROW(temp.remove());
+  exist(temp, false);
+}
+
 void equal(const path& lhs, const path& rhs)
 {
   BOOST_CHECK_EQUAL(lhs, rhs);
@@ -282,6 +290,10 @@ init_test_suite()
 #define def(path)                                          \
   create_suite->add(BOOST_TEST_CASE(bind(create, path)));
   def(std::string("tests")/"libport"/"creation_test");
+#undef def
+#define def(path)                                          \
+  create_suite->add(BOOST_TEST_CASE(temporary_files))
+  def();
 #undef def
 
   return suite;
