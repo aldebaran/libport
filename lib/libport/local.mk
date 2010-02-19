@@ -1,10 +1,12 @@
 lib_LTLIBRARIES += lib/libport/libport@LIBSFX@.la
 lib_libport_libport@LIBSFX@_la_LDFLAGS =	\
   -avoid-version -no-undefined			\
+  $(BOOST_SIGNALS_LDFLAGS)			\
   $(BOOST_THREAD_LDFLAGS)
 
 lib_libport_libport@LIBSFX@_la_LIBADD =		\
   $(LIBADD)					\
+  $(BOOST_SIGNALS_LIBS)				\
   $(BOOST_SYSTEM_LIBS)				\
   $(BOOST_THREAD_LIBS)				\
   $(CLOCK_LIBS)					\

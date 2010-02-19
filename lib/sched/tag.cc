@@ -18,6 +18,7 @@ namespace sched
   void
   Tag::stop(Scheduler& sched, const boost::any& payload) const
   {
+    stop_hook_();
     sched.signal_stop(*this, payload);
   }
 
@@ -26,6 +27,12 @@ namespace sched
   {
     assert(blocked_);
     return payload_;
+  }
+
+  boost::signal0<void>&
+  Tag::stop_hook_get()
+  {
+    return stop_hook_;
   }
 
 } // namespace sched

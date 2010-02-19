@@ -12,7 +12,9 @@
 # define SCHED_TAG_HH
 
 # include <boost/any.hpp>
+# include <boost/signals.hpp>
 
+# include <libport/attributes.hh>
 # include <libport/finally.hh>
 # include <libport/symbol.hh>
 
@@ -94,6 +96,7 @@ namespace sched
 
     const libport::Symbol& name_get() const;
     void name_set(const libport::Symbol&);
+    boost::signal0<void>& stop_hook_get();
 
   private:
     explicit Tag(const Tag&);
@@ -104,6 +107,7 @@ namespace sched
     boost::any payload_;
     prio_type prio_;
     bool flow_control_;
+    boost::signal0<void> stop_hook_;
   };
 
 } // namespace sched
