@@ -26,12 +26,13 @@
 #include <libport/path.hh>
 #include <libport/sys/stat.h>
 #include <libport/sys/types.h>
+#include <libport/tokenizer.hh>
 #include <libport/unistd.h>
 
 GD_ADD_CATEGORY(path);
 
 
-// Implementation detail: if path_ is empty and not absolute
+// Implementation detail: if components() is empty and not absolute
 // then the path is '.'.
 
 namespace libport
@@ -48,33 +49,24 @@ namespace libport
     init();
   }
 
+  path::path(const fs::path& p)
+    : boost_path_(p)
+  {
+    init();
+  }
+
   void
   path::init()
   {
-    if (boost_path_.empty())
+    if (boost_path_.file_string().empty())
       throw invalid_path("Path can't be empty.");
-
-#if defined WIN32
-    volume_ = boost_path_.root_name();
-    // root_name() returns "//" for shares.
-    if (volume_.find("//") == 0)
-      volume_.replace(0,2,"\\\\");
-#endif
-
-    // Cut directories on / and \.
-    foreach (const std::string& component, boost_path_)
-      if (component != "/")
-        append_dir(component);
+    boost_path_ = clean();
   }
 
   path&
   path::operator=(const path& rhs)
   {
     boost_path_ = rhs.boost_path_;
-    path_ = rhs.path_;
-#if defined WIN32
-    volume_ = rhs.volume_;
-#endif
     return *this;
   }
 
@@ -85,14 +77,12 @@ namespace libport
       throw invalid_path(
         "Rhs of concatenation is absolute: " + rhs.to_string());
 #ifdef WIN32
-    if (!rhs.volume_.empty())
+    if (!rhs.volume_get().empty())
       throw invalid_path("concatenation of path with volume: " +
 			 rhs.to_string());
 #endif
     boost_path_ /= rhs.boost_path_;
-    foreach (const std::string& dir, rhs.path_)
-      append_dir(dir);
-
+    boost_path_ = clean();
     return *this;
   }
 
@@ -106,8 +96,8 @@ namespace libport
   std::string
   path::to_string() const
   {
-    if (!boost_path_.is_complete() && path_.empty())
-      return WIN32_IF(volume_.empty() ? "." : volume_, ".");
+    if (!boost_path_.is_complete() && components().empty())
+      return WIN32_IF(volume_get().empty() ? "." : volume_get(), ".");
 
     return boost_path_.file_string();
   }
@@ -126,41 +116,76 @@ namespace libport
     return o << operator std::string();
   }
 
-  void
-  path::append_dir(const std::string& dir)
+  std::string
+  path::clean()
   {
-    precondition(dir.find(separator_) == std::string::npos);
+    std::string res;
+    fs::path::iterator it = boost_path_.begin();
+    fs::path::iterator it_end = boost_path_.end();
+    if (it == it_end)
+      return ".";
 
-    if (!dir.empty() && dir != ".")
+    bool tail = false;
+    bool has_path = false;
+    if (absolute_get())
     {
-      // The following does not work properly with symlinks.  One
-      // cannot expect that removing "foo/../" inside a valid path
-      // results in the same path.  We should check whether "foo" is
-      // *not* a symlink before playing this kind of trick.
-#if 0
-      if (dir == ".."
-          && !path_.empty() && *path_.rbegin() != "..")
-        path_.pop_back();
-      else
+      res = *it;
+      ++it;
+#ifdef WIN32
+      // Add an \ after the drive letter / share.
+      tail = true;
 #endif
-	path_.push_back(dir);
     }
+
+    for (;it != it_end; ++it)
+    {
+      if (!it->empty() && *it != ".")
+      {
+        if (tail++)
+          res += separator_;
+        res += *it;
+        has_path = true;
+      }
+    }
+    if (has_path && *(--it_end) == ".")
+      res += separator_;
+    return res.empty() ? "." : res;
+  }
+
+  std::string
+  path::volume_get() const
+  {
+#ifndef WIN32
+    return "";
+#else
+    std::string res = boost_path_.root_name();
+    if (res.find("//") == 0)
+      res.replace(0, 2, "\\\\");
+    return res;
+#endif
   }
 
   path
   path::dirname() const
   {
     // dirname of / is /, dirname of . is .
-    if (path_.empty())
+    if (components().empty())
       return *this;
 
-    std::string res = boost_path_.branch_path().directory_string();
+    std::string res = boost_path_.parent_path().directory_string();
     return path(res.empty() ? "." : res);
   }
 
   bool path::exists() const
   {
-    bool res = fs::exists(boost_path_);
+    bool res;
+    try {
+      res = fs::exists(boost_path_);
+    }
+    catch (...)
+    {
+      res = false; 
+    }
     GD_CATEGORY(path);
     GD_FINFO_DUMP("exists: %-5s: %s", res ? "true" : "false", to_string());
     return res;
@@ -216,5 +241,24 @@ namespace libport
     }
 
     *this = dst;
+  }
+
+  const path::path_type
+  path::components() const
+  {
+    path_type path_;
+    fs::path::iterator it_end = boost_path_.end();
+    fs::path::iterator it = boost_path_.begin();
+    if (it == it_end)
+      return path_;
+
+    // Skip volume information
+    if (absolute_get())
+      ++it;
+    for (;it != it_end; ++it)
+      if (!it->empty() && *it != ".")
+        path_.push_back(*it);
+
+    return path_;
   }
 }

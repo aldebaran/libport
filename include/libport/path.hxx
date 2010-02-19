@@ -54,13 +54,6 @@ namespace libport
   }
 
   inline
-  std::string
-  path::volume_get() const
-  {
-    return WIN32_IF(volume_, "");
-  }
-
-  inline
   bool
   path::absolute_get() const
   {
@@ -85,13 +78,6 @@ namespace libport
   path::operator std::string() const
   {
     return to_string();
-  }
-
-  inline
-  const path::path_type&
-  path::components() const
-  {
-    return path_;
   }
 
   inline
