@@ -231,7 +231,7 @@ init_test_suite()
   def("/usr/local/gostai", "/usr/local", "gostai");
   def("/", "/", "/");
 #else
-  def("\\\\share\\foo\\bar\\", "\\\\share\\foo\\bar", ".");
+  def("\\\\share\\foo\\bar\\", "\\\\share\\foo", "bar");
 #endif
   def(".", ".", ".");
 #undef def

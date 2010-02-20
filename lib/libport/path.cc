@@ -126,7 +126,6 @@ namespace libport
       return ".";
 
     bool tail = false;
-    bool has_path = false;
     if (absolute_get())
     {
       res = *it;
@@ -144,11 +143,8 @@ namespace libport
         if (tail++)
           res += separator_;
         res += *it;
-        has_path = true;
       }
     }
-    if (has_path && *(--it_end) == ".")
-      res += separator_;
     return res.empty() ? "." : res;
   }
 
