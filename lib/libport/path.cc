@@ -26,7 +26,6 @@
 #include <libport/path.hh>
 #include <libport/sys/stat.h>
 #include <libport/sys/types.h>
-#include <libport/tokenizer.hh>
 #include <libport/unistd.h>
 
 GD_ADD_CATEGORY(path);

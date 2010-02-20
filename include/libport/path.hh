@@ -107,7 +107,7 @@ namespace libport
     bool absolute_get() const;
 
     /// Get boost::filesystem::path object.
-    fs::path& get_boostpath();
+    fs::path& boostpath_get();
 
   private:
 

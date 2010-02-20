@@ -82,7 +82,7 @@ namespace libport
 
   inline
   fs::path&
-  path::get_boostpath()
+  path::boostpath_get()
   {
     return boost_path_;
   }
