@@ -6,14 +6,16 @@ lib_libport_libport@LIBSFX@_la_LDFLAGS =	\
 
 lib_libport_libport@LIBSFX@_la_LIBADD =		\
   $(LIBADD)					\
+  $(BOOST_FILESYSTEM_LIBS)			\
   $(BOOST_SIGNALS_LIBS)				\
   $(BOOST_SYSTEM_LIBS)				\
   $(BOOST_THREAD_LIBS)				\
   $(CLOCK_LIBS)					\
+  $(LIBADD)					\
   $(LTDL_LIBS)					\
-  $(SOCKETS_LIBS)				\
   $(PTHREAD_LDFLAGS)				\
   $(PTHREAD_LIBS)				\
+  $(SOCKETS_LIBS)				\
   $(SSL_LIBS)
 
 lib_libport_libport@LIBSFX@_la_CPPFLAGS =	\

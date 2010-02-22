@@ -20,6 +20,10 @@
 # include <list>
 # include <libport/export.hh>
 # include <libport/detect-win32.h>
+# include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
+
 namespace libport
 {
   /** \brief Paths in filesystems, i.e., file names.
@@ -49,6 +53,10 @@ namespace libport
     /** @throw invalid_path if \a p isn't a valid path
      */
     path(const char* p);
+
+    /** @throw invalid_path if \a p isn't a valid path
+     */
+    path(const fs::path& p);
     /// \}
 
     /// \name Operations on path.
@@ -71,7 +79,6 @@ namespace libport
     /// Return the volume.  Empty, unless on windows, in which
     /// case it looks like "c:".
     std::string volume_get() const;
-    void volume_set(const std::string& v);
     path dirname() const;
     bool exists() const;
     /// Remove the file.
@@ -81,9 +88,7 @@ namespace libport
     void rename(const std::string& dst);
     /// \}
 
-#ifndef WIN32
     static path temporary_file();
-#endif
 
     /// \name Printing and converting.
     /// \{
@@ -94,41 +99,29 @@ namespace libport
     typedef std::list<std::string> path_type;
     std::string to_string() const;
     operator std::string() const;
-    const path_type& components() const;
+    const path_type components() const;
     std::ostream& dump(std::ostream& ostr) const;
     /// \}
 
     /// Whether is absolute.
     bool absolute_get() const;
 
+    /// Get boost::filesystem::path object.
+    fs::path& boostpath_get();
+
   private:
 
-    /// Append a single directory \a dir.
-    void append_dir(const std::string& dir);
+    /// Clean a clean path string from boost_path_
+    std::string clean();
 
     /// Init object with path \a p.
-    void init(std::string p);
+    void init();
 
-    /// Reset object to empty, and then init
-    /// to path \a p
-    void reset(const std::string& p);
+    /// Boost Object.
+    fs::path boost_path_;
 
-    /// Represented path.
-    path_type path_;
-
-    /// Whether an absolute path.
-    bool absolute_;
-
-#ifdef WIN32
-    /// Path separator
-    static const char separator_ = '\\';
-
-    /// Name of the volume (C:) for absolute paths under windows.
-    std::string volume_;
-#else
-    /// Path separator
-    static const char separator_ = '/';
-#endif
+    /// Path separator.
+    static const char separator_ = WIN32_IF('\\', '/');
   };
 
   /// Dump \a p on \a o.

@@ -20,6 +20,12 @@ using boost::bind;
 using libport::file_library;
 using libport::test_suite;
 
+#ifdef WIN32
+static const std::string root_dir = "C:\\";
+#else
+static const std::string root_dir = "/";
+#endif
+
 template <typename Library>
 void ctor(const Library& lib, const char* sep,
           const std::string& _expected)
@@ -45,9 +51,10 @@ init_test_suite()
 # define def(Path, Sep, Expected)                                       \
   ctor_suite->add(BOOST_TEST_CASE(bind(ctor<std::string>,               \
                                        Path, Sep, Expected)));
-  def("/foo:/bar", ":", ".:/foo:/bar");
-  def("/foo:",     ":", ".:/foo");
-  def("::/foo:",   ":", ".:/foo");
+  def(root_dir + "foo:"+ root_dir + "bar", ":",
+      ".:" + root_dir + "foo:" + root_dir + "bar");
+  def(root_dir + "foo:", ":", ".:" + root_dir + "foo");
+  def("::" + root_dir + "foo:",   ":", ".:" + root_dir + "foo");
 #undef def
 
 #define STRIP_PARENS(S) S
@@ -58,34 +65,46 @@ init_test_suite()
                                        list_of Path, Sep, Expected)))
 
   // First component overrides everything.
-  def(("/outer1:/outer2")("/inner1:/inner2"), ":",
-      ".:/outer1:/outer2");
+  def((root_dir + "outer1:" + root_dir + "outer2")
+        (root_dir + "inner1:" + root_dir + "inner2"), ":",
+      ".:" + root_dir + "outer1:" + root_dir + "outer2");
 
   // First component enhances.
-  def(("/outer1::/outer2")("/inner1:/inner2"), ":",
-      ".:/outer1:/inner1:/inner2:/outer2");
-  def((":/outer1:/outer2")("/inner1:/inner2"), ":",
-      ".:/inner1:/inner2:/outer1:/outer2");
-  def(("/outer1:/outer2:")("/inner1:/inner2"), ":",
-      ".:/outer1:/outer2:/inner1:/inner2");
+  def((root_dir + "outer1::" + root_dir + "outer2")
+        (root_dir + "inner1:" + root_dir + "inner2"), ":",
+      ".:" + root_dir + "outer1:" + root_dir + "inner1:"
+        + root_dir + "inner2:" + root_dir + "outer2");
+  def((":" + root_dir + "outer1:" + root_dir + "outer2")
+        (root_dir + "inner1:" + root_dir + "inner2"), ":",
+      ".:" + root_dir + "inner1:" + root_dir + "inner2:"
+      + root_dir + "outer1:" + root_dir + "outer2");
+  def((root_dir + "outer1:" + root_dir + "outer2:")
+        (root_dir + "inner1:" + root_dir + "inner2"), ":",
+      ".:" + root_dir + "outer1:" + root_dir + "outer2:"
+        + root_dir + "inner1:" + root_dir + "inner2");
 
   // First component enhances with superfluous colons.
-  def((":/outer1::/outer2::")("/inner1:/inner2"), ":",
-      ".:/inner1:/inner2:/outer1:/outer2");
+  def((":" + root_dir + "outer1::" + root_dir + "outer2::")
+        (root_dir + "inner1:" + root_dir + "inner2"), ":",
+      ".:" + root_dir + "inner1:" + root_dir + "inner2:"
+        + root_dir + "outer1:" + root_dir + "outer2");
 
   // Superfluous colons.
-  def((":/outer1::/outer2::"), ":",
-      ".:/outer1:/outer2");
+  def((":" + root_dir + "outer1::" + root_dir + "outer2::"), ":",
+      ".:" + root_dir + "outer1:" + root_dir + "outer2");
 
   // Three components.
-  def(("/outer1:/outer2:")("/inner1::/inner2")("/inmost1::/inmost2"), ":",
-      ".:/outer1:/outer2:/inner1:/inmost1:/inmost2:/inner2");
+  def((root_dir + "outer1:" + root_dir + "outer2:")
+        (root_dir + "inner1::" + root_dir + "inner2")
+        (root_dir + "inmost1::" + root_dir + "inmost2"), ":",
+      ".:" + root_dir + "outer1:" + root_dir + "outer2:" + root_dir
+        + "inner1:" + root_dir + "inmost1:" + root_dir + "inmost2:"
+        + root_dir + "inner2");
 
   // First are empty.
-  def(("")("")("/inmost1::/inmost2"), ":",
-      ".:/inmost1:/inmost2");
-  def(("")("")(""), ":",
-      ".");
+  def((std::string(""))("")(root_dir + "inmost1::" + root_dir + "inmost2"), ":",
+      ".:" + root_dir + "inmost1:" + root_dir + "inmost2");
+  def(("")("")(""), ":", ".");
 #undef def
 
   return suite;

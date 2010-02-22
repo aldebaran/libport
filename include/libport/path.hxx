@@ -46,23 +46,45 @@ namespace libport
   | path.  |
   `-------*/
 
-  inline std::ostream&
+  inline
+  std::ostream&
   operator<<(std::ostream& o, const path& p)
   {
     return p.dump(o);
   }
 
   inline
-  std::string
-  path::volume_get() const
-  {
-    return WIN32_IF(volume_, "");
-  }
-
-  inline bool
+  bool
   path::absolute_get() const
   {
-    return absolute_;
+    return boost_path_.is_complete();
+  }
+
+  inline
+  std::string
+  path::basename() const
+  {
+    return boost_path_.filename();
+  }
+
+  inline
+  std::string
+  path::extension() const
+  {
+    return boost_path_.extension();
+  }
+
+  inline
+  path::operator std::string() const
+  {
+    return to_string();
+  }
+
+  inline
+  fs::path&
+  path::boostpath_get()
+  {
+    return boost_path_;
   }
 }
 

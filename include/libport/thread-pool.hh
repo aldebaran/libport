@@ -87,7 +87,7 @@ namespace libport
                           rTaskLock lock = 0);
 
     /// Return number of tasks in queue.
-    size_t queueSize() const;
+    size_t queueSize();
 
   private:
     void threadLoop(rThread thnead);

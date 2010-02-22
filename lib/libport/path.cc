@@ -13,103 +13,59 @@
  ** \brief Implement libport::path.
  */
 
-#include <iostream>
-#include <libport/cstdio>
-#include <libport/exception.hh>
-#include <libport/fcntl.h>
-#include <libport/unistd.h>
-#include <libport/sys/stat.h>
-#include <libport/sys/types.h>
 #include <cctype>
-
+#include <iostream>
 #include <libport/contract.hh>
+#include <libport/cstdio>
 #include <libport/debug.hh>
 #include <libport/detect-win32.h>
-#include <libport/finally.hh>
+#include <libport/exception.hh>
+#include <libport/fcntl.h>
 #include <libport/foreach.hh>
 #include <libport/format.hh>
 #include <libport/path.hh>
-#include <libport/tokenizer.hh>
+#include <libport/sys/stat.h>
+#include <libport/sys/types.h>
+#include <libport/unistd.h>
 
 GD_ADD_CATEGORY(path);
 
 
-// Implementation detail: if path_ is empty and absolute_ is false,
+// Implementation detail: if components() is empty and not absolute
 // then the path is '.'.
 
 namespace libport
 {
   path::path(const std::string& p)
+    : boost_path_(p)
   {
-    init(p);
+    init();
   }
 
   path::path(const char* p)
+    : boost_path_(p)
   {
-    init(p);
+    init();
+  }
+
+  path::path(const fs::path& p)
+    : boost_path_(p)
+  {
+    init();
   }
 
   void
-  path::init(std::string p)
+  path::init()
   {
-    if (p.empty())
+    if (boost_path_.file_string().empty())
       throw invalid_path("Path can't be empty.");
-
-    // Compute volume_ and absolute_.
-#if defined WIN32
-    // Under Win32, absolute paths start with a letter followed by
-    // ":\". If the trailing slash is missing, this is a relative
-    // path.
-    if (2 <= p.length()
-	&& isalpha(p[0]) && p[1] == ':')
-    {
-      volume_ = p.substr(0, 2);
-      absolute_ = p.length() >= 3 && (p[2] == '\\' || p[2] == '/');
-      p.erase(0, absolute_ ? 3 : 2);
-    }
-    // Network share, such as "\\shared volume\foo\bar"
-    else if (3 <= p.length()
-	     && p[0] == '\\' && p[1] == '\\')
-    {
-      absolute_ = true;
-      std::string::size_type pos = p.find('\\', 3);
-      if (pos == std::string::npos)
-      {
-	volume_ = p;
-	p.clear();
-      }
-      else
-      {
-	volume_ = p.substr(0, pos);
-	p = p.erase(0, pos);
-      }
-    }
-    // Fallback to Unix cases for subsystems such as cygwin
-    else
-#endif // WIN32
-    if (!p.empty() && (p[0] == '/' || p[0] == separator_))
-    {
-      absolute_ = true;
-      p = p.erase(0, 0);
-    }
-    else
-      absolute_ = false;
-
-
-    // Cut directories on / and \.
-    foreach (const std::string& component,
-             make_tokenizer(p, WIN32_IF("/\\", "/")))
-      append_dir(component);
+    boost_path_ = clean();
   }
 
   path&
   path::operator=(const path& rhs)
   {
-    absolute_ = rhs.absolute_;
-    path_ = rhs.path_;
-#if defined WIN32
-    volume_ = rhs.volume_;
-#endif
+    boost_path_ = rhs.boost_path_;
     return *this;
   }
 
@@ -120,15 +76,12 @@ namespace libport
       throw invalid_path(
         "Rhs of concatenation is absolute: " + rhs.to_string());
 #ifdef WIN32
-    if (!rhs.volume_.empty())
+    if (!rhs.volume_get().empty())
       throw invalid_path("concatenation of path with volume: " +
 			 rhs.to_string());
 #endif
-    for (path_type::const_iterator dir = rhs.path_.begin();
-	 dir != rhs.path_.end();
-	 ++dir)
-      append_dir(*dir);
-
+    boost_path_ /= rhs.boost_path_;
+    boost_path_ = clean();
     return *this;
   }
 
@@ -139,28 +92,13 @@ namespace libport
     return res /= rhs;
   }
 
-  path::operator std::string() const
-  {
-    return to_string();
-  }
-
   std::string
   path::to_string() const
   {
-    if (!absolute_ && path_.empty())
-      return WIN32_IF(volume_.empty() ? "." : volume_, ".");
+    if (!boost_path_.is_complete() && components().empty())
+      return WIN32_IF(volume_get().empty() ? "." : volume_get(), ".");
 
-    std::string res = WIN32_IF(volume_, "");
-    if (absolute_)
-      res += separator_;
-    bool tail = false;
-    foreach (const std::string& dir, path_)
-    {
-      if (tail++)
-	res += separator_;
-      res += dir;
-    }
-    return res;
+    return boost_path_.file_string();
   }
 
   bool
@@ -177,72 +115,72 @@ namespace libport
     return o << operator std::string();
   }
 
-  void
-  path::append_dir(const std::string& dir)
+  std::string
+  path::clean()
   {
-    precondition(dir.find(separator_) == std::string::npos);
+    std::string res;
+    fs::path::iterator it = boost_path_.begin();
+    fs::path::iterator it_end = boost_path_.end();
+    if (it == it_end)
+      return ".";
 
-    if (!dir.empty() && dir != ".")
+    bool tail = false;
+    if (absolute_get())
     {
-      // The following does not work properly with symlinks.  One
-      // cannot expect that removing "foo/../" inside a valid path
-      // results in the same path.  We should check whether "foo" is
-      // *not* a symlink before playing this kind of trick.
-#if 0
-      if (dir == ".."
-          && !path_.empty() && *path_.rbegin() != "..")
-        path_.pop_back();
-      else
+      res = *it;
+      ++it;
+#ifdef WIN32
+      // Add an \ after the drive letter / share.
+      tail = true;
 #endif
-	path_.push_back(dir);
     }
+
+    for (;it != it_end; ++it)
+    {
+      if (!it->empty() && *it != ".")
+      {
+        if (tail++)
+          res += separator_;
+        res += *it;
+      }
+    }
+    return res.empty() ? "." : res;
   }
 
-
   std::string
-  path::basename() const
+  path::volume_get() const
   {
-    // basename of / is /, basename of . is .
-    if (path_.empty())
-      return *this;
-
-    return path_.back();
-  }
-
-  std::string
-  path::extension() const
-  {
-    std::string name = basename();
-    size_t pos = name.rfind(".");
-
-    if (pos == std::string::npos || pos == name.size() - 1)
-      return "";
-
-    return name.substr(pos + 1);
+#ifndef WIN32
+    return "";
+#else
+    std::string res = boost_path_.root_name();
+    if (res.find("//") == 0)
+      res.replace(0, 2, "\\\\");
+    return res;
+#endif
   }
 
   path
   path::dirname() const
   {
     // dirname of / is /, dirname of . is .
-    if (path_.empty())
+    if (components().empty())
       return *this;
 
-    std::string last = path_.back();
-    // The const cast here is justified since the modification is
-    // systematically reverted
-    const_cast<path*>(this)->path_.pop_back();
-    libport::Finally finally(
-      boost::bind(&path_type::push_back,
-		  boost::ref(const_cast<path*>(this)->path_), last));
-    path res = path_.empty() ? "." : *this;
-    return res;
+    std::string res = boost_path_.parent_path().directory_string();
+    return path(res.empty() ? "." : res);
   }
 
   bool path::exists() const
   {
-    struct stat buf;
-    bool res = 0 == stat(to_string().c_str(), &buf);
+    bool res;
+    try {
+      res = fs::exists(boost_path_);
+    }
+    catch (...)
+    {
+      res = false;
+    }
     GD_CATEGORY(path);
     GD_FINFO_DUMP("exists: %-5s: %s", res ? "true" : "false", to_string());
     return res;
@@ -258,45 +196,61 @@ namespace libport
     return true;
   }
 
-#ifndef WIN32
   path
   path::temporary_file()
   {
-    char tmpfile[] = "/tmp/tmp.XXXXXX";
-    int fd = mkstemp(tmpfile);
+#ifndef WIN32
+    char tmp_name[] = "/tmp/tmp.XXXXXX";
+    int fd = mkstemp(tmp_name);
     close (fd);
-    return path(tmpfile);
-  }
 #else
-  // Implementation pieces for windows
+    char tmp_dir[MAX_PATH];
+    char tmp_name[MAX_PATH];
 
-  // // Get the path to the temporary folder
-  // char tmp_path[MAX_PATH];
-  // memset (tmp_path, 0, MAX_PATH);
-  // GetTempPath(MAX_PATH, tmp_path);
-  // char tmpfile[MAX_PATH];
-  // memset (tmpfile, 0, MAX_PATH);
-  // GetTempFileName (tmp_path, "", 0, tmpfile);
+    if(GetTempPathA(sizeof(tmp_dir), tmp_dir) == 0
+       || GetTempFileNameA(tmp_dir, "$$$", 0, tmp_name) == 0)
+      throw Exception("unable to generate path for temporary file");
 #endif
+    return path(tmp_name);
+  }
 
   void
   path::remove() const
   {
-    if (unlink(to_string().c_str()))
+    if (!fs::remove(boost_path_))
       throw Exception(libport::format("unable to unlink file: %s", *this));
   }
 
   void
   path::rename(const std::string& dst)
   {
-    if (::rename(to_string().c_str(), dst.c_str()))
-      throw Exception(libport::format("unable to rename file: %s", *this));
-    else
-      *this = dst;
+    try {
+      fs::rename(boost_path_, dst);
+    }
+    catch (Exception& e) {
+      throw Exception(libport::format(
+        "unable to rename file %s (%s)", *this, e.what()));
+    }
+
+    *this = dst;
   }
 
-  const path::path_type& path::components() const
+  const path::path_type
+  path::components() const
   {
+    path_type path_;
+    fs::path::iterator it_end = boost_path_.end();
+    fs::path::iterator it = boost_path_.begin();
+    if (it == it_end)
+      return path_;
+
+    // Skip volume information
+    if (absolute_get())
+      ++it;
+    for (;it != it_end; ++it)
+      if (!it->empty() && *it != ".")
+        path_.push_back(*it);
+
     return path_;
   }
 }

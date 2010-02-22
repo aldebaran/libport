@@ -56,7 +56,6 @@ include msvc/local.mk
 # case of an installed libltdl).
 AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 
-
 ## ------- ##
 ## Tests.  ##
 ## ------- ##

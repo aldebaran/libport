@@ -17,6 +17,28 @@ using boost::bind;
 using libport::path;
 using libport::test_suite;
 
+
+#if defined WIN32
+# define APPLE_LINUX_WINDOWS(Apple, Linux, Windows) Windows
+#elif defined __APPLE__
+# define APPLE_LINUX_WINDOWS(Apple, Linux, Windows) Apple
+#else
+# define APPLE_LINUX_WINDOWS(Apple, Linux, Windows) Linux
+#endif
+
+static const std::string separator =
+  APPLE_LINUX_WINDOWS("/", "/", "\\");
+
+// Join path components.
+static
+std::string
+operator/(const std::string& lhs, const std::string& rhs)
+{
+  return (lhs.empty() ? rhs
+          : rhs.empty() ? lhs
+          : lhs + separator + rhs);
+}
+
 void path_ctor(const std::string& path,
                const std::string& WIN32_IF(volume, /* nothing */),
                bool valid)
@@ -79,6 +101,14 @@ void create(const path& p)
   exist(p, false);
 }
 
+void temporary_files(void)
+{
+  path temp = path::temporary_file();
+  exist(temp, true);
+  BOOST_CHECK_NO_THROW(temp.remove());
+  exist(temp, false);
+}
+
 void equal(const path& lhs, const path& rhs)
 {
   BOOST_CHECK_EQUAL(lhs, rhs);
@@ -106,10 +136,11 @@ init_test_suite()
 # define def(Path, Vol, Valid)                                            \
   ctor_suite->add(BOOST_TEST_CASE(bind(path_ctor, Path, Vol, Valid)));
   def("urbi.u", "", true);
-  def("foo/bar.cc", "", true);
-  def("/usr/local", "", true);
+  def(std::string("foo")/std::string("bar.cc"), "", true);
   def("", "", false);
-#ifdef WIN32
+#ifndef WIN32
+  def("/usr/local", "", true);
+#else
   def("C:\\Documents and Settings", "C:", true);
   def("c:", "c:", true);
   def("\\\\shared_volume\\subdir", "\\\\shared_volume", true);
@@ -123,15 +154,15 @@ init_test_suite()
 #define def(Path, Abs)                                                  \
   abs_suite->add(BOOST_TEST_CASE(bind(path_absolute, Path, Abs)));
   def("relative", false);
-  def("relative/with/directories", false);
-  def("relative/with/trailing/slash/", false);
+  def(std::string("relative")/"with"/"directories", false);
+  def(std::string("relative")/"with"/"trailing"/"slash"/"", false);
+#ifndef WIN32
   def("/", true);
   def("/absolute", true);
   def("/absolute/but/longer", true);
   def("/absolute/with/trailing/slash/", true);
   def("/./still/../absolute", true);
-#ifdef WIN32
-  def("\\", true);
+#else
   def("c:", false);
   def("C:", false);
   def("C:\\", true);
@@ -150,7 +181,7 @@ init_test_suite()
   def("C:\\Documents and Settings");
   def("c:");
   def("\\\\shared_volume\\subdir");
-  def("\\");
+  // def("\\");
 #else
   def(".");
   def("/");
@@ -166,34 +197,41 @@ init_test_suite()
 #define def(lhs, rhs)                                           \
   eq_suite->add(BOOST_TEST_CASE(bind(equal, lhs, rhs)));
   def("foo", "foo");
-  def("foo/bar/baz/quux", "foo/bar/baz/quux");
+  def(std::string("foo")/"bar"/"baz"/"quux",
+      std::string("foo")/"bar"/"baz"/"quux");
+#ifndef WIN32
   def("/foo/bar/baz/quux", "/foo/bar/baz/quux");
-  def("just/stay", "./just/././stay/./");
-  def("foo", "foo/");
+#endif
+  def(std::string("just")/"stay",
+      std::string(".")/"just"/"."/"."/"stay"/"."/"");
+  def(std::string(".")/""/""/""/""/"."/""/""/"foo"/"", "foo");
+  def("foo", std::string("foo")/"");
 //  def("in/is/fun",
 //      "in/and/out/../../is/fun/too/..");
-  def("in/and/out/../../is/fun/too/..",
-      "in/and/out/../../is/fun/too/..");
+  def(std::string("in")/"and"/"out"/".."/".."/"is"/"fun"/"too"/"..",
+      std::string("in")/"and"/"out"/".."/".."/"is"/"fun"/"too"/"..");
 #undef def
+#ifdef WIN32
 #define def(lhs, rhs)                                           \
   eq_suite->add(BOOST_TEST_CASE(bind(not_equal, lhs, rhs)));
-  def("foo", "/foo");
+  def("foo", "\\\\foo");
 #undef def
+#endif // WIN32
 
   // Test basename/dirname
   test_suite* name_suite = BOOST_TEST_SUITE("Basename/dirname test suite");
   suite->add(name_suite);
 #define def(path, dir, base)                                    \
   name_suite->add(BOOST_TEST_CASE(bind(path_name, path, dir, base)));
-  def("dirname/basename", "dirname", "basename");
+  def(std::string("dirname")/"basename", "dirname", "basename");
   def("foo", ".", "foo");
-  def("../../bar", "../..", "bar");
-  def("/usr/local/gostai", "/usr/local", "gostai");
+  def(std::string("..")/".."/"bar", std::string("..")/"..", "bar");
   // Standard (and somehow logical) GNU coreutils behavior:
 #ifndef WIN32
+  def("/usr/local/gostai", "/usr/local", "gostai");
   def("/", "/", "/");
 #else
-  def("/", "\\", "\\");
+  def("\\\\share\\foo\\bar\\", "\\\\share\\foo", "bar");
 #endif
   def(".", ".", ".");
 #undef def
@@ -203,15 +241,20 @@ init_test_suite()
   suite->add(concat_suite);
 #define def(lhs, rhs, res)                                      \
   concat_suite->add(BOOST_TEST_CASE(bind(concat, lhs, rhs, res)));
-  def("foo", "bar", "foo/bar");
-  def("foo/bar", "baz/quux", "foo/bar/baz/quux");
-  def("foo/bar", ".", "foo/bar");
+  def("foo", "bar", std::string("foo")/"bar");
+  def(std::string("foo")/"bar",
+      std::string("baz")/"quux",
+      std::string("foo")/"bar"/"baz"/"quux");
+  def(std::string("foo")/"bar", ".",
+      std::string("foo")/"bar");
 //  def("foo/bar", "../..", ".");
-  def("foo/bar", "../..", "foo/bar/../..");
+  def(std::string("foo")/"bar", std::string("..")/"..",
+      std::string("foo")/"bar"/".."/"..");
+#ifndef WIN32
   def("/foo", "bar", "/foo/bar");
   def("/", "foo", "/foo");
   def("/", ".", "/");
-#ifdef WIN32
+#else
   def("\\\\share\\foo", "bar", "\\\\share\\foo\\bar");
   def("c:\\", "foo", "c:\\foo");
   def("c:", "bar", "c:bar");
@@ -219,9 +262,11 @@ init_test_suite()
 #undef def
 #define def(lhs, rhs)                                           \
   concat_suite->add(BOOST_TEST_CASE(bind(invalid_concat, lhs, rhs)));
-  def("/", "/");
+  def(std::string("")/"", std::string("")/"");
+#ifndef WIN32
   def("foo", "/bar");
-#ifdef WIN32
+#else
+  def("foo", "C:\\\\bar");
   def("\\\\share\\foo", "\\\\share\\bar");
   def("c:", "d:");
 #endif
@@ -231,15 +276,24 @@ init_test_suite()
   suite->add(exist_suite);
 #define def(path, res)                                          \
   exist_suite->add(BOOST_TEST_CASE(bind(exist, path, res)));
+#ifndef WIN32
   def("/", true);
   def("/this/directory/does/not/exist", false);
+#else
+  def("C:\\", true);
+  def("C:\\this\\directory\\does\\not\\exist", false);
+#endif
 #undef def
 
   test_suite* create_suite = BOOST_TEST_SUITE("File creation test suite");
   suite->add(create_suite);
 #define def(path)                                          \
   create_suite->add(BOOST_TEST_CASE(bind(create, path)));
-  def("tests/libport/creation_test");
+  def(std::string("tests")/"libport"/"creation_test");
+#undef def
+#define def(path)                                          \
+  create_suite->add(BOOST_TEST_CASE(temporary_files))
+  def();
 #undef def
 
   return suite;

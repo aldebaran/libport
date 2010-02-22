@@ -23,7 +23,7 @@ namespace libport
   }
 
   size_t
-  ThreadPool::queueSize() const
+  ThreadPool::queueSize()
   {
     libport::BlockLock bl(lock_);
     return queue_.size() + nLockedTasks_;
