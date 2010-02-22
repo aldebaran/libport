@@ -18,16 +18,7 @@ using libport::path;
 using libport::test_suite;
 
 
-#if defined WIN32
-# define APPLE_LINUX_WINDOWS(Apple, Linux, Windows) Windows
-#elif defined __APPLE__
-# define APPLE_LINUX_WINDOWS(Apple, Linux, Windows) Apple
-#else
-# define APPLE_LINUX_WINDOWS(Apple, Linux, Windows) Linux
-#endif
-
-static const std::string separator =
-  APPLE_LINUX_WINDOWS("/", "/", "\\");
+static const std::string separator = WIN32_IF("\\", "/");
 
 // Join path components.
 static
@@ -136,7 +127,7 @@ init_test_suite()
 # define def(Path, Vol, Valid)                                            \
   ctor_suite->add(BOOST_TEST_CASE(bind(path_ctor, Path, Vol, Valid)));
   def("urbi.u", "", true);
-  def(std::string("foo")/std::string("bar.cc"), "", true);
+  def(std::string("foo")/"bar.cc", "", true);
   def("", "", false);
 #ifndef WIN32
   def("/usr/local", "", true);
