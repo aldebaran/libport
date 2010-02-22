@@ -83,13 +83,16 @@ static void test_many_fast()
 
 std::vector<unsigned> lockCheck;
 
+boost::uint32_t errors = 0;
+
 static void task_sleep_check_lock(int delay, unsigned lockid, unsigned lockval)
 {
   lockCheck[lockid] = lockval;
   for (int i=0; i<10; ++i)
   {
     usleep(delay/10);
-    BOOST_CHECK_EQUAL(lockCheck[lockid], lockval);
+    if (lockCheck[lockid] != lockval)
+      atomic_inc32(&errors);
     lockCheck[lockid] = lockval;
   }
   atomic_inc32(&counter);
@@ -121,6 +124,7 @@ static void test_lock()
     usleep(500000);
   }
   BOOST_CHECK_EQUAL(nTasks, val);
+  BOOST_CHECK_EQUAL(errors, 0);
 }
 
 test_suite*
