@@ -719,9 +719,9 @@ sub transform_things (\&@)
   for my $thing (@thing)
     {
       my $basename = basename($thing);
-      if ($basename =~ m{(?:\.bak|~)$})
+      if ($basename =~ m{(?:\.bak|\.mk|\.stamp|Makefile\.(am|in)|~)$})
         {
-          # Skip silently back up files.
+          # Skip silently these files.
         }
       elsif (
           -f $thing
@@ -752,7 +752,7 @@ sub transform_things (\&@)
         }
       else
         {
-          verbose 2, (-e $thing
+          verbose 1, (-e $thing
                       ? "skipping $thing"
                       : "ignoring $thing: does not exist");
         }
