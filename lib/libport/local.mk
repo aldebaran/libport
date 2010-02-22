@@ -5,7 +5,6 @@ lib_libport_libport@LIBSFX@_la_LDFLAGS =	\
   $(BOOST_THREAD_LDFLAGS)
 
 lib_libport_libport@LIBSFX@_la_LIBADD =		\
-  $(LIBADD)					\
   $(BOOST_FILESYSTEM_LIBS)			\
   $(BOOST_SIGNALS_LIBS)				\
   $(BOOST_SYSTEM_LIBS)				\
