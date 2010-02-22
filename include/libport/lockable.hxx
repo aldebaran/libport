@@ -36,7 +36,7 @@ namespace libport
 
   inline void lockLock(Lock& l)
   {
-    if (WaitForSingleObject(l, INFINITE) ==  WAIT_FAILED)
+    if (WaitForSingleObject(l, INFINITE) == WAIT_FAILED)
       errnoabort("WaitForSingleObject");
   }
 

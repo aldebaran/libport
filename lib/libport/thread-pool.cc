@@ -18,12 +18,12 @@
 namespace libport
 {
   ThreadPool::ThreadPool(size_t maxThreads)
-  : maxThreads_(maxThreads)
+    : maxThreads_(maxThreads)
   {
   }
 
   size_t
-  ThreadPool::queueSize()
+  ThreadPool::queueSize() const
   {
     libport::BlockLock bl(lock_);
     return queue_.size() + nLockedTasks_;
@@ -153,7 +153,7 @@ namespace libport
   }
 
   ThreadPool::TaskLock::TaskLock()
-  : registered(false)
+    : registered(false)
   {
   }
 
