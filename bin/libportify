@@ -377,13 +377,13 @@ sub libport_gdcategory ($\$)
 
   for my $category (m{GD_CATEGORY\s*\(\s*(\w+)\s*\)}g)
   {
-    verbose 4, "use category: $category\n";
+    verbose 4, "use category: $category";
     $categories{$category} = 1;
   };
 
   for my $category (m{GD_ADD_CATEGORY\s*\(\s*(\w+)\s*\)}g)
   {
-    verbose 4, "def category: $category\n";
+    verbose 4, "def category: $category";
     $categories{$category} = 0;
   };
 
@@ -547,7 +547,7 @@ sub libport_license (%)
   my (%group) = @_;
   for my $key (sort keys %group)
     {
-      print "$key => {{$group{$key}}}\n";
+      verbose 6, "$key => {{$group{$key}}}";
     }
 
   my $res;
@@ -594,7 +594,7 @@ sub libport_relicense ($\$)
   my $updated = 0;
   for my $re (@license_re)
     {
-      verbose 2, $$contents_ref;
+      verbose 3, $$contents_ref;
       $$contents_ref =~ s{$re}{$updated = 1; libport_license(%+)}smegi;
     }
   # If the license was not seen (the right license model is also in
@@ -682,21 +682,7 @@ sub transform_file (\&$)
   # Do not alter files we don't own.
   if ($file =~ m{libcoroutine|libltdl})
   {
-    warn "ignoring foreign file: $file";
-    return;
-  }
-
-  # When using globbing, we sometimes find directories.
-  if (! -f $file)
-  {
-    warn "ignoring non file: $file";
-    return;
-  }
-
-  # When using globbing, we sometimes find directories.
-  if ($file =~ /\.bak$/)
-  {
-    warn "ignoring backup file: $file";
+    verbose 2, "ignoring foreign file: $file";
     return;
   }
 
@@ -717,7 +703,7 @@ sub transform_file (\&$)
     }
   else
     {
-      warn "no changes: $file\n";
+      verbose 2, "no changes: $file";
     }
 }
 
@@ -732,14 +718,19 @@ sub transform_things (\&@)
 
   for my $thing (@thing)
     {
-      if (
+      my $basename = basename($thing);
+      if ($basename =~ m{(?:\.bak|~)$})
+        {
+          # Skip silently back up files.
+        }
+      elsif (
           -f $thing
           # We libportify source files.  They have an extension,
           # except cstdio and so forth...
-          && basename($thing) =~ m{ (?:\.(?:cc|h|hh|hxx|u)(?:\.in)?$)
-                                  | (?:^c\w+$)}x
+          && $basename =~ m{ (?:\.(?:cc|h|hh|hxx|u)(?:\.in)?$)
+                               | (?:^c\w+$)}x
           # but then configure matches that regexp.
-          && basename($thing) !~ m{configure}x
+          && $basename !~ m{configure}x
         )
         {
           transform_file &$transform_ref, $thing;
@@ -761,9 +752,9 @@ sub transform_things (\&@)
         }
       else
         {
-          warn (-e $thing
-                ? "skipping $thing\n"
-                : "ignoring $thing: does not exist\n");
+          verbose 2, (-e $thing
+                      ? "skipping $thing"
+                      : "ignoring $thing: does not exist");
         }
     }
 }
@@ -780,7 +771,7 @@ sub help ($)
   my ($verbose) = @_;
   use Pod::Usage;
   # See <URL:http://perldoc.perl.org/pod2man.html#NOTES>.
-  pod2usage( { -message => "Relocate shlib deps when possible, check remaing deps",
+  pod2usage( { -message => "Fix libport usage",
                -exitval => 0,
                -verbose => $verbose,
                -output  => \*STDOUT });
