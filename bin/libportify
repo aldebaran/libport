@@ -93,6 +93,24 @@ Be less verbose.  Accumulates.
 
 Be more verbose.  Accumulates.
 
+Verbosify levels:
+
+=over 4
+
+=item 0
+
+Display nothing.
+
+=item 1 (default)
+
+Display skipped files.
+
+=item 2
+
+Display processed files.
+
+=back
+
 =back
 
 =cut
@@ -520,20 +538,28 @@ my %license_field =
   years     => q{[\\d\\-]+(?:, [\\d\\-]+)*},
 );
 
-# Make the regexps more flexible.
-for my $re (@license_re)
+=libport_license_setup()
+
+Make the regexps more flexible.
+
+=cut
+
+sub libport_license_setup ()
 {
-  for my $field (keys %license_field)
-    {
-      $re =~ s{<$field>}{(?<$field>$license_field{$field})}g;
-    }
-  # Accept arbitrary comment closing.
-  verbose 1, $re;
-  $re .= ' (?:[\*\\s]*\*/\s)?';
-  $re =~ s{^\s*}{^[\\s/*!]*}gm;
-  $re =~ s/\s+/\\s+/gm;
-  $re .= '\s*';
-  verbose 1, $re;
+  for my $re (@license_re)
+  {
+    for my $field (keys %license_field)
+      {
+        $re =~ s{<$field>}{(?<$field>$license_field{$field})}g;
+      }
+    # Accept arbitrary comment closing.
+    verbose 4, $re;
+    $re .= ' (?:[\*\\s]*\*/\s)?';
+    $re =~ s{^\s*}{^[\\s/*!]*}gm;
+    $re =~ s/\s+/\\s+/gm;
+    $re .= '\s*';
+    verbose 4, $re;
+  }
 }
 
 =item C<libport_license(%group)>
@@ -801,6 +827,8 @@ sub getopt ()
   push @step, qw(headers debug gdcategory renamings)
     unless $foreign;
   verbose 2, "Steps: @step";
+
+  libport_license_setup;
 }
 
 
