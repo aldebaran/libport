@@ -170,7 +170,8 @@ namespace libport
     throw(xlt_advise::exception)
   {
     msg += ": ";
-    msg += lt_dlerror() ? lt_dlerror() : "(no available error message)";
+    const char* err = lt_dlerror();
+    msg += err ? err : "(no available error message)";
     throw exception(msg);
   }
 
