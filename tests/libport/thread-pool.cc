@@ -43,7 +43,7 @@ static void task_sleep_inc(int delay)
 // In slowInject, inject slower to trigger the IDLE thread code more often.
 static void test_many(bool slowInject)
 {
-  ThreadPool tp(10);
+  ThreadPool& tp = *new ThreadPool(10);
   counter = 0;
   std::vector<ThreadPool::rTaskLock> v;
   for(int i=0; i<10; ++i)
@@ -101,7 +101,7 @@ static void task_sleep_check_lock(int delay, unsigned lockid, unsigned lockval)
 // Test that no two tasks with same lock are executed in parallel.
 static void test_lock()
 {
-  ThreadPool tp(10);
+  ThreadPool& tp = *new ThreadPool(10);
   counter = 0;
   std::vector<ThreadPool::rTaskLock> v;
   for(int i=0; i<10; ++i)
