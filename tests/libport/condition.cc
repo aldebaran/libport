@@ -73,7 +73,11 @@ static void clear(libport::Condition& cond,
                   libport::Semaphore& sem)
 {
   die = true;
-  cond.broadcast();
+  // Lock to ensure all threads are waiting on cond before broadcasting.
+  {
+    BlockLock bl(cond);
+    cond.broadcast();
+  }
   sem -= NTHREAD;
   die = false;
 }
