@@ -13,6 +13,7 @@
 
 # include <map>
 
+# include <libport/cassert>
 # include <libport/containers.hh>
 # include <libport/meta.hh>
 # include <libport/type-info.hh>
