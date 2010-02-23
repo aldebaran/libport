@@ -429,6 +429,10 @@ sub libport_renamings ($\$)
   my ($file, $contents_ref) = @_;
   local $_ = $$contents_ref;
 
+  # aver is nicer than assert.
+  # Don't change the definition of our assert though.
+  s/\bassert\s*\((?!Assertion\))/aver(/g;
+
   # We are now simply using Boost.Unordered.
   s/libport::hash_map/boost::unordered_map/g;
 

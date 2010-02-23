@@ -86,6 +86,24 @@ _libport_die_hard()
 	   ? 0						\
 	   : pabort(Message)))
 
+/*-------------------------------------------------------------------.
+| aver -- Same as "libport::assert", to work around the fact that it |
+| is alsmot impossible to redefine assert.                           |
+|                                                                    |
+| Indeed, most implementations do not guard <assert.h> so that we    |
+| can include it with NDEBUG defined and/or undefined in the same    |
+| compilation unit.  And many of the components we use (e.g.,        |
+| Boost), include <cassert>, which undefines our assert and restores |
+| the standard one.                                                  |
+`-------------------------------------------------------------------*/
+
+/// \def aver(Assertion)
+/// Same as assert, but on failure, dump \a Message on std::cerr.
+# define aver(Assertion)                                        \
+  __passert(Assertion,                                          \
+            "failed assertion: " << #Assertion << std::endl)
+
+
 /*---------------------------------------------------------.
 | assert -- Same as "std::assert", but with our features.  |
 `---------------------------------------------------------*/
@@ -93,9 +111,9 @@ _libport_die_hard()
 /// \def assert(Assertion)
 /// Same as assert, but on failure, dump \a Message on std::cerr.
 # undef assert
-# define assert(Assertion)                                      \
-  __passert(Assertion,                                          \
-            "failed assertion: " << #Assertion << std::endl)
+# define assert(Assertion)                      \
+  aver(Assertion)
+
 
 /*---------------------------.
 | passert -- Pretty assert.  |
