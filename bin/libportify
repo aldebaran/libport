@@ -705,13 +705,6 @@ sub transform_file (\&$)
 {
   my ($transform_ref, $file) = @_;
 
-  # Do not alter files we don't own.
-  if ($file =~ m{libcoroutine|libltdl})
-  {
-    verbose 2, "ignoring foreign file: $file";
-    return;
-  }
-
   my $contents = contents ($file);
   my $updated = $transform_ref->($file, $contents);
   if ($contents ne $updated)
@@ -745,7 +738,8 @@ sub transform_things (\&@)
   for my $thing (@thing)
     {
       my $basename = basename($thing);
-      if ($basename =~ m{(?:\.bak|\.mk|\.stamp|Makefile\.(am|in)|~)$})
+      if ($basename =~ m{(?:\.bak|\.mk|\.stamp|Makefile\.(am|in)|~)$}
+          || $thing =~ m{bison|libcoroutine|libltdl|tinyxml})
         {
           # Skip silently these files.
         }
@@ -767,6 +761,7 @@ sub transform_things (\&@)
                               |\.git
                               |\.dsym
                               |bison
+                              |tinyxml
                               |_build
                               |jpeg)$}x)
         {
