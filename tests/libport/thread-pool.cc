@@ -124,7 +124,7 @@ static void test_lock()
     usleep(500000);
   }
   BOOST_CHECK_EQUAL(nTasks, val);
-  BOOST_CHECK_EQUAL(errors, 0);
+  BOOST_CHECK_EQUAL(errors, 0U);
 }
 
 test_suite*
