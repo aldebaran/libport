@@ -15,9 +15,16 @@
 # define LIBPORT_CASSERT
 
 # include <cassert>
+# include <iostream> // std::cerr
 # include <libport/cerrno>
+# include <libport/compiler.hh>
 # include <libport/config.h>
 # include <libport/cstdlib>
+# include <libport/cstring> // libport::strerror.
+
+/*-------------------------.
+| LIBPORT_ASSERT_VERBOSE.  |
+`-------------------------*/
 
 // Remove abort messages only if the compilation mode space is enabled.
 # ifndef LIBPORT_ASSERT_VERBOSE
@@ -27,24 +34,6 @@
 #   define LIBPORT_ASSERT_VERBOSE 1
 #  endif
 # endif
-
-# include <iostream> // std::cerr
-# include <libport/cstring> // libport::strerror.
-
-# include <libport/compiler.hh>
-
-# ifdef _MSC_VER
-#  include <crtdbg.h>
-# endif
-
-namespace libport
-{
-  /// A wrapper to std::abort to ensure that it is declared as
-  /// noreturn (which is not the case of std::abort with MSVC).
-  LIBPORT_API
-  ATTRIBUTE_NORETURN
-  void abort();
-}
 
 
 /*--------------.
@@ -58,7 +47,6 @@ namespace libport
 #  define ASSERT_ECHO(File, Line, Message)      \
   (void) 0
 # endif
-
 
 
 /*-------------------------.

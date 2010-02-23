@@ -18,6 +18,21 @@
 # include <libport/detect-win32.h>
 # include <libport/export.hh>
 
+
+/*-----------------.
+| libport::abort.  |
+`-----------------*/
+
+namespace libport
+{
+  /// A wrapper to std::abort to ensure that it is declared as
+  /// noreturn (which is not the case of std::abort with MSVC).
+  /// Also dumps the stack trace.
+  LIBPORT_API
+  ATTRIBUTE_NORETURN
+  void abort();
+}
+
 /*---------.
 | setenv.  |
 `---------*/
@@ -76,9 +91,9 @@ namespace libport
   std::string xgetenv(const std::string& c, const std::string& deflt = "");
 }
 
-/*--------.
-| xsystem |
-`--------*/
+/*----------.
+| xsystem.  |
+`----------*/
 
 namespace libport
 {
