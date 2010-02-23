@@ -104,7 +104,7 @@ class TestSocket: public libport::Socket
     nInstance--;
     // BOOST_TEST_MESSAGE(this << " dying, in " << K_get()
     //                    << " lasterror=" << lastError.message());
-    // assert(false);
+    // aver(false);
   }
 
   size_t onRead(const void* data, size_t size)

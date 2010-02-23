@@ -255,7 +255,7 @@ namespace libport
                  bool udp)
   {
     (void)udp;
-    assert(!udp);
+    aver(!udp);
     boost::system::error_code erc;
     erc = Socket::listenProto<boost::asio::ip::tcp>(
       f, host, port,

@@ -41,7 +41,7 @@ namespace libport
 
   std::ostream& decindent(std::ostream& o)
   {
-    assert(indent_get(o));
+    aver(indent_get(o));
     indent_get(o) -= 2;
     return o;
   }

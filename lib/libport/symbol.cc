@@ -80,7 +80,7 @@ namespace libport
   std::ostream&
   Symbol::print_escaped (std::ostream& ostr) const
   {
-    assert (str_);
+    aver(str_);
     const std::string& str = *str_;   // Shortcut
 
     // Check if the symbol is not a standard one, i.e. if it does not match

@@ -33,7 +33,7 @@ namespace libport
                    const std::string& opt)
     : path_(path)
   {
-    assert(argc > 0);
+    aver(argc > 0);
 
     for (int i = 1; i < argc; ++i)
       if (opt == argv[i] && i + 1 < argc)

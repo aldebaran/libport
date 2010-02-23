@@ -64,7 +64,7 @@ namespace libport
   // Add \a val to semaphore \a id
   static void alter_sem(int id, int val)
   {
-    assert(val);
+    aver(val);
     sembuf sops[1];
     sops[0].sem_num = 0;
     sops[0].sem_op = val;

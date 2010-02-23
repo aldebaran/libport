@@ -202,7 +202,7 @@ namespace libport
       id(const Root* r)
       {
         TypeInfo i(*r);
-        assert(mhas(ids_(), i));
+        aver(mhas(ids_(), i));
         return ids_().find(i)->second;
       }
 

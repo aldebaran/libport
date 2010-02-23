@@ -29,10 +29,10 @@ namespace libport
   {
     void* array[63];
     HMODULE hdl = GetModuleHandle(TEXT("kernel32.dll"));
-    assert(hdl);
+    aver(hdl);
     CSBT csbt = (CSBT) GetProcAddress(hdl,
 				      "RtlCaptureStackBackTrace");
-    assert(csbt);
+    aver(csbt);
     size_t frames = csbt(0, 63, array, 0);
     res.clear();
     res.reserve(frames);

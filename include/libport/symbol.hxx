@@ -30,13 +30,13 @@ namespace libport
   inline const std::string&
   Symbol::name_get () const
   {
-    assert (str_);
+    aver(str_);
     return *str_;
   }
 
   inline Symbol::operator const std::string& () const
   {
-    assert (str_);
+    aver(str_);
     return *str_;
   }
 
@@ -69,8 +69,8 @@ namespace libport
   Symbol::operator< (const Symbol& rhs) const
   {
     //<<
-    assert (str_);
-    assert (rhs.str_);
+    aver(str_);
+    aver(rhs.str_);
     return *str_ < *rhs.str_;
     //>>
   }
@@ -79,7 +79,7 @@ namespace libport
   bool
   Symbol::empty() const
   {
-    assert (str_);
+    aver(str_);
     return str_->empty();
   }
 

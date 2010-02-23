@@ -20,7 +20,7 @@ namespace libport
 
   void program_initialize(int argc, const char** argv)
   {
-    assert(argc >= 1);
+    aver(argc >= 1);
     program_initialize(cli_args_type(argv, argv + argc));
   }
 
@@ -33,7 +33,7 @@ namespace libport
   {
     if (program_initialized_)
       return;
-    assert(args.size() >= 1);
+    aver(args.size() >= 1);
     program_name_ = args[0];
     program_arguments_.insert(program_arguments_.end(),
                               ++args.begin(), args.end());
@@ -49,13 +49,13 @@ namespace libport
 
   const std::string& program_name()
   {
-    assert(program_initialized_);
+    aver(program_initialized_);
     return program_name_;
   }
 
   const cli_args_type& program_arguments()
   {
-    assert(program_initialized_);
+    aver(program_initialized_);
     return program_arguments_;
   }
 

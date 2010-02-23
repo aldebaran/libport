@@ -110,7 +110,7 @@ namespace libport
       filter(Debug::levels::dump);
     else
       // Don't use GD_ABORT here, we can be in the debugger constructor!
-      assert(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP or [0-4])");
+      aver(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP or [0-4])");
   }
 
   Debug::levels::Level
@@ -191,7 +191,7 @@ namespace libport
   void
   Debug::pop_category()
   {
-    assert(!categories_stack_.empty());
+    aver(!categories_stack_.empty());
     categories_stack_.pop_back();
   }
 

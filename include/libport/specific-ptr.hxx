@@ -74,7 +74,7 @@ namespace libport
   SpecificPtr<T, Key>::operator*()
   {
     T* e = get();
-    assert(e);
+    aver(e);
     return *e;
   }
 

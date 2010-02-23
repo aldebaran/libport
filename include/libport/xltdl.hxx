@@ -9,6 +9,7 @@
  */
 
 #include <boost/static_assert.hpp>
+#include <libport/cassert>
 #include <libport/format.hh>
 
 namespace libport
@@ -36,7 +37,7 @@ namespace libport
   xlt_handle::sym(const std::string& s)
     throw (xlt_handle::exception)
   {
-    assert(handle);
+    aver(handle);
     void* res = lt_dlsym(handle, s.c_str());
     if (!res)
       fail(libport::format("failed to dlsym %s", s));

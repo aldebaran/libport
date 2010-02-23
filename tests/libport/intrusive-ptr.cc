@@ -24,7 +24,7 @@ using libport::intrusive_ptr;
 struct Counted : libport::RefCounted
 {
   Counted () : libport::RefCounted() { ++instances; }
-  virtual ~Counted () { assert (0 < instances); --instances; }
+  virtual ~Counted () { aver(0 < instances); --instances; }
   static unsigned instances;
 };
 

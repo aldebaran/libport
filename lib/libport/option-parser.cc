@@ -10,6 +10,7 @@
 
 #include <boost/algorithm/string.hpp>
 
+#include <libport/cassert>
 #include <libport/foreach.hh>
 #include <libport/format.hh>
 #include <libport/markup-ostream.hh>
@@ -301,7 +302,7 @@ namespace libport
   {
     if (!filled_)
     {
-      assert(def);
+      aver(def);
       return def.get();
     }
     return value_;

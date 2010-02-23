@@ -66,9 +66,9 @@ namespace sched
   void
   Scheduler::add_job(rJob job)
   {
-    assert(job);
-    assert(!libport::has(jobs_, job));
-    assert(!libport::has(pending_, job));
+    aver(job);
+    aver(!libport::has(jobs_, job));
+    aver(!libport::has(pending_, job));
     // If we are currently in a job, add it to the pending_ queue so that
     // the job is started in the course of the current round. To make sure
     // that it is not started too late even if the creator is located after
@@ -244,9 +244,9 @@ namespace sched
 	LIBPORT_DEBUG("will resume job " << *job
 	      << (job->side_effect_free_get() ? " (side-effect free)" : ""));
 	possible_side_effect_ |= !job->side_effect_free_get();
-	assert(!current_job_);
+	aver(!current_job_);
 	coroutine_switch_to(&coro_, job->coro_get());
-	assert(current_job_);
+	aver(current_job_);
 	current_job_ = 0;
 	possible_side_effect_ |= !job->side_effect_free_get();
 	LIBPORT_DEBUG("back from job " << *job
@@ -320,7 +320,7 @@ namespace sched
       // Switch back to the scheduler. But in the case this job has been
       // destroyed, erase the local variable first so that it doesn't keep
       // a reference on it which will never be destroyed.
-      assert(current_job_ == job);
+      aver(current_job_ == job);
       LIBPORT_DEBUG(*job << " has "
                     << (job->terminated() ? "" : "not ") << "terminated\n\t"
                     << "state: " << job->state_get());
@@ -330,10 +330,10 @@ namespace sched
       coroutine_switch_to(current_coro, &coro_);
 
       // If we regain control, we are not dead.
-      assert(job);
+      aver(job);
 
       // We regained control, we are again in the context of the job.
-      assert(!current_job_);
+      aver(!current_job_);
       current_job_ = job;
       LIBPORT_DEBUG("job " << *job << " resumed");
 

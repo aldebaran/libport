@@ -25,7 +25,7 @@ namespace sched
   const boost::any&
   Tag::payload_get() const
   {
-    assert(blocked_);
+    aver(blocked_);
     return payload_;
   }
 

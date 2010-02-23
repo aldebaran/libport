@@ -24,7 +24,7 @@ namespace sched
   inline Job&
   Scheduler::current_job() const
   {
-    assert(current_job_);
+    aver(current_job_);
     return *current_job_;
   }
 

@@ -104,7 +104,7 @@ namespace sched
     // releases its memory.
     {
       GD_CATEGORY(sched);
-      assert(state_ == to_start);
+      aver(state_ == to_start);
       LIBPORT_DEBUG("In Job::run for " << this);
 
       // We may get interrupted during our first run, in which case
@@ -188,7 +188,7 @@ namespace sched
   void
   Job::register_child(const rJob& child, Collector& children)
   {
-    assert(!child->parent_);
+    aver(!child->parent_);
     child->parent_ = this;
     children.push_back(child);
     children_.push_back(child);

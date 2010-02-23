@@ -237,12 +237,12 @@ namespace libport                                                       \
 
 # else // !LIBPORT_ASSERT_VERBOSE
 
-#  define assert_eq(A, B) assert(A == B)
-#  define assert_ge(A, B) assert(A >= B)
-#  define assert_gt(A, B) assert(A >  B)
-#  define assert_le(A, B) assert(A <= B)
-#  define assert_lt(A, B) assert(A <  B)
-#  define assert_ne(A, B) assert(A != B)
+#  define assert_eq(A, B) aver(A == B)
+#  define assert_ge(A, B) aver(A >= B)
+#  define assert_gt(A, B) aver(A >  B)
+#  define assert_le(A, B) aver(A <= B)
+#  define assert_lt(A, B) aver(A <  B)
+#  define assert_ne(A, B) aver(A != B)
 # endif
 
 #endif // !LIBPORT_CASSERT

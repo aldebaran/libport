@@ -201,7 +201,7 @@ namespace libport
           case cached:
           {
             unsigned id = Impl<unsigned>::get("id", input, ser);
-            assert(id < ser.ptr_map_.size());
+            aver(id < ser.ptr_map_.size());
             return reinterpret_cast<T*>(ser.ptr_map_[id]);
           }
           case serialized:

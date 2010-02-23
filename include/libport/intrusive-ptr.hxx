@@ -152,7 +152,7 @@ namespace libport
   intrusive_ptr<U>
   intrusive_ptr<T>::unchecked_cast() const
   {
-    assert(dynamic_cast<U*>(pointee_));
+    aver(dynamic_cast<U*>(pointee_));
     return static_cast<U*>(pointee_);
   }
 
@@ -178,7 +178,7 @@ namespace libport
   T*
   intrusive_ptr<T>::operator->() const
   {
-    assert(pointee_);
+    aver(pointee_);
     return pointee_;
   }
 

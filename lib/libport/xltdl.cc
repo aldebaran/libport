@@ -211,14 +211,14 @@ namespace libport
   void
   xlt_handle::detach()
   {
-    assert(handle);
+    aver(handle);
     handle = 0;
   }
 
   void
   xlt_handle::attach(lt_dlhandle h)
   {
-    assert(!handle);
+    aver(!handle);
     handle = h;
   }
 

@@ -138,14 +138,14 @@ namespace sched
   inline Coro*
   Job::coro_get() const
   {
-    assert(coro_);
+    aver(coro_);
     return coro_;
   }
 
   inline void
   Job::start_job()
   {
-    assert(state_ == to_start);
+    aver(state_ == to_start);
     scheduler_.add_job(this);
   }
 
