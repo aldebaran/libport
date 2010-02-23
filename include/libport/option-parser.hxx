@@ -11,6 +11,7 @@
 #ifndef OPTION_PARSER_HXX
 # define OPTION_PARSER_HXX
 
+# include <libport/cassert>
 # include <libport/lexical-cast.hh>
 
 namespace libport
