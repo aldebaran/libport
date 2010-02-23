@@ -57,21 +57,21 @@ namespace libport
   bool
   path::absolute_get() const
   {
-    return boost_path_.is_complete();
+    return value_.is_complete();
   }
 
   inline
   std::string
   path::basename() const
   {
-    return boost_path_.filename();
+    return value_.filename();
   }
 
   inline
   std::string
   path::extension() const
   {
-    return boost_path_.extension();
+    return value_.extension();
   }
 
   inline
@@ -81,10 +81,17 @@ namespace libport
   }
 
   inline
-  fs::path&
-  path::boostpath_get()
+  const path::value_type&
+  path::value_get() const
   {
-    return boost_path_;
+    return value_;
+  }
+
+  inline
+  path::value_type&
+  path::value_get()
+  {
+    return value_;
   }
 }
 

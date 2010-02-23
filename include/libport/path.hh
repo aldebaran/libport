@@ -22,8 +22,6 @@
 # include <libport/detect-win32.h>
 # include <boost/filesystem.hpp>
 
-namespace fs = boost::filesystem;
-
 namespace libport
 {
   /** \brief Paths in filesystems, i.e., file names.
@@ -42,6 +40,9 @@ namespace libport
       std::string msg_;
     };
 
+    /// The "native" type we wrap.
+    typedef boost::filesystem::path value_type;
+
     /// \name Constructors.
     /// \{
 
@@ -56,7 +57,7 @@ namespace libport
 
     /** @throw invalid_path if \a p isn't a valid path
      */
-    path(const fs::path& p);
+    path(const value_type& p);
     /// \}
 
     /// \name Operations on path.
@@ -107,18 +108,21 @@ namespace libport
     bool absolute_get() const;
 
     /// Get boost::filesystem::path object.
-    fs::path& boostpath_get();
+    const value_type& value_get() const;
+
+    /// Get boost::filesystem::path object.
+    value_type& value_get();
 
   private:
 
-    /// Clean a clean path string from boost_path_
-    std::string clean();
+    /// Clean a clean path string from value_.
+    std::string clean() const;
 
     /// Init object with path \a p.
     void init();
 
     /// Boost Object.
-    fs::path boost_path_;
+    value_type value_;
 
     /// Path separator.
     static const char separator_ = WIN32_IF('\\', '/');
