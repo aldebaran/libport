@@ -730,6 +730,24 @@ sub transform_file (\&$)
     }
 }
 
+=item C<dir_content($name)>
+
+Return the contents of the directory C<$name>, skipping C<.> and
+C<..>.  Return qualified paths, i.e., with C<$name/> prefixed.
+
+=cut
+
+sub dir_content($)
+{
+  my ($name) = @_;
+  opendir (my $dir, $name) ||
+    die "cannot opendir $name: $!";
+  my @res = map { "$name/$_" } grep { !/^\.\.?$/ } readdir($dir);
+  closedir $dir ||
+    die "cannot closedir $name: $!";;
+  @res;
+}
+
 
 # transform_things (&TRANSFORM, @THING)
 # ------------------------------------
@@ -769,11 +787,7 @@ sub transform_things (\&@)
                               |_build
                               |jpeg)$}x)
         {
-          opendir (my $dir, $thing) ||
-            die "cannot opendir $thing: $!";
-          my @e = map { "$thing/$_" } grep { !/^\.\.?$/ } readdir($dir);
-          transform_things (&$transform_ref, @e);
-          closedir $dir;
+          transform_things (&$transform_ref, dir_content($thing));
         }
       else
         {
