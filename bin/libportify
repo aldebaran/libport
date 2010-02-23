@@ -433,9 +433,9 @@ sub libport_renamings ($\$)
   s/libport::hash_map/boost::unordered_map/g;
 
   # Denottalify.
-  s/allready/already/g;
-  s/wether/whether/g;
-  s/writting/writing/g;
+  s/\ballready\b/already/g;
+  s/\bwether\b/whether/g;
+  s/\bwritting\b/writing/g;
 
   $$contents_ref = $_;
 }
