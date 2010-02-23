@@ -455,6 +455,89 @@ sub libport_spaces ($\$)
 }
 
 
+## ------------- ##
+## Year ranges.  ##
+## ------------- ##
+
+=item C<range_first($range)>
+
+The first year of the range, possibly reduced to a single year.
+
+=cut
+
+sub range_first ($)
+{
+  my ($res) = @_;
+  $res =~ s/-.*//g;
+  $res;
+}
+
+=item C<range_last($range)>
+
+The last year of the range, possibly reduced to a single year.
+
+=cut
+
+sub range_last ($)
+{
+  my ($res) = @_;
+  $res =~ s/.*-//g;
+  $res;
+}
+
+=item C<range_new($y1, $y2)>
+
+Build a new range from two years, possible equal.
+
+=cut
+
+sub range_new ($$)
+{
+  ($_[0] != $_[1]) ? "$_[0]-$_[1]": "$_[0]";
+}
+
+=item C<libport_range(@range)>
+
+Clean up the list of ranges C<@range>, and return the result.  For
+instance:
+
+  2005, 2007,2008,2010 => 2005, 2007-2008, 2010
+
+=cut
+
+sub libport_range(@)
+{
+  my @range = @_;
+  my @res;
+  my $prev;
+  for my $range (map { split /,\s*/ } @range)
+  {
+    if (defined $prev)
+    {
+      if (range_last($prev) == range_first($range)
+          || range_last($prev) + 1 == range_first($range))
+      {
+        $prev = range_new(range_first($prev), range_last($range));
+      }
+      else
+      {
+        push @res, $prev;
+        $prev = $range;
+      }
+    }
+    else
+    {
+      $prev = $range;
+    }
+  }
+  push @res, $prev
+    if defined $prev;
+  my $res = join (', ', @res);
+  verbose 5, "range: @range => $res";
+  $res;
+}
+
+
 ## ---------- ##
 ## Licenses.  ##
 ## ---------- ##
@@ -576,6 +659,8 @@ The proper license notice based on the C<%group>.
 sub libport_license (%)
 {
   my (%group) = @_;
+  # Clean up the years.
+  $group{years} = libport_range($group{years});
   for my $key (sort keys %group)
     {
       verbose 6, "$key => {{$group{$key}}}";
@@ -654,18 +739,14 @@ sub libport_copyright ($\$)
   local $_ = $$contents_ref;
 
   s{
-      (Copyright\s\(C\)\s
+      (?<=Copyright\s\(C\)\s)
       # A series of four-digit dates.  Possibly intervals.
-      \d{4}(?:-\d{4})?(?:,\s\d{4}(?:-\d{4})?)*)
+      (\d{4}(?:-\d{4})?(?:,\s*\d{4}(?:-\d{4})?)*)
       # Don't change Copyright lines that are not about Gostai.
       (?=,\ Gostai)
    }
    {
-     my $orig = $1;
-     $orig .= ($orig =~ /$year$/ ? "" : ", $year");
-     my $prev = $year - 1;
-     $orig =~ s/-$prev, $year/-$year/g;
-     $orig;
+     libport_range($1, $year)
    }gex;
 
   $$contents_ref = $_;
