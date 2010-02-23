@@ -194,14 +194,13 @@ sub verbose($@)
     if $level <= $verbose;
 }
 
-## ------------- ##
-## fix headers.  ##
-## ------------- ##
+=item C<libport_headers ($file, \$contents)>
 
-# fix_headers ($FILE, \$CONTENTS)
-# ------------------------------
-# Normalize the use of libport and system headers.
-sub fix_headers ($\$)
+Normalize the use of libport and system headers.
+
+=cut
+
+sub libport_headers ($\$)
 {
   my ($file, $contents_ref) = @_;
   local $_ = $$contents_ref;
@@ -684,7 +683,7 @@ sub libportify ($$)
   my %step =
     (
      spaces    => \&libport_spaces,
-     headers   => \&fix_headers,
+     headers   => \&libport_headers,
      debug     => \&libport_debug,
      gdcategory=> \&libport_gdcategory,
      renamings => \&libport_renamings,
