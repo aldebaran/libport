@@ -75,7 +75,8 @@ namespace libport
 // Unfortunately, some old compilers (namely gcc 3) complain when the
 // last operand of the comma operator has 'no effect' - which is otherwise
 // perfectly legitimate. Work around them with this function.
-ATTRIBUTE_NORETURN static inline int
+ATTRIBUTE_NORETURN
+static inline int
 _libport_die_hard()
 {
   libport::abort();
@@ -96,6 +97,17 @@ _libport_die_hard()
   ((void) ((Assertion)					\
 	   ? 0						\
 	   : pabort(Message)))
+
+/*---------------------------------------------------------.
+| assert -- Same as "std::assert", but with our features.  |
+`---------------------------------------------------------*/
+
+/// \def assert(Assertion)
+/// Same as assert, but on failure, dump \a Message on std::cerr.
+# undef assert
+# define assert(Assertion)                                      \
+  __passert(Assertion,                                          \
+            "failed assertion: " << #Assertion << std::endl)
 
 /*---------------------------.
 | passert -- Pretty assert.  |
