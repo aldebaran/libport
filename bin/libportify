@@ -544,7 +544,7 @@ sub libport_range(@)
 
 my @license_re =
 (
-q{<copyright> <years>, <holder>
+q{<copyright> <years>, <holder>\.?
 
 This software is provided \"as is\" without warranty of any kind,
 either expressed or implied, including but not limited to the
@@ -691,7 +691,6 @@ EOF
 
   $res;
 }
-
 
 =item C<libport_relicense($file, \$contents)>
 
