@@ -467,7 +467,8 @@ This software is provided \"as is\" without warranty of any kind,
 either expressed or implied, including but not limited to the
 implied warranties of fitness for a particular purpose.
 
-See the LICENSE file for more information.},
+See the LICENSE file for more information.
+<urbiforge>?},
 
 q{(?:\\\\file <file>)?
 This file is part of <project>\.?
@@ -480,7 +481,7 @@ This software is provided "as is" without warranty of any kind,
 either expressed or implied, including but not limited to the
 implied warranties of fitness for a particular purpose.
 
-For more information, comments, bug reports: http://www.urbiforge.com},
+<urbiforge>},
 
 q{(?:<file>: )?(?:This file is part of <project>\\.)?
 <copyright> (?:<years>, <holder>|<holder>, <years>\.)
@@ -490,7 +491,7 @@ either expressed or implied, including but not limited to the
 implied warranties of fitness for a particular purpose.
 
 See the LICENSE file for more information.
-For comments, bug reports and feedback: http://www.urbiforge.com},
+<urbiforge>},
 
 q{\\\\file <file>
 
@@ -508,7 +509,7 @@ q{\\\\file <file>
  either expressed or implied, including but not limited to the
  implied warranties of fitness for a particular purpose.
 
- For more information, comments, bug reports: http://www.urbiforge.net},
+ <urbiforge>},
 
 q{(?:\\\\file <file>)?
 
@@ -534,11 +535,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
 # The "syntax" of some interesting fields.
 my %license_field =
 (
-  copyright => q{Copyright\s*\([cC]\)},
-  file      => q{[\\-\\w\\./]+},
-  holder    => q{(?:Gostai (?:SAS|S.A.S.?)?|Jean-Christophe Baillie)},
-  project   => q{[^\\n]*},
-  years     => q{[\\d\\-]+(?:, [\\d\\-]+)*},
+ copyright => q{Copyright\s*\([cC]\)},
+ file      => q{[\\-\\w\\./]+},
+ holder    => q{(?:Gostai (?:SAS|S.A.S.?)?|Jean-Christophe Baillie)},
+ project   => q{[^\\n]*},
+ urbiforge => q{For (?:comments, bug reports and feedback|more information, comments, bug reports): http://www\.urbiforge\.(?:com|net)},
+ years     => q{[\\d\\-]+(?:,\s*[\\d\\-]+)*},
 );
 
 =libport_license_setup()
