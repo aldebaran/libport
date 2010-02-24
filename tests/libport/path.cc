@@ -17,7 +17,6 @@ using boost::bind;
 using libport::path;
 using libport::test_suite;
 
-
 static const std::string separator = WIN32_IF("\\", "/");
 
 // Join path components.
@@ -98,6 +97,11 @@ void temporary_files(void)
   exist(temp, true);
   BOOST_CHECK_NO_THROW(temp.remove());
   exist(temp, false);
+}
+
+void components(const path& p, const libport::path::path_type& expected)
+{
+  BOOST_CHECK(p.components() == expected);
 }
 
 void equal(const path& lhs, const path& rhs)
@@ -282,9 +286,19 @@ init_test_suite()
   create_suite->add(BOOST_TEST_CASE(bind(create, path)));
   def(std::string("tests")/"libport"/"creation_test");
 #undef def
-#define def(path)                                          \
+#define def()                                              \
   create_suite->add(BOOST_TEST_CASE(temporary_files))
   def();
+#undef def
+
+  // Components tests
+  test_suite* components_suite = BOOST_TEST_SUITE("Components test suite");
+  suite->add(components_suite);
+#define def(path, expected)                                \
+  components_suite->add(BOOST_TEST_CASE(bind(components, path, expected)))
+  const char* comp[] = {"base", "foo", "bar"};
+  libport::path::path_type expected(comp, comp+3);
+  def("/base/foo/bar", expected);
 #undef def
 
   return suite;

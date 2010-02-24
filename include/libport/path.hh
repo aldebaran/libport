@@ -100,7 +100,7 @@ namespace libport
     typedef std::list<std::string> path_type;
     std::string to_string() const;
     operator std::string() const;
-    const path_type components() const;
+    path_type components() const;
     std::ostream& dump(std::ostream& ostr) const;
     /// \}
 
@@ -119,7 +119,7 @@ namespace libport
     std::string clean() const;
 
     /// Init object with path \a p.
-    void init();
+    void init(const std::string& p);
 
     /// Boost Object.
     value_type value_;

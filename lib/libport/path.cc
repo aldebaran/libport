@@ -34,28 +34,32 @@ GD_ADD_CATEGORY(path);
 namespace libport
 {
   path::path(const std::string& p)
-    : value_(p)
   {
-    init();
+    init(p);
   }
 
   path::path(const char* p)
-    : value_(p)
   {
-    init();
+    init(p);
   }
 
   path::path(const value_type& p)
-    : value_(p)
   {
-    init();
+    init(p.file_string());
   }
 
   void
-  path::init()
+  path::init(const std::string& p)
   {
-    if (value_.file_string().empty())
+    if (p.empty())
       throw invalid_path("Path can't be empty.");
+#ifdef WIN32
+    // We want "/" to mean "the root of the current volume" on windows.
+    if (p[0] == '/')
+      value_ = boost::filesystem::current_path().root_name() + p;
+    else
+#endif
+    value_ = p;
     value_ = clean();
   }
 
@@ -127,13 +131,14 @@ namespace libport
       res = *i;
       ++i;
 #ifdef WIN32
-      // Add an \ after the drive letter / share.
+      // Add a "\" after the drive letter or network share.
       tail = true;
 #endif
     }
 
     for (;i != i_end; ++i)
     {
+      // Remove the "." and empty components.
       if (!i->empty() && *i != ".")
       {
         if (tail++)
@@ -235,7 +240,7 @@ namespace libport
     *this = dst;
   }
 
-  const path::path_type
+  path::path_type
   path::components() const
   {
     path_type path_;
@@ -247,7 +252,12 @@ namespace libport
 
     // Skip volume information.
     if (absolute_get())
+    {
       ++i;
+#ifdef WIN32 // Skip a / after the volume information.
+      ++i;
+#endif
+    }
     for (;i != i_end; ++i)
       if (!i->empty() && *i != ".")
         path_.push_back(*i);
