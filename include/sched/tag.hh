@@ -97,6 +97,8 @@ namespace sched
     const libport::Symbol& name_get() const;
     void name_set(const libport::Symbol&);
     boost::signal0<void>& stop_hook_get();
+    boost::signal0<void>& freeze_hook_get();
+    boost::signal0<void>& unfreeze_hook_get();
 
   private:
     explicit Tag(const Tag&);
@@ -108,6 +110,8 @@ namespace sched
     prio_type prio_;
     bool flow_control_;
     boost::signal0<void> stop_hook_;
+    boost::signal0<void> freeze_hook_;
+    boost::signal0<void> unfreeze_hook_;
   };
 
 } // namespace sched

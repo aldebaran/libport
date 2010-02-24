@@ -35,4 +35,16 @@ namespace sched
     return stop_hook_;
   }
 
+  boost::signal0<void>&
+  Tag::freeze_hook_get()
+  {
+    return freeze_hook_;
+  }
+
+  boost::signal0<void>&
+  Tag::unfreeze_hook_get()
+  {
+    return unfreeze_hook_;
+  }
+
 } // namespace sched

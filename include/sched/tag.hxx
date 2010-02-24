@@ -49,12 +49,14 @@ namespace sched
   Tag::freeze()
   {
     frozen_ = true;
+    freeze_hook_();
   }
 
   inline void
   Tag::unfreeze()
   {
     frozen_ = false;
+    unfreeze_hook_();
   }
 
   inline void
