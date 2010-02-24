@@ -63,6 +63,10 @@
 // Unfortunately, some old compilers (namely gcc 3) complain when the
 // last operand of the comma operator has 'no effect' - which is otherwise
 // perfectly legitimate. Work around them with this function.
+//
+// Other compilers, e.g., MSVC, dislike that a no-return function
+// has a non-void return type, which makes plenty of sense.
+# if defined __GNUC__ && __GNUC__ <= 3
 ATTRIBUTE_NORETURN
 static inline int
 _libport_die_hard()
@@ -70,10 +74,14 @@ _libport_die_hard()
   libport::abort();
 }
 
-# define pabort(Msg)                                      \
+#  define pabort(Msg)                                      \
   (ASSERT_ECHO(__FILE__, __LINE__, "abort: " << Msg),     \
    _libport_die_hard())
-
+# else // !__GNUC__ <= 3
+#  define pabort(Msg)                                      \
+  (ASSERT_ECHO(__FILE__, __LINE__, "abort: " << Msg),     \
+   ::libport::abort(), 0)
+# endif // !__GNUC__ <= 3
 
 /*-----------------------------------------------------.
 | __passert -- Pretty assert with additional message.  |
