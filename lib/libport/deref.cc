@@ -8,12 +8,12 @@
  * See the LICENSE file for more information.
  */
 
-/**
- ** \file libport/deref.cc
- ** \brief Implementation for libport/deref.hh.
+/*
+ * \file libport/deref.cc
+ * \brief Implementation for libport/deref.hh.
  */
 
-# include <libport/deref.hh>
+#include <libport/deref.hh>
 
 namespace libport
 {
