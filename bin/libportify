@@ -17,10 +17,6 @@ my $year = 2010;
 
   libportify [OPTIONS...] DIR|FILE...
 
-   git ls-files --no-empty-directory |
-        perl -ne 'chomp; print "$_\n" if -f' |
-        xargs libportify
-
 =head1 DESCRIPTION
 
 Traverse all the DIR and FILE... and process them.
@@ -80,6 +76,15 @@ Display this message and exit.
 This package is foreign, run only the steps that make sense for
 non-libport packages.
 
+=item B<-g>, B<--git>
+
+Use C<git ls-file> to recurse into the directories, instead of reading
+the directories.
+
+=item B<-n>, B<--no-recurse>
+
+Don't enter the directories.
+
 =item B<-s>, B<--step>=I<step>
 
 Run the step C<step>.  Accumulates.  If B<-s> is not used at all, run
@@ -121,8 +126,14 @@ my $diff;
 # Whether a foreign package.
 my $foreign = 0;
 
+# Whether to use git to recurse.
+my $git = 0;
+
 # The prefix for the log messages.
 my $me = basename($0);
+
+# Whether to recurse in directories.
+my $recurse = 1;
 
 # Steps to run, in order.
 my @step;
@@ -163,8 +174,16 @@ my $braced =
     }x;
 
 
-# contents ($FILE_NAME)
-# ---------------------
+=head1 FUNCTIONS
+
+=over 4
+
+=item C<contents ($file)>
+
+The contensts of C<$file> as a single string.
+
+=cut
+
 sub contents ($)
 {
   my ($file) = @_;
@@ -176,10 +195,6 @@ sub contents ($)
   $contents;
 }
 
-
-=head1 FUNCTIONS
-
-=over 4
 
 =item C<verbose($level, @message)>
 
@@ -626,7 +641,7 @@ my %license_field =
  years     => q{[\\d\\-]+(?:,\s*[\\d\\-]+)*},
 );
 
-=libport_license_setup()
+=item C<libport_license_setup()>
 
 Make the regexps more flexible.
 
@@ -821,14 +836,23 @@ C<..>.  Return qualified paths, i.e., with C<$name/> prefixed.
 sub dir_content($)
 {
   my ($name) = @_;
-  opendir (my $dir, $name) ||
-    die "cannot opendir $name: $!";
-  my @res = map { "$name/$_" } grep { !/^\.\.?$/ } readdir($dir);
-  closedir $dir ||
-    die "cannot closedir $name: $!";;
-  @res;
-}
 
+  my @res;
+  if ($git)
+  {
+    my $files = qx{cd $name && git ls-files};
+    @res = split (/\n/, $files);
+  }
+  else
+  {
+    opendir (my $dir, $name) ||
+      die "cannot opendir $name: $!";
+    my @res = grep { !/^\.\.?$/ } readdir($dir);
+    closedir $dir ||
+      die "cannot closedir $name: $!";
+  }
+  map { "$name/$_" } @res;
+}
 
 # transform_things (&TRANSFORM, @THING)
 # ------------------------------------
@@ -859,6 +883,7 @@ sub transform_things (\&@)
           transform_file &$transform_ref, $thing;
         }
       elsif (-d $thing
+             && $recurse
              && $thing !~ m{(?:libltdl
                               |libcoroutine
                               |\.git
@@ -909,6 +934,8 @@ sub getopt ()
   my %option = (
     "f|foreign"     => \$foreign,
     "h|help"        => sub { help ($verbose) },
+    "g|git"         => \$git,
+    "n|no-recurse"  => sub { $recurse = 0 },
     "s|step=s"      => \@step,
     "q|quiet"       => sub { --$verbose },
     "v|verbose"     => sub { ++$verbose },
