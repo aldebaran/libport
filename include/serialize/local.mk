@@ -1,5 +1,5 @@
 # serialize/ headers
-serialize_includedir = $(libport_include_basedir)/serialize
+serialize_includedir = $(brandincludedir)/serialize
 serialize_include_HEADERS =			\
   include/serialize/binary-i-serializer.hh	\
   include/serialize/binary-i-serializer.hxx \

@@ -1,4 +1,4 @@
-sched_includedir = $(libport_include_basedir)/sched
+sched_includedir = $(brandincludedir)/sched
 sched_include_HEADERS =					\
   include/sched/configuration.hh			\
   include/sched/coroutine.hh				\
