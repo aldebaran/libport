@@ -72,8 +72,7 @@ check-clean-local:
 # The targets run by the buildfarm.  Yes, it run installcheck, but it
 # makes no sense for Libport, so just bounce to regular check.
 CHECK_BUILDFARM_FLAGS = -j4 AM_COLOR_TESTS=no VERBOSE=1 INSTRUMENTATION=1
-check-buildfarm installcheck-buildfarm:
-	-$(build_aux_dir)/semaphore-clean.sh
+check-buildfarm installcheck-buildfarm: clean-semaphores
 	$(MAKE) $(AM_MAKEFLAGS)			\
 	  $(CHECK_BUILDFARM_FLAGS) check-html
 
