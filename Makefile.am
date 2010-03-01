@@ -38,7 +38,7 @@ include include/serialize/local.mk
 include lib/serialize/local.mk
 
 # libsched.
-include include/sched/local.mk
+#include include/sched/local.mk
 include lib/sched/local.mk
 
 # libltdl.
