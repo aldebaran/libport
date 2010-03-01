@@ -16,11 +16,15 @@
 #ifndef LIBPORT_BOOST_INTRUSIVE_PTR_HXX
 # define LIBPORT_BOOST_INTRUSIVE_PTR_HXX
 
+# include <typeinfo>
+# include <libport/config.h>
 # include <libport/cassert>
 
 # include <libport/compiler.hh>
 
-# include <serialize/serialize.hh>
+# if LIBPORT_ENABLE_SERIALIZATION
+#  include <serialize/serialize.hh>
+# endif
 
 namespace libport
 {
@@ -266,6 +270,7 @@ namespace libport
     return p.unsafe_cast<U>();
   }
 
+#ifdef LIBPORT_ENABLE_SERIALIZATION
   /*----------------.
   | Serialization.  |
   `----------------*/
@@ -303,6 +308,7 @@ namespace libport
       }
     };
   }
+#endif
 }
 
 #endif // !LIBPORT_BOOST_INTRUSIVE_PTR_HXX

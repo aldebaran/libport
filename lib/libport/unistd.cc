@@ -16,6 +16,7 @@
 #include <stdexcept>
 
 #include <libport/config.h>
+#include <libport/containers.hh>
 #include <libport/format.hh>
 #include <libport/separate.hh>
 #include <libport/unistd.h>

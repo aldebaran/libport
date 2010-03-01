@@ -11,6 +11,8 @@
 #ifndef LIBPORT_THREAD_POOL_HH
 # define LIBPORT_THREAD_POOL_HH
 
+# include <list>
+
 # include <boost/function.hpp>
 
 # include <libport/export.hh>

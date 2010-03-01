@@ -34,8 +34,11 @@ include include/libport/local.mk
 include lib/libport/local.mk
 
 # libserialize.
+if ENABLE_SERIALIZATION
 include include/serialize/local.mk
+
 include lib/serialize/local.mk
+endif
 
 # libsched.
 #include include/sched/local.mk
