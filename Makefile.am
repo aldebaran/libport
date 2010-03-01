@@ -41,10 +41,6 @@ include lib/serialize/local.mk
 include include/sched/local.mk
 include lib/sched/local.mk
 
-# libtinyxml.
-include include/tinyxml/local.mk
-include lib/tinyxml/local.mk
-
 # libltdl.
 include libltdl/Makefile.inc
 
