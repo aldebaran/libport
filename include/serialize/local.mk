@@ -1,5 +1,5 @@
 # serialize/ headers
-serialize_includedir = $(brandincludedir)/serialize
+serialize_includedir = $(includedir)/serialize
 serialize_include_HEADERS =			\
   include/serialize/binary-i-serializer.hh	\
   include/serialize/binary-i-serializer.hxx \

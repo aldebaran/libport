@@ -1,5 +1,5 @@
 # C headers.
-libport_includedir = $(brandincludedir)/libport
+libport_includedir = $(includedir)/libport
 libport_include_HEADERS =			\
   include/libport/cassert			\
   include/libport/cerrno			\

@@ -1,4 +1,4 @@
-sched_includedir = $(brandincludedir)/sched
+sched_includedir = $(includedir)/sched
 sched_include_HEADERS =					\
   include/sched/configuration.hh			\
   include/sched/coroutine.hh				\
