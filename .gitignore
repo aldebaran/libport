@@ -7,3 +7,4 @@
 /configure
 /gui/Makefile.in
 /include/config.h.in
+/include/config.h.in~
