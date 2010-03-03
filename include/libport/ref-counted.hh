@@ -19,6 +19,7 @@ namespace libport
   {
     public:
       RefCounted ();
+      virtual ~RefCounted();
       void counter_inc () const;
       bool counter_dec () const;
 

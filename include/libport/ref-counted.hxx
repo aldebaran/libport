@@ -13,9 +13,11 @@
 
 namespace libport
 {
-
   inline RefCounted::RefCounted ()
     : count_(0)
+  {}
+
+  inline RefCounted::~RefCounted ()
   {}
 
   inline void RefCounted::counter_inc () const
