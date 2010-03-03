@@ -94,6 +94,12 @@ namespace sched
     /// Job may no longer be valid then.
     Job& current_job() const;
 
+    /// Get the currently executing job, if any.
+    ///
+    /// \return A reference onto the currently executing job, or zero
+    /// if we're not executing a job.
+    Job* current_job_opt() const;
+
     /// Check whether a job is the current job.
     ///
     /// \param job Job to be checked against the current job.

@@ -28,6 +28,12 @@ namespace sched
     return *current_job_;
   }
 
+  inline Job*
+  Scheduler::current_job_opt() const
+  {
+    return current_job_.get();
+  }
+
   inline bool
   Scheduler::is_current_job(const Job* job) const
   {
