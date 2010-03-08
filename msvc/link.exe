@@ -578,6 +578,12 @@ while (<>)
       ||
       # Bad features from Wine.
       m{fixme:heap:HeapSetInformation \(nil\) 1 \(nil\) 0}
+      ||
+      m{fixme:ole:NdrCorrelationInitialize (.*): stub}
+      ||
+      m{fixme:ole:NdrCorrelationFree (.*): stub}
+      ||
+      m{err:secur32:SECUR32_initSchannelSP libgnutls not found, SSL connections will fail}
       )
   {
     print STDERR "Ignoring: {{{$_}}}\n"
