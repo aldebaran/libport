@@ -583,6 +583,8 @@ while (<>)
       ||
       m{fixme:ole:NdrCorrelationFree (.*): stub}
       ||
+      m{fixme:rpc:NdrStubCall2 new correlation description not implemented}
+      ||
       m{err:secur32:SECUR32_initSchannelSP libgnutls not found, SSL connections will fail}
       )
   {
