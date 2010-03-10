@@ -41,7 +41,22 @@
   LIBPORT_HEAD(Seq) LIBPORT_APPLY(LIBPORT_SEPARATE_HELPER, LIBPORT_TAIL(Seq))
 
 /// Concatenate the two arguments.
-# define LIBPORT_CAT(A, B) BOOST_PP_CAT(A, B)
+# ifdef _MSC_VER
+#  define LIBPORT_CAT(A, B)   LIBPORT_CAT_0(A, B)
+#  define LIBPORT_CAT_0(A, B) LIBPORT_CAT_1(A, B)
+#  define LIBPORT_CAT_1(A, B) LIBPORT_CAT_2(A, B)
+#  define LIBPORT_CAT_2(A, B) LIBPORT_CAT_3(A, B)
+#  define LIBPORT_CAT_3(A, B) LIBPORT_CAT_4(A, B)
+#  define LIBPORT_CAT_4(A, B) LIBPORT_CAT_5(A, B)
+#  define LIBPORT_CAT_5(A, B) LIBPORT_CAT_6(A, B)
+#  define LIBPORT_CAT_6(A, B) LIBPORT_CAT_7(A, B)
+#  define LIBPORT_CAT_7(A, B) LIBPORT_CAT_8(A, B)
+#  define LIBPORT_CAT_8(A, B) LIBPORT_CAT_9(A, B)
+#  define LIBPORT_CAT_9(A, B) A ## B
+# else
+#  define LIBPORT_CAT(A, B) LIBPORT_CAT_(A, B)
+#  define LIBPORT_CAT_(A, B) A ## B
+# endif
 
 /// __FILE__:__LINE__ as a string.
 # define __HERE__				\
@@ -54,6 +69,12 @@
 `-----------*/
 
 # define LIBPORT_ID(...) __VA_ARGS__
+
+/*--------------.
+| LIBPORT_DELAY |
+`--------------*/
+
+# define LIBPORT_DELAY(X) X
 
 /*--------------.
 | LIBPORT_COMMA |
@@ -77,8 +98,13 @@
 | LIBPORT_SIZE |
 `-------------*/
 
-# define LIBPORT_LIST_SIZE_HELPER1(...)             \
+# ifdef _MSC_VER
+#  define LIBPORT_LIST_SIZE_HELPER1(...)                                \
+  LIBPORT_DELAY(LIBPORT_LIST_SIZE_HELPER)##2(__VA_ARGS__, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
+# else
+#  define LIBPORT_LIST_SIZE_HELPER1(...)                                \
   LIBPORT_LIST_SIZE_HELPER2(__VA_ARGS__, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
+# endif
 # define LIBPORT_LIST_SIZE_HELPER2(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, ...) \
   A10
 
@@ -126,7 +152,7 @@
   Macro(LIBPORT_LIST_HEAD(List)), LIBPORT_LIST_MAP_8(Macro, LIBPORT_LIST_TAIL(List))
 
 # define LIBPORT_LIST_MAP(Macro, List)                                       \
-  (BOOST_PP_CAT(LIBPORT_LIST_MAP_, LIBPORT_LIST_SIZE(List))(Macro, List))
+  (LIBPORT_CAT(LIBPORT_LIST_MAP_, LIBPORT_LIST_SIZE(List))(Macro, List))
 
 /*-----------------.
 | LIBPORT_LIST_NTH |
