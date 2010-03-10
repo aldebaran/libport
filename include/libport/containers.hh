@@ -22,6 +22,8 @@
 # include <set>
 # include <vector>
 
+# include <libport/foreach.hh>
+
 namespace libport
 {
 
@@ -181,6 +183,22 @@ namespace libport
 
 #undef INSERT
 
+
+  /*--------------------.
+  | ostream << vector.  |
+  `--------------------*/
+
+  template <typename T, typename Alloc>
+  std::ostream&
+  operator<< (std::ostream& out, const std::vector<T, Alloc>& c)
+  {
+    out << "[";
+    typedef typename std::vector<T, Alloc>::value_type value_type;
+    foreach (const value_type& v, c)
+      out << v << ", ";
+    out << "]";
+    return out;
+  }
 
 } // namespace std
 
