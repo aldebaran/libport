@@ -40,6 +40,7 @@ TESTS_BINARIES =                                \
   tests/libport/option-parser.cc		\
   tests/libport/path.cc                         \
   tests/libport/pid-file.cc                     \
+  tests/libport/preproc.cc                      \
   tests/libport/pthread.cc                      \
   tests/libport/read-stdin.cc                   \
   tests/libport/safe-container.cc               \
@@ -121,6 +122,7 @@ tests_libport_markup_ostream_SOURCES               = tests/libport/markup-ostrea
 tests_libport_option_parser_SOURCES                = tests/libport/option-parser.cc
 tests_libport_path_SOURCES                         = tests/libport/path.cc
 tests_libport_pid_file_SOURCES                     = tests/libport/pid-file.cc
+tests_libport_preproc_SOURCES                      = tests/libport/preproc.cc
 tests_libport_pthread_SOURCES                      = tests/libport/pthread.cc
 tests_libport_read_stdin_SOURCES                   = tests/libport/read-stdin.cc
 tests_libport_safe_container_SOURCES               = tests/libport/safe-container.cc
