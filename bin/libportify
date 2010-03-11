@@ -1,14 +1,5 @@
 #! /usr/bin/perl -w
 
-# We need a fairly recent version of Perl to have powerful regexps.
-use v5.10.0;
-
-use strict;
-use IO::File;
-use File::Basename;
-
-my $year = 2010;
-
 =head1 NAME
 
   libportify - sanitize sources/upgrade libport usage
@@ -120,6 +111,13 @@ Display processed files.
 
 =cut
 
+# We need a fairly recent version of Perl to have powerful regexps.
+use v5.10.0;
+
+use strict;
+use IO::File;
+use File::Basename;
+
 # The program to use to display diffs.
 my $diff;
 
@@ -140,6 +138,9 @@ my @step;
 
 # Verbosity level.
 my $verbose = 1;
+
+# FIXME: Compute from the current date.
+my $year = 2010;
 
 # A regexp that matches 0 or more repetitions of either a
 # non-backtracking word with no parens/braces, or a braced group, or a
@@ -799,8 +800,15 @@ sub libportify ($$)
   $contents;
 }
 
-# transform_file (&TRANSFORM, $FILE)
-# ----------------------------------
+=item C<transform_file (&transform, $file)>
+
+Apply C<&transform> on the contents of C<$file>.  If there is no
+difference, do nothing.  Otherwise, back-up the original C<$file> into
+C<$file.bak>, save the new contents in C<$file>, and show the
+differences.  Preserve permissions.
+
+=cut
+
 sub transform_file (\&$)
 {
   my ($transform_ref, $file) = @_;
@@ -904,7 +912,7 @@ sub transform_things (\&@)
     }
 }
 
-=item C<help>
+=item C<help($verbose)>
 
 Generate the B<--help> message.  Generates the full man page when
 C<$verbose>.
