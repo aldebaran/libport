@@ -2,55 +2,11 @@
 
 =head1 NAME
 
-  libportify - sanitize sources/upgrade libport usage
+libportify - sanitize sources/upgrade libport usage
 
 =head1 SYNOPSIS
 
-  libportify [OPTIONS...] DIR|FILE...
-
-=head1 DESCRIPTION
-
-Traverse all the DIR and FILE... and process them.
-
-The steps are (starred items are the only one run for foreign
-packages):
-
-=over 4
-
-=item spaces *
-
-Clean up trailing spaces.
-
-=item relicense *
-
-Make the various license header standard, and update the copyright
-years.  If there is no license, include the default one.
-
-=item copyright *
-
-Update copyright years.  Works only on valid license notices.
-
-=item headers
-
-Fix headers (e.g., when libport provides replacement headers, use them
-instead of system headers).
-
-=item debug
-
-Update C<GD_DEBUG> calls.
-
-=item gdcategory
-
-There was a time during which libport.debug did not require all the
-categories to be actually defined.  This is no longer the case, and
-any C<GD_CATEGORY> must have its C<GD_ADD_CATEGORY>.  This pass adds
-missing C<GD_ADD_CATEGORY> calls after the last include.
-
-=item renamings
-
-Fix names and bad spelling.
-
-=back
+libportify [OPTIONS...] DIR|FILE...
 
 =head1 OPTIONS
 
@@ -60,7 +16,7 @@ General options:
 
 =item B<-h>, B<--help>
 
-Display this message and exit.
+Display this message and exit.  More complete with B<--verbose>.
 
 =item B<-f>, B<--foreign>
 
@@ -106,6 +62,50 @@ Display skipped files.
 Display processed files.
 
 =back
+
+=back
+
+=head1 DESCRIPTION
+
+Traverse all the DIR and FILE... and process them.
+
+The steps are (starred items are the only one run for foreign
+packages):
+
+=over 4
+
+=item spaces *
+
+Clean up trailing spaces.
+
+=item relicense *
+
+Make the various license header standard, and update the copyright
+years.  If there is no license, include the default one.
+
+=item copyright *
+
+Update copyright years.  Works only on valid license notices.
+
+=item headers
+
+Fix headers (e.g., when libport provides replacement headers, use them
+instead of system headers).
+
+=item debug
+
+Update C<GD_DEBUG> calls.
+
+=item gdcategory
+
+There was a time during which libport.debug did not require all the
+categories to be actually defined.  This is no longer the case, and
+any C<GD_CATEGORY> must have its C<GD_ADD_CATEGORY>.  This pass adds
+missing C<GD_ADD_CATEGORY> calls after the last include.
+
+=item renamings
+
+Fix names and bad spelling.
 
 =back
 
