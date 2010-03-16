@@ -14,28 +14,29 @@
 
 using libport::test_suite;
 
-#define LIST (1, 2, 3, 4, 5, 6, 7, 8, 9,)
+#define LIST LIBPORT_LIST(1, 2, 3, 4, 5, 6, 7, 8, 9,)
 
 static void
 arity()
 {
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(()), 0);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE((1,)), 1);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE((1, 2,)), 2);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE((1, 2, 3,)), 3);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE((1, 2, 3, 4,)), 4);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE((1, 2, 3, 4, 5,)), 5);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE((1, 2, 3, 4, 5, 6,)), 6);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE((1, 2, 3, 4, 5, 6, 7,)), 7);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE((1, 2, 3, 4, 5, 6, 7, 8,)), 8);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE((1, 2, 3, 4, 5, 6, 7, 8, 9,)), 9);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST()), 0);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST(1,)), 1);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST(1, 2,)), 2);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST(1, 2, 3,)), 3);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST(1, 2, 3, 4,)), 4);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST(1, 2, 3, 4, 5,)), 5);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST(1, 2, 3, 4, 5, 6,)), 6);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST(1, 2, 3, 4, 5, 6, 7,)), 7);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST(1, 2, 3, 4, 5, 6, 7, 8,)), 8);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_SIZE(LIBPORT_LIST(1, 2, 3, 4, 5, 6, 7, 8, 9,)), 9);
 }
 
+#define HEAD_TAIL_LIST LIBPORT_LIST(42, 51, 69,)
 static void
 head_tail()
 {
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_HEAD((42, 51, 69,)), 42);
-  BOOST_CHECK_EQUAL(LIBPORT_LIST_HEAD(LIBPORT_LIST_TAIL(LIBPORT_LIST_TAIL((42, 51, 69,)))), 69);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_HEAD(HEAD_TAIL_LIST), 42);
+  BOOST_CHECK_EQUAL(LIBPORT_LIST_HEAD(LIBPORT_LIST_TAIL(LIBPORT_LIST_TAIL(HEAD_TAIL_LIST))), 69);
 }
 
 #define MAP_MACRO(X) (X * X)
@@ -77,7 +78,7 @@ flatten()
   expected.push_back(1);
   expected.push_back(2);
   std::vector<int> effective;
-  LIBPORT_LIST_FLATTEN((effective.push_back(0);, effective.push_back(1);, effective.push_back(2);, ));
+  LIBPORT_LIST_FLATTEN(LIBPORT_LIST(effective.push_back(0);, effective.push_back(1);, effective.push_back(2);, ));
   BOOST_CHECK_EQUAL(effective, expected);
 }
 
@@ -90,7 +91,7 @@ apply()
   expected.push_back(1);
   expected.push_back(2);
   std::vector<int> effective;
-  LIBPORT_LIST_APPLY(APPLY_MACRO, (0, 1, 2,));
+  LIBPORT_LIST_APPLY(APPLY_MACRO, LIBPORT_LIST(0, 1, 2,));
   BOOST_CHECK_EQUAL(effective, expected);
 }
 
@@ -98,7 +99,7 @@ static int arg_f(int a, int b, int c) { return (a + b) * c; };
 static void
 arg()
 {
-  BOOST_CHECK_EQUAL(42, LIBPORT_LIST_ARG(arg_f, (10, 11, 2,)));
+  BOOST_CHECK_EQUAL(42, LIBPORT_LIST_ARG(arg_f, LIBPORT_LIST(10, 11, 2,)));
 }
 
 test_suite*
