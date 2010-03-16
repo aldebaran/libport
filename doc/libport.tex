@@ -12,16 +12,63 @@
 
 \chapter{Documentation}
 
-\section{TeXHT}
+\section{TeX4ht}
 
 TeX4ht works well, but there is a number of limitations you should be
 aware of if you want to stay out of troubles.
 \begin{itemize}
-\item The most detailed documentation I found is
+\item The most detailed introductory documentation I found is
   \url{http://www.gutenberg.eu.org/pub/GUTenberg/publicationsPDF/37-popineau.pdf}.
+\item The TeX4ht site does contain a complete documentation, it is
+  just hard to realize where the content is.  See
+  \url{http://www.cse.ohio-state.edu/~gurari/TeX4ht/mn11.html#QQ1-11-51}
+  and note that the numbers on the left-hand side are hyperlinks to
+  detailed information.
+\end{itemize}
+
+\subsection{Known Issues}
+
+\begin{itemize}
 \item Avoid starred sections at sectioning boundaries.  I.e., if you
   split at sections, you should avoid playing with
   \lstinline|\section*|.
+
+\item Don't create environments with embed hlines in the close part
+  that do not have their \lstinline|\\| before, it does not compile.
+  It was reported.
+
+  So this is wrong:
+\begin{lstlisting}[language=LaTeX]
+\newenvironment{operatorTable}
+{%
+  \begin{tabular}{|c|c|c|c|c|}%
+  }{%
+    \hline%
+  \end{tabular}%
+}
+
+\begin{operatorTable}
+  a & b & c & d & e\\
+  a & b & c & d & e\\
+\end{operatorTable}
+\end{lstlisting}
+
+  But this works:
+\begin{lstlisting}[language=LaTeX]
+\newenvironment{operatorTable}
+{%
+  \begin{tabular}{|c|c|c|c|c|}%
+    \hline%
+  }{%
+    \\\hline%
+  \end{tabular}%
+}
+
+\begin{operatorTable}
+  a & b & c & d & e\\
+  a & b & c & d & e
+\end{operatorTable}
+\end{lstlisting}
 \end{itemize}
 
 \chapter{Portability issues}
