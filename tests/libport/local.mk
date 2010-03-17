@@ -12,6 +12,7 @@ TESTSFLAGS = --log_level=$(LOG_LEVEL)
 TESTS_BINARIES =                                \
   tests/libport/asio.cc                         \
   tests/libport/assert.cc                       \
+  tests/libport/attributes.cc                   \
   tests/libport/base64.cc                       \
   tests/libport/backtrace.cc                    \
   tests/libport/cli.cc                          \
@@ -93,6 +94,7 @@ tests_libport_asio_LDFLAGS = $(BOOST_SYSTEM_LDFLAGS) $(AM_LDFLAGS)
 tests_libport_asio_CXXFLAGS = $(PTHREAD_CFLAGS) $(AM_CXXFLAGS)
 
 tests_libport_assert_SOURCES                       = tests/libport/assert.cc
+tests_libport_attributes_SOURCES                   = tests/libport/attributes.cc
 tests_libport_base64_SOURCES                       = tests/libport/base64.cc
 tests_libport_backtrace_SOURCES                    = tests/libport/backtrace.cc
 tests_libport_cli_SOURCES                          = tests/libport/cli.cc
