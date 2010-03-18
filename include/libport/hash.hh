@@ -37,6 +37,8 @@
 #  endif
 # endif
 
+// Boost header below is including cmath so include our wrapper first.
+# include <libport/cmath>
 # include <boost/unordered_map.hpp>
 
 #endif // !LIBPORT_HASH_HH
