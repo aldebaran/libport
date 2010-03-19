@@ -2,9 +2,9 @@
 ## Package setup ##
 ## ------------- ##
 
-AC_INIT([Libport], [UNDEFINED], [common-bugs@lists.gostai.com])
+AC_INIT([Libport], [UNDEFINED], [libport-bugs@lists.gostai.com])
 URBI_PACKAGE_VERSION
-URBI_PACKAGE_COPYRIGHT([Gostai SAS], [2005-2010])
+URBI_PACKAGE_COPYRIGHT([Gostai S.A.S.], [2005-2010])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux])
 URBI_DISTCHECK_CONFIGURE_FLAGS
