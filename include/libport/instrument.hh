@@ -24,7 +24,7 @@
   const char* LIBPORT_CAT(libport_instrument, __LINE__) =	\
     "INSTRUMENTFLAGS=" __HERE__ ":" #Flags
 
-# define INSTRUMENT_DISABLE                     \
+# define INSTRUMENT_DISABLE()                   \
   INSTRUMENTFLAGS(--mode=none)
 
 #endif
