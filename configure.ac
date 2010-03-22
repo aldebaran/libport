@@ -10,9 +10,7 @@ AC_CONFIG_MACRO_DIR([build-aux])
 URBI_DISTCHECK_CONFIGURE_FLAGS
 URBI_PACKAGE_KIND([sdk])
 
-# Automake 1.10 generates incomplete "clean-libtool" targets which
-# result in the end in failing distchecks.
-AM_INIT_AUTOMAKE([1.10.2 foreign -Wall nostdinc subdir-objects])
+AM_INIT_AUTOMAKE([foreign -Wall nostdinc subdir-objects])
 
 ## -------------------- ##
 ## Tool/Compilers setup ##
