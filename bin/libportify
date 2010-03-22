@@ -114,6 +114,15 @@ Fix names and bad spelling.
 # We need a fairly recent version of Perl to have powerful regexps.
 use v5.10.0;
 
+BEGIN
+{
+  use File::Basename;
+  unshift @INC, dirname($0) . '/../build-aux/perl';
+}
+
+use BuildAux::FileUtils;
+use BuildAux::Verbose;
+
 use strict;
 use IO::File;
 use File::Basename;
@@ -127,17 +136,11 @@ my $foreign = 0;
 # Whether to use git to recurse.
 my $git = 0;
 
-# The prefix for the log messages.
-my $me = basename($0);
-
 # Whether to recurse in directories.
 my $recurse = 1;
 
 # Steps to run, in order.
 my @step;
-
-# Verbosity level.
-my $verbose = 1;
 
 # FIXME: Compute from the current date.
 my $year = 2010;
@@ -178,37 +181,6 @@ my $braced =
 =head1 FUNCTIONS
 
 =over 4
-
-=item C<contents ($file)>
-
-The contensts of C<$file> as a single string.
-
-=cut
-
-sub contents ($)
-{
-  my ($file) = @_;
-  local $/;                     # Turn on slurp-mode.
-  use IO::File;
-  my $f = new IO::File "< $file" or die "cannot open $file: $!";
-  my $contents = $f->getline or die "cannot read $file: $!";
-  $f->close;
-  $contents;
-}
-
-
-=item C<verbose($level, @message)>
-
-Report the C<@message> is C<$level> E<lt>= C<$verbose>.
-
-=cut
-
-sub verbose($@)
-{
-  my ($level, @message) = @_;
-  map { print STDERR "$me: " . "  " x $level . "$_\n" } @message
-    if $level <= $verbose;
-}
 
 =item C<libport_headers ($file, \$contents)>
 
