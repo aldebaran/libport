@@ -1,4 +1,5 @@
-sched_includedir = $(includedir)/sched
+# Currently we don't want to install libsched headers.
+sched_includedir =
 sched_include_HEADERS =					\
   include/sched/configuration.hh			\
   include/sched/coroutine.hh				\

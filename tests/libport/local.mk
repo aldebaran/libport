@@ -146,9 +146,10 @@ tests_libport_xltdl_SOURCES                        = tests/libport/xltdl.cc
 
 tests_libport_xltdl_LDADD = $(LDADD) $(LTDL_LIBS)
 
-EXTRA_DIST +=                                   \
-  tests/libport/ufloat-common.cc                \
-  tests/libport/ufloat-config.h                 \
+EXTRA_DIST +=					\
+  tests/libport/test.hh				\
+  tests/libport/ufloat-common.cc		\
+  tests/libport/ufloat-config.h			\
   tests/libport/666.txt
 
 TESTS_ENVIRONMENT +=                            \

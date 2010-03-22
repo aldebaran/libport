@@ -27,8 +27,4 @@ dist_lib_sched_libsched@LIBSFX@_la_SOURCES =	\
 lib_sched_libsched@LIBSFX@_la_CPPFLAGS +=	\
   -I$(top_srcdir)/include/sched/libcoroutine
 
-# This is distributed, but not compiled directly: it is included by
-# Coro.cc.
-EXTRA_DIST += lib/sched/libcoroutine/Coro.c
-
 include lib/sched/libcoroutine/local.mk
