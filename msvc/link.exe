@@ -172,6 +172,14 @@ dll_2_lib ()
   echo "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/'
 }
 
+# all_2_pdb ()
+# ------------
+# Return the name of the corresponding output.
+all_2_pdb ()
+{
+  echo "$1" | sed -re 's/(-[0-9]*)?.(obj|lib|dll|exe)/.pdb/'
+}
+
 # quote_for_eval_arg ARG
 # ----------------------
 # Aesthetically quote ARG to be evaled later.
@@ -388,6 +396,31 @@ get_options__o ()
   # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
 }
 
+# handle option -g
+# ----------------
+do_option__g=false
+handle_option__g ()
+{
+  case $mode in
+  (compile)
+    # Use Z7 option because it store debug information inside the *.obj file
+    # instead of adding information inside a global file.  This prevent
+    # failures of parallel builds.  The 'old-style' correspond to
+    # non-incremental generation of debug symbols which does not corespond
+    # to our usage as we are not using an interactive IDE for windows
+    # builds.
+    outargs "-Z7"
+    ;;
+
+  (link)
+    # Produce a pdb file with the name of the library / binary which has the
+    # same name.  The produced PDB file should be in the same directory as
+    # the produced binary.
+    outargs "/debug '/pdb:$(transform "$(all_2_pdb "$output")")' /pdbtype:con"
+    ;;
+  esac
+}
+
 get_options ()
 {
   verbose "arguments: $*"
@@ -442,7 +475,7 @@ get_options ()
     (-Wno-inline)
         outargs -wd4710
         ;;
-    (-g|-ggdb) outargs "-Zi";;
+    (-g|-ggdb) do_option__g=true;;
 
     # Optimizations.
     (-fno-strict-aliasing);;
@@ -658,6 +691,8 @@ case $runtime in
   (release) outargs '-MD';;
   (*) fatal "invalid \$runtime: $runtime";;
 esac
+
+if test "$do_option__g" = true; then handle_option__g; fi
 
 case $mode in
   (compile)
