@@ -174,7 +174,7 @@ dll_2_lib ()
 
 # all_2_pdb ()
 # ------------
-# Return the name of the corresponding output.
+# Return the PDB name of the corresponding output.
 all_2_pdb ()
 {
   echo "$1" | sed -re 's/(-[0-9]*)?.(obj|lib|dll|exe)/.pdb/'
@@ -676,7 +676,7 @@ case $runtime in
     # Produce a pdb file with the name of the library / binary which has the
     # same name.  The produced PDB file should be in the same directory as
     # the produced binary.
-    outargs "-DEBUG '-PDB:$(transform "$(all_2_pdb "$output")")' -PDBTYPE:CON"
+    outargs "-Fd$(transform "$(all_2_pdb "$output")")"
     ;;
   (release) outargs '-MD';;
   (*) fatal "invalid \$runtime: $runtime";;
