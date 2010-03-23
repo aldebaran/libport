@@ -403,20 +403,8 @@ handle_option__g ()
 {
   case $mode in
   (compile)
-    # Use Z7 option because it store debug information inside the *.obj file
-    # instead of adding information inside a global file.  This prevent
-    # failures of parallel builds.  The 'old-style' correspond to
-    # non-incremental generation of debug symbols which does not corespond
-    # to our usage as we are not using an interactive IDE for windows
-    # builds.
-    outargs "-Z7"
-    ;;
 
   (link)
-    # Produce a pdb file with the name of the library / binary which has the
-    # same name.  The produced PDB file should be in the same directory as
-    # the produced binary.
-    outargs "/debug '/pdb:$(transform "$(all_2_pdb "$output")")' /pdbtype:con"
     ;;
   esac
 }
@@ -475,7 +463,15 @@ get_options ()
     (-Wno-inline)
         outargs -wd4710
         ;;
-    (-g|-ggdb) do_option__g=true;;
+    (-g|-ggdb)
+        # Use Z7 option because it store debug information inside the *.obj
+        # file instead of adding information inside a global file.  This
+        # prevent failures of parallel builds.  The 'old-style' correspond
+        # to non-incremental generation of debug symbols which does not
+        # corespond to our usage as we are not using an interactive IDE for
+        # windows builds.
+        outargs "-Z7"
+        ;;
 
     # Optimizations.
     (-fno-strict-aliasing);;
@@ -687,12 +683,17 @@ esac
 get_options "$@"
 
 case $runtime in
-  (debug)   outargs '-MDd';;
+  (debug)
+    outargs '-MDd'
+
+    # Produce a pdb file with the name of the library / binary which has the
+    # same name.  The produced PDB file should be in the same directory as
+    # the produced binary.
+    outargs "/debug '/pdb:$(transform "$(all_2_pdb "$output")")' /pdbtype:con"
+    ;;
   (release) outargs '-MD';;
   (*) fatal "invalid \$runtime: $runtime";;
 esac
-
-if test "$do_option__g" = true; then handle_option__g; fi
 
 case $mode in
   (compile)
