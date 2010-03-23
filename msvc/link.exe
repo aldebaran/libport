@@ -672,11 +672,6 @@ get_options "$@"
 case $runtime in
   (debug)
     outargs '-MDd'
-
-    # Produce a pdb file with the name of the library / binary which has the
-    # same name.  The produced PDB file should be in the same directory as
-    # the produced binary.
-    outargs "-Fd$(transform "$(all_2_pdb "$output")")"
     ;;
   (release) outargs '-MD';;
   (*) fatal "invalid \$runtime: $runtime";;
@@ -696,6 +691,15 @@ case $mode in
       (*)        outargs "-Fe$(transform "$output")";;
     esac
     linkargs "-SUBSYSTEM:console" "-MANIFEST" "Kernel32.Lib"
+    ;;
+esac
+
+case $runtime:$mode in
+  (debug:link)
+    # Produce a pdb file with the name of the library / binary which has
+    # the same name.  The produced PDB file should be in the same
+    # directory as the produced binary.
+    outargs "-Fd$(transform "$(all_2_pdb "$output")")"
     ;;
 esac
 
