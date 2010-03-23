@@ -396,19 +396,6 @@ get_options__o ()
   # if echo $1 | grep -q .exe; then PROG=link.exe ; fi
 }
 
-# handle option -g
-# ----------------
-do_option__g=false
-handle_option__g ()
-{
-  case $mode in
-  (compile)
-
-  (link)
-    ;;
-  esac
-}
-
 get_options ()
 {
   verbose "arguments: $*"
@@ -689,7 +676,7 @@ case $runtime in
     # Produce a pdb file with the name of the library / binary which has the
     # same name.  The produced PDB file should be in the same directory as
     # the produced binary.
-    outargs "/debug '/pdb:$(transform "$(all_2_pdb "$output")")' /pdbtype:con"
+    outargs "-DEBUG '-PDB:$(transform "$(all_2_pdb "$output")")' -PDBTYPE:CON"
     ;;
   (release) outargs '-MD';;
   (*) fatal "invalid \$runtime: $runtime";;
