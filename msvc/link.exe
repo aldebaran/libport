@@ -177,7 +177,7 @@ dll_2_lib ()
 # Return the PDB name of the corresponding output.
 all_2_pdb ()
 {
-  echo "$1" | sed -re 's/(-[0-9]*)?.[a-zA-Z]*/.pdb/'
+  echo "$1" | sed -re 's/\.[^.]*/.pdb/'
 }
 
 # quote_for_eval_arg ARG
@@ -699,7 +699,7 @@ case $runtime:$mode in
     # Produce a pdb file with the name of the library / binary which has
     # the same name.  The produced PDB file should be in the same
     # directory as the produced binary.
-    outargs "-Fd$(transform "$(all_2_pdb "$output")")"
+    outargs "-Zi -Fd$(transform "$(all_2_pdb "$output")")"
     ;;
 esac
 
