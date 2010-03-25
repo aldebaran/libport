@@ -534,9 +534,7 @@ my @license_re =
 (
 q{<copyright> <years>, <holder>\.?
 
-This software is provided \"as is\" without warranty of any kind,
-either expressed or implied, including but not limited to the
-implied warranties of fitness for a particular purpose.
+<asis>
 
 See the LICENSE file for more information.
 <urbiforge>?},
@@ -548,18 +546,14 @@ This file is part of <project>\.?
 Permission to use, copy, modify, and redistribute this software for
 non-commercial use is hereby granted.
 
-This software is provided "as is" without warranty of any kind,
-either expressed or implied, including but not limited to the
-implied warranties of fitness for a particular purpose.
+<asis>
 
 <urbiforge>},
 
 q{(?:<file>: )?(?:This file is part of <project>\\.)?
 <copyright> (?:<years>, <holder>|<holder>, <years>\.)
 
-This software is provided "?as is"? without warranty of any kind,
-either expressed or implied, including but not limited to the
-implied warranties of fitness for a particular purpose.
+<asis>
 
 See the LICENSE file for more information.
 <urbiforge>},
@@ -576,9 +570,7 @@ q{\\\\file <file>
  Permission to use, copy, modify, and redistribute this software for
  non-commercial use is hereby granted.
 
- This software is provided "as is" without warranty of any kind,
- either expressed or implied, including but not limited to the
- implied warranties of fitness for a particular purpose.
+<asis>
 
  <urbiforge>},
 
@@ -606,6 +598,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
 # The "syntax" of some interesting fields.
 my %license_field =
 (
+ asis      => q{This software is provided "?as is"? without warranty of any kind,
+either expressed or implied, including but not limited to the
+implied warranties of fitness for a particular purpose.},
  brief     => q{(?:Definition|Implementation).*},
  copyright => q{Copyright\s*\([cC]\)},
  file      => q{[\\-\\w\\./]+},
