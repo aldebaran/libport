@@ -37,23 +37,23 @@ check_symbols()
   // used in this test do not collide with the name used in the library.
   const unsigned int init_map_size = Symbol::string_map_size ();
 
-  const Symbol toto1("toto");
-  const Symbol toto2("toto");
-  const Symbol titi1("titi");
+  const Symbol foo1("foo");
+  const Symbol foo2("foo");
+  const Symbol bar1("bar");
 
   BOOST_CHECK_EQUAL(Symbol::string_map_size () - init_map_size, 2u);
-  BOOST_CHECK_EQUAL(toto1.name_get (), "toto");
+  BOOST_CHECK_EQUAL(foo1.name_get (), "foo");
 
-  BOOST_CHECK_EQUAL(toto1, Symbol("toto"));
-  BOOST_CHECK(toto1 != Symbol("titi"));
+  BOOST_CHECK_EQUAL(foo1, Symbol("foo"));
+  BOOST_CHECK(foo1 != Symbol("bar"));
 
-  BOOST_CHECK_EQUAL(toto1, toto2);
-  BOOST_CHECK(toto1 != titi1);
+  BOOST_CHECK_EQUAL(foo1, foo2);
+  BOOST_CHECK(foo1 != bar1);
 
-  std::string junk = "tata";
-  const Symbol tata1(junk);
-  junk = "toto";
-  BOOST_CHECK_EQUAL(tata1, Symbol("tata"));
+  std::string junk = "baz";
+  const Symbol baz1(junk);
+  junk = "foo";
+  BOOST_CHECK_EQUAL(baz1, Symbol("baz"));
 }
 
 // Make sure we never create a Symbol that already exists.
