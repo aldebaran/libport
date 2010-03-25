@@ -912,6 +912,7 @@ Process the command line options.
 sub getopt ()
 {
   use Getopt::Long;
+
   my %option = (
     "f|foreign"     => \$foreign,
     "h|help"        => sub { help ($verbose) },
@@ -925,9 +926,12 @@ sub getopt ()
   GetOptions (%option)
     or exit 1;
 
-  @step = qw(spaces relicense copyright);
-  push @step, qw(headers debug gdcategory renamings)
-    unless $foreign;
+  unless (@step)
+  {
+    @step = qw(spaces relicense copyright);
+    push @step, qw(headers debug gdcategory renamings)
+      unless $foreign;
+  }
   verbose 2, "Steps: @step";
 
   libport_license_setup;
