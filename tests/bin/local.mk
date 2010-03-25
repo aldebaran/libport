@@ -7,6 +7,6 @@ EXTRA_DIST += $(LPC).m4sh
 nodist_check_SCRIPTS += $(LPC)
 m4sh_scripts += $(LPC)
 
-%.log: %.lpc %.exp $(LPC)
+%.log: %.lpc %.exp $(LPC) bin/libportify
 	@$(am__check_pre) $(LPC) $${dir}$< $(am__check_post)
 

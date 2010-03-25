@@ -567,7 +567,7 @@ See the LICENSE file for more information.
 q{\\\\file <file>
 
  File: .*
- (?<brief>Implementation.*)
+ <brief>
 
  This file is part of
  <project>
@@ -584,7 +584,7 @@ q{\\\\file <file>
 
 q{(?:\\\\file <file>)?
 
-(?<brief>.*\.)?
+<brief>?
 
 <copyright> <years> <holder>.  All rights reserved.
 
@@ -606,6 +606,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
 # The "syntax" of some interesting fields.
 my %license_field =
 (
+ brief     => q{(?:Definition|Implementation).*},
  copyright => q{Copyright\s*\([cC]\)},
  file      => q{[\\-\\w\\./]+},
  holder    => q{(?:Gostai (?:SAS|S.A.S.?)?|Jean-Christophe Baillie)},
