@@ -8,7 +8,7 @@ me=$as_me
 
 libportify=$abs_top_srcdir/bin/libportify
 
-xrun "--help" $PERL $libportify --help
+# xrun "--help" $PERL $libportify --help
 
 in=$(absolute "$1")
 test -f "$in" ||
@@ -22,7 +22,7 @@ mkcd $base.dir
 # libportify modifies the file.
 cp $in input.cc
 
-xrun "libportify" $PERL "$libportify" input.cc
+xrun "libportify" $PERL "$libportify" -v -v -v -v input.cc
 
 # Fix: this is not a nqice feature of rst_expect.
 mv input.cc output.raw

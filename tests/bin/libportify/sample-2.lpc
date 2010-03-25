@@ -10,4 +10,6 @@
 // For comments, bug reports and feedback: http://www.urbiforge.com
 //
 
+/* Do not change this comment. */
+
 #include <libport/debug.hh>

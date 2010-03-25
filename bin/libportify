@@ -629,13 +629,13 @@ sub libport_license_setup ()
       {
         $re =~ s{<$field>}{(?<$field>$license_field{$field})}g;
       }
-    # Accept arbitrary comment closing.
-    verbose 4, $re;
-    $re .= ' (?:[\*\\s]*\*/\s)?';
-    $re =~ s{^\s*}{^[\\s/*!]*}gm;
+
+    $re =~ s{\n+}{\\s*}gs;
+
+    verbose 4, "Regexp C:", split(/\n/, $re);
     $re =~ s/\s+/\\s+/gm;
-    $re .= '\s*';
-    verbose 4, $re;
+
+    verbose 4, "Regexp:", split(/\n/, $re);
   }
 }
 
@@ -696,11 +696,47 @@ sub libport_relicense ($\$)
     if $file =~ m{(?:flex-lexer\.hh|gui/lcdrange\.h)$};
 
   my $updated = 0;
-  for my $re (@license_re)
+
+  # Look for C-comments.
+  $$contents_ref =~ s{(/\*(.*?)\*/\s*)}
+  {
+    my $orig = $1;
+    my $str = $2;
+    my $done = 0;
+    $str =~ s/^[\t\ *]+//gm;
+    $str =~ s{^\s+}{};
+    $str =~ s{\s+$}{};
+    for my $re (@license_re)
     {
-      verbose 3, $$contents_ref;
-      $$contents_ref =~ s{$re}{$updated = 1; libport_license(%+)}smegi;
+      verbose 5, "AGAINST: ", $re;
+      $str =~ s{$re}{$updated = 1; $done = 1;
+                         verbose 5, "MATCH!!!";
+                         libport_license(%+)}smegi;
     }
+    $done ? $str : $orig;
+  }esmg;
+
+  # Look for C++ comments.
+  $$contents_ref =~ s{((?:^\s*//.*\n)+)}
+  {
+    my $orig = $1;
+    my $str = $orig;
+    my $done = 0;
+    verbose 5, "C++:", $str;
+    $str =~ s{^[\t\ ]*//[\t\ ]*}{}gm;
+    $str =~ s{^\s+}{};
+    $str =~ s{\s+$}{};
+    verbose 5, "C++:", split (/\n/, $str);
+    for my $re (@license_re)
+    {
+      verbose 5, "AGAINST: ", $re;
+      $str =~ s{$re}{$updated = 1; $done = 1;
+                         verbose 5, "MATCH!!!";
+                         libport_license(%+)}smegi;
+    }
+    $done ? $str : $orig;
+  }emg;
+
   # If the license was not seen (the right license model is also in
   # the set of recognized licenses), then add it.
   if (!$updated)
