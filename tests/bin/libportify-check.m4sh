@@ -1,0 +1,30 @@
+                                                        -*- shell-script -*-
+URBI_INIT
+
+exec 3>&2
+me=$as_me
+
+libportify=$abs_top_srcdir/bin/libportify
+
+xrun "--help"    $libportify --help
+
+in=$(absolute "$1")
+test -f "$in" ||
+  fatal "no such file: $in"
+
+base=$(basename "$in" "lpc")
+
+# Move to a private dir.
+mkcd $base.dir
+
+# libportify modifies the file.
+cp $in input.cc
+
+xrun "libportify" "$libportify" input.cc
+
+# Fix: this is not a nqice feature of rst_expect.
+mv input.cc output.raw
+cp output.raw output.eff
+cp $in input.cc
+rst_expect ${in/.lpc} output
+$exit

@@ -5,6 +5,8 @@ include build-aux/fix-libtool-la.mk
 include build-aux/libport.mk
 include build-aux/build-farm.mk
 include build-aux/bootstrap.mk
+include build-aux/m4sh.mk
+
 
 TESTS =
 include build-aux/check.mk

@@ -1,5 +1,3 @@
-include $(top_srcdir)/build-aux/m4sh.mk
-
 EXTRA_DIST +=					\
   msvc/cl.exe					\
   msvc/cygpath					\
