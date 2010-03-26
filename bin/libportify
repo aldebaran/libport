@@ -532,7 +532,8 @@ sub libport_range(@)
 
 my @license_re =
 (
-q{<copyright> <years>, <holder>\.?
+q{(?:<file>: )?(?:This file is part of <project>\\.)?
+<copyright> (?:<years>, <holder>|<holder>, <years>\.)
 
 <asis>
 
@@ -548,14 +549,6 @@ non-commercial use is hereby granted.
 
 <asis>
 
-<urbiforge>},
-
-q{(?:<file>: )?(?:This file is part of <project>\\.)?
-<copyright> (?:<years>, <holder>|<holder>, <years>\.)
-
-<asis>
-
-See the LICENSE file for more information.
 <urbiforge>},
 
 q{\\\\file <file>
