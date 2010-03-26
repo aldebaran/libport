@@ -271,16 +271,16 @@ namespace libport
     : indent_(0)
   {}
 
-  static void show_time()
+  static
+  std::ostream&
+  dump_time(std::ostream& s)
   {
-    time_t     now;
-    struct tm  *ts;
-    char       buf[80];
-
-    now = time(NULL);
-    ts = localtime(&now);
-    strftime(buf, sizeof(buf), "%a %Y-%m-%d %H:%M:%S %Z", ts);
-    std::cerr << buf;
+    time_t now = time(0);
+    struct tm* ts = localtime(&now);
+    char buf[80];
+    strftime(buf, sizeof buf, "%a %Y-%m-%d %H:%M:%S %Z", ts);
+    s << buf;
+    return s;
   }
 
   void
@@ -326,8 +326,7 @@ namespace libport
     if (timestamps())
     {
       color(c);
-      show_time();
-      ostr << "    ";
+      ostr << dump_time(ostr) << "    ";
     }
     color(colors::purple);
     ostr << "[" << category() << "] ";
