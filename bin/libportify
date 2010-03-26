@@ -916,25 +916,7 @@ sub transform_things (\&@)
     }
 }
 
-=item C<help($verbose)>
-
-Generate the B<--help> message.  Generates the full man page when
-C<$verbose>.
-
-=cut
-
-sub help ($)
-{
-  my ($verbose) = @_;
-  use Pod::Usage;
-  # See <URL:http://perldoc.perl.org/pod2man.html#NOTES>.
-  pod2usage( { -message => "Fix libport usage",
-               -exitval => 0,
-               -verbose => $verbose,
-               -output  => \*STDOUT });
-}
-
-=item C<getopt>
+=item C<getopt()>
 
 Process the command line options.
 
@@ -942,20 +924,15 @@ Process the command line options.
 
 sub getopt ()
 {
-  use Getopt::Long;
-
-  my %option = (
-    "f|foreign"     => \$foreign,
-    "h|help"        => sub { help ($verbose) },
-    "g|git"         => \$git,
-    "n|no-recurse"  => sub { $recurse = 0 },
-    "s|step=s"      => \@step,
-    "q|quiet"       => sub { --$verbose },
-    "v|verbose"     => sub { ++$verbose },
+  use BuildAux::Getopt qw($message);
+  $message = "Fix libport usage";
+  BuildAux::Getopt::getopt
+    (
+     "f|foreign"     => \$foreign,
+     "g|git"         => \$git,
+     "n|no-recurse"  => sub { $recurse = 0 },
+     "s|step=s"      => \@step,
     );
-  Getopt::Long::Configure ("bundling", "pass_through");
-  GetOptions (%option)
-    or exit 1;
 
   unless (@step)
   {
