@@ -8,7 +8,6 @@
  * See the LICENSE file for more information.
  */
 
-#include <libport/cassert>
 #include <iostream>
 
 #include <libport/cassert>
@@ -17,6 +16,7 @@
 #include <libport/debug.hh>
 #include <libport/escape.hh>
 #include <libport/foreach.hh>
+#include <libport/format.hh>
 #include <libport/ip-semaphore.hh>
 #include <libport/lockable.hh>
 #include <libport/pthread.h>
@@ -288,9 +288,8 @@ namespace libport
   {
     static bool tty = isatty(STDOUT_FILENO);
     static bool force = getenv("GD_COLOR");
-    boost::format format("[33;0%s;%sm");
     if (tty || force)
-      std::cerr << str(format % (bold ? 1 : 0) % color);
+      std::cerr << format("[33;0%s;%sm", bold ? 1 : 0, color);
   }
 
   void
@@ -378,9 +377,10 @@ namespace libport
 
   std::string gd_ihexdump(const unsigned char* data, unsigned size)
   {
-    std::stringstream ss;
-    ss << libport::escape(std::string((const char*)data, (size_t)(size)));
-    std::string res = "\"" + ss.str() + "\" ";
+    std::string res =
+      format("\"%s\"",
+             libport::escape(std::string((const char*)data, (size_t)(size))));
+
     bool first = true;
     for (unsigned i = 0; i < size; ++i)
     {
@@ -388,10 +388,8 @@ namespace libport
         first = false;
       else
         res += " ";
-      boost::format format("0x%x");
-      // This is sick, but we have to cast to int, or boost::format
-      // will print the character.
-      res += str(format % static_cast<unsigned int>(data[i]));
+      // Cast to int, or boost::format will print the character.
+      res += format("0x%x", static_cast<unsigned int>(data[i]));
     }
     return res;
   }
@@ -403,10 +401,9 @@ namespace libport
 
   SyslogDebug::SyslogDebug(const std::string& program)
   {
-    boost::format format("Opening syslog session for '%s'");
-
     openlog(strdup(program.c_str()), LOG_PID, LOG_DAEMON);
-    syslog(LOG_INFO | LOG_DAEMON, "%s", (format % program).str().c_str());
+    syslog(LOG_INFO | LOG_DAEMON, "%s",
+           format("Opening syslog session for '%s'", program).c_str());
   }
 
   SyslogDebug::~SyslogDebug()
