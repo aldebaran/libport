@@ -271,31 +271,36 @@ namespace libport
     : indent_(0)
   {}
 
-  static
-  std::ostream&
-  dump_time(std::ostream& s)
+  namespace
   {
-    time_t now = time(0);
-    struct tm* ts = localtime(&now);
-    char buf[80];
-    strftime(buf, sizeof buf, "%a %Y-%m-%d %H:%M:%S %Z", ts);
-    s << buf;
-    return s;
-  }
+    inline
+    std::string
+    time()
+    {
+      time_t now = std::time(0);
+      struct tm* ts = std::localtime(&now);
+      char buf[80];
+      strftime(buf, sizeof buf, "%a %Y-%m-%d %H:%M:%S %Z", ts);
+      return buf;
+    }
 
-  void
-  ConsoleDebug::color(int color, bool bold)
-  {
-    static bool tty = isatty(STDOUT_FILENO);
-    static bool force = getenv("GD_COLOR");
-    if (tty || force)
-      std::cerr << format("[33;0%s;%sm", bold ? 1 : 0, color);
-  }
+    inline
+    std::string
+    color(int color, bool bold = true)
+    {
+      static bool tty = isatty(STDOUT_FILENO);
+      static bool force = getenv("GD_COLOR");
+      return (tty || force
+              ? format("[33;0%s;%sm", bold ? 1 : 0, color)
+              : "");
+    }
 
-  void
-  ConsoleDebug::reset()
-  {
-    color(0);
+    inline
+    std::string
+    reset()
+    {
+      return color(0);
+    }
   }
 
   static Debug::colors::Color
@@ -323,12 +328,9 @@ namespace libport
     std::ostringstream ostr;
     Debug::colors::Color c = msg_color(type);
     if (timestamps())
-    {
-      color(c);
-      ostr << dump_time(ostr) << "    ";
-    }
-    color(colors::purple);
-    ostr << "[" << category() << "] ";
+      ostr << color(c) << time() << "    ";
+    ostr << color(colors::purple)
+         << "[" << category() << "] ";
     {
       static bool pid = getenv("GD_PID");
       if (pid)
@@ -341,7 +343,7 @@ namespace libport
         ostr << "[" << pthread_self() << "] ";
     }
 #endif
-    color(c);
+    ostr << color(c);
     for (unsigned i = 0; i < indent_; ++i)
       ostr << " ";
     // As syslog would do, don't issue the users' \n.
@@ -350,13 +352,10 @@ namespace libport
     else
       ostr << msg;
     if (locations())
-    {
-      color(colors::blue);
-      ostr << "    (" << fun << ", " << file << ":" << line << ")";
-    }
-    color(colors::white);
-    ostr << std::endl;
-    std::cerr << ostr.str();
+      ostr << color(colors::blue)
+           << "    (" << fun << ", " << file << ":" << line << ")";
+    ostr << color(colors::white);
+    std::cerr << ostr.str() << std::endl;
   }
 
   void

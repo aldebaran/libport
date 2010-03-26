@@ -163,8 +163,6 @@ namespace libport
     virtual void pop();
 
   private:
-    void color(int color, bool bold = true);
-    void reset();
     unsigned indent_;
   };
 
