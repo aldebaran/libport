@@ -777,8 +777,12 @@ sub libport_copyright ($\$)
 ## ----------- ##
 
 
-# libportify ($FILE, $CONTENTS)
-# -----------------------------
+=item C<libportify ($file, $contents)>
+
+Apply the transformations on C<$contents> of C<$file>.
+
+=cut
+
 sub libportify ($$)
 {
   my ($file, $contents) = @_;
@@ -866,9 +870,13 @@ sub dir_content($)
   map { "$name/$_" } @res;
 }
 
-# transform_things (&TRANSFORM, @THING)
-# ------------------------------------
-# Work on file-system entities.
+=item C<transform_things (&transform, @thing)>
+
+Work on file-system entities (files, directories etc.).  Call
+C<&transform> on file contents, and save them if changed.
+
+=cut
+
 sub transform_things (\&@);
 sub transform_things (\&@)
 {
