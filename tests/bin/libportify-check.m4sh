@@ -6,6 +6,9 @@ me=$as_me
 
 : ${PERL=perl}
 
+$PERL -e 'use v5.10.0;' ||
+  error SKIP "is not Perl 5.10: $PERL"
+
 libportify=$abs_top_srcdir/bin/libportify
 
 # xrun "--help" $PERL $libportify --help
