@@ -276,17 +276,17 @@ sub to_format ($)
   my @arg;
   for my $c (split(/\s*<<\s*/, $stream))
   {
-      $c =~ s/^\s+//;
-      $c =~ s/\s+$//;
-      if ($c =~ /^"(.*)"$/ || $c =~ /^'(.*)'$/)
-      {
-          $res .= $1;
-      }
-      else
-      {
-          $res .= "%s";
-          push @arg, $c
-      }
+    $c =~ s/^\s+//;
+    $c =~ s/\s+$//;
+    if ($c =~ /^"(.*)"$/ || $c =~ /^'(.*)'$/)
+    {
+      $res .= $1;
+    }
+    else
+    {
+      $res .= "%s";
+      push @arg, $c
+    }
   }
   my $args = join ', ', @arg;
   return ("\"$res\"", $args);
@@ -591,15 +591,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.}
 # The "syntax" of some interesting fields.
 my %license_field =
 (
- asis      => q{This software is provided "?as is"? without warranty of any kind,
-either expressed or implied, including but not limited to the
-implied warranties of fitness for a particular purpose.},
+
+ asis      => q{This software is provided "?as is"? without warranty
+                of any kind, either expressed or implied, including
+                but not limited to the implied warranties of fitness
+                for a particular purpose.},
  brief     => q{(?:Definition|Implementation).*},
  copyright => q{Copyright\s*\([cC]\)},
  file      => q{[\\-\\w\\./]+},
  holder    => q{(?:Gostai (?:SAS|S.A.S.?)?|Jean-Christophe Baillie)},
  project   => q{[^\\n]*},
- urbiforge => q{For (?:comments, bug reports and feedback|more information, comments, bug reports): http://www\.urbiforge\.(?:com|net)},
+ urbiforge => q{For (?:comments, bug reports and feedback|more information,
+                comments, bug reports): http://www\.urbiforge\.(?:com|net)},
  years     => q{[\\d\\-]+(?:,\s*[\\d\\-]+)*},
 );
 
@@ -614,9 +617,9 @@ sub libport_license_setup ()
   for my $re (@license_re)
   {
     for my $field (keys %license_field)
-      {
-        $re =~ s{<$field>}{(?<$field>$license_field{$field})}g;
-      }
+    {
+      $re =~ s{<$field>}{(?<$field>$license_field{$field})}g;
+    }
 
     $re =~ s{\n+}{\\s*}gs;
 
@@ -728,13 +731,13 @@ sub libport_relicense ($\$)
   # If the license was not seen (the right license model is also in
   # the set of recognized licenses), then add it.
   if (!$updated)
-    {
-      my %group =
-        (
-         years => $year,
-        );
-      $$contents_ref = libport_license(%group) . $$contents_ref;
-    }
+  {
+    my %group =
+      (
+       years => $year,
+      );
+    $$contents_ref = libport_license(%group) . $$contents_ref;
+  }
 }
 
 
@@ -817,22 +820,22 @@ sub transform_file (\&$)
   my $contents = contents ($file);
   my $updated = $transform_ref->($file, $contents);
   if ($contents ne $updated)
-    {
-      my $mode = (stat($file))[2] & 0777;
-      my $bak = "$file.bak";
-      rename ($file, $bak)
-        or die "$0: cannot rename $file as $bak: $!\n";
-      my $out = new IO::File(">$file") or die;
-      print $out $updated;
-      $out->close;
-      chmod ($mode, $file)
-        or die "$me: cannot chmod $file: $!\n";
-      system("$diff -u $bak $file");
-    }
+  {
+    my $mode = (stat($file))[2] & 0777;
+    my $bak = "$file.bak";
+    rename ($file, $bak)
+      or die "$0: cannot rename $file as $bak: $!\n";
+    my $out = new IO::File(">$file") or die;
+    print $out $updated;
+    $out->close;
+    chmod ($mode, $file)
+      or die "$me: cannot chmod $file: $!\n";
+    system("$diff -u $bak $file");
+  }
   else
-    {
-      verbose 2, "no changes: $file";
-    }
+  {
+    verbose 2, "no changes: $file";
+  }
 }
 
 =item C<dir_content($name)>
@@ -876,28 +879,28 @@ sub transform_things (\&@)
   my ($transform_ref, @thing) = @_;
 
   for my $thing (@thing)
+  {
+    my $basename = basename($thing);
+    if ($basename =~ m{(?:\.bak|\.mk|\.stamp|Makefile\.(am|in)|~)$}
+        || $thing =~ m{bison|libcoroutine|libltdl|tinyxml})
     {
-      my $basename = basename($thing);
-      if ($basename =~ m{(?:\.bak|\.mk|\.stamp|Makefile\.(am|in)|~)$}
-          || $thing =~ m{bison|libcoroutine|libltdl|tinyxml})
-        {
-          # Skip silently these files.
-        }
-      elsif (
-          -f $thing
-          # We libportify source files.  They have an extension,
-          # except cstdio and so forth...
-          && $basename =~ m{ (?:\.(?:cc|h|hh|hxx|u)(?:\.in)?$)
+      # Skip silently these files.
+    }
+    elsif (
+      -f $thing
+      # We libportify source files.  They have an extension,
+      # except cstdio and so forth...
+      && $basename =~ m{ (?:\.(?:cc|h|hh|hxx|u)(?:\.in)?$)
                                | (?:^c\w+$)}x
-          # but then configure matches that regexp.
-          && $basename !~ m{configure}x
-        )
-        {
-          transform_file &$transform_ref, $thing;
-        }
-      elsif (-d $thing
-             && $recurse
-             && $thing !~ m{(?:libltdl
+      # but then configure matches that regexp.
+      && $basename !~ m{configure}x
+      )
+    {
+      transform_file &$transform_ref, $thing;
+    }
+    elsif (-d $thing
+           && $recurse
+           && $thing !~ m{(?:libltdl
                               |libcoroutine
                               |\.git
                               |\.dsym
@@ -905,16 +908,16 @@ sub transform_things (\&@)
                               |tinyxml
                               |_build
                               |jpeg)$}x)
-        {
-          transform_things (&$transform_ref, dir_content($thing));
-        }
-      else
-        {
-          verbose 1, (-e $thing
-                      ? "skipping $thing"
-                      : "ignoring $thing: does not exist");
-        }
+    {
+      transform_things (&$transform_ref, dir_content($thing));
     }
+    else
+    {
+      verbose 1, (-e $thing
+                  ? "skipping $thing"
+                  : "ignoring $thing: does not exist");
+    }
+  }
 }
 
 =item C<getopt()>
@@ -958,17 +961,17 @@ $diff = (`colordiff --version 2>/dev/null` ne ''
 transform_things &libportify, @ARGV;
 
 
-### Setup "GNU" style for perl-mode and cperl-mode.
+### Setup "Gostai" style for perl-mode and cperl-mode.
 ## Local Variables:
 ## perl-indent-level: 2
 ## perl-continued-statement-offset: 2
-## perl-continued-brace-offset: 0
+## perl-continued-brace-offset: -2
 ## perl-brace-offset: 0
 ## perl-brace-imaginary-offset: 0
 ## perl-label-offset: -2
 ## cperl-indent-level: 2
 ## cperl-brace-offset: 0
-## cperl-continued-brace-offset: 0
+## cperl-continued-brace-offset: -2
 ## cperl-label-offset: -2
 ## cperl-extra-newline-before-brace: t
 ## cperl-merge-trailing-else: nil
