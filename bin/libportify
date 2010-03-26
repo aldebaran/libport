@@ -120,11 +120,10 @@ BEGIN
   unshift @INC, dirname($0) . '/../build-aux/perl';
 }
 
+use strict;
 use BuildAux::FileUtils;
 use BuildAux::Verbose;
-
-use strict;
-use IO::File;
+use BuildAux::XFile;
 use File::Basename;
 
 # The program to use to display diffs.
@@ -825,7 +824,7 @@ sub transform_file (\&$)
     my $bak = "$file.bak";
     rename ($file, $bak)
       or die "$0: cannot rename $file as $bak: $!\n";
-    my $out = new IO::File(">$file") or die;
+    my $out = new BuildAux::XFile(">$file");
     print $out $updated;
     $out->close;
     chmod ($mode, $file)
