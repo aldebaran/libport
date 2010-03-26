@@ -288,7 +288,7 @@ namespace libport
     std::string
     color(int color, bool bold = true)
     {
-      static bool tty = isatty(STDOUT_FILENO);
+      static bool tty = isatty(STDERR_FILENO);
       static bool force = getenv("GD_COLOR");
       return (tty || force
               ? format("[33;0%s;%sm", bold ? 1 : 0, color)
