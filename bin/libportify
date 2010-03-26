@@ -885,15 +885,13 @@ sub transform_things (\&@)
     {
       # Skip silently these files.
     }
-    elsif (
-      -f $thing
-      # We libportify source files.  They have an extension,
-      # except cstdio and so forth...
-      && $basename =~ m{ (?:\.(?:cc|h|hh|hxx|u)(?:\.in)?$)
+    elsif (-f $thing
+           # We libportify source files.  They have an extension,
+           # except cstdio and so forth...
+           && $basename =~ m{ (?:\.(?:cc|h|hh|hxx|u)(?:\.in)?$)
                                | (?:^c\w+$)}x
-      # but then configure matches that regexp.
-      && $basename !~ m{configure}x
-      )
+           # but then configure matches that regexp.
+           && $basename !~ m{configure}x)
     {
       transform_file &$transform_ref, $thing;
     }
