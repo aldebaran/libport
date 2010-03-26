@@ -502,7 +502,6 @@ namespace libport
   {
     libport::BlockLock lock(debugger_mutex_);
     bool no_gd_init = false;
-    Debug* d;
 
     if (!debugger_data)
     {
@@ -511,7 +510,7 @@ namespace libport
       no_gd_init = true;
     }
 
-    d = debugger_data->get();
+    Debug *d = debugger_data->get();
     if (!d)
     {
       if (make_debugger.empty())

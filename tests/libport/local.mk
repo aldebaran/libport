@@ -21,6 +21,7 @@ TESTS_BINARIES =                                \
   tests/libport/cstdlib.cc                      \
   tests/libport/damerau-levenshtein-distance.cc \
   tests/libport/debug.cc                        \
+  tests/libport/debug-dummy.cc                  \
   tests/libport/deref.cc                        \
   tests/libport/dirent.cc                       \
   tests/libport/erase-if.cc                     \
