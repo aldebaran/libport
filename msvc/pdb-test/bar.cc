@@ -8,7 +8,6 @@
  * See the LICENSE file for more information.
  */
 
-
 __declspec(dllexport)
 int bar()
 {
