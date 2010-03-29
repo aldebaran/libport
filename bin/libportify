@@ -683,6 +683,38 @@ EOF
   $res;
 }
 
+=item C<relicense(\$str)>
+
+Update C<$$str> by applying all our license updaters on it.  C<$$str>
+is expected to be pure text, strip from comment markup.  Trailing and
+starting white spaces are stripped.
+
+Return 1 if there was an updated, 0 otherwise.
+
+=cut
+
+sub relicense(\$)
+{
+  my ($str) = @_;
+
+  $$str =~ s/^[\t\ *]+//gm;
+  $$str =~ s{^\s+}{};
+  $$str =~ s{\s+$}{};
+
+  my $res = 0;
+  for my $re (@license_re)
+  {
+    verbose 5, "AGAINST: ", $re;
+    $$str =~ s{$re}
+    {
+      $res = 1;
+      libport_license(%+)
+    }smegi;
+  }
+  $res;
+}
+
+
 =item C<libport_relicense($file, \$contents)>
 
 Update the license notice.  Add one if there was none.
@@ -705,16 +737,8 @@ sub libport_relicense ($\$)
     my $orig = $1;
     my $str = $2;
     my $done = 0;
-    $str =~ s/^[\t\ *]+//gm;
-    $str =~ s{^\s+}{};
-    $str =~ s{\s+$}{};
-    for my $re (@license_re)
-    {
-      verbose 5, "AGAINST: ", $re;
-      $str =~ s{$re}{$updated = 1; $done = 1;
-                         verbose 5, "MATCH!!!";
-                         libport_license(%+)}smegi;
-    }
+    my $done = relicense($str);
+    $updated ||= $done;
     $done ? $str : $orig;
   }esmg;
 
@@ -723,19 +747,10 @@ sub libport_relicense ($\$)
   {
     my $orig = $1;
     my $str = $orig;
-    my $done = 0;
     verbose 5, "C++:", $str;
-    $str =~ s{^[\t\ ]*//[\t\ ]*}{}gm;
-    $str =~ s{^\s+}{};
-    $str =~ s{\s+$}{};
-    verbose 5, "C++:", split (/\n/, $str);
-    for my $re (@license_re)
-    {
-      verbose 5, "AGAINST: ", $re;
-      $str =~ s{$re}{$updated = 1; $done = 1;
-                         verbose 5, "MATCH!!!";
-                         libport_license(%+)}smegi;
-    }
+    $str =~ s{^[\t\ ]*//}{}gm;
+    my $done = relicense($str);
+    $updated ||= $done;
     $done ? $str : $orig;
   }emg;
 
