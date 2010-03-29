@@ -46,11 +46,11 @@ struct DataCollector : libport::opts::DataVisitor
 };
 
 void
-check_arg_exp_and_file()
+check_exp_and_file()
 {
   OptionParser p;
-  p << libport::opts::arg_file
-    << libport::opts::arg_exp;
+  p << libport::opts::file
+    << libport::opts::exp;
 
   // Test presence
   {
@@ -85,6 +85,6 @@ init_test_suite()
 {
   libport::program_initialize("test_suite");
   test_suite* suite = BOOST_TEST_SUITE("libport::input-arguments");
-  suite->add(BOOST_TEST_CASE(check_arg_exp_and_file));
+  suite->add(BOOST_TEST_CASE(check_exp_and_file));
   return suite;
 }
