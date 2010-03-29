@@ -736,7 +736,6 @@ sub libport_relicense ($\$)
   {
     my $orig = $1;
     my $str = $2;
-    my $done = 0;
     my $done = relicense($str);
     $updated ||= $done;
     $done ? $str : $orig;
