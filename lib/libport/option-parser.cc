@@ -499,10 +499,16 @@ namespace libport
       version("display version information",             "version");
 
     OptionValue
+    // Client.
       host("address to connect to",    "host",    'H'),
       port("port to connect to",       "port",    'P'),
+      port_file("file containing the port to listen to",
+                "port-file", 0, "FILE"),
+    // Server.
       host_l("address to listen to",   "host",    'H'),
-      port_l("port to listen to, 0 for automatic selection", "port",  'P');
+      port_l("port to listen to, 0 for automatic selection", "port",  'P'),
+      port_file_l("write port number to the specified file",
+                  "port-file", 'w', "FILE");
 
     OptionValues
       files("load file",     "file",    'f');

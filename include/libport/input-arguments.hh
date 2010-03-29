@@ -84,8 +84,8 @@ namespace libport
   | Predefined options.  |
   `---------------------*/
 
-    extern LIBPORT_API OptionValues arg_exp;
-    extern LIBPORT_API OptionValues arg_file;
+    extern LIBPORT_API OptionValues exp;
+    extern LIBPORT_API OptionValues file;
     extern LIBPORT_API DataList input_arguments;
   }
 }

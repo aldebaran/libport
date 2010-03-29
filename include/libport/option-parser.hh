@@ -292,14 +292,45 @@ namespace libport
 
   namespace opts
   {
+    // -f, --file=FILE
+    // load file.
     extern LIBPORT_API OptionValues files;
-    extern LIBPORT_API OptionFlag   help;
-    extern LIBPORT_API OptionValue  host;
-    extern LIBPORT_API OptionValue  port;
-    extern LIBPORT_API OptionValue  host_l;
-    extern LIBPORT_API OptionValue  port_l;
-    extern LIBPORT_API OptionFlag   verbose;
-    extern LIBPORT_API OptionFlag   version;
+
+    // -h, --help
+    // display this message and exit successfully.
+    extern LIBPORT_API OptionFlag help;
+
+    // -H, --host=HOST
+    // address to connect to (client).
+    extern LIBPORT_API OptionValue host;
+
+    // -H, --host=HOST
+    // address to listen to (server).
+    extern LIBPORT_API OptionValue host_l;
+
+    // -P, --port=PORT
+    // port to connect to (client).
+    extern LIBPORT_API OptionValue port;
+
+    // --port-file=FILE
+    // file containing the port to listen to (client).
+    extern LIBPORT_API OptionValue port_file;
+
+    // -w, --port-file=FILE
+    // write port number to the specified file (server).
+    extern LIBPORT_API OptionValue port_file_l;
+
+    // -P, --port=PORT
+    // port to listen to, 0 for automatic selection (server).
+    extern LIBPORT_API OptionValue port_l;
+
+    // -v, --verbose
+    // be more verbose.
+    extern LIBPORT_API OptionFlag verbose;
+
+    // --version
+    // display version information.
+    extern LIBPORT_API OptionFlag version;
   }
 }
 

@@ -74,8 +74,8 @@ namespace libport
       , cb_file_(boost::bind(&DataList::add_file,
                              &input_arguments, _1))
     {
-      arg_exp.set_callback(&cb_exp_);
-      arg_file.set_callback(&cb_file_);
+      exp.set_callback(&cb_exp_);
+      file.set_callback(&cb_file_);
     }
 
     DataList::~DataList()
@@ -127,10 +127,10 @@ namespace libport
     | Predefined options.  |
     `---------------------*/
 
-    OptionValues arg_exp("send SCRIPT to the server",
-                         "expression", 'e', "SCRIPT");
-    OptionValues arg_file("send the contents of FILE to the server",
-                          "file", 'f', "FILE");
+    OptionValues exp("send SCRIPT to the server",
+                     "expression", 'e', "SCRIPT");
+    OptionValues file("send the contents of FILE to the server",
+                      "file", 'f', "FILE");
 
     DataList input_arguments;
   }
