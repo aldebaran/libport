@@ -18,6 +18,12 @@ General options:
 
 Display this message and exit.  More complete with B<--verbose>.
 
+=item B<-e>, B<--exact>
+
+Instead of trusting the copyright years in the file header, ask git
+for the commit years.  This is expensive, and should only be used in
+case of doubt.
+
 =item B<-f>, B<--foreign>
 
 This package is foreign, run only the steps that make sense for
@@ -131,6 +137,9 @@ use File::Basename;
 
 # The program to use to display diffs.
 my $diff;
+
+# Whether running git to get commit years.
+my $exact = 0;
 
 # Whether a foreign package.
 my $foreign = 0;
@@ -787,7 +796,7 @@ sub libport_copyright ($\$)
       (?=,\ Gostai)
    }
    {
-     libport_range(git_years($file))
+     libport_range(($exact ? git_years($file) : $1), $year)
    }gex;
 
   $$contents_ref = $_;
@@ -956,10 +965,11 @@ sub getopt ()
   $message = "Fix libport usage";
   BuildAux::Getopt::getopt
     (
-     "f|foreign"     => \$foreign,
-     "g|git"         => \$git,
-     "n|no-recurse"  => sub { $recurse = 0 },
-     "s|step=s"      => \@step,
+     "e|exact"      => \$exact,
+     "f|foreign"    => \$foreign,
+     "g|git"        => \$git,
+     "n|no-recurse" => sub { $recurse = 0 },
+     "s|step=s"     => \@step,
     );
 
   unless (@step)
