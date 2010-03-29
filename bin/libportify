@@ -885,7 +885,7 @@ sub dir_content($)
   {
     opendir (my $dir, $name) ||
       die "cannot opendir $name: $!";
-    my @res = grep { !/^\.\.?$/ } readdir($dir);
+    @res = grep { !/^\.\.?$/ } readdir($dir);
     closedir $dir ||
       die "cannot closedir $name: $!";
   }
