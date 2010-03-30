@@ -144,10 +144,26 @@ extern pid_t rfork_thread(int, void*, int(*)(void*), void*);
 #endif
 
 #if defined(__arm__)
-int getmcontext(mcontext_t*);
-void setmcontext(const mcontext_t*);
-#define	setcontext(u)	setmcontext(&(u)->uc_mcontext)
-#define	getcontext(u)	getmcontext(&(u)->uc_mcontext)
+
+/* In some dynamic library loading configurations, the libc implementation of
+ * swapcontext and makecontenxt takes precedence over ours. So rename those
+ * functions.
+ */
+#define swapcontext libcoro_swapcontext
+#define makecontext libcoro_makecontext
+
+
+int             swapcontext(ucontext_t*, const ucontext_t*);
+void            makecontext(ucontext_t*, void(*)(), int, ...);
+int             getmcontext(mcontext_t*);
+void            setmcontext(const mcontext_t*);
+
+#define        setcontext(u) \
+   setmcontext((mcontext_t*)( (char*)(&(u)->uc_mcontext) + 12))
+#define        getcontext(u)  \
+   getmcontext((mcontext_t*)((char*)(&(u)->uc_mcontext) + 12))
+//#define	setcontext(u)	setmcontext(&(u)->uc_mcontext)
+//#define	getcontext(u)	getmcontext(&(u)->uc_mcontext)
 #endif
 
 /*
