@@ -14,8 +14,15 @@
 # include <libport/local-data.hh>
 # include <libport/thread-data.hh>
 
+# ifndef __UCLIBC__
 typedef ::libport::LocalSingleton<Coro*, ::libport::localdata::Thread>
   LocalCoroPtr;
+# else
+ /* Under uclibc, we need pthread local data to be coroutine-specific for proper
+  * exception handling. So current_coro ptr cannot be a pthread local.
+  */
+typedef Coro* LocalCoroPtr;
+# endif
 
 // Hook stuff for uclibc-workaround
 SCHED_API extern LocalCoroPtr coroutine_current_;
