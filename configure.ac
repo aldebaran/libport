@@ -63,16 +63,6 @@ if test x$enable_ssl = xyes; then
   AC_SUBST([SSL_LIBS], ['-lssl -lcrypto'])
 fi
 
-# --enable-serialization.
-URBI_ARG_ENABLE([enable-serialization],
-                [Build with support for serialization], [yes|no], [yes])
-AM_CONDITIONAL([ENABLE_SERIALIZATION],
-               [test x$enable_serialization = xyes])
-if test x$enable_serialization = xyes; then
-  AC_DEFINE([ENABLE_SERIALIZATION], [1],
-            [Define to 1 if serialization is enabled.])
-fi
-
 # libport/backtrace.
 AC_CHECK_HEADERS([execinfo.h])
 
