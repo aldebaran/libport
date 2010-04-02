@@ -48,6 +48,8 @@ namespace sched
   inline void
   Tag::freeze()
   {
+    if (frozen_)
+      return;
     frozen_ = true;
     freeze_hook_();
   }
@@ -55,6 +57,8 @@ namespace sched
   inline void
   Tag::unfreeze()
   {
+    if (!frozen_)
+      return;
     frozen_ = false;
     unfreeze_hook_();
   }
@@ -62,6 +66,8 @@ namespace sched
   inline void
   Tag::block(Scheduler& sched, const boost::any& payload)
   {
+    // Blocking a blocked tag is possible, since blocking is not only changing
+    // state but also an action (stop).
     blocked_ = true;
     payload_ = payload;
     stop(sched, payload);
