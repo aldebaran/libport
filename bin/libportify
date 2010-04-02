@@ -930,7 +930,7 @@ sub transform_things (\&@)
   for my $thing (@thing)
   {
     my $basename = basename($thing);
-    if ($basename =~ m{(?:\.bak|\.mk|\.stamp|Makefile\.(am|in)|~)$}
+    if ($basename =~ m{(?:\.bak|\.mk|\.stamp|(?:config\.h|Makefile)\.(am|in)|~)$}
         || $thing =~ m{bison|libcoroutine|libltdl|tinyxml})
     {
       # Skip silently these files.
