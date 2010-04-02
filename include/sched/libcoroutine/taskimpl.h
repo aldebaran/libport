@@ -10,9 +10,9 @@ extern "C"
 
 /* Copyright (c) 2005-2006 Russ Cox, MIT; see COPYRIGHT */
 
-#if defined(__sun__)
+#if defined __sun__
 #	define __EXTENSIONS__ 1 /* SunOS */
-#	if defined(__SunOS5_6__) || defined(__SunOS5_7__) || defined(__SunOS5_8__)
+#	if defined __SunOS5_6__ || defined __SunOS5_7__ || defined __SunOS5_8__
 		/* NOT USING #define __MAKECONTEXT_V2_SOURCE 1 / * SunOS */
 #	else
 #		define __MAKECONTEXT_V2_SOURCE 1
@@ -21,43 +21,43 @@ extern "C"
 
 //#define USE_UCONTEXT 1
 
-#if defined(__OpenBSD__)
-#undef USE_UCONTEXT
-#define USE_UCONTEXT 0
+#if defined __OpenBSD__
+#	undef USE_UCONTEXT
+#	define USE_UCONTEXT 0
 #endif
 
-#if defined(__APPLE__)
-#include <AvailabilityMacros.h>
-#if defined(MAC_OS_X_VERSION_10_5)
-#undef USE_UCONTEXT
-#define USE_UCONTEXT 0
-#endif
+#if defined __APPLE__
+#	include <AvailabilityMacros.h>
+#	if defined MAC_OS_X_VERSION_10_5
+#		undef USE_UCONTEXT
+#		define USE_UCONTEXT 0
+#	endif
 #endif
 
 #include <errno.h>
 #include <stdlib.h>
-#ifndef _MSC_VER
-# include <unistd.h>
-#endif
 #include <string.h>
 #include <assert.h>
 #include <time.h>
-#ifndef _MSC_VER
-# include <sys/time.h>
+
+#ifndef _WIN32
+#	include <unistd.h>
+#	include <sys/time.h>
+#	include <sys/types.h>
+#	ifndef __MINGW32__
+#		include <sys/wait.h>
+#	endif
+#	include <sched.h>
+#	include <signal.h>
+#	if USE_UCONTEXT
+#		include <ucontext.h>
+#	endif
+#	ifndef __MINGW32__
+#		include <sys/utsname.h>
+#	endif
+#	include <inttypes.h>
 #endif
-#include <sys/types.h>
-#ifndef _MSC_VER
-# include <sys/wait.h>
-# include <sched.h>
-#endif
-#include <signal.h>
-#if USE_UCONTEXT
-#include <ucontext.h>
-#endif
-#ifndef _MSC_VER
-# include <sys/utsname.h>
-# include <inttypes.h>
-#endif
+
 //#include "task.h"
 
 // #define nil ((void*)0)
