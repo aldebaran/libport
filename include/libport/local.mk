@@ -70,6 +70,7 @@ libport_include_HEADERS +=				\
   include/libport/destructible.hxx			\
   include/libport/detect-win32.h			\
   include/libport/dirent.h				\
+  include/libport/dlfcn.h				\
   include/libport/errors.hh				\
   include/libport/escape.hh				\
   include/libport/escape.hxx				\

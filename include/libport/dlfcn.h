@@ -32,7 +32,6 @@ typedef HMODULE RTLD_HANDLE;
 static inline RTLD_HANDLE
 dlopen(const char* name, int)
 {
-  std::cerr << "LoadLibrary: " << name << std::endl;
   RTLD_HANDLE res = LoadLibrary(name);
   if (res)
   {
