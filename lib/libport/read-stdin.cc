@@ -17,6 +17,7 @@
 #include <libport/cstdio>
 #include <libport/cstring>
 #include <libport/detect-win32.h>
+#include <libport/debug.hh>
 #include <libport/exception.hh>
 #include <libport/format.hh>
 #include <libport/lexical-cast.hh>
@@ -32,12 +33,27 @@
 
 #define FAIL_(Format, ...)						\
   do {                                                                  \
-    LIBPORT_ECHO(libport::format(Format, ## __VA_ARGS__));              \
+    GD_FERROR(Format, ## __VA_ARGS__);                                  \
     throw libport::Exception(libport::format(Format, ## __VA_ARGS__));  \
   } while (false)
 
-#define FAIL(Format, ...)                                       \
+#define FAIL(Format, ...)                                               \
   FAIL_(Format ": %s", ## __VA_ARGS__, strerror(errno))
+
+
+#define INFO_(Format, ...)                                              \
+  do {                                                                  \
+    GD_FINFO_DEBUG(Format, ## __VA_ARGS__);                             \
+    throw libport::Exception(libport::format(Format, ## __VA_ARGS__));  \
+  } while (false)
+
+#define INFO(Format, ...)                                               \
+  INFO_(Format ": %s", ## __VA_ARGS__, strerror(errno))
+
+
+
+GD_INIT();
+GD_ADD_CATEGORY(read_file);
 
 
 namespace libport
@@ -79,6 +95,7 @@ namespace libport
   static DWORD WINAPI
   readThread(void* d)
   {
+    GD_CATEGORY(read_file);
     ConsumerData& data = *reinterpret_cast<ConsumerData*>(d);
     try
     {
@@ -88,8 +105,11 @@ namespace libport
 	int r = read(data.fd, buf, sizeof buf);
 	if (r < 0)
 	  FAIL("read error on fd = %s", data.fd);
-	else if (r == 0) // EOF counts as an 'error'.
-	  FAIL_("read error on fd = %s: EOF", data.fd);
+	else if (r == 0) // EOF counts as an 'error' but less verbose.
+        {
+	  INFO("read error on fd = %s: EOF", data.fd);
+          break;
+        }
 	BlockLock bl(data.lock);
 	data.buffer.append(buf, r);
       }
@@ -135,6 +155,7 @@ namespace libport
   size_t
   read_fd(int fd, char* buf, size_t len)
   {
+    GD_CATEGORY(read_file);
     // Select.
     {
       fd_set fds;
@@ -146,10 +167,10 @@ namespace libport
 
       int r = select(fd + 1, &fds, 0, 0, &tv);
       if (r < 0)
-       if (errno != EINTR)
+        if (errno != EINTR)
           FAIL("select error on fd=%d", fd);
-       else
-         return 0;
+        else
+          return 0;
       else if (r == 0)
         return 0;
     }
@@ -162,10 +183,14 @@ namespace libport
           FAIL("read error on fd = %s", fd);
        else
          return 0;
-      else if (r == 0) // EOF counts as an 'error'.
-        FAIL_("read error on fd = %s: EOF", fd);
-      else
-	return r;
+      else if (r == 0) // EOF counts as an 'error' but less verbose.
+      {
+         if (fd != 0)
+           INFO_("End Of File on file descriptor %s", fd);
+         else
+           INFO_("stdin (%s) closed (EOF), interactive mode disabled.", fd);
+      }
+      return r;
     }
   }
 
