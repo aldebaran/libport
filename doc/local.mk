@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006, 2009 Gostai S.A.S.
+# Copyright (C) 2006, 2009, 2010 Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -39,7 +39,7 @@ include doc/document-aux/make/tex.mk
 EXTRA_DIST +=								   \
   $(addprefix doc/document-aux/,$(call ls_files_in_dir,$(share_dir)))
 
-TEXI2DVI_FLAGS += -I doc -~
+TEXI2DVIFLAGS += -I doc -~
 
 PDF = doc/libport.pdf
 EXTRA_DATA += $(PDF)
