@@ -641,34 +641,30 @@ sub libport_license_setup ()
   }
 }
 
-=item C<libport_license(%group)>
+=item C<libport_license($type, %group)>
 
 The proper license notice based on the C<%group>.
 
 =cut
 
-sub libport_license (%)
+sub libport_license ($%)
 {
-  my (%group) = @_;
+  my ($type, %group) = @_;
   # Clean up the years.
   $group{years} = libport_range($group{years});
   for my $key (sort keys %group)
-    {
-      verbose 6, "$key => {{$group{$key}}}";
-    }
+  {
+    verbose 6, "$key => {{$group{$key}}}";
+  }
 
-  my $res;
-  $res .= <<EOF;
-/*
- * Copyright (C) $group{years}, Gostai S.A.S.
- *
- * This software is provided \"as is\" without warranty of any kind,
- * either expressed or implied, including but not limited to the
- * implied warranties of fitness for a particular purpose.
- *
- * See the LICENSE file for more information.
- */
+  my $res = make_comment($type, <<EOF) . "\n";
+Copyright (C) $group{years}, Gostai S.A.S.
 
+This software is provided \"as is\" without warranty of any kind,
+either expressed or implied, including but not limited to the
+implied warranties of fitness for a particular purpose.
+
+See the LICENSE file for more information.
 EOF
 
   $res .= "/// \\file $group{file}\n"
@@ -683,7 +679,7 @@ EOF
   $res;
 }
 
-=item C<relicense(\$str)>
+=item C<relicense($type, \$str)>
 
 Update C<$$str> by applying all our license updaters on it.  C<$$str>
 is expected to be pure text, strip from comment markup.  Trailing and
@@ -693,9 +689,9 @@ Return 1 if there was an updated, 0 otherwise.
 
 =cut
 
-sub relicense(\$)
+sub relicense($\$)
 {
-  my ($str) = @_;
+  my ($type, $str) = @_;
 
   $$str =~ s/^[\t\ *]+//gm;
   $$str =~ s{^\s+}{};
@@ -708,7 +704,7 @@ sub relicense(\$)
     $$str =~ s{$re}
     {
       $res = 1;
-      libport_license(%+)
+      libport_license($type, %+)
     }smegi;
   }
   $res;
@@ -729,6 +725,11 @@ sub libport_relicense ($\$)
   return
     if $file =~ m{(?:flex-lexer\.hh|gui/lcdrange\.h)$};
 
+  # The comment type to use.
+  my $type = file_type($file);
+  $type = 'c'
+    if $type eq 'c++' || $type eq 'urbiscript';
+
   my $updated = 0;
 
   # Look for C-comments.
@@ -736,7 +737,7 @@ sub libport_relicense ($\$)
   {
     my $orig = $1;
     my $str = $2;
-    my $done = relicense($str);
+    my $done = relicense($type, $str);
     $updated ||= $done;
     $done ? $str : $orig;
   }esmg;
@@ -748,7 +749,7 @@ sub libport_relicense ($\$)
     my $str = $orig;
     verbose 5, "C++:", $str;
     $str =~ s{^[\t\ ]*//}{}gm;
-    my $done = relicense($str);
+    my $done = relicense($type, $str);
     $updated ||= $done;
     $done ? $str : $orig;
   }emg;
@@ -761,7 +762,7 @@ sub libport_relicense ($\$)
       (
        years => $year,
       );
-    $$contents_ref = libport_license(%group) . $$contents_ref;
+    $$contents_ref = libport_license($type, %group) . $$contents_ref;
   }
 }
 
@@ -959,7 +960,7 @@ sub transform_things (\&@)
     elsif (-f $thing
            # We libportify source files.  They have an extension,
            # except cstdio and so forth...
-           && $basename =~ m{ (?:\.(?:cc|h|hh|hxx|u)(?:\.in)?$)
+           && $basename =~ m{ (?:\.(?:cc|h|hh|hxx|tex|u)(?:\.in)?$)
                                | (?:^c\w+$)}x
            # but then configure matches that regexp.
            && $basename !~ m{configure}x)
