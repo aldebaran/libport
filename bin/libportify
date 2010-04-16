@@ -922,6 +922,28 @@ C<&transform> on file contents, and save them if changed.
 
 =cut
 
+my @ignore = qw(
+  .*\.bak
+  .*\.dsym
+  \.git
+  autom4te.cache
+  bison
+  config\.h(?:\.in)?
+  jpeg
+  libcoroutine
+  libltdl
+  Makefile(?:\.in)?
+  tinyxml
+  );
+my $ignore =
+  '\A'
+  . '(?:.*/)?'
+  . ('(?:'
+     . join ('|', @ignore)
+     . ')')
+  . '(?:/.*)?'
+  . '\z';
+
 sub transform_things (\&@);
 sub transform_things (\&@)
 {
@@ -930,8 +952,7 @@ sub transform_things (\&@)
   for my $thing (@thing)
   {
     my $basename = basename($thing);
-    if ($basename =~ m{(?:\.bak|\.mk|\.stamp|(?:config\.h|Makefile)\.(am|in)|~)$}
-        || $thing =~ m{bison|libcoroutine|libltdl|tinyxml})
+    if ($thing =~ m{$ignore}o)
     {
       # Skip silently these files.
     }
@@ -945,16 +966,7 @@ sub transform_things (\&@)
     {
       transform_file &$transform_ref, $thing;
     }
-    elsif (-d $thing
-           && $recurse
-           && $thing !~ m{(?:libltdl
-                              |libcoroutine
-                              |\.git
-                              |\.dsym
-                              |bison
-                              |tinyxml
-                              |_build
-                              |jpeg)$}x)
+    elsif (-d $thing && $recurse)
     {
       transform_things (&$transform_ref, dir_content($thing));
     }
