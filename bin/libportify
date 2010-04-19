@@ -732,27 +732,41 @@ sub libport_relicense ($\$)
 
   my $updated = 0;
 
-  # Look for C-comments.
-  $$contents_ref =~ s{(/\*(.*?)\*/\s*)}
+  if ($type eq 'c')
   {
-    my $orig = $1;
-    my $str = $2;
-    my $done = relicense($type, $str);
-    $updated ||= $done;
-    $done ? $str : $orig;
-  }esmg;
+    # Look for C-comments.
+    $$contents_ref =~ s{(/\*(.*?)\*/\s*)}
+    {
+      my $orig = $1;
+      my $str = $2;
+      my $done = relicense($type, $str);
+      $updated ||= $done;
+      $done ? $str : $orig;
+    }esmg;
 
-  # Look for C++ comments.
-  $$contents_ref =~ s{((?:^\s*//.*\n)+)}
+    # Look for C++ comments.
+    $$contents_ref =~ s{((?:^\s*//.*\n)+)}
+    {
+      my $orig = $1;
+      my $str = $orig;
+      $str =~ s{^[\t\ ]*//}{}gm;
+      my $done = relicense($type, $str);
+      $updated ||= $done;
+      $done ? $str : $orig;
+    }emg;
+  }
+  elsif ($type eq 'tex')
   {
-    my $orig = $1;
-    my $str = $orig;
-    verbose 5, "C++:", $str;
-    $str =~ s{^[\t\ ]*//}{}gm;
-    my $done = relicense($type, $str);
-    $updated ||= $done;
-    $done ? $str : $orig;
-  }emg;
+    $$contents_ref =~ s{((?:^\s*%%.*\n+)+)}
+    {
+      my $orig = $1;
+      my $str = $orig;
+      $str =~ s{^[\t\ ]*%%}{}gm;
+      my $done = relicense($type, $str);
+      $updated ||= $done;
+      $done ? $str : $orig;
+    }emg;
+  }
 
   # If the license was not seen (the right license model is also in
   # the set of recognized licenses), then add it.
