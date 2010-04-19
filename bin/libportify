@@ -940,6 +940,9 @@ C<&transform> on file contents, and save them if changed.
 my @ignore = qw(
   .*\.bak
   .*\.dsym
+  .*\.jpg
+  .*\.pdf
+  .*\.png
   \.git
   autom4te.cache
   bison
