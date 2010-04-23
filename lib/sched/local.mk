@@ -1,3 +1,11 @@
+## Copyright (C) 2009-2010, Gostai S.A.S.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+
 lib_LTLIBRARIES += lib/sched/libsched@LIBSFX@.la
 lib_sched_libsched@LIBSFX@_la_LDFLAGS = -avoid-version -no-undefined
 lib_sched_libsched@LIBSFX@_la_LIBADD = $(LIBADD) $(LIBPORT_LIBS)
