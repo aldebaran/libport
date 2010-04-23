@@ -726,9 +726,12 @@ sub libport_relicense ($\$)
     if $file =~ m{(?:flex-lexer\.hh|gui/lcdrange\.h)$};
 
   # The comment type to use.
-  my $type = file_type($file);
-  $type = 'c'
-    if $type eq 'c++' || $type eq 'urbiscript';
+  my $type = file_comment_type($file);
+  if (! defined $type)
+  {
+    verbose 1, "don't know how to issue comments for $file";
+    return;
+  }
 
   my $updated = 0;
 
@@ -745,7 +748,7 @@ sub libport_relicense ($\$)
     }esmg;
 
     # Look for C++ comments.
-    $$contents_ref =~ s{((?:^\s*//.*\n)+)}
+    $$contents_ref =~ s{((?:^[\t\ ]*//.*\n)+\n*)}
     {
       my $orig = $1;
       my $str = $orig;
@@ -755,13 +758,25 @@ sub libport_relicense ($\$)
       $done ? $str : $orig;
     }emg;
   }
-  elsif ($type eq 'tex')
+  elsif ($type eq 'sh')
   {
-    $$contents_ref =~ s{((?:^\s*%%.*\n+)+)}
+    $$contents_ref =~ s{((?:^[\t\ ]*#+.*\n)+\n*)}
     {
       my $orig = $1;
       my $str = $orig;
-      $str =~ s{^[\t\ ]*%%}{}gm;
+      $str =~ s{^[\t\ ]*#+}{}gm;
+      my $done = relicense($type, $str);
+      $updated ||= $done;
+      $done ? $str : $orig;
+    }emg;
+  }
+  elsif ($type eq 'tex')
+  {
+    $$contents_ref =~ s{((?:^[\t\ ]*%.*\n+)+\n*)}
+    {
+      my $orig = $1;
+      my $str = $orig;
+      $str =~ s{^[\t\ ]*%+}{}gm;
       my $done = relicense($type, $str);
       $updated ||= $done;
       $done ? $str : $orig;
@@ -793,7 +808,7 @@ sub git_years($)
   # answer properly.
   my $base = basename($file);
   my $dir = dirname($file);
-  my $res = qx{cd $dir && git log -M -C --pretty=format:%ci $base};
+  my $res = qx{cd $dir && git log --follow -M -C --pretty=format:%ci $base};
   # $res is:
   # 2010-03-22 15:08:27 +0100
   # 2010-03-22 14:38:07 +0100
@@ -947,6 +962,7 @@ my @ignore = qw(
   autom4te.cache
   bison
   config\.h(?:\.in)?
+  configure
   jpeg
   libcoroutine
   libltdl
@@ -977,10 +993,9 @@ sub transform_things (\&@)
     elsif (-f $thing
            # We libportify source files.  They have an extension,
            # except cstdio and so forth...
-           && $basename =~ m{ (?:\.(?:cc|h|hh|hxx|tex|u)(?:\.in)?$)
-                               | (?:^c\w+$)}x
-           # but then configure matches that regexp.
-           && $basename !~ m{configure}x)
+           #&& $basename =~ m{ (?:\.(?:cc|h|hh|hxx|tex|u)(?:\.in)?$)
+           #                    | (?:^c\w+$)}x
+      )
     {
       transform_file &$transform_ref, $thing;
     }
