@@ -1,5 +1,6 @@
-TESTS += $(LIBPORTIFY_TESTS)
 LIBPORTIFY_TESTS = $(call ls_files,tests/bin/libportify/*.lpc)
+TESTS += $(LIBPORTIFY_TESTS)
+EXTRA_DIST += $(LIBPORTIFY_TESTS)
 
 # libportify-check
 LPC = tests/bin/libportify-check
