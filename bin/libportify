@@ -673,7 +673,7 @@ EOF
   $res .= "/// \\brief $group{brief}\n"
     if defined $group{brief};
 
-  $res .= "// This file is part of $group{project}.\n"
+  $res .= "// This file is part of $group{project}.\n\n"
     if defined $group{project};
 
   $res;
