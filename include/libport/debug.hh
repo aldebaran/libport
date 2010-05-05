@@ -593,6 +593,9 @@ namespace libport
 #  define GD_ENABLE(Name)
 #  define GD_ENABLE_LOCATIONS()
 #  define GD_ENABLE_TIMESTAMPS()
+#  define GD_SERROR(Msg)
+#  define GD_SINFO(Msg)
+#  define GD_SWARN(Msg)
 
 # endif
 
