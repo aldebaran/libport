@@ -14,11 +14,15 @@
 # include <libport/detect-win32.h>
 
 # ifdef WIN32
+#if !defined STATIC_BUILD
 #  ifdef BUILDING_LIBPORT
 #   define LIBPORT_API __declspec(dllexport)
 #  else
 #   define LIBPORT_API __declspec(dllimport)
 #  endif
+#else
+#define LIBPORT_API
+#endif
 # else
 #  define LIBPORT_API __attribute__((visibility("default")))
 # endif

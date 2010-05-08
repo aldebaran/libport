@@ -14,11 +14,15 @@
 # include <libport/detect-win32.h>
 
 # ifdef WIN32
+# ifndef STATIC_BUILD
 #  ifdef BUILDING_LIBSCHED
 #   define SCHED_API __declspec(dllexport)
 #  else
 #   define SCHED_API __declspec(dllimport)
 #  endif
+#else
+#define SCHED_API
+#endif
 # else
 #  define SCHED_API __attribute__((visibility("default")))
 # endif
