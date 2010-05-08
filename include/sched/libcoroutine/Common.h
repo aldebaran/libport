@@ -40,7 +40,9 @@ typedef long long int64_t;
 
 #if defined(WIN32) || defined(__WINS__) || defined(__MINGW32__) || defined(_MSC_VER)
 #define inline __inline
-#define snprintf _snprintf
+#if defined _MSC_VER
+# define snprintf _snprintf
+#endif
 #define usleep(x) Sleep(((x)+999)/1000)
 
 #define HAS_FIBERS 1
