@@ -31,6 +31,7 @@
 #  define ATTRIBUTE_NOINLINE __declspec(noinline)
 #  define ATTRIBUTE_NORETURN __declspec(noreturn)
 #  define ATTRIBUTE_NOTHROW  __declspec(nothrow)
+#  define ATTRIBUTE_STDCALL  __stdcall
 #  define ATTRIBUTE_UNUSED_RESULT /* FILLME */
 
 # endif
@@ -46,6 +47,7 @@
 #    define ATTRIBUTE_NOINLINE __attribute__((__noinline__))
 #    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
 #    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
+#    define ATTRIBUTE_STDCALL __attribute__((__stdcall__))
 #    define ATTRIBUTE_UNUSED_RESULT __attribute__((warn_unused_result))
 #  endif
 # endif
