@@ -23,7 +23,9 @@ ACLOCAL_AMFLAGS = -I build-aux
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status $@
 
-EXTRA_DIST += bootstrap
+EXTRA_DIST += 					\
+  bootstrap					\
+  LICENSE
 
 include bin/local.mk
 include doc/local.mk

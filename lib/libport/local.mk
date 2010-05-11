@@ -87,9 +87,8 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
 #   $(libport_srcdir)/uffloat.cc		\
 #   $(libport_srcdir)/ull-fixed-point.cc
 
-# Create the file git-config.hh with accurate revision information.
-#
-# We depend on .version to avoid frequent regeneration of this file.
+# Create revision.hh with accurate revision information.  Depend on
+# .version to avoid frequent regeneration of this file.
 REVISION_FILE = lib/libport/revision.hh
 REVISION_PREFIX = LIBPORT_PACKAGE_
 include $(top_srcdir)/build-aux/revision.mk
