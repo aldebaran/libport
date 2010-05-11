@@ -657,15 +657,7 @@ sub libport_license ($%)
     verbose 6, "$key => {{$group{$key}}}";
   }
 
-  my $res = make_comment($type, <<EOF) . "\n";
-Copyright (C) $group{years}, Gostai S.A.S.
-
-This software is provided \"as is\" without warranty of any kind,
-either expressed or implied, including but not limited to the
-implied warranties of fitness for a particular purpose.
-
-See the LICENSE file for more information.
-EOF
+  my $res = license($type, $group{years}) . "\n";
 
   $res .= "/// \\file $group{file}\n"
     if defined $group{file};
