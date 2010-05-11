@@ -135,9 +135,6 @@ use BuildAux::Verbose;
 use BuildAux::XFile;
 use File::Basename;
 
-# The program to use to display diffs.
-my $diff;
-
 # Whether running git to get commit years.
 my $exact = 0;
 
@@ -887,26 +884,8 @@ differences.  Preserve permissions.
 sub transform_file (\&$)
 {
   my ($transform_ref, $file) = @_;
-
   my $contents = contents ($file);
-  my $updated = $transform_ref->($file, $contents);
-  if ($contents ne $updated)
-  {
-    my $mode = (stat($file))[2] & 0777;
-    my $bak = "$file.bak";
-    rename ($file, $bak)
-      or die "$0: cannot rename $file as $bak: $!\n";
-    my $out = new BuildAux::XFile(">$file");
-    print $out $updated;
-    $out->close;
-    chmod ($mode, $file)
-      or die "$me: cannot chmod $file: $!\n";
-    system("$diff -u $bak $file");
-  }
-  else
-  {
-    verbose 2, "no changes: $file";
-  }
+  file_update($file, $transform_ref->($file, $contents));
 }
 
 =item C<dir_content($name)>
@@ -1040,9 +1019,6 @@ sub getopt ()
 ## ------ ##
 
 getopt;
-$diff = (`colordiff --version 2>/dev/null` ne ''
-         ? 'colordiff'
-         : 'diff');
 transform_things &libportify, @ARGV;
 
 
