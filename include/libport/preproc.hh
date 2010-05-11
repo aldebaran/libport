@@ -293,4 +293,9 @@ for i in range(0, 10):
 
 #define LIBPORT_LIST_DECORATE
 
+/// Call Macro(useless, arg, elem) for each extra argument.
+#define LIBPORT_VAARGS_APPLY(Macro, arg, ...) \
+    BOOST_PP_SEQ_FOR_EACH(Macro, arg,         \
+    LIBPORT_LIST(__VA_ARGS__,))
+
 #endif

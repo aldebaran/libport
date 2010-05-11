@@ -102,6 +102,26 @@ arg()
   BOOST_CHECK_EQUAL(42, LIBPORT_LIST_ARG(arg_f, LIBPORT_LIST(10, 11, 2,)));
 }
 
+static void
+apply_vaargs()
+{
+  // Test the backend
+  #define CAT(r, data, elem) data elem
+  const char* val = LIBPORT_VAARGS_APPLY(CAT, "a", "a", "b", "c", "d");
+  // Evaling VAARGS_APPLY inside the CHECK_EQUAL results in "a" "b" "c" "d" != "abdc". Don't ask...
+  BOOST_CHECK_EQUAL(val, "aaabacad");
+
+  // Test it the way it will be used
+  #define USERMACRO_HELPER(r, data, elem) s= s*10 + data + elem;
+  #define USERMACRO(a, ...) LIBPORT_VAARGS_APPLY(USERMACRO_HELPER, a, __VA_ARGS__)
+  int s = 0;
+  USERMACRO(2, 1, 2, 3, 4);
+  BOOST_CHECK_EQUAL(s, 3456);
+  #undef USERMACRO
+  #undef USERMACRO_HELPER
+  #undef CAT
+}
+
 test_suite*
 init_test_suite()
 {
@@ -113,5 +133,6 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(flatten));
   suite->add(BOOST_TEST_CASE(apply));
   suite->add(BOOST_TEST_CASE(arg));
+  suite->add(BOOST_TEST_CASE(apply_vaargs));
   return suite;
 }
