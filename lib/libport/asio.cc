@@ -503,6 +503,7 @@ namespace libport
       io.run_one();
     else
       io.run();
+    asc->cancel();
   }
 
   bool isPollThread()
