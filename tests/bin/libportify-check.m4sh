@@ -31,5 +31,5 @@ xrun "libportify" $PERL "$libportify" -v -v -v -v input.cc
 mv input.cc output.raw
 cp output.raw output.eff
 cp $in input.cc
-rst_expect ${in/.lpc} output
+rst_expect ${in%.lpc} output
 $exit
