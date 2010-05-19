@@ -514,7 +514,8 @@ namespace libport
 
   boost::system::error_code
   Socket::open_serial(const std::string& device,
-                      unsigned int rate)
+                      unsigned int rate,
+                      bool async_reader)
   {
     boost::system::error_code erc;
     typedef netdetail::SocketWrapper<boost::asio::serial_port>
@@ -528,7 +529,8 @@ namespace libport
       return erc;
     BaseSocket* sb = netdetail::SocketImpl<SerialPortWrapper>::create(&sp);
     setBase(sb);
-    sb->startReader();
+    if (async_reader)
+      sb->startReader();
     onConnect();
 
     return erc;

@@ -232,8 +232,17 @@ namespace libport
 
 # if 103600 <= BOOST_VERSION
 
+    /** Open a serial port.
+     * \param the device to use (ex: ttyUSB0,ttyS0 under linux,
+     *    COM1 under windows.
+     * \param rate bit-rate (9600, 19200, 38400, 57600, 115200...)
+     * \param async_reader start asynchronous reading task if true. Setting
+     *    this to false meanse your onRead() function will never be called,
+     *    you will have to use synchronous calls to read().
+     */
     boost::system::error_code
-    open_serial(const std::string& device, unsigned int rate);
+    open_serial(const std::string& device, unsigned int rate,
+                bool async_reader = true);
 
 # endif
 
