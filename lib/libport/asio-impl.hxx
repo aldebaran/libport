@@ -86,6 +86,8 @@ namespace libport
       std::string getRemoteHost() const;
       unsigned short getLocalPort() const;
       std::string getLocalHost() const;
+      // Bounce to read_dispatch
+      std::string read(size_t length);
       bool isConnected() const;
 
       template<typename Acceptor, typename BaseFactory>
@@ -104,7 +106,8 @@ namespace libport
       int stealFD();
 #endif
       native_handle_type getFD();
-
+      // Effective backend
+      std::string read_(size_t length);
     private:
       Stream* base_;
       void continueWrite(DestructionLock lock, boost::system::error_code erc,
@@ -141,6 +144,7 @@ namespace libport
 #define ACCEPTOR_FAIL                                                   \
     {throw std::runtime_error("Call not implemented for Acceptors");}
       void write(const void*, size_t) ACCEPTOR_FAIL
+      std::string read(size_t) ACCEPTOR_FAIL
       unsigned short getRemotePort() const ACCEPTOR_FAIL
       std::string getRemoteHost() const ACCEPTOR_FAIL
       void startReader() ACCEPTOR_FAIL
@@ -272,6 +276,62 @@ namespace libport
     SocketImpl<Stream>::isConnected() const
     {
       return base_->lowest_layer().is_open();
+    }
+
+    class transfer_exactly {
+    public:
+      transfer_exactly(size_t amount): amount_(amount) {}
+      size_t operator()(const boost::system::error_code& error,
+                        size_t transferred)
+      {
+        if (error)
+          return 0;
+        //std::cerr << "txf " << amount_ <<" " << transferred
+        //<< " => " << amount_ - transferred << std::endl;
+        aver(amount_>= transferred);
+        return amount_ - transferred;
+      }
+    private:
+      // Amount left to transfer.
+      size_t amount_;
+    };
+
+    template<typename Stream>
+    std::string
+    SocketImpl<Stream>::read_(size_t length)
+    {
+      std::string buffer;
+      boost::asio::read(*base_, readBuffer_,
+                        transfer_exactly(length));
+      std::istream is(&readBuffer_);
+      buffer.resize(length);
+      is.read(&buffer[0], length);
+      long len = is.gcount();
+      buffer.resize(len);
+      return buffer;
+    }
+
+    template<typename T>
+    std::string
+    read_dispatch(SocketImpl<T>* sock, size_t length)
+    {
+      return sock->read_(length);
+    }
+
+    template<>
+    inline std::string
+    read_dispatch<boost::asio::ip::udp::socket>(
+                                                SocketImpl<boost::asio::ip::udp::socket>*,
+                                            size_t)
+    {
+      throw std::runtime_error("Not implemented");
+    }
+
+    template<typename Stream>
+    std::string
+    SocketImpl<Stream>::read(size_t length)
+    {
+      return read_dispatch<Stream>(this, length);
     }
 
 #if ! defined WIN32

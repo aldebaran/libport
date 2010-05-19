@@ -108,6 +108,8 @@ namespace libport
     virtual unsigned short getLocalPort() const = 0;
     /// Get IP address of local endpoint
     virtual std::string getLocalHost() const = 0;
+    /// Synchronously read and return exactly 'length' bytes.
+    virtual std::string read(size_t length) = 0;
     // For internal use
     virtual void startReader() = 0;
 #if ! defined WIN32
@@ -198,6 +200,16 @@ namespace libport
 
     void syncWrite(const void* data, size_t length);
     void syncWrite(const std::string& s);
+
+    /// Synchronously read and return exactly 'length' bytes.
+    std::string read(size_t length)
+    {
+      if (base_)
+        return base_->read(length);
+      else
+        throw std::runtime_error("Socket not initialized");
+    }
+
     void close()
     {
       if (base_)
