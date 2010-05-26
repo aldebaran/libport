@@ -130,32 +130,6 @@ namespace std
 
 
   /*-------------------------.
-  | Container == Container.  |
-  `-------------------------*/
-
-namespace libport
-{
-#define APPLY_ON_CONTAINERS(Macro)              \
-  APPLY_ON_ASSOCIATIVE_CONTAINERS(Macro)        \
-  APPLY_ON_BACK_INSERTION_CONTAINERS(Macro)
-
-  // ::std::list already provides this.
-#define APPLY_ON_EQUAL_CONTAINERS(Macro)        \
-  Macro(::std::deque);                          \
-  Macro(::std::vector);                         \
-  Macro(::std::set);
-
-  // Compare two containers.
-#define LIBPORT_CONTAINERS_DECLARE_EQUAL(Container)                     \
-  template <typename E, typename A>                                     \
-  bool operator==(const Container<E, A>& lhs,                           \
-                  const Container<E, A>& rhs);
-
-  APPLY_ON_EQUAL_CONTAINERS(LIBPORT_CONTAINERS_DECLARE_EQUAL)
-#undef LIBPORT_CONTAINERS_DECLARE_EQUAL
-}
-
-  /*-------------------------.
   | Container << Container.  |
   `-------------------------*/
 

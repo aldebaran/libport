@@ -140,30 +140,6 @@ namespace libport
     c.erase(std::remove_if(begin(c), end_c, f), end_c);
   }
 
-
-  /*-------------------------.
-  | Container == Container.  |
-  `-------------------------*/
-
-# define LIBPORT_CONTAINERS_DEFINE_EQUAL(Container)     \
-  template <typename E, typename A>                     \
-  bool operator==(const Container<E, A>& lhs,           \
-                  const Container<E, A>& rhs)           \
-  {                                                     \
-    typedef Container<E, A> C;                          \
-    typename C::const_iterator l = lhs.begin();         \
-    typename C::const_iterator r = rhs.begin();         \
-                                                        \
-    for (; l != lhs.end() && r != rhs.end(); ++l, ++r)  \
-      if (*l != *r)                                     \
-        return false;                                   \
-                                                        \
-    return l == lhs.end() && r == rhs.end();            \
-  }
-
-  APPLY_ON_EQUAL_CONTAINERS(LIBPORT_CONTAINERS_DEFINE_EQUAL)
-# undef LIBPORT_CONTAINERS_DEFINE_EQUAL
-
 } // namespace libport
 
 namespace std
