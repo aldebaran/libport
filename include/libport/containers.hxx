@@ -239,6 +239,19 @@ namespace std
 
 #undef INSERT
 
+  template <typename T, typename Alloc>
+  inline
+  std::ostream&
+  operator<< (std::ostream& out, const std::vector<T, Alloc>& c)
+  {
+    out << "[";
+    typedef typename std::vector<T, Alloc>::value_type value_type;
+    foreach (const value_type& v, c)
+      out << v << ", ";
+    out << "]";
+    return out;
+  }
+
 } // namespace std
 
 #endif // !LIBPORT_CONTAINERS_HXX
