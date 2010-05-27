@@ -108,9 +108,11 @@ namespace libport
     virtual unsigned short getLocalPort() const = 0;
     /// Get IP address of local endpoint
     virtual std::string getLocalHost() const = 0;
+    /// Write synchronously the whole buffer.
+    virtual void syncWrite(const void* data, size_t length) = 0;
     /// Synchronously read and return exactly 'length' bytes.
     virtual std::string read(size_t length) = 0;
-    // For internal use
+    // For internal use: start asynchronous reading task
     virtual void startReader() = 0;
 #if ! defined WIN32
     virtual native_handle_type stealFD() = 0;

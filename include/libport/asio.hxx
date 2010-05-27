@@ -89,25 +89,9 @@ namespace libport
   inline void
   Socket::syncWrite(const void* data, size_t length)
   {
-    const char* cdata = static_cast<const char*>(data);
-#ifdef WIN32
-    DWORD written;
-    for (size_t pos = 0; pos < length; pos += written)
-    {
-      if (!WriteFile((HANDLE)getFD(), cdata+pos, length-pos,
-                     &written, NULL))
-        throw std::runtime_error(std::string("WriteFile: ")
-                                 + libport::strerror(0));
-    }
-#else
-    ssize_t written;
-    for (size_t pos = 0; pos < length; pos += written)
-    {
-      written = ::write(getFD(), cdata+pos, length-pos);
-      if (written == -1)
-        throw std::runtime_error(std::string("write: ")
-                                 + libport::strerror(errno));
-    }
-#endif
+    if (base_)
+      base_->syncWrite(data, length);
+    else
+      throw std::runtime_error("Socket is not bound");
   }
 }

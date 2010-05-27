@@ -86,6 +86,7 @@ namespace libport
       std::string getRemoteHost() const;
       unsigned short getLocalPort() const;
       std::string getLocalHost() const;
+      void syncWrite(const void* data, size_t length);
       // Bounce to read_dispatch
       std::string read(size_t length);
       bool isConnected() const;
@@ -148,6 +149,7 @@ namespace libport
       unsigned short getRemotePort() const ACCEPTOR_FAIL
       std::string getRemoteHost() const ACCEPTOR_FAIL
       void startReader() ACCEPTOR_FAIL
+      void syncWrite(const void*, size_t) ACCEPTOR_FAIL
 #undef ACCEPTOR_FAIL
       unsigned short getLocalPort() const;
       std::string getLocalHost() const;
@@ -248,6 +250,27 @@ namespace libport
     SocketImpl<Stream>::getRemotePort() const
     {
       return base_->lowest_layer().remote_endpoint().port();
+    }
+
+
+    template<typename Stream>
+    void syncWriteDispatch(Stream* s, const void* data, size_t length)
+    {
+      boost::asio::write(*s, boost::asio::buffer(data, length));
+    }
+
+    template<> inline
+    void syncWriteDispatch<boost::asio::ip::udp::socket>
+    (boost::asio::ip::udp::socket*, const void*, size_t)
+    {
+      throw std::runtime_error("not implemented");
+    }
+
+    template<typename Stream>
+    void
+    SocketImpl<Stream>::syncWrite(const void* data, size_t length)
+    {
+      syncWriteDispatch(base_, data, length);
     }
 
     template<typename Stream>
