@@ -526,6 +526,14 @@ namespace libport
     if (erc)
       return erc;
     sp.set_option(boost::asio::serial_port::baud_rate(rate), erc);
+    // 8N1 mode, might not be the default so force it.
+    sp.set_option(boost::asio::serial_port::character_size(8), erc);
+    sp.set_option(boost::asio::serial_port::parity(
+      boost::asio::serial_port::parity::none), erc);
+    sp.set_option(boost::asio::serial_port::stop_bits(
+      boost::asio::serial_port::stop_bits::one), erc);
+    sp.set_option(boost::asio::serial_port::flow_control(
+      boost::asio::serial_port::flow_control::none), erc);
     if (erc)
       return erc;
     BaseSocket* sb = netdetail::SocketImpl<SerialPortWrapper>::create(&sp);
