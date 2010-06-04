@@ -16,12 +16,14 @@
 #ifndef SCHED_JOB_HXX
 # define SCHED_JOB_HXX
 
-# include <libport/cassert>
-
 # include <libport/bind.hh>
+# include <libport/cassert>
+# include <libport/debug.hh>
 
 # include <sched/scheduler.hh>
 # include <sched/coroutine.hh>
+
+GD_ADD_CATEGORY(Scheduler);
 
 namespace sched
 {
@@ -186,6 +188,8 @@ namespace sched
 	coroutine_stack_space_almost_gone(coro_))
     {
       libport::Finally finally(libport::scoped_set(check_stack_space_, false));
+      GD_CATEGORY(Scheduler);
+      GD_ERROR("Stack space exhausted");
       scheduling_error("stack space exhausted");
     }
   }
