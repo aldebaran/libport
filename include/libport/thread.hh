@@ -30,20 +30,35 @@ namespace libport
   pthread_t
   startThread(T* obj, void (T::*func)(void));
 
+  /// Simple interface to run a function in a separate thread.
   template<typename Res>
   class ThreadedCall
   {
   public:
     ThreadedCall();
+
+    /// Construct, and call start() on \a f.
     ThreadedCall(boost::function0<Res> f);
+
+    /// Fire a new thread to compute \a f.
     void start(boost::function0<Res> f);
+
+    /// Evaluate \a f (in the current thread), and store the result.
     void wrap(boost::function0<Res> f);
 
+    /// Clear result and thread handle.
     void clear();
-    /// Return true if a job finished.
+
+    /// Whether the job is finished.
     bool finished() const;
+
+    /// Whether a thread is computing.
     bool running() const;
+
+    /// Wait until the thread is done.
     void wait();
+
+    /// Return the result of the last computed function.
     Res get();
 
   private:

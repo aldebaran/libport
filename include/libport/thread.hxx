@@ -76,6 +76,7 @@ namespace libport
   void
   ThreadedCall<Res>::start(boost::function0<Res> f)
   {
+    aver(!handle_);
     res_ = boost::none;
     handle_ = startThread(boost::bind(&ThreadedCall<Res>::wrap, this, f));
   }
