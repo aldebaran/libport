@@ -31,6 +31,7 @@ namespace libport
   class LIBPORT_API file_library
   {
   public:
+    typedef file_library self_type;
 
     typedef std::list<path> path_list_type;
 
@@ -46,6 +47,7 @@ namespace libport
     file_library(const path& p);
     /// Init the library with a string to split at \a separator.
     file_library(const std::string& library, const char* separator);
+
     /// Handle a list of search-paths.
     /// \param r  the collection of search-paths.
     ///           each occurrence of an additional colon marks the
@@ -58,9 +60,9 @@ namespace libport
 
     /// \name Managing inclusion paths.
     /// \{
-    void push_back(const path& p);
+    self_type& push_back(const path& p);
     /// Split \a library on \a separator and put at the end of path list.
-    void push_back(const std::string& library, const char* separator);
+    self_type& push_back(const std::string& library, const char* separator);
 
     /// Handle a list of search-paths.
     /// \param r  the collection of search-paths.
@@ -69,16 +71,17 @@ namespace libport
     ///           If there is none, the remaining components are ignored.
     /// \param sep  the separator to split search-paths (typically colon).
     template <class ForwardRange>
-      void push_back(const ForwardRange& r, const char* sep);
+      self_type& push_back(const ForwardRange& r, const char* sep);
 
-    void append(const path& p);
+    self_type& append(const path& p);
 
-    void push_front(const path& p);
+    self_type& push_front(const path& p);
+
     /// Split \a library on \a separator and put at the beginning of path list.
     /// \warning "a:b:c" will end with "c" first, then "b", then "a",
     /// then what was already here.
-    void push_front(const std::string& library, const char* separator);
-    void prepend(const path& p);
+    self_type& push_front(const std::string& library, const char* separator);
+    self_type& prepend(const path& p);
     /// \}
 
     /// \name current directory.

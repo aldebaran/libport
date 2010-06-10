@@ -94,32 +94,36 @@ namespace libport
     return res;
   }
 
-  void
+  file_library&
   file_library::push_back(const path& p)
   {
     search_path_.push_back(ensure_absolute_path(p));
+    return *this;
   }
 
-  void
+  file_library&
   file_library::push_back(const std::string& lib, const char* sep)
   {
     foreach (const std::string& s, split(lib, sep))
       if (!s.empty())
         push_back(s);
+    return *this;
   }
 
-  void
+  file_library&
   file_library::push_front(const path& p)
   {
     search_path_.push_front(ensure_absolute_path(p));
+    return *this;
   }
 
-  void
+  file_library&
   file_library::push_front(const std::string& lib, const char* sep)
   {
     foreach (const std::string& s, split(lib, sep))
       if (!s.empty())
         push_front(s);
+    return *this;
   }
 
   void

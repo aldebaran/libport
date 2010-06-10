@@ -30,7 +30,7 @@ namespace libport
   }
 
   template <class ForwardRange>
-  void
+  file_library&
   file_library::push_back(const ForwardRange& r, const char* sep)
   {
     bool inserted = false;
@@ -54,18 +54,19 @@ namespace libport
           }
         }
     }
+    return *this;
   }
 
-  inline void
+  inline file_library&
   file_library::append(const path& p)
   {
-    push_back(p);
+    return push_back(p);
   }
 
-  inline void
+  inline file_library&
   file_library::prepend(const path& p)
   {
-    push_front(p);
+    return push_front(p);
   }
 
   inline const file_library::path_list_type&
