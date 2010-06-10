@@ -201,6 +201,28 @@ vm_open (lt_user_data LT__UNUSED loader_data, const char *filename,
     SetErrorMode(errormode);
   }
 
+  /* To provide more accurate error messages, try to see if
+     LoadLibrary failed because the file does not exist.  Beside,
+     setting the error to FILE_NOT_FOUND is required by tryall_dlopen:
+     as long as loading modules fails because the file does not exist,
+     it proceeds to the next attempts; but the first failure which is
+     not related to FILE_NOT_FOUND ends this search, so that we do not
+     hide failure of modules that we cannot load because they are
+     broken beneath "file not found" error messages.
+
+     We check this *after* having tried dlopen to give a chance to the
+     native system walk its dlopen module path.  */
+  if (!module)
+    {
+      FILE *file = fopen (wpath, LT_READTEXT_MODE);
+      if (!file)
+        {
+          LT__SETERROR (FILE_NOT_FOUND);
+          return 0;
+        }
+      fclose (file);
+    }
+
   /* libltdl expects this function to fail if it is unable
      to physically load the library.  Sadly, LoadLibrary
      will search the loaded libraries for a match and return
