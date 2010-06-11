@@ -145,6 +145,18 @@ namespace libport
   {
     GD_CATEGORY(XLTDL);
     GD_FINFO_TRACE("loading %s", s);
+
+    // Clear the error flags from previous runs.
+    //
+    // FIXME: This should be done in libltdl itself.  The problem
+    // probably arose from our patches to preserve the first error
+    // when traversing the user path: now, even on success, the error
+    // flag remains set, and the following run is hindered by it.  We
+    // need to complete this patch with a means to ensure that the
+    // error flags is restored to its previous state (typically
+    // no-error) when eventually we managed to load the file.
+    lt_dlerror();
+
     lt_dlhandle res = 0;
     // We cannot simply use search_file in file_library, because we
     // don't know the extension of the file we are looking for (*.la,
