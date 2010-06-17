@@ -11,6 +11,7 @@
 namespace libport
 {
   template<class T, int R>
+  inline
   ReservedVector<T, R>::ReservedVector()
   {
     this->reserve(R);
@@ -18,17 +19,20 @@ namespace libport
 
   template<class T, int R>
   template<typename I1, typename I2>
+  inline
   ReservedVector<T, R>::ReservedVector(I1 b, I2 e)
     : std::vector<T>(b, e)
   {}
 
   template<class T, int R>
   template<int R2>
+  inline
   ReservedVector<T, R>::ReservedVector(const ReservedVector<T, R2>& b)
     : std::vector<T>(b)
   {}
 
   template<typename T>
+  inline
   void pop_front(T& v)
   {
     T v2(++v.begin(), v.end());
@@ -36,6 +40,7 @@ namespace libport
   }
 
   template<typename T, typename U>
+  inline
   void push_front(T& v, const U& e)
   {
     T v2;
