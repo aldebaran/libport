@@ -89,10 +89,15 @@ _libport_die_hard()
 
 /// \def __passert(Assertion, Message)
 /// Same as assert, but on failure, dump \a Message on std::cerr.
-# define __passert(Assertion, Message)			\
+# if defined NDEBUG
+#  define __passert(Assertion, Message)
+# else
+#  define __passert(Assertion, Message)			\
   ((void) ((Assertion)					\
 	   ? 0						\
 	   : pabort(Message)))
+# endif
+
 
 /*-------------------------------------------------------------------.
 | aver -- Same as "libport::assert", to work around the fact that it |
@@ -235,7 +240,17 @@ namespace libport                                                       \
   DEFINE_ASSERT_OP(lt, < )
   DEFINE_ASSERT_OP(ne, !=)
 
-# if LIBPORT_ASSERT_VERBOSE
+# if defined NDEBUG
+
+#  define assert_eq(A, B)
+#  define assert_ge(A, B)
+#  define assert_gt(A, B)
+#  define assert_le(A, B)
+#  define assert_lt(A, B)
+#  define assert_ne(A, B)
+
+# elif LIBPORT_ASSERT_VERBOSE
+
 #  define assert_eq(A, B) ::libport::assert_eq(A, B, #A, #B, __FILE__, __LINE__)
 #  define assert_ge(A, B) ::libport::assert_ge(A, B, #A, #B, __FILE__, __LINE__)
 #  define assert_gt(A, B) ::libport::assert_gt(A, B, #A, #B, __FILE__, __LINE__)
@@ -243,7 +258,7 @@ namespace libport                                                       \
 #  define assert_lt(A, B) ::libport::assert_lt(A, B, #A, #B, __FILE__, __LINE__)
 #  define assert_ne(A, B) ::libport::assert_ne(A, B, #A, #B, __FILE__, __LINE__)
 
-# else // !LIBPORT_ASSERT_VERBOSE
+# else // !defined NDEBUG && !LIBPORT_ASSERT_VERBOSE
 
 #  define assert_eq(A, B) aver(A == B)
 #  define assert_ge(A, B) aver(A >= B)
