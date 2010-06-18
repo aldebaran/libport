@@ -211,6 +211,7 @@ namespace libport
           }
         }
         // GCC bug prevents this: unreachable();
+        // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=44580
         abort();
       }
     };

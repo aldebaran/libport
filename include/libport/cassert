@@ -90,7 +90,8 @@ _libport_die_hard()
 /// \def __passert(Assertion, Message)
 /// Same as assert, but on failure, dump \a Message on std::cerr.
 # if defined NDEBUG
-#  define __passert(Assertion, Message)
+#  define __passert(Assertion, Message)         \
+  ((void) 0)
 # else
 #  define __passert(Assertion, Message)			\
   ((void) ((Assertion)					\

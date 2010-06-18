@@ -113,7 +113,7 @@ namespace libport
       filter(Debug::levels::dump);
     else
       // Don't use GD_ABORT here, we can be in the debugger constructor!
-      aver(!"invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP or [0-4])");
+      pabort("invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP or [0-4])");
   }
 
   Debug::levels::Level
