@@ -21,7 +21,6 @@
 
 #include <libport/compiler.hh>
 #include <libport/containers.hh>
-#include <libport/contract.hh>
 #include <libport/deref.hh>
 #include <libport/foreach.hh>
 

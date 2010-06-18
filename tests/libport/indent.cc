@@ -14,7 +14,6 @@
 
 #include <iostream>
 #include <sstream>
-#include <libport/contract.hh>
 #include <libport/indent.hh>
 
 #include <libport/unit-test.hh>

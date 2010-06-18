@@ -19,7 +19,6 @@
 # include <iostream>
 
 # include <libport/deref.hh>
-# include <libport/contract.hh>
 
 namespace libport
 {

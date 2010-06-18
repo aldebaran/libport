@@ -69,7 +69,6 @@ libport_include_HEADERS +=				\
   include/libport/condition.hxx				\
   include/libport/containers.hh				\
   include/libport/containers.hxx			\
-  include/libport/contract.hh				\
   include/libport/damerau-levenshtein-distance.hh	\
   include/libport/debug.hh				\
   include/libport/deref.hh				\

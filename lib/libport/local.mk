@@ -40,7 +40,6 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/buffer-stream.cc			\
   lib/libport/cli.cc				\
   lib/libport/compiler.cc			\
-  lib/libport/contract.cc			\
   lib/libport/csignal.cc			\
   lib/libport/cstdio.cc				\
   lib/libport/cstdlib.cc			\

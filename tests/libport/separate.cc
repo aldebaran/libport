@@ -16,7 +16,6 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
-#include <libport/contract.hh>
 #include <libport/separate.hh>
 #include <libport/pair.hh>
 

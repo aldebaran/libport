@@ -17,9 +17,9 @@
 # define LIBPORT_TIMER_HXX
 
 # include <libport/bind.hh>
+# include <libport/cassert>
 # include <boost/ref.hpp>
 
-# include <libport/contract.hh>
 # include <libport/foreach.hh>
 # include <libport/timer.hh>
 
@@ -30,7 +30,7 @@ namespace libport
   void
   timer::push(int i)
   {
-    precondition(intmap.find(i) != intmap.end());
+    aver(intmap.find(i) != intmap.end());
     push(intmap[i]);
   }
 
@@ -42,7 +42,7 @@ namespace libport
 # endif
     )
   {
-    precondition(tasksmap[task_name] == tasks.top());
+    assert_eq(tasksmap[task_name], tasks.top());
     pop();
   }
 

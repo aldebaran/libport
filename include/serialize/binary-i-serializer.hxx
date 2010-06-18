@@ -14,7 +14,6 @@
 # include <vector>
 
 # include <libport/arpa/inet.h>
-# include <libport/contract.hh>
 # include <libport/foreach.hh>
 # include <libport/hierarchy.hh>
 # include <libport/meta.hh>
@@ -201,7 +200,7 @@ namespace libport
           case cached:
           {
             unsigned id = Impl<unsigned>::get("id", input, ser);
-            aver(id < ser.ptr_map_.size());
+            assert_lt(id, ser.ptr_map_.size());
             return reinterpret_cast<T*>(ser.ptr_map_[id]);
           }
           case serialized:
@@ -211,7 +210,8 @@ namespace libport
               ::res(ser, input);
           }
         }
-        unreached();
+        // GCC bug prevents this: unreachable();
+        abort();
       }
     };
 

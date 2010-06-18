@@ -16,9 +16,46 @@
 using libport::test_suite;
 using namespace libport;
 
+static
+void
+unreachable_1()
+{
+  return;
+  unreachable();
+}
+
+template <typename T>
+static
+void
+unreachable_2(T)
+{
+  return;
+  // FIXME: GCC 4.4 makes a warning here  unreachable();
+}
+
+static
+const char*
+unreachable_3()
+{
+  enum count_type { one, two };
+  count_type c = one;
+  switch (c)
+  {
+  case one:
+    return "1";
+  case two:
+    return "2";
+  }
+  unreachable();
+}
+
 void
 check_assert_op()
 {
+  unreachable_1();
+  unreachable_2(2);
+  unreachable_3();
+
   // I'd like to check the error messages, but how?
   BOOST_CHECK_NO_THROW(assert_eq(0, 0));
   BOOST_CHECK_NO_THROW(assert_ge(2, -2));

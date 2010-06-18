@@ -13,6 +13,7 @@
  ** \brief Implements libport::file_library.
  */
 
+#include <libport/cassert>
 #include <libport/cstdlib>
 #include <stdexcept>
 #include <iostream>
@@ -25,7 +26,6 @@
 # include <direct.h>
 #endif
 
-#include <libport/contract.hh>
 #include <libport/file-library.hh>
 #include <libport/file-system.hh>
 #include <libport/foreach.hh>
@@ -138,14 +138,14 @@ namespace libport
   void
   file_library::pop_current_directory()
   {
-    precondition(!current_directory_.empty());
+    aver(!current_directory_.empty());
     current_directory_.pop_front();
   }
 
   path
   file_library::current_directory_get() const
   {
-    precondition(!current_directory_.empty());
+    aver(!current_directory_.empty());
     return *current_directory_.begin();
   }
 

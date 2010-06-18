@@ -19,11 +19,9 @@
 # include <iostream>
 # include <sstream>
 
-# include <libport/lexical-cast.hh>
-
-# include <libport/contract.hh>
 # include <libport/deref.hh>
 # include <libport/foreach.hh>
+# include <libport/format.hh>
 # include <libport/indent.hh>
 # include <libport/map.hh>
 
@@ -70,8 +68,7 @@ namespace libport
     if (ires != map_.end ())
       return ires;
     else
-      throw std::range_error (std::string("map: no mapping for ")
-			      + boost::lexical_cast<std::string> (t));
+      throw std::range_error(libport::format("map: no mapping for %s", t));
   }
 
   template <class T, class N>
@@ -82,8 +79,7 @@ namespace libport
     if (ires != map_.end ())
       return ires;
     else
-      throw std::range_error (std::string("map: no mapping for ")
-			      + boost::lexical_cast<std::string> (t));
+      throw std::range_error (libport::format("map: no mapping for %s", t));
   }
 
   template <class T, class N>

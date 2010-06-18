@@ -259,6 +259,9 @@ sub libport_headers ($\$)
      $file =~ $dash_header ? "<boost/$header.hpp>" : "<libport/$dash_header.hh>";
    }gxe;
 
+  # Prefer aver to other assertion mechanisms.
+  s{<libport/contract.hh>}{<libport/cassert>}g;
+
   $$contents_ref = $_;
 }
 
@@ -426,6 +429,8 @@ sub libport_renamings ($\$)
 
   # aver is nicer than assert.
   # Don't change the definition of our assert though.
+  s/\b(?:post|pre)condition\s*\(/aver(/g;
+  s/\bunreached\s*\(/unreachable(/g;
   s/\bassert\s*\((?!Assertion\))/aver(/g;
 
   # We are now simply using Boost.Unordered.

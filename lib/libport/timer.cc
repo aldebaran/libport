@@ -13,6 +13,7 @@
  ** \brief Implementation for libport/timer.hh.
  */
 
+#include <libport/cassert>
 #include <libport/config.h>
 #include <iostream>
 #include <iomanip>
@@ -52,7 +53,6 @@ static libport::utime_t times(struct tms* t)
 
 #include <libport/unistd.h>
 #include <libport/timer.hh>
-#include <libport/contract.hh>
 
 namespace libport
 {
@@ -116,7 +116,7 @@ namespace libport
     : intmap(rhs.intmap)
     , total(rhs.total)
   {
-    precondition (rhs.tasks.empty ());
+    aver(rhs.tasks.empty ());
 
     for (task_map_type::const_iterator i = rhs.tasksmap.begin ();
 	 i != rhs.tasksmap.end (); ++i)
@@ -255,7 +255,7 @@ namespace libport
   void
   timer::pop ()
   {
-    precondition (!tasks.empty ());
+    aver(!tasks.empty ());
 
     // Set the Elapsed time for the task we are closing
     tasks.top ()->stop ();
@@ -272,7 +272,7 @@ namespace libport
   timer::operator<< (const timer& rhs)
   {
     // No task should be running when merging timers.
-    precondition (rhs.tasks.empty ());
+    aver(rhs.tasks.empty ());
 
     for (task_map_type::const_iterator i = rhs.tasksmap.begin ();
 	 i != rhs.tasksmap.end (); ++i)

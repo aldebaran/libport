@@ -74,11 +74,11 @@ _libport_die_hard()
   libport::abort();
 }
 
-#  define pabort(Msg)                                      \
+#  define pabort(Msg)                                     \
   (ASSERT_ECHO(__FILE__, __LINE__, "abort: " << Msg),     \
    _libport_die_hard())
 # else // !__GNUC__ <= 3
-#  define pabort(Msg)                                      \
+#  define pabort(Msg)                                     \
   (ASSERT_ECHO(__FILE__, __LINE__, "abort: " << Msg),     \
    ::libport::abort(), 0)
 # endif // !__GNUC__ <= 3
