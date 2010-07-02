@@ -61,7 +61,7 @@ namespace sched
   Job::Collector::dump(std::ostream& o) const
   {
     return o << "{" << libport::incendl
-             // Explicit parameters required by MSWC 2005.
+             // Explicit parameters required by MSVC 2005.
              << libport::separate<const Collector,
                                   std::ostream&(*)(std::ostream&)>
                                   (*this, libport::iendl)
