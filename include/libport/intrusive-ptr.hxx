@@ -88,14 +88,20 @@ namespace libport
     // This is the only place where the counter is used.
     if (pointee_ != other)
     {
-      // Decrement current pointee count and delete the object if it reaches 0.
-      if (pointee_ && pointee_->counter_dec())
-        delete pointee_;
+      // Swap pointers before the destruction of its pointee to avoid
+      // bad manipulation of this object when the pointee gets
+      // destructed.
+      T* previous = pointee_;
 
       // Take the pointer, increment counter.
       pointee_ = other;
       if (pointee_)
         pointee_->counter_inc();
+
+      // Decrement previous pointee count and delete the object if it
+      // reaches 0.
+      if (previous && previous->counter_dec())
+        delete previous;
     }
     return *this;
   }
