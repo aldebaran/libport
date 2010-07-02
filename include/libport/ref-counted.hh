@@ -25,6 +25,7 @@ namespace libport
 
     protected:
       unsigned counter_get() const;
+      void counter_reset() const;
 
     private:
       mutable unsigned count_;
