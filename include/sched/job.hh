@@ -425,14 +425,6 @@ namespace sched
 
     /// Number of jobs created and not yet destroyed.
     static unsigned int alive_jobs_;
-
-  protected:
-    /// Exception used to terminate a job.
-    struct SCHED_API TerminateException : public SchedulerException
-    {
-      COMPLETE_EXCEPTION(TerminateException)
-    };
-
   };
 
   SCHED_API
@@ -469,6 +461,13 @@ namespace sched
   private:
     mutable exception_ptr child_exception_;
   };
+
+  /// Exception used to terminate a job.
+  struct SCHED_API TerminateException : public SchedulerException
+  {
+    COMPLETE_EXCEPTION(TerminateException)
+  };
+
 
   /// Terminate all jobs present in container and empty it.
   SCHED_API
