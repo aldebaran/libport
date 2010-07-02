@@ -44,17 +44,18 @@ namespace sched
  private:								\
    boost::optional<Type> Name ## _;
 
-#define PARTIAL_COMPLETE_EXCEPTION(Name)                \
- public:                                                \
- virtual ::sched::exception_ptr clone() const		\
- {                                                      \
-   return ::sched::exception_ptr(new Name(*this));      \
- };                                           		\
-private:                                                \
-  ATTRIBUTE_NORETURN virtual void rethrow_() const      \
-  {                                                     \
-    throw *this;                                        \
+#define PARTIAL_COMPLETE_EXCEPTION(Name)                  \
+public:                                                   \
+  virtual ::sched::exception_ptr clone() const            \
+  {                                                       \
+    return ::sched::exception_ptr(new Name(*this));       \
+  }                                                       \
+private:                                                  \
+  ATTRIBUTE_NORETURN virtual void rethrow_() const        \
+  {                                                       \
+    throw *this;                                          \
   };
+
 #define COMPLETE_EXCEPTION(Name)			\
   PARTIAL_COMPLETE_EXCEPTION(Name)			\
 public:							\
