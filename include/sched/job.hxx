@@ -23,7 +23,7 @@
 # include <sched/scheduler.hh>
 # include <sched/coroutine.hh>
 
-GD_ADD_CATEGORY(Scheduler);
+GD_ADD_CATEGORY(sched);
 
 namespace sched
 {
@@ -188,7 +188,7 @@ namespace sched
 	coroutine_stack_space_almost_gone(coro_))
     {
       libport::Finally finally(libport::scoped_set(check_stack_space_, false));
-      GD_CATEGORY(Scheduler);
+      GD_CATEGORY(sched);
       GD_ERROR("Stack space exhausted");
       scheduling_error("stack space exhausted");
     }
