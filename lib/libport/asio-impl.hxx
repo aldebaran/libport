@@ -608,11 +608,12 @@ namespace libport
   typename Proto::endpoint
   resolve(const std::string& host,
           const std::string& port,
-          boost::system::error_code &erc)
+          boost::system::error_code &erc,
+          boost::asio::io_service& ios)
   {
     typename Proto::resolver::query query(host, port);
     // Synchronous resolution, we do not care which io_service is used.
-    typename Proto::resolver resolver(get_io_service());
+    typename Proto::resolver resolver(ios);
     typename Proto::resolver::iterator iter = resolver.resolve(query, erc);
     if (erc)
       return typename Proto::endpoint();
@@ -636,7 +637,8 @@ template<class Proto, class BaseFactory>
          host, port, timeout, bf);
       return erc;
     }
-    typename Proto::endpoint ep = resolve<Proto>(host, port, erc);
+    typename Proto::endpoint ep = resolve<Proto>(host, port, erc,
+                                                 get_io_service());
     if (erc)
       return erc;
     typename Proto::socket* s = new typename Proto::socket(get_io_service());
@@ -695,7 +697,8 @@ template<class Proto, class BaseFactory>
                       BaseFactory bf)
   {
     boost::system::error_code erc;
-    typename Proto::endpoint ep = resolve<Proto>(host, port, erc);
+    typename Proto::endpoint ep = resolve<Proto>(host, port, erc,
+                                                 get_io_service());
     if (erc)
       return erc;
     typename Proto::acceptor* a;
