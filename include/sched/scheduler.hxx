@@ -59,15 +59,15 @@ namespace sched
   }
 
   inline void
-  Scheduler::real_time_behaviour_set()
+  Scheduler::real_time_behavior_set()
   {
-    real_time_behaviour_ = true;
+    real_time_behavior_ = true;
   }
 
   inline bool
-  Scheduler::real_time_behaviour_get() const
+  Scheduler::real_time_behavior_get() const
   {
-    return real_time_behaviour_;
+    return real_time_behavior_;
   }
 
   inline void

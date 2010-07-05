@@ -147,12 +147,12 @@ namespace sched
     /// Reset statistics.
     void stats_reset();
 
-    /// Indicate that we now want real-time behaviour (which may be already
+    /// Indicate that we now want real-time behavior (which may be already
     /// on).
-    void real_time_behaviour_set();
+    void real_time_behavior_set();
 
-    /// Check whether we want real-time behaviour or not.
-    bool real_time_behaviour_get() const;
+    /// Check whether we want real-time behavior or not.
+    bool real_time_behavior_get() const;
 
     /// Sets whether to keep the list of jobs in the terminated state
     void keep_terminated_jobs_set(bool keep);
@@ -208,7 +208,7 @@ namespace sched
     scheduler_stats_type stats_;
 
     /// Is real-time behavior desired?
-    bool real_time_behaviour_;
+    bool real_time_behavior_;
 
     /// List of terminated jobs (kept if keep_terminated_jobs_ is true)
     jobs_type terminated_jobs_;

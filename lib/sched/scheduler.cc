@@ -41,7 +41,7 @@ namespace sched
     , possible_side_effect_(true)
     , cycle_(0)
     , ready_to_die_(false)
-    , real_time_behaviour_(false)
+    , real_time_behavior_(false)
     , keep_terminated_jobs_(false)
   {
     LIBPORT_DEBUG("Initializing main coroutine");
@@ -133,7 +133,7 @@ namespace sched
     std::swap(pending_, jobs_);
 
     // Sort all the jobs according to their priority.
-    if (real_time_behaviour_)
+    if (real_time_behavior_)
     {
       static std::vector<rJob> tmp;
       tmp.reserve(pending_.size());

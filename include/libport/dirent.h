@@ -35,7 +35,7 @@ extern "C"
 
   /* This does not implement the full {open,close,read}dir API. The
      only purpose is to enable to transparently list directories under
-     Windows. Because of the underlying primitives, the behaviour also
+     Windows. Because of the underlying primitives, the behavior also
      differs on some point: for instance, opendir is systematically
      successful, even if the directory does not exist. If such a
      difference becomes problematic in some future situation, the code
