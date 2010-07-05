@@ -489,21 +489,29 @@ namespace libport
       usleep(duration);
   }
 
-  static void stop_io_service(boost::asio::io_service& io)
+  static void stop_io_service(boost::asio::io_service& io,
+                              bool& timer_called)
   {
+    timer_called = true;
     io.stop();
   }
-  void pollFor(useconds_t duration, bool once, boost::asio::io_service& io)
+  size_t pollFor(useconds_t duration, bool once, boost::asio::io_service& io)
   {
     boost::asio::io_service::work work(io);
     io.reset();
+    bool timer_called = false;
     AsyncCallHandler asc =
-      asyncCall(boost::bind(&stop_io_service, boost::ref(io)), duration, io);
+      asyncCall(boost::bind(&stop_io_service, boost::ref(io),
+                            boost::ref(timer_called)), duration, io);
+    size_t res = 0;
     if (once)
-      io.run_one();
+      res = io.run_one();
     else
-      io.run();
+      res = io.run();
+    if (timer_called)
+      res--;
     asc->cancel();
+    return res;
   }
 
   bool isPollThread()

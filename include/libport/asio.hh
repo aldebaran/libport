@@ -419,8 +419,9 @@ namespace libport
   /** Poll on an io_service for given duration in microseconds.
    *  @param duration max duration for which to poll in microseconds
    *  @param once process at most one handler before returning if true
+   *  @return the number of handler functions that were called.
    */
-  LIBPORT_API void
+  LIBPORT_API size_t
   pollFor(useconds_t duration, bool once = false,
           boost::asio::io_service& io = get_io_service());
 
