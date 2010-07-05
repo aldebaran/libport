@@ -157,12 +157,12 @@ namespace sched
     /// Sets whether to keep the list of jobs in the terminated state
     void keep_terminated_jobs_set(bool keep);
     /// Get the list of terminated jobs
-    jobs_type terminated_jobs_get();
+    jobs_type terminated_jobs_get() const;
     /// Clear the list of terminated jobs
     void terminated_jobs_clear();
 
     /// Return currently computed deadline for next round.
-    libport::utime_t deadline_get();
+    libport::utime_t deadline_get() const;
 
     /// Set the job that gets scheduled after execute_round.
     void idle_job_set(rJob job);

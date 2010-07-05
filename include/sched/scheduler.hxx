@@ -77,7 +77,7 @@ namespace sched
   }
 
   inline jobs_type
-  Scheduler::terminated_jobs_get()
+  Scheduler::terminated_jobs_get() const
   {
     return terminated_jobs_;
   }
@@ -89,7 +89,7 @@ namespace sched
   }
 
   inline libport::utime_t
-  Scheduler::deadline_get()
+  Scheduler::deadline_get() const
   {
     return deadline_;
   }
