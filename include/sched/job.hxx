@@ -129,8 +129,7 @@ namespace sched
   Job::yield_until(libport::utime_t deadline)
   {
     if (non_interruptible_)
-      scheduling_error
-	("attempt to sleep in non-interruptible code");
+      scheduling_error("attempt to sleep in non-interruptible code");
 
     state_ = sleeping;
     deadline_ = deadline;
@@ -184,8 +183,8 @@ namespace sched
   inline void
   Job::check_stack_space()
   {
-    if (check_stack_space_ &&
-	coroutine_stack_space_almost_gone(coro_))
+    if (check_stack_space_
+	&& coroutine_stack_space_almost_gone(coro_))
     {
       libport::Finally finally(libport::scoped_set(check_stack_space_, false));
       GD_CATEGORY(sched);

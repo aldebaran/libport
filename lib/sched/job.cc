@@ -24,8 +24,6 @@
 
 #include <sched/job.hh>
 
-GD_ADD_CATEGORY(sched);
-
 namespace sched
 {
   StopException::StopException(unsigned depth, boost::any payload)
@@ -112,10 +110,11 @@ namespace sched
       // or we would get removed abruptly from the scheduler pending_
       // list.
       state_ = running;
-      try {
-        if (has_pending_exception() &&
-            dynamic_cast<SchedulerException*>(pending_exception_.get()))
-	check_for_pending_exception();
+      try
+      {
+        if (has_pending_exception()
+            && dynamic_cast<SchedulerException*>(pending_exception_.get()))
+          check_for_pending_exception();
         work();
       }
       catch (TerminateException&)
@@ -204,8 +203,7 @@ namespace sched
   Job::yield_until_terminated(Job& other)
   {
     if (non_interruptible_ && this != &other)
-      scheduling_error
-	("dependency on other task in non-interruptible code");
+      scheduling_error("dependency on other task in non-interruptible code");
 
     if (!other.terminated())
     {
@@ -240,8 +238,8 @@ namespace sched
   Job::yield_until_things_changed()
   {
     if (non_interruptible_ && !frozen())
-      scheduling_error
-	("attempt to wait for condition changes in non-interruptible code");
+      scheduling_error("attempt to wait for condition changes"
+                       " in non-interruptible code");
 
     state_ = waiting;
     scheduler_.resume_scheduler(this);

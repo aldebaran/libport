@@ -313,9 +313,9 @@ namespace sched
     if (job->state_get() == running && side_effect_free_save)
       return;
 
-    if (job->state_get() == running &&
-	job->prio_get() >= UPRIO_RT_MIN &&
-	!job->frozen())
+    if (job->state_get() == running
+	&& UPRIO_RT_MIN <= job->prio_get()
+	&& !job->frozen())
       return;
 
     // We may have to suspend the job several time in case it makes no sense
