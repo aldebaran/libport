@@ -88,6 +88,12 @@ namespace sched
     terminated_jobs_.clear();
   }
 
+  inline libport::utime_t
+  Scheduler::deadline_get()
+  {
+    return deadline_;
+  }
+
 } // namespace sched
 
 #endif // !SCHED_SCHEDULER_HXX

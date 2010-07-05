@@ -160,6 +160,12 @@ namespace sched
     jobs_type terminated_jobs_get();
     /// Clear the list of terminated jobs
     void terminated_jobs_clear();
+
+    /// Return currently computed deadline for next round.
+    libport::utime_t deadline_get();
+
+    /// Set the job that gets scheduled after execute_round.
+    void idle_job_set(rJob job);
   private:
     /// Execute one round in the scheduler.
     ///
@@ -180,6 +186,7 @@ namespace sched
     /// Current job.
     rJob current_job_;
 
+    rJob idle_job_;
     /// Iterator on the next job if iterating at the beginning of the
     /// iteration.
     jobs_type::iterator next_job_p_;
@@ -206,6 +213,9 @@ namespace sched
     /// List of terminated jobs (kept if keep_terminated_jobs_ is true)
     jobs_type terminated_jobs_;
     bool keep_terminated_jobs_;
+
+    /// Deadline for next round
+    libport::utime_t deadline_;
   };
 
 } // namespace sched

@@ -75,7 +75,7 @@ namespace sched
     // example), insert it right before the job which was right after the
     // current one. This way, jobs inserted successively will get queued
     // in the right order.
-    if (current_job_)
+    if (current_job_ && current_job_ != idle_job_)
       pending_.insert(next_job_p_, job);
     else
       jobs_.push_back(job);
@@ -98,8 +98,24 @@ namespace sched
     else
       LIBPORT_DEBUG("Scheduler asking to be woken up ASAP");
 #endif
-
+    if (idle_job_)
+    {
+      aver(!current_job_);
+      coroutine_switch_to(&coro_, idle_job_->coro_get());
+      aver(current_job_);
+      current_job_ = 0;
+    }
     return deadline;
+  }
+
+  void
+  Scheduler::idle_job_set(rJob ijob)
+  {
+    idle_job_ = ijob;
+    current_job_ = idle_job_;
+    coroutine_start(&coro_,
+                    idle_job_->coro_get(), run_job, idle_job_.get());
+    current_job_ = 0;
   }
 
   static bool prio_gt(const rJob& j1, const rJob& j2)
@@ -135,7 +151,7 @@ namespace sched
     // may have add a side effect and reset this indication for the current
     // job.
     libport::utime_t start_time = get_time_();
-    libport::utime_t deadline = start_time +  3600000000LL;
+    deadline_ = start_time +  3600000000LL;
     bool start_waiting = possible_side_effect_;
     possible_side_effect_ = false;
     bool at_least_one_started = false;
@@ -190,7 +206,7 @@ namespace sched
 	coroutine_start(&coro_,
                         current_job_->coro_get(), run_job, current_job_.get());
 	current_job_ = 0;
-	deadline = SCHED_IMMEDIATE;
+	deadline_ = SCHED_IMMEDIATE;
 	at_least_one_started = true;
 	continue;
       }
@@ -214,7 +230,7 @@ namespace sched
 	  if (job_deadline <= current_time)
 	    start = true;
 	  else
-	    deadline = std::min(deadline, job_deadline);
+	    deadline_ = std::min(deadline_, job_deadline);
 	}
 	break;
       case waiting:
@@ -253,10 +269,10 @@ namespace sched
 	switch (job->state_get())
 	{
 	case running:
-	  deadline = SCHED_IMMEDIATE;
+	  deadline_ = SCHED_IMMEDIATE;
 	  break;
 	case sleeping:
-	  deadline = std::min(deadline, job->deadline_get());
+	  deadline_ = std::min(deadline_, job->deadline_get());
 	  break;
 	default:
 	  break;
@@ -270,17 +286,17 @@ namespace sched
     // start it. Also start if a possible side effect happened, it may have
     // occurred later then the waiting jobs in the cycle.
     if (possible_side_effect_)
-      deadline = SCHED_IMMEDIATE;
+      deadline_ = SCHED_IMMEDIATE;
 
     // If we are ready to die and there are no jobs left, then die.
     if (ready_to_die_ && jobs_.empty())
-      deadline = SCHED_EXIT;
+      deadline_ = SCHED_EXIT;
 
     // Compute statistics
     if (at_least_one_started)
       stats_.add_sample(get_time_() - start_time);
 
-    return deadline;
+    return deadline_;
   }
 
   void
@@ -310,10 +326,13 @@ namespace sched
     {
       // Add the job at the end of the scheduler queue unless the job has
       // already terminated.
-      if (!job->terminated())
-	jobs_.push_back(job);
-      else if (keep_terminated_jobs_)
-        terminated_jobs_.push_back(job);
+      if (job != idle_job_)
+      {
+        if (!job->terminated())
+	  jobs_.push_back(job);
+        else if (keep_terminated_jobs_)
+          terminated_jobs_.push_back(job);
+      }
 
 
       // Switch back to the scheduler. But in the case this job has been
