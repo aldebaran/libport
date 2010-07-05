@@ -186,8 +186,9 @@ namespace sched
     if (check_stack_space_
 	&& coroutine_stack_space_almost_gone(coro_))
     {
-      FINALLY(((bool&, check_stack_space_)),
-              check_stack_space_ = false);
+      // Cannot be nicely converted to using FINALLY because of
+      // MSVC2005.  See finally.hh.
+      libport::Finally finally(libport::scoped_set(check_stack_space_, false));
       GD_CATEGORY(sched);
       GD_ERROR("Stack space exhausted");
       scheduling_error("stack space exhausted");
