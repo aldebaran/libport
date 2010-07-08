@@ -274,13 +274,14 @@ namespace libport
     }
 
 
-    typedef void* Handle;
     typedef boost::function0<Socket*> SocketFactory;
     /** Listen using udp.
      * Call onRead(data, length, link) for each new packet. Link can be used
      * to reply to the sender through its UDPLink::reply() method.
+     * @return the local port that was bound.
      */
-    static Handle listenUDP(const std::string& host, const std::string& port,
+    static unsigned short listenUDP(const std::string& host,
+                                    const std::string& port,
                             boost::function3<void, const void*, size_t,
                             boost::shared_ptr<UDPLink> > onRead,
                             boost::system::error_code& erc);

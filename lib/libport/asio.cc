@@ -110,8 +110,10 @@ namespace libport
       onread_type onRead;
       void start_receive();
       void handle_receive(const boost::system::error_code& error, size_t sz);
+      unsigned short getLocalPort();
     private:
-      boost::array<char, 2000> recv_buffer_;
+      std::vector<char> recv_buffer_;
+      static const int default_size_ = 65535;
       boost::asio::ip::udp::endpoint remote_endpoint_;
       boost::asio::ip::udp::socket socket_;
       friend class libport::Socket;
@@ -120,6 +122,7 @@ namespace libport
     UDPSocket::UDPSocket()
       :socket_(get_io_service())
     {
+      recv_buffer_.resize(default_size_);
     }
 
     void
@@ -141,6 +144,11 @@ namespace libport
                                                    getDestructionLock()));
       onRead(&recv_buffer_[0], sz, l);
       start_receive();
+    }
+
+    unsigned short UDPSocket::getLocalPort()
+    {
+      return socket_.local_endpoint().port();
     }
 
     void
@@ -194,8 +202,9 @@ namespace libport
     read_or_recv(SocketImpl<udpsock>*s,
                  SocketImpl<udpsock>::DestructionLock lock)
     {
-      s->udpBuffer_.resize(2000);
-      s->base_->async_receive(boost::asio::buffer(&s->udpBuffer_[0], 2000),
+      if (!s->udpBuffer_.size())
+        s->udpBuffer_.resize(65535);
+      s->base_->async_receive(boost::asio::buffer(s->udpBuffer_),
                               boost::bind(&recv_bounce, s, lock, _1, _2));
     }
 
@@ -406,7 +415,7 @@ namespace libport
     //waitForDestructionPermission();
   }
 
-  Socket::Handle
+  unsigned short
   Socket::listenUDP(const std::string& host,
                     const std::string& port,
                     netdetail::UDPSocket::onread_type onRead,
@@ -422,7 +431,7 @@ namespace libport
     udp::resolver resolver(libport::get_io_service(true));
     udp::resolver::iterator iter = resolver.resolve(query, erc);
     if (erc)
-      return Handle();
+      return 0;
     // Careful to use the protocol reported by the endpoint.
     while (iter != udp::resolver::iterator())
     {
@@ -437,10 +446,10 @@ namespace libport
       erc =
         netdetail::errorcodes::make_error_code(
           netdetail::errorcodes::bad_address);
-    return Handle();
+    return 0;
   ok:
     s->start_receive();
-    return Handle();
+    return s->getLocalPort();
   }
 
   void
