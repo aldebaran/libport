@@ -312,9 +312,7 @@ test()
 
   BOOST_TEST_MESSAGE("##UDP");
   {
-    libport::Socket::Handle hu =
-      libport::Socket::listenUDP(listen_host, S_AVAIL_PORT, &echo, err);
-    (void)hu;
+    libport::Socket::listenUDP(listen_host, S_AVAIL_PORT, &echo, err);
     BOOST_CHECK_MESSAGE(!err, err.message());
     test_one(true);
     usleep(delay);
