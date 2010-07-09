@@ -31,7 +31,7 @@
 # include <iostream>
 #endif
 
-#define FAIL_(Format, ...)						\
+#define FAIL_(Format, ...)                                              \
   do {                                                                  \
     GD_FERROR(Format, ## __VA_ARGS__);                                  \
     throw libport::Exception(libport::format(Format, ## __VA_ARGS__));  \
@@ -101,17 +101,17 @@ namespace libport
     {
       while (true)
       {
-	static char buf[BUFSIZ];
-	int r = read(data.fd, buf, sizeof buf);
-	if (r < 0)
-	  FAIL("read error on fd = %s", data.fd);
-	else if (r == 0) // EOF counts as an 'error' but less verbose.
+        static char buf[BUFSIZ];
+        int r = read(data.fd, buf, sizeof buf);
+        if (r < 0)
+          FAIL("read error on fd = %s", data.fd);
+        else if (r == 0) // EOF counts as an 'error' but less verbose.
         {
-	  INFO("read error on fd = %s: EOF", data.fd);
+          INFO("read error on fd = %s: EOF", data.fd);
           break;
         }
-	BlockLock bl(data.lock);
-	data.buffer.append(buf, r);
+        BlockLock bl(data.lock);
+        data.buffer.append(buf, r);
       }
     }
     catch (const libport::Exception& e)
@@ -179,16 +179,16 @@ namespace libport
     {
       int r = read(fd, buf, len);
       if (r < 0)
-       if (errno != EINTR)
+        if (errno != EINTR)
           FAIL("read error on fd = %s", fd);
-       else
-         return 0;
+        else
+          return 0;
       else if (r == 0) // EOF counts as an 'error' but less verbose.
       {
-         if (fd != 0)
-           INFO_("End Of File on file descriptor %s", fd);
-         else
-           INFO_("stdin (%s) closed (EOF), interactive mode disabled.", fd);
+        if (fd == 0)
+          INFO_("stdin (%s) closed (EOF), interactive mode disabled.", fd);
+        else
+          INFO_("End Of File on file descriptor %s", fd);
       }
       return r;
     }
