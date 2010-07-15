@@ -194,7 +194,7 @@ namespace libport
     {
       std::ostream stream(&s->readBuffer_);
       stream.write(&s->udpBuffer_[0], std::streamsize(recv));
-      s->onReadDemux(lock, erc);
+      s->onReadDemux(lock, erc, recv);
     }
 
     template<>

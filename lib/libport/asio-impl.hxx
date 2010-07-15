@@ -71,6 +71,8 @@ namespace libport
     public:
       SocketImpl()
         : base_(0)
+        , bytesReceived_(0)
+        , bytesSent_(0)
       {}
       ~SocketImpl()
       {
@@ -90,7 +92,14 @@ namespace libport
       // Bounce to read_dispatch
       std::string read(size_t length);
       bool isConnected() const;
-
+      unsigned long bytesReceived() const
+      {
+        return bytesReceived_;
+      }
+      unsigned long bytesSent() const
+      {
+        return bytesSent_;
+      }
       template<typename Acceptor, typename BaseFactory>
       static void
       onAccept(io_service& io, boost::system::error_code erc, Stream* s,
@@ -113,7 +122,8 @@ namespace libport
       Stream* base_;
       void continueWrite(DestructionLock lock, boost::system::error_code erc,
 			 size_t sz);
-      void onReadDemux(DestructionLock lock, boost::system::error_code erc);
+      void onReadDemux(DestructionLock lock, boost::system::error_code erc,
+                       size_t);
 
       friend class libport::Socket;
 
@@ -127,6 +137,8 @@ namespace libport
       recv_bounce(SocketImpl<udpsock>*s, AsioDestructible::DestructionLock lock,
 		  boost::system::error_code erc, size_t recv);
       std::vector<char> udpBuffer_;
+      unsigned long bytesReceived_;
+      unsigned long bytesSent_;
     };
 
     // Acceptor implementation
@@ -150,6 +162,8 @@ namespace libport
       std::string getRemoteHost() const ACCEPTOR_FAIL
       void startReader() ACCEPTOR_FAIL
       void syncWrite(const void*, size_t) ACCEPTOR_FAIL
+      unsigned long bytesSent() const ACCEPTOR_FAIL
+      unsigned long bytesReceived() const ACCEPTOR_FAIL
 #undef ACCEPTOR_FAIL
       unsigned short getLocalPort() const;
       std::string getLocalHost() const;
@@ -271,6 +285,7 @@ namespace libport
     SocketImpl<Stream>::syncWrite(const void* data, size_t length)
     {
       syncWriteDispatch(base_, data, length);
+      bytesSent_ += length;
     }
 
     template<typename Stream>
@@ -331,6 +346,7 @@ namespace libport
       is.read(&buffer[0], length);
       long len = is.gcount();
       buffer.resize(len);
+      bytesReceived_ += length;
       return buffer;
     }
 
@@ -406,7 +422,7 @@ namespace libport
     void
     SocketImpl<Stream>::continueWrite(DestructionLock lock,
                                       boost::system::error_code er,
-                                      size_t)
+                                      size_t sz)
     {
       if (er)
       {
@@ -415,6 +431,8 @@ namespace libport
         close();
         return;
       }
+      else
+        bytesSent_ += sz;
       libport::BlockLock bl(this);
       current_ = 1 - current_;
       if (pending_)
@@ -438,12 +456,13 @@ namespace libport
       boost::asio::async_read(*s->base_, s->readBuffer_,
                               boost::asio::transfer_at_least(1),
                               boost::bind(&SocketImpl<Stream>::onReadDemux,
-                                          s, lock, _1));
+                                          s, lock, _1, _2));
     }
     template<typename Stream>
     void
     SocketImpl<Stream>::onReadDemux(DestructionLock lock,
-                                    boost::system::error_code erc)
+                                    boost::system::error_code erc,
+                                    size_t sz)
     {
       BlockLock bl(callbackLock);
       if (erc)
@@ -456,6 +475,7 @@ namespace libport
       }
       else
       {
+        bytesReceived_ += sz;
         if (onReadFunc)
           onReadFunc(readBuffer_);
         if (isConnected())

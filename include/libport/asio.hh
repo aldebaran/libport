@@ -118,7 +118,8 @@ namespace libport
     virtual native_handle_type stealFD() = 0;
 #endif
     virtual native_handle_type getFD() = 0;
-
+    virtual unsigned long bytesReceived() const = 0;
+    virtual unsigned long bytesSent() const = 0;
     /// Callback function called each time new data is available.
     boost::function1<bool, boost::asio::streambuf&> onReadFunc;
     /// Callback function called in case of error on the socket.
@@ -228,6 +229,8 @@ namespace libport
     std::string getRemoteHost() const    { CHECK;return base_->getRemoteHost();}
     unsigned short getLocalPort() const  { CHECK;return base_->getLocalPort();}
     std::string getLocalHost() const     { CHECK;return base_->getLocalHost();}
+    unsigned long bytesReceived() const  { CHECK;return base_->bytesReceived();}
+    unsigned long bytesSent() const      { CHECK;return base_->bytesSent();}
     bool isConnected() const      {return base_ ? base_->isConnected() : false;}
 
     /** Connect to a remote host.
