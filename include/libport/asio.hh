@@ -140,6 +140,10 @@ namespace libport
     }
   };
 
+  #define CHECK do{ \
+    if (!base_) throw std::runtime_error("Transport endpoint not connected");\
+  }\
+    while(0)
   /** Socket class with a higher API.
    *
    * It is recommended that you always asynchronously destroy Socket instances
@@ -188,6 +192,7 @@ namespace libport
     /// Asynchronous write
     void write(const void* data, size_t length)
     {
+      CHECK;
       base_->write(data, length);
     }
     /// Alias on write() for API compatibility.
@@ -206,6 +211,7 @@ namespace libport
     /// Synchronously read and return exactly 'length' bytes.
     std::string read(size_t length)
     {
+      CHECK;
       if (base_)
         return base_->read(length);
       else
@@ -218,10 +224,10 @@ namespace libport
         base_->close();
     }
 
-    unsigned short getRemotePort() const { return base_->getRemotePort();}
-    std::string getRemoteHost() const    { return base_->getRemoteHost();}
-    unsigned short getLocalPort() const  { return base_->getLocalPort();}
-    std::string getLocalHost() const     { return base_->getLocalHost();}
+    unsigned short getRemotePort() const { CHECK;return base_->getRemotePort();}
+    std::string getRemoteHost() const    { CHECK;return base_->getRemoteHost();}
+    unsigned short getLocalPort() const  { CHECK;return base_->getLocalPort();}
+    std::string getLocalHost() const     { CHECK;return base_->getLocalHost();}
     bool isConnected() const      {return base_ ? base_->isConnected() : false;}
 
     /** Connect to a remote host.
@@ -353,7 +359,7 @@ namespace libport
                  useconds_t timeout, bool async, BaseFactory bf);
     boost::asio::io_service& io_;
   };
-
+#undef CHECK
   /** Wrapper of libport::Socket to be able to use Socket without inherit from
    *  it.
    */
