@@ -289,6 +289,13 @@ namespace libport
   }
 
   void
+  Socket::doDestroy()
+  {
+    io_.post(boost::bind(netdetail::deletor<AsioDestructible>,
+                                      this));
+  }
+
+  void
   Socket::onError(boost::system::error_code)
   {
     // Nothing

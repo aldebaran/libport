@@ -118,6 +118,8 @@ namespace libport
       native_handle_type getFD();
       // Effective backend
       std::string read_(size_t length);
+    protected:
+      virtual void doDestroy();
     private:
       Stream* base_;
       void continueWrite(DestructionLock lock, boost::system::error_code erc,
@@ -266,6 +268,12 @@ namespace libport
       return base_->lowest_layer().remote_endpoint().port();
     }
 
+    template<typename Stream>
+    void SocketImpl<Stream>::doDestroy()
+    {
+      base_->get_io_service().post(
+            boost::bind(netdetail::deletor<SocketImpl<Stream> >,this));
+    }
 
     template<typename Stream>
     void syncWriteDispatch(Stream* s, const void* data, size_t length)

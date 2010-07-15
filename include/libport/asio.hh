@@ -350,6 +350,7 @@ namespace libport
     static void sleep(useconds_t duration);
     boost::asio::io_service& get_io_service();
   protected:
+    virtual void doDestroy();
     bool onRead_(boost::asio::streambuf&);
     std::string buffer;
     BaseSocket* base_;
