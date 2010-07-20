@@ -20,6 +20,7 @@ namespace libport
 {
 
   template<template<class, class>class C, class T>
+  inline
   SafeContainer<C, T>::SafeContainer()
    : currentMask(0)
    , invalidationMask(0)
@@ -32,6 +33,7 @@ namespace libport
 
 #define CONTAINER_SMETHOD(Ret)                          \
   template<template<class, class>class C, class T>      \
+  inline						\
   Ret                                                   \
   CONTAINER::
 
@@ -49,6 +51,7 @@ namespace libport
   }
 
   template<template<class, class>class C, class T>
+  inline
   const typename SafeContainer<C, T>::iterator::value_type*
   SafeContainer<C, T>::iterator::operator->() const
   {
@@ -264,6 +267,7 @@ namespace libport
 
   template<template<class, class>class C, class T>
   template<typename I>
+  inline
   void CONTAINER::insert(iterator where, I beg, I end)
   {
     base_iterator_ l = where.base;

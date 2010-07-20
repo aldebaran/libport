@@ -18,10 +18,10 @@ namespace libport
    * To function properly, only a subset of container operations are
    * supported, and incrementing a copy of an iterator different than
    * begin() is not allowed. Furthermore, the number of iterators to
-   * not-the-end that can be present at the same time is limited(to at
+   * not-the-end that can be present at the same time is limited (to at
    * least 32).
    *
-   * Usage is simple: Instanciate with container type C (std::list)
+   * Usage is simple: Instantiate with container type C (std::list)
    * and element type T. Obtain an iterator by calling begin(). Each
    * call to operator++() on the iterator will give you access to the
    * next element that was present at the time of the begin()
@@ -116,7 +116,7 @@ namespace libport
      * is reversed each time the same bit is reused.
      * When iterator++ is called, the iterator looks for the next element with
      * its bit in the 'before transition' state, switches it and returns it.
-     * Any call to erase() marks all iterartors as dirty. When this happens,
+     * Any call to erase() marks all iterators as dirty. When this happens,
      * next call to iterator++ will look for the first element with its
      * bit in the 'before transition' state, starting from begin().
      * New elements are inserted with all mask bits in the 'after transition'
