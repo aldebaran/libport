@@ -10,10 +10,10 @@
 
 # Autotools might believe they are under cygwin while building with
 # msvc, so provide a dummy cygpath.
-while ! test -z "$1"; do
-  case $1 in
-    -*)  ;;
-    *)  echo $1 ; exit ;;
+for arg
+do
+  case $arg in
+    (-*) ;;
+    (*)  echo "$arg" ; exit ;;
   esac
-  shift
 done
