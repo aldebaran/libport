@@ -83,6 +83,79 @@ aware of if you want to stay out of troubles.
 
 \chapter{Portability issues}
 
+\section{Mac OS X}
+
+It seems that in interactive sessions, the flags of stdin, stdout and stderr
+are bound.  If you fcntl one of them, the others will be affected.  See the
+following program.
+
+\lstinputlisting[language=C++,basicstyle=\ttfamily\footnotesize]{fcntl.cc}
+
+\paragraph{Default}
+In an interactive session.  It's the same under Screen.
+\begin{lstlisting}
+$ ./a.out a
+"----------------------": ----------------------
+"Save": Save
+fcntl(STDIN_FILENO, F_GETFL): 2
+(flags = fcntl(STDOUT_FILENO, F_GETFL)): 2
+fcntl(STDERR_FILENO, F_GETFL): 2
+"Set": Set
+(res = fcntl(STDOUT_FILENO, F_SETFL, res)): 0
+fcntl(STDIN_FILENO, F_GETFL): 6
+fcntl(STDOUT_FILENO, F_GETFL): 6
+fcntl(STDERR_FILENO, F_GETFL): 6
+a
+"Restore": Restore
+(res = fcntl(STDOUT_FILENO, F_SETFL, flags)): 0
+fcntl(STDIN_FILENO, F_GETFL): 2
+fcntl(STDOUT_FILENO, F_GETFL): 2
+fcntl(STDERR_FILENO, F_GETFL): 2
+\end{lstlisting}
+
+\paragraph{Redirect stdout}
+This time, stdin and stdout are not correlated.  The same happens if you
+redirect stderr instead: it is detached from the two others.
+
+\begin{lstlisting}
+$ ./a.out a | cat
+"----------------------": ----------------------
+"Save": Save
+fcntl(STDIN_FILENO, F_GETFL): 2
+(flags = fcntl(STDOUT_FILENO, F_GETFL)): 1
+fcntl(STDERR_FILENO, F_GETFL): 2
+"Set": Set
+(res = fcntl(STDOUT_FILENO, F_SETFL, res)): 0
+fcntl(STDIN_FILENO, F_GETFL): 2
+fcntl(STDOUT_FILENO, F_GETFL): 5
+fcntl(STDERR_FILENO, F_GETFL): 2
+"Restore": Restore
+(res = fcntl(STDOUT_FILENO, F_SETFL, flags)): 0
+fcntl(STDIN_FILENO, F_GETFL): 2
+fcntl(STDOUT_FILENO, F_GETFL): 1
+fcntl(STDERR_FILENO, F_GETFL): 2
+a
+\end{lstlisting}
+
+\begin{lstlisting}
+$ ./a.out a >/dev/null
+"----------------------": ----------------------
+"Save": Save
+fcntl(STDIN_FILENO, F_GETFL): 2
+(flags = fcntl(STDOUT_FILENO, F_GETFL)): 1
+fcntl(STDERR_FILENO, F_GETFL): 2
+"Set": Set
+(res = fcntl(STDOUT_FILENO, F_SETFL, res)): 0
+fcntl(STDIN_FILENO, F_GETFL): 2
+fcntl(STDOUT_FILENO, F_GETFL): 5
+fcntl(STDERR_FILENO, F_GETFL): 2
+"Restore": Restore
+(res = fcntl(STDOUT_FILENO, F_SETFL, flags)): 0
+fcntl(STDIN_FILENO, F_GETFL): 2
+fcntl(STDOUT_FILENO, F_GETFL): 1
+fcntl(STDERR_FILENO, F_GETFL): 2
+\end{lstlisting}
+
 \section{Windows}
 
 \subsection{Test suite}
@@ -175,3 +248,10 @@ using.cc:10: note:         see declaration of 'libport::Top::foo'
   Extract the struct from the function.
 \end{workaround}
 \end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% ispell-dictionary: "american"
+%%% fill-column: 76
+%%% End:

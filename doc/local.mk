@@ -62,7 +62,9 @@ $(REVISION_FILE_STY): $(top_srcdir)/.version $(REVISION) $(build_aux_dir)/revisi
 		--output=$@
 	touch $@
 
-libport_sources = $(call ls_files,doc/*.tex)
+libport_sources =				\
+  $(call ls_files,doc/*.cc)			\
+  $(call ls_files,doc/*.tex)
 EXTRA_DIST += $(libport_sources)
 libport_deps =					\
   $(REVISION_FILE_STY)				\
