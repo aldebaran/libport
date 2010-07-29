@@ -19,15 +19,17 @@ void
 check_names()
 {
   libport::utsname names;
-#define CHECK(Routine)                                  \
-  do {                                                  \
-    std::string res;                                    \
-    BOOST_CHECK_NO_THROW(res = names.Routine());        \
-    BOOST_TEST_MESSAGE(#Routine ": " << res);           \
+#define CHECK(Routine)                                          \
+  do {                                                          \
+    BOOST_CHECK_NO_THROW(names.Routine());                      \
+    BOOST_TEST_MESSAGE(#Routine ": " << names.Routine());       \
   } while (false)
   CHECK(machine);
   CHECK(node);
   CHECK(release);
+  CHECK(major);
+  CHECK(minor);
+  CHECK(patchlevel);
   CHECK(system);
   CHECK(version);
 #undef CHECK

@@ -38,6 +38,11 @@ namespace libport
     /// release.
     std::string release() const;
 
+    /// Decompose release into major, minor, and patchlevel.
+    unsigned major() const;
+    unsigned minor() const;
+    unsigned patchlevel() const;
+
     /// Version level of the operating system.
     /// version.
     std::string version() const;
@@ -47,6 +52,9 @@ namespace libport
 
   private:
     struct ::utsname utsname_;
+    unsigned major_;
+    unsigned minor_;
+    unsigned patchlevel_;
   };
 
 }

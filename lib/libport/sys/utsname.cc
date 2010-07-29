@@ -10,13 +10,23 @@
 
 #include <libport/sys/utsname.h>
 #include <libport/cassert>
+#include <sstream>
 
 namespace libport
 {
 
   utsname::utsname()
+    : major_(0)
+    , minor_(0)
+    , patchlevel_(0)
   {
     ERRNO_RUN(uname, &utsname_);
+    std::stringstream r(release());
+    r >> major_;
+    assert_eq(r.get(), '.');
+    r >> minor_;
+    assert_eq(r.get(), '.');
+    r >> patchlevel_;
   }
 
 #define DEFINE(Function, Member)                \
@@ -31,6 +41,18 @@ namespace libport
   DEFINE(release, release);
   DEFINE(system,  sysname);
   DEFINE(version, version);
+#undef DEFINE
+
+#define DEFINE(Function)                        \
+  unsigned                                      \
+  utsname::Function() const                     \
+  {                                             \
+    return Function ## _;                       \
+  }
+
+  DEFINE(major);
+  DEFINE(minor);
+  DEFINE(patchlevel);
 #undef DEFINE
 
 }
