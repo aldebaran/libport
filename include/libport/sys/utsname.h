@@ -39,9 +39,10 @@ namespace libport
     std::string release() const;
 
     /// Decompose release into major, minor, and patchlevel.
-    unsigned major() const;
-    unsigned minor() const;
-    unsigned patchlevel() const;
+    /// The GNU Libc defines macros named major and minor...
+    unsigned release_major() const;
+    unsigned release_minor() const;
+    unsigned release_patchlevel() const;
 
     /// Version level of the operating system.
     /// version.

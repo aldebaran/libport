@@ -45,7 +45,7 @@ namespace libport
 
 #define DEFINE(Function)                        \
   unsigned                                      \
-  utsname::Function() const                     \
+  utsname::release_ ## Function() const         \
   {                                             \
     return Function ## _;                       \
   }

@@ -27,9 +27,9 @@ check_names()
   CHECK(machine);
   CHECK(node);
   CHECK(release);
-  CHECK(major);
-  CHECK(minor);
-  CHECK(patchlevel);
+  CHECK(release_major);
+  CHECK(release_minor);
+  CHECK(release_patchlevel);
   CHECK(system);
   CHECK(version);
 #undef CHECK
