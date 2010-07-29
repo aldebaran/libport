@@ -12,6 +12,21 @@
 #include <libport/cassert>
 #include <sstream>
 
+#if ! defined LIBPORT_HAVE_SYS_UTSNAME_H
+// Replacement for Windows.
+int
+uname(struct utsname* u)
+{
+  u->sysname = "unknown";
+  u->nodename = "unknown";
+  u->release = "unknown";
+  u->version = "unknown";
+  u->machine = "unknown";
+  return 0;
+};
+
+#endif
+
 namespace libport
 {
 

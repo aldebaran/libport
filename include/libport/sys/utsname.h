@@ -13,8 +13,22 @@
 
 # include <libport/config.h>
 
-# ifdef LIBPORT_HAVE_SYS_UTSNAME_H
+# if defined LIBPORT_HAVE_SYS_UTSNAME_H
 #  include <sys/utsname.h>
+# else
+
+#  define _SYS_NAMELEN 40
+struct utsname
+{
+  const char *sysname;
+  const char *nodename;
+  const char *release;
+  const char *version;
+  const char *machine;
+};
+
+int uname(utsname* u);
+
 # endif
 
 # include <string>
@@ -28,6 +42,7 @@ namespace libport
     utsname();
     /// Name of the operating system implementation.
     /// Corresponds to sysname.
+    /// "Darwin" on OS X.
     std::string system() const;
 
     /// Network name of this machine.
