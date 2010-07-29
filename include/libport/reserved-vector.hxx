@@ -22,14 +22,18 @@ namespace libport
   inline
   ReservedVector<T, R>::ReservedVector(I1 b, I2 e)
     : std::vector<T>(b, e)
-  {}
+  {
+    this->reserve(R);
+  }
 
   template<class T, int R>
   template<int R2>
   inline
   ReservedVector<T, R>::ReservedVector(const ReservedVector<T, R2>& b)
     : std::vector<T>(b)
-  {}
+  {
+    this->reserve(R);
+  }
 
   template<typename T>
   inline
