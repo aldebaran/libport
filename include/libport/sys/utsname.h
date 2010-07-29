@@ -12,6 +12,7 @@
 # define LIBPORT_SYS_UTSNAME_H
 
 # include <libport/config.h>
+# include <libport/export.hh>
 
 # if defined LIBPORT_HAVE_SYS_UTSNAME_H
 #  include <sys/utsname.h>
@@ -27,6 +28,7 @@ struct utsname
   const char *machine;
 };
 
+LIBPORT_API
 int uname(utsname* u);
 
 # endif
@@ -36,7 +38,7 @@ int uname(utsname* u);
 namespace libport
 {
 
-  class utsname
+  class LIBPORT_API utsname
   {
   public:
     utsname();
