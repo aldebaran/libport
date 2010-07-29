@@ -60,6 +60,7 @@ TESTS_BINARIES =                                \
   tests/libport/ufloat-double.cc                \
   tests/libport/unescape.cc                     \
   tests/libport/utime.cc			\
+  tests/libport/utsname.cc			\
   tests/libport/xltdl.cc
 
 # ufloat-float.cc is commented out as we do not support ufloat /=

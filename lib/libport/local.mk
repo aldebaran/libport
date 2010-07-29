@@ -70,6 +70,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/semaphore.cc			\
   lib/libport/symbol.cc				\
   lib/libport/synchronizer.cc			\
+  lib/libport/sys/utsname.cc			\
   lib/libport/sysexits.cc			\
   lib/libport/timer.cc				\
   lib/libport/thread-pool.cc			\

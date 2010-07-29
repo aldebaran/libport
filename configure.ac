@@ -84,6 +84,9 @@ AC_CHECK_LIB([rt], [clock_gettime],
 # libport/sys/prctl.h
 AC_CHECK_HEADERS([sys/prctl.h])
 
+# libport/sys/utsname
+AC_CHECK_HEADERS([sys/utsname.h])
+
 # libport/sys/wait.h
 AC_CHECK_HEADERS([sys/wait.h])
 
