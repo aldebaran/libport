@@ -40,7 +40,7 @@ namespace libport
     return push(level_stack_.back(), msg, fun, file, line);
   }
 
-#define ATTRIBUTE(Name)                         \
+#define GD_ATTRIBUTE(Name)                      \
   inline                                        \
   void Debug::Name(bool v)                      \
   {                                             \
@@ -53,9 +53,9 @@ namespace libport
     return Name##_;                             \
   }                                             \
 
-  ATTRIBUTE(locations);
-  ATTRIBUTE(timestamps);
+  GD_ATTRIBUTE(locations);
+  GD_ATTRIBUTE(timestamps);
 
-#undef ATTRIBUTE
+#undef GD_ATTRIBUTE
 
 }
