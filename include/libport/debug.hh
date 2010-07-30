@@ -283,53 +283,33 @@ namespace libport
   GD_FINFO("%s: %s = %s", Msg, #Exp, Exp)
 
 
-#  define GD_INFO_LOG(Msg)                      \
-  do { GD_LOG(); GD_INFO(Msg); } while (0)
+#  define GD_INFO_(Level, Message)                              \
+  GD_DEBUGGER->debug(Message,                                   \
+                     ::libport::Debug::types::info,             \
+                     ::libport::Debug::levels::Level,           \
+                     GD_FUNCTION, __FILE__, __LINE__)
 
-#  define GD_INFO_TRACE(Msg)                    \
-  do { GD_TRACE(); GD_INFO(Msg); } while (0)
 
-#  define GD_INFO_DEBUG(Msg)                    \
-  do { GD_DEBUG(); GD_INFO(Msg); } while (0)
+#  define GD_INFO_LOG(Msg)   GD_INFO_(log, Msg)
+#  define GD_INFO_TRACE(Msg) GD_INFO_(trace, Msg)
+#  define GD_INFO_DEBUG(Msg) GD_INFO_(debug, Msg)
+#  define GD_INFO_DUMP(Msg)  GD_INFO_(dump, Msg)
 
-#  define GD_INFO_DUMP(Msg)                     \
-  do { GD_DUMP(); GD_INFO(Msg); } while (0)
+#  define GD_FINFO_LOG(Msg, ...)   GD_INFO_(log,   GD_FORMAT(Msg, __VA_ARGS__))
+#  define GD_FINFO_TRACE(Msg, ...) GD_INFO_(trace, GD_FORMAT(Msg, __VA_ARGS__))
+#  define GD_FINFO_DEBUG(Msg, ...) GD_INFO_(debug, GD_FORMAT(Msg, __VA_ARGS__))
+#  define GD_FINFO_DUMP(Msg, ...)  GD_INFO_(dump,  GD_FORMAT(Msg, __VA_ARGS__))
 
-#  define GD_FINFO_LOG(Msg, ...)                        \
-  do { GD_LOG(); GD_FINFO(Msg, __VA_ARGS__); } while (0)
+#  define GD_SINFO_LOG(Msg)   GD_INFO_(log,   GD_STREAM(Msg))
+#  define GD_SINFO_TRACE(Msg) GD_INFO_(trace, GD_STREAM(Msg))
+#  define GD_SINFO_DEBUG(Msg) GD_INFO_(debug, GD_STREAM(Msg))
+#  define GD_SINFO_DUMP(Msg)  GD_INFO_(dump,  GD_STREAM(Msg))
 
-#  define GD_FINFO_TRACE(Msg, ...)                      \
-  do { GD_TRACE(); GD_FINFO(Msg, __VA_ARGS__); } while (0)
+#  define GD_VINFO_LOG(Msg, Exp)   GD_INFO_LOG("%s: %s = %s", Msg, #Exp, Exp)
+#  define GD_VINFO_TRACE(Msg, Exp) GD_INFO_TRACE("%s: %s = %s", Msg, #Exp, Exp)
+#  define GD_VINFO_DEBUG(Msg, Exp) GD_INFO_DEBUG("%s: %s = %s", Msg, #Exp, Exp)
+#  define GD_VINFO_DUMP(Msg, Exp)  GD_INFO_DUMP("%s: %s = %s", Msg, #Exp, Exp)
 
-#  define GD_FINFO_DEBUG(Msg, ...)                      \
-  do { GD_DEBUG(); GD_FINFO(Msg, __VA_ARGS__); } while (0)
-
-#  define GD_FINFO_DUMP(Msg, ...)                       \
-  do { GD_DUMP(); GD_FINFO(Msg, __VA_ARGS__); } while (0)
-
-#  define GD_SINFO_LOG(Msg)                        \
-  do { GD_LOG(); GD_SINFO(Msg); } while (0)
-
-#  define GD_SINFO_TRACE(Msg)                      \
-  do { GD_TRACE(); GD_SINFO(Msg); } while (0)
-
-#  define GD_SINFO_DEBUG(Msg)                      \
-  do { GD_DEBUG(); GD_SINFO(Msg); } while (0)
-
-#  define GD_SINFO_DUMP(Msg)                       \
-  do { GD_DUMP(); GD_SINFO(Msg); } while (0)
-
-#  define GD_VINFO_LOG(Msg, Val)                        \
-  do { GD_LOG(); GD_VINFO(Msg, Val); } while (0)
-
-#  define GD_VINFO_TRACE(Msg, Val)                      \
-  do { GD_TRACE(); GD_VINFO(Msg, Val); } while (0)
-
-#  define GD_VINFO_DEBUG(Msg, Val)                      \
-  do { GD_DEBUG(); GD_VINFO(Msg, Val); } while (0)
-
-#  define GD_VINFO_DUMP(Msg, Val)                       \
-  do { GD_DUMP(); GD_VINFO(Msg, Val); } while (0)
 
 #  define GD_WARN(Message)                                      \
   GD_DEBUGGER->debug(Message, ::libport::Debug::types::warn,    \
