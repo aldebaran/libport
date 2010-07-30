@@ -37,10 +37,13 @@ namespace libport
   {
     ERRNO_RUN(uname, &utsname_);
     std::stringstream r(release());
+    // FIXME: Improve checking.  Use Spirit?
     r >> major_;
-    assert_eq(r.get(), '.');
+    // Skip `.'.
+    r.get();
     r >> minor_;
-    assert_eq(r.get(), '.');
+    // Skip `.'.
+    r.get();
     r >> patchlevel_;
   }
 
