@@ -8,24 +8,6 @@
  * See the LICENSE file for more information.
  */
 
-/*! \file ulong-fixed-point.hh
- *******************************************************************************
-
- File: ulong-fixed-point.hh\n
- Definition of the ULongFixedPoint classes.
-
- This file is part of
- %URBI Kernel, version __kernelversion__\n
- (c) Jean-Christophe Baillie, 2004-2005.
-
- This software is provided "as is" without warranty of any kind,
- either expressed or implied, including but not limited to the
- implied warranties of fitness for a particular purpose.
-
- For more information, comments, bug reports: http://www.urbiforge.net
-
- **************************************************************************** */
-
 #ifndef LIBPORT_ULONG_FIXED_POINT_HH
 # define LIBPORT_ULONG_FIXED_POINT_HH
 # include <iostream>
