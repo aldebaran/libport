@@ -166,24 +166,19 @@ namespace libport
     return this;
   }
 
-  bool
-  Debug::disabled() const
-  {
-    return (level_stack_.back() > filter_
-            || categories_stack_.empty()
-            || !debug::test_category(categories_stack_.back()));
-  }
-
   Debug*
   Debug::push(const std::string& msg,
               const std::string& fun,
               const std::string& file,
               unsigned line)
   {
-    if (disabled())
+    if (enabled())
+    {
+      message_push(msg, fun, file, line);
+      return this;
+    }
+    else
       return 0;
-    message_push(msg, fun, file, line);
-    return this;
   }
 
   void

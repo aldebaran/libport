@@ -15,8 +15,11 @@ namespace libport
   inline
   bool Debug::enabled() const
   {
-    return !disabled();
+    return (level_stack_.back() <= filter_
+            && !categories_stack_.empty()
+            && debug::test_category(categories_stack_.back()));
   }
+
 
 #define ATTRIBUTE(Name)                         \
   inline                                        \

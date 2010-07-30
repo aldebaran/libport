@@ -131,8 +131,6 @@ namespace libport
 
     // Whether the message should be displayed.
     bool enabled() const;
-    // Whether the message should not be displayed.
-    bool disabled() const;
 
     bool test_category(Symbol c) const;
   protected:
