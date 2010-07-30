@@ -133,11 +133,12 @@ namespace libport
   void
   Debug::debug(const std::string& msg,
                types::Type type,
+               levels::Level lvl,
                const std::string& fun,
                const std::string& file,
                unsigned line)
   {
-    if (enabled())
+    if (enabled(lvl))
     {
 # ifdef LIBPORT_HAVE_IP_SEMAPHORE
       static bool useLock = getenv("GD_USE_LOCK") || getenv("GD_PID");
@@ -167,12 +168,13 @@ namespace libport
   }
 
   Debug*
-  Debug::push(const std::string& msg,
+  Debug::push(levels::Level lvl,
+              const std::string& msg,
               const std::string& fun,
               const std::string& file,
               unsigned line)
   {
-    if (enabled())
+    if (enabled(lvl))
     {
       message_push(msg, fun, file, line);
       return this;

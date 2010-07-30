@@ -91,12 +91,26 @@ namespace libport
     virtual ~Debug();
 
     // Report the message if it is enabled.
+    // Report the message if its \a lvl suffices.
+    void debug(const std::string& msg,
+               types::Type type,
+               levels::Level lvl,
+               const std::string& fun = "",
+               const std::string& file = "",
+               unsigned line = 0);
     // This is the public interface.
     void debug(const std::string& msg,
                types::Type type,
                const std::string& fun = "",
                const std::string& file = "",
                unsigned line = 0);
+
+    Debug* push(levels::Level lvl,
+                const std::string& msg,
+                const std::string& fun = "",
+                const std::string& file = "",
+                unsigned line = 0);
+    // Use the topmost level.
     Debug* push(const std::string& msg,
                 const std::string& fun = "",
                 const std::string& file = "",
@@ -129,8 +143,9 @@ namespace libport
     void filter(const std::string& lvl);
     levels::Level level() const;
 
-    // Whether the message should be displayed.
-    bool enabled() const;
+    /// Whether a message with level \a lvl message should be
+    /// displayed.
+    bool enabled(levels::Level lvl) const;
 
     bool test_category(Symbol c) const;
   protected:
