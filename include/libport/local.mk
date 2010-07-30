@@ -12,6 +12,7 @@ libport_include_HEADERS =			\
   include/libport/cassert			\
   include/libport/cerrno			\
   include/libport/cmath				\
+  include/libport/cmath.hxx			\
   include/libport/csignal			\
   include/libport/cstdio			\
   include/libport/cstdlib			\

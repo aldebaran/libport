@@ -16,6 +16,7 @@ TESTS_BINARIES =                                \
   tests/libport/base64.cc                       \
   tests/libport/backtrace.cc                    \
   tests/libport/cli.cc                          \
+  tests/libport/cmath.cc                        \
   tests/libport/condition.cc                    \
   tests/libport/containers.cc                   \
   tests/libport/cstdlib.cc                      \

@@ -40,46 +40,4 @@ namespace libport
 }
 # endif
 
-# include <libport/config.h>
-/* round is not C++ standard (not even POSIX) and neither gnulib nor Boost
- * provide one.  So here is my quick replacement.  */
-# ifndef LIBPORT_HAVE_ROUND
-#  include <libport/cmath>
-namespace libport
-{
-  inline float round(float d)
-  {
-    return floor(d + 0.5f + FLT_EPSILON);
-  }
-
-  inline double round(double d)
-  {
-    return floor(d + 0.5 + DBL_EPSILON);
-  }
-
-  inline long double round(long double d)
-  {
-    return floor(d + 0.5 + LDBL_EPSILON);
-  }
-
-}
-# endif /* !LIBPORT_HAVE_ROUND */
-
-/* trunc is not C++ standard (not even POSIX) and although gnulib says it
- * provides a replacement in its manual, in fact it doesn't, nor does Boost.
- * So here is my quick replacement.  */
-# ifndef LIBPORT_HAVE_TRUNC
-#  include <libport/cmath>
-namespace libport
-{
-  inline double trunc (double d)
-  {
-    if (d < 0.0)
-      return ceil (d);
-    else
-      return floor (d);
-  }
-}
-# endif /* !LIBPORT_HAVE_TRUNC */
-
 #endif // !LIBPORT_UFLOAT_HXX

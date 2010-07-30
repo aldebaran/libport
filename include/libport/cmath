@@ -58,6 +58,24 @@ namespace std
 
 # endif // ! defined _MSC_VER
 
+/*----------.
+| Libport.  |
+`----------*/
+
+// round and trunc are not C++ standard (not even POSIX).
+namespace libport
+{
+  float round(float d);
+  double round(double d);
+  long double round(long double d);
+
+  float trunc(float d);
+  double trunc(double d);
+  long double trunc(long double d);
+}
+
+# include <libport/cmath.hxx>
+
 #endif // !LIBPORT_CMATH
 
 // Local Variables:

@@ -94,31 +94,6 @@ namespace libport
 }
 # endif
 
-# include <libport/config.h>
-/* round is not C++ standard (not even POSIX) and neither gnulib nor Boost
- * provide one.  So here is my quick replacement.  */
-# ifndef LIBPORT_HAVE_ROUND
-namespace libport
-{
-  inline float round (float d);
-  inline double round (double d);
-  inline long double round (long double d);
-
-}
-# endif /* !LIBPORT_HAVE_ROUND */
-
-/* trunc is not C++ standard (not even POSIX) and although gnulib says it
- * provides a replacement in its manual, in fact it doesn't, nor does Boost.
- * So here is my quick replacement.  */
-# ifndef LIBPORT_HAVE_TRUNC
-#  include <libport/cmath>
-namespace libport
-{
-  LIBPORT_API inline double trunc (double d);
-}
-# endif /* !LIBPORT_HAVE_TRUNC */
-
-
 /*---------------------.
 | Float to int casts.  |
 `---------------------*/
