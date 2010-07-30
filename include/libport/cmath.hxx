@@ -31,7 +31,8 @@ namespace libport
   {                                                             \
     return                                                      \
       ROUND_IF(::round(v),                                      \
-               std::sgn(v) * std::floor(std::fabs(v) + 0.5));   \
+               (v < 0. ? -1. : 1.0)                             \
+               * std::floor(std::fabs(v) + 0.5));               \
   }
   ROUND(float);
   ROUND(double);
