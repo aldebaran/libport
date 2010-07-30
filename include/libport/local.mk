@@ -73,6 +73,7 @@ libport_include_HEADERS +=				\
   include/libport/containers.hxx			\
   include/libport/damerau-levenshtein-distance.hh	\
   include/libport/debug.hh				\
+  include/libport/debug.hxx				\
   include/libport/deref.hh				\
   include/libport/deref.hxx				\
   include/libport/destructible.hh			\

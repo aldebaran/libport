@@ -89,6 +89,9 @@ namespace libport
 
     Debug();
     virtual ~Debug();
+
+    // Report the message if it is enabled.
+    // This is the public interface.
     void debug(const std::string& msg,
                types::Type type,
                const std::string& fun = "",
@@ -99,6 +102,8 @@ namespace libport
                 const std::string& file = "",
                 unsigned line = 0);
 
+    // Report the message.
+    // This is the backend.
     virtual void message(const std::string& msg,
                          types::Type type,
                          const std::string& fun = "",
@@ -114,20 +119,24 @@ namespace libport
     Debug* push_level(levels::Level lvl);
 
     void locations(bool value);
-    bool locations();
+    bool locations() const;
     void timestamps(bool value);
-    bool timestamps();
+    bool timestamps() const;
 
     ATTRIBUTE_NORETURN static void abort(const std::string& msg);
 
     void filter(levels::Level lvl);
     void filter(const std::string& lvl);
     levels::Level level() const;
-    bool disabled();
+
+    // Whether the message should be displayed.
+    bool enabled() const;
+    // Whether the message should not be displayed.
+    bool disabled() const;
 
     bool test_category(Symbol c) const;
   protected:
-    std::string category();
+    std::string category() const;
     virtual void pop() = 0;
 
   private:
@@ -598,5 +607,7 @@ namespace libport
 #  define GD_SWARN(Msg)
 
 # endif
+
+# include <libport/debug.hxx>
 
 #endif

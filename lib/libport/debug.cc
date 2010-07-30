@@ -137,9 +137,7 @@ namespace libport
                const std::string& file,
                unsigned line)
   {
-    if (disabled())
-      return;
-
+    if (enabled())
     {
 # ifdef LIBPORT_HAVE_IP_SEMAPHORE
       static bool useLock = getenv("GD_USE_LOCK") || getenv("GD_PID");
@@ -169,7 +167,7 @@ namespace libport
   }
 
   bool
-  Debug::disabled()
+  Debug::disabled() const
   {
     return (level_stack_.back() > filter_
             || categories_stack_.empty()
@@ -210,7 +208,7 @@ namespace libport
   }
 
   std::string
-  Debug::category()
+  Debug::category() const
   {
     std::string res = (categories_stack_.empty()
                        ? GD_GET_CATEGORY(NONE).name_get()
@@ -227,23 +225,6 @@ namespace libport
 
     return res;
   }
-
-#define ATTRIBUTE(Name)                         \
-                                                \
-  void Debug::Name(bool v)                      \
-  {                                             \
-    Name##_ = v;                                \
-  }                                             \
-                                                \
-  bool Debug::Name()                            \
-  {                                             \
-    return Name##_;                             \
-  }                                             \
-
-  ATTRIBUTE(locations);
-  ATTRIBUTE(timestamps);
-
-#undef ATTRIBUTE
 
   void Debug::abort(const std::string& msg)
   {
