@@ -25,6 +25,18 @@ namespace libport
   {
   };
 
+  /// \class shortcut to boost implementation that does not delete the backend.
+  template <typename T>
+  class UnmanagedThreadSpecificPtr
+    : public boost::thread_specific_ptr<T>
+  {
+  public:
+    UnmanagedThreadSpecificPtr()
+    : boost::thread_specific_ptr<T>(&noop)
+    {}
+    static void noop(T*) {}
+  };
+
   namespace localdata
   {
     /// \brief Define Thread encapsulation type.

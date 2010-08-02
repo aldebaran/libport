@@ -77,7 +77,9 @@ namespace libport
     {
       typedef T target;
       typedef libport::LocalData<T, Coroutine> type;
-      typedef ThreadSpecificPtr<type> container;
+      // The coroutine will take care of the destruction of LocalData, so
+      // do nothing when the thread dies.
+      typedef UnmanagedThreadSpecificPtr<type> container;
     };
   }
 }
