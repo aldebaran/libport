@@ -51,8 +51,6 @@
   INFO_(Format ": %s", ## __VA_ARGS__, strerror(errno))
 
 
-
-GD_INIT();
 GD_ADD_CATEGORY(read_file);
 
 
