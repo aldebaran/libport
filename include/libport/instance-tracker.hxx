@@ -33,6 +33,12 @@ namespace libport
   }
 
   template <typename T>
+  bool InstanceTracker<T>::check(T* inst) const
+  {
+    return libport::mhas(instances_, inst);
+  }
+
+  template <typename T>
   typename InstanceTracker<T>::set_type InstanceTracker<T>::instances_;
 }
 

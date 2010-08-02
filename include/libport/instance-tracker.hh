@@ -29,7 +29,8 @@ namespace libport
     InstanceTracker();
     ~InstanceTracker();
     static const set_type& instances_get();
-
+    /// Check that inst is a registered instance.
+    bool check(T* inst) const;
   private:
     static set_type instances_;
   };
