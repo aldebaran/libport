@@ -52,7 +52,17 @@ namespace libport
     static __int64 freq = get_performance_frequency();
     __int64 now = get_performance_counter();
     static __int64 base = now;
-    return (utime_t) ((now - base) * 1000000LL) / freq;
+
+    // Beware that this formula might cause an overflow, because of the
+    // multiplication before the division:
+    // (utime_t) ((now - base) * 1000000LL) / freq;
+    // Of course inverting the multiplication and the division is not
+    // a solution because of the precision loss.
+
+    // One solution: splitting the operation:
+    utime_t high =  (now - base)              / freq * 1000000LL;
+    utime_t low = (((now - base) * 1000000LL) / freq) % 1000000LL;
+    return high + low;
   }
 }
 
