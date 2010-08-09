@@ -11,6 +11,8 @@
 #ifndef LIBPORT_UTIME_HH
 # define LIBPORT_UTIME_HH
 
+# include <boost/date_time/posix_time/posix_time.hpp>
+
 # include <libport/export.hh>
 # include <libport/sys/time.h>
 # include <libport/ufloat.hh>
@@ -29,6 +31,12 @@ namespace libport
 
   /// Return elapsed time from an arbitrary basis in microseconds.
   LIBPORT_API utime_t utime();
+
+  /// Return the arbitrary basis
+  LIBPORT_API const boost::posix_time::ptime& utime_reference();
+
+  /// Set the arbitrary basis
+  void utime_reference_set(const boost::posix_time::ptime& ref);
 
   /// Convert from microseconds to timeval.
   timeval utime_to_timeval(utime_t t);
