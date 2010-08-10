@@ -36,7 +36,7 @@ namespace libport
   LIBPORT_API const boost::posix_time::ptime& utime_reference();
 
   /// Set the arbitrary basis
-  void utime_reference_set(const boost::posix_time::ptime& ref);
+  LIBPORT_API void utime_reference_set(const boost::posix_time::ptime& ref);
 
   /// Convert from microseconds to timeval.
   timeval utime_to_timeval(utime_t t);
