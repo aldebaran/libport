@@ -190,6 +190,40 @@ namespace libport
     lockable_.unlock();
   }
 
+
+  inline
+  ScopedTryLock::ScopedTryLock(Lockable& l)
+    : lockable_(l)
+  {
+    hasLock_ = lockable_.tryLock();
+  }
+
+  inline
+  ScopedTryLock::ScopedTryLock(Lockable* l)
+    : lockable_(*l)
+  {
+    hasLock_ = lockable_.tryLock();
+  }
+
+  inline
+  ScopedTryLock::~ScopedTryLock()
+  {
+    if (hasLock_)
+      lockable_.unlock();
+  }
+
+  inline bool
+  ScopedTryLock::hasLock() const
+  {
+    return hasLock_;
+  }
+
+  inline
+  ScopedTryLock::operator bool() const
+  {
+    return hasLock();
+  }
+
 } // namespace libport
 
 #endif // !LIBPORT_LOCKABLE_HXX

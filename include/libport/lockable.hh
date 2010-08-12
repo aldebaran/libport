@@ -74,6 +74,22 @@ namespace libport
     Lockable& lockable_;
   };
 
+  /*----------------.
+  | ScopedTryLock.  |
+  `----------------*/
+
+  class ScopedTryLock
+  {
+  public:
+    ScopedTryLock(Lockable& l);
+    ScopedTryLock(Lockable* l);
+    ~ScopedTryLock();
+    operator bool () const;
+    bool hasLock() const;
+  private:
+    Lockable& lockable_;
+    bool hasLock_;
+  };
 } // namespace libport
 
 # ifdef LOCKED
