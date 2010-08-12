@@ -525,6 +525,7 @@ namespace libport
 #  define GD_ENABLE_TIMESTAMPS()                \
   GD_ENABLE(timestamps)
 
+#  include <libport/debug.hxx>
 # else
 
 #  define GD_DEBUGGER
@@ -600,7 +601,5 @@ namespace libport
 #  define GD_SWARN(Msg)
 
 # endif
-
-# include <libport/debug.hxx>
 
 #endif
