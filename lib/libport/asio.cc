@@ -104,7 +104,7 @@ namespace libport
     class UDPSocket: public Destructible
     {
     public:
-      UDPSocket();
+      UDPSocket(boost::asio::io_service& io = get_io_service());
       typedef boost::function3<void, const void*, size_t,
                                boost::shared_ptr<UDPLink> > onread_type;
       onread_type onRead;
@@ -119,8 +119,8 @@ namespace libport
       friend class libport::Socket;
     };
 
-    UDPSocket::UDPSocket()
-      :socket_(get_io_service())
+    UDPSocket::UDPSocket(boost::asio::io_service& io)
+      :socket_(io)
     {
       recv_buffer_.resize(default_size_);
     }
@@ -426,16 +426,17 @@ namespace libport
   Socket::listenUDP(const std::string& host,
                     const std::string& port,
                     netdetail::UDPSocket::onread_type onRead,
-                    boost::system::error_code& erc)
+                    boost::system::error_code& erc,
+                    boost::asio::io_service& io)
   {
     using namespace boost::asio::ip;
-    netdetail::UDPSocket* s = new netdetail::UDPSocket();
+    netdetail::UDPSocket* s = new netdetail::UDPSocket(io);
     s->onRead = onRead;
     /* On some configurations, the resolver will resolve an ipv6 address even
      * if this protocol is not supported by the system. So try to bind using all
      * the endopints until one succeeds, and not just the first. */
     udp::resolver::query query(host, port);
-    udp::resolver resolver(libport::get_io_service(true));
+    udp::resolver resolver(io);
     udp::resolver::iterator iter = resolver.resolve(query, erc);
     if (erc)
       return 0;

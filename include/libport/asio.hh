@@ -293,7 +293,9 @@ namespace libport
                                     const std::string& port,
                             boost::function3<void, const void*, size_t,
                             boost::shared_ptr<UDPLink> > onRead,
-                            boost::system::error_code& erc);
+                            boost::system::error_code& erc,
+                            boost::asio::io_service& s
+                              = libport::get_io_service());
 
     /** Listen using TCP or UDP.
      *
