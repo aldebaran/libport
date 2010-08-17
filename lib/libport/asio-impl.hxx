@@ -283,9 +283,9 @@ namespace libport
 
     template<> inline
     void syncWriteDispatch<boost::asio::ip::udp::socket>
-    (boost::asio::ip::udp::socket*, const void*, size_t)
+    (boost::asio::ip::udp::socket* s, const void* data, size_t length )
     {
-      throw std::runtime_error("not implemented");
+      s->send(boost::asio::buffer(data, length));
     }
 
     template<typename Stream>
