@@ -15,6 +15,8 @@
 
 namespace libport
 {
+  static const unsigned invalid_count = 0xFFFFFFFF;
+
   inline RefCounted::RefCounted ()
     : count_(0)
   {}
@@ -24,7 +26,7 @@ namespace libport
 
   inline void RefCounted::counter_inc () const
   {
-    aver(count_ != 0xFFFFFFFF);
+    aver(count_ != invalid_count);
     ++count_;
   }
 
@@ -32,17 +34,17 @@ namespace libport
   // object inside the destructor.
   inline void RefCounted::counter_reset () const
   {
-    aver(count_ == 0xFFFFFFFF);
+    aver(count_ == invalid_count);
     count_ = 1;
   }
 
   inline bool RefCounted::counter_dec () const
   {
-    aver(count_ != 0xFFFFFFFF);
+    aver(count_ != invalid_count);
     --count_;
     if (!count_)
     {
-      count_ = 0xFFFFFFFF;
+      count_ = invalid_count;
       return true;
     }
     return false;
