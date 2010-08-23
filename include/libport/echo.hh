@@ -14,6 +14,8 @@
 #ifndef LIBPORT_ECHO_HH
 # define LIBPORT_ECHO_HH
 
+# include <iostream>
+# include <string>
 # include <libport/export.hh>
 
 /*--------------.
