@@ -19,9 +19,9 @@
 #include <libport/cassert>
 #include <libport/cstdlib>
 
-#include <libport/compiler.hh>
 #include <libport/containers.hh>
 #include <libport/deref.hh>
+#include <libport/echo.hh>
 #include <libport/foreach.hh>
 
 #include <sched/scheduler.hh>

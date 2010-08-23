@@ -11,20 +11,12 @@
 #ifndef SERIALIZE_EXPORT_HH
 # define SERIALIZE_EXPORT_HH
 
-# include <libport/detect-win32.h>
+# include <libport/compiler.hh>
 
-# ifdef WIN32
-#ifndef STATIC_BUILD
-#  ifdef BUILDING_SERIALIZE
-#   define SERIALIZE_API __declspec(dllexport)
-#  else
-#   define SERIALIZE_API __declspec(dllimport)
-#  endif
-#else
-#define SERIALIZE_API
-#endif
+# ifdef BUILDING_SERIALIZE
+#   define SERIALIZE_API ATTRIBUTE_DLLEXPORT
 # else
-#  define SERIALIZE_API __attribute__((visibility("default")))
+#   define SERIALIZE_API ATTRIBUTE_DLLIMPORT
 # endif
 
 #endif // SERIALIZE_EXPORT_HH

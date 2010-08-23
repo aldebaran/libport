@@ -15,9 +15,9 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/mem_fn.hpp>
 
-#include <libport/compiler.hh>     // For LIBPORT_DEBUG
 #include <libport/containers.hh>
 #include <libport/debug.hh>
+#include <libport/echo.hh>
 #include <libport/foreach.hh>
 #include <libport/indent.hh>
 #include <libport/separate.hh>

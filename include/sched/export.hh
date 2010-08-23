@@ -11,20 +11,12 @@
 #ifndef SCHED_EXPORT_HH
 # define SCHED_EXPORT_HH
 
-# include <libport/detect-win32.h>
+# include <libport/compiler.hh>
 
-# ifdef WIN32
-# ifndef STATIC_BUILD
-#  ifdef BUILDING_LIBSCHED
-#   define SCHED_API __declspec(dllexport)
-#  else
-#   define SCHED_API __declspec(dllimport)
-#  endif
-#else
-#define SCHED_API
-#endif
+# ifdef BUILDING_LIBSCHED
+#   define SCHED_API ATTRIBUTE_DLLEXPORT
 # else
-#  define SCHED_API __attribute__((visibility("default")))
+#   define SCHED_API ATTRIBUTE_DLLIMPORT
 # endif
 
 #endif // SCHED_EXPORT_HH

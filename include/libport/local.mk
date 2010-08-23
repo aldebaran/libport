@@ -66,7 +66,6 @@ libport_include_HEADERS +=				\
   include/libport/cli.hxx				\
   include/libport/compilation.hh			\
   include/libport/compiler.hh				\
-  include/libport/compiler.hxx				\
   include/libport/condition.hh				\
   include/libport/condition.hxx				\
   include/libport/containers.hh				\
@@ -81,6 +80,8 @@ libport_include_HEADERS +=				\
   include/libport/detect-win32.h			\
   include/libport/dirent.h				\
   include/libport/dlfcn.h				\
+  include/libport/echo.hh				\
+  include/libport/echo.hxx				\
   include/libport/errors.hh				\
   include/libport/escape.hh				\
   include/libport/escape.hxx				\

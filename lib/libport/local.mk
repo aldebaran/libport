@@ -39,7 +39,6 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/base64.cc				\
   lib/libport/buffer-stream.cc			\
   lib/libport/cli.cc				\
-  lib/libport/compiler.cc			\
   lib/libport/csignal.cc			\
   lib/libport/cstdio.cc				\
   lib/libport/cstdlib.cc			\
@@ -49,6 +48,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/debug.cc				\
   lib/libport/deref.cc				\
   lib/libport/dirent.cc				\
+  lib/libport/echo.cc				\
   lib/libport/escape.cc				\
   lib/libport/fd-stream.cc			\
   lib/libport/file-library.cc			\
