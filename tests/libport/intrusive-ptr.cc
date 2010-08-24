@@ -71,10 +71,36 @@ check()
   CHECK(0);
 }
 
+class RefFromDtor: public libport::RefCounted
+{
+public:
+  RefFromDtor()
+    : dead_(false)
+  {}
+
+  ~RefFromDtor()
+  {
+    BOOST_CHECK(!dead_);
+    dead_ = true;
+    libport::intrusive_ptr<RefFromDtor> ref_from_dtor = this;
+  }
+
+private:
+  bool dead_;
+};
+
+void
+ref_from_dtor()
+{
+  libport::intrusive_ptr<RefFromDtor> ref_from_dtor = new RefFromDtor;
+}
+
+
 test_suite*
 init_test_suite()
 {
-  test_suite* suite = BOOST_TEST_SUITE("libport::cli");
+  test_suite* suite = BOOST_TEST_SUITE("libport::intrusive_ptr");
   suite->add(BOOST_TEST_CASE(check));
+  suite->add(BOOST_TEST_CASE(ref_from_dtor));
   return suite;
 }

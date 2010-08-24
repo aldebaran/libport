@@ -11,22 +11,29 @@
 #ifndef LIBPORT_REF_COUNTED_HXX
 # define LIBPORT_REF_COUNTED_HXX
 
+# include <climits>
+
 # include <libport/cassert>
 
 namespace libport
 {
-  static const unsigned invalid_count = 0xFFFFFFFF;
+  static const unsigned invalid_count = UINT_MAX;
+  static const unsigned dying_count   = UINT_MAX - 1;
 
   inline RefCounted::RefCounted ()
     : count_(0)
   {}
 
   inline RefCounted::~RefCounted ()
-  {}
+  {
+    count_ = invalid_count;
+  }
 
   inline void RefCounted::counter_inc () const
   {
     aver(count_ != invalid_count);
+    if (count_ == dying_count)
+      return;
     ++count_;
   }
 
@@ -34,17 +41,19 @@ namespace libport
   // object inside the destructor.
   inline void RefCounted::counter_reset () const
   {
-    aver(count_ == invalid_count);
+    aver(count_ == dying_count);
     count_ = 1;
   }
 
   inline bool RefCounted::counter_dec () const
   {
     aver(count_ != invalid_count);
+    if (count_ == dying_count)
+      return false;
     --count_;
     if (!count_)
     {
-      count_ = invalid_count;
+      count_ = dying_count;
       return true;
     }
     return false;
@@ -52,6 +61,7 @@ namespace libport
 
   inline unsigned RefCounted::counter_get () const
   {
+    aver(count_ != invalid_count);
     return count_;
   }
 }
