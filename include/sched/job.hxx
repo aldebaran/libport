@@ -23,10 +23,9 @@
 # include <sched/scheduler.hh>
 # include <sched/coroutine.hh>
 
-GD_ADD_CATEGORY(sched);
-
 namespace sched
 {
+  GD_CATEGORY(libport::sched);
 
   /*------------.
   | job_state.  |
@@ -189,7 +188,6 @@ namespace sched
       // Cannot be nicely converted to using FINALLY because of
       // MSVC2005.  See finally.hh.
       libport::Finally finally(libport::scoped_set(check_stack_space_, false));
-      GD_CATEGORY(sched);
       GD_ERROR("Stack space exhausted");
       scheduling_error("stack space exhausted");
     }

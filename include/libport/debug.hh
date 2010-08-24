@@ -36,16 +36,17 @@ namespace libport
 {
   namespace debug
   {
-    typedef std::map<Symbol, bool> categories_type;
+    typedef Symbol category_type;
+    typedef std::map<category_type, bool> categories_type;
 
     categories_type& get_categories();
-    LIBPORT_API Symbol add_category(Symbol name);
-    LIBPORT_API int enable_category(Symbol name);
-    LIBPORT_API int disable_category(Symbol name);
+    LIBPORT_API category_type add_category(category_type name);
+    LIBPORT_API int enable_category(category_type name);
+    LIBPORT_API int disable_category(category_type name);
 
     /// Reclaim the allocated memory.
     LIBPORT_API void clear();
-    bool test_category(Symbol name);
+    bool test_category(category_type name);
   }
 
   class LIBPORT_API Debug
@@ -95,40 +96,44 @@ namespace libport
     void debug(const std::string& msg,
                types::Type type,
                levels::Level lvl,
+               debug::category_type category,
                const std::string& fun = "",
                const std::string& file = "",
                unsigned line = 0);
     // This is the public interface.
     void debug(const std::string& msg,
                types::Type type,
+               debug::category_type category,
                const std::string& fun = "",
                const std::string& file = "",
                unsigned line = 0);
 
     Debug* push(levels::Level lvl,
+                debug::category_type category,
                 const std::string& msg,
                 const std::string& fun = "",
                 const std::string& file = "",
                 unsigned line = 0);
     // Use the topmost level.
-    Debug* push(const std::string& msg,
+    Debug* push(debug::category_type category,
+                const std::string& msg,
                 const std::string& fun = "",
                 const std::string& file = "",
                 unsigned line = 0);
 
     // Report the message.
     // This is the backend.
-    virtual void message(const std::string& msg,
+    virtual void message(debug::category_type category,
+                         const std::string& msg,
                          types::Type type,
                          const std::string& fun = "",
                          const std::string& file = "",
                          unsigned line = 0) = 0;
-    virtual void message_push(const std::string& msg,
+    virtual void message_push(debug::category_type category,
+                              const std::string& msg,
                               const std::string& fun = "",
                               const std::string& file = "",
                               unsigned line = 0) = 0;
-
-    Debug* push_category(Symbol name);
 
     Debug* push_level(levels::Level lvl);
 
@@ -137,7 +142,7 @@ namespace libport
     void timestamps(bool value);
     bool timestamps() const;
 
-    ATTRIBUTE_NORETURN static void abort(const std::string& msg);
+    ATTRIBUTE_NORETURN static void abort();
 
     void filter(levels::Level lvl);
     void filter(const std::string& lvl);
@@ -145,18 +150,15 @@ namespace libport
 
     /// Whether a message with level \a lvl message should be
     /// displayed.
-    bool enabled(levels::Level lvl) const;
+    bool enabled(levels::Level lvl, debug::category_type category) const;
 
-    bool test_category(Symbol c) const;
   protected:
-    std::string category() const;
+    std::string category_format(debug::category_type cat) const;
     virtual void pop() = 0;
 
   private:
-    void pop_category();
     void pop_level();
 
-    std::list<Symbol> categories_stack_;
     std::list<levels::Level> level_stack_;
     bool locations_;
     bool timestamps_;
@@ -164,7 +166,6 @@ namespace libport
 
   public:
     // Define Finally* classes.
-    FINALLY_DEFINE(Category, ((Debug*, debug)), debug->pop_category());
     FINALLY_DEFINE(Level, ((Debug*, debug)), debug->pop_level());
     FINALLY_DEFINE(Indent, ((Debug*, debug)), if (debug) debug->pop());
   };
@@ -173,12 +174,14 @@ namespace libport
   {
   public:
     ConsoleDebug();
-    virtual void message(const std::string& msg,
+    virtual void message(debug::category_type category,
+                         const std::string& msg,
                          types::Type type,
                          const std::string& fun = "",
                          const std::string& file = "",
                          unsigned line = 0);
-    virtual void message_push(const std::string& msg,
+    virtual void message_push(debug::category_type category,
+                              const std::string& msg,
                               const std::string& fun = "",
                               const std::string& file = "",
                               unsigned line = 0);
@@ -194,12 +197,14 @@ namespace libport
   public:
     SyslogDebug(const std::string& program);
     ~SyslogDebug();
-    virtual void message(const std::string& msg,
+    virtual void message(debug::category_type category,
+                         const std::string& msg,
                          types::Type type,
                          const std::string& fun,
                          const std::string& file,
                          unsigned line);
-    virtual void message_push(const std::string& msg,
+    virtual void message_push(debug::category_type category,
+                              const std::string& msg,
                               const std::string& fun,
                               const std::string& file,
                               unsigned line);
@@ -271,7 +276,8 @@ namespace libport
 
 #  define GD_INFO(Message)                                      \
   GD_DEBUGGER->debug(Message, ::libport::Debug::types::info,    \
-                    GD_FUNCTION, __FILE__, __LINE__)
+                     GD_CATEGORY_GET(),                         \
+                     GD_FUNCTION, __FILE__, __LINE__)
 
 #  define GD_FINFO(Msg, ...)                    \
   GD_INFO(GD_FORMAT(Msg, __VA_ARGS__))
@@ -287,7 +293,8 @@ namespace libport
   GD_DEBUGGER->debug(Message,                                   \
                      ::libport::Debug::types::info,             \
                      ::libport::Debug::levels::Level,           \
-                     GD_FUNCTION, __FILE__, __LINE__)
+                     GD_CATEGORY_GET(),                         \
+                     GD_FUNCTION, __FILE__, __LINE__)           \
 
 
 #  define GD_INFO_LOG(Msg)   GD_INFO_(log, Msg)
@@ -313,7 +320,8 @@ namespace libport
 
 #  define GD_WARN(Message)                                      \
   GD_DEBUGGER->debug(Message, ::libport::Debug::types::warn,    \
-                    GD_FUNCTION, __FILE__, __LINE__)
+                     GD_CATEGORY_GET(),                         \
+                     GD_FUNCTION, __FILE__, __LINE__)           \
 
 #  define GD_FWARN(Msg, ...)                 \
   GD_WARN(GD_FORMAT(Msg, __VA_ARGS__))
@@ -327,7 +335,8 @@ namespace libport
 
 #  define GD_ERROR(Message)                                     \
   GD_DEBUGGER->debug(Message, ::libport::Debug::types::error,   \
-                    GD_FUNCTION, __FILE__, __LINE__)
+                     GD_CATEGORY_GET(),                         \
+                     GD_FUNCTION, __FILE__, __LINE__)           \
 
 #  define GD_FERROR(Msg, ...)               \
   GD_ERROR(GD_FORMAT(Msg, __VA_ARGS__))
@@ -341,27 +350,24 @@ namespace libport
 
 #  define GD_PUSH(Message)                              \
   GD_FINALLY(Indent)                                    \
-  (GD_DEBUGGER->push(Message,                           \
-                     GD_FUNCTION, __FILE__, __LINE__))
+  (GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,        \
+                     GD_FUNCTION, __FILE__, __LINE__))  \
 
 #  define GD_FPUSH(Message, ...)                \
-  GD_PUSH(GD_FORMAT(Message, __VA_ARGS__))              \
-                                                \
+  GD_PUSH(GD_FORMAT(Message, __VA_ARGS__))      \
+
 /*-------------.
 | Categories.  |
 `-------------*/
 
-#  define GD_ADD_CATEGORY(Name)                                         \
-  static ::libport::Symbol _gd_category_##Name =                        \
-    ::libport::debug::add_category(::libport::Symbol(#Name))
+#  define GD_CATEGORY_GET() _libport_gd_category
 
-#  define GD_GET_CATEGORY(Name)                  \
-  _gd_category_##Name
+#  define GD_CATEGORY(Name)                                             \
+  static ::libport::debug::category_type GD_CATEGORY_GET() =            \
+    ::libport::debug::add_category(::libport::debug::category_type(#Name))
 
-
-#  define GD_CATEGORY(Cat)                              \
-  GD_FINALLY(Category)                                  \
-  (GD_DEBUGGER->push_category(GD_GET_CATEGORY(Cat)))
+// #  define GD_GET_CATEGORY(Name)
+//   _gd_category_##Name
 
 #  define GD_DISABLE_CATEGORY(Cat)                                      \
   static int _gd_category_disable_##Cat =                               \
@@ -371,8 +377,8 @@ namespace libport
   static int _gd_category_enable_##Cat =         \
     ::libport::debug::enable_category(GD_GET_CATEGORY(Cat))
 
-#  define GD_CHECK_CATEGORY(Cat)                \
-  GD_DEBUGGER->test_category(GD_GET_CATEGORY(Cat))
+// #  define GD_CHECK_CATEGORY(Cat)
+//   GD_DEBUGGER->test_category(GD_GET_CATEGORY(Cat))
 
 /*--------.
 | Level.  |
@@ -449,7 +455,12 @@ namespace libport
 `-------------*/
 
 #  define GD_ABORT(Msg)                         \
-  libport::Debug::abort(Msg)
+  do                                            \
+  {                                             \
+    GD_ERROR(Msg);                              \
+    libport::Debug::abort();                    \
+  }                                             \
+  while (0)                                     \
 
 #  define GD_FABORT(Msg, ...)                   \
   GD_ABORT(GD_FORMAT(Msg, __VA_ARGS__))
@@ -592,7 +603,6 @@ namespace libport
 #  define GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)
 #  define GD_INIT_SYSLOG(Program, DataEncapsulation)
 #  define GD_INIT_SYSLOG_DEBUG_PER(Program, DataEncapsulation)
-#  define GD_ADD_CATEGORY(Name)
 #  define GD_ENABLE(Name)
 #  define GD_ENABLE_LOCATIONS()
 #  define GD_ENABLE_TIMESTAMPS()

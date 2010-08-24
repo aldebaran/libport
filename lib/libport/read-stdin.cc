@@ -51,7 +51,7 @@
   INFO_(Format ": %s", ## __VA_ARGS__, strerror(errno))
 
 
-GD_ADD_CATEGORY(read_file);
+GD_CATEGORY(read_file);
 
 
 namespace libport
@@ -93,7 +93,6 @@ namespace libport
   static DWORD WINAPI
   readThread(void* d)
   {
-    GD_CATEGORY(read_file);
     ConsumerData& data = *reinterpret_cast<ConsumerData*>(d);
     try
     {
@@ -153,7 +152,6 @@ namespace libport
   size_t
   read_fd(int fd, char* buf, size_t len)
   {
-    GD_CATEGORY(read_file);
     // Select.
     {
       fd_set fds;

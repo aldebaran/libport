@@ -26,7 +26,7 @@
 #include <libport/sys/types.h>
 #include <libport/unistd.h>
 
-GD_ADD_CATEGORY(path);
+GD_CATEGORY(path);
 
 // Implementation detail: if components() is empty and not absolute
 // then the path is '.'.
@@ -184,7 +184,6 @@ namespace libport
     {
       res = false;
     }
-    GD_CATEGORY(path);
     GD_FINFO_DUMP("exists: %-5s: %s", res ? "true" : "false", to_string());
     return res;
   }

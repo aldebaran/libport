@@ -12,32 +12,33 @@ namespace libport
 {
 
   inline
-  bool Debug::enabled(levels::Level lvl) const
+  bool Debug::enabled(levels::Level lvl, debug::category_type category) const
   {
     return (lvl <= filter_
-            && !categories_stack_.empty()
-            && debug::test_category(categories_stack_.back()));
+            && debug::test_category(category));
   }
 
   inline
   void
   Debug::debug(const std::string& msg,
                types::Type type,
+               debug::category_type category,
                const std::string& fun,
                const std::string& file,
                unsigned line)
   {
-    debug(msg, type, level_stack_.back(), fun, file, line);
+    debug(msg, type, level_stack_.back(), category, fun, file, line);
   }
 
   inline
   Debug*
-  Debug::push(const std::string& msg,
+  Debug::push(debug::category_type category,
+              const std::string& msg,
               const std::string& fun,
               const std::string& file,
               unsigned line)
   {
-    return push(level_stack_.back(), msg, fun, file, line);
+    return push(level_stack_.back(), category, msg, fun, file, line);
   }
 
 #define GD_ATTRIBUTE(Name)                      \

@@ -29,7 +29,7 @@
 
 #ifndef LIBPORT_DEBUG_DISABLE
 
-GD_ADD_CATEGORY(NONE);
+GD_CATEGORY(libport::Debug);
 
 namespace libport
 {
@@ -78,8 +78,7 @@ namespace libport
   }
 
   Debug::Debug()
-    : categories_stack_()
-    , level_stack_()
+    : level_stack_()
     , locations_(getenv("GD_LOC"))
     , timestamps_(getenv("GD_TIME"))
     , filter_(levels::log)
@@ -134,11 +133,12 @@ namespace libport
   Debug::debug(const std::string& msg,
                types::Type type,
                levels::Level lvl,
+               debug::category_type category,
                const std::string& fun,
                const std::string& file,
                unsigned line)
   {
-    if (enabled(lvl))
+    if (enabled(lvl, category))
     {
 # ifdef LIBPORT_HAVE_IP_SEMAPHORE
       static bool useLock = getenv("GD_USE_LOCK") || getenv("GD_PID");
@@ -149,15 +149,8 @@ namespace libport
         f << boost::bind(&IPSemaphore::operator++, boost::ref(sem()));
       }
 # endif
-      message(msg, type, fun, file, line);
+      message(category, msg, type, fun, file, line);
     }
-  }
-
-  Debug*
-  Debug::push_category(Symbol category)
-  {
-    categories_stack_.push_back(category);
-    return this;
   }
 
   Debug*
@@ -169,25 +162,19 @@ namespace libport
 
   Debug*
   Debug::push(levels::Level lvl,
+              debug::category_type category,
               const std::string& msg,
               const std::string& fun,
               const std::string& file,
               unsigned line)
   {
-    if (enabled(lvl))
+    if (enabled(lvl, category))
     {
-      message_push(msg, fun, file, line);
+      message_push(category, msg, fun, file, line);
       return this;
     }
     else
       return 0;
-  }
-
-  void
-  Debug::pop_category()
-  {
-    aver(!categories_stack_.empty());
-    categories_stack_.pop_back();
   }
 
   void
@@ -196,20 +183,10 @@ namespace libport
     level_stack_.pop_back();
   }
 
-  bool
-  Debug::test_category(Symbol c) const
-  {
-    return (categories_stack_.empty()
-            ? GD_GET_CATEGORY(NONE) == c
-            : categories_stack_.back() == c);
-  }
-
   std::string
-  Debug::category() const
+  Debug::category_format(debug::category_type cat) const
   {
-    std::string res = (categories_stack_.empty()
-                       ? GD_GET_CATEGORY(NONE).name_get()
-                       : categories_stack_.back().name_get());
+    std::string res = cat;
     size_t size = res.size();
     size_t largest = debug::categories_largest();
     if (size < largest)
@@ -223,9 +200,8 @@ namespace libport
     return res;
   }
 
-  void Debug::abort(const std::string& msg)
+  void Debug::abort()
   {
-    GD_ERROR(msg);
     libport::abort();
   }
 
@@ -297,7 +273,8 @@ namespace libport
   }
 
   void
-  ConsoleDebug::message(const std::string& msg,
+  ConsoleDebug::message(debug::category_type category,
+                        const std::string& msg,
                         types::Type type,
                         const std::string& fun,
                         const std::string& file,
@@ -308,7 +285,7 @@ namespace libport
     if (timestamps())
       ostr << color(c) << time() << "    ";
     ostr << color(colors::purple)
-         << "[" << category() << "] ";
+         << "[" << category_format(category) << "] ";
     {
       static bool pid = getenv("GD_PID");
       if (pid)
@@ -337,12 +314,13 @@ namespace libport
   }
 
   void
-  ConsoleDebug::message_push(const std::string& msg,
+  ConsoleDebug::message_push(debug::category_type category,
+                             const std::string& msg,
                              const std::string& fun,
                              const std::string& file,
                              unsigned line)
   {
-    debug(msg, types::info, fun, file, line);
+    debug(msg, types::info, category, fun, file, line);
     indent_ += 2;
   }
 
@@ -406,14 +384,15 @@ namespace libport
   }
 
   void
-  SyslogDebug::message(const std::string& msg,
-                        types::Type type,
-                        const std::string& fun,
-                        const std::string& file,
-                        unsigned line)
+  SyslogDebug::message(debug::category_type category,
+                       const std::string& msg,
+                       types::Type type,
+                       const std::string& fun,
+                       const std::string& file,
+                       unsigned line)
   {
     std::stringstream s;
-    s << "[" << category() << "] ";
+    s << "[" << category_format(category) << "] ";
     for (unsigned i = 0; i < indent_; ++i)
       s << " ";
     // As syslog would do, don't issue the users' \n.
@@ -428,12 +407,13 @@ namespace libport
   }
 
   void
-  SyslogDebug::message_push(const std::string& msg,
-                             const std::string& fun,
-                             const std::string& file,
-                             unsigned line)
+  SyslogDebug::message_push(debug::category_type category,
+                            const std::string& msg,
+                            const std::string& fun,
+                            const std::string& file,
+                            unsigned line)
   {
-    debug(msg, types::info, fun, file, line);
+    debug(msg, types::info, category, fun, file, line);
     indent_ += 2;
   }
 
@@ -494,14 +474,13 @@ namespace libport
       else
         d = make_debugger();
       debugger_data->set(d);
-      d->push_category(GD_GET_CATEGORY(NONE));
     }
 
     if (no_gd_init)
     {
 # define _GD_WARN(Message)                              \
-  d->debug(Message, ::libport::Debug::types::warn,      \
-           GD_FUNCTION, __FILE__, __LINE__)
+      d->debug(Message, ::libport::Debug::types::warn,  \
+               GD_CATEGORY_GET(), GD_FUNCTION, __FILE__, __LINE__)
 
       _GD_WARN("GD_INIT was not invoked, defaulting to console logs");
 # undef _GD_WARN

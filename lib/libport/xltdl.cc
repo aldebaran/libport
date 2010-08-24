@@ -17,7 +17,7 @@
 #include <libport/sysexits.hh>
 #include <libport/xltdl.hh>
 
-GD_ADD_CATEGORY(XLTDL);
+GD_CATEGORY(XLTDL);
 
 extern "C"
 {
@@ -42,7 +42,6 @@ namespace libport
       ltdebug(unsigned /* verbosity */,
               unsigned level, const char* format, va_list args)
       {
-        GD_CATEGORY(XLTDL);
         int errors = 0;
         char* msg = 0;
         errors += vasprintf(&msg, format, args) < 0;
@@ -133,7 +132,6 @@ namespace libport
   xlt_advise::dlopen_(const std::string& s) const
     throw(xlt_advise::exception)
   {
-    GD_CATEGORY(XLTDL);
     lt_dlhandle res = lt_dlopenadvise(s.c_str(), advise_);
     GD_FINFO_TRACE("loading %s: %s", s, res ? "pass" : "fail");
     return res;
@@ -143,7 +141,6 @@ namespace libport
   xlt_advise::open(const std::string& s)
     throw(xlt_advise::exception)
   {
-    GD_CATEGORY(XLTDL);
     GD_FINFO_TRACE("loading %s", s);
 
     // Clear the error flags from previous runs.
