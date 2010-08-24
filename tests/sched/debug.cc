@@ -25,9 +25,7 @@ INSTRUMENTFLAGS(--mode=none);
 using libport::test_suite;
 
 GD_INIT_DEBUG_PER(::libport::localdata::ThreadCoroutine);
-GD_ADD_CATEGORY(MAIN);
-GD_ADD_CATEGORY(C1);
-GD_ADD_CATEGORY(C2);
+GD_CATEGORY(MAIN);
 
 #ifndef LIBPORT_DEBUG_DISABLE
 
@@ -45,7 +43,6 @@ static void start2(void*)
 
   GD_INFO_LOG("= C2");
 
-  BOOST_CHECK(GD_CHECK_CATEGORY(C2));
   BOOST_CHECK_EQUAL(GD_CURRENT_LEVEL(), libport::Debug::levels::log);
   GD_FILTER_DEC();
 
@@ -55,7 +52,6 @@ static void start2(void*)
   GD_INFO_LOG("= C2 (should not be printed)");
 
   // should not be libport::Debug::levels::dump
-  BOOST_CHECK(GD_CHECK_CATEGORY(C2));
   BOOST_CHECK_EQUAL(GD_CURRENT_LEVEL(), libport::Debug::levels::none);
   BOOST_CHECK(!GD_SHOW_TRACE());
   GD_FILTER_INC();
@@ -77,7 +73,6 @@ static void start(void*)
 
   GD_INFO_LOG("= C1");
 
-  BOOST_CHECK(GD_CHECK_CATEGORY(C1));
   BOOST_CHECK_EQUAL(GD_CURRENT_LEVEL(), libport::Debug::levels::dump);
   GD_FILTER_INC();
 
@@ -85,8 +80,6 @@ static void start(void*)
   coroutine_start(c1, c2, &start2, (void*)0);
 
   GD_INFO_LOG("= C1");
-
-  BOOST_CHECK(GD_CHECK_CATEGORY(C1));
 
   // should not be libport::Debug::levels::none
   BOOST_CHECK_EQUAL(GD_CURRENT_LEVEL(), libport::Debug::levels::dump);
@@ -96,13 +89,11 @@ static void start(void*)
   coroutine_switch_to(c1, mc);
 
   GD_INFO_LOG("= C1");
-  BOOST_CHECK(GD_CHECK_CATEGORY(C1));
 
   ECHO("(08) c1->main");
   coroutine_switch_to(c1, mc);
 
   GD_INFO_LOG("= C1");
-  BOOST_CHECK(GD_CHECK_CATEGORY(C1));
 
   ECHO("(!!) END!!");
 }
@@ -114,7 +105,6 @@ void test_debug()
 
   // test the category before the main coroutine defined.
   GD_INFO_LOG("= Main");
-  BOOST_CHECK(GD_CHECK_CATEGORY(MAIN));
 
   GD_LOG();
 
@@ -125,25 +115,21 @@ void test_debug()
   c1 = coroutine_new();
 
   GD_INFO_LOG("= Main");
-  BOOST_CHECK(GD_CHECK_CATEGORY(MAIN));
 
   ECHO("(01) Main->start c1");
   coroutine_start(mc, c1, &start, (void*)0);
 
   GD_INFO_LOG("= Main");
-  BOOST_CHECK(GD_CHECK_CATEGORY(MAIN));
 
   ECHO("(07) Main->c1");
   coroutine_switch_to(mc, c1);
 
   GD_INFO_LOG("= Main");
-  BOOST_CHECK(GD_CHECK_CATEGORY(MAIN));
 
   ECHO("(09) Main->c2");
   coroutine_switch_to(mc, c2);
 
   GD_INFO_LOG("= Main");
-  BOOST_CHECK(GD_CHECK_CATEGORY(MAIN));
 
   ECHO("(11) Main done");
   BOOST_CHECK_NO_THROW(GD_QUIT());

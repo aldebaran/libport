@@ -16,15 +16,13 @@
 using libport::test_suite;
 
 GD_INIT();
-GD_ADD_CATEGORY(TEST);
+GD_CATEGORY(TEST);
 
 #ifndef LIBPORT_DEBUG_DISABLE
 
 void
 dynamic_level()
 {
-  GD_CATEGORY(TEST);
-
   GD_FILTER_LOG();
 
   BOOST_CHECK_EQUAL(GD_CURRENT_LEVEL(), libport::Debug::levels::log);
@@ -57,14 +55,11 @@ dynamic_level()
 
 static const unsigned concurrent_categories_niter = 4;
 static const unsigned concurrent_categories_nthread = 16;
-GD_ADD_CATEGORY(Thread);
 
 void* concurrent_categories_thread(void*)
 {
-  GD_CATEGORY(TEST);
   for (unsigned i = 0; i < concurrent_categories_niter; ++i)
   {
-    GD_CATEGORY(Thread);
     GD_INFO("OK.");
   }
   return 0;
