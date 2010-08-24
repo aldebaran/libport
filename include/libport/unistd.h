@@ -16,6 +16,7 @@
 # include <libport/export.hh>
 # include <libport/config.h>
 
+# include <string>
 # include <vector>
 
 // This is traditional Unix file.
