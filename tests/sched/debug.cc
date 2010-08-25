@@ -106,8 +106,6 @@ void test_debug()
   // test the category before the main coroutine defined.
   GD_INFO_LOG("= Main");
 
-  GD_LOG();
-
   ECHO("(00) Main start");
 
   mc = coroutine_new();

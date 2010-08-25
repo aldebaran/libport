@@ -78,12 +78,10 @@ namespace libport
   }
 
   Debug::Debug()
-    : level_stack_()
-    , locations_(getenv("GD_LOC"))
+    : locations_(getenv("GD_LOC"))
     , timestamps_(getenv("GD_TIME"))
     , filter_(levels::log)
   {
-    push_level(levels::log);
     if (const char* lvl_c = getenv("GD_LEVEL"))
       filter(lvl_c);
   }
@@ -154,13 +152,6 @@ namespace libport
   }
 
   Debug*
-  Debug::push_level(levels::Level lvl)
-  {
-    level_stack_.push_back(lvl);
-    return this;
-  }
-
-  Debug*
   Debug::push(levels::Level lvl,
               debug::category_type category,
               const std::string& msg,
@@ -175,12 +166,6 @@ namespace libport
     }
     else
       return 0;
-  }
-
-  void
-  Debug::pop_level()
-  {
-    level_stack_.pop_back();
   }
 
   std::string
@@ -320,7 +305,7 @@ namespace libport
                              const std::string& file,
                              unsigned line)
   {
-    debug(msg, types::info, category, fun, file, line);
+    debug(msg, types::info, ::libport::Debug::levels::log, category, fun, file, line);
     indent_ += 2;
   }
 
@@ -413,7 +398,7 @@ namespace libport
                             const std::string& file,
                             unsigned line)
   {
-    debug(msg, types::info, category, fun, file, line);
+    debug(msg, types::info, levels::log, category, fun, file, line);
     indent_ += 2;
   }
 
@@ -478,9 +463,10 @@ namespace libport
 
     if (no_gd_init)
     {
-# define _GD_WARN(Message)                              \
-      d->debug(Message, ::libport::Debug::types::warn,  \
-               GD_CATEGORY_GET(), GD_FUNCTION, __FILE__, __LINE__)
+# define _GD_WARN(Message)                                              \
+      d->debug(Message, ::libport::Debug::types::warn,                  \
+               Debug::levels::log,                                      \
+               GD_CATEGORY_GET(), GD_FUNCTION, __FILE__, __LINE__)      \
 
       _GD_WARN("GD_INIT was not invoked, defaulting to console logs");
 # undef _GD_WARN
