@@ -11,6 +11,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <libport/cassert>
+#include <libport/containers.hh>
 #include <libport/foreach.hh>
 #include <libport/format.hh>
 #include <libport/markup-ostream.hh>
@@ -408,6 +409,22 @@ namespace libport
   /*---------------.
   | OptionParser.  |
   `---------------*/
+
+  cli_args_type
+  OptionParser::operator () (int argc, const char** argv)
+  {
+    cli_args_type args;
+
+    foreach (const char* arg, std::make_pair(argv + 1, argv + argc))
+      args << arg;
+    return operator () (args);
+  }
+
+  cli_args_type
+  OptionParser::operator () (int argc, char** argv)
+  {
+    return operator () (argc, const_cast<const char**>(argv));
+  }
 
   cli_args_type
   OptionParser::operator() (const cli_args_type& _args)

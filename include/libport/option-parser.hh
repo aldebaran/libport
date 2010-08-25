@@ -272,6 +272,8 @@ namespace libport
   {
   public:
     cli_args_type operator () (const cli_args_type& args);
+    cli_args_type operator () (int argc, const char** argv);
+    cli_args_type operator () (int argc, char** argv);
     OptionParser& operator << (Option& opt);
     OptionParser& operator << (const std::string& doc);
     void usage(std::ostream& ouput) const;
