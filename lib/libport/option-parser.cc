@@ -59,14 +59,14 @@ namespace libport
 
   Option::Option(const std::string& doc)
     : documentation_(doc)
-    , callback_(0)
+    , callback_()
   {}
 
   Option::~Option()
   {}
 
   void
-  Option::set_callback(callback_type* callback)
+  Option::set_callback(const callback_type& callback)
   {
     callback_ = callback;
   }

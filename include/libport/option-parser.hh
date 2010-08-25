@@ -93,7 +93,8 @@ namespace libport
     virtual bool test(cli_args_type& args) = 0;
     virtual void init() = 0;
     typedef boost::function0<void> callback_type;
-    void set_callback(callback_type* callback);
+    typedef boost::optional<callback_type> callback_opt_type;
+    void set_callback(const callback_type& callback);
     void usage(std::ostream& output) const;
     void doc(std::ostream& output) const;
     void callback() const;
@@ -102,7 +103,7 @@ namespace libport
     virtual void usage_(std::ostream& output) const = 0;
     virtual void doc_(std::ostream& output) const = 0;
     std::string documentation_;
-    callback_type* callback_;
+    callback_opt_type callback_;
   };
 
 
