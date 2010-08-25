@@ -95,14 +95,12 @@ namespace libport
     // Report the message if its \a lvl suffices.
     void debug(const std::string& msg,
                types::Type type,
-               levels::Level lvl,
                debug::category_type category,
                const std::string& fun = "",
                const std::string& file = "",
                unsigned line = 0);
 
-    Debug* push(levels::Level lvl,
-                debug::category_type category,
+    Debug* push(debug::category_type category,
                 const std::string& msg,
                 const std::string& fun = "",
                 const std::string& file = "",
@@ -248,18 +246,32 @@ namespace libport
   libport::Debug::Finally ## Type                       \
     BOOST_PP_CAT(_gd_pop_ ## Type ## _, __LINE__)
 
+#  define GD_ENABLED(Level)                             \
+  GD_DEBUGGER->enabled(::libport::Debug::levels::Level, GD_CATEGORY_GET())
 
 /*--------.
 | Print.  |
 `--------*/
 
+
+#  define GD_MESSAGE_(Type, Level, Message)                             \
+  do                                                                    \
+  {                                                                     \
+    if (GD_ENABLED(Level))                                              \
+      GD_DEBUGGER->debug(Message,                                       \
+                         ::libport::Debug::types::Type,                 \
+                         GD_CATEGORY_GET(),                             \
+                         GD_FUNCTION, __FILE__, __LINE__);              \
+  }                                                                     \
+  while (0)                                                             \
+
 // INFO
 
-#  define GD_INFO(Message)                                      \
-  GD_DEBUGGER->debug(Message, ::libport::Debug::types::info,    \
-                     ::libport::Debug::levels::log,             \
-                     GD_CATEGORY_GET(),                         \
-                     GD_FUNCTION, __FILE__, __LINE__)
+#  define GD_INFO_(Level, Message)              \
+  GD_MESSAGE_(info, Level, Message)
+
+#  define GD_INFO(Message)                      \
+  GD_INFO_(log, Message)
 
 #  define GD_FINFO(Msg, ...)                    \
   GD_INFO(GD_FORMAT(Msg, __VA_ARGS__))
@@ -269,14 +281,6 @@ namespace libport
 
 #  define GD_VINFO(Msg, Exp)                    \
   GD_FINFO("%s: %s = %s", Msg, #Exp, Exp)
-
-
-#  define GD_INFO_(Level, Message)                              \
-  GD_DEBUGGER->debug(Message,                                   \
-                     ::libport::Debug::types::info,             \
-                     ::libport::Debug::levels::Level,           \
-                     GD_CATEGORY_GET(),                         \
-                     GD_FUNCTION, __FILE__, __LINE__)           \
 
 
 #  define GD_INFO_LOG(Msg)   GD_INFO_(log, Msg)
@@ -301,16 +305,13 @@ namespace libport
 
 // WARN
 
-#  define GD_WARN(Message)                                      \
-  GD_DEBUGGER->debug(Message, ::libport::Debug::types::warn,    \
-                     ::libport::Debug::levels::log,             \
-                     GD_CATEGORY_GET(),                         \
-                     GD_FUNCTION, __FILE__, __LINE__)           \
+#  define GD_WARN(Message)                      \
+  GD_MESSAGE_(warn, log, Message)
 
-#  define GD_FWARN(Msg, ...)                 \
+#  define GD_FWARN(Msg, ...)                    \
   GD_WARN(GD_FORMAT(Msg, __VA_ARGS__))
 
-#  define GD_SWARN(Msg)                 \
+#  define GD_SWARN(Msg)                         \
   GD_WARN(GD_STREAM(Msg))
 
 #  define GD_VWARN(Msg, Exp)                    \
@@ -318,16 +319,13 @@ namespace libport
 
 // ERROR
 
-#  define GD_ERROR(Message)                                     \
-  GD_DEBUGGER->debug(Message, ::libport::Debug::types::error,   \
-                     ::libport::Debug::levels::log,             \
-                     GD_CATEGORY_GET(),                         \
-                     GD_FUNCTION, __FILE__, __LINE__)           \
+#  define GD_ERROR(Message)                     \
+  GD_MESSAGE_(error, log, Message)
 
-#  define GD_FERROR(Msg, ...)               \
+#  define GD_FERROR(Msg, ...)                   \
   GD_ERROR(GD_FORMAT(Msg, __VA_ARGS__))
 
-#  define GD_SERROR(Msg)               \
+#  define GD_SERROR(Msg)                        \
   GD_ERROR(GD_STREAM(Msg))
 
 #  define GD_VERROR(Msg, Exp)                   \
@@ -335,11 +333,12 @@ namespace libport
 
 // PUSH
 
-#  define GD_PUSH_(Message, Level)                      \
-  GD_FINALLY(Indent)                                    \
-  (GD_DEBUGGER->push(::libport::Debug::levels::Level,   \
-                     GD_CATEGORY_GET(), Message,        \
-                     GD_FUNCTION, __FILE__, __LINE__))  \
+#  define GD_PUSH_(Message, Level)                                      \
+  GD_FINALLY(Indent)                                                    \
+  (GD_ENABLED(Level)                                                    \
+   ? GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                      \
+                       GD_FUNCTION, __FILE__, __LINE__)                 \
+   : 0)                                                                 \
 
 #  define GD_PUSH(Message) GD_PUSH_(Message, log)
 #  define GD_PUSH_LOG(Message) GD_PUSH_(Message, log)

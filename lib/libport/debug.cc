@@ -130,42 +130,32 @@ namespace libport
   void
   Debug::debug(const std::string& msg,
                types::Type type,
-               levels::Level lvl,
                debug::category_type category,
                const std::string& fun,
                const std::string& file,
                unsigned line)
   {
-    if (enabled(lvl, category))
-    {
 # ifdef LIBPORT_HAVE_IP_SEMAPHORE
-      static bool useLock = getenv("GD_USE_LOCK") || getenv("GD_PID");
-      libport::Finally f;
-      if (useLock)
-      {
-        --sem();
-        f << boost::bind(&IPSemaphore::operator++, boost::ref(sem()));
-      }
-# endif
-      message(category, msg, type, fun, file, line);
+    static bool useLock = getenv("GD_USE_LOCK") || getenv("GD_PID");
+    libport::Finally f;
+    if (useLock)
+    {
+      --sem();
+      f << boost::bind(&IPSemaphore::operator++, boost::ref(sem()));
     }
+# endif
+    message(category, msg, type, fun, file, line);
   }
 
   Debug*
-  Debug::push(levels::Level lvl,
-              debug::category_type category,
+  Debug::push(debug::category_type category,
               const std::string& msg,
               const std::string& fun,
               const std::string& file,
               unsigned line)
   {
-    if (enabled(lvl, category))
-    {
-      message_push(category, msg, fun, file, line);
-      return this;
-    }
-    else
-      return 0;
+    message_push(category, msg, fun, file, line);
+    return this;
   }
 
   std::string
@@ -305,7 +295,7 @@ namespace libport
                              const std::string& file,
                              unsigned line)
   {
-    debug(msg, types::info, ::libport::Debug::levels::log, category, fun, file, line);
+    debug(msg, types::info, category, fun, file, line);
     indent_ += 2;
   }
 
@@ -398,7 +388,7 @@ namespace libport
                             const std::string& file,
                             unsigned line)
   {
-    debug(msg, types::info, levels::log, category, fun, file, line);
+    debug(msg, types::info, category, fun, file, line);
     indent_ += 2;
   }
 
@@ -465,7 +455,6 @@ namespace libport
     {
 # define _GD_WARN(Message)                                              \
       d->debug(Message, ::libport::Debug::types::warn,                  \
-               Debug::levels::log,                                      \
                GD_CATEGORY_GET(), GD_FUNCTION, __FILE__, __LINE__)      \
 
       _GD_WARN("GD_INIT was not invoked, defaulting to console logs");
