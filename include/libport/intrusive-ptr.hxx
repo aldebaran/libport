@@ -24,6 +24,9 @@
 
 # if LIBPORT_ENABLE_SERIALIZATION
 #  include <serialize/serialize.hh>
+#  ifndef LIBPORT_NO_BOOST
+#    include <boost/serialization/split_member.hpp>
+#  endif
 # endif
 
 namespace libport
