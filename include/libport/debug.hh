@@ -260,8 +260,6 @@ namespace libport
 
 #  define GD_FUNCTION __FUNCTION__
 
-#  define GD_FINALLY(Type)                              \
-
 #  define GD_ENABLED(Level)                             \
   GD_DEBUGGER->enabled(::libport::Debug::levels::Level, GD_CATEGORY_GET())
 
