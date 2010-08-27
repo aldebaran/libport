@@ -145,8 +145,26 @@ namespace libport
     levels::Level filter_;
 
   public:
-    // Define Finally* classes.
-    FINALLY_DEFINE(Indent, ((Debug*, debug)), if (debug) debug->pop());
+    class Indent
+    {
+    public:
+      ATTRIBUTE_ALWAYS_INLINE
+      Indent(Debug* debug, bool active)
+        : _debug(debug)
+        , _active(active)
+      {}
+
+      ATTRIBUTE_ALWAYS_INLINE
+      ~Indent()
+      {
+        if (_active)
+          _debug->pop();
+      }
+
+    private:
+      Debug* _debug;
+      bool _active;
+    };
   };
 
   class LIBPORT_API ConsoleDebug: public Debug
@@ -243,8 +261,6 @@ namespace libport
 #  define GD_FUNCTION __FUNCTION__
 
 #  define GD_FINALLY(Type)                              \
-  libport::Debug::Finally ## Type                       \
-    BOOST_PP_CAT(_gd_pop_ ## Type ## _, __LINE__)
 
 #  define GD_ENABLED(Level)                             \
   GD_DEBUGGER->enabled(::libport::Debug::levels::Level, GD_CATEGORY_GET())
@@ -334,11 +350,10 @@ namespace libport
 // PUSH
 
 #  define GD_PUSH_(Message, Level)                                      \
-  GD_FINALLY(Indent)                                                    \
-  (GD_ENABLED(Level)                                                    \
-   ? GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                      \
-                       GD_FUNCTION, __FILE__, __LINE__)                 \
-   : 0)                                                                 \
+  libport::Debug::Indent(GD_DEBUGGER, GD_ENABLED(Level));               \
+  if (GD_ENABLED(Level))                                                \
+    GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                       \
+                      GD_FUNCTION, __FILE__, __LINE__)                  \
 
 #  define GD_PUSH(Message) GD_PUSH_(Message, log)
 #  define GD_PUSH_LOG(Message) GD_PUSH_(Message, log)
