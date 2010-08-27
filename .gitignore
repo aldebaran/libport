@@ -1,4 +1,5 @@
 /.version
+/.version.bak
 /.version.stamp
 /Makefile.in
 /aclocal.m4
