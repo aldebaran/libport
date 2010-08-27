@@ -43,6 +43,8 @@
 
 /// Concatenate the two arguments.
 # ifdef _MSC_VER
+
+#  define LIBPORT_CAT(A, B) LIBPORT_CAT_0(A, B)
 /*
 #!/usr/bin/python
 
