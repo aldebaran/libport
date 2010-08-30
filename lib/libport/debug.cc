@@ -302,7 +302,7 @@ namespace libport
   void
   ConsoleDebug::pop()
   {
-    assert_gt(indent_, 0);
+    assert_gt(indent_, 0u);
     indent_ -= 2;
   }
 
@@ -396,7 +396,7 @@ namespace libport
   void
   SyslogDebug::pop()
   {
-    assert_gt(indent_, 0);
+    assert_gt(indent_, 0u);
     indent_ -= 2;
   }
 #endif
