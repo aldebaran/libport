@@ -348,7 +348,8 @@ namespace libport
 // PUSH
 
 #  define GD_PUSH_(Message, Level)                                      \
-  libport::Debug::Indent(GD_DEBUGGER, GD_ENABLED(Level));               \
+  libport::Debug::Indent _gd_indent_ ## __LINE__                        \
+    (GD_DEBUGGER, GD_ENABLED(Level));                                   \
   if (GD_ENABLED(Level))                                                \
     GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                       \
                       GD_FUNCTION, __FILE__, __LINE__)                  \
