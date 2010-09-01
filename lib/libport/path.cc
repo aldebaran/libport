@@ -232,7 +232,7 @@ namespace libport
     }
     catch (Exception& e)
     {
-      throw Exception(libport::format("unable to rename file %s (%s)",
+      throw Exception(libport::format("unable to rename file %s: %s",
                                       *this, e.what()));
     }
 
