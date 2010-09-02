@@ -20,8 +20,10 @@
 #include <libport/ip-semaphore.hh>
 #include <libport/lockable.hh>
 #include <libport/pthread.h>
+#include <libport/tokenizer.hh>
 #include <libport/windows.hh>
 #include <libport/unistd.h>
+#include <libport/utime.hh>
 
 #ifndef WIN32
 # include <syslog.h>
@@ -206,6 +208,9 @@ namespace libport
     std::string
     time()
     {
+      static bool us = getenv("GD_TIMESTAMP_US");
+      if (us)
+        return string_cast(utime());
       time_t now = std::time(0);
       struct tm* ts = std::localtime(&now);
       char buf[80];
