@@ -219,7 +219,8 @@ namespace libport
     {
       static bool tty = isatty(STDERR_FILENO);
       static bool force = getenv("GD_COLOR");
-      return (tty || force
+      static bool force_disable = getenv("GD_NO_COLOR");
+      return (((tty || force) && !force_disable)
               ? format("[33;0%s;%sm", bold ? 1 : 0, color)
               : "");
     }
