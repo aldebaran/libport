@@ -125,8 +125,7 @@ _libport_die_hard()
 /// \def assert(Assertion)
 /// Same as assert, but on failure, dump \a Message on std::cerr.
 # undef assert
-# define assert(Assertion)                      \
-  aver(Assertion)
+# define assert aver
 
 
 /*---------------------------.
@@ -213,13 +212,13 @@ namespace libport
 | assert_<op> -- compare two values, show both of them if fail.  |
 `---------------------------------------------------------------*/
 
-#  define DEFINE_ASSERT_OP(OpName, Op)                                  \
+#  define DEFINE_AVER_OP(OpName, Op)                                    \
 namespace libport                                                       \
 {                                                                       \
   template <typename T, typename U>                                     \
   inline                                                                \
   void                                                                  \
-  assert_ ## OpName(const T& lhs, const U& rhs,                         \
+  aver_ ## OpName(const T& lhs, const U& rhs,                           \
                     const char* lstr, const char* rstr,                 \
                     const char* file, int line)                         \
   {                                                                     \
@@ -234,40 +233,64 @@ namespace libport                                                       \
   }                                                                     \
 }
 
-  DEFINE_ASSERT_OP(eq, ==)
-  DEFINE_ASSERT_OP(ge, >=)
-  DEFINE_ASSERT_OP(gt, > )
-  DEFINE_ASSERT_OP(le, <=)
-  DEFINE_ASSERT_OP(lt, < )
-  DEFINE_ASSERT_OP(ne, !=)
+  DEFINE_AVER_OP(eq, ==)
+  DEFINE_AVER_OP(ge, >=)
+  DEFINE_AVER_OP(gt, > )
+  DEFINE_AVER_OP(le, <=)
+  DEFINE_AVER_OP(lt, < )
+  DEFINE_AVER_OP(ne, !=)
 
 # if defined NDEBUG
 
-#  define assert_eq(A, B)
-#  define assert_ge(A, B)
-#  define assert_gt(A, B)
-#  define assert_le(A, B)
-#  define assert_lt(A, B)
-#  define assert_ne(A, B)
+#  define aver_eq(A, B)
+#  define aver_ge(A, B)
+#  define aver_gt(A, B)
+#  define aver_le(A, B)
+#  define aver_lt(A, B)
+#  define aver_ne(A, B)
 
 # elif LIBPORT_ASSERT_VERBOSE
 
-#  define assert_eq(A, B) ::libport::assert_eq(A, B, #A, #B, __FILE__, __LINE__)
-#  define assert_ge(A, B) ::libport::assert_ge(A, B, #A, #B, __FILE__, __LINE__)
-#  define assert_gt(A, B) ::libport::assert_gt(A, B, #A, #B, __FILE__, __LINE__)
-#  define assert_le(A, B) ::libport::assert_le(A, B, #A, #B, __FILE__, __LINE__)
-#  define assert_lt(A, B) ::libport::assert_lt(A, B, #A, #B, __FILE__, __LINE__)
-#  define assert_ne(A, B) ::libport::assert_ne(A, B, #A, #B, __FILE__, __LINE__)
+#  define aver_eq(A, B) ::libport::aver_eq(A, B, #A, #B, __FILE__, __LINE__)
+#  define aver_ge(A, B) ::libport::aver_ge(A, B, #A, #B, __FILE__, __LINE__)
+#  define aver_gt(A, B) ::libport::aver_gt(A, B, #A, #B, __FILE__, __LINE__)
+#  define aver_le(A, B) ::libport::aver_le(A, B, #A, #B, __FILE__, __LINE__)
+#  define aver_lt(A, B) ::libport::aver_lt(A, B, #A, #B, __FILE__, __LINE__)
+#  define aver_ne(A, B) ::libport::aver_ne(A, B, #A, #B, __FILE__, __LINE__)
 
 # else // !defined NDEBUG && !LIBPORT_ASSERT_VERBOSE
 
-#  define assert_eq(A, B) aver(A == B)
-#  define assert_ge(A, B) aver(A >= B)
-#  define assert_gt(A, B) aver(A >  B)
-#  define assert_le(A, B) aver(A <= B)
-#  define assert_lt(A, B) aver(A <  B)
-#  define assert_ne(A, B) aver(A != B)
+#  define aver_eq(A, B) aver(A == B)
+#  define aver_ge(A, B) aver(A >= B)
+#  define aver_gt(A, B) aver(A >  B)
+#  define aver_le(A, B) aver(A <= B)
+#  define aver_lt(A, B) aver(A <  B)
+#  define aver_ne(A, B) aver(A != B)
 # endif
+
+  // X <= Y && Y <= Z
+# define aver_le_le(X, Y, Z)                    \
+  do {                                          \
+    aver_le(X, Y);                              \
+    aver_le(Y, Z);                              \
+  } while (false);
+
+  // X <= Y && Y < Z
+# define aver_le_lt(X, Y, Z)                    \
+  do {                                          \
+    aver_le(X, Y);                              \
+    aver_lt(Y, Z);                              \
+  } while (false);
+
+
+
+  // Backward compatibility.
+# define assert_eq  aver_eq
+# define assert_ge  aver_ge
+# define assert_gt  aver_gt
+# define assert_le  aver_le
+# define assert_lt  aver_lt
+# define assert_ne  aver_ne
 
 #endif // !LIBPORT_CASSERT
 
