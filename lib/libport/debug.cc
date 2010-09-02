@@ -38,6 +38,9 @@ namespace libport
 
   namespace debug
   {
+    // Wether categories are enabled by default.
+    static bool default_category_state = true;
+
     categories_type& get_categories()
     {
       static categories_type categories;
@@ -54,7 +57,8 @@ namespace libport
     Symbol
     add_category(Symbol name)
     {
-      get_categories()[name] = true;
+      if (!mhas(get_categories(), name))
+        get_categories()[name] = default_category_state;
       size_t size = name.name_get().size();
       if (categories_largest() < size)
         categories_largest() = size;
@@ -77,13 +81,33 @@ namespace libport
     {
       return get_categories()[name];
     }
+
+    static void set_category_state(const char* list, bool state)
+    {
+      // Set default to !state.
+      debug::default_category_state = !state;
+      // Also set existing to !state
+      foreach(categories_type::value_type& v, get_categories())
+        v.second = !state;
+      tokenizer_type t = make_tokenizer(list, ",");
+      foreach(const std::string& elem, t)
+        get_categories()[Symbol(elem)] = state;
+    }
   }
+
+
 
   Debug::Debug()
     : locations_(getenv("GD_LOC"))
     , timestamps_(getenv("GD_TIME"))
     , filter_(levels::log)
   {
+    // Process enabled/disabled categories in environment.
+    if (const char* enablelist = getenv("GD_ENABLE_CATEGORY"))
+      debug::set_category_state(enablelist, true);
+    if (const char* disablelist = getenv("GD_DISABLE_CATEGORY"))
+      debug::set_category_state(disablelist, false);
+
     if (const char* lvl_c = getenv("GD_LEVEL"))
       filter(lvl_c);
   }
