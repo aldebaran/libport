@@ -8,7 +8,6 @@
  * See the LICENSE file for more information.
  */
 
-#include <libport/backtrace.hh>
 #include <libport/cassert>
 #include <libport/cstdlib>
 #include <libport/detect-win32.h>
@@ -21,24 +20,6 @@
 # ifdef _MSC_VER
 #  include <crtdbg.h> // _CrtDbgBreak
 # endif
-
-namespace libport
-{
-
-  void
-  abort()
-  {
-    foreach(const std::string& str, libport::backtrace())
-      std::cerr << str << std::endl;
-# ifdef _MSC_VER
-    if (getenv("_DEBUG_VCXX"))
-      _CrtDbgBreak();
-    else
-# endif
-      std::abort();
-  }
-
-}
 
 #ifdef _MSC_VER
 
