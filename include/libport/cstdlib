@@ -31,6 +31,8 @@ namespace libport
   LIBPORT_API
   ATTRIBUTE_NORETURN
   void abort();
+  /// If set, throw instead of aborting. Useful for tests.
+  void abort_throw(bool v = true);
 }
 
 /*---------.

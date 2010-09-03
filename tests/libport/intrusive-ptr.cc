@@ -12,8 +12,6 @@
  ** Test code for libport/intrusive-ptr.hh features.
  */
 
-#define LIBPORT_ABORT_THROW
-
 #include <libport/ref-counted.hh>
 #include <libport/intrusive-ptr.hh>
 
@@ -123,6 +121,8 @@ held_ref_from_dtor()
 test_suite*
 init_test_suite()
 {
+  libport::abort_throw();
+
   test_suite* suite = BOOST_TEST_SUITE("libport::intrusive_ptr");
   suite->add(BOOST_TEST_CASE(check));
   suite->add(BOOST_TEST_CASE(ref_from_dtor));

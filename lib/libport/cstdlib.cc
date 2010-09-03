@@ -8,6 +8,10 @@
  * See the LICENSE file for more information.
  */
 
+#include <stdexcept>
+#include <iostream>
+
+#include <libport/backtrace.hh>
 #include <libport/cassert>
 #include <libport/cstdlib>
 #include <libport/detect-win32.h>
@@ -48,6 +52,35 @@ extern "C"
 }
 
 #endif
+
+/*--------.
+| abort.  |
+`--------*/
+
+namespace libport
+{
+  bool abort_throw_ = false;
+  void abort_throw(bool v)
+  {
+    abort_throw_ = v;
+  }
+  void
+  abort()
+  {
+    if (abort_throw_)
+      throw std::runtime_error("abortion");
+    else
+      foreach(const std::string& str, libport::backtrace())
+        std::cerr << str << std::endl;
+# ifdef _MSC_VER
+    if (getenv("_DEBUG_VCXX"))
+      _CrtDbgBreak();
+    else
+# endif
+      std::abort();
+  }
+
+}
 
 /*----------.
 | xsystem.  |

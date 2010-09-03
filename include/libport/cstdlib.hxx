@@ -11,12 +11,6 @@
 #ifndef LIBPORT_CSTDLIB_HXX
 # define LIBPORT_CSTDLIB_HXX
 
-# include <stdexcept>
-# include <iostream>
-
-# include <libport/backtrace.hh>
-# include <libport/foreach.hh>
-
 /*---------.
 | setenv.  |
 `---------*/
@@ -70,32 +64,6 @@ namespace libport
   {
     return xgetenv(c.c_str(), deflt);
   }
-}
-
-/*--------.
-| abort.  |
-`--------*/
-
-namespace libport
-{
-
-  inline void
-  abort()
-  {
-# ifdef LIBPORT_ABORT_THROW
-    throw std::runtime_error("abortion");
-# else
-    foreach(const std::string& str, libport::backtrace())
-      std::cerr << str << std::endl;
-#  ifdef _MSC_VER
-    if (getenv("_DEBUG_VCXX"))
-      _CrtDbgBreak();
-    else
-#  endif
-# endif
-      std::abort();
-  }
-
 }
 
 #endif
