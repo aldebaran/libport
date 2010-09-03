@@ -18,17 +18,18 @@ namespace libport
   class RefCounted : boost::noncopyable
   {
     public:
+      typedef signed int count_type;
       RefCounted ();
       virtual ~RefCounted();
       void counter_inc () const;
       bool counter_dec () const;
 
     protected:
-      unsigned counter_get() const;
+      count_type counter_get() const;
       void counter_reset() const;
 
     private:
-      mutable unsigned count_;
+      mutable count_type count_;
   };
 }
 
