@@ -17,8 +17,11 @@
 
 namespace libport
 {
-  static const RefCounted::count_type invalid_count = INT_MIN;
-  static const RefCounted::count_type dying_count   = INT_MIN + 1;
+  enum SpecialCountValues
+  {
+    invalid_count = INT_MIN,
+    dying_count   = INT_MIN + 1,
+  };
 
   inline
   RefCounted::RefCounted ()
