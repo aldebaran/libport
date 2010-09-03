@@ -12,6 +12,8 @@
  ** Test code for libport/intrusive-ptr.hh features.
  */
 
+#define LIBPORT_ABORT_THROW
+
 #include <libport/ref-counted.hh>
 #include <libport/intrusive-ptr.hh>
 
@@ -96,11 +98,34 @@ ref_from_dtor()
 }
 
 
+class HeldRefFromDtor: public libport::RefCounted
+{
+public:
+  HeldRefFromDtor()
+  {}
+
+  static libport::intrusive_ptr<HeldRefFromDtor> held;
+  ~HeldRefFromDtor()
+  {
+    held = this;
+  }
+};
+libport::intrusive_ptr<HeldRefFromDtor> HeldRefFromDtor::held;
+
+void
+held_ref_from_dtor()
+{
+  libport::intrusive_ptr<HeldRefFromDtor> held_ref_from_dtor = new HeldRefFromDtor;
+  BOOST_CHECK_THROW(held_ref_from_dtor = 0, std::exception);
+}
+
+
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::intrusive_ptr");
   suite->add(BOOST_TEST_CASE(check));
   suite->add(BOOST_TEST_CASE(ref_from_dtor));
+  suite->add(BOOST_TEST_CASE(held_ref_from_dtor));
   return suite;
 }
