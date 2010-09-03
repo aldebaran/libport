@@ -211,7 +211,7 @@ namespace libport
 
     if(GetTempPathA(sizeof(tmp_dir), tmp_dir) == 0
        || GetTempFileNameA(tmp_dir, "$$$", 0, tmp_name) == 0)
-      throw Exception("unable to generate path for temporary file");
+      throw Exception("cannot generate path for temporary file");
 #endif
     return path(tmp_name);
   }
@@ -220,7 +220,7 @@ namespace libport
   path::remove() const
   {
     if (!boost::filesystem::remove(value_))
-      throw Exception(libport::format("unable to unlink file: %s", *this));
+      throw Exception(libport::format("cannot unlink file %s", *this));
   }
 
   void
@@ -232,7 +232,7 @@ namespace libport
     }
     catch (Exception& e)
     {
-      throw Exception(libport::format("unable to rename file %s: %s",
+      throw Exception(libport::format("cannot rename file %s: %s",
                                       *this, e.what()));
     }
 
