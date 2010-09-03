@@ -47,9 +47,11 @@ namespace libport
   Error::what() const throw ()
   {
     std::string res;
-    foreach (const std::string error, errors_)
+    foreach (const std::string& error, errors_)
       res += error + "\n";
-    // FIXME: Huh???  Does not seem safe to me.
+    // Remove the last \n.
+    res.resize(res.size() - 1);
+    // FIXME: Returning pointer to destructed value.
     return res.c_str();
   }
 
@@ -244,7 +246,7 @@ namespace libport
       else
       {
         if (args.size() < 2)
-          throw Error(format("--%s takes one argument", name_long_));
+          throw Error(format("option `--%s' requires an argument", name_long_));
         args.erase(args.begin());
         res = args[0];
       }

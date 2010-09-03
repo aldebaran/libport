@@ -151,7 +151,7 @@ check_option_value()
     catch (libport::Error& e)
     {
       BOOST_CHECK_EQUAL(e.errors().size(), 1u);
-      BOOST_CHECK_EQUAL(e.errors()[0], "--value takes one argument");
+      BOOST_CHECK_EQUAL(e.errors()[0], "option `--value' requires an argument");
     }
   }
 }
