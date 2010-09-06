@@ -80,6 +80,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/unistd.cc				\
   lib/libport/utime.cc				\
   lib/libport/version.cc			\
+  lib/libport/xalloc.cc				\
   lib/libport/xltdl.cc
 
 # These are broken and someone will have to fix them...

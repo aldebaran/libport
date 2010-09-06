@@ -198,6 +198,8 @@ libport_include_HEADERS +=				\
   include/libport/weak-ptr.hh				\
   include/libport/weak-ptr.hxx				\
   include/libport/windows.hh				\
+  include/libport/xalloc.hh				\
+  include/libport/xalloc.hxx				\
   include/libport/xltdl.hh				\
   include/libport/xltdl.hxx
 
