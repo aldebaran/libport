@@ -47,7 +47,7 @@ include doc/document-aux/make/tex.mk
 EXTRA_DIST +=								   \
   $(addprefix doc/document-aux/,$(call ls_files_in_dir,$(share_dir)))
 
-TEXI2DVIFLAGS += -I doc -~
+TEXI2DVIFLAGS += -I $(top_srcdir) -I doc -~
 
 PDF = doc/libport.pdf
 EXTRA_DATA += $(PDF)

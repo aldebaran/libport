@@ -18,6 +18,49 @@
 \begin{document}
 \maketitle
 
+\chapter{Libport}
+\section{Compiler}
+
+\subsection{ATTRIBUTE\_DLLEXPORT, ATTRIBUTE\_DLLIMPORT}
+
+Use these guys to declare what symbols should be exported from the
+shared-object you are building, and what symbols should be imported from the
+shared-object you are using.  Of course, exported symbols at build-time are
+imported symbols at use-time, so the headers should use a single symbol to
+flag exported/imported symbols.  Use a CPP symbol to specify whether you are
+building.  See for instance \file{libport/export.hh}:
+
+\lstinputlisting[language=C++,basicstyle=\ttfamily\footnotesize]{include/libport/export.hh}
+
+Things to know:
+\begin{itemize}
+\item Put it before the declaration of the functions you export:
+\begin{cxx}
+  LIBPORT_API backtrace_type& backtrace(backtrace_type& bt);
+\end{cxx}
+
+\item Put it between \lstinline|class| or \lstinline|struct| and the name of
+  the class.
+\begin{cxx}
+  /// Defines the operator() for the classes get_type, set_type and swap_type.
+  struct LIBPORT_API iomanipulator
+    : public std::unary_function<void, std::ostream>
+  {
+    // ...
+\end{cxx}
+
+\item Also do it for inner classes (required by Visual):
+\begin{cxx}
+  template <class StoredType>
+  class LIBPORT_API xalloc
+  {
+    class LIBPORT_API set_type : public iomanipulator
+    {
+    public:
+    // ...
+\end{cxx}
+\end{itemize}
+
 \chapter{Documentation}
 
 \section{TeX4ht}
