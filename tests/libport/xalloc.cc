@@ -19,9 +19,6 @@
 
 using libport::test_suite;
 
-struct my_unique_type {};
-struct my_other_unique_type {};
-
 void check_xalloc()
 {
   std::ostringstream s;
