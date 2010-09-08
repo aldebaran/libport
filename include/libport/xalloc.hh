@@ -49,14 +49,14 @@ namespace libport
    ** swap methods, then use this class as a parameter of operator<<.
    */
   template <class StoredType>
-  class LIBPORT_API xalloc
+  class xalloc
   {
   private:
     /** \brief Handle the data to put in the xalloced place.
      **
      ** This inner class is used only with the set method.
      */
-    class LIBPORT_API set_type : public iomanipulator
+    class set_type : public iomanipulator
     {
     public:
       /// Set data_ to data.
@@ -74,7 +74,7 @@ namespace libport
      **
      ** This inner class is used only with the get method.
      */
-    class LIBPORT_API get_type : public iomanipulator
+    class get_type : public iomanipulator
     {
     public:
       /// Set data_ to data.
@@ -93,7 +93,7 @@ namespace libport
      **
      ** This inner class is used only with the swap method.
      */
-    class LIBPORT_API swap_type : public iomanipulator
+    class swap_type : public iomanipulator
     {
     public:
       /// Set data_ to data.
@@ -117,6 +117,7 @@ namespace libport
     /// The xalloc index.
     long int index() const;
     /// The stored data as an lvalue.
+
     StoredType& operator()(std::ostream& ostr) const;
 
     /// A setter.
