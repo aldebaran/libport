@@ -126,6 +126,8 @@ init_test_suite()
   test_suite* suite = BOOST_TEST_SUITE("libport::intrusive_ptr");
   suite->add(BOOST_TEST_CASE(check));
   suite->add(BOOST_TEST_CASE(ref_from_dtor));
+#ifndef NDEBUG
   suite->add(BOOST_TEST_CASE(held_ref_from_dtor));
+#endif
   return suite;
 }

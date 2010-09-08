@@ -49,7 +49,7 @@ check()
 # define CHECK(N)						\
   BOOST_CHECK_EQUAL(ninstances, N)
 
- rCounted a = new Counted(42);
+  rCounted a = new Counted(42);
   std::stringstream s;
 
   CHECK(1);
