@@ -59,8 +59,9 @@ error ()
 
 verbose ()
 {
+  # Don't
   case "$verbose: $VERBOSE " in
-    (true:* | *" cl.exe "* | *" link.exe "* | *" x "* | *" 1 "*)
+    (true:* | *" cl.exe "* | *" link.exe "* | *" x "*)
       stderr "$@"
       ;;
   esac
@@ -737,7 +738,15 @@ runtime=release
 # Input file name.
 source=
 # Wrapper verbosity.
-verbose=false
+#
+# Do not fire verbosity when VERBOSE=1, as for instance the libport
+# tests set VERBOSE to 1 to get the test logs.  But then the
+# compilation itself becomes verbose and clutters the output, which in
+# turn defeats the use of ccache.
+case " $VERBOSE " in
+  (*" cl.exe "* | *" link.exe "* | *" x "*)  verbose=true;;
+  (*)                                        verbose=false;;
+esac
 
 PROG=$me
 

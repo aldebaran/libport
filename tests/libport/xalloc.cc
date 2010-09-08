@@ -65,7 +65,7 @@ void check_xalloc()
   s << flag1.swap(val);
   s << flag1.get(var);
   BOOST_CHECK_EQUAL(var, 4);
-  // Is it reproductible ?
+  // Is it reproducible ?
   ++val;
   s << flag1.swap(val);
   s << flag1.get(var);
