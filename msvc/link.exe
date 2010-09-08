@@ -369,7 +369,7 @@ get_options ()
 
     # Preprocessor options.
     (-E)  mode=preprocess; outargs "$1";;
-    (-I ) outargs "-I$(transform "$2")"     ; shift;;
+    (-I|-isystem) outargs "-I$(transform "$2")"     ; shift;;
     (-I*) outargs "-I$(transform "${1#-I}")";;
 
     # Dependencies.
