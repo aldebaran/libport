@@ -403,6 +403,8 @@ get_options ()
 
     # Optimizations.
     (-fno-strict-aliasing);;
+    (-fno-inline);;
+    (-O0) ;;
     (-O2) outargs "$1";;
     (-O3) outargs -Ox;;
 
