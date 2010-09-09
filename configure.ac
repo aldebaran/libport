@@ -21,7 +21,8 @@ AC_CONFIG_MACRO_DIR([build-aux])
 URBI_DISTCHECK_CONFIGURE_FLAGS
 URBI_PACKAGE_KIND([sdk])
 
-AM_INIT_AUTOMAKE([1.11 foreign -Wall nostdinc subdir-objects])
+AM_INIT_AUTOMAKE([1.11 foreign -Wall nostdinc silent-rules subdir-objects])
+AM_SILENT_RULES([yes])
 
 ## -------------------- ##
 ## Tool/Compilers setup ##
