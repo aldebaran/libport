@@ -23,7 +23,7 @@ namespace libport
   sem_t*
   sem_open(const char* /* name */,
            int /* oflag */,
-           unsigned int /*mode_t*/ /* mode */,
+           mode_t /* mode */,
            unsigned int /* value */)
   {
     return 0; // Use sem_init instead.

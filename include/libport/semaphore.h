@@ -13,6 +13,7 @@
 
 # include <libport/detect-win32.h>
 # include <libport/export.hh>
+# include <libport/sys/types.h>
 # include <libport/ctime>
 
 // Get sem_t.
@@ -26,8 +27,6 @@
 namespace libport
 {
   typedef HANDLE sem_t;
-
-  typedef unsigned int mode_t;
 
   LIBPORT_API
   sem_t* sem_open(const char* name, int oflag, mode_t mode, unsigned int value);

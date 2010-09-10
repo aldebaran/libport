@@ -14,6 +14,7 @@
 # include <fcntl.h>
 
 # include <libport/detect-win32.h>
+# include <libport/sys/types.h>
 
 # ifdef WIN32
 #  include <io.h>
