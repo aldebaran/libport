@@ -138,15 +138,19 @@ void test2()
     s.push_back(i);
   std::vector<int> tv;
   BOOST_CHECK(check_list(s, tolist(9, (3,4,5,6,7,8,9,10,11))));
-  for(int i=0; i<100; ++i)
+
+  // SafeContainers really behave in a specific way when used several
+  // times.
+  for (int i = 0; i < 100; ++i)
   {
-    int sum;
+    int sum = 0;
     foreach(int j, s)
       sum += j;
+    BOOST_CHECK_EQUAL(sum, 63);
   }
   BOOST_CHECK(check_list(s, tolist(9, (3,4,5,6,7,8,9,10,11))));
   BOOST_CHECK(check_list(s, tolist(9, (3,4,5,6,7,8,9,10,11))));
-  for(int i=0; i<100; ++i)
+  for (int i = 0; i < 100; ++i)
   {
     tv.clear();
     for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
@@ -161,7 +165,7 @@ void test2()
   BOOST_CHECK(check_list(s, tolist(9, (3,4,5,6,7,8,9,10,11))));
   std::vector<int> v(b.begin(), b.end());
   /// keep v and s in sync, randomly remove elements
-  for (int i=0; i<1000; ++i)
+  for (int i = 0; i < 1000; ++i)
   {
     int item = rand()% v.size();
     int p = 0;
@@ -209,15 +213,16 @@ void test3()
   foreach(int i, b)
     s.push_back(i);
   std::vector<int> tv;
-  for (int i=0; i<1000; ++i)
+  for (int i = 0; i < 1000; ++i)
   {
-    int item = rand()% b.size();
+    int item = rand() % b.size();
     int p = 0;
     tv.clear();
     for (libport::SafeContainer<std::list, int>::iterator i = s.begin();
          i != s.end(); ++i, ++p)
     {
-      if (p == item) break;
+      if (p == item)
+        break;
       tv.push_back(*i);
     }
     BOOST_CHECK(check_list(tv, std::vector<int>(b.begin(), b.begin() + item)));
