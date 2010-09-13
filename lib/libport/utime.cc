@@ -13,7 +13,8 @@
 
 namespace libport
 {
-  static boost::posix_time::ptime reference(boost::posix_time::microsec_clock::local_time());
+  static boost::posix_time::ptime reference =
+    boost::posix_time::microsec_clock::local_time();
 
   const boost::posix_time::ptime&
   utime_reference()
@@ -30,6 +31,7 @@ namespace libport
   utime_t
   utime()
   {
-    return (boost::posix_time::microsec_clock::local_time() - utime_reference()).total_microseconds();
+    return (boost::posix_time::microsec_clock::local_time()
+            - utime_reference()).total_microseconds();
   }
 }
