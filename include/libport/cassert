@@ -219,8 +219,8 @@ namespace libport                                                       \
   inline                                                                \
   void                                                                  \
   aver_ ## OpName(const T& lhs, const U& rhs,                           \
-                    const char* lstr, const char* rstr,                 \
-                    const char* file, int line)                         \
+                  const char* lstr, const char* rstr,                   \
+                  const char* file, int line)                           \
   {                                                                     \
     if (!(lhs Op rhs))                                                  \
     {                                                                   \

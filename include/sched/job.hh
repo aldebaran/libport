@@ -157,8 +157,14 @@ namespace sched
     void yield();
 
     /// As yield(), but ask not to be woken up before the deadline.
-    /// \sa yield(), yield_until_terminated(), yield_until_things_changed()
+    /// \sa yield(), yield_until_terminated(), yield_until_things_changed(),
+    ///     yield_for().
     void yield_until(libport::utime_t deadline);
+
+    /// As yield(), but ask not to be woken up before the end of the delay.
+    /// \sa yield(), yield_until(), yield_until_terminated(),
+    ///     yield_until_things_changed()
+    void yield_for(libport::utime_t delay);
 
     /// Wait for another job to terminate before resuming execution of
     /// the current one. If the other job has already terminated, the
@@ -168,7 +174,7 @@ namespace sched
     ///        same Job as the target and the waiting job, in which case
     ///        the Job will only be woken up by an asynchronous exception.
     ///
-    /// \sa yield(), yield_until(), yield_until_things_changed()
+    /// \sa yield(), yield_for(), yield_until(), yield_until_things_changed()
     void yield_until_terminated(Job& other);
 
     /// Same as \p yield_until_terminated above(), but wait for every
@@ -176,7 +182,7 @@ namespace sched
     void yield_until_terminated(const jobs_type& jobs);
 
     /// Wait for any other task to be scheduled.
-    /// \sa yield(), yield_until_terminated(), yield_until()
+    /// \sa yield(), yield_for(), yield_until_terminated(), yield_until()
     void yield_until_things_changed();
 
     /// Mark the current job as side-effect free.

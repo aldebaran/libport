@@ -135,6 +135,12 @@ namespace sched
     scheduler_.resume_scheduler(this);
   }
 
+  inline void
+  Job::yield_for(libport::utime_t delay)
+  {
+    yield_until(libport::utime() + delay);
+  }
+
   inline Coro*
   Job::coro_get() const
   {
