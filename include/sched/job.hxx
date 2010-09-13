@@ -138,7 +138,7 @@ namespace sched
   inline void
   Job::yield_for(libport::utime_t delay)
   {
-    yield_until(libport::utime() + delay);
+    yield_until(scheduler_.get_time() + delay);
   }
 
   inline Coro*
