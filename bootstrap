@@ -10,4 +10,4 @@
 # For comments, bug reports and feedback: http://www.urbiforge.com
 
 export LIBTOOLIZE_FLAGS="--ltdl --nonrecursive"
-exec build-aux/bootstrap "$@"
+exec build-aux/bin/bootstrap "$@"
