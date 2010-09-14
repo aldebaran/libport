@@ -45,6 +45,10 @@ namespace libport
   template<typename T>
   T convert_argument(const std::string& opt, const char* arg);
 
+  /// Same, but in C++.
+  template<typename T>
+  T convert_argument(const std::string& opt, const std::string& arg);
+
   /// Same but in C++.
   /// \param args     argv/argc as a C++ object.
   /// \param optind   index of the option (argument is expected at optind+1).

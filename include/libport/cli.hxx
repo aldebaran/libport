@@ -49,6 +49,16 @@ namespace libport
     return arg;
   }
 
+
+  template<typename T>
+  T
+  convert_argument(const std::string& opt, const std::string& arg)
+  {
+    return convert_argument<T>(opt, arg.c_str());
+  }
+
+
+
   template<typename T>
   T
   convert_argument(const cli_args_type& args, unsigned i)
