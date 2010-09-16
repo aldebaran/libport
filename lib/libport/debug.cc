@@ -99,7 +99,7 @@ namespace libport
 
   Debug::Debug()
     : locations_(getenv("GD_LOC"))
-    , timestamps_(getenv("GD_TIME"))
+    , timestamps_(getenv("GD_TIME") || getenv("GD_TIMESTAMP_US"))
     , filter_(levels::log)
   {
     // Process enabled/disabled categories in environment.
