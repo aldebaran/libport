@@ -14,7 +14,8 @@
 # define LIBPORT_FINALLY_HH
 
 # include <libport/system-warning-push.hh>
-#  include <boost/function.hpp>
+# include <boost/function.hpp>
+# include <boost/typeof/typeof.hpp>
 # include <libport/system-warning-pop.hh>
 
 // Not required by libport/finally.hh, but by 90% of its users.
@@ -142,6 +143,29 @@ namespace libport
   template<typename Value, typename Container>
   Finally::action_type scoped_push(const Value& value, Container& container);
 }
+
+// Set Var to Val. Restore the previous value at scope end.
+#define LIBPORT_SCOPE_SET(Var, Val)                                     \
+  typedef BOOST_TYPEOF(Var) LIBPORT_CAT(LibportResetType, __LINE__);    \
+  struct LIBPORT_CAT(_LibportReset, __LINE__)                           \
+  {                                                                     \
+    inline LIBPORT_CAT(_LibportReset, __LINE__)                         \
+      (LIBPORT_CAT(LibportResetType, __LINE__)& var,                    \
+       LIBPORT_CAT(LibportResetType, __LINE__) val)                     \
+      : var_(var)                                                       \
+      , val_(val)                                                       \
+    {}                                                                  \
+                                                                        \
+    inline ~LIBPORT_CAT(_LibportReset, __LINE__)()                      \
+    {                                                                   \
+      var_ = val_;                                                      \
+    }                                                                   \
+                                                                        \
+    LIBPORT_CAT(LibportResetType, __LINE__)& var_;                      \
+    LIBPORT_CAT(LibportResetType, __LINE__)  val_;                      \
+  };                                                                    \
+  LIBPORT_CAT(_LibportReset, __LINE__) _libport_reset_##Line(Var, Var); \
+  Var = Val;                                                            \
 
 # include <libport/finally.hxx>
 
