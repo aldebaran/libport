@@ -745,4 +745,3 @@ template<class Proto, class BaseFactory>
     return erc;
   }
 }
-
