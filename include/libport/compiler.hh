@@ -35,6 +35,15 @@
 #  define ATTRIBUTE_NOINLINE __declspec(noinline)
 #  define ATTRIBUTE_NORETURN __declspec(noreturn)
 #  define ATTRIBUTE_NOTHROW  __declspec(nothrow)
+
+/// Declare a function whose features printf-like arguments.
+/// \param Format   the number of the printf-like format string.
+///                 First argument is numbered 1, not 0.
+///                 In a class, argument 1 is "this", so first visible
+///                 argument is 2.
+/// \param FirstArg The number of the first varargs.  Should point to
+///                 the "..." in the argument list.
+#  define ATTRIBUTE_PRINTF(Format, FirstArg)
 #  define ATTRIBUTE_STDCALL  __stdcall
 #  define ATTRIBUTE_UNUSED_RESULT /* FILLME */
 
@@ -63,6 +72,8 @@
 #    define ATTRIBUTE_NOINLINE __attribute__((__noinline__))
 #    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
 #    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
+#    define ATTRIBUTE_PRINTF(Format, FirstArg) \
+         __attribute__((format(printf, Format, FirstArg)))
 #    define ATTRIBUTE_STDCALL __attribute__((__stdcall__))
 #    define ATTRIBUTE_UNUSED_RESULT __attribute__((warn_unused_result))
 #  endif
