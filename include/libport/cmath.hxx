@@ -26,13 +26,15 @@ namespace libport
 #  define ROUND_IF(True, False) False
 # endif
 
+// Beware of warnings: "0.5" is a double, "0.5f" is a float.
+// Use an explicit conversion, that's simpler.
 # define ROUND(Type)                                            \
   inline Type round(Type v)                                     \
   {                                                             \
     return                                                      \
       ROUND_IF(::round(v),                                      \
-               (v < 0. ? -1. : 1.0)                             \
-               * std::floor(std::fabs(v) + 0.5));               \
+               (v < Type(0.) ? Type(-1.) : Type(1.))            \
+               * std::floor(std::fabs(v) + Type(0.5)));         \
   }
   ROUND(float);
   ROUND(double);
