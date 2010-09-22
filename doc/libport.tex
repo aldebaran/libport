@@ -127,6 +127,36 @@ aware of if you want to stay out of troubles.
 
 \chapter{Portability issues}
 
+\section{Types}
+\subsection{timeval}
+
+timeval is defined by GNU LibC
+(http://www.gnu.org/s/libc/manual/html_node/Elapsed-Time.html) and by MSVC
+(http://msdn.microsoft.com/en-us/library/ms740560(VS.85).aspx) as two longs.
+
+OSX plays a different game:
+
+\begin{cxx}
+#define _STRUCT_TIMEVAL         struct timeval
+_STRUCT_TIMEVAL
+{
+        __darwin_time_t         tv_sec;         /* seconds */
+        __darwin_suseconds_t    tv_usec;        /* and microseconds */
+};
+#endif /* _STRUCT_TIMEVAL */
+\end{cxx}
+
+\noindent
+but \file{/usr/include/i386/_types.h} says:
+
+\begin{cxx}
+typedef long                 __darwin_time_t;        /* time() */
+\end{cxx}
+
+\noindent
+
+so use long.
+
 \section{Mac OS X and Linux}
 
 It seems that in interactive sessions, the flags of stdin, stdout and stderr

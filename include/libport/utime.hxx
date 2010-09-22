@@ -34,7 +34,7 @@ namespace libport
   {
     timeval res;
     // Explicit convertions to silence MSVC warnings.
-    res.tv_sec = time_t(t / (1000 * 1000));
+    res.tv_sec = long(t / (1000 * 1000));
     res.tv_usec = suseconds_t(t % (1000 * 1000));
     return res;
   }
