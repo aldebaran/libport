@@ -39,6 +39,7 @@ AM_PROG_AS
 URBI_WIN32
 URBI_SOCKETS
 URBI_LIBTOOL
+URBI_SHLIBEXT
 # Name of the subdirectory that contains libltdl sources.
 LT_CONFIG_LTDL_DIR([libltdl])
 LTDL_INIT([convenience nonrecursive])

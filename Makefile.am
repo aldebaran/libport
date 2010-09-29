@@ -15,6 +15,7 @@ include build-aux/make/build-farm.mk
 include build-aux/bootstrap.mk
 include build-aux/m4sh.mk
 
+VERSION_STUBS = lib/libport/.libs/libport$(SHLIBEXT)
 
 TESTS =
 include build-aux/check.mk
