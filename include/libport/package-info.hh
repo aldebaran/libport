@@ -38,7 +38,7 @@ namespace libport
     void dependency_add(const PackageInfo& p);
 
     data_type& operator[](const key_type& k);
-    const data_type& get(const key_type& k) const;
+    data_type get(const key_type& k) const;
 
     /// NAME version VERSION rev. REVISION.
     data_type name_version_revision() const;

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <libport/foreach.hh>
 #include <libport/package-info.hh>
+#include <boost/algorithm/string.hpp>
 
 namespace libport
 {
@@ -63,10 +64,16 @@ namespace libport
     return map_[k];
   }
 
-  const PackageInfo::data_type&
+  PackageInfo::data_type
   PackageInfo::get(const key_type& k) const
   {
-    return map_.find(k)->second;
+    data_type res = map_.find(k)->second;
+    if (boost::starts_with(res, "GIT-VERSION-GEN("))
+      // Skip up to the first closing paren.
+      res = res.substr(res.find(')') + 1);
+    if (res.empty())
+      res = "<EMPTY>";
+    return res;
   }
 
   std::ostream&

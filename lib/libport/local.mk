@@ -92,6 +92,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
 # .version to avoid frequent regeneration of this file.
 REVISION_FILE = lib/libport/revision.hh
 REVISION_PREFIX = LIBPORT_PACKAGE_
+REVISIONFLAGS ?= --stub
 include $(top_srcdir)/build-aux/revision.mk
 
 # Make sure nobody uses config.h instead of libport/config.h.
