@@ -598,6 +598,10 @@ while (<>)
       m{fixme:rpc:NdrStubCall2 new correlation description not implemented}
       ||
       m{err:secur32:SECUR32_initSchannelSP libgnutls not found, SSL connections will fail}
+      ||
+      # Appears alone on the output.  Probably due to Boost when it
+      # decides to use Visual's decltype.
+      m{using native typeof}
       )
   {
     print STDERR "Ignoring: {{{$_}}}\n"
