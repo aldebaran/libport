@@ -33,8 +33,8 @@ namespace libport
   {                                                             \
     return                                                      \
       ROUND_IF(::round(v),                                      \
-               (v < Type(0.) ? Type(-1.) : Type(1.))            \
-               * std::floor(std::fabs(v) + Type(0.5)));         \
+               (v < (Type)0. ? (Type)-1. : (Type)1.)            \
+               * std::floor(std::fabs(v) + (Type)0.5));         \
   }
   ROUND(float);
   ROUND(double);
