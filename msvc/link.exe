@@ -600,7 +600,7 @@ while (<>)
       m{err:secur32:SECUR32_initSchannelSP libgnutls not found, SSL connections will fail}
       ||
       # Appears alone on the output.  Probably due to Boost when it
-      # decides to use Visual's decltype.
+      # decides to use the decltype of Visual.
       m{using native typeof}
       )
   {
