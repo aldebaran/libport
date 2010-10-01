@@ -37,6 +37,19 @@ extern "C"
 }
 #endif
 
+#if defined _MSC_VER || defined __MINGW32__
+
+namespace libport
+{
+  const char*
+  getenv(const char* name)
+  {
+    return ::getenv(name);
+  }
+}
+
+#endif
+
 
 #if defined _MSC_VER || defined __MINGW32__
 

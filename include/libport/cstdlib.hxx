@@ -12,6 +12,23 @@
 # define LIBPORT_CSTDLIB_HXX
 
 /*---------.
+| getenv.  |
+`---------*/
+
+# if !defined _MSC_VER && !defined __MINGW32__
+
+namespace libport
+{
+  inline const char*
+  getenv(const char* name)
+  {
+    return ::getenv(name);
+  }
+}
+
+# endif
+
+/*---------.
 | setenv.  |
 `---------*/
 

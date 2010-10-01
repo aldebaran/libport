@@ -37,21 +37,21 @@ using libport::test_suite;
 static void test_environ()
 {
   // Variables we know to be defined.
-  const char* path = getenv("PATH");
+  const char* path = libport::getenv("PATH");
   BOOST_CHECK(!!path);
-  BOOST_CHECK(!!getenv("SRCDIR"));
+  BOOST_CHECK(!!libport::getenv("SRCDIR"));
 
   // setenv should not override by default.
   BOOST_CHECK(!setenv("PATH", "TOTO", 0));
-  BOOST_CHECK_EQUAL(getenv("PATH"), path);
+  BOOST_CHECK_EQUAL(libport::getenv("PATH"), path);
 
   // Variables we know (hope) not to be defined.
   const char* var = "__THIS_IS_AN_UNLIKELY_VARIABLE_NAME__";
-  BOOST_CHECK(!getenv(var));
+  BOOST_CHECK(!libport::getenv(var));
   BOOST_CHECK(!setenv(var, "23", 0));
-  BOOST_CHECK_EQUAL("23", getenv(var));
+  BOOST_CHECK_EQUAL("23", libport::getenv(var));
   BOOST_CHECK(!unsetenv(var));
-  BOOST_CHECK(!getenv(var));
+  BOOST_CHECK(!libport::getenv(var));
 }
 
 // Testing system under windows is a pain. We're probably not actually

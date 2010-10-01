@@ -38,6 +38,16 @@ namespace libport
 }
 
 /*---------.
+| getenv.  |
+`---------*/
+
+namespace libport
+{
+  LIBPORT_API
+  const char* getenv(const char* name);
+}
+
+/*---------.
 | setenv.  |
 `---------*/
 
