@@ -18,7 +18,7 @@ include build-aux/m4sh.mk
 TESTS =
 include build-aux/check.mk
 
-ACLOCAL_AMFLAGS = -I build-aux
+ACLOCAL_AMFLAGS = -I build-aux/m4 -I build-aux
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status $@
 

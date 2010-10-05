@@ -92,11 +92,9 @@ BUILT_SOURCES += $(nodist_lib_libport_libport@LIBSFX@_la_SOURCES)
 #   $(libport_srcdir)/uffloat.cc		\
 #   $(libport_srcdir)/ull-fixed-point.cc
 
-# Create revision.hh with accurate revision information.  Depend on
-# .version to avoid frequent regeneration of this file.
-# Resolve stubs in libuobject.
+# Resolve stubs in libport.
 all-local: lib/libport/libport.unstub.stamp
-lib/libport/libport.unstub.stamp: lib/libport/libport$(LIBSFX).la $(VERSIONIFY)
+lib/libport/libport.unstub.stamp: $(VERSIONIFY_CACHE) lib/libport/libport$(LIBSFX).la $(VERSIONIFY)
 	$(VERSIONIFY_RUN) --resolve=lib/libport/.libs/libport$(LIBSFX)$(SHLIBEXT)
 
 lib/libport/revision-stub.hh: $(VERSIONIFY)
