@@ -83,6 +83,10 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/xalloc.cc				\
   lib/libport/xltdl.cc
 
+nodist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
+  lib/libport/revision-stub.hh
+BUILT_SOURCES += $(nodist_lib_libport_libport@LIBSFX@_la_SOURCES)
+
 # These are broken and someone will have to fix them...
 # libport_sources += 				\
 #   $(libport_srcdir)/uffloat.cc		\
@@ -90,10 +94,13 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
 
 # Create revision.hh with accurate revision information.  Depend on
 # .version to avoid frequent regeneration of this file.
-REVISION_FILE = lib/libport/revision.hh
-REVISION_PREFIX = LIBPORT_PACKAGE_
-REVISIONFLAGS ?= --stub
-include $(top_srcdir)/build-aux/revision.mk
+# Resolve stubs in libuobject.
+all-local: lib/libport/libport.unstub.stamp
+lib/libport/libport.unstub.stamp: lib/libport/libport$(LIBSFX).la $(VERSIONIFY)
+	$(VERSIONIFY_RUN) --resolve=lib/libport/.libs/libport$(LIBSFX)$(SHLIBEXT)
+
+lib/libport/revision-stub.hh: $(VERSIONIFY)
+	$(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --stub=$@
 
 # Make sure nobody uses config.h instead of libport/config.h.
 #maintainer-check:

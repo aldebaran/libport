@@ -8,8 +8,8 @@
  * See the LICENSE file for more information.
  */
 
-#if ! defined PACKAGE_INFO_HH
-# define PACKAGE_INFO_HH
+#ifndef LIBPORT_PACKAGE_INFO_HH
+# define LIBPORT_PACKAGE_INFO_HH
 
 # include <iostream>
 # include <set>
@@ -72,13 +72,17 @@ namespace libport
     (Var)["copyright-years"]    = Prefix ## COPYRIGHT_YEARS;    \
     (Var)["date"]               = Prefix ## DATE;               \
     (Var)["id"]                 = Prefix ## ID;                 \
+    (Var)["major"]              = Prefix ## MAJOR;              \
+    (Var)["minor"]              = Prefix ## MINOR;              \
     (Var)["name"]               = Prefix ## NAME;               \
     (Var)["patch"]              = Prefix ## PATCH;              \
     (Var)["revision"]           = Prefix ## REVISION;           \
     (Var)["string"]             = Prefix ## STRING;             \
+    (Var)["subminor"]           = Prefix ## SUB_MINOR;           \
     (Var)["tarname"]            = Prefix ## TARNAME;            \
     (Var)["version"]            = Prefix ## VERSION;            \
     (Var)["version-rev"]        = Prefix ## VERSION_REV;        \
+    (Var)["version-value"]      = Prefix ## VERSION_VALUE;      \
   } while (0)
 
 /// Define \a Var using information from config.h and version.hh.

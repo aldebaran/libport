@@ -209,16 +209,10 @@ libport_include_HEADERS +=				\
 
 nodist_libport_include_HEADERS =		\
   include/libport/config.h			\
-  include/libport/format.hh
+  include/libport/format.hh			\
+  include/libport/revision.hh
 CLEANFILES += $(nodist_libport_include_HEADERS)
 BUILT_SOURCES += $(nodist_libport_include_HEADERS)
-
-# format.hh.
-EXTRA_DIST += include/libport/format.hh.py
-%.hh: %.hh.py
-	test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
-	$< >$@.tmp
-	mv $@.tmp $@
 
 # config.h.
 generate_libport_config_h = \
@@ -232,4 +226,15 @@ include/libport/config.h: $(CONFIG_HEADER) $(generate_libport_config_h)
 	test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
 	$(generate_libport_config_h) $< $@.tmp
 	mv $@.tmp $@
+
+# format.hh.
+EXTRA_DIST += include/libport/format.hh.py
+%.hh: %.hh.py
+	test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
+	$< >$@.tmp
+	mv $@.tmp $@
+
+# revision.hh
+include/libport/revision.hh: $(top_srcdir)/.version $(VERSIONIFY)
+	$(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --header=$@
 

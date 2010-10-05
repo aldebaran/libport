@@ -8,14 +8,12 @@
 
 include build-aux/init.mk
 include build-aux/build-aux.mk
-include build-aux/package-version.mk
+include build-aux/make/package-version.mk
 include build-aux/fix-libtool-la.mk
 include build-aux/libport.mk
 include build-aux/make/build-farm.mk
 include build-aux/bootstrap.mk
 include build-aux/m4sh.mk
-
-VERSION_STUBS = lib/libport/.libs/libport$(SHLIBEXT)
 
 TESTS =
 include build-aux/check.mk
