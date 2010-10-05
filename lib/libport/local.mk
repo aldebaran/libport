@@ -86,6 +86,8 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
 nodist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/revision-stub.hh
 BUILT_SOURCES += $(nodist_lib_libport_libport@LIBSFX@_la_SOURCES)
+lib/libport/revision-stub.hh: $(VERSIONIFY)
+	$(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --stub=$@
 
 # These are broken and someone will have to fix them...
 # libport_sources += 				\
@@ -96,9 +98,6 @@ BUILT_SOURCES += $(nodist_lib_libport_libport@LIBSFX@_la_SOURCES)
 all-local: lib/libport/libport.unstub.stamp
 lib/libport/libport.unstub.stamp: $(VERSIONIFY_CACHE) lib/libport/libport$(LIBSFX).la $(VERSIONIFY)
 	$(VERSIONIFY_RUN) --resolve=lib/libport/.libs/libport$(LIBSFX)$(SHLIBEXT)
-
-lib/libport/revision-stub.hh: $(VERSIONIFY)
-	$(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --stub=$@
 
 # Make sure nobody uses config.h instead of libport/config.h.
 #maintainer-check:

@@ -13,7 +13,7 @@
 
 #include <libport/config.h>
 #include <libport/package-info.hh>
-#include <libport/revision-stub.hh>
+#include <lib/libport/revision-stub.hh>
 #include <libport/version.hh>
 
 namespace libport
