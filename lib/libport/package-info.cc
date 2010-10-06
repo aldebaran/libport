@@ -68,7 +68,7 @@ namespace libport
   PackageInfo::get(const key_type& k) const
   {
     data_type res = map_.find(k)->second;
-    if (boost::starts_with(res, "GIT-VERSION-GEN("))
+    if (boost::starts_with(res, "VERSIONIFY("))
       // Skip up to the first closing paren.
       res = res.substr(res.find(')') + 1);
     if (res.empty())
