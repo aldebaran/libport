@@ -9,8 +9,11 @@
  */
 
 #include <iostream>
+
 #include <libport/foreach.hh>
 #include <libport/package-info.hh>
+#include <libport/lexical-cast.hh>
+
 #include <boost/algorithm/string.hpp>
 
 namespace libport
@@ -41,7 +44,7 @@ namespace libport
     res =
       name_version_revision() + "\n"
       + "Copyright (C) " + get ("copyright-years")
-      + " "         + get ("copyright-holder")
+      + " " + get ("copyright-holder")
       + "."
       ;
 
@@ -84,6 +87,19 @@ namespace libport
       o << (tail++ ? ", " : "") << p.first << " = " << p.second;
     return o;
   }
+
+#define DEFINE(Fun, Field)                              \
+  PackageInfo::integer_type                             \
+  PackageInfo::Fun() const                              \
+  {                                                     \
+    return lexical_cast<integer_type>(get(#Field));     \
+  }
+
+  DEFINE(major, "major")
+  DEFINE(minor, "minor")
+  DEFINE(subminor, "subminor")
+  DEFINE(version_value, "version-value")
+#undef DEFINE
 
   std::ostream&
   operator<<(std::ostream& o, const PackageInfo& p)

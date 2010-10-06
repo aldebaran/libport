@@ -48,6 +48,18 @@ namespace libport
     /// "Report bugs to <BUGREPORT>.".
     data_type report_bugs() const;
 
+    /// A type to return version numbers as numbers.
+    typedef unsigned int integer_type;
+
+    /// "major" as an integer.
+    integer_type major() const;
+    /// "minor" as an integer.
+    integer_type minor() const;
+    /// "sub-minor" as an integer.
+    integer_type subminor() const;
+    /// "version-value" as an integer.
+    integer_type version_value() const;
+
     /// Report this on \a o.
     /// Does not end with a std::endl.
     /// For debugging.
