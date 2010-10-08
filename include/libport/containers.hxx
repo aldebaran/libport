@@ -228,6 +228,26 @@ namespace std
     return out;
   }
 
+  template <typename K, typename V, typename Alloc>
+  std::ostream&
+  operator<< (std::ostream& out, const boost::unordered_map<K, V, Alloc>& c)
+  {
+    out << "[";
+    typedef typename boost::unordered_map<K, V, Alloc>::value_type value_type;
+    foreach (const value_type& v, c)
+      out << v.first << ": " << v.second << ", ";
+    out << "]";
+    return out;
+  }
+
+  template <typename F, typename S>
+  std::ostream&
+  operator<< (std::ostream& out, const std::pair<F, S>& c)
+  {
+    out << "(" << c.first << ", " << c.second << ")";
+    return out;
+  }
+
 } // namespace std
 
 #endif // !LIBPORT_CONTAINERS_HXX

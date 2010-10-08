@@ -22,6 +22,8 @@
 # include <set>
 # include <vector>
 
+# include <boost/unordered_map.hpp>
+
 # include <libport/foreach.hh>
 
 namespace libport
@@ -165,6 +167,14 @@ namespace std
   template <typename T, typename Alloc>
   std::ostream&
   operator<< (std::ostream& out, const std::vector<T, Alloc>& c);
+
+  /*----------------------------------.
+  | ostream << boost::unordered_map.  |
+  `----------------------------------*/
+
+  template <typename K, typename V, typename Alloc>
+  std::ostream&
+  operator<< (std::ostream& out, const boost::unordered_map<K, V, Alloc>& c);
 
 } // namespace std
 
