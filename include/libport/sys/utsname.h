@@ -11,6 +11,8 @@
 #ifndef LIBPORT_SYS_UTSNAME_H
 # define LIBPORT_SYS_UTSNAME_H
 
+# include <iosfwd>
+
 # include <libport/config.h>
 # include <libport/export.hh>
 
@@ -68,6 +70,9 @@ namespace libport
     /// Machine hardware platform.
     std::string machine() const;
 
+    /// Mostly for debugging.
+    std::ostream& dump(std::ostream& o) const;
+
   private:
     struct ::utsname utsname_;
     unsigned major_;
@@ -75,6 +80,11 @@ namespace libport
     unsigned patchlevel_;
   };
 
+  /// Mostly for debugging.
+  std::ostream& operator<<(std::ostream& o, const utsname& u);
+
 }
+
+# include <libport/sys/utsname.hxx>
 
 #endif

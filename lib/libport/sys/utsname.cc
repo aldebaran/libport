@@ -10,6 +10,7 @@
 
 #include <libport/sys/utsname.h>
 #include <libport/cassert>
+#include <iostream>
 #include <sstream>
 
 #if ! defined LIBPORT_HAVE_SYS_UTSNAME_H
@@ -72,5 +73,20 @@ namespace libport
   DEFINE(minor);
   DEFINE(patchlevel);
 #undef DEFINE
+
+  std::ostream&
+  utsname::dump(std::ostream& o) const
+  {
+#define FIELD(N) #N ": " << N()
+    return o
+      << FIELD(machine) << ", "
+      << FIELD(node) << ", "
+      << FIELD(release) << ", "
+      << FIELD(system) << ", "
+      << FIELD(release_major) << ", "
+      << FIELD(release_minor) << ", "
+      << FIELD(release_patchlevel);
+#undef FIELD
+  }
 
 }

@@ -44,6 +44,7 @@ sys_libport_include_HEADERS =			\
   include/libport/sys/time.hxx			\
   include/libport/sys/types.h			\
   include/libport/sys/utsname.h			\
+  include/libport/sys/utsname.hxx		\
   include/libport/sys/wait.h
 
 
