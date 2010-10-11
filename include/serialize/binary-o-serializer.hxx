@@ -202,6 +202,22 @@ namespace libport
       }
     };
 
+    /*------------.
+    | std::pair.  |
+    `------------*/
+    template <typename A, typename B>
+    struct BinaryOSerializer::Impl<std::pair<A, B> >
+    {
+      typedef std::pair<A, B> type;
+      static void
+      put(const std::string&, const type& v, std::ostream& output,
+          BinaryOSerializer& ser)
+      {
+        Impl<A>::put("first",  v.first,  output, ser);
+        Impl<B>::put("second", v.second, output, ser);
+      }
+    };
+
     /*--------------.
     | std::string.  |
     `--------------*/
