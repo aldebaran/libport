@@ -245,7 +245,6 @@ namespace libport
   }
 }
 
-
 /*----------.
 | Helpers.  |
 `----------*/
@@ -279,7 +278,165 @@ namespace libport
   }                                                                     \
   while (0)                                                             \
 
-// INFO
+
+// PUSH
+
+#  define GD_PUSH_(Message, Level)                                      \
+  libport::Debug::Indent _gd_indent_ ## __LINE__                        \
+    (GD_DEBUGGER, GD_ENABLED(Level));                                   \
+  if (GD_ENABLED(Level))                                                \
+    GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                       \
+                      GD_FUNCTION, __FILE__, __LINE__)                  \
+
+/*-------------.
+| Categories.  |
+`-------------*/
+
+#  define GD_CATEGORY_GET() _libport_gd_category
+
+#  define GD_CATEGORY(Name)                                             \
+  static ::libport::debug::category_type GD_CATEGORY_GET() =            \
+    ::libport::debug::add_category(::libport::debug::category_type(#Name))
+
+// #  define GD_GET_CATEGORY(Name)
+//   _gd_category_##Name
+
+#  define GD_DISABLE_CATEGORY(Cat)                                      \
+  static int _gd_category_disable_##Cat =                               \
+    ::libport::debug::disable_category(GD_GET_CATEGORY(Cat))
+
+#  define GD_ENABLE_CATEGORY(Cat)                \
+  static int _gd_category_enable_##Cat =         \
+    ::libport::debug::enable_category(GD_GET_CATEGORY(Cat))
+
+// #  define GD_CHECK_CATEGORY(Cat)
+//   GD_DEBUGGER->test_category(GD_GET_CATEGORY(Cat))
+
+/*--------.
+| Level.  |
+`--------*/
+
+#  define GD_FILTER(Lvl)                        \
+  GD_DEBUGGER->filter(Lvl)
+
+#  define GD_CURRENT_LEVEL()                    \
+  GD_DEBUGGER->level()
+
+#  define GD_FILTER_INC()                                               \
+  do {                                                                  \
+    if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::dump)           \
+      GD_DEBUGGER->filter(                                              \
+        (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() + 1));     \
+  } while (0)                                                           \
+
+#  define GD_FILTER_DEC()                                               \
+  do {                                                                  \
+    if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::none)           \
+      GD_DEBUGGER->filter(                                              \
+        (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() - 1));     \
+  } while (0)                                                           \
+
+#  define GD_SHOW_LEVEL(Lvl)                    \
+  (GD_CURRENT_LEVEL() >= Lvl)
+
+/*-------------.
+| Assertions.  |
+`-------------*/
+
+#  define GD_ABORT(Msg)                         \
+  do                                            \
+  {                                             \
+    GD_ERROR(Msg);                              \
+    libport::Debug::abort();                    \
+  }                                             \
+  while (0)                                     \
+
+#  define GD_IHEXDUMP(Data, Size)                       \
+  libport::gd_ihexdump                                  \
+  (reinterpret_cast<const unsigned char*>(Data), Size)
+
+
+/*------------.
+| Configure.  |
+`------------*/
+
+#  define GD_DEFAULT_DATA_ENCAPSULATION ::libport::localdata::Thread
+
+#  define GD__INIT_(DataEncapsulation)                                  \
+  static int                                                            \
+  _libport_initdebug_()                                                 \
+  {                                                                     \
+    make_debugger = _libport_mkdebug_;                                  \
+    debugger_data = new LocalData<Debug, DataEncapsulation>;            \
+    return 42;                                                          \
+  }                                                                     \
+                                                                        \
+  static int _libport_debug_initialized_ = _libport_initdebug_();
+
+// Should be called before quitting to reclaim memory.
+#  define GD_QUIT()                             \
+  ::libport::debug::clear()
+
+#  define GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)                  \
+  namespace libport                                                     \
+  {                                                                     \
+    static Debug* _libport_mkdebug_()                                   \
+    {                                                                   \
+      return new ConsoleDebug;                                          \
+    }                                                                   \
+    GD__INIT_(DataEncapsulation);                                       \
+  }
+
+#  define GD_INIT_SYSLOG_DEBUG_PER(Program, DataEncapsulation)          \
+  namespace libport                                                     \
+  {                                                                     \
+    static Debug* _libport_mkdebug_()                                   \
+    {                                                                   \
+      new SyslogDebug(#Program);                                        \
+    }                                                                   \
+    GD__INIT_(DataEncapsulation);                                       \
+  }
+
+#  define GD_ENABLE(Name)                       \
+  GD_DEBUGGER->Name(true)
+
+#  include <libport/debug.hxx>
+
+# else // LIBPORT_DEBUG_DISABLE defined
+
+#  define GD_DEBUGGER
+#  define GD_FORMAT_ELEM(R, Data, Elem)
+#  define GD_FORMAT(Msg, ...)
+#  define GD_CATEGORY(Cat)
+#  define GD_DISABLE_CATEGORY(Cat)
+#  define GD_ENABLE_CATEGORY(Cat)
+#  define GD_CHECK_CATEGORY(Cat)
+#  define GD_LEVEL(Lvl)
+#  define GD_FILTER(Lvl)
+#  define GD_CURRENT_LEVEL()
+#  define GD_FILTER_INC()
+#  define GD_FILTER_DEC()
+#  define GD_FPUSH_TRACE(...)
+#  define GD_FPUSH_LOG(...)
+#  define GD_FPUSH_DUMP(...)
+#  define GD_FPUSH_TRACE(...)
+#  define GD_FPUSH_DEBUG(...)
+#  define GD_PUSH_TRACE(...)
+#  define GD_SHOW_LEVEL(Lvl)
+#  define GD_ABORT(Msg)
+#  define GD_IHEXDUMP(Data, Size)
+#  define GD_QUIT()
+#  define GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)
+#  define GD_INIT_SYSLOG_DEBUG_PER(Program, DataEncapsulation)
+#  define GD_ENABLE(Name)
+
+# endif //LIBPORT_DEBUG_DISABLE
+
+// Bouncing macros, do not need to be undefined
+
+/*-------.
+| Info.  |
+`-------*/
 
 #  define GD_INFO_(Level, Message)              \
   GD_MESSAGE_(info, Level, Message)
@@ -317,7 +474,9 @@ namespace libport
 #  define GD_VINFO_DEBUG(Msg, Exp) GD_INFO_DEBUG("%s: %s = %s", Msg, #Exp, Exp)
 #  define GD_VINFO_DUMP(Msg, Exp)  GD_INFO_DUMP("%s: %s = %s", Msg, #Exp, Exp)
 
-// WARN
+/*-------.
+| WARN   |
+`-------*/
 
 #  define GD_WARN(Message)                      \
   GD_MESSAGE_(warn, log, Message)
@@ -331,7 +490,9 @@ namespace libport
 #  define GD_VWARN(Msg, Exp)                    \
   GD_FWARN("%s: %s = %s", Msg, #Exp, Exp)
 
-// ERROR
+/*-------.
+| ERROR  |
+`-------*/
 
 #  define GD_ERROR(Message)                     \
   GD_MESSAGE_(error, log, Message)
@@ -345,14 +506,9 @@ namespace libport
 #  define GD_VERROR(Msg, Exp)                   \
   GD_FERROR("%s: %s = %s", Msg, #Exp, Exp)
 
-// PUSH
-
-#  define GD_PUSH_(Message, Level)                                      \
-  libport::Debug::Indent _gd_indent_ ## __LINE__                        \
-    (GD_DEBUGGER, GD_ENABLED(Level));                                   \
-  if (GD_ENABLED(Level))                                                \
-    GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                       \
-                      GD_FUNCTION, __FILE__, __LINE__)                  \
+/*-------.
+| PUSH   |
+`-------*/
 
 #  define GD_PUSH(Message) GD_PUSH_(Message, log)
 #  define GD_PUSH_LOG(Message) GD_PUSH_(Message, log)
@@ -366,36 +522,9 @@ namespace libport
 #  define GD_FPUSH_DEBUG(Message, ...) GD_PUSH_DEBUG(GD_FORMAT(Message, __VA_ARGS__))
 #  define GD_FPUSH_DUMP(Message, ...) GD_PUSH_DUMP(GD_FORMAT(Message, __VA_ARGS__))
 
-/*-------------.
-| Categories.  |
-`-------------*/
-
-#  define GD_CATEGORY_GET() _libport_gd_category
-
-#  define GD_CATEGORY(Name)                                             \
-  static ::libport::debug::category_type GD_CATEGORY_GET() =            \
-    ::libport::debug::add_category(::libport::debug::category_type(#Name))
-
-// #  define GD_GET_CATEGORY(Name)
-//   _gd_category_##Name
-
-#  define GD_DISABLE_CATEGORY(Cat)                                      \
-  static int _gd_category_disable_##Cat =                               \
-    ::libport::debug::disable_category(GD_GET_CATEGORY(Cat))
-
-#  define GD_ENABLE_CATEGORY(Cat)                \
-  static int _gd_category_enable_##Cat =         \
-    ::libport::debug::enable_category(GD_GET_CATEGORY(Cat))
-
-// #  define GD_CHECK_CATEGORY(Cat)
-//   GD_DEBUGGER->test_category(GD_GET_CATEGORY(Cat))
-
 /*--------.
 | Level.  |
 `--------*/
-
-#  define GD_FILTER(Lvl)                        \
-  GD_DEBUGGER->filter(Lvl)
 
 #  define GD_FILTER_NONE()                      \
   GD_FILTER(::libport::Debug::levels::none)
@@ -411,26 +540,6 @@ namespace libport
 
 #  define GD_FILTER_DUMP()                      \
   GD_FILTER(::libport::Debug::levels::dump)
-
-#  define GD_CURRENT_LEVEL()                    \
-  GD_DEBUGGER->level()
-
-#  define GD_FILTER_INC()                                               \
-  do {                                                                  \
-    if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::dump)           \
-      GD_DEBUGGER->filter(                                              \
-        (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() + 1));     \
-  } while (0)                                                           \
-
-#  define GD_FILTER_DEC()                                               \
-  do {                                                                  \
-    if (GD_CURRENT_LEVEL() != ::libport::Debug::levels::none)           \
-      GD_DEBUGGER->filter(                                              \
-        (::libport::Debug::levels::Level)(GD_CURRENT_LEVEL() - 1));     \
-  } while (0)                                                           \
-
-#  define GD_SHOW_LEVEL(Lvl)                    \
-  (GD_CURRENT_LEVEL() >= Lvl)
 
 #  define GD_SHOW_LOG()                         \
   GD_SHOW_LEVEL(::libport::Debug::levels::log)
@@ -448,41 +557,15 @@ namespace libport
 | Assertions.  |
 `-------------*/
 
-#  define GD_ABORT(Msg)                         \
-  do                                            \
-  {                                             \
-    GD_ERROR(Msg);                              \
-    libport::Debug::abort();                    \
-  }                                             \
-  while (0)                                     \
-
 #  define GD_FABORT(Msg, ...)                   \
   GD_ABORT(GD_FORMAT(Msg, __VA_ARGS__))
 
 #  define GD_UNREACHABLE()                      \
   GD_ABORT("Unreachable code reached")
 
-#  define GD_IHEXDUMP(Data, Size)                       \
-  libport::gd_ihexdump                                  \
-  (reinterpret_cast<const unsigned char*>(Data), Size)
-
-
 /*------------.
 | Configure.  |
 `------------*/
-
-#  define GD_DEFAULT_DATA_ENCAPSULATION ::libport::localdata::Thread
-
-#  define GD__INIT_(DataEncapsulation)                                  \
-  static int                                                            \
-  _libport_initdebug_()                                                 \
-  {                                                                     \
-    make_debugger = _libport_mkdebug_;                                  \
-    debugger_data = new LocalData<Debug, DataEncapsulation>;            \
-    return 42;                                                          \
-  }                                                                     \
-                                                                        \
-  static int _libport_debug_initialized_ = _libport_initdebug_();
 
 // Must be called before any use.
 #  define GD_INIT()                             \
@@ -491,121 +574,16 @@ namespace libport
 #  define GD_INIT_DEBUG_PER(DataEncapsulation)  \
   GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)
 
-// Should be called before quitting to reclaim memory.
-#  define GD_QUIT()                             \
-  ::libport::debug::clear()
-
-#  define GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)                  \
-  namespace libport                                                     \
-  {                                                                     \
-    static Debug* _libport_mkdebug_()                                   \
-    {                                                                   \
-      return new ConsoleDebug;                                          \
-    }                                                                   \
-    GD__INIT_(DataEncapsulation);                                       \
-  }
-
-#  define GD_INIT_SYSLOG_DEBUG_PER(Program, DataEncapsulation)          \
-  namespace libport                                                     \
-  {                                                                     \
-    static Debug* _libport_mkdebug_()                                   \
-    {                                                                   \
-      new SyslogDebug(#Program);                                        \
-    }                                                                   \
-    GD__INIT_(DataEncapsulation);                                       \
-  }
-
 #  define GD_INIT_CONSOLE()                                             \
   GD_INIT_CONSOLE_DEBUG_PER(GD_DEFAULT_DATA_ENCAPSULATION)
 
 #  define GD_INIT_SYSLOG(Program, DataEncapsulation)                    \
   GD_INIT_SYSLOG_DEBUG_PER(Program, GD_DEFAULT_DATA_ENCAPSULATION)
 
-#  define GD_ENABLE(Name)                       \
-  GD_DEBUGGER->Name(true)
-
 #  define GD_ENABLE_LOCATIONS()                 \
   GD_ENABLE(locations)
 
 #  define GD_ENABLE_TIMESTAMPS()                \
   GD_ENABLE(timestamps)
-
-#  include <libport/debug.hxx>
-# else
-
-#  define GD_DEBUGGER
-#  define GD_FORMAT_ELEM(R, Data, Elem)
-#  define GD_FORMAT(Msg, ...)
-#  define GD_INFO(Message)
-#  define GD_FINFO(Msg, ...)
-#  define GD_VINFO(Msg, Exp)
-#  define GD_INFO_LOG(Msg)
-#  define GD_INFO_TRACE(Msg)
-#  define GD_INFO_DEBUG(Msg)
-#  define GD_INFO_DUMP(Msg)
-#  define GD_FINFO_LOG(Msg, ...)
-#  define GD_FINFO_TRACE(Msg, ...)
-#  define GD_FINFO_DEBUG(Msg, ...)
-#  define GD_FINFO_DUMP(Msg, ...)
-#  define GD_SINFO_LOG(Msg, ...)
-#  define GD_SINFO_TRACE(Msg, ...)
-#  define GD_SINFO_DEBUG(Msg, ...)
-#  define GD_SINFO_DUMP(Msg, ...)
-#  define GD_VINFO_LOG(Msg, Val)
-#  define GD_VINFO_TRACE(Msg, Val)
-#  define GD_VINFO_DEBUG(Msg, Val)
-#  define GD_VINFO_DUMP(Msg, Val)
-#  define GD_WARN(Message)
-#  define GD_FWARN(Msg, ...)
-#  define GD_VWARN(Msg, Exp)
-#  define GD_ERROR(Message)
-#  define GD_FERROR(Msg, ...)
-#  define GD_VERROR(Msg, Exp)
-#  define GD_PUSH(Message)
-#  define GD_FPUSH(Message, ...)
-#  define GD_CATEGORY(Cat)
-#  define GD_DISABLE_CATEGORY(Cat)
-#  define GD_ENABLE_CATEGORY(Cat)
-#  define GD_CHECK_CATEGORY(Cat)
-#  define GD_LEVEL(Lvl)
-#  define GD_FILTER(Lvl)
-#  define GD_FILTER_NONE()
-#  define GD_FILTER_LOG()
-#  define GD_FILTER_TRACE()
-#  define GD_FILTER_DEBUG()
-#  define GD_FILTER_DUMP()
-#  define GD_CURRENT_LEVEL()
-#  define GD_FILTER_INC()
-#  define GD_FILTER_DEC()
-#  define GD_FPUSH_TRACE(...)
-#  define GD_FPUSH_LOG(...)
-#  define GD_FPUSH_DUMP(...)
-#  define GD_FPUSH_TRACE(...)
-#  define GD_FPUSH_DEBUG(...)
-#  define GD_PUSH_TRACE(...)
-#  define GD_SHOW_LEVEL(Lvl)
-#  define GD_SHOW_LOG()
-#  define GD_SHOW_TRACE()
-#  define GD_SHOW_DEBUG()
-#  define GD_SHOW_DUMP()
-#  define GD_ABORT(Msg)
-#  define GD_FABORT(Msg, ...)
-#  define GD_UNREACHABLE()
-#  define GD_IHEXDUMP(Data, Size)
-#  define GD_INIT()
-#  define GD_INIT_DEBUG_PER(DataEncapsulation)
-#  define GD_QUIT()
-#  define GD_INIT_CONSOLE()
-#  define GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)
-#  define GD_INIT_SYSLOG(Program, DataEncapsulation)
-#  define GD_INIT_SYSLOG_DEBUG_PER(Program, DataEncapsulation)
-#  define GD_ENABLE(Name)
-#  define GD_ENABLE_LOCATIONS()
-#  define GD_ENABLE_TIMESTAMPS()
-#  define GD_SERROR(Msg)
-#  define GD_SINFO(Msg)
-#  define GD_SWARN(Msg)
-
-# endif
 
 #endif
