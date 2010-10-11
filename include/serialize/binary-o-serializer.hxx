@@ -11,8 +11,9 @@
 #ifndef LIBPORT_SERIALIZE_BINARY_O_SERIALIZER_HXX
 # define LIBPORT_SERIALIZE_BINARY_O_SERIALIZER_HXX
 
-
 # include <vector>
+
+# include <boost/optional.hpp>
 
 # include <libport/arpa/inet.h>
 # include <libport/meta.hh>
@@ -177,6 +178,27 @@ namespace libport
           Impl<char>::put("opt", serialized, output, ser);
           Impl<T>::put("value", *ptr, output, ser);
         }
+      }
+    };
+
+    /*-----------------.
+    | Boost optional.  |
+    `-----------------*/
+    template <typename T>
+    struct BinaryOSerializer::Impl<boost::optional<T> >
+    {
+      typedef boost::optional<T> type;
+      static void
+      put(const std::string&, const type& v, std::ostream& output,
+          BinaryOSerializer& ser)
+      {
+        if (!v)
+        {
+          Impl<char>::put("opt", null, output, ser);
+          return;
+        }
+        Impl<char>::put("opt", serialized, output, ser);
+        Impl<type>::put("value", v.get(), output, ser);
       }
     };
 

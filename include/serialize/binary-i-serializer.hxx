@@ -13,6 +13,8 @@
 
 # include <vector>
 
+# include <boost/optional.hpp>
+
 # include <libport/arpa/inet.h>
 # include <libport/foreach.hh>
 # include <libport/hierarchy.hh>
@@ -212,6 +214,32 @@ namespace libport
         }
         // GCC bug prevents this: unreachable();
         // http://gcc.gnu.org/bugzilla/show_bug.cgi?id=44580
+        abort();
+      }
+    };
+
+    /*-----------------.
+    | Boost optional.  |
+    `-----------------*/
+    template <typename T>
+    struct BinaryISerializer::Impl<boost::optional<T> >
+    {
+      typedef boost::optional<T> type;
+      static type get(const std::string&, std::istream& input,
+                      BinaryISerializer& ser)
+      {
+        pointer_status status =
+          static_cast<pointer_status>(Impl<char>::get("opt", input, ser));
+        switch (status)
+        {
+          case null:
+            return 0;
+          case cached:
+            assert(!"Impossible 'cached' value "
+                   "for a serialized boost::optional.");
+          case serialized:
+            return BinaryISerializer::Impl<T>::get("value", input, ser);
+        }
         abort();
       }
     };
