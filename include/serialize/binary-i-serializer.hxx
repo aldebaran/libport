@@ -255,7 +255,7 @@ namespace libport
                       BinaryISerializer& ser)
       {
         A first  = BinaryISerializer::Impl<A>::get("first",  input, ser);
-        B second = BinaryISerializer::Impl<A>::get("second", input, ser);
+        B second = BinaryISerializer::Impl<B>::get("second", input, ser);
         return type(first, second);
       }
     };
