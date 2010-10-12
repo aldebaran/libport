@@ -6,17 +6,17 @@
 ##
 ## See the LICENSE file for more information.
 
-include build-aux/init.mk
-include build-aux/build-aux.mk
+include build-aux/make/init.mk
+include build-aux/make/build-aux.mk
 include build-aux/make/package-version.mk
-include build-aux/fix-libtool-la.mk
-include build-aux/libport.mk
+include build-aux/make/fix-libtool-la.mk
+include build-aux/make/libport.mk
 include build-aux/make/build-farm.mk
-include build-aux/bootstrap.mk
-include build-aux/m4sh.mk
+include build-aux/make/bootstrap.mk
+include build-aux/make/m4sh.mk
 
 TESTS =
-include build-aux/check.mk
+include build-aux/make/check.mk
 
 ACLOCAL_AMFLAGS = -I build-aux/m4 -I build-aux
 libtool: $(LIBTOOL_DEPS)

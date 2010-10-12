@@ -1,4 +1,4 @@
-include $(top_srcdir)/build-aux/instrument.mk
+include build-aux/make/instrument.mk
 # This is for Boost Unit Test tests.  "all" is much more verbose.
 LOG_LEVEL = test_suite
 TESTSFLAGS = --log_level=$(LOG_LEVEL)
