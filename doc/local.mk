@@ -53,21 +53,18 @@ PDF = doc/libport.pdf
 EXTRA_DATA += $(PDF)
 CLEANFILES += $(PDF)
 
-REVISION_FILE_STY = doc/revision.sty
-$(REVISION_FILE_STY): $(top_srcdir)/.version $(REVISION) $(build_aux_dir)/revision.mk
-	$(REVISION) --latex			\
-		--cache=$<			\
-		--srcdir=$(top_srcdir)		\
-		--directory			\
-		--output=$@
-	touch $@
+REVISION_FILE = revision.sty
+CLEANFILES += $(REVISION_FILE)
+BUILT_SOURCES += $(REVISION_FILE)
+$(REVISION_FILE):
+	$(VERSIONIFY) --directory --cache=$(top_srcdir)/.version --latex=$@
 
 libport_sources =				\
   $(call ls_files,doc/*.cc)			\
   $(call ls_files,doc/*.tex)
 EXTRA_DIST += $(libport_sources)
 libport_deps =					\
-  $(REVISION_FILE_STY)				\
+  $(REVISION_FILE)				\
   $(libport_sources)
 #   $(call ls_files,doc/*.sty doc/*.cls)
 $(PDF): $(libport_deps)
