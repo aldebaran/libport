@@ -223,19 +223,22 @@ EXTRA_DIST += $(generate_libport_config_h)
 # this for config.h.  Arguably, we could use _configs.sed, but it is
 # not documented.
 include/libport/config.h: $(CONFIG_HEADER) $(generate_libport_config_h)
-	rm -f $@ $@.tmp
-	test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
-	$(generate_libport_config_h) $< $@.tmp
-	mv $@.tmp $@
+	$(AM_V_GEN)
+	$(AM_V_at)rm -f $@ $@.tmp
+	$(AM_V_at)test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
+	$(AM_V_at)$(generate_libport_config_h) $< $@.tmp
+	$(AM_V_at)mv $@.tmp $@
 
 # format.hh.
 EXTRA_DIST += include/libport/format.hh.py
 %.hh: %.hh.py
-	test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
-	$< >$@.tmp
-	mv $@.tmp $@
+	$(AM_V_GEN)
+	$(AM_V_at)test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
+	$(AM_V_at)$< >$@.tmp
+	$(AM_V_at)mv $@.tmp $@
 
 # revision.hh
 include/libport/revision.hh: $(top_srcdir)/.version $(VERSIONIFY)
-	$(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --header=$@
+	$(AM_V_GEN)
+	$(AM_V_at)$(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --header=$@
 
