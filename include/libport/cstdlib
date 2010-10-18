@@ -47,6 +47,16 @@ namespace libport
   const char* getenv(const char* name);
 }
 
+/*-------.
+| rand.  |
+`-------*/
+
+namespace libport
+{
+  LIBPORT_API
+  int rand();
+}
+
 /*---------.
 | setenv.  |
 `---------*/

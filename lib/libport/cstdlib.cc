@@ -8,6 +8,12 @@
  * See the LICENSE file for more information.
  */
 
+
+// Needed to get rand_s. Don't take any chance, define it right away.
+#if defined _MSC_VER && !defined _CRT_RAND_S
+# define _CRT_RAND_S
+#endif
+
 #include <stdexcept>
 #include <iostream>
 
@@ -50,6 +56,21 @@ namespace libport
 
 #endif
 
+namespace libport
+{
+  int rand()
+  {
+#if defined _MSC_VER
+    unsigned int res;
+    errno_t err = rand_s(&res);
+    // FIXME: Actual error handling?
+    assert_eq(err, 0);
+    return res;
+#else
+    return ::rand();
+#endif
+  }
+}
 
 #if defined _MSC_VER || defined __MINGW32__
 
