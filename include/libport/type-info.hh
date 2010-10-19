@@ -11,6 +11,8 @@
 #ifndef LIBPORT_TYPE_INFO_HH
 # define LIBPORT_TYPE_INFO_HH
 
+# include <string>
+
 namespace libport
 {
   class TypeInfo
