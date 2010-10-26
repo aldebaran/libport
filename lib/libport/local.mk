@@ -96,8 +96,8 @@ lib/libport/revision-stub.hh: $(VERSIONIFY)
 
 # Resolve stubs in libport.
 all-local: lib/libport/libport.unstub.stamp
-lib/libport/libport.unstub.stamp: $(VERSIONIFY_CACHE) lib/libport/libport$(LIBSFX).la $(VERSIONIFY)
-	$(VERSIONIFY_RUN) --resolve=lib/libport/.libs/libport$(LIBSFX)$(SHLIBEXT)
+lib/libport/libport.unstub.stamp: lib/libport/libport$(LIBSFX).la $(VERSIONIFY_CACHE) $(VERSIONIFY)
+	$(VERSIONIFY_RUN) --resolve=$<
 
 # Make sure nobody uses config.h instead of libport/config.h.
 #maintainer-check:
