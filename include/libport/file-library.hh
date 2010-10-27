@@ -125,6 +125,7 @@ namespace libport
     /// \name Accessor.
     /// \{
     const path_list_type& search_path_get() const;
+    path_list_type& search_path();
     /// \}
 
   private:

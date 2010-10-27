@@ -75,6 +75,12 @@ namespace libport
     return search_path_;
   }
 
+  inline file_library::path_list_type&
+  file_library::search_path()
+  {
+    return search_path_;
+  }
+
   inline std::ostream&
   operator<<(std::ostream& ostr, const file_library& l)
   {

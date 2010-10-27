@@ -41,6 +41,7 @@ namespace libport
 
     const file_library& path() const throw ();
     file_library& path() throw ();
+    xlt_advise& path(const file_library& p) throw ();
 
     xlt_handle open(const std::string& s) throw(exception);
 

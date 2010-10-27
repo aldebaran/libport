@@ -128,6 +128,13 @@ namespace libport
     return path_;
   }
 
+  xlt_advise&
+  xlt_advise::path(const file_library& p) throw()
+  {
+    path_ = p;
+    return *this;
+  }
+
   lt_dlhandle
   xlt_advise::dlopen_(const std::string& s) const
     throw(xlt_advise::exception)
