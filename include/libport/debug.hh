@@ -339,18 +339,6 @@ namespace libport
 #  define GD_SHOW_LEVEL(Lvl)                    \
   (GD_CURRENT_LEVEL() >= Lvl)
 
-/*-------------.
-| Assertions.  |
-`-------------*/
-
-#  define GD_ABORT(Msg)                         \
-  do                                            \
-  {                                             \
-    GD_ERROR(Msg);                              \
-    libport::Debug::abort();                    \
-  }                                             \
-  while (0)                                     \
-
 #  define GD_IHEXDUMP(Data, Size)                       \
   libport::gd_ihexdump                                  \
   (reinterpret_cast<const unsigned char*>(Data), Size)
@@ -404,35 +392,40 @@ namespace libport
 
 # else // LIBPORT_DEBUG_DISABLE defined
 
-#  define GD_DEBUGGER
-#  define GD_FORMAT_ELEM(R, Data, Elem)
-#  define GD_FORMAT(Msg, ...)
 #  define GD_CATEGORY(Cat)
-#  define GD_DISABLE_CATEGORY(Cat)
-#  define GD_ENABLE_CATEGORY(Cat)
 #  define GD_CHECK_CATEGORY(Cat)
-#  define GD_LEVEL(Lvl)
-#  define GD_FILTER(Lvl)
 #  define GD_CURRENT_LEVEL()
-#  define GD_FILTER_INC()
+#  define GD_DEBUGGER
+#  define GD_DISABLE_CATEGORY(Cat)
+#  define GD_ENABLE(Name)
+#  define GD_ENABLE_CATEGORY(Cat)
+#  define GD_FILTER(Lvl)
 #  define GD_FILTER_DEC()
-#  define GD_FPUSH_TRACE(...)
-#  define GD_FPUSH_LOG(...)
-#  define GD_FPUSH_DUMP(...)
-#  define GD_FPUSH_TRACE(...)
-#  define GD_FPUSH_DEBUG(...)
-#  define GD_PUSH_TRACE(...)
-#  define GD_SHOW_LEVEL(Lvl)
-#  define GD_ABORT(Msg)
+#  define GD_FILTER_INC()
+#  define GD_FPUSH_(...)
 #  define GD_IHEXDUMP(Data, Size)
-#  define GD_QUIT()
 #  define GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)
 #  define GD_INIT_SYSLOG_DEBUG_PER(Program, DataEncapsulation)
-#  define GD_ENABLE(Name)
+#  define GD_LEVEL(Lvl)
+#  define GD_MESSAGE_(...)
+#  define GD_QUIT()
+#  define GD_SHOW_LEVEL(Lvl)
 
 # endif //LIBPORT_DEBUG_DISABLE
 
 // Bouncing macros, do not need to be undefined
+
+/*-------------.
+| Assertions.  |
+`-------------*/
+
+#  define GD_ABORT(Msg)                         \
+  do                                            \
+  {                                             \
+    GD_ERROR(Msg);                              \
+    libport::Debug::abort();                    \
+  }                                             \
+  while (0)                                     \
 
 /*-------.
 | Info.  |
