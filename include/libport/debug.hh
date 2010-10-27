@@ -467,53 +467,40 @@ namespace libport
 #  define GD_VINFO_DEBUG(Msg, Exp) GD_INFO_DEBUG("%s: %s = %s", Msg, #Exp, Exp)
 #  define GD_VINFO_DUMP(Msg, Exp)  GD_INFO_DUMP("%s: %s = %s", Msg, #Exp, Exp)
 
-/*-------.
-| WARN   |
-`-------*/
-
-#  define GD_WARN(Message)                      \
-  GD_MESSAGE_(warn, log, Message)
-
-#  define GD_FWARN(Msg, ...)                    \
-  GD_WARN(GD_FORMAT(Msg, __VA_ARGS__))
-
-#  define GD_SWARN(Msg)                         \
-  GD_WARN(GD_STREAM(Msg))
-
-#  define GD_VWARN(Msg, Exp)                    \
-  GD_FWARN("%s: %s = %s", Msg, #Exp, Exp)
 
 /*-------.
-| ERROR  |
+| WARN.  |
 `-------*/
 
-#  define GD_ERROR(Message)                     \
-  GD_MESSAGE_(error, log, Message)
+#  define GD_WARN(Message)   GD_MESSAGE_(warn, log, Message)
+#  define GD_FWARN(Msg, ...) GD_WARN(GD_FORMAT(Msg, __VA_ARGS__))
+#  define GD_SWARN(Msg)      GD_WARN(GD_STREAM(Msg))
+#  define GD_VWARN(Msg, Exp) GD_FWARN("%s: %s = %s", Msg, #Exp, Exp)
 
-#  define GD_FERROR(Msg, ...)                   \
-  GD_ERROR(GD_FORMAT(Msg, __VA_ARGS__))
+/*--------.
+| ERROR.  |
+`--------*/
 
-#  define GD_SERROR(Msg)                        \
-  GD_ERROR(GD_STREAM(Msg))
-
-#  define GD_VERROR(Msg, Exp)                   \
-  GD_FERROR("%s: %s = %s", Msg, #Exp, Exp)
+#  define GD_ERROR(Message)   GD_MESSAGE_(error, log, Message)
+#  define GD_FERROR(Msg, ...) GD_ERROR(GD_FORMAT(Msg, __VA_ARGS__))
+#  define GD_SERROR(Msg)      GD_ERROR(GD_STREAM(Msg))
+#  define GD_VERROR(Msg, Exp) GD_FERROR("%s: %s = %s", Msg, #Exp, Exp)
 
 /*-------.
-| PUSH   |
+| PUSH.  |
 `-------*/
 
-#  define GD_PUSH(Message) GD_PUSH_(Message, log)
-#  define GD_PUSH_LOG(Message) GD_PUSH_(Message, log)
-#  define GD_PUSH_TRACE(Message) GD_PUSH_(Message, trace)
-#  define GD_PUSH_DEBUG(Message) GD_PUSH_(Message, debug)
-#  define GD_PUSH_DUMP(Message) GD_PUSH_(Message, dump)
+#  define GD_PUSH(Msg)       GD_PUSH_(Msg, log)
+#  define GD_PUSH_LOG(Msg)   GD_PUSH_(Msg, log)
+#  define GD_PUSH_TRACE(Msg) GD_PUSH_(Msg, trace)
+#  define GD_PUSH_DEBUG(Msg) GD_PUSH_(Msg, debug)
+#  define GD_PUSH_DUMP(Msg)  GD_PUSH_(Msg, dump)
 
-#  define GD_FPUSH(Message, ...) GD_PUSH(GD_FORMAT(Message, __VA_ARGS__))
-#  define GD_FPUSH_LOG(Message, ...) GD_PUSH_LOG(GD_FORMAT(Message, __VA_ARGS__))
-#  define GD_FPUSH_TRACE(Message, ...) GD_PUSH_TRACE(GD_FORMAT(Message, __VA_ARGS__))
-#  define GD_FPUSH_DEBUG(Message, ...) GD_PUSH_DEBUG(GD_FORMAT(Message, __VA_ARGS__))
-#  define GD_FPUSH_DUMP(Message, ...) GD_PUSH_DUMP(GD_FORMAT(Message, __VA_ARGS__))
+#  define GD_FPUSH(Msg, ...)       GD_PUSH      (GD_FORMAT(Msg, __VA_ARGS__))
+#  define GD_FPUSH_LOG(Msg, ...)   GD_PUSH_LOG  (GD_FORMAT(Msg, __VA_ARGS__))
+#  define GD_FPUSH_TRACE(Msg, ...) GD_PUSH_TRACE(GD_FORMAT(Msg, __VA_ARGS__))
+#  define GD_FPUSH_DEBUG(Msg, ...) GD_PUSH_DEBUG(GD_FORMAT(Msg, __VA_ARGS__))
+#  define GD_FPUSH_DUMP(Msg, ...)  GD_PUSH_DUMP (GD_FORMAT(Msg, __VA_ARGS__))
 
 /*--------.
 | Level.  |
