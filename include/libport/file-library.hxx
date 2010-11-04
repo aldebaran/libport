@@ -57,6 +57,38 @@ namespace libport
     return *this;
   }
 
+  template <class Iterable>
+  file_library&
+  file_library::push_back(const std::string& user_path,
+                          const Iterable& default_path,
+                          const char* sep)
+  {
+    bool inserted = false;
+    if (user_path.empty())
+    {
+      // Insert the following search path component.
+      foreach (const std::string& s, default_path)
+        if (!s.empty())
+          push_back(s);
+    }
+    else
+    {
+      foreach (const std::string& s1, split(user_path, sep))
+      {
+        if (!s1.empty())
+          push_back(s1);
+        else if (!inserted)
+        {
+          foreach (const std::string& s2, default_path)
+            if (!s2.empty())
+              push_back(s2);
+          inserted = true;
+        }
+      }
+    }
+    return *this;
+  }
+
   inline file_library&
   file_library::append(const path& p)
   {
