@@ -262,10 +262,10 @@ namespace libport
 #  define GD_ENABLED(Level)                             \
   GD_DEBUGGER->enabled(::libport::Debug::levels::Level, GD_CATEGORY_GET())
 
+
 /*--------.
 | Print.  |
 `--------*/
-
 
 #  define GD_MESSAGE_(Type, Level, Message)                             \
   do                                                                    \
@@ -339,9 +339,8 @@ namespace libport
 #  define GD_SHOW_LEVEL(Lvl)                    \
   (GD_CURRENT_LEVEL() >= Lvl)
 
-#  define GD_IHEXDUMP(Data, Size)                       \
-  libport::gd_ihexdump                                  \
-  (reinterpret_cast<const unsigned char*>(Data), Size)
+#  define GD_IHEXDUMP(Data, Size)                                       \
+  libport::gd_ihexdump(reinterpret_cast<const unsigned char*>(Data), Size)
 
 
 /*------------.
@@ -419,7 +418,7 @@ namespace libport
 | Assertions.  |
 `-------------*/
 
-#  define GD_ABORT(Msg)                         \
+# define GD_ABORT(Msg)                          \
   do                                            \
   {                                             \
     GD_ERROR(Msg);                              \
@@ -431,116 +430,116 @@ namespace libport
 | Info.  |
 `-------*/
 
-#  define GD_INFO_(Level, Message)              \
+# define GD_INFO_(Level, Message)               \
   GD_MESSAGE_(info, Level, Message)
 
-#  define GD_INFO(Message)                      \
+# define GD_INFO(Message)                       \
   GD_INFO_(log, Message)
 
-#  define GD_FINFO(Msg, ...)                    \
+# define GD_FINFO(Msg, ...)                     \
   GD_INFO(GD_FORMAT(Msg, __VA_ARGS__))
 
-#  define GD_SINFO(Msg)                         \
+# define GD_SINFO(Msg)                          \
   GD_INFO(GD_STREAM(Msg))
 
-#  define GD_VINFO(Msg, Exp)                    \
+# define GD_VINFO(Msg, Exp)                     \
   GD_FINFO("%s: %s = %s", Msg, #Exp, Exp)
 
 
-#  define GD_INFO_LOG(Msg)   GD_INFO_(log, Msg)
-#  define GD_INFO_TRACE(Msg) GD_INFO_(trace, Msg)
-#  define GD_INFO_DEBUG(Msg) GD_INFO_(debug, Msg)
-#  define GD_INFO_DUMP(Msg)  GD_INFO_(dump, Msg)
+# define GD_INFO_LOG(Msg)   GD_INFO_(log, Msg)
+# define GD_INFO_TRACE(Msg) GD_INFO_(trace, Msg)
+# define GD_INFO_DEBUG(Msg) GD_INFO_(debug, Msg)
+# define GD_INFO_DUMP(Msg)  GD_INFO_(dump, Msg)
 
-#  define GD_FINFO_LOG(Msg, ...)   GD_INFO_(log,   GD_FORMAT(Msg, __VA_ARGS__))
-#  define GD_FINFO_TRACE(Msg, ...) GD_INFO_(trace, GD_FORMAT(Msg, __VA_ARGS__))
-#  define GD_FINFO_DEBUG(Msg, ...) GD_INFO_(debug, GD_FORMAT(Msg, __VA_ARGS__))
-#  define GD_FINFO_DUMP(Msg, ...)  GD_INFO_(dump,  GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_FINFO_LOG(Msg, ...)   GD_INFO_(log,   GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_FINFO_TRACE(Msg, ...) GD_INFO_(trace, GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_FINFO_DEBUG(Msg, ...) GD_INFO_(debug, GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_FINFO_DUMP(Msg, ...)  GD_INFO_(dump,  GD_FORMAT(Msg, __VA_ARGS__))
 
-#  define GD_SINFO_LOG(Msg)   GD_INFO_(log,   GD_STREAM(Msg))
-#  define GD_SINFO_TRACE(Msg) GD_INFO_(trace, GD_STREAM(Msg))
-#  define GD_SINFO_DEBUG(Msg) GD_INFO_(debug, GD_STREAM(Msg))
-#  define GD_SINFO_DUMP(Msg)  GD_INFO_(dump,  GD_STREAM(Msg))
+# define GD_SINFO_LOG(Msg)   GD_INFO_(log,   GD_STREAM(Msg))
+# define GD_SINFO_TRACE(Msg) GD_INFO_(trace, GD_STREAM(Msg))
+# define GD_SINFO_DEBUG(Msg) GD_INFO_(debug, GD_STREAM(Msg))
+# define GD_SINFO_DUMP(Msg)  GD_INFO_(dump,  GD_STREAM(Msg))
 
-#  define GD_VINFO_LOG(Msg, Exp)   GD_INFO_LOG("%s: %s = %s", Msg, #Exp, Exp)
-#  define GD_VINFO_TRACE(Msg, Exp) GD_INFO_TRACE("%s: %s = %s", Msg, #Exp, Exp)
-#  define GD_VINFO_DEBUG(Msg, Exp) GD_INFO_DEBUG("%s: %s = %s", Msg, #Exp, Exp)
-#  define GD_VINFO_DUMP(Msg, Exp)  GD_INFO_DUMP("%s: %s = %s", Msg, #Exp, Exp)
+# define GD_VINFO_LOG(Msg, Exp)   GD_INFO_LOG  ("%s: %s = %s", Msg, #Exp, Exp)
+# define GD_VINFO_TRACE(Msg, Exp) GD_INFO_TRACE("%s: %s = %s", Msg, #Exp, Exp)
+# define GD_VINFO_DEBUG(Msg, Exp) GD_INFO_DEBUG("%s: %s = %s", Msg, #Exp, Exp)
+# define GD_VINFO_DUMP(Msg, Exp)  GD_INFO_DUMP ("%s: %s = %s", Msg, #Exp, Exp)
 
 
 /*-------.
 | WARN.  |
 `-------*/
 
-#  define GD_WARN(Message)   GD_MESSAGE_(warn, log, Message)
-#  define GD_FWARN(Msg, ...) GD_WARN(GD_FORMAT(Msg, __VA_ARGS__))
-#  define GD_SWARN(Msg)      GD_WARN(GD_STREAM(Msg))
-#  define GD_VWARN(Msg, Exp) GD_FWARN("%s: %s = %s", Msg, #Exp, Exp)
+# define GD_WARN(Message)   GD_MESSAGE_(warn, log, Message)
+# define GD_FWARN(Msg, ...) GD_WARN(GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_SWARN(Msg)      GD_WARN(GD_STREAM(Msg))
+# define GD_VWARN(Msg, Exp) GD_FWARN("%s: %s = %s", Msg, #Exp, Exp)
 
 /*--------.
 | ERROR.  |
 `--------*/
 
-#  define GD_ERROR(Message)   GD_MESSAGE_(error, log, Message)
-#  define GD_FERROR(Msg, ...) GD_ERROR(GD_FORMAT(Msg, __VA_ARGS__))
-#  define GD_SERROR(Msg)      GD_ERROR(GD_STREAM(Msg))
-#  define GD_VERROR(Msg, Exp) GD_FERROR("%s: %s = %s", Msg, #Exp, Exp)
+# define GD_ERROR(Message)   GD_MESSAGE_(error, log, Message)
+# define GD_FERROR(Msg, ...) GD_ERROR(GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_SERROR(Msg)      GD_ERROR(GD_STREAM(Msg))
+# define GD_VERROR(Msg, Exp) GD_FERROR("%s: %s = %s", Msg, #Exp, Exp)
 
 /*-------.
 | PUSH.  |
 `-------*/
 
-#  define GD_PUSH(Msg)       GD_PUSH_(Msg, log)
-#  define GD_PUSH_LOG(Msg)   GD_PUSH_(Msg, log)
-#  define GD_PUSH_TRACE(Msg) GD_PUSH_(Msg, trace)
-#  define GD_PUSH_DEBUG(Msg) GD_PUSH_(Msg, debug)
-#  define GD_PUSH_DUMP(Msg)  GD_PUSH_(Msg, dump)
+# define GD_PUSH(Msg)       GD_PUSH_(Msg, log)
+# define GD_PUSH_LOG(Msg)   GD_PUSH_(Msg, log)
+# define GD_PUSH_TRACE(Msg) GD_PUSH_(Msg, trace)
+# define GD_PUSH_DEBUG(Msg) GD_PUSH_(Msg, debug)
+# define GD_PUSH_DUMP(Msg)  GD_PUSH_(Msg, dump)
 
-#  define GD_FPUSH(Msg, ...)       GD_PUSH      (GD_FORMAT(Msg, __VA_ARGS__))
-#  define GD_FPUSH_LOG(Msg, ...)   GD_PUSH_LOG  (GD_FORMAT(Msg, __VA_ARGS__))
-#  define GD_FPUSH_TRACE(Msg, ...) GD_PUSH_TRACE(GD_FORMAT(Msg, __VA_ARGS__))
-#  define GD_FPUSH_DEBUG(Msg, ...) GD_PUSH_DEBUG(GD_FORMAT(Msg, __VA_ARGS__))
-#  define GD_FPUSH_DUMP(Msg, ...)  GD_PUSH_DUMP (GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_FPUSH(Msg, ...)       GD_PUSH      (GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_FPUSH_LOG(Msg, ...)   GD_PUSH_LOG  (GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_FPUSH_TRACE(Msg, ...) GD_PUSH_TRACE(GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_FPUSH_DEBUG(Msg, ...) GD_PUSH_DEBUG(GD_FORMAT(Msg, __VA_ARGS__))
+# define GD_FPUSH_DUMP(Msg, ...)  GD_PUSH_DUMP (GD_FORMAT(Msg, __VA_ARGS__))
 
 /*--------.
 | Level.  |
 `--------*/
 
-#  define GD_FILTER_NONE()                      \
+# define GD_FILTER_NONE()                       \
   GD_FILTER(::libport::Debug::levels::none)
 
-#  define GD_FILTER_LOG()                       \
+# define GD_FILTER_LOG()                        \
   GD_FILTER(::libport::Debug::levels::log)
 
-#  define GD_FILTER_TRACE()                     \
+# define GD_FILTER_TRACE()                      \
   GD_FILTER(::libport::Debug::levels::trace)
 
-#  define GD_FILTER_DEBUG()                     \
+# define GD_FILTER_DEBUG()                      \
   GD_FILTER(::libport::Debug::levels::debug)
 
-#  define GD_FILTER_DUMP()                      \
+# define GD_FILTER_DUMP()                       \
   GD_FILTER(::libport::Debug::levels::dump)
 
-#  define GD_SHOW_LOG()                         \
+# define GD_SHOW_LOG()                          \
   GD_SHOW_LEVEL(::libport::Debug::levels::log)
 
-#  define GD_SHOW_TRACE()                               \
+# define GD_SHOW_TRACE()                                \
   GD_SHOW_LEVEL(::libport::Debug::levels::trace)
 
-#  define GD_SHOW_DEBUG()                               \
+# define GD_SHOW_DEBUG()                                \
   GD_SHOW_LEVEL(::libport::Debug::levels::debug)
 
-#  define GD_SHOW_DUMP()                        \
+# define GD_SHOW_DUMP()                         \
   GD_SHOW_LEVEL(::libport::Debug::levels::dump)
 
 /*-------------.
 | Assertions.  |
 `-------------*/
 
-#  define GD_FABORT(Msg, ...)                   \
+# define GD_FABORT(Msg, ...)                    \
   GD_ABORT(GD_FORMAT(Msg, __VA_ARGS__))
 
-#  define GD_UNREACHABLE()                      \
+# define GD_UNREACHABLE()                       \
   GD_ABORT("Unreachable code reached")
 
 /*------------.
@@ -548,22 +547,22 @@ namespace libport
 `------------*/
 
 // Must be called before any use.
-#  define GD_INIT()                             \
+# define GD_INIT()                             \
   GD_INIT_CONSOLE()
 
-#  define GD_INIT_DEBUG_PER(DataEncapsulation)  \
+# define GD_INIT_DEBUG_PER(DataEncapsulation)   \
   GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)
 
-#  define GD_INIT_CONSOLE()                                             \
+# define GD_INIT_CONSOLE()                                      \
   GD_INIT_CONSOLE_DEBUG_PER(GD_DEFAULT_DATA_ENCAPSULATION)
 
 #  define GD_INIT_SYSLOG(Program, DataEncapsulation)                    \
   GD_INIT_SYSLOG_DEBUG_PER(Program, GD_DEFAULT_DATA_ENCAPSULATION)
 
-#  define GD_ENABLE_LOCATIONS()                 \
+# define GD_ENABLE_LOCATIONS()                  \
   GD_ENABLE(locations)
 
-#  define GD_ENABLE_TIMESTAMPS()                \
+# define GD_ENABLE_TIMESTAMPS()                 \
   GD_ENABLE(timestamps)
 
 #endif
