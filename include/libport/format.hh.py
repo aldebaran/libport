@@ -9,7 +9,7 @@
 # See the LICENSE file for more information.
 
 
-print '''\
+print('''\
 #ifndef LIBPORT_FORMAT_HH
 # define LIBPORT_FORMAT_HH
 
@@ -29,7 +29,7 @@ namespace libport
     boost::format f(fmt);
     return str(f);
   }
-'''
+''')
 
 def args(n, f, d = ', '):
     return d.join(map(f, range(n)))
@@ -40,7 +40,7 @@ for n in range(1, 9):
         'formals':  args(n, lambda x : 'const T%s& arg%s' % (x, x)),
         'format':   args(n, lambda x : 'arg%s' % x, ' % '),
         }
-    print '''\
+    print('''\
   template <%(template)s>
   inline
   std::string format(const std::string& fmt, %(formals)s)
@@ -49,9 +49,9 @@ for n in range(1, 9):
     f %% %(format)s;
     return str(f);
   }
-''' % a
+''' % a)
 
-print '''\
+print('''\
 }
 
-#endif'''
+#endif''')
