@@ -162,14 +162,14 @@ namespace libport
                  const std::string& name_long,
                  const std::string& formal,
                  char name_short = '\0',
-                 callback_type* cb = 0);
-    void set_callback(callback_type* callback);
+                 const callback_type& cb = callback_type());
+    void set_callback(const callback_type& callback);
     ostring test_option(cli_args_type& args);
 
   protected:
     virtual void usage_(std::ostream& output) const;
     virtual void doc_(std::ostream& output) const;
-    callback_type* callback1_;
+    callback_type callback1_;
 
   private:
     std::string formal_;
@@ -186,7 +186,7 @@ namespace libport
                 const std::string& name_long,
                 char name_short = '\0',
 		const std::string& formal = "",
-                callback_type* cb = 0);
+                const callback_type& cb = callback_type());
     virtual bool test(cli_args_type& args);
     virtual void init();
     std::string value(const boost::optional<std::string>& def
@@ -234,7 +234,7 @@ namespace libport
 		 const std::string& name_long,
 		 char name_short = '\0',
 		 const std::string& formal = "",
-                 callback_type* cb = 0);
+                 const callback_type& cb = callback_type());
     virtual bool test(cli_args_type& args);
     virtual void init();
     const values_type& get() const;

@@ -74,8 +74,8 @@ namespace libport
       , cb_file_(boost::bind(&DataList::add_file,
                              &input_arguments, _1))
     {
-      exp.set_callback(&cb_exp_);
-      file.set_callback(&cb_file_);
+      exp.set_callback(cb_exp_);
+      file.set_callback(cb_file_);
     }
 
     DataList::~DataList()

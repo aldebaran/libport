@@ -214,11 +214,11 @@ namespace libport
       GD_DEBUGGER->filter(lvl);
     }
 
-    OptionValued::callback_type cb_debug(&cb_debug_fun);
+    OptionValued::callback_type cb_debug(cb_debug_fun);
 
     OptionValue
     debug("set the debug level in NONE, LOG (default), TRACE, DEBUG, DUMP",
-          "debug", 'd', "LEVEL", &cb_debug);
+          "debug", 'd', "LEVEL", cb_debug);
 
   }
 

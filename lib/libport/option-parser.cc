@@ -201,16 +201,16 @@ namespace libport
                              const std::string& name_long,
                              const std::string& formal,
 			     char name_short,
-                             callback_type* cb)
+                             const callback_type& cb)
     : OptionNamed(doc, name_long, name_short)
-    , callback1_(0)
+    , callback1_()
     , formal_(formal.empty() ?  boost::to_upper_copy(name_long) : formal)
   {
     set_callback(cb);
   }
 
   void
-  OptionValued::set_callback(callback_type* callback)
+  OptionValued::set_callback(const callback_type& callback)
   {
     callback1_ = callback;
   }
@@ -254,7 +254,7 @@ namespace libport
     }
 
     if (res && callback1_)
-      (*callback1_)(res.get());
+      callback1_(res.get());
     return res;
   }
 
@@ -267,7 +267,7 @@ namespace libport
                            const std::string& name_long,
                            char name_short,
 			   const std::string& formal,
-                           callback_type* cb)
+                           const callback_type& cb)
     : OptionValued(doc, name_long, formal, name_short, cb)
     , filled_(false)
     , value_()
@@ -326,7 +326,7 @@ namespace libport
                              const std::string& name_long,
                              char name_short,
 			     const std::string& formal,
-                             callback_type* cb)
+                             const callback_type& cb)
     : OptionValued(doc, name_long, formal, name_short, cb)
     , values_()
   {}
