@@ -1,3 +1,11 @@
+## Copyright (C) 2006-2010, Gostai S.A.S.
+##
+## This software is provided "as is" without warranty of any kind,
+## either expressed or implied, including but not limited to the
+## implied warranties of fitness for a particular purpose.
+##
+## See the LICENSE file for more information.
+
 # No need to re-run the test if the sources have not changed.
 LAZY_TEST_SUITE = 1
 STRICT_TEST_LOGS = $(shell $(LIST_FAILED_TEST_LOGS))
