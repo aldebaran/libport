@@ -71,6 +71,9 @@ namespace libport
 
     DataList::DataList()
       : super_type()
+      , has_exps_(false)
+      , has_files_(false)
+      , has_modules_(false)
       , cb_exp_(boost::bind(&DataList::add_exp,
                             &input_arguments, _1))
       , cb_file_(boost::bind(&DataList::add_file,
@@ -90,18 +93,21 @@ namespace libport
     void
     DataList::add_exp(const std::string& arg)
     {
+      has_exps_ = true;
       push_back(new TextData(arg));
     }
 
     void
     DataList::add_file(const std::string& arg)
     {
+      has_files_ = true;
       push_back(new FileData(arg == "-" ? "/dev/stdin" : arg));
     }
 
     void
     DataList::add_module(const std::string& arg)
     {
+      has_modules_ = true;
       push_back(new TextData(libport::format("loadModule(\"%s\");",
                              libport::escape(arg))));
     }

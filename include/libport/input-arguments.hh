@@ -75,8 +75,14 @@ namespace libport
       void add_exp(const std::string& arg);
       void add_file(const std::string& arg);
       void add_module(const std::string& arg);
+      bool has_exps() const;
+      bool has_files() const;
+      bool has_modules() const;
 
       typedef boost::function1<void, const std::string&> callback_type;
+      bool has_exps_;
+      bool has_files_;
+      bool has_modules_;
       callback_type cb_exp_;
       callback_type cb_file_;
       callback_type cb_module_;

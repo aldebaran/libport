@@ -20,6 +20,24 @@ namespace libport
       return d.dump(o);
     }
 
+    inline bool
+    DataList::has_exps() const
+    {
+      return has_exps_;
+    }
+
+    inline bool
+    DataList::has_files() const
+    {
+      return has_files_;
+    }
+
+    inline bool
+    DataList::has_modules() const
+    {
+      return has_modules_;
+    }
+
   }
 
 }
