@@ -74,10 +74,12 @@ namespace libport
       void clear();
       void add_exp(const std::string& arg);
       void add_file(const std::string& arg);
+      void add_module(const std::string& arg);
 
       typedef boost::function1<void, const std::string&> callback_type;
       callback_type cb_exp_;
       callback_type cb_file_;
+      callback_type cb_module_;
     };
 
   /*---------------------.
@@ -86,6 +88,7 @@ namespace libport
 
     extern LIBPORT_API OptionValues exp;
     extern LIBPORT_API OptionValues file;
+    extern LIBPORT_API OptionValues module;
     extern LIBPORT_API DataList input_arguments;
   }
 }
