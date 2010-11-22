@@ -24,6 +24,18 @@ namespace libport
       void counter_inc () const;
       bool counter_dec () const;
 
+      // Prevent deletion in a scope, typically in a RefCounted
+      // constructor.
+      class Ward
+      {
+      public:
+        Ward(RefCounted* ref_counted);
+        ~Ward();
+
+      private:
+        RefCounted& ref_counted_;
+      };
+
     protected:
       count_type counter_get() const;
       void counter_reset() const;

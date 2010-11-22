@@ -73,6 +73,19 @@ namespace libport
     aver(count_ != invalid_count);
     return count_;
   }
+
+  inline
+  RefCounted::Ward::Ward(RefCounted* ref_counted)
+    : ref_counted_(*ref_counted)
+  {
+    ref_counted_.count_++;
+  }
+
+  inline
+  RefCounted::Ward::~Ward()
+  {
+    ref_counted_.count_--;
+  }
 }
 
 #endif

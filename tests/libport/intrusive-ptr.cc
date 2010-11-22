@@ -117,6 +117,35 @@ held_ref_from_dtor()
   BOOST_CHECK_THROW(held_ref_from_dtor = 0, std::exception);
 }
 
+class Warded: public libport::RefCounted
+{
+public:
+  typedef libport::intrusive_ptr<Warded> rWarded;
+  static void evil(rWarded warded)
+  {
+    warded->x++;
+  }
+
+  Warded()
+    : x(0)
+  {
+    Ward ward(this);
+    evil(this);
+  }
+
+  ~Warded()
+  {
+    x = 0;
+  }
+
+  int x;
+};
+
+void ward()
+{
+  Warded w;
+  BOOST_CHECK_EQUAL(w.x, 1);
+}
 
 test_suite*
 init_test_suite()
@@ -129,5 +158,6 @@ init_test_suite()
 #ifndef NDEBUG
   suite->add(BOOST_TEST_CASE(held_ref_from_dtor));
 #endif
+  suite->add(BOOST_TEST_CASE(ward));
   return suite;
 }
