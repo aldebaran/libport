@@ -222,6 +222,13 @@ namespace libport
     return pointee_;
   }
 
+  template <typename T>
+  std::ostream&
+  operator << (std::ostream& out, const intrusive_ptr<T>& p)
+  {
+    return out << p.get();
+  }
+
 #ifndef LIBPORT_NO_BOOST
   template <typename T>
   template <typename Archive>

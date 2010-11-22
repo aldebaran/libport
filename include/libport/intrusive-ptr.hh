@@ -175,6 +175,9 @@ namespace libport
   intrusive_ptr<U>
   unsafe_cast(const intrusive_ptr<T>& p);
 
+  template <typename T>
+  std::ostream&
+  operator << (std::ostream& out, const intrusive_ptr<T>& p);
 }
 
 #  include <libport/intrusive-ptr.hxx>
