@@ -103,6 +103,16 @@ void components(const path& p, const libport::path::path_type& expected)
   BOOST_CHECK(p.components() == expected);
 }
 
+void parent(const path& p, const path& expected)
+{
+  BOOST_CHECK(p == expected);
+}
+
+void is_root(const path& p, bool expected)
+{
+  BOOST_CHECK(p.is_root() == expected);
+}
+
 void equal(const path& lhs, const path& rhs)
 {
   BOOST_CHECK_EQUAL(lhs, rhs);
@@ -298,6 +308,30 @@ init_test_suite()
   const char* comp[] = {"base", "foo", "bar"};
   libport::path::path_type expected(comp, comp+3);
   def("/base/foo/bar", expected);
+#undef def
+
+  // Test parent and is_root
+  test_suite* parent_suite = BOOST_TEST_SUITE("Parent test suite");
+  suite->add(parent_suite);
+
+#define def(p, e)                                                      \
+  parent_suite->add(BOOST_TEST_CASE(bind(parent,                       \
+                                         libport::path(p).parent(),    \
+                                         libport::path(e))))
+
+  def("foo/bar/baz/qux", "foo/bar/baz");
+  def("foo/bar/baz",     "foo/bar");
+  def("foo/bar",         "foo");
+  def("foo",             libport::path::cwd());
+#undef def
+
+#define def(p, e)                                                      \
+  parent_suite->add(BOOST_TEST_CASE(bind(is_root,                      \
+                                         libport::path(p),             \
+                                         e)))
+  def("foo",  false);
+  def("/foo", false);
+  def("/",    true);
 #undef def
 
   return suite;
