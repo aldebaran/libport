@@ -89,16 +89,16 @@ namespace libport
     void rename(const std::string& dst);
     /// \}
 
-    static path cwd();
     /// Return the current working directory.
+    static path cwd();
 
-    bool is_root() const;
     /// Whether the path is the root of a drive.
+    bool is_root() const;
 
-    path parent() const;
     /// Return a path which is the parent directory.
     /// If path is relative, current directory is
     /// returned when asking for parent of 1-depth entity.
+    path parent() const;
 
     static path temporary_file();
 
