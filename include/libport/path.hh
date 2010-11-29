@@ -89,6 +89,17 @@ namespace libport
     void rename(const std::string& dst);
     /// \}
 
+    static path cwd();
+    /// Return the current working directory.
+
+    bool is_root() const;
+    /// Whether the path is the root of a drive.
+
+    path parent() const;
+    /// Return a path which is the parent directory.
+    /// If path is relative, current directory is
+    /// returned when asking for parent of 1-depth entity.
+
     static path temporary_file();
 
     /// \name Printing and converting.
@@ -127,6 +138,9 @@ namespace libport
     /// Path separator.
     static const char separator_ = WIN32_IF('\\', '/');
   };
+
+  LIBPORT_API
+  std::string format_boost_fs_error(const char*);
 
   /// Dump \a p on \a o.
   std::ostream& operator<<(std::ostream& o, const path& p);
