@@ -17,6 +17,9 @@
 # define LIBPORT_BOOST_INTRUSIVE_PTR_HXX
 
 # include <typeinfo>
+
+# include <boost/functional/hash.hpp>
+
 # include <libport/config.h>
 # include <libport/cassert>
 
@@ -288,6 +291,14 @@ namespace libport
   unsafe_cast(const intrusive_ptr<T>& p)
   {
     return p.unsafe_cast<U>();
+  }
+
+  template <typename T>
+  ATTRIBUTE_ALWAYS_INLINE
+  std::size_t
+  hash_value(const intrusive_ptr<T>& ptr)
+  {
+    return boost::hash_value(ptr.get());
   }
 
 #ifdef LIBPORT_ENABLE_SERIALIZATION

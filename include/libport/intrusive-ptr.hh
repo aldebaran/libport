@@ -178,6 +178,10 @@ namespace libport
   template <typename T>
   std::ostream&
   operator << (std::ostream& out, const intrusive_ptr<T>& p);
+
+  template <typename T>
+  std::size_t
+  hash_value(const intrusive_ptr<T>& ptr);
 }
 
 #  include <libport/intrusive-ptr.hxx>
