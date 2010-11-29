@@ -11,6 +11,7 @@
 #ifndef SCHED_COROUTINE_CORO_HXX
 # define SCHED_COROUTINE_CORO_HXX
 
+# include <libport/debug.hh>
 # include <libport/local-data.hh>
 # include <libport/thread-data.hh>
 
@@ -48,7 +49,9 @@ coroutine_main()
 inline Coro*
 coroutine_new(size_t stack_size)
 {
+  GD_CATEGORY(Sched.Coroutine);
   Coro* res = Coro_new();
+  GD_FINFO_TRACE("Create coroutine: %s.", res);
   Coro_setStackSize_(res,
                      (stack_size
                       ? stack_size
@@ -61,6 +64,8 @@ coroutine_new(size_t stack_size)
 inline void
 coroutine_free(Coro* coro)
 {
+  GD_CATEGORY(Sched.Coroutine);
+  GD_FINFO_TRACE("Free coroutine: %s.", coro);
   if (coroutine_free_hook)
     coroutine_free_hook(coro);
   Coro_free(coro);
@@ -87,6 +92,8 @@ coroutine_stack_size(Coro* self)
 inline void
 coroutine_initialize_main(Coro* coro)
 {
+  GD_CATEGORY(Sched.Coroutine);
+  GD_FINFO_TRACE("Initialize main coroutine: %s.", coro);
   coroutine_main_ = coro;
   coroutine_current_ = coro;
   Coro_initializeMainCoro(coro);
@@ -97,6 +104,8 @@ template<typename T>
 inline void
 coroutine_start(Coro* self, Coro* other, void (*callback)(T*), T* context)
 {
+  GD_CATEGORY(Sched.Coroutine);
+  GD_FINFO_TRACE("Start coroutine: %s.", other);
   coroutine_current_ = other;
   Coro_startCoro_(self, other, context,
 		  reinterpret_cast<CoroStartCallback*>(callback));
@@ -106,6 +115,8 @@ coroutine_start(Coro* self, Coro* other, void (*callback)(T*), T* context)
 inline void
 coroutine_switch_to(Coro* self, Coro* next)
 {
+  GD_CATEGORY(Sched.Coroutine);
+  GD_FINFO_TRACE("Switch coroutine: %s => %s.", self, next);
   coroutine_current_ = next;
   Coro_switchTo_(self, next);
   coroutine_current_ = self;
