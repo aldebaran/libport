@@ -21,6 +21,7 @@
 # include <ostream>
 
 # include <boost/range.hpp>
+# include <boost/unordered_set.hpp>
 
 # include <libport/containers.hh>
 # include <libport/foreach.hh>
@@ -39,13 +40,39 @@ namespace libport
     c.clear();
   }
 
+  template <typename Container>
+  struct Finder
+  {
+    typedef Container container;
+    typedef typename container::iterator iterator;
+    typedef typename container::value_type value_type;
+    static iterator
+    find(container& c, const value_type& v)
+    {
+      return std::find(begin(c), end(c), v);
+    }
+  };
+
+
+  template <typename Value, typename Hash, typename Pred, typename Alloc>
+  struct Finder<boost::unordered_set<Value, Hash, Pred, Alloc> >
+  {
+    typedef boost::unordered_set<Value, Hash, Pred, Alloc> container;
+    typedef typename container::iterator iterator;
+    typedef typename container::value_type value_type;
+    static iterator
+    find(container& c, const value_type& v)
+    {
+      return c.find(v);
+    }
+  };
 
   // Find \a v in the whole \a c.
   template<typename Container>
   inline typename Container::const_iterator
   find(const Container& c, const typename Container::value_type& v)
   {
-    return std::find(begin(c), end(c), v);
+    return find(const_cast<Container&>(c), v);
   }
 
   // Find \a v in the whole \a c.
@@ -53,9 +80,8 @@ namespace libport
   inline typename Container::iterator
   find(Container& c, const typename Container::value_type& v)
   {
-    return std::find(begin(c), end(c), v);
+    return Finder<Container>::find(c, v);
   }
-
 
   template<typename Container>
   inline typename Container::mapped_type

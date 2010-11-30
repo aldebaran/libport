@@ -47,10 +47,70 @@ check_operator_lt_lt()
   BOOST_CHECK_EQUAL(s4.size(), 2u);
 }
 
+class logging_string: public std::string
+{
+public:
+  logging_string(const char* v)
+    : std::string(v)
+  {}
+};
+
+unsigned logging_string_comparisons = 0;
+bool operator == (const logging_string& lhs, const logging_string& rhs)
+{
+  ++logging_string_comparisons;
+  return std::operator == (reinterpret_cast<const std::string&>(lhs),
+                           reinterpret_cast<const std::string&>(rhs));
+}
+
+static void check_find_vector()
+{
+  typedef std::vector<logging_string> container_type;
+
+  logging_string a("a");
+  logging_string b("b");
+  logging_string c("c");
+
+  container_type cont;
+  cont << a << b << c;
+  BOOST_CHECK_EQUAL(cont.size(), 3u);
+  logging_string_comparisons = 0;
+  container_type::iterator it(libport::find(cont, logging_string("b")));
+  BOOST_CHECK(it == cont.begin() + 1);
+  BOOST_CHECK_EQUAL(logging_string_comparisons, 2u);
+  logging_string_comparisons = 0;
+  container_type::iterator end(libport::find(cont, logging_string("d")));
+  BOOST_CHECK(end == cont.end());
+  BOOST_CHECK_EQUAL(logging_string_comparisons, 3u);
+}
+
+static void check_find_unordered_set()
+{
+  typedef boost::unordered_set<logging_string> container_type;
+
+  logging_string a("a");
+  logging_string b("b");
+  logging_string c("c");
+
+  container_type cont;
+  cont << a << b << c;
+  BOOST_CHECK_EQUAL(cont.size(), 3u);
+  logging_string_comparisons = 0;
+  container_type::iterator it(libport::find(cont, logging_string("b")));
+  BOOST_CHECK(it != cont.end());
+  BOOST_CHECK_EQUAL(logging_string_comparisons, 1u);
+  logging_string_comparisons = 0;
+  container_type::iterator end(libport::find(cont, logging_string("d")));
+  BOOST_CHECK(end == cont.end());
+  BOOST_CHECK_EQUAL(logging_string_comparisons, 0u);
+}
+
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport.containers test suite");
   suite->add(BOOST_TEST_CASE(check_operator_lt_lt));
+  suite->add(BOOST_TEST_CASE(check_find_vector));
+  suite->add(BOOST_TEST_CASE(check_find_unordered_set));
   return suite;
 }
