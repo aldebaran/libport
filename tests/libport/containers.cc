@@ -36,6 +36,15 @@ check_operator_lt_lt()
   BOOST_CHECK_EQUAL(s3.size(), 4u);
   s3 << s1;
   BOOST_CHECK_EQUAL(s3.size(), 4u);
+
+  typedef boost::unordered_set<std::string> boost_string_set;
+  boost_string_set s4;
+  BOOST_CHECK_EQUAL(s4.size(), 0u);
+  s4 << "a";
+  s4 << "b";
+  BOOST_CHECK_EQUAL(s4.size(), 2u);
+  s4 << "b";
+  BOOST_CHECK_EQUAL(s4.size(), 2u);
 }
 
 test_suite*

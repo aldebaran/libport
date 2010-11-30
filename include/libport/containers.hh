@@ -23,6 +23,7 @@
 # include <vector>
 
 # include <boost/unordered_map.hpp>
+# include <boost/unordered_set.hpp>
 
 # include <libport/foreach.hh>
 
@@ -117,7 +118,8 @@ namespace std
   `---------------------------------*/
 
 #define APPLY_ON_ASSOCIATIVE_CONTAINERS(Macro)  \
-  Macro(::std::set);
+  Macro(::std::set);                            \
+  Macro(::boost::unordered_set);                \
 
   // Insert with '<<'.
 #define INSERT(Container)                               \
