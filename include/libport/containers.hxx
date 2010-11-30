@@ -18,6 +18,7 @@
 
 # include <algorithm>
 # include <functional>
+# include <set>
 # include <ostream>
 
 # include <boost/range.hpp>
@@ -25,6 +26,7 @@
 
 # include <libport/containers.hh>
 # include <libport/foreach.hh>
+# include <libport/preproc.hh>
 
 namespace libport
 {
@@ -53,19 +55,28 @@ namespace libport
     }
   };
 
+#define LIBPORT_CONTAINER_FIND_MEMBER(Template, Type)   \
+  template<LIBPORT_UNWRAP(Template)>                    \
+  struct Finder<LIBPORT_UNWRAP(Type)>                   \
+  {                                                     \
+    typedef LIBPORT_UNWRAP(Type) container;             \
+    typedef typename container::iterator iterator;      \
+    typedef typename container::value_type value_type;  \
+    static iterator                                     \
+    find(container& c, const value_type& v)             \
+    {                                                   \
+      return c.find(v);                                 \
+    }                                                   \
+  };                                                    \
 
-  template <typename Value, typename Hash, typename Pred, typename Alloc>
-  struct Finder<boost::unordered_set<Value, Hash, Pred, Alloc> >
-  {
-    typedef boost::unordered_set<Value, Hash, Pred, Alloc> container;
-    typedef typename container::iterator iterator;
-    typedef typename container::value_type value_type;
-    static iterator
-    find(container& c, const value_type& v)
-    {
-      return c.find(v);
-    }
-  };
+  LIBPORT_CONTAINER_FIND_MEMBER(
+    (typename Value, typename Hash, typename Pred, typename Alloc),
+    (boost::unordered_set<Value, Hash, Pred, Alloc>));
+  LIBPORT_CONTAINER_FIND_MEMBER(
+    (typename Key, typename Compare, typename Alloc),
+    (std::set<Key, Compare, Alloc>));
+
+#undef LIBPORT_CONTAINER_FIND_MEMBER
 
   // Find \a v in the whole \a c.
   template<typename Container>

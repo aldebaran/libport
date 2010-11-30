@@ -105,6 +105,29 @@ static void check_find_unordered_set()
   BOOST_CHECK_EQUAL(logging_string_comparisons, 0u);
 }
 
+static void check_find_std_set()
+{
+  typedef std::set<logging_string> container_type;
+
+  logging_string a("a");
+  logging_string b("b");
+  logging_string c("c");
+  logging_string d("d");
+  logging_string e("e");
+
+  container_type cont;
+  cont << a << b << c << d << e;
+  BOOST_CHECK_EQUAL(cont.size(), 5u);
+  logging_string_comparisons = 0;
+  container_type::iterator it(libport::find(cont, logging_string("e")));
+  BOOST_CHECK(it != cont.end());
+  BOOST_CHECK_LT(logging_string_comparisons, 5u);
+  logging_string_comparisons = 0;
+  container_type::iterator end(libport::find(cont, logging_string("f")));
+  BOOST_CHECK(end == cont.end());
+  BOOST_CHECK_LT(logging_string_comparisons, 5u);
+}
+
 test_suite*
 init_test_suite()
 {
@@ -112,5 +135,6 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(check_operator_lt_lt));
   suite->add(BOOST_TEST_CASE(check_find_vector));
   suite->add(BOOST_TEST_CASE(check_find_unordered_set));
+  suite->add(BOOST_TEST_CASE(check_find_std_set));
   return suite;
 }
