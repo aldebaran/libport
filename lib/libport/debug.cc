@@ -38,6 +38,7 @@ GD_CATEGORY(libport::Debug);
 namespace libport
 {
   ::libport::AbstractLocalData<local_data>* debugger_data;
+  Debug* debugger;
 
   local_data::local_data()
     : indent(0)
@@ -450,25 +451,6 @@ namespace libport
 #endif
     }
   }
-
-  static Debug* debugger_create()
-  {
-    if (make_debugger.empty())
-    {
-      Debug* res = new ConsoleDebug;
-      res->debug("GD_INIT was not invoked, defaulting to console logs", ::libport::Debug::types::warn, GD_CATEGORY_GET(), GD_FUNCTION, __FILE__, __LINE__);
-      return res;
-    }
-    else
-      return make_debugger();
-  }
-
-  Debug* debugger()
-  {
-    static Debug* res = debugger_create();
-    return res;
-  }
-
 }
 
 #endif

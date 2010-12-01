@@ -172,6 +172,7 @@ namespace libport
       bool _active;
     };
   };
+  extern Debug* debugger;
 
   class LIBPORT_API ConsoleDebug: public Debug
   {
@@ -215,9 +216,6 @@ namespace libport
   };
 #  endif
 
-  LIBPORT_API extern boost::function0<Debug*> make_debugger;
-  LIBPORT_API Debug* debugger();
-
   LIBPORT_API std::string gd_ihexdump(const unsigned char* data, unsigned size);
 
 
@@ -252,7 +250,7 @@ namespace libport
 | Helpers.  |
 `----------*/
 
-#  define GD_DEBUGGER libport::debugger()
+#  define GD_DEBUGGER ::libport::debugger
 
 #  define GD_FORMAT(Msg, ...)                   \
   libport::format(Msg, __VA_ARGS__)
@@ -352,30 +350,21 @@ namespace libport
 
 #  define GD_DEFAULT_DATA_ENCAPSULATION ::libport::localdata::Thread
 
-#  define GD__INIT_(DataEncapsulation)                                  \
-  static int                                                            \
-  _libport_initdebug_()                                                 \
-  {                                                                     \
-    make_debugger = _libport_mkdebug_;                                  \
-    debugger_data = new LocalData<local_data, DataEncapsulation>;       \
-    return 42;                                                          \
-  }                                                                     \
-                                                                        \
-  static int _libport_debug_initialized_ = _libport_initdebug_();
-
 // Should be called before quitting to reclaim memory.
 #  define GD_QUIT()                             \
   ::libport::debug::clear()
 
 #  define GD_INIT_DEBUG_PER_(DataEncapsulation, DebugInstantiation)     \
-  namespace libport                                                     \
+  static int                                                            \
+  _libport_initdebug_()                                                 \
   {                                                                     \
-    static Debug* _libport_mkdebug_()                                   \
-    {                                                                   \
-      return new DebugInstantiation;                                    \
-    }                                                                   \
-    GD__INIT_(DataEncapsulation);                                       \
-  }
+    ::libport::debugger = new DebugInstantiation;                       \
+    ::libport::debugger_data =                                          \
+        new ::libport::LocalData< ::libport::local_data,                \
+                                  DataEncapsulation>;                   \
+    return 42;                                                          \
+  }                                                                     \
+  static int _libport_debug_initialized_ = _libport_initdebug_();       \
 
 #  define GD_ENABLE(Name)                       \
   GD_DEBUGGER->Name(true)
@@ -546,10 +535,10 @@ namespace libport
 `------------*/
 
 # define GD_INIT_CONSOLE_DEBUG_PER(DataEncapsulation)   \
-  GD_INIT_DEBUG_PER_(DataEncapsulation, ConsoleDebug)
+  GD_INIT_DEBUG_PER_(DataEncapsulation, ::libport::ConsoleDebug)
 
 # define GD_INIT_SYSLOG_DEBUG_PER(Program, DataEncapsulation)   \
-  GD_INIT_DEBUG_PER_(DataEncapsulation, SyslogDebug(#Program))
+  GD_INIT_DEBUG_PER_(DataEncapsulation, ::libport::SyslogDebug(#Program))
 
 // Must be called before any use.
 # define GD_INIT()                             \
