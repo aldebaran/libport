@@ -26,10 +26,9 @@
 #  include <boost/function.hpp>
 #  include <libport/export.hh>
 #  include <libport/finally.hh>
+#  include <libport/local-data.hh>
 #  include <libport/option-parser.hh>
 #  include <libport/symbol.hh>
-
-#  include <libport/local-data.hh>
 #  include <libport/thread-data.hh>
 
 namespace libport
@@ -48,6 +47,13 @@ namespace libport
     LIBPORT_API void clear();
     bool test_category(category_type name);
   }
+
+  struct local_data
+  {
+    local_data();
+    unsigned indent;
+  };
+  extern ::libport::AbstractLocalData<local_data>* debugger_data;
 
   class LIBPORT_API Debug
   {
@@ -206,13 +212,10 @@ namespace libport
                               const std::string& file,
                               unsigned line);
     virtual void pop();
-  private:
-    unsigned indent_;
   };
 #  endif
 
   LIBPORT_API extern boost::function0<Debug*> make_debugger;
-  LIBPORT_API extern AbstractLocalData<Debug>* debugger_data;
   LIBPORT_API Debug* debugger();
 
   LIBPORT_API std::string gd_ihexdump(const unsigned char* data, unsigned size);
@@ -354,7 +357,7 @@ namespace libport
   _libport_initdebug_()                                                 \
   {                                                                     \
     make_debugger = _libport_mkdebug_;                                  \
-    debugger_data = new LocalData<Debug, DataEncapsulation>;            \
+    debugger_data = new LocalData<local_data, DataEncapsulation>;       \
     return 42;                                                          \
   }                                                                     \
                                                                         \

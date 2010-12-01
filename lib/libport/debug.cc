@@ -20,10 +20,12 @@
 #include <libport/ip-semaphore.hh>
 #include <libport/lockable.hh>
 #include <libport/pthread.h>
+#include <libport/thread-data.hh>
 #include <libport/tokenizer.hh>
-#include <libport/windows.hh>
 #include <libport/unistd.h>
 #include <libport/utime.hh>
+#include <libport/windows.hh>
+#include <sched/coroutine-data.hh>
 
 #ifndef WIN32
 # include <syslog.h>
@@ -35,6 +37,12 @@ GD_CATEGORY(libport::Debug);
 
 namespace libport
 {
+  ::libport::AbstractLocalData<local_data>* debugger_data;
+
+  local_data::local_data()
+    : indent(0)
+  {}
+
 
   namespace debug
   {
@@ -399,7 +407,7 @@ namespace libport
   {
     std::stringstream s;
     s << "[" << category_format(category) << "] ";
-    for (unsigned i = 0; i < indent_; ++i)
+    for (unsigned i = 0; i < debugger_data->get()->indent; ++i)
       s << " ";
     // As syslog would do, don't issue the users' \n.
     if (!msg.empty() && msg[msg.size() - 1] == '\n')
@@ -420,80 +428,45 @@ namespace libport
                             unsigned line)
   {
     debug(msg, types::info, category, fun, file, line);
-    indent_ += 2;
+    debugger_data->get()->indent += 2;
   }
 
   void
   SyslogDebug::pop()
   {
     assert_gt(indent_, 0u);
-    indent_ -= 2;
+    debugger_data->get()->indent -= 2;
   }
 #endif
 
   boost::function0<Debug*> make_debugger;
-  AbstractLocalData<Debug>* debugger_data;
-
-  typedef std::map<pthread_t, Debug*> map_type;
-  // Do not make it an actual object, as it is sometimes used on
-  // dtors, and the order to destruction is not specified.  Using a
-  // dynamically allocated object protects us from this.
-  static map_type* pdebuggers = new map_type;
-  libport::Lockable debugger_mutex_;
 
   namespace debug
   {
     void clear()
     {
 #if FIXME
-      typedef std::pair<pthread_t, Debug*> entry;
-      foreach (entry p, *pdebuggers)
-      {
-        delete p.second;
-        p.second = 0;
-      }
+      delete debugger();
 #endif
-      delete pdebuggers;
-      pdebuggers = 0;
     }
+  }
+
+  static Debug* debugger_create()
+  {
+    if (make_debugger.empty())
+    {
+      Debug* res = new ConsoleDebug;
+      res->debug("GD_INIT was not invoked, defaulting to console logs", ::libport::Debug::types::warn, GD_CATEGORY_GET(), GD_FUNCTION, __FILE__, __LINE__);
+      return res;
+    }
+    else
+      return make_debugger();
   }
 
   Debug* debugger()
   {
-    libport::BlockLock lock(debugger_mutex_);
-    bool no_gd_init = false;
-
-    if (!debugger_data)
-    {
-      debugger_data =
-        new LocalData<Debug, ::libport::localdata::Thread>;
-      no_gd_init = true;
-    }
-
-    Debug *d = debugger_data->get();
-    if (!d)
-    {
-      if (make_debugger.empty())
-      {
-        d = new ConsoleDebug;
-        no_gd_init = true;
-      }
-      else
-        d = make_debugger();
-      debugger_data->set(d);
-    }
-
-    if (no_gd_init)
-    {
-# define _GD_WARN(Message)                                              \
-      d->debug(Message, ::libport::Debug::types::warn,                  \
-               GD_CATEGORY_GET(), GD_FUNCTION, __FILE__, __LINE__)      \
-
-      _GD_WARN("GD_INIT was not invoked, defaulting to console logs");
-# undef _GD_WARN
-    }
-
-    return d;
+    static Debug* res = debugger_create();
+    return res;
   }
 
 }
