@@ -217,6 +217,13 @@ namespace libport
     return parent_path;
   }
 
+  std::time_t
+  path::last_write_time() const
+  {
+    return boost::filesystem::last_write_time(
+      boost::filesystem::path(to_string()));
+  }
+
   bool path::create() const
   {
     int fd = open(to_string().c_str(),
