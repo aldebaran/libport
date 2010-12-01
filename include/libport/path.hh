@@ -100,6 +100,9 @@ namespace libport
     /// returned when asking for parent of 1-depth entity.
     path parent() const;
 
+    /// Return last write time WITHOUT local time offset.
+    std::time_t last_write_time() const;
+
     static path temporary_file();
 
     /// \name Printing and converting.
