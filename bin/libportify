@@ -104,13 +104,6 @@ instead of system headers).
 
 Update C<GD_DEBUG> calls.
 
-=item gdcategory
-
-There was a time during which libport.debug did not require all the
-categories to be actually defined.  This is no longer the case, and
-any C<GD_CATEGORY> must have its C<GD_ADD_CATEGORY>.  This pass adds
-missing C<GD_ADD_CATEGORY> calls after the last include.
-
 =item renamings
 
 Fix names and bad spelling.
@@ -373,48 +366,6 @@ sub libport_debug ($\$)
      $res;
    }xges;
 
-
-  $$contents_ref = $_;
-}
-
-# libport_gdcategory ($FILE, \$CONTENTS)
-# --------------------------------------
-# Add missing GD_ADD_CATEGORY at the top of each file using a GD_CATEGORY
-sub libport_gdcategory ($\$)
-{
-  my ($file, $contents_ref) = @_;
-
-  # Do not alter files dedicated to handle debug.
-  return
-    if $file =~ m{(?:debug\.hh|debug\.hxx|debug\.cc)$};
-
-  my %categories = ();
-  local $_ = $$contents_ref;
-
-  for my $category (m{GD_CATEGORY\s*\(\s*(\w+)\s*\)}g)
-  {
-    verbose 4, "use category: $category";
-    $categories{$category} = 1;
-  };
-
-  for my $category (m{GD_ADD_CATEGORY\s*\(\s*(\w+)\s*\)}g)
-  {
-    verbose 4, "def category: $category";
-    $categories{$category} = 0;
-  };
-
-  # The file should at least have one include otherwise it won't be
-  # able to access the macro.
-  s{(.*#\s*include\s+[<"][^">]+(?<!\.hxx)[">])}
-  {
-    my $text = $1;
-    for my $category (sort keys %categories)
-    {
-      $text .= "\n\nGD_ADD_CATEGORY($category);"
-        if $categories{$category} == 1;
-    }
-    $text
-  }mes;
 
   $$contents_ref = $_;
 }
@@ -860,7 +811,6 @@ sub libportify ($$)
      spaces    => \&libport_spaces,
      headers   => \&libport_headers,
      debug     => \&libport_debug,
-     gdcategory=> \&libport_gdcategory,
      renamings => \&libport_renamings,
      relicense => \&libport_relicense,
      copyright => \&libport_copyright,
@@ -1010,7 +960,7 @@ sub getopt ()
   unless (@step)
   {
     @step = qw(spaces relicense copyright);
-    push @step, qw(headers debug gdcategory renamings)
+    push @step, qw(headers debug renamings)
       unless $foreign;
   }
   verbose 2, "Steps: @step";
