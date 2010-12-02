@@ -403,6 +403,13 @@ namespace libport
 
 // Bouncing macros, do not need to be undefined
 
+
+/*-------------------------.
+| Backward compatibility.  |
+`-------------------------*/
+
+# define GD_ADD_CATEGORY(Category) /* Ignore. */
+
 /*-------------.
 | Assertions.  |
 `-------------*/
