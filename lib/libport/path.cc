@@ -300,9 +300,6 @@ namespace libport
     /// Get rid of function namespace.
     std::string error = std::string(what).substr(ns.size());
     /// Get rid of function name and ": ".
-    error = error.substr(error.find(":") + 2);
-    /// Urbi errors begin with a lower case letter.
-    error[0] = tolower(error[0]);
-    return error;
+    return error.substr(error.find(":") + 2);
   }
 }
