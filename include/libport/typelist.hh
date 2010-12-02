@@ -308,6 +308,22 @@ namespace libport
           typedef List<H, typename Add<T, Elt>::res> res;
       };
 
+      // Fold
+      template <template <typename, typename> class F, typename L>
+      struct Fold
+      {};
+
+      template <template <typename, typename> class F, typename H>
+      struct Fold<F, meta::typelist::List<H, meta::typelist::Null> >
+      {
+        typedef H res;
+      };
+
+      template <template <typename, typename> class F, typename H, typename T>
+      struct Fold<F, meta::typelist::List<H, T> >
+      {
+        typedef F<H, typename Fold<F, T>::res> res;
+      };
     }
   }
 }
