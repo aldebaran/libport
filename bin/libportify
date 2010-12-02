@@ -916,12 +916,7 @@ sub transform_things (\&@)
     {
       # Skip silently these files.
     }
-    elsif (-f $thing
-           # We libportify source files.  They have an extension,
-           # except cstdio and so forth...
-           #&& $basename =~ m{ (?:\.(?:cc|h|hh|hxx|tex|u)(?:\.in)?$)
-           #                    | (?:^c\w+$)}x
-      )
+    elsif (-f $thing)
     {
       transform_file &$transform_ref, $thing;
     }
