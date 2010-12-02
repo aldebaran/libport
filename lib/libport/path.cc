@@ -188,35 +188,6 @@ namespace libport
     return res;
   }
 
-  path
-  path::cwd()
-  {
-    return path(boost::filesystem::current_path().string());
-  }
-
-
-  bool
-  path::is_root() const
-  {
-    return to_string() == volume_get() + "/";
-  }
-
-
-  path
-  path::parent() const
-  {
-    if (is_root())
-      return path(volume_get().append(1, separator_));
-
-    const std::string parent_path =
-      boost::filesystem::path(to_string()).parent_path().string();
-
-    if (parent_path.empty())
-      return cwd();
-
-    return parent_path;
-  }
-
   bool path::create() const
   {
     int fd = open(to_string().c_str(),
@@ -262,7 +233,7 @@ namespace libport
     catch (Exception& e)
     {
       throw Exception(libport::format("cannot rename file %s: %s",
-                                      *this, format_boost_fs_error(e.what())));
+                                      *this, e.what()));
     }
 
     *this = dst;
@@ -291,15 +262,5 @@ namespace libport
         path_.push_back(*i);
 
     return path_;
-  }
-
-  std::string
-  format_boost_fs_error(const char* what)
-  {
-    static const std::string ns = "boost::filesystem::";
-    /// Get rid of function namespace.
-    std::string error = std::string(what).substr(ns.size());
-    /// Get rid of function name and ": ".
-    return error.substr(error.find(":") + 2);
   }
 }
