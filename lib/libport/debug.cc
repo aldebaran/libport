@@ -10,6 +10,8 @@
 
 #include <iostream>
 
+#include <boost/thread/tss.hpp>
+
 #include <libport/cassert>
 #include <libport/containers.hh>
 #include <libport/cstdio>
@@ -37,8 +39,18 @@ GD_CATEGORY(libport::Debug);
 
 namespace libport
 {
-  ::libport::AbstractLocalData<local_data>* debugger_data;
+  boost::function0<local_data&> debugger_data;
   Debug* debugger;
+
+  local_data&
+  debugger_data_thread_local()
+  {
+    static boost::thread_specific_ptr<local_data> storage;
+    if (!storage.get())
+      storage.reset(new local_data);
+    return *storage;
+  }
+
 
   local_data::local_data()
     : indent(0)
@@ -232,7 +244,6 @@ namespace libport
   }
 
   ConsoleDebug::ConsoleDebug()
-    : indent_(0)
   {}
 
   namespace
@@ -313,7 +324,7 @@ namespace libport
     }
 #endif
     ostr << color(c);
-    for (unsigned i = 0; i < indent_; ++i)
+    for (unsigned i = 0; i < debugger_data().indent; ++i)
       ostr << " ";
     // As syslog would do, don't issue the users' \n.
     if (!msg.empty() && msg[msg.size() - 1] == '\n')
@@ -335,14 +346,14 @@ namespace libport
                              unsigned line)
   {
     debug(msg, types::info, category, fun, file, line);
-    indent_ += 2;
+    debugger_data().indent += 2;
   }
 
   void
   ConsoleDebug::pop()
   {
-    assert_gt(indent_, 0u);
-    indent_ -= 2;
+    assert_gt(debugger_data().indent, 0u);
+    debugger_data().indent -= 2;
   }
 
   std::string gd_ihexdump(const unsigned char* data, unsigned size)
@@ -408,7 +419,7 @@ namespace libport
   {
     std::stringstream s;
     s << "[" << category_format(category) << "] ";
-    for (unsigned i = 0; i < debugger_data->get()->indent; ++i)
+    for (unsigned i = 0; i < debugger_data().indent; ++i)
       s << " ";
     // As syslog would do, don't issue the users' \n.
     if (!msg.empty() && msg[msg.size() - 1] == '\n')
@@ -429,14 +440,14 @@ namespace libport
                             unsigned line)
   {
     debug(msg, types::info, category, fun, file, line);
-    debugger_data->get()->indent += 2;
+    debugger_data().indent += 2;
   }
 
   void
   SyslogDebug::pop()
   {
-    assert_gt(indent_, 0u);
-    debugger_data->get()->indent -= 2;
+    assert_gt(debugger_data().indent, 0u);
+    debugger_data().indent -= 2;
   }
 #endif
 
