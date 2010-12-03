@@ -17,7 +17,7 @@
 # include <libport/program-name.hh>
 
 // Hopefully some day we will use Boost.ProgramOptions and get rid of
-// this junk.  Yet, better share the junk than duplicate it.
+// this junk.  Better share the junk than duplicate it.
 
 namespace libport
 {
@@ -26,7 +26,7 @@ namespace libport
   void usage_error(const std::string& err);
 
   LIBPORT_API ATTRIBUTE_NORETURN
-  /// An option \a opt was called with its required argument.
+  /// An option \a opt was called without its required argument.
   /// \throw std::runtime_error
   void required_argument(const std::string& opt);
 

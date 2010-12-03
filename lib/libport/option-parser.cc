@@ -521,12 +521,12 @@ namespace libport
     // Client.
       host("address to connect to",    "host",    'H'),
       port("port to connect to",       "port",    'P'),
-      port_file("file containing the port to listen to",
+      port_file("read port number in FILE",
                 "port-file", 0, "FILE"),
     // Server.
       host_l("address to listen to",   "host",    'H'),
       port_l("port to listen to, 0 for automatic selection", "port",  'P'),
-      port_file_l("write port number to the specified file",
+      port_file_l("write port number to FILE",
                   "port-file", 'w', "FILE");
 
     OptionValues
