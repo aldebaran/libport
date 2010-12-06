@@ -16,7 +16,9 @@ TESTS += $(TESTS_BINARIES)
 include tests/bin/local.mk
 include tests/libport/local.mk
 include tests/sched/local.mk
+if ENABLE_SERIALIZATION
 include tests/serialize/local.mk
+endif
 
 # We disable this framework because it is not usable yet.
 # It has interesting code, this is why it is not thrown away.
