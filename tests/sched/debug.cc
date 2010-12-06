@@ -14,6 +14,7 @@
 #include <libport/unit-test.hh>
 
 #include <sched/coroutine-data.hh>
+#include <sched/coroutine-local-storage.hh>
 
 // do not test coroutine with valgrind if it is not enabled.
 #if ! defined(USE_VALGRIND) || defined(NVALGRIND)
@@ -24,7 +25,21 @@ INSTRUMENTFLAGS(--mode=none);
 
 using libport::test_suite;
 
-GD_INIT_DEBUG_PER(::libport::localdata::ThreadCoroutine);
+static  libport::local_data&
+debugger_data_thread_coro_local()
+{
+  typedef boost::thread_specific_ptr<libport::local_data> thread_storage;
+  typedef sched::CoroutineLocalStorage<thread_storage> coro_storage;
+
+  static coro_storage cstorage;
+
+  thread_storage& tstorage = *cstorage;
+  if (!tstorage.get())
+    tstorage.reset(new libport::local_data);
+  return *tstorage;
+}
+
+GD_INIT_DEBUG_PER(&debugger_data_thread_coro_local);
 GD_CATEGORY(MAIN);
 
 #ifndef LIBPORT_DEBUG_DISABLE
