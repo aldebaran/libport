@@ -23,6 +23,7 @@ namespace libport
       virtual ~RefCounted();
       void counter_inc () const;
       bool counter_dec () const;
+      count_type counter_get() const;
 
       // Prevent deletion in a scope, typically in a RefCounted
       // constructor.
@@ -37,7 +38,6 @@ namespace libport
       };
 
     protected:
-      count_type counter_get() const;
       void counter_reset() const;
 
     private:
