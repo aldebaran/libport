@@ -53,8 +53,8 @@ namespace libport
     local_data();
     unsigned indent;
   };
-  extern boost::function0<local_data&> debugger_data;
-  local_data& debugger_data_thread_local();
+  LIBPORT_API extern boost::function0<local_data&> debugger_data;
+  LIBPORT_API local_data& debugger_data_thread_local();
 
   class LIBPORT_API Debug
   {
@@ -173,7 +173,7 @@ namespace libport
       bool _active;
     };
   };
-  extern Debug* debugger;
+  LIBPORT_API extern Debug* debugger;
 
   class LIBPORT_API ConsoleDebug: public Debug
   {

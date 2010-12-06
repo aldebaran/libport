@@ -39,8 +39,8 @@ GD_CATEGORY(libport::Debug);
 
 namespace libport
 {
-  boost::function0<local_data&> debugger_data;
-  Debug* debugger;
+  LIBPORT_API boost::function0<local_data&> debugger_data;
+  LIBPORT_API Debug* debugger;
 
   local_data&
   debugger_data_thread_local()
