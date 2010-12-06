@@ -48,7 +48,7 @@ namespace libport
     bool test_category(category_type name);
   }
 
-  struct local_data
+  struct LIBPORT_API local_data
   {
     local_data();
     unsigned indent;
