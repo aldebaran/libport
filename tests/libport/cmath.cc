@@ -36,12 +36,25 @@ check_round()
   BOOST_CHECK(std::isnan(libport::round(nan)));
 }
 
+// Needed by VCXX 2005.  Forcing the instantiation does not even suffice.
+typedef long double long_double;
+#define DEFINE(Type)                            \
+  void                                          \
+  check_ ## Type()                              \
+  {                                             \
+    check_round<Type>();                        \
+  }
+DEFINE(float);
+DEFINE(double);
+DEFINE(long_double);
+#undef DEFINE
+
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE(__FILE__);
-  suite->add(BOOST_TEST_CASE(check_round<float>));
-  suite->add(BOOST_TEST_CASE(check_round<double>));
-  suite->add(BOOST_TEST_CASE(check_round<long double>));
+  suite->add(BOOST_TEST_CASE(check_float));
+  suite->add(BOOST_TEST_CASE(check_double));
+  suite->add(BOOST_TEST_CASE(check_long_double));
   return suite;
 }
