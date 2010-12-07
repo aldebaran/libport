@@ -9,9 +9,8 @@
  */
 
 #include <libport/bind.hh>
-#include <libport/unit-test.hh>
+#include <libport/test.hh>
 #include <libport/path.hh>
-
 
 using boost::bind;
 using libport::path;

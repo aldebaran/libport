@@ -10,7 +10,7 @@
 
 #include <libport/config.h>
 #include <libport/xltdl.hh>
-#include <libport/unit-test.hh>
+#include <libport/test.hh>
 
 using libport::test_suite;
 

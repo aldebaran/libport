@@ -12,7 +12,7 @@
 
 #include <libport/pid-file.hh>
 #include <libport/program-name.hh>
-#include <libport/unit-test.hh>
+#include <libport/test.hh>
 #include <libport/unistd.h>
 #include <libport/fcntl.h>
 

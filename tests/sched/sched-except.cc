@@ -10,10 +10,10 @@
 
 #include <iostream>
 #include <sched/coroutine.hh>
-#include <libport/unit-test.hh>
+#include <libport/test.hh>
 
 // do not test coroutine with valgrind if it is not enabled.
-#if ! defined(USE_VALGRIND) || defined(NVALGRIND)
+#if ! defined USE_VALGRIND || defined NVALGRIND
 # include <libport/instrument.hh>
 
 INSTRUMENTFLAGS(--mode=none);

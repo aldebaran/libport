@@ -11,13 +11,13 @@
 #include <libport/containers.hh>
 #include <libport/debug.hh>
 #include <libport/thread.hh>
-#include <libport/unit-test.hh>
+#include <libport/test.hh>
 
 #include <sched/coroutine-data.hh>
 #include <sched/coroutine-local-storage.hh>
 
 // do not test coroutine with valgrind if it is not enabled.
-#if ! defined(USE_VALGRIND) || defined(NVALGRIND)
+#if ! defined USE_VALGRIND || defined NVALGRIND
 # include <libport/instrument.hh>
 
 INSTRUMENTFLAGS(--mode=none);

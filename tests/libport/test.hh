@@ -8,13 +8,18 @@
  * See the LICENSE file for more information.
  */
 
-#include <boost/algorithm/string.hpp>
-#include <libport/compiler.hh>
-#include <libport/cstdlib>
-#include <libport/format.hh>
-#include <libport/unit-test.hh>
-#include <libport/sysexits.hh>
-#include <iostream>
+#ifndef LIBPORT_TEST_HH
+# define LIBPORT_TEST_HH
+#  include <boost/algorithm/string.hpp>
+#  include <libport/compiler.hh>
+#  include <libport/cstdlib>
+#  include <libport/debug.hh>
+#  include <libport/format.hh>
+#  include <libport/unit-test.hh>
+#  include <libport/sysexits.hh>
+#  include <iostream>
+
+GD_INIT();
 
 inline
 std::string
@@ -59,3 +64,5 @@ skip_if(const char* env)
   if (running(env))
     skip(env);
 }
+
+#endif // !LIBPORT_TEST_HH
