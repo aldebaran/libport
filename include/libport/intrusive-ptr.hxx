@@ -113,38 +113,6 @@ namespace libport
   }
 
   template <typename T>
-  ATTRIBUTE_ALWAYS_INLINE
-  bool
-  intrusive_ptr<T>::operator == (const T* p) const
-  {
-    return pointee_ == p;
-  }
-
-  template <typename T>
-  ATTRIBUTE_ALWAYS_INLINE
-  bool
-  intrusive_ptr<T>::operator == (const intrusive_ptr<T> &p) const
-  {
-    return pointee_ == p.get();
-  }
-
-  template <typename T>
-  ATTRIBUTE_ALWAYS_INLINE
-  bool
-  intrusive_ptr<T>::operator != (const intrusive_ptr<T> &p) const
-  {
-    return pointee_ != p.get();
-  }
-
-  template <typename T>
-  ATTRIBUTE_ALWAYS_INLINE
-  bool
-  intrusive_ptr<T>::operator != (const T* p) const
-  {
-    return pointee_ != p;
-  }
-
-  template <typename T>
   template <typename U>
   ATTRIBUTE_ALWAYS_INLINE
   intrusive_ptr<U>
@@ -195,6 +163,13 @@ namespace libport
 
   template <typename T>
   ATTRIBUTE_ALWAYS_INLINE
+  intrusive_ptr<T>::operator T*() const
+  {
+    return pointee_;
+  }
+
+  template <typename T>
+  ATTRIBUTE_ALWAYS_INLINE
   T*
   intrusive_ptr<T>::operator->() const
   {
@@ -216,13 +191,6 @@ namespace libport
   intrusive_ptr<T>::reset()
   {
     *this = 0;
-  }
-
-  template <typename T>
-  ATTRIBUTE_ALWAYS_INLINE
-  intrusive_ptr<T>::operator bool() const
-  {
-    return pointee_;
   }
 
   template <typename T>
