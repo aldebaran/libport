@@ -198,7 +198,7 @@ namespace libport
   bool
   path::is_root() const
   {
-    return to_string() == volume_get() + "/";
+    return to_string() == (volume_get() + separator_);
   }
 
 
@@ -304,11 +304,11 @@ namespace libport
   format_boost_fs_error(const char* what)
   {
     static const std::string ns = "boost::filesystem::";
-    /// Get rid of function namespace.
+    // Get rid of function namespace.
     std::string error = std::string(what).substr(ns.size());
-    /// Get rid of function name and ": ".
+    // Get rid of function name and ": ".
     error = error.substr(error.find(":") + 2);
-    /// Urbi errors begin with a lower case letter.
+    // Urbi errors begin with a lower case letter.
     error[0] = tolower(error[0]);
     return error;
   }
