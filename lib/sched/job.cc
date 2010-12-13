@@ -181,7 +181,7 @@ namespace sched
 	job->state_set(running);
     to_wake_up_.clear();
     state_ = zombie;
-    scheduler_.resume_scheduler(this);
+    resume_scheduler_();
   }
 
   void
@@ -213,7 +213,7 @@ namespace sched
       state_ = joining;
       try
       {
-	scheduler_.resume_scheduler(this);
+	resume_scheduler_();
       }
       catch (...)
       {
@@ -242,7 +242,7 @@ namespace sched
                        " in non-interruptible code");
 
     state_ = waiting;
-    scheduler_.resume_scheduler(this);
+    resume_scheduler_();
   }
 
   void
@@ -309,6 +309,14 @@ namespace sched
   {
     return alive_jobs_;
   }
+
+  void
+  Job::hook_preempted() const
+  { /* nothing*/ }
+
+  void
+  Job::hook_resumed() const
+  { /* nothing*/ }
 
   /*------------.
   | jobs_type.  |

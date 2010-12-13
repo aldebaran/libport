@@ -121,7 +121,7 @@ namespace sched
       return;
 
     state_ = running;
-    scheduler_.resume_scheduler(this);
+    resume_scheduler_();
   }
 
   inline void
@@ -132,7 +132,7 @@ namespace sched
 
     state_ = sleeping;
     deadline_ = deadline;
-    scheduler_.resume_scheduler(this);
+    resume_scheduler_();
   }
 
   inline void
@@ -283,6 +283,13 @@ namespace sched
     return j.dump(o);
   }
 
+  inline void
+  Job::resume_scheduler_()
+  {
+    hook_preempted();
+    scheduler_.resume_scheduler(this);
+    hook_resumed();
+  }
 
   /*-----------------.
   | ChildException.  |

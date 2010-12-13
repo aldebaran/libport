@@ -362,6 +362,13 @@ namespace sched
     bool ancester_of(const rJob& that) const;
 
   protected:
+    /// Called before control is returned to the scheduler.
+    virtual void hook_preempted() const;
+
+    /// Called when control is resumed from the scheduler.
+    virtual void hook_resumed() const;
+
+  protected:
 
     /// Must be implemented to do something useful. If an exception is
     /// raised, it will be propagated to our parent if we have one or
@@ -410,6 +417,9 @@ namespace sched
     bool non_interruptible_;
 
   private:
+
+    /// Helper to switch to the scheduler coroutine.
+    void resume_scheduler_();
 
     /// Helper functions for constructors.
     void init_common(const libport::Symbol& name);
