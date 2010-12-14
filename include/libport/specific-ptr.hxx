@@ -10,7 +10,7 @@
 
 #ifndef LIBPORT_SPECIFIC_PTR_HXX
 # define LIBPORT_SPECIFIC_PTR_HXX
-
+#include <boost/bind.hpp>
 namespace libport
 {
   /// Register the hook for the process.
