@@ -273,13 +273,6 @@ namespace libport
               ? format("[33;0%s;%sm", bold ? 1 : 0, color)
               : "");
     }
-
-    inline
-    std::string
-    reset()
-    {
-      return color(0);
-    }
   }
 
   static Debug::colors::Color
