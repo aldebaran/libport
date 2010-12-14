@@ -14,6 +14,7 @@
 namespace libport
 {
 
+  LIBPORT_API
   boost::format
   format_get(const std::string& s)
   {

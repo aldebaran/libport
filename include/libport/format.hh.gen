@@ -17,12 +17,15 @@ print('''\
 # include <boost/format.hpp>
 # include <libport/system-warning-pop.hh>
 
+# include <libport/export.hh>
+
 namespace libport
 {
 
   /// A Boost Format object cache.
   /// \\param s   the format string to compile once
   /// \\returns   a Boost format copy, since it maintains state.
+  LIBPORT_API
   boost::format format_get(const std::string& s);
 
   // Also accept 0-ary format strings.  Don't return it directly,
