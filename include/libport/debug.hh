@@ -365,6 +365,20 @@ namespace libport
 #  define GD_ENABLE(Name)                       \
   GD_DEBUGGER->Name(true)
 
+
+/*-------------.
+| Assertions.  |
+`-------------*/
+
+# define GD_ABORT(Msg)                          \
+  do                                            \
+  {                                             \
+    GD_ERROR(Msg);                              \
+    libport::Debug::abort();                    \
+  }                                             \
+  while (0)                                     \
+
+
 #  include <libport/debug.hxx>
 
 # else // LIBPORT_DEBUG_DISABLE defined
@@ -380,13 +394,14 @@ namespace libport
 #  define GD_FILTER_DEC()
 #  define GD_FILTER_INC()
 #  define GD_FPUSH_(...)
+#  define GD_PUSH_(...)
 #  define GD_IHEXDUMP(Data, Size)
 #  define GD_INIT_DEBUG_PER_(DebugData, DebugInstantiation)
 #  define GD_LEVEL(Lvl)
 #  define GD_MESSAGE_(...)
 #  define GD_QUIT()
 #  define GD_SHOW_LEVEL(Lvl)
-
+#  define GD_ABORT(a) abort()
 # endif //LIBPORT_DEBUG_DISABLE
 
 // Bouncing macros, do not need to be undefined
@@ -397,18 +412,6 @@ namespace libport
 `-------------------------*/
 
 # define GD_ADD_CATEGORY(Category) /* Ignore. */
-
-/*-------------.
-| Assertions.  |
-`-------------*/
-
-# define GD_ABORT(Msg)                          \
-  do                                            \
-  {                                             \
-    GD_ERROR(Msg);                              \
-    libport::Debug::abort();                    \
-  }                                             \
-  while (0)                                     \
 
 /*-------.
 | Info.  |
