@@ -40,6 +40,7 @@ TESTS_BINARIES =                                \
   tests/libport/file-library.cc                 \
   tests/libport/finally.cc                      \
   tests/libport/foreach.cc                      \
+  tests/libport/format.cc	                \
   tests/libport/has-if.cc                       \
   tests/libport/hash.cc                         \
   tests/libport/hmac-sha1.cc			\

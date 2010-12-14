@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright (C) 2009, Gostai S.A.S.
+# Copyright (C) 2009, 2010, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -20,14 +20,18 @@ print('''\
 namespace libport
 {
 
+  /// A Boost Format object cache.
+  /// \\param s   the format string to compile once
+  /// \\returns   a Boost format copy, since it maintains state.
+  boost::format format_get(const std::string& s);
+
   // Also accept 0-ary format strings.  Don't return it directly,
   // still consult boost::format to make sure there are no trailing
   // %s.
   inline
   std::string format(const std::string& fmt)
   {
-    boost::format f(fmt);
-    return str(f);
+    return str(format_get(fmt));
   }
 ''')
 
@@ -45,9 +49,7 @@ for n in range(1, 9):
   inline
   std::string format(const std::string& fmt, %(formals)s)
   {
-    boost::format f(fmt);
-    f %% %(format)s;
-    return str(f);
+    return str(format_get(fmt) %% %(format)s);
   }
 ''' % a)
 

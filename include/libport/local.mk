@@ -230,12 +230,13 @@ include/libport/config.h: $(CONFIG_HEADER) $(generate_libport_config_h)
 	$(AM_V_at)mv $@.tmp $@
 
 # format.hh.
-EXTRA_DIST += include/libport/format.hh.py
-%.hh: %.hh.py
-	$(AM_V_GEN)
-	$(AM_V_at)test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
-	$(AM_V_at)$< >$@.tmp
-	$(AM_V_at)mv $@.tmp $@
+EXTRA_DIST += include/libport/format.hh.gen
+%: %.gen
+	$(AM_V_GEN)mkdir -p $(dir $@)
+	$(AM_V_at)$< > $@.tmp
+	$(AM_V_at)chmod a-w $@.tmp
+	$(AM_V_at)$(top_srcdir)/build-aux/bin/move-if-change --color $@.tmp $@
+	$(AM_V_at)touch $@
 
 # revision.hh
 include/libport/revision.hh: $(top_srcdir)/.version $(VERSIONIFY)
