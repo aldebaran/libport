@@ -148,6 +148,25 @@ namespace libport
 
 # ifdef _MSC_VER
 
+  /*---------------.
+  | numeric_cast.  |
+  `---------------*/
+
+  /// Can the conversion be performed properly?
+  template <typename T>
+  bool numeric_castable(ufloat v);
+
+#  define UFLOAT_CAST(Type)                                     \
+  template                                                      \
+  LIBPORT_API                                                   \
+  bool numeric_cast<Type>(ufloat v);
+
+  // Declare the casts.
+  UFLOAT_CASTS
+
+#  undef UFLOAT_CAST
+
+
   /// Convert a libport::ufloat to T. Raise
   /// libport::bad_numeric_cast if the provided argument is not
   /// directly convertible to a T.
@@ -166,6 +185,11 @@ namespace libport
 #  undef UFLOAT_CAST
 
 # else // ! _MSC_VER
+
+  /// Can the conversion be performed properly?
+  template <typename T>
+  LIBPORT_API
+  bool numeric_castable(ufloat v);
 
   /// Convert a libport::ufloat to T. Raise
   /// libport::bad_numeric_cast if the provided argument is not

@@ -167,6 +167,42 @@ namespace libport
   };
 
 
+  /*-------------------.
+  | numeric_castable.  |
+  `-------------------*/
+
+  template <typename T>
+  bool
+  numeric_castable(ufloat val)
+  {
+    double int_part;
+    if (modf(val, &int_part) != 0)
+      return false;
+
+    static boost::numeric::converter
+      <T,
+      ufloat,
+      boost::numeric::conversion_traits<T, ufloat>,
+      boost::numeric::def_overflow_handler,
+      ExactFloat2IntRounderPolicy<ufloat> > converter;
+
+    return converter.out_of_range(val) == boost::numeric::cInRange;
+  }
+
+# define UFLOAT_CAST(Type)                                      \
+  template                                                      \
+  bool numeric_castable<Type>(ufloat v);
+
+  // Instantiate.
+  UFLOAT_CASTS
+
+#undef UFLOAT_CAST
+
+
+  /*---------------.
+  | numeric_cast.  |
+  `---------------*/
+
   template <typename T>
   T
   numeric_cast(ufloat val) throw (bad_numeric_cast)

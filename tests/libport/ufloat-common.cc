@@ -15,7 +15,7 @@
 
 using libport::test_suite;
 
-static void test_comparison()
+static void check_comparison()
 {
   ufloat f = 1;
   ufloat g = 10;
@@ -34,6 +34,10 @@ static void test_comparison()
 }
 
 
+/*---------------.
+| numeric_cast.  |
+`---------------*/
+
 # define CHECK_TO_AND_FRO(Value)                                \
   do {                                                          \
     T value = Value;                                            \
@@ -47,13 +51,13 @@ static void test_comparison()
 
 
 template <typename T>
-static void test_max()
+static void check_max()
 {
   CHECK_LIMIT(max);
 }
 
 template <typename T>
-static void test_unsigned_range()
+static void check_unsigned_range()
 {
   CHECK_LIMIT(epsilon);
   CHECK_LIMIT(min);
@@ -63,11 +67,39 @@ static void test_unsigned_range()
 }
 
 template <typename T>
-static void test_signed_range()
+static void check_signed_range()
 {
-  test_unsigned_range<T>();
+  check_unsigned_range<T>();
   CHECK_TO_AND_FRO(-1);
   CHECK_TO_AND_FRO(-10000);
+}
+
+# undef CHECK_LIMIT
+# undef CHECK_TO_AND_FRO
+
+
+/*-------------------.
+| numeric_castable.  |
+`-------------------*/
+
+static void
+check_castable()
+{
+  BOOST_CHECK( libport::numeric_castable<int>(65536.0));
+  BOOST_CHECK(!libport::numeric_castable<int>(65536.1));
+
+  BOOST_CHECK(!libport::numeric_castable<int>(4294967296.0));
+  BOOST_CHECK( libport::numeric_castable<long int>(4294967296.0));
+  BOOST_CHECK(!libport::numeric_castable<long int>(4294967296.1));
+
+  BOOST_CHECK( libport::numeric_castable<long int>( 21474836470.0));
+  BOOST_CHECK( libport::numeric_castable<long int>(-21474836470.0));
+  BOOST_CHECK(!libport::numeric_castable<long int>( 21474836470.1));
+
+  // These do not fit into doubles.
+  // // std::numeric_limits<long long>::max()
+  // BOOST_CHECK( libport::numeric_castable<long long>(9223372036854775807.0));
+  // BOOST_CHECK(!libport::numeric_castable<long long>(9223372036854775807.1));
 }
 
 
@@ -75,16 +107,17 @@ test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::ufloat");
-  suite->add(BOOST_TEST_CASE(test_comparison));
+  suite->add(BOOST_TEST_CASE(check_comparison));
+  suite->add(BOOST_TEST_CASE(check_castable));
 
   // The following use of "&" are required to please MSVC.  Otherwise
   // at runtime it just dies:
   //
-  // unknown location(0): fatal error in "test_signed_range<int>":
+  // unknown location(0): fatal error in "check_signed_range<int>":
   // memory access violation
 #define CHECK(Type)                                     \
-  suite->add(BOOST_TEST_CASE(&test_signed_range<int>)); \
-  suite->add(BOOST_TEST_CASE(&test_max<int>));
+  suite->add(BOOST_TEST_CASE(&check_signed_range<int>)); \
+  suite->add(BOOST_TEST_CASE(&check_max<int>));
 
   CHECK(char);
   CHECK(unsigned char);
@@ -95,24 +128,24 @@ init_test_suite()
 
 #undef CHECK
 
-  suite->add(BOOST_TEST_CASE(&test_signed_range<long>));
+  suite->add(BOOST_TEST_CASE(&check_signed_range<long>));
 
   // On 64 bits, long is like long long, see below...
 #if !(defined LIBPORT_URBI_UFLOAT_DOUBLE && _LP64)
-  suite->add(BOOST_TEST_CASE(&test_max<long>));
+  suite->add(BOOST_TEST_CASE(&check_max<long>));
 #endif
 
-  suite->add(BOOST_TEST_CASE(&test_unsigned_range<unsigned long>));
+  suite->add(BOOST_TEST_CASE(&check_unsigned_range<unsigned long>));
 #if !(defined LIBPORT_URBI_UFLOAT_DOUBLE && _LP64)
-  suite->add(BOOST_TEST_CASE(&test_max<unsigned long>));
+  suite->add(BOOST_TEST_CASE(&check_max<unsigned long>));
 #endif
-  suite->add(BOOST_TEST_CASE(&test_signed_range<long long>));
+  suite->add(BOOST_TEST_CASE(&check_signed_range<long long>));
 
-  suite->add(BOOST_TEST_CASE(&test_unsigned_range<unsigned long long>));
+  suite->add(BOOST_TEST_CASE(&check_unsigned_range<unsigned long long>));
 
   // We can't represent these values in doubles.
-  // suite->add(BOOST_TEST_CASE(test_max<long long>));
-  // suite->add(BOOST_TEST_CASE(test_max<unsigned long long>));
+  // suite->add(BOOST_TEST_CASE(check_max<long long>));
+  // suite->add(BOOST_TEST_CASE(check_max<unsigned long long>));
 
   return suite;
 }
