@@ -146,22 +146,25 @@ namespace libport
 
 // Set Var to Val. Restore the previous value at scope end.
 #define LIBPORT_SCOPE_SET(Var, Val)                                     \
-  typedef BOOST_TYPEOF(Var) LIBPORT_CAT(LibportResetType, __LINE__);    \
+  typedef BOOST_TYPEOF(Var) BOOST_PP_CAT(LibportResetType, __LINE__);   \
   LIBPORT_SCOPE_SET_DECLARE(__LINE__,                                   \
-                            LIBPORT_CAT(LibportResetType, __LINE__));   \
+                            BOOST_PP_CAT(LibportResetType, __LINE__));  \
   LIBPORT_SCOPE_SET_USE(__LINE__, Var, Val)                             \
+
+#define LIBPORT_SCOPE_INCREMENT(Var) LIBPORT_SCOPE_SET(Var, Var + 1)
+#define LIBPORT_SCOPE_DECREMENT(Var) LIBPORT_SCOPE_SET(Var, Var - 1)
 
 // Splitted versions of SCOPE_SET, to workaround Visual 2005 and
 // inline functions. See comment on FINALLY.
 #define LIBPORT_SCOPE_SET_DECLARE(Name, Type)                           \
-  struct LIBPORT_CAT(_LibportReset, Name)                               \
+  struct BOOST_PP_CAT(_LibportReset, Name)                              \
   {                                                                     \
-    inline LIBPORT_CAT(_LibportReset, Name)(Type& var, Type val)        \
+    inline BOOST_PP_CAT(_LibportReset, Name)(Type& var, Type val)       \
       : var_(var)                                                       \
       , val_(val)                                                       \
     {}                                                                  \
                                                                         \
-    inline ~LIBPORT_CAT(_LibportReset, Name)()                          \
+    inline ~BOOST_PP_CAT(_LibportReset, Name)()                         \
     {                                                                   \
       var_ = val_;                                                      \
     }                                                                   \
@@ -171,7 +174,8 @@ namespace libport
   };                                                                    \
 
 #define LIBPORT_SCOPE_SET_USE(Name, Var, Val)                           \
-  LIBPORT_CAT(_LibportReset,Name) _libport_reset_##__LINE__(Var, Var);  \
+  BOOST_PP_CAT(_LibportReset,Name)                                      \
+  BOOST_PP_CAT(_libport_reset_, __LINE__)(Var, Var);                    \
   Var = Val;                                                            \
 
 # include <libport/finally.hxx>
