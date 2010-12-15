@@ -159,7 +159,7 @@ namespace libport
 #  define UFLOAT_CAST(Type)                                     \
   template                                                      \
   LIBPORT_API                                                   \
-  bool numeric_cast<Type>(ufloat v);
+  bool numeric_castable<Type>(ufloat v);
 
   // Declare the casts.
   UFLOAT_CASTS

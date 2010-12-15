@@ -26,8 +26,8 @@ check_numbers()
   CHECK("1",   "%s", 1.0);
   CHECK("1",   "%s", 1.0);
 
-  CHECK("4294967296",   "%s", 4294967296);
-  CHECK("21474836470",  "%s", 21474836470);
+  CHECK("4294967296",   "%s", 4294967296ll);
+  CHECK("21474836470",  "%s", 21474836470ll);
   // std::numeric_limits<long long>::max()
   CHECK("9223372036854775807",  "%s", 9223372036854775807ll);
   // std::numeric_limits<long long>::min(), but GCC does not accept it

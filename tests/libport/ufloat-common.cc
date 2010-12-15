@@ -89,12 +89,17 @@ check_castable()
   BOOST_CHECK(!libport::numeric_castable<int>(65536.1));
 
   BOOST_CHECK(!libport::numeric_castable<int>(4294967296.0));
-  BOOST_CHECK( libport::numeric_castable<long int>(4294967296.0));
-  BOOST_CHECK(!libport::numeric_castable<long int>(4294967296.1));
 
-  BOOST_CHECK( libport::numeric_castable<long int>( 21474836470.0));
-  BOOST_CHECK( libport::numeric_castable<long int>(-21474836470.0));
-  BOOST_CHECK(!libport::numeric_castable<long int>( 21474836470.1));
+  // Does not work on 32b machines where int == long.
+  if (32 <= sizeof(long))
+  {
+    BOOST_CHECK( libport::numeric_castable<long>(4294967296.0));
+    BOOST_CHECK(!libport::numeric_castable<long>(4294967296.1));
+
+    BOOST_CHECK( libport::numeric_castable<long>( 21474836470.0));
+    BOOST_CHECK( libport::numeric_castable<long>(-21474836470.0));
+    BOOST_CHECK(!libport::numeric_castable<long>( 21474836470.1));
+  }
 
   // These do not fit into doubles.
   // // std::numeric_limits<long long>::max()
