@@ -89,5 +89,5 @@ check-buildfarm installcheck-buildfarm: clean-semaphores
 
 # Manually list the files you're using from build-aux here.
 # Note: Automake already takes care of the .mk and .m4 files you use.
-EXTRA_DIST += \
+EXTRA_DIST +=					\
   build-aux/test.sh
