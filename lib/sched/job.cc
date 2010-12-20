@@ -102,8 +102,8 @@ namespace sched
     // releases its memory.
     {
       GD_CATEGORY(sched);
-      aver(state_ == to_start);
-      LIBPORT_DEBUG("In Job::run for " << this);
+      aver_eq(state_, to_start);
+      GD_FINFO_DEBUG("job %s: run", this);
 
       // We may get interrupted during our first run, in which case
       // we better not be in the to_start state while we are executing
@@ -119,12 +119,14 @@ namespace sched
       }
       catch (TerminateException&)
       {
-      // Normal termination requested.
+        // Normal termination requested.
+        GD_FINFO_DEBUG("job %s: TerminateException", this);
       }
       catch (StopException&)
       {
         // Termination through "stop" or "block" on a top-level tag,
         // that is a tag inherited at the job creation time.
+        GD_FINFO_DEBUG("job %s: StopException", this);
       }
       catch (const exception& e)
       {
@@ -270,16 +272,15 @@ namespace sched
   Job::register_stopped_tag(const Tag& tag, const boost::any& payload)
   {
     size_t max_tag_check = (size_t)-1;
-    if (has_pending_exception())
+    if (exception* e = pending_exception_.get())
     {
       // If we are going to terminate, do nothing
-      if (dynamic_cast<TerminateException*>(pending_exception_.get()))
+      if (dynamic_cast<TerminateException*>(e))
 	return;
       // If we already have a StopException stored, do not go any
       // further.
-      if (StopException* exc =
-          dynamic_cast<StopException*>(pending_exception_.get()))
-	max_tag_check = exc->depth_get();
+      if (StopException* se = dynamic_cast<StopException*>(e))
+	max_tag_check = se->depth_get();
     }
 
     // Check if we are affected by this tag, up-to max_tag_check from
