@@ -277,9 +277,8 @@ namespace sched
 	return;
       // If we already have a StopException stored, do not go any
       // further.
-      StopException* exc =
-	dynamic_cast<StopException*>(pending_exception_.get());
-      if (exc)
+      if (StopException* exc =
+          dynamic_cast<StopException*>(pending_exception_.get()))
 	max_tag_check = exc->depth_get();
     }
 
