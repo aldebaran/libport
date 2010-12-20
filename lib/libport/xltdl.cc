@@ -35,57 +35,57 @@ namespace libport
     namespace details
     {
 
-      /// \param verbosity  the current debug level.
-      /// \param level      the level of this message.
-      static
-      int
-      ltdebug(unsigned /* verbosity */,
-              unsigned level, const char* format, va_list args)
-      {
-        int errors = 0;
-        char* msg = 0;
-        errors += vasprintf(&msg, format, args) < 0;
-        if (!errors && msg)
-        {
-          GD_FINFO_DEBUG("%s%s", std::string(level * 2, ' '), msg);
-          free(msg);
-        }
-        return errors;
-      }
+       /// \param verbosity  the current debug level.
+       /// \param level      the level of this message.
+       static
+       int
+       ltdebug(unsigned /* verbosity */,
+               unsigned level, const char* format, va_list args)
+       {
+         int errors = 0;
+         char* msg = 0;
+         errors += vasprintf(&msg, format, args) < 0;
+         if (!errors && msg)
+         {
+           GD_FINFO_DEBUG("%s%s", std::string(level * 2, ' '), msg);
+           free(msg);
+         }
+         return errors;
+       }
 
-      void init()
-      {
-        static bool tail = false;
-        if (!tail++)
-        {
-          lt_dlinit();
-          lt_dladd_log_function((lt_dllog_function*) &ltdebug, 0);
-        }
-      }
-    }
-  }
-
-
-  /*------------------------.
-  | xlt_advise::exception.  |
-  `------------------------*/
-
-  xlt_advise::exception::exception(const std::string& msg)
-    : std::runtime_error(msg)
-  {}
+       void init()
+       {
+         static bool tail = false;
+         if (!tail++)
+         {
+           lt_dlinit();
+           lt_dladd_log_function((lt_dllog_function*) &ltdebug, 0);
+         }
+       }
+     }
+   }
 
 
-  /*-------------.
-  | xlt_advise.  |
-  `-------------*/
+   /*------------------------.
+   | xlt_advise::exception.  |
+   `------------------------*/
 
-  xlt_advise::xlt_advise()
-    throw(xlt_advise::exception)
-    : path_()
-  {
-    xlt::details::init();
-    if (lt_dladvise_init(&advise_))
-      fail("failed to initialize dladvise");
+   xlt_advise::exception::exception(const std::string& msg)
+     : std::runtime_error(msg)
+   {}
+
+
+   /*-------------.
+   | xlt_advise.  |
+   `-------------*/
+
+   xlt_advise::xlt_advise()
+     throw(xlt_advise::exception)
+     : path_()
+   {
+     xlt::details::init();
+     if (lt_dladvise_init(&advise_))
+       fail("failed to initialize dladvise");
   }
 
   // FIXME: Bad: dtors must not throw.
@@ -181,6 +181,7 @@ namespace libport
 
 
   /// Throw an exception, or exit with exit_failure_ if nonnull.
+  ATTRIBUTE_NORETURN
   void
   xlt_advise::fail(std::string msg)
     throw(xlt_advise::exception)
@@ -239,6 +240,7 @@ namespace libport
   }
 
   /// Throw an exception, or exit with exit_failure_ if nonnull.
+  ATTRIBUTE_NORETURN
   void
   xlt_handle::fail(const std::string& msg)
     throw(xlt_advise::exception)
