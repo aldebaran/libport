@@ -132,8 +132,6 @@ namespace libport
     void timestamps(bool value);
     bool timestamps() const;
 
-    ATTRIBUTE_NORETURN static void abort();
-
     void filter(levels::Level lvl);
     void filter(const std::string& lvl);
     levels::Level level() const;
@@ -365,20 +363,6 @@ namespace libport
 #  define GD_ENABLE(Name)                       \
   GD_DEBUGGER->Name(true)
 
-
-/*-------------.
-| Assertions.  |
-`-------------*/
-
-# define GD_ABORT(Msg)                          \
-  do                                            \
-  {                                             \
-    GD_ERROR(Msg);                              \
-    libport::Debug::abort();                    \
-  }                                             \
-  while (0)                                     \
-
-
 #  include <libport/debug.hxx>
 
 # else // LIBPORT_DEBUG_DISABLE defined
@@ -404,7 +388,23 @@ namespace libport
 #  define GD_ABORT(a) abort()
 # endif //LIBPORT_DEBUG_DISABLE
 
-// Bouncing macros, do not need to be undefined
+
+
+/*=============================================\
+| Bouncing macros, do not need to be undefined |
+\=============================================*/
+
+/*-------------.
+| Assertions.  |
+`-------------*/
+
+# define GD_ABORT(Msg)                          \
+  do                                            \
+  {                                             \
+    GD_ERROR(Msg);                              \
+    libport::abort();                           \
+  }                                             \
+  while (0)                                     \
 
 
 /*-------------------------.

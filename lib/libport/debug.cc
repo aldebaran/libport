@@ -222,11 +222,6 @@ namespace libport
     return res;
   }
 
-  void Debug::abort()
-  {
-    libport::abort();
-  }
-
   namespace opts
   {
 
@@ -396,10 +391,10 @@ namespace libport
       CASE(info,  LOG_INFO);
       CASE(warn,  LOG_WARNING);
       CASE(error, LOG_ERR);
-      // Pacify Gcc.
-    }
-    libport::abort();
 #undef CASE
+    }
+    // Pacify Gcc.
+    libport::abort();
   }
 
   void
