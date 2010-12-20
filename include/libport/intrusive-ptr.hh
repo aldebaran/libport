@@ -82,6 +82,24 @@ namespace libport
     intrusive_ptr& operator=(U* ptr);
     /// \}
 
+    /// \name Equality operators.
+    /// \{
+
+    /** \brief Reference comparison.
+     ** Returns true if this points to \a p. */
+    bool operator== (const T* p) const;
+
+    bool operator== (const intrusive_ptr<T>& p) const;
+    bool operator!= (const intrusive_ptr<T>& p) const;
+
+    /** \brief Reference comparison.
+     ** Returns false if this points to \a p. */
+    bool operator!= (const T* p) const;
+
+    /// \brief bool cast operator to use the intrusive_ptr in boolean contexts.
+    operator bool() const;
+    /// \}
+
     /// \name Casts.
     /// \{
 
@@ -114,8 +132,6 @@ namespace libport
     /// \{
     /// Get the underlying pointee.
     T* get() const;
-    /// \brief plain pointer cast.
-    operator T*() const;
     /// Equivalent to (*this) = 0;
     void reset();
     T* operator->() const;
