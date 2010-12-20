@@ -80,7 +80,7 @@ namespace libport
 
   /// Extension of shared modules, potential dot included.
   static const std::string ext_module =
-# if defined(WIN32)
+# if defined WIN32
   ".dll"
 # else
   ".so"
@@ -89,9 +89,9 @@ namespace libport
 
   /// Extension of shared libraries, potential dot included.
   static const std::string ext_shlib =
-# if defined(WIN32)
+# if defined WIN32
   ".dll"
-# elif defined(__APPLE__)
+# elif defined __APPLE__
   ".dylib"
 # else
   ".so"

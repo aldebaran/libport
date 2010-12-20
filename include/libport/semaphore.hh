@@ -16,7 +16,7 @@
 
 # include <boost/noncopyable.hpp>
 
-# ifdef __APPLE__
+# if defined __APPLE__
 #  include <string>
 # endif
 
@@ -64,7 +64,7 @@ namespace libport
   private:
     void destroy();
     sem_t* sem_;
-# ifdef __APPLE__
+# if defined __APPLE__
     std::string name_;
 # endif
     static size_t instances_;

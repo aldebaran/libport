@@ -23,7 +23,7 @@
 // -fvisibility=hidden.  I (AD) could not exactly pinpoint the
 // problem, but at least I know one cure: do not play dirty visibility
 // tricks with Asio.
-# if defined __GNUC__ && ! defined WIN32
+# if defined __GNUC__ && defined __APPLE__
 #  pragma GCC visibility push(default)
 # endif
 # include <boost/asio.hpp>
@@ -33,7 +33,7 @@
 # if defined LIBPORT_ENABLE_SSL
 #   include <boost/asio/ssl.hpp>
 # endif
-# if defined __GNUC__ && ! defined WIN32
+# if defined __GNUC__ && defined __APPLE__
 #  pragma GCC visibility pop
 # endif
 
@@ -50,7 +50,7 @@
 
 namespace libport
 {
-#ifdef WIN32
+#if defined WIN32
   typedef boost::asio::detail::socket_type native_handle_type;
   static const native_handle_type invalid_handle =
     (native_handle_type)INVALID_HANDLE_VALUE;
