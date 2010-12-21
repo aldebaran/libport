@@ -11,10 +11,10 @@
 #ifndef LIBPORT_SAFE_CONTAINER_HXX
 # define LIBPORT_SAFE_CONTAINER_HXX
 
-#include <stdexcept>
-#include <iostream>
+# include <stdexcept>
+# include <iostream>
 
-#include <boost/foreach.hpp>
+# include <boost/foreach.hpp>
 
 namespace libport
 {
@@ -58,32 +58,37 @@ namespace libport
     return &base->v;
   }
 
-  CONTAINER_SMETHOD() real_value_type::real_value_type(const value_type &v,
-                                                       self_type& owner)
+  CONTAINER_SMETHOD(__)
+  real_value_type::real_value_type(const value_type &v,
+                                   self_type& owner)
     : v(v)
   {
     mask = owner.currentMask;
   }
 
-  CONTAINER_SMETHOD() Flag::Flag()
+  CONTAINER_SMETHOD(__)
+  Flag::Flag()
     : mask(0)
     , val(0)
   {}
 
-  CONTAINER_SMETHOD() iterator::iterator()
-   : owner(0)
+  CONTAINER_SMETHOD(__)
+  iterator::iterator()
+    : owner(0)
   {
   }
 
-  CONTAINER_SMETHOD() iterator::iterator(const iterator& b)
+  CONTAINER_SMETHOD(__)
+  iterator::iterator(const iterator& b)
     : owner(b.owner)
     , base(b.base)
   {
     *this = b;
   }
 
-  CONTAINER_SMETHOD() iterator::iterator(const base_iterator_& b,
-                                         CONTAINER& owner, Flag f)
+  CONTAINER_SMETHOD(__)
+  iterator::iterator(const base_iterator_& b,
+                     CONTAINER& owner, Flag f)
     : flag(f)
     , owner(&owner)
     , base(b)
@@ -91,7 +96,8 @@ namespace libport
   }
 
 
-  CONTAINER_SMETHOD() iterator::~iterator()
+  CONTAINER_SMETHOD(__)
+  iterator::~iterator()
   {
     destroy();
   }
@@ -299,6 +305,5 @@ namespace libport
 #undef CONTAINER
 #undef CONTAINER_METHOD
 #undef CONTAINER_SMETHOD
-
 
 #endif

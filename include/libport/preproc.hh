@@ -16,6 +16,45 @@
 # include <boost/preprocessor/seq/for_each.hpp>
 # include <boost/preprocessor/seq/transform.hpp>
 
+
+/// Expand to nothing.
+///
+/// This is useful to macro arguments that we want empty, but to avoid
+/// warnings from MSCV.  For instance the following source produces
+/// warnings for each line except the last one, using LIBPORT_EMPTY.
+///
+///  #pragma warning(4: 4003)
+///  #define MACRO(Arg) Arg
+///  #define EMPTY
+///
+///  void foo ()
+///  {
+///    MACRO();
+///    MACRO( );
+///    MACRO(/**/);
+///    MACRO(/*1*/);
+///    MACRO(EMPTY);
+///  }
+///
+/// The problem exists only for unary macros.  The following example
+/// triggers no warning at all.
+///
+///  #pragma warning(4: 4003)
+///  #define MACRO(A, B) A B
+///  #define EMPTY
+///
+///  void foo ()
+///  {
+///    MACRO(,);
+///    MACRO(, /**/);
+///    MACRO(/**/,);
+///    MACRO(/**/, /**/);
+///  }
+# define LIBPORT_EMPTY
+/// The same, but less intrusive.
+# define __
+
+
 # define LIBPORT_MAP_HELPER(R, Macro, Elt) (Macro(Elt))
 /// Return \a Seq, with \a Macro applied on every element.
 # define LIBPORT_MAP(Macro, Seq)                                 \
@@ -94,40 +133,40 @@ for i in range(0, 32):
 
 // FIXME: Generate all these
 
-/*-----------.
-| LIBPORT_ID |
-`-----------*/
+/*-------------.
+| LIBPORT_ID.  |
+`-------------*/
 
 # define LIBPORT_ID(...) __VA_ARGS__
 
-/*--------------.
-| LIBPORT_DELAY |
-`--------------*/
+/*----------------.
+| LIBPORT_DELAY.  |
+`----------------*/
 
 # define LIBPORT_DELAY(X) X
 
-/*--------------.
-| LIBPORT_COMMA |
-`--------------*/
+/*----------------.
+| LIBPORT_COMMA.  |
+`----------------*/
 
 # define LIBPORT_COMMA ,
 
-/*-------------.
-| LIBPORT_WRAP |
-`-------------*/
+/*---------------.
+| LIBPORT_WRAP.  |
+`---------------*/
 
 # define LIBPORT_WRAP(...) (__VA_ARGS__)
 
-/*---------------.
-| LIBPORT_UNWRAP |
-`---------------*/
+/*-----------------.
+| LIBPORT_UNWRAP.  |
+`-----------------*/
 
 # define LIBPORT_UNWRAP(...) LIBPORT_ID __VA_ARGS__
 
 
-/*-------------.
-| LIBPORT_LIST |
-`-------------*/
+/*---------------.
+| LIBPORT_LIST.  |
+`---------------*/
 
 /*
 #!/usr/bin/python
@@ -227,15 +266,15 @@ for i in range(10):
   LIBPORT_CAT(LIBPORT_LIST_BUILD_, LIBPORT_LIST_VASIZE((__VA_ARGS__))),        \
   (__VA_ARGS__))                                                       \
 
-/*-------------.
-| LIBPORT_SIZE |
-`-------------*/
+/*---------------.
+| LIBPORT_SIZE.  |
+`---------------*/
 
 # define LIBPORT_LIST_SIZE(List) BOOST_PP_SEQ_SIZE(List)
 
-/*-------------------.
-| LIBPORT_LIST_EMPTY |
-`-------------------*/
+/*---------------------.
+| LIBPORT_LIST_EMPTY.  |
+`---------------------*/
 
 # define LIBPORT_LIST_EMPTY_0 LIBPORT_TRUE
 # define LIBPORT_LIST_EMPTY_1 LIBPORT_FALSE
@@ -271,56 +310,56 @@ for i in range(10):
 # define LIBPORT_LIST_EMPTY_31 LIBPORT_FALSE
 # define LIBPORT_LIST_EMPTY(List) LIBPORT_CAT(LIBPORT_LIST_EMPTY_, LIBPORT_LIST_SIZE(List))
 
-/*------------------.
-| LIBPORT_LIST_HEAD |
-`------------------*/
+/*--------------------.
+| LIBPORT_LIST_HEAD.  |
+`--------------------*/
 
 # define LIBPORT_LIST_HEAD(List) BOOST_PP_SEQ_HEAD(List)
 
-/*------------------.
-| LIBPORT_LIST_TAIL |
-`------------------*/
+/*--------------------.
+| LIBPORT_LIST_TAIL.  |
+`--------------------*/
 
 # define LIBPORT_LIST_TAIL(List) BOOST_PP_SEQ_TAIL(List)
 
-/*-----------------.
-| LIBPORT_LIST_MAP |
-`-----------------*/
+/*-------------------.
+| LIBPORT_LIST_MAP.  |
+`-------------------*/
 
 # define LIBPORT_LIST_MAP_HELPER(Unused, Macro, Elt) Macro(Elt)
 # define LIBPORT_LIST_MAP(Macro, List) BOOST_PP_SEQ_TRANSFORM(LIBPORT_LIST_MAP_HELPER, Macro, List)
 
-/*-----------------.
-| LIBPORT_LIST_AUX |
-`-----------------*/
+/*-------------------.
+| LIBPORT_LIST_AUX.  |
+`-------------------*/
 
 # define LIBPORT_LIST_MAP_AUX_HELPER(Unused, Aux, Elt) BOOST_PP_TUPLE_ELEM(2, 0, Aux)(Elt, BOOST_PP_TUPLE_ELEM(2, 1, Aux))
 # define LIBPORT_LIST_MAP_AUX(Macro, List, Aux) BOOST_PP_SEQ_TRANSFORM(LIBPORT_LIST_MAP_AUX_HELPER, (Macro, Aux), List)
 
-/*-------------------.
-| LIBPORT_LIST_APPLY |
-`-------------------*/
+/*---------------------.
+| LIBPORT_LIST_APPLY.  |
+`---------------------*/
 
 # define LIBPORT_LIST_APPLY_HELPER(Unused, Macro, Elt) Macro(Elt)
 # define LIBPORT_LIST_APPLY(Macro, List) BOOST_PP_SEQ_FOR_EACH(LIBPORT_LIST_APPLY_HELPER, Macro, List)
 
-/*------------------------.
-| LIBPORT_LIST_APPLY_ARGS |
-`------------------------*/
+/*--------------------------.
+| LIBPORT_LIST_APPLY_ARGS.  |
+`--------------------------*/
 
 # define LIBPORT_LIST_APPLY_ARGS_HELPER(Unused, Macro, Elt) Macro Elt
 # define LIBPORT_LIST_APPLY_ARGS(Macro, List) BOOST_PP_SEQ_FOR_EACH(LIBPORT_LIST_APPLY_ARGS_HELPER, Macro, List)
 
-/*-----------------.
-| LIBPORT_LIST_AUX |
-`-----------------*/
+/*-------------------.
+| LIBPORT_LIST_AUX.  |
+`-------------------*/
 
 # define LIBPORT_LIST_APPLY_AUX_HELPER(Unused, Aux, Elt) BOOST_PP_TUPLE_ELEM(2, 0, Aux)(Elt, BOOST_PP_TUPLE_ELEM(2, 1, Aux))
 # define LIBPORT_LIST_APPLY_AUX(Macro, List, Aux) BOOST_PP_SEQ_FOR_EACH(LIBPORT_LIST_APPLY_AUX_HELPER, (Macro, Aux), List)
 
-/*-----------------.
-| LIBPORT_LIST_NTH |
-`-----------------*/
+/*-------------------.
+| LIBPORT_LIST_NTH.  |
+`-------------------*/
 
 /*
 #!/usr/bin/python
@@ -435,15 +474,15 @@ for i in range(0, 10):
 # define LIBPORT_LIST_NTH_0_LIBPORT_FALSE(List) LIBPORT_LIST_HEAD(List)
 # define LIBPORT_LIST_NTH(Nth, List) BOOST_PP_CAT(LIBPORT_LIST_NTH_, Nth)(List)
 
-/*----------------.
-| LIBPORT_FLATTEN |
-`----------------*/
+/*------------------.
+| LIBPORT_FLATTEN.  |
+`------------------*/
 
 # define LIBPORT_LIST_FLATTEN(List) LIBPORT_LIST_SEP(List, )
 
-/*-----------------.
-| LIBPORT_LIST_SEP |
-`-----------------*/
+/*-------------------.
+| LIBPORT_LIST_SEP.  |
+`-------------------*/
 
 # define LIBPORT_LIST_SEP_HELPER(Elt, Sep) LIBPORT_UNWRAP(Sep) Elt
 # define LIBPORT_LIST_SEP_LIBPORT_FALSE(List, Sep) LIBPORT_LIST_HEAD(List) \
@@ -451,16 +490,16 @@ for i in range(0, 10):
 # define LIBPORT_LIST_SEP_LIBPORT_TRUE(List, Sep)
 # define LIBPORT_LIST_SEP(List, Sep) LIBPORT_CAT(LIBPORT_LIST_SEP_, LIBPORT_LIST_EMPTY(List))(List, LIBPORT_WRAP(Sep))
 
-/*-----------------.
-| LIBPORT_LIST_ARG |
-`-----------------*/
+/*-------------------.
+| LIBPORT_LIST_ARG.  |
+`-------------------*/
 
 # define LIBPORT_LIST_ARG_HELPER(Macro, Args) Macro Args
 # define LIBPORT_LIST_ARG(Macro, List) LIBPORT_LIST_ARG_HELPER(Macro, (LIBPORT_LIST_SEP(List, LIBPORT_COMMA)))
 
-/*----------------------.
-| LIBPORT_LIST_DECORATE |
-`----------------------*/
+/*------------------------.
+| LIBPORT_LIST_DECORATE.  |
+`------------------------*/
 
 #define LIBPORT_LIST_DECORATE
 
