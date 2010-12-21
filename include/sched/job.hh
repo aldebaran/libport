@@ -200,11 +200,15 @@ namespace sched
     /// \return True if the job is currently side-effect free.
     bool side_effect_free_get() const;
 
-    /// Raise an exception next time this job will be resumed.
+    /// Raise an exception next time this job will be resumed,
+    /// or right now if this is the current job.
     ///
-    /// \param e The exception to throw when the job will be scheduled
-    ///        again.
-    void async_throw(const exception& e);
+    /// \param e
+    ///   The exception to throw when the job will be scheduled again.
+    /// \param force_async
+    ///   Whether we prevent synchronous throw if the current job
+    ///   is the one to receive this exception.
+    void async_throw(const exception& e, bool force_async = false);
 
     /// Maybe raise a deferred exception. Must be called from the scheduler
     /// while resuming the job execution. For example, StopException

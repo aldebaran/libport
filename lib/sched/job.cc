@@ -248,7 +248,7 @@ namespace sched
   }
 
   void
-  Job::async_throw(const exception& e)
+  Job::async_throw(const exception& e, bool force_async)
   {
     // A job which has received an exception is no longer side effect
     // free or non-interruptible.
@@ -256,7 +256,7 @@ namespace sched
     non_interruptible_ = false;
     // If this is the current job we are talking about, the exception
     // is synchronous.
-    if (scheduler_.is_current_job(this))
+    if (!force_async && scheduler_.is_current_job(this))
       e.rethrow();
 
     // Store the exception for later use.
