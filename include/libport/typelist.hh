@@ -259,6 +259,25 @@ namespace libport
           typedef typename If<Comp<H, next>::res || Eq<next, Null>::res, H, next>::res res;
       };
 
+      // Foreach
+      template <typename C, typename L, template<typename> class F>
+      struct ForEach
+      {
+        void operator()(C& ctx)
+        {
+        }
+      };
+      template <typename C, typename H, typename T,
+        template<typename> class F>
+      struct ForEach<C, List<H, T>, F>
+      {
+        void operator()(C& ctx)
+        {
+          F<H>()(ctx);
+          ForEach<C, T, F>()(ctx);
+        }
+      };
+
       // Map
       template <template <class> class F, typename L>
       struct Map: private Assert<IsList<L>::res, Is_not_a_list<L> >::res
