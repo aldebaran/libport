@@ -32,40 +32,40 @@ namespace libport
     template <typename T1, typename T2>
     struct Eq
     {
-        static const bool res = false;
+      static const bool res = false;
     };
 
     template <typename T>
     struct Eq<T, T>
     {
-        static const bool res = true;
+      static const bool res = true;
     };
 
     /// If
     template <bool cond, typename Then=True, typename Else=False>
     struct If
     {
-        typedef Then res;
+      typedef Then res;
     };
 
     template <typename Then, typename Else>
     struct If<false, Then, Else>
     {
-        typedef Else res;
+      typedef Else res;
     };
 
     /// Inherits
     template <typename C, typename M>
     struct Inherits
     {
-        typedef char Yes;
-        class No {char dummy[2];};
-        static No test(...);
-        static Yes test(const M*);
-        static C* make();
+      typedef char Yes;
+      class No {char dummy[2];};
+      static No test(...);
+      static Yes test(const M*);
+      static C* make();
 
-        static const bool res =
-          sizeof (test(make())) == sizeof(Yes) && !Eq<M, void>::res;
+      static const bool res =
+        sizeof (test(make())) == sizeof(Yes) && !Eq<M, void>::res;
     };
 
     /// Inherited

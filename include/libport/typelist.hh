@@ -193,82 +193,84 @@ namespace libport
       };
 
       template <typename H, typename T, int I>
-      struct LooseAt<List<H, T>, I>:
-          private Assert <I >= 0, Must_be_positive<I> >
+      struct LooseAt<List<H, T>, I>
+        : private Assert <I >= 0, Must_be_positive<I> >
       {
         typedef typename LooseAt<T, I - 1>::res res;
       };
 
       // Contains
       template <typename L, typename V>
-      struct Contains:
-          private Assert<IsList<L>::res, Is_not_a_list<V> >
+      struct Contains
+        : private Assert<IsList<L>::res, Is_not_a_list<V> >
       {
-          static const bool res = false;
+        static const bool res = false;
       };
 
       template <typename H, typename T, typename V>
       struct Contains<List<H, T>, V>
       {
-          static const bool res = Contains<T, V>::res;
+        static const bool res = Contains<T, V>::res;
       };
 
       template <typename T, typename V>
       struct Contains<List<V, T>, V>
       {
-          static const bool res = true;
+        static const bool res = true;
       };
 
       // Idx
       template <typename L, typename V, int I>
-      struct IdxRec:
-          private Assert<IsList<L>::res, Is_not_a_list<V> >,
-          private Assert<false, Not_in_list<V> >
+      struct IdxRec
+        : private Assert<IsList<L>::res, Is_not_a_list<V> >
+        , private Assert<false, Not_in_list<V> >
       {};
 
       template <typename H, typename T, typename V, int I>
       struct IdxRec<List<H, T>, V, I>
       {
-          static const int res = IdxRec<T, V, I + 1>::res;
+        static const int res = IdxRec<T, V, I + 1>::res;
       };
 
       template <typename T, typename V, int I>
       struct IdxRec<List<V, T>, V, I>
       {
-          static const int res = I;
+        static const int res = I;
       };
 
       template <typename L, typename V>
       struct Idx
       {
-          static const int res = IdxRec<L, V, 0>::res;
+        static const int res = IdxRec<L, V, 0>::res;
       };
 
-      // Max
+      // Max.
       template <typename L, template <typename, typename> class Comp>
       struct Max: private Assert<IsList<L>::res, Is_not_a_list<L> >::res
       {
-          typedef Null res;
+        typedef Null res;
       };
 
 
-      template <typename H, typename T, template <typename, typename> class Comp>
+      template <typename H, typename T,
+                template <typename, typename> class Comp>
       struct Max<List<H, T>, Comp>
       {
-          typedef typename Max<T, Comp>::res next;
-          typedef typename If<Comp<H, next>::res || Eq<next, Null>::res, H, next>::res res;
+        typedef typename Max<T, Comp>::res next;
+        typedef typename If<Comp<H, next>::res || Eq<next, Null>::res,
+                            H, next>::res res;
       };
 
-      // Foreach
+      // Foreach.
       template <typename C, typename L, template<typename> class F>
       struct ForEach
       {
-        void operator()(C& ctx)
+        void operator()(C&)
         {
         }
       };
       template <typename C, typename H, typename T,
-        template<typename> class F>
+                template<typename> class F>
       struct ForEach<C, List<H, T>, F>
       {
         void operator()(C& ctx)
@@ -282,23 +284,24 @@ namespace libport
       template <template <class> class F, typename L>
       struct Map: private Assert<IsList<L>::res, Is_not_a_list<L> >::res
       {
-          typedef Null res;
+        typedef Null res;
       };
 
       template <template <class> class F, typename H, typename T>
       struct Map<F, List<H, T> >
       {
-          typedef List<F<H>, typename Map<F, T>::res> res;
+        typedef List<F<H>, typename Map<F, T>::res> res;
       };
 
       // MapBind
       template <template <class, class> class F, typename L, typename V>
       struct MapBind: private Assert<IsList<L>::res, Is_not_a_list<L> >::res
       {
-          typedef Null res;
+        typedef Null res;
       };
 
-      template <template <class, class> class F, typename H, typename T, typename V>
+      template <template <class, class> class F,
+                typename H, typename T, typename V>
       struct MapBind<F, List<H, T>, V>
       {
           typedef List<F<H, V>, typename MapBind<F, T, V>::res> res;
