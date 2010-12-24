@@ -74,7 +74,13 @@
 #    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
 #    define ATTRIBUTE_PRINTF(Format, FirstArg) \
          __attribute__((format(printf, Format, FirstArg)))
-#    define ATTRIBUTE_STDCALL __attribute__((__stdcall__))
+
+// Only on i386 architectures.  Left undefined on purpose for other
+// architectures.
+#    if defined __i386__
+#     define ATTRIBUTE_STDCALL __attribute__((__stdcall__))
+#    endif
+
 #    define ATTRIBUTE_UNUSED_RESULT __attribute__((warn_unused_result))
 #  endif
 # endif // !defined __attribute__
