@@ -11,17 +11,12 @@ if ! SCHED_CORO_OSTHREAD
 ## the sched interface.
 TESTS_BINARIES +=				\
   tests/sched/sched.cc				\
-  tests/sched/sched-except.cc
-
-# TFAIL: This tests that GD filter level is coroutine-local, which is
-# not the case anymore. The only coroutine-local data we could test is
-# the identation level, which has no accessor, since it wouldn't make
-# sense - except for test purpose.
-# tests/sched/debug.cc
+  tests/sched/sched-except.cc			\
+  tests/sched/debug.cc
 endif
 
-# tests_sched_debug_SOURCES = tests/sched/debug.cc
-# tests_sched_debug_LDFLAGS = $(SCHED_LIBS) $(AM_LDFLAGS)
+tests_sched_debug_SOURCES = tests/sched/debug.cc
+tests_sched_debug_LDFLAGS = $(SCHED_LIBS) $(AM_LDFLAGS)
 
 tests_sched_sched_SOURCES = tests/sched/sched.cc
 tests_sched_sched_LDFLAGS = $(SCHED_LIBS) $(AM_LDFLAGS)
