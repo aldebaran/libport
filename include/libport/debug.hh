@@ -357,19 +357,23 @@ namespace libport
   ::libport::debug::clear()
 
 #  define GD_INIT_DEBUG_PER_(DebugData, DebugInstantiation)             \
-  static int                                                            \
-  _libport_initdebug_()                                                 \
+  struct DebugInitialize                                                \
   {                                                                     \
-    if (::libport::debugger)                                            \
+    DebugInitialize()                                                   \
     {                                                                   \
-      GD_ERROR("GD was already initialized");                           \
-      return 0;                                                         \
+      if (::libport::debugger)                                          \
+      {                                                                 \
+        GD_CATEGORY(Libport.Debug);                                     \
+        GD_ERROR("GD was already initialized");                         \
+      }                                                                 \
+      else                                                              \
+      {                                                                 \
+        ::libport::debugger = new DebugInstantiation;                   \
+        ::libport::debugger_data = DebugData;                           \
+      }                                                                 \
     }                                                                   \
-    ::libport::debugger = new DebugInstantiation;                       \
-    ::libport::debugger_data = DebugData;                               \
-    return 42;                                                          \
-  }                                                                     \
-  static int _libport_debug_initialized_ = _libport_initdebug_();
+  };                                                                    \
+  static DebugInitialize _libport_debug_initialized_;
 
 #  define GD_ENABLE(Name)                       \
   GD_DEBUGGER->Name(true)
