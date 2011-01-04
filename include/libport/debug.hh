@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -279,7 +279,7 @@ namespace libport
 // PUSH
 
 #  define GD_PUSH_(Message, Level)                                      \
-  libport::Debug::Indent _gd_indent_ ## __LINE__                        \
+  libport::Debug::Indent BOOST_PP_CAT(_gd_indent_, __LINE__)            \
     (GD_DEBUGGER, GD_ENABLED(Level));                                   \
   if (GD_ENABLED(Level))                                                \
     GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                       \
