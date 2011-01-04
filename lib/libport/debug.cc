@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -313,7 +313,7 @@ namespace libport
 #endif
     ostr << color(c);
     for (unsigned i = 0; i < debugger_data().indent; ++i)
-      ostr << " ";
+      ostr << "  ";
     // As syslog would do, don't issue the users' \n.
     if (!msg.empty() && msg[msg.size() - 1] == '\n')
       ostr.write(msg.c_str(), msg.size() - 1);
@@ -334,14 +334,14 @@ namespace libport
                              unsigned line)
   {
     debug(msg, types::info, category, fun, file, line);
-    debugger_data().indent += 2;
+    debugger_data().indent++;
   }
 
   void
   ConsoleDebug::pop()
   {
     assert_gt(debugger_data().indent, 0u);
-    debugger_data().indent -= 2;
+    debugger_data().indent--;
   }
 
   std::string gd_ihexdump(const unsigned char* data, unsigned size)
@@ -408,7 +408,7 @@ namespace libport
     std::stringstream s;
     s << "[" << category_format(category) << "] ";
     for (unsigned i = 0; i < debugger_data().indent; ++i)
-      s << " ";
+      s << "  ";
     // As syslog would do, don't issue the users' \n.
     if (!msg.empty() && msg[msg.size() - 1] == '\n')
       s.write(msg.c_str(), msg.size() - 1);
@@ -428,14 +428,14 @@ namespace libport
                             unsigned line)
   {
     debug(msg, types::info, category, fun, file, line);
-    debugger_data().indent += 2;
+    debugger_data().indent++;
   }
 
   void
   SyslogDebug::pop()
   {
     assert_gt(debugger_data().indent, 0u);
-    debugger_data().indent -= 2;
+    debugger_data().indent--;
   }
 #endif
 
