@@ -63,21 +63,21 @@ void test_debug()
 
   {
     GD_PUSH("Main indent");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1u);
     GD_INFO_LOG("Main => C1");
     coroutine_start(mc, c1, &start_c1, (void*)0);
     GD_INFO_LOG("Main <= C1");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1u);
     GD_INFO_LOG("Main => C1");
     coroutine_switch_to(mc, c1);
     GD_INFO_LOG("Main <= C1");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1u);
     GD_INFO_LOG("Main => C2");
     coroutine_switch_to(mc, c2);
     GD_INFO_LOG("Main <= C2");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1u);
   }
-  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0);
+  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0u);
 
   GD_INFO_LOG("Main end");
   BOOST_CHECK_NO_THROW(GD_QUIT());
@@ -88,24 +88,24 @@ static void start_c1(void*)
   GD_CATEGORY(C1);
   GD_INFO_LOG("C1 start");
   c2 = coroutine_new();
-  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0);
+  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0u);
   GD_INFO_LOG("C1 => C2");
   coroutine_start(c1, c2, &start_c2, (void*)0);
   GD_INFO_LOG("C1 <= C2");
-  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0);
+  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0u);
 
   {
     GD_PUSH("C1 indent");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1u);
     GD_PUSH("C1 indent");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 2);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 2u);
     GD_INFO("C1 => Main");
     coroutine_switch_to(c1, mc);
     GD_INFO("C1 <= Main");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 2);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 2u);
   }
 
-  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0);
+  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0u);
   GD_INFO_LOG("C1 end => Main");
   coroutine_switch_to(c1, mc);
 }
@@ -116,19 +116,19 @@ static void start_c2(void*)
   GD_FILTER_LOG();
   GD_INFO_LOG("C2 start");
 
-  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0);
+  BOOST_CHECK_EQUAL(GD_INDENTATION(), 0u);
 
   {
     GD_PUSH("C2 indent");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 1u);
     GD_PUSH("C2 indent");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 2);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 2u);
     GD_PUSH("C2 indent");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 3);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 3u);
     GD_INFO("C2 => C1");
     coroutine_switch_to(c2, c1);
     GD_INFO("C2 <= Main");
-    BOOST_CHECK_EQUAL(GD_INDENTATION(), 3);
+    BOOST_CHECK_EQUAL(GD_INDENTATION(), 3u);
     GD_INFO_LOG("C2 end => main");
     coroutine_switch_to(c2, mc);
   }
