@@ -113,7 +113,6 @@ static void start_c1(void*)
 static void start_c2(void*)
 {
   GD_CATEGORY(C2);
-  GD_FILTER_LOG();
   GD_INFO_LOG("C2 start");
 
   BOOST_CHECK_EQUAL(GD_INDENTATION(), 0u);
