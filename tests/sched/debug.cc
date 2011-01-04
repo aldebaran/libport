@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -11,7 +11,7 @@
 #include <libport/containers.hh>
 #include <libport/debug.hh>
 #include <libport/thread.hh>
-#include <libport/test.hh>
+#include <libport/unit-test.hh>
 
 #include <sched/coroutine-data.hh>
 #include <sched/coroutine-local-storage.hh>
