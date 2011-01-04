@@ -98,6 +98,9 @@ namespace libport
     Debug();
     virtual ~Debug();
 
+    // The current indentation level
+    unsigned indentation() const;
+
     // Report the message if it is enabled.
     // Report the message if its \a lvl suffices.
     void debug(const std::string& msg,
@@ -258,6 +261,9 @@ namespace libport
 
 #  define GD_ENABLED(Level)                             \
   GD_DEBUGGER->enabled(::libport::Debug::levels::Level, GD_CATEGORY_GET())
+
+#  define GD_INDENTATION()                      \
+  GD_DEBUGGER->indentation()
 
 
 /*--------.

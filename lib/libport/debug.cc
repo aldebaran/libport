@@ -160,6 +160,12 @@ namespace libport
       pabort("invalid debug level (NONE, LOG, TRACE, DEBUG, DUMP or [0-4])");
   }
 
+  unsigned
+  Debug::indentation() const
+  {
+    return debugger_data().indent;
+  }
+
   Debug::levels::Level
   Debug::level() const
   {
