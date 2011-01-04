@@ -360,6 +360,11 @@ namespace libport
   static int                                                            \
   _libport_initdebug_()                                                 \
   {                                                                     \
+    if (::libport::debugger)                                            \
+    {                                                                   \
+      GD_ERROR("GD was already initialized");                           \
+      return 0;                                                         \
+    }                                                                   \
     ::libport::debugger = new DebugInstantiation;                       \
     ::libport::debugger_data = DebugData;                               \
     return 42;                                                          \
