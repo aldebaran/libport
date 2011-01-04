@@ -71,10 +71,12 @@ void test_debug()
     GD_INFO_LOG("Main => C1");
     coroutine_switch_to(mc, c1);
     GD_INFO_LOG("Main <= C1");
+    coroutine_free(c1);
     BOOST_CHECK_EQUAL(GD_INDENTATION(), 1u);
     GD_INFO_LOG("Main => C2");
     coroutine_switch_to(mc, c2);
     GD_INFO_LOG("Main <= C2");
+    coroutine_free(c2);
     BOOST_CHECK_EQUAL(GD_INDENTATION(), 1u);
   }
   BOOST_CHECK_EQUAL(GD_INDENTATION(), 0u);
