@@ -260,7 +260,7 @@ namespace libport
 #  define GD_FUNCTION __FUNCTION__
 
 #  define GD_ENABLED(Level)                             \
-  GD_DEBUGGER->enabled(::libport::Debug::levels::Level, GD_CATEGORY_GET())
+  (GD_DEBUGGER && GD_DEBUGGER->enabled(::libport::Debug::levels::Level, GD_CATEGORY_GET()))
 
 #  define GD_INDENTATION()                      \
   GD_DEBUGGER->indentation()
