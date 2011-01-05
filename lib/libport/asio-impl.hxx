@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -408,8 +408,8 @@ namespace libport
     send_bounce(SocketImpl<T>* s,const void* buffer, size_t length)
     {
       libport::BlockLock bl(s);
-      std::ostream stream(&s->buffers_[s->current_==-1 ? 0:1-s->current_]);
-      stream.write((const char*)buffer, std::streamsize(length));
+      s->buffers_[s->current_==-1 ? 0:1-s->current_]
+         .sputn((const char*)buffer, length);
       s->pending_ = true;
       if (s->current_ == -1)
       {
