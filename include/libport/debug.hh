@@ -361,15 +361,16 @@ namespace libport
   {                                                                     \
     DebugInitialize()                                                   \
     {                                                                   \
+      GD_CATEGORY(Libport.Debug);                                       \
       if (::libport::debugger)                                          \
-      {                                                                 \
-        GD_CATEGORY(Libport.Debug);                                     \
         GD_ERROR("GD was already initialized");                         \
-      }                                                                 \
       else                                                              \
       {                                                                 \
         ::libport::debugger = new DebugInstantiation;                   \
         ::libport::debugger_data = DebugData;                           \
+        GD_INFO_TRACE("Initialize GD with backend "                     \
+                      #DebugInstantiation ", storage " #DebugData       \
+                      ".");                                             \
       }                                                                 \
     }                                                                   \
   };                                                                    \
