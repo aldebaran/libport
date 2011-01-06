@@ -135,13 +135,24 @@ namespace libport
     void timestamps(bool value);
     bool timestamps() const;
 
-    void filter(levels::Level lvl);
-    void filter(const std::string& lvl);
-    levels::Level level() const;
+  /*-------------.
+  | Filter level |
+  `-------------*/
 
+  public:
+    /// Set the current filter level.
+    static void filter(levels::Level lvl);
+    /// Set the current filter level.
+    static void filter(const std::string& lvl);
+    /// Get the current filter level.
+    static levels::Level level();
+  private:
+    static levels::Level filter_;
+
+  public:
     /// Whether a message with level \a lvl message should be
     /// displayed.
-    bool enabled(levels::Level lvl, debug::category_type category) const;
+    static bool enabled(levels::Level lvl, debug::category_type category);
 
   protected:
     std::string category_format(debug::category_type cat) const;
@@ -150,7 +161,6 @@ namespace libport
   private:
     bool locations_;
     bool timestamps_;
-    levels::Level filter_;
 
   public:
     class Indent

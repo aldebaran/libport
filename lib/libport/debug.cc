@@ -41,6 +41,8 @@ namespace libport
 {
   LIBPORT_API boost::function0<local_data&> debugger_data;
   LIBPORT_API Debug* debugger = 0;
+  LIBPORT_API Debug::levels::Level Debug::filter_(levels::log);
+
 
   local_data&
   debugger_data_thread_local()
@@ -121,7 +123,6 @@ namespace libport
   Debug::Debug()
     : locations_(getenv("GD_LOC"))
     , timestamps_(getenv("GD_TIME") || getenv("GD_TIMESTAMP_US"))
-    , filter_(levels::log)
   {
     // Process enabled/disabled categories in environment.
     if (const char* enablelist = getenv("GD_ENABLE_CATEGORY"))
@@ -167,7 +168,7 @@ namespace libport
   }
 
   Debug::levels::Level
-  Debug::level() const
+  Debug::level()
   {
     return filter_;
   }
