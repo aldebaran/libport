@@ -14,6 +14,7 @@
 # include <vector>
 
 # include <boost/optional.hpp>
+# include <boost/static_assert.hpp>
 
 # include <libport/arpa/inet.h>
 # include <libport/meta.hh>
@@ -121,9 +122,32 @@ namespace libport
       }                                         \
     }
 
-    SERIALIZE_NET_INTEGRAL(unsigned int,   htonl);
-    SERIALIZE_NET_INTEGRAL(unsigned short, htons);
+    SERIALIZE_NET_INTEGRAL(unsigned int,       htonl);
+    SERIALIZE_NET_INTEGRAL(unsigned long,      htonl);
+    SERIALIZE_NET_INTEGRAL(unsigned short,     htons);
+
 #undef SERIALIZE_NET_INTEGRAL
+
+    // FIXME: Other sizes not handled for now. Should be easy to add.
+    BOOST_STATIC_ASSERT(sizeof(long long) == 8);
+    template <>
+    struct BinaryOSerializer::Impl<unsigned long long>
+    {
+      static void
+      put(const std::string& name,
+          unsigned long long l, std::ostream&,
+          BinaryOSerializer& s)
+      {
+        union
+        {
+          unsigned long long in;
+          struct { uint32_t high; uint32_t low; } out;
+        } res;
+        res.in = l;
+        s.serialize<uint32_t>(name, res.out.high);
+        s.serialize<uint32_t>(name, res.out.low);
+      }
+    };
 
     /*---------.
     | double.  |
@@ -153,6 +177,8 @@ namespace libport
     BOUNCE(bool,           char);
     BOUNCE(unsigned char,  char);
     BOUNCE(int,            unsigned int);
+    BOUNCE(long,           unsigned long);
+    BOUNCE(long long,      unsigned long long);
     BOUNCE(short,          unsigned short);
 
 #undef BOUNCE

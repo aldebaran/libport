@@ -125,9 +125,30 @@ namespace libport
       }                                                                 \
     };
 
-    SERIALIZE_NET_INTEGRAL(unsigned int,   ntohl);
-    SERIALIZE_NET_INTEGRAL(unsigned short, ntohs);
+    SERIALIZE_NET_INTEGRAL(unsigned int,       ntohl, size_int_);
+    SERIALIZE_NET_INTEGRAL(unsigned long,      ntohl, size_long_);
+    SERIALIZE_NET_INTEGRAL(unsigned short,     ntohs, size_short_);
 #undef SERIALIZE_NET_INTEGRAL
+
+    // FIXME: Other sizes not handled for now. Should be easy to add.
+    BOOST_STATIC_ASSERT(sizeof(long long) == 8);
+    template <>
+    struct BinaryISerializer::Impl<unsigned long long>
+    {
+      static unsigned long long
+        get(const std::string& name, std::istream&,
+            BinaryISerializer& s)
+      {
+        union
+        {
+          struct { uint32_t high; uint32_t low; } in;
+          unsigned long long out;
+        } res;
+        res.in.high = s.unserialize<uint32_t>(name);
+        res.in.low = s.unserialize<uint32_t>(name);
+        return res.out;
+      }
+    };
 
     /*---------.
     | double.  |
@@ -160,6 +181,8 @@ namespace libport
     BOUNCE(bool,          char);
     BOUNCE(unsigned char, char);
     BOUNCE(int,           unsigned);
+    BOUNCE(long,          unsigned long);
+    BOUNCE(long long,     unsigned long long);
     BOUNCE(short,         unsigned short);
 #undef BOUNCE
 

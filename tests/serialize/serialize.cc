@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -8,6 +8,7 @@
  * See the LICENSE file for more information.
  */
 
+#include <climits>
 #include <fstream>
 #include <string>
 
@@ -61,6 +62,28 @@ void binary_pod()
     BOOST_CHECK_EQUAL(p1, p4);
     BOOST_CHECK_EQUAL(p2, p3);
     BOOST_CHECK_EQUAL(p5, reinterpret_cast<int*>(NULL));
+  }
+}
+
+void binary_integers_size()
+{
+  {
+    std::ofstream f(BASE "binary_integers_size");
+    BinaryOSerializer ser(f);
+
+    ser.serialize<unsigned short>("test", USHRT_MAX / 2);
+    ser.serialize<unsigned int>("test", UINT_MAX / 2);
+    ser.serialize<unsigned long>("test", ULONG_MAX / 2);
+    ser.serialize<unsigned long long>("test", ULONG_LONG_MAX / 2);
+  }
+  {
+    std::ifstream f(BASE "binary_integers_size");
+    BOOST_CHECK(f.good());
+    BinaryISerializer ser(f);
+    BOOST_CHECK_EQUAL(ser.unserialize<unsigned short>("test"), USHRT_MAX / 2);
+    BOOST_CHECK_EQUAL(ser.unserialize<unsigned int>("test"), UINT_MAX / 2);
+    BOOST_CHECK_EQUAL(ser.unserialize<unsigned long>("test"), ULONG_MAX / 2);
+    BOOST_CHECK_EQUAL(ser.unserialize<unsigned long long>("test"), ULONG_LONG_MAX / 2);
   }
 }
 
@@ -226,6 +249,7 @@ init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("Serialization test suite");
   suite->add(BOOST_TEST_CASE(binary_pod));
+  suite->add(BOOST_TEST_CASE(binary_integers_size));
   suite->add(BOOST_TEST_CASE(binary_class));
   suite->add(BOOST_TEST_CASE(binary_hierarchy));
   return suite;
