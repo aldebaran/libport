@@ -24,8 +24,15 @@ using namespace libport;
 void
 check_argument()
 {
+  BOOST_CHECK_TYPE(traits::RemoveConst<int      >::res, int);
+  BOOST_CHECK_TYPE(traits::RemoveConst<const int>::res, int);
+
   BOOST_CHECK_TYPE(traits::Arg<int>::res, int);
   BOOST_CHECK_TYPE(traits::Arg<std::string>::res, const std::string&);
+
+  BOOST_CHECK_TYPE(traits::Flatten<int>::res, int);
+  BOOST_CHECK_TYPE(traits::Flatten<int&>::res, int);
+  BOOST_CHECK_TYPE(traits::Flatten<const int>::res, int);
   BOOST_CHECK_TYPE(traits::Flatten<const int&>::res, int);
 }
 
