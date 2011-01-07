@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -20,7 +20,12 @@ namespace libport
       , ptr_map_()
       , symbol_id_(0)
       , symbol_map_()
-    {}
+    {
+      serialize<unsigned char>(sizeof(short));
+      serialize<unsigned char>(sizeof(int));
+      serialize<unsigned char>(sizeof(long));
+      serialize<unsigned char>(sizeof(long long));
+    }
 
     BinaryOSerializer::~BinaryOSerializer()
     {}

@@ -10,6 +10,7 @@
 
 #include <climits>
 #include <fstream>
+#include <ios>
 #include <string>
 
 #include <libport/bind.hh>
@@ -84,6 +85,38 @@ void binary_integers_size()
     BOOST_CHECK_EQUAL(ser.unserialize<unsigned int>("test"), UINT_MAX / 2);
     BOOST_CHECK_EQUAL(ser.unserialize<unsigned long>("test"), ULONG_MAX / 2);
     BOOST_CHECK_EQUAL(ser.unserialize<unsigned long long>("test"), ULONG_LONG_MAX / 2);
+  }
+}
+
+void binary_integers_size_portability()
+{
+  // Simulate fancy short size.
+  {
+    std::ofstream f(BASE "binary_integers_size");
+    BinaryOSerializer ser(f);
+
+    // Change integers size.
+    char sizes[] = {0x4, 0x4, 0x4, 0x8,};
+    f.flush();
+    f.seekp(std::ios_base::beg);
+    f.write(sizes, sizeof(sizes));
+    f.flush();
+
+    ser.serialize<uint32_t>(0);
+    ser.serialize<uint32_t>(42);
+    ser.serialize<uint32_t>(USHRT_MAX + 1);
+    ser.serialize<uint32_t>(USHRT_MAX);
+    f.flush();
+    f.close();
+  }
+  {
+    std::ifstream f(BASE "binary_integers_size");
+    BOOST_CHECK(f.good());
+    BinaryISerializer ser(f);
+    BOOST_CHECK_EQUAL(ser.unserialize<unsigned short>(), 0);
+    BOOST_CHECK_EQUAL(ser.unserialize<unsigned short>(), 42);
+    BOOST_CHECK_THROW(ser.unserialize<unsigned short>(), libport::serialize::Exception);
+    BOOST_CHECK_EQUAL(ser.unserialize<unsigned short>(), USHRT_MAX);
   }
 }
 
@@ -250,6 +283,7 @@ init_test_suite()
   test_suite* suite = BOOST_TEST_SUITE("Serialization test suite");
   suite->add(BOOST_TEST_CASE(binary_pod));
   suite->add(BOOST_TEST_CASE(binary_integers_size));
+  suite->add(BOOST_TEST_CASE(binary_integers_size_portability));
   suite->add(BOOST_TEST_CASE(binary_class));
   suite->add(BOOST_TEST_CASE(binary_hierarchy));
   return suite;

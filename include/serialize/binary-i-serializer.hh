@@ -49,6 +49,8 @@ namespace libport
       friend struct PCImpl;
       template <typename T>
       friend struct PHImpl;
+
+      unsigned char size_short_, size_int_, size_long_, size_long_long_;
     };
   }
 }

@@ -13,6 +13,7 @@
 
 # include <vector>
 
+# include <boost/format.hpp>
 # include <boost/optional.hpp>
 
 # include <libport/arpa/inet.h>
@@ -20,6 +21,7 @@
 # include <libport/hierarchy.hh>
 # include <libport/meta.hh>
 # include <libport/symbol.hh>
+# include <serialize/exception.hh>
 # include <serialize/fwd.hh>
 
 
@@ -111,23 +113,52 @@ namespace libport
     /*---------------------.
     | unsigned int/short.  |
     `---------------------*/
-# define SERIALIZE_NET_INTEGRAL(Type, Function)                         \
-    template <>                                                         \
-    struct BinaryISerializer::Impl<Type>                                \
-    {                                                                   \
-      static Type                                                       \
-      get(const std::string&, std::istream& input,                      \
-          BinaryISerializer&)                                           \
-      {                                                                 \
-        Type normalized;                                                \
-        input.read(reinterpret_cast<char*>(&normalized), sizeof(Type)); \
-        return Function(normalized);                                    \
-      }                                                                 \
+
+# define SERIALIZE_NET_INTEGRAL_CASE(Type, Function, Size,      \
+                                     LSize, LType)              \
+    case LSize:                                                 \
+    {                                                           \
+      LType val;                                                \
+      input.read(reinterpret_cast<char*>(&val), s.Size);        \
+      res = val = Function(val);                                \
+      if (val != res)                                           \
+        throw Exception(str(error                               \
+                            % static_cast<int>(s.Size)          \
+                            % #Type                             \
+                            % val                               \
+                            % sizeof(Type)                      \
+                            % res));                            \
+      return res;                                               \
+    }                                                           \
+
+# define SERIALIZE_NET_INTEGRAL(Type, Size)                     \
+    template <>                                                 \
+    struct BinaryISerializer::Impl<Type>                        \
+    {                                                           \
+      static Type                                               \
+        get(const std::string&, std::istream& input,            \
+            BinaryISerializer& s)                               \
+      {                                                         \
+        Type res;                                               \
+        static boost::format error                              \
+          ("overflow error: %u bytes long %s"                   \
+           " with value %u doesn't fit in %u bytes"             \
+           " (truncated: %u).");                                \
+        switch (s.Size)                                         \
+        {                                                       \
+          SERIALIZE_NET_INTEGRAL_CASE(Type, ntohs, Size,        \
+                                      2, uint16_t)              \
+            SERIALIZE_NET_INTEGRAL_CASE(Type, ntohl, Size,      \
+                                      4, uint32_t)              \
+          default:                                              \
+            unreachable();                                      \
+        }                                                       \
+      }                                                         \
     };
 
-    SERIALIZE_NET_INTEGRAL(unsigned int,       ntohl, size_int_);
-    SERIALIZE_NET_INTEGRAL(unsigned long,      ntohl, size_long_);
-    SERIALIZE_NET_INTEGRAL(unsigned short,     ntohs, size_short_);
+    SERIALIZE_NET_INTEGRAL(unsigned int,   size_int_);
+    SERIALIZE_NET_INTEGRAL(unsigned long,  size_long_);
+    SERIALIZE_NET_INTEGRAL(unsigned short, size_short_);
 #undef SERIALIZE_NET_INTEGRAL
 
     // FIXME: Other sizes not handled for now. Should be easy to add.
