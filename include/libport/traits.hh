@@ -126,6 +126,23 @@ namespace libport
       typedef T type;
     };
 
+    /*---------------.
+    | Remove const.  |
+    `---------------*/
+
+    /// Remove const mark from T.
+    template <typename T>
+    struct RemoveConst
+    {
+      typedef T res;
+    };
+
+    template <typename T>
+    struct RemoveConst<const T>
+    {
+      typedef T res;
+    };
+
     /*----.
     | Arg |
     `----*/
