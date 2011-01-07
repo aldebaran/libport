@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -24,10 +24,14 @@ namespace libport
       : public OSerializer<BinaryOSerializer>
     {
     public:
+      typedef OSerializer<BinaryOSerializer> super_type;
       BinaryOSerializer(std::ostream& output);
       ~BinaryOSerializer();
       template <typename T>
       struct Impl;
+      template <typename T>
+      void serialize(typename traits::Arg<T>::res v);
+      using super_type::serialize;
 
     private:
       typedef boost::unordered_map<long, unsigned> ptr_map_type;

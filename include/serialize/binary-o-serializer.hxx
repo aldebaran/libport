@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -25,6 +25,14 @@ namespace libport
 {
   namespace serialize
   {
+    template <typename T>
+    void
+    BinaryOSerializer::serialize(typename traits::Arg<T>::res v)
+    {
+      // Name is ignored anyway.
+      serialize<T>("", v);
+    }
+
     /*----------------.
     | Generic class.  |
     `----------------*/

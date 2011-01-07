@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -23,10 +23,15 @@ namespace libport
     class SERIALIZE_API BinaryISerializer: public ISerializer<BinaryISerializer>
     {
     public:
+      typedef ISerializer<BinaryISerializer> super_type;
       BinaryISerializer(std::istream& input);
       ~BinaryISerializer();
       template <typename T>
       struct Impl;
+      template <typename T>
+      typename meta::If<meta::Inherits<T, meta::BaseHierarchy>::res, T*, T>::res
+      unserialize();
+      using super_type::unserialize;
 
     private:
       template <typename T>
