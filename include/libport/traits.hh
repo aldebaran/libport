@@ -171,6 +171,17 @@ namespace libport
         typedef typename F1<typename F2<T>::res>::res res;
       };
     };
+
+    /*--------.
+    | Flatten |
+    `--------*/
+
+    /// Remove all const and reference marks from T
+    template <typename T>
+    struct Flatten
+    {
+      typedef typename Compose<RemoveConst, RemoveReference>::fun<T>::res res;
+    };
   }
 }
 

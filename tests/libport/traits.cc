@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -19,6 +19,7 @@ check_argument()
 {
   BOOST_CHECK((meta::Eq<traits::Arg<int>::res, int>::res));
   BOOST_CHECK((meta::Eq<traits::Arg<std::string>::res, const std::string&>::res));
+  BOOST_CHECK((meta::Eq<traits::Flatten<const int&>::res, int>::res));
 }
 
 test_suite*
