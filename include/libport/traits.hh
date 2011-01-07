@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -100,7 +100,20 @@ namespace libport
     | Remove reference.  |
     `-------------------*/
 
-    /// Remove reference mark from T
+    /// Remove reference mark from T.
+    template <typename T>
+    struct RemoveReference
+    {
+      typedef T res;
+    };
+
+    template <typename T>
+    struct RemoveReference<T&>
+    {
+      typedef T res;
+    };
+
+    /// Remove reference mark from T, tr1 style.
     template <typename T>
     struct remove_reference
     {
