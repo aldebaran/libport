@@ -14,12 +14,19 @@
 using libport::test_suite;
 using namespace libport;
 
+#define BOOST_CHECK_TYPE(T1, T2)                                        \
+  BOOST_CHECK_MESSAGE((meta::Eq<T1, T2>::res),                          \
+                      (std::string(#T1 " != " #T2 " (")                 \
+                       + typeid(T1).name() + " != "                    \
+                       + typeid(T2).name() + ")"));                    \
+
+
 void
 check_argument()
 {
-  BOOST_CHECK((meta::Eq<traits::Arg<int>::res, int>::res));
-  BOOST_CHECK((meta::Eq<traits::Arg<std::string>::res, const std::string&>::res));
-  BOOST_CHECK((meta::Eq<traits::Flatten<const int&>::res, int>::res));
+  BOOST_CHECK_TYPE(traits::Arg<int>::res, int);
+  BOOST_CHECK_TYPE(traits::Arg<std::string>::res, const std::string&);
+  BOOST_CHECK_TYPE(traits::Flatten<const int&>::res, int);
 }
 
 test_suite*
