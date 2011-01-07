@@ -156,6 +156,21 @@ namespace libport
     {
       typedef typename meta::If<IsPOD<T>::res, T, const T&>::res res;
     };
+
+    /*--------.
+    | Compose |
+    `--------*/
+
+    /// Compose meta functions.
+    template <template <typename> class F1, template <typename> class F2>
+    struct Compose
+    {
+      template <typename T>
+      struct fun
+      {
+        typedef typename F1<typename F2<T>::res>::res res;
+      };
+    };
   }
 }
 
