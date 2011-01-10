@@ -338,6 +338,13 @@ namespace libport
         }
       }
     };
+    template<typename T>
+    BinaryOSerializer& BinaryOSerializer::operator <<(T& v)
+    {
+      static const std::string empty("");
+      serialize<typename boost::remove_const<T>::type>(empty, v);
+      return *this;
+    }
   }
 }
 

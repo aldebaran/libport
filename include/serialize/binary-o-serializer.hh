@@ -29,10 +29,11 @@ namespace libport
       ~BinaryOSerializer();
       template <typename T>
       struct Impl;
+      template<typename T>
+      BinaryOSerializer& operator <<(T& v);
       template <typename T>
       void serialize(typename traits::Arg<T>::res v);
       using super_type::serialize;
-
     private:
       typedef boost::unordered_map<long, unsigned> ptr_map_type;
       unsigned ptr_id_;

@@ -407,6 +407,12 @@ namespace libport
         return res;
       }
     };
+    template<typename T>
+    BinaryISerializer& BinaryISerializer::operator >>(T& v)
+      {
+        v = unserialize<T>("");
+        return *this;
+      }
   }
 }
 

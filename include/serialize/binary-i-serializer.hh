@@ -28,11 +28,12 @@ namespace libport
       ~BinaryISerializer();
       template <typename T>
       struct Impl;
+      template<typename T>
+      BinaryISerializer& operator >>(T& v);
       template <typename T>
       typename meta::If<meta::Inherits<T, meta::BaseHierarchy>::res, T*, T>::res
       unserialize();
       using super_type::unserialize;
-
     private:
       template <typename T>
       struct PCImpl;
