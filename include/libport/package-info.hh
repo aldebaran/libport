@@ -67,7 +67,7 @@ namespace libport
     /// For debugging.
     std::ostream& dump(std::ostream& o = std::cerr) const;
 
-    struct Version
+    struct LIBPORT_API Version
     {
       integer_type major, minor, subMinor, patchLevel;
       Version(integer_type major=0,
