@@ -108,4 +108,72 @@ namespace libport
     return o << p.signature();
   }
 
+  PackageInfo::Version
+  PackageInfo::version() const
+  {
+    return Version(version_major(), version_minor(), version_subminor(),
+                   version_patch());
+  }
+
+  PackageInfo::Version::Version(integer_type major,
+                                integer_type minor,
+                                integer_type subMinor,
+                                integer_type patchLevel)
+  : subMinor(subMinor)
+  , patchLevel(patchLevel)
+  {
+    // Workaround glibc macros major(x) and minor(x)
+    this->major = major;
+    this->minor = minor;
+  }
+
+  bool PackageInfo::Version::operator < (const PackageInfo::Version& v) const
+  {
+    if (major < v.major) return true;
+    if (major > v.major) return false;
+    if (minor < v.minor) return true;
+    if (minor > v.minor) return false;
+    if (subMinor < v.subMinor) return true;
+    if (subMinor > v.subMinor) return false;
+    return patchLevel < v.patchLevel;
+  }
+
+  bool PackageInfo::Version::operator <= (const PackageInfo::Version& v) const
+  {
+    return *this == v || *this < v;
+  }
+
+  bool PackageInfo::Version::operator > (const PackageInfo::Version& v) const
+  {
+    return ! (*this <= v);
+  }
+
+  bool PackageInfo::Version::operator >= (const PackageInfo::Version& v) const
+  {
+    return ! (*this < v);
+  }
+
+  bool PackageInfo::Version::operator == (const PackageInfo::Version& v) const
+  {
+    return major == v.major
+      && minor == v.minor
+      && subMinor == v.subMinor
+      && patchLevel == v.patchLevel;
+  }
+
+  bool PackageInfo::Version::operator != (const PackageInfo::Version& v) const
+  {
+    return ! (*this == v);
+  }
+
+  std::ostream&
+  operator<<(std::ostream& o, const PackageInfo::Version& v)
+  {
+    return o << '('
+      << v.major << ", "
+      << v.minor << ", "
+      << v.subMinor << ", "
+      << v.patchLevel << ')';
+  }
+
 }

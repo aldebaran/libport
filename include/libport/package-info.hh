@@ -67,6 +67,21 @@ namespace libport
     /// For debugging.
     std::ostream& dump(std::ostream& o = std::cerr) const;
 
+    struct Version
+    {
+      integer_type major, minor, subMinor, patchLevel;
+      Version(integer_type major=0,
+              integer_type minor=0,
+              integer_type subMinor=0,
+              integer_type patchLevel=0);
+      bool operator == (const Version& v) const;
+      bool operator != (const Version& v) const;
+      bool operator <  (const Version& v) const;
+      bool operator >  (const Version& v) const;
+      bool operator >= (const Version& v) const;
+      bool operator <= (const Version& v) const;
+    };
+    Version version() const;
   private:
     map_type map_;
     /// Sub packages (Dependencies).
@@ -76,6 +91,8 @@ namespace libport
 
   /// Report the signature of \a p on \a o.
   LIBPORT_API std::ostream& operator<<(std::ostream& o, const PackageInfo& p);
+  LIBPORT_API std::ostream& operator<<(std::ostream& o,
+                                       const PackageInfo::Version& p);
 }
 
 /// Define \a Var using information from config.h and version.hh.
