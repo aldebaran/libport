@@ -1,5 +1,5 @@
 # This file is part of Urbi SDK.
-# Copyright (C) 2006-2010, Gostai S.A.S.
+# Copyright (C) 2006-2011, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -116,7 +116,7 @@ URBI_PTHREAD_SOURCES
 # AC_CONFIG_FILES([gui/Makefile])
 URBI_ARG_ENABLE([enable-boost-serialization],
                 [enable boost::serialization support],
-                [yes|no], [no])
+                [yes|no], [yes])
 AM_CONDITIONAL([WITH_BOOST_SERIALIZATION],
                [test x$enable_boost_serialization = xyes])
 if test x$enable_boost_serialization = xyes; then
