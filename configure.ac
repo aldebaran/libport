@@ -116,7 +116,7 @@ URBI_PTHREAD_SOURCES
 # AC_CONFIG_FILES([gui/Makefile])
 URBI_ARG_ENABLE([enable-boost-serialization],
                 [enable boost::serialization support],
-                [yes|no], [yes])
+                [yes|no], [no])
 AM_CONDITIONAL([WITH_BOOST_SERIALIZATION],
                [test x$enable_boost_serialization = xyes])
 if test x$enable_boost_serialization = xyes; then
