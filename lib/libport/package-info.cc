@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -95,9 +95,10 @@ namespace libport
     return lexical_cast<integer_type>(get(#Field));     \
   }
 
-  DEFINE(major, "major")
-  DEFINE(minor, "minor")
-  DEFINE(subminor, "subminor")
+  DEFINE(version_major, "major")
+  DEFINE(version_minor, "minor")
+  DEFINE(version_subminor, "subminor")
+  DEFINE(version_patch, "patch")
   DEFINE(version_value, "version-value")
 #undef DEFINE
 

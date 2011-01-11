@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -52,11 +52,13 @@ namespace libport
     typedef unsigned int integer_type;
 
     /// "major" as an integer.
-    integer_type major() const;
+    integer_type version_major() const;
     /// "minor" as an integer.
-    integer_type minor() const;
+    integer_type version_minor() const;
     /// "sub-minor" as an integer.
-    integer_type subminor() const;
+    integer_type version_subminor() const;
+     /// "patch" as an integer.
+    integer_type version_patch() const;
     /// "version-value" as an integer.
     integer_type version_value() const;
 
