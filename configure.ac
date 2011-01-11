@@ -129,7 +129,6 @@ WITH_XENOMAI
 URBI_LIB_SUFFIX
 AC_CONFIG_FILES([Makefile])
 
-AC_CONFIG_FILES([doc/doxygen.sh],    [chmod a=rx doc/doxygen.sh])
-AC_CONFIG_FILES([build-aux/test.sh], [chmod a=rx build-aux/test.sh])
+URBI_CONFIG_SCRIPTS([doc/doxygen.sh], [build-aux/test.sh])
 
 AC_OUTPUT
