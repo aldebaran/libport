@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -205,9 +205,9 @@ extern "C"
 }
 # endif
 
-/*---------.
-| usleep.  |
-`---------*/
+/*-------------------------------------.
+| usleep and base types from cstdint.  |
+`--------------------------------------*/
 
 # if defined WIN32
 #  include <boost/cstdint.hpp>
@@ -215,6 +215,12 @@ extern "C"
 {
   // Based on the value I have on my G4 -- Akim.
   typedef boost::uint32_t useconds_t;
+  using boost::uint32_t;
+  using boost::int32_t;
+  using boost::uint16_t;
+  using boost::int16_t;
+  using boost::uint8_t;
+  using boost::int8_t;
 }
 
 // Some libraries define usleep as a macro. In this case, do not redefine
