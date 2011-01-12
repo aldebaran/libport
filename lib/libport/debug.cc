@@ -112,7 +112,8 @@ namespace libport
       // Also set existing to !state
       foreach(categories_type::value_type& v, get_categories())
         v.second = !state;
-      tokenizer_type t = make_tokenizer(list, ",");
+      std::string s(list); // Do not pass temporary to make_tokenizer.
+      tokenizer_type t = make_tokenizer(s, ",");
       foreach(const std::string& elem, t)
         get_categories()[Symbol(elem)] = state;
     }
