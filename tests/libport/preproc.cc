@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010, 2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -204,6 +204,23 @@ apply_vaargs()
   #undef CAT
 }
 
+static void
+enum_()
+{
+  BOOST_CHECK_EQUAL(LIBPORT_ENUM(("foo")("bar")("baz"), " - "), "foo - bar - baz");
+  BOOST_CHECK_EQUAL(LIBPORT_ENUM(("foo")("bar")       , " - "), "foo - bar");
+  BOOST_CHECK_EQUAL(LIBPORT_ENUM(("foo")              , " - "), "foo");
+}
+
+static void
+enum_pretty()
+{
+  BOOST_CHECK_EQUAL(LIBPORT_ENUM_PRETTY_SEVERAL(("foo")("bar")("baz"), ", ", " and "), "foo, bar and baz");
+  BOOST_CHECK_EQUAL(LIBPORT_ENUM_PRETTY(("foo")("bar")("baz"), ", ", " and "), "foo, bar and baz");
+  BOOST_CHECK_EQUAL(LIBPORT_ENUM_PRETTY(("foo")("bar")       , ", ", " and "), "foo and bar");
+  BOOST_CHECK_EQUAL(LIBPORT_ENUM_PRETTY(("foo")              , ", ", " and "), "foo");
+}
+
 test_suite*
 init_test_suite()
 {
@@ -216,5 +233,7 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(apply));
   suite->add(BOOST_TEST_CASE(arg));
   suite->add(BOOST_TEST_CASE(apply_vaargs));
+  suite->add(BOOST_TEST_CASE(enum_));
+  suite->add(BOOST_TEST_CASE(enum_pretty));
   return suite;
 }

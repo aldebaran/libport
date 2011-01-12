@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -14,6 +14,7 @@
 # include <boost/function.hpp>
 # include <boost/preprocessor/tuple/elem.hpp>
 # include <boost/preprocessor/seq/for_each.hpp>
+# include <boost/preprocessor/seq/remove.hpp>
 # include <boost/preprocessor/seq/transform.hpp>
 
 
@@ -79,6 +80,28 @@
 /// Separate \a Seq with commas
 # define LIBPORT_SEPARATE(Seq)                                          \
   LIBPORT_HEAD(Seq) LIBPORT_APPLY(LIBPORT_SEPARATE_HELPER, LIBPORT_TAIL(Seq))
+
+/// Separate \a Seq with \a Sep
+# define LIBPORT_ENUM(Seq, Sep)                                         \
+  LIBPORT_HEAD(Seq) BOOST_PP_SEQ_FOR_EACH(LIBPORT_ENUM_HELPER, Sep, BOOST_PP_SEQ_TAIL(Seq))
+# define LIBPORT_ENUM_HELPER(Data, Sep, Elt) Sep Elt
+
+/// Separate \a Seq with \a LSep for the last separator and \a Sep everywhere else.
+/// Typically: "a, b, c, d and e".
+# define LIBPORT_ENUM_PRETTY(Seq, Sep, LSep)                            \
+  BOOST_PP_CAT(                                                         \
+    LIBPORT_ENUM_PRETTY_,                                               \
+    BOOST_PP_IF(BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(Seq)), SEVERAL, ONE))    \
+  (Seq, Sep, LSep)
+# define LIBPORT_ENUM_PRETTY_ONE(Seq, Sep, LSep)        \
+  BOOST_PP_SEQ_HEAD(Seq)
+# define LIBPORT_ENUM_PRETTY_SEVERAL(Seq, Sep, LSep)    \
+  LIBPORT_ENUM(LIBPORT_RTAIL(Seq), Sep) LSep LIBPORT_RHEAD(Seq)
+
+/// The last element element of the sequence (reverse head)
+# define LIBPORT_RHEAD(Seq) BOOST_PP_SEQ_ELEM(BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(Seq)), Seq)
+/// The sequence minus the last element (reverse tail)
+# define LIBPORT_RTAIL(Seq) BOOST_PP_SEQ_REMOVE(Seq, BOOST_PP_DEC(BOOST_PP_SEQ_SIZE(Seq)))
 
 /// Concatenate the two arguments.
 # ifdef _MSC_VER
