@@ -411,7 +411,6 @@ namespace libport
 #  define GD_MESSAGE_(...)
 #  define GD_QUIT()
 #  define GD_SHOW_LEVEL(Lvl)
-#  define GD_ABORT(a) abort()
 # endif //LIBPORT_DEBUG_DISABLE
 
 
