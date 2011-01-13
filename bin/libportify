@@ -192,6 +192,10 @@ Normalize the use of libport and system headers.
 sub libport_headers ($\$)
 {
   my ($file, $contents_ref) = @_;
+  my $type = file_type($file);
+  return
+    unless $type && $type eq 'c++';
+
   local $_ = $$contents_ref;
 
   # C-system headers.
@@ -378,14 +382,18 @@ sub libport_renamings ($\$)
   my ($file, $contents_ref) = @_;
   local $_ = $$contents_ref;
 
-  # aver is nicer than assert.
-  # Don't change the definition of our assert though.
-  s/\b(?:post|pre)condition\s*\(/aver(/g;
-  s/\bunreached\s*\(/unreachable(/g;
-  s/\bassert\s*\((?!Assertion\))/aver(/g;
+  my $type = file_type($file);
+  if (defined $type && $type eq 'c++')
+  {
+    # aver is nicer than assert.
+    # Don't change the definition of our assert though.
+    s/\b(?:post|pre)condition\s*\(/aver(/g;
+    s/\bunreached\s*\(/unreachable(/g;
+    s/\bassert\s*\((?!Assertion\))/aver(/g;
 
-  # We are now simply using Boost.Unordered.
-  s/libport::hash_map/boost::unordered_map/g;
+    # We are now simply using Boost.Unordered.
+    s/libport::hash_map/boost::unordered_map/g;
+  }
 
   # Denottalify.
   s/\ballready\b/already/g;
@@ -882,6 +890,7 @@ my @ignore = qw(
   .*\.bak
   .*\.dsym
   .*\.jpg
+  .*\.mp3
   .*\.pdf
   .*\.png
   \.git
