@@ -1,4 +1,4 @@
-## Copyright (C) 2008-2010, Gostai S.A.S.
+## Copyright (C) 2008-2011, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -54,7 +54,6 @@ libport_include_HEADERS +=				\
   include/libport/algorithm.hxx				\
   include/libport/asio.hh				\
   include/libport/asio.hxx				\
-  include/libport/assert.hh				\
   include/libport/attributes.hh				\
   include/libport/backtrace.hh				\
   include/libport/backtrace.hxx				\
