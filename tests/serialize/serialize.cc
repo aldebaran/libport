@@ -32,6 +32,8 @@ using namespace libport::serialize;
 #define UNSERIALIZE(Type, Value)                                \
     BOOST_CHECK_EQUAL(ser.unserialize<Type>("test"), Value);
 
+GD_INIT();
+
 void binary_pod()
 {
   {

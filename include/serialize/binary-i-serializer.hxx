@@ -118,6 +118,8 @@ namespace libport
                                      LSize, LType)              \
     case LSize:                                                 \
     {                                                           \
+      GD_CATEGORY(Serialize.Binary);                            \
+                                                                \
       LType val;                                                \
       input.read(reinterpret_cast<char*>(&val), s.Size);        \
       res = val = Function(val);                                \
@@ -147,9 +149,9 @@ namespace libport
         switch (s.Size)                                         \
         {                                                       \
           SERIALIZE_NET_INTEGRAL_CASE(Type, ntohs, Size,        \
-                                      2, uint16_t)              \
-            SERIALIZE_NET_INTEGRAL_CASE(Type, ntohl, Size,      \
-                                      4, uint32_t)              \
+                                      2, uint16_t);             \
+          SERIALIZE_NET_INTEGRAL_CASE(Type, ntohl, Size,        \
+                                      4, uint32_t);             \
           default:                                              \
             unreachable();                                      \
         }                                                       \

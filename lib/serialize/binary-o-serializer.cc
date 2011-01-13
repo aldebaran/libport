@@ -8,7 +8,11 @@
  * See the LICENSE file for more information.
  */
 
+#include <libport/debug.hh>
+
 #include <serialize/binary-o-serializer.hh>
+
+GD_CATEGORY(Serialize.Output.Binary);
 
 namespace libport
 {
@@ -21,10 +25,16 @@ namespace libport
       , symbol_id_(0)
       , symbol_map_()
     {
-      serialize<unsigned char>(sizeof(short));
-      serialize<unsigned char>(sizeof(int));
-      serialize<unsigned char>(sizeof(long));
-      serialize<unsigned char>(sizeof(long long));
+      GD_PUSH_TRACE("New binary output serializer");
+      GD_FINFO_DEBUG("short     size: %s", sizeof(short));
+      GD_FINFO_DEBUG("int       size: %s", sizeof(int));
+      GD_FINFO_DEBUG("long      size: %s", sizeof(long));
+      GD_FINFO_DEBUG("long long size: %s", sizeof(long long));
+
+      serialize<unsigned char>("short size", sizeof(short));
+      serialize<unsigned char>("int size", sizeof(int));
+      serialize<unsigned char>("long size", sizeof(long));
+      serialize<unsigned char>("long long size", sizeof(long long));
     }
 
     BinaryOSerializer::~BinaryOSerializer()

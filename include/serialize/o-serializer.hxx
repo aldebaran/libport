@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -7,6 +7,9 @@
  *
  * See the LICENSE file for more information.
  */
+
+#include <libport/debug.hh>
+#include <libport/escape.hh>
 
 #ifndef O_SERIALIZER_HXX
 # define O_SERIALIZER_HXX
@@ -30,6 +33,9 @@ namespace libport
     OSerializer<Exact>::serialize(const std::string& name,
                                   typename traits::Arg<T>::res v)
     {
+      GD_CATEGORY(Serialize.Output);
+      GD_FPUSH_TRACE("Serialize %s with name \"%s\"",
+                     typeid(T).name(), libport::escape(name));
       Exact::template Impl<T>::put(name, v, stream_,
                                    static_cast<Exact&>(*this));
     }

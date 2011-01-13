@@ -109,17 +109,21 @@ namespace libport
     /*---------------------.
     | unsigned int/short.  |
     `---------------------*/
-# define SERIALIZE_NET_INTEGRAL(Type, Function) \
-    template <>                                 \
-    struct BinaryOSerializer::Impl<Type>        \
-    {                                           \
-      static void                               \
-      put(const std::string&,                   \
-          Type i, std::ostream& output,         \
-          BinaryOSerializer&)                   \
-      {                                         \
-        write_(output, Function(i));            \
-      }                                         \
+# define SERIALIZE_NET_INTEGRAL(Type, Function)         \
+    template <>                                         \
+    struct BinaryOSerializer::Impl<Type>                \
+    {                                                   \
+      static void                                       \
+      put(const std::string&,                           \
+          Type i, std::ostream& output,                 \
+          BinaryOSerializer&)                           \
+      {                                                 \
+        GD_CATEGORY(Serialize.Output.Binary);           \
+        GD_FINFO_DUMP("Value: %s", i);                  \
+        Type o = Function(i);                           \
+        GD_FINFO_DUMP("Normalized: %x", o);             \
+        write_(output, o);                              \
+      }                                                 \
     }
 
     SERIALIZE_NET_INTEGRAL(unsigned int,       htonl);

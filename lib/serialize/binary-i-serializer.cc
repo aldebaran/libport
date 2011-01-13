@@ -8,7 +8,11 @@
  * See the LICENSE file for more information.
  */
 
+#include <libport/debug.hh>
+
 #include <serialize/binary-i-serializer.hh>
+
+GD_CATEGORY(Serialize.Input.Binary);
 
 namespace libport
 {
@@ -18,13 +22,21 @@ namespace libport
       : ISerializer<BinaryISerializer>(input)
       , ptr_map_()
       , sym_map_()
-      , size_short_(unserialize<unsigned char>())
-      , size_int_(unserialize<unsigned char>())
-      , size_long_(unserialize<unsigned char>())
-      , size_long_long_(unserialize<unsigned char>())
-    {}
+    {
+      GD_PUSH_TRACE("New binary input serializer");
+      size_short_ = unserialize<unsigned char>("short size");
+      size_int_ = unserialize<unsigned char>("int size");
+      size_long_ = unserialize<unsigned char>("long size");
+      size_long_long_ = unserialize<unsigned char>("long long size");
+      GD_FINFO_DEBUG("short     size: %d", size_short_);
+      GD_FINFO_DEBUG("int       size: %d", size_int_);
+      GD_FINFO_DEBUG("long      size: %d", size_long_);
+      GD_FINFO_DEBUG("long long size: %d", size_long_long_);
+    }
 
     BinaryISerializer::~BinaryISerializer()
-    {}
+    {
+      GD_INFO_TRACE("Delete binary input serializer");
+    }
   }
 }
