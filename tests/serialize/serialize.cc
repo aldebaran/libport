@@ -121,7 +121,8 @@ void binary_integers_size_portability()
     BinaryISerializer ser(f);
     UNSERIALIZE(unsigned short, 0);
     UNSERIALIZE(unsigned short, 42);
-    UNSERIALIZE(unsigned short, libport::serialize::Exception);
+    BOOST_CHECK_THROW(ser.unserialize<unsigned short>(),
+                      libport::serialize::Exception);
     UNSERIALIZE(unsigned short, USHRT_MAX);
   }
 }
