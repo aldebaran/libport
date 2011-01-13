@@ -13,6 +13,7 @@
 #include <ios>
 #include <string>
 
+#include <libport/debug.hh>
 #include <libport/bind.hh>
 
 #include <libport/export.hh>
@@ -76,24 +77,30 @@ void binary_pod()
 
 void binary_integers_size()
 {
-  {
-    std::ofstream f(BASE "binary_integers_size");
-    BinaryOSerializer ser(f);
+  const char *fn = BASE "binary_integers_size";
 
-    SERIALIZE(unsigned short, USHRT_MAX / 2);
-    SERIALIZE(unsigned int, UINT_MAX / 2);
-    SERIALIZE(unsigned long, ULONG_MAX / 2);
-    SERIALIZE(unsigned long long, ULONG_LONG_MAX / 2);
-  }
-  {
-    std::ifstream f(BASE "binary_integers_size");
-    BOOST_CHECK(f.good());
-    BinaryISerializer ser(f);
-    UNSERIALIZE(unsigned short, USHRT_MAX / 2);
-    UNSERIALIZE(unsigned int, UINT_MAX / 2);
-    UNSERIALIZE(unsigned long, ULONG_MAX / 2);
-    UNSERIALIZE(unsigned long long, ULONG_LONG_MAX / 2);
-  }
+#define CHECK(Type)                                                     \
+  do {                                                                  \
+    {                                                                   \
+      std::ofstream f(fn);                                              \
+      BinaryOSerializer ser(f);                                         \
+      SERIALIZE(Type, (Type) (std::numeric_limits<Type>::max() / 2));   \
+    }                                                                   \
+    {                                                                   \
+      std::ifstream f(fn);                                              \
+      BOOST_CHECK(f.good());                                            \
+      BinaryISerializer ser(f);                                         \
+      UNSERIALIZE(Type, (Type) (std::numeric_limits<Type>::max() / 2)); \
+      f.peek();                                                         \
+      BOOST_CHECK(f.eof());                                             \
+    }                                                                   \
+  } while (false)
+
+  CHECK(unsigned short);
+  CHECK(unsigned int);
+  CHECK(unsigned long);
+  CHECK(unsigned long long);
+#undef CHECK
 }
 
 void binary_integers_size_portability()
