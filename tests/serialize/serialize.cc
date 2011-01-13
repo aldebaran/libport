@@ -26,33 +26,39 @@ using namespace libport::serialize;
 
 #define BASE "tests/serialize/"
 
+#define SERIALIZE(Type, Value)                                  \
+    BOOST_CHECK_NO_THROW(ser.serialize<Type>("test", Value))
+
+#define UNSERIALIZE(Type, Value)                                \
+    BOOST_CHECK_EQUAL(ser.unserialize<Type>("test"), Value);
+
 void binary_pod()
 {
   {
     std::ofstream f(BASE "binary_pod");
     BinaryOSerializer ser(f);
 
-    ser.serialize<int>("test", 42);
-    ser.serialize<bool>("test", true);
-    ser.serialize<bool>("test", false);
-    ser.serialize<std::string>("test", "string ");
+    SERIALIZE(int, 42);
+    SERIALIZE(bool, true);
+    SERIALIZE(bool, false);
+    SERIALIZE(std::string, "string ");
     int* p1 = new int(51);
     int* p2 = new int(69);
-    ser.serialize<int*>("test", p1);
-    ser.serialize<int*>("test", p2);
-    ser.serialize<int*>("test", p2);
-    ser.serialize<int*>("test", p1);
-    ser.serialize<int*>("test", NULL);
+    SERIALIZE(int*, p1);
+    SERIALIZE(int*, p2);
+    SERIALIZE(int*, p2);
+    SERIALIZE(int*, p1);
+    SERIALIZE(int*, NULL);
   }
   {
     std::ifstream f(BASE "binary_pod");
     BOOST_CHECK(f.good());
     BinaryISerializer ser(f);
 
-    BOOST_CHECK_EQUAL(ser.unserialize<int>("test"), 42);
-    BOOST_CHECK(ser.unserialize<bool>("test"));
-    BOOST_CHECK(!ser.unserialize<bool>("test"));
-    BOOST_CHECK_EQUAL(ser.unserialize<std::string>("test"), "string ");
+    UNSERIALIZE(int, 42);
+    UNSERIALIZE(bool, true);
+    UNSERIALIZE(bool, false);
+    UNSERIALIZE(std::string, "string ");
     int* p1 = ser.unserialize<int*>("test");
     int* p2 = ser.unserialize<int*>("test");
     int* p3 = ser.unserialize<int*>("test");
@@ -72,19 +78,19 @@ void binary_integers_size()
     std::ofstream f(BASE "binary_integers_size");
     BinaryOSerializer ser(f);
 
-    ser.serialize<unsigned short>("test", USHRT_MAX / 2);
-    ser.serialize<unsigned int>("test", UINT_MAX / 2);
-    ser.serialize<unsigned long>("test", ULONG_MAX / 2);
-    ser.serialize<unsigned long long>("test", ULONG_LONG_MAX / 2);
+    SERIALIZE(unsigned short, USHRT_MAX / 2);
+    SERIALIZE(unsigned int, UINT_MAX / 2);
+    SERIALIZE(unsigned long, ULONG_MAX / 2);
+    SERIALIZE(unsigned long long, ULONG_LONG_MAX / 2);
   }
   {
     std::ifstream f(BASE "binary_integers_size");
     BOOST_CHECK(f.good());
     BinaryISerializer ser(f);
-    BOOST_CHECK_EQUAL(ser.unserialize<unsigned short>("test"), USHRT_MAX / 2);
-    BOOST_CHECK_EQUAL(ser.unserialize<unsigned int>("test"), UINT_MAX / 2);
-    BOOST_CHECK_EQUAL(ser.unserialize<unsigned long>("test"), ULONG_MAX / 2);
-    BOOST_CHECK_EQUAL(ser.unserialize<unsigned long long>("test"), ULONG_LONG_MAX / 2);
+    UNSERIALIZE(unsigned short, USHRT_MAX / 2);
+    UNSERIALIZE(unsigned int, UINT_MAX / 2);
+    UNSERIALIZE(unsigned long, ULONG_MAX / 2);
+    UNSERIALIZE(unsigned long long, ULONG_LONG_MAX / 2);
   }
 }
 
@@ -102,10 +108,10 @@ void binary_integers_size_portability()
     f.write(sizes, sizeof(sizes));
     f.flush();
 
-    ser.serialize<uint32_t>(0);
-    ser.serialize<uint32_t>(42);
-    ser.serialize<uint32_t>(USHRT_MAX + 1);
-    ser.serialize<uint32_t>(USHRT_MAX);
+    SERIALIZE(uint32_t, 0);
+    SERIALIZE(uint32_t, 42);
+    SERIALIZE(uint32_t, USHRT_MAX + 1);
+    SERIALIZE(uint32_t, USHRT_MAX);
     f.flush();
     f.close();
   }
@@ -113,10 +119,10 @@ void binary_integers_size_portability()
     std::ifstream f(BASE "binary_integers_size");
     BOOST_CHECK(f.good());
     BinaryISerializer ser(f);
-    BOOST_CHECK_EQUAL(ser.unserialize<unsigned short>(), 0);
-    BOOST_CHECK_EQUAL(ser.unserialize<unsigned short>(), 42);
-    BOOST_CHECK_THROW(ser.unserialize<unsigned short>(), libport::serialize::Exception);
-    BOOST_CHECK_EQUAL(ser.unserialize<unsigned short>(), USHRT_MAX);
+    UNSERIALIZE(unsigned short, 0);
+    UNSERIALIZE(unsigned short, 42);
+    UNSERIALIZE(unsigned short, libport::serialize::Exception);
+    UNSERIALIZE(unsigned short, USHRT_MAX);
   }
 }
 
