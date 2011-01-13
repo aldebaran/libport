@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -26,7 +26,7 @@
 #include <libport/sys/types.h>
 #include <libport/unistd.h>
 
-GD_CATEGORY(path);
+GD_CATEGORY(Libport.Path);
 
 // Implementation detail: if components() is empty and not absolute
 // then the path is '.'.

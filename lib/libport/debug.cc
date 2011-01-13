@@ -35,7 +35,7 @@
 
 #ifndef LIBPORT_DEBUG_DISABLE
 
-GD_CATEGORY(libport::Debug);
+GD_CATEGORY(Libport.Debug);
 
 namespace libport
 {

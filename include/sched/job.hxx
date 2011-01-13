@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -25,8 +25,6 @@
 
 namespace sched
 {
-  GD_CATEGORY(libport::sched);
-
   /*------------.
   | job_state.  |
   `------------*/
@@ -188,6 +186,7 @@ namespace sched
   inline void
   Job::check_stack_space()
   {
+    GD_CATEGORY(Sched.Job);
     if (check_stack_space_
 	&& coroutine_stack_space_almost_gone(coro_))
     {

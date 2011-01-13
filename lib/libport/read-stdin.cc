@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -51,7 +51,7 @@
   INFO_(Format ": %s", ## __VA_ARGS__, strerror(errno))
 
 
-GD_CATEGORY(read_file);
+GD_CATEGORY(Libport.ReadFile);
 
 
 namespace libport

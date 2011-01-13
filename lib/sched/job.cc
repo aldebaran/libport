@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -101,7 +101,7 @@ namespace sched
     // called back. So perform RAII in a subblock to ensure that GD_CATEGORY
     // releases its memory.
     {
-      GD_CATEGORY(sched);
+      GD_CATEGORY(Sched);
       aver_eq(state_, to_start);
       GD_FINFO_DEBUG("job %s: run", this);
 
