@@ -143,8 +143,8 @@ my $recurse = 1;
 # Steps to run, in order.
 my @step;
 
-# FIXME: Compute from the current date.
-my $year = 2010;
+# The current year.
+my $year = 1900 + (localtime)[5];
 
 # A regexp that matches 0 or more repetitions of either a
 # non-backtracking word with no parens/braces, or a braced group, or a
