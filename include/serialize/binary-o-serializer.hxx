@@ -109,49 +109,52 @@ namespace libport
     /*---------------------.
     | unsigned int/short.  |
     `---------------------*/
-# define SERIALIZE_NET_INTEGRAL(Type, Function)         \
-    template <>                                         \
-    struct BinaryOSerializer::Impl<Type>                \
-    {                                                   \
-      static void                                       \
-      put(const std::string&,                           \
-          Type i, std::ostream& output,                 \
-          BinaryOSerializer&)                           \
-      {                                                 \
-        GD_CATEGORY(Serialize.Output.Binary);           \
-        GD_FINFO_DUMP("Value: %s", i);                  \
-        Type o = Function(i);                           \
-        GD_FINFO_DUMP("Normalized: %x", o);             \
-        write_(output, o);                              \
-      }                                                 \
+
+# define SERIALIZE_NET_INTEGRAL(Type)                           \
+    template <>                                                 \
+    struct BinaryOSerializer::Impl<Type>                        \
+    {                                                           \
+      static void                                               \
+      put(const std::string&,                                   \
+          Type i, std::ostream& output,                         \
+          BinaryOSerializer& s)                                 \
+      {                                                         \
+        GD_CATEGORY(Serialize.Output.Binary);                   \
+        GD_FINFO_DUMP("Value: %s", i);                          \
+        switch (sizeof(Type))                                   \
+        {                                                       \
+          case 2:                                               \
+            i = htons(i);                                       \
+            break;                                              \
+          case 4:                                               \
+            i = htonl(i);                                       \
+            break;                                              \
+          case 8:                                               \
+          {                                                     \
+            union                                               \
+            {                                                   \
+              unsigned long long in;                            \
+              struct { uint32_t high; uint32_t low; } out;      \
+            } res;                                              \
+            res.in = i;                                         \
+            s.serialize<uint32_t>(res.out.high);                \
+            s.serialize<uint32_t>(res.out.low);                 \
+            return;                                             \
+          }                                                     \
+          default:                                              \
+            unreachable();                                      \
+        }                                                       \
+        GD_FINFO_DUMP("Normalized: %x", i);                     \
+        write_(output, i);                                      \
+      }                                                         \
     }
 
-    SERIALIZE_NET_INTEGRAL(unsigned int,       htonl);
-    SERIALIZE_NET_INTEGRAL(unsigned long,      htonl);
-    SERIALIZE_NET_INTEGRAL(unsigned short,     htons);
+    SERIALIZE_NET_INTEGRAL(unsigned int);
+    SERIALIZE_NET_INTEGRAL(unsigned long);
+    SERIALIZE_NET_INTEGRAL(unsigned long long);
+    SERIALIZE_NET_INTEGRAL(unsigned short);
 
 #undef SERIALIZE_NET_INTEGRAL
-
-    // FIXME: Other sizes not handled for now. Should be easy to add.
-    BOOST_STATIC_ASSERT(sizeof(long long) == 8);
-    template <>
-    struct BinaryOSerializer::Impl<unsigned long long>
-    {
-      static void
-      put(const std::string& name,
-          unsigned long long l, std::ostream&,
-          BinaryOSerializer& s)
-      {
-        union
-        {
-          unsigned long long in;
-          struct { uint32_t high; uint32_t low; } out;
-        } res;
-        res.in = l;
-        s.serialize<uint32_t>(name, res.out.high);
-        s.serialize<uint32_t>(name, res.out.low);
-      }
-    };
 
     /*---------.
     | double.  |

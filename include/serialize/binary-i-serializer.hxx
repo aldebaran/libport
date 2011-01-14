@@ -152,36 +152,28 @@ namespace libport
                                       2, uint16_t);             \
           SERIALIZE_NET_INTEGRAL_CASE(Type, ntohl, Size,        \
                                       4, uint32_t);             \
+          case 8:                                               \
+          {                                                     \
+            union                                               \
+            {                                                   \
+              struct { uint32_t high; uint32_t low; } in;       \
+              unsigned long long out;                           \
+            } res;                                              \
+            res.in.high = s.unserialize<uint32_t>();            \
+            res.in.low = s.unserialize<uint32_t>();             \
+            return res.out;                                     \
+          }                                                     \
           default:                                              \
             unreachable();                                      \
         }                                                       \
       }                                                         \
-    };
+    };                                                          \
 
-    SERIALIZE_NET_INTEGRAL(unsigned int,   size_int_);
-    SERIALIZE_NET_INTEGRAL(unsigned long,  size_long_);
-    SERIALIZE_NET_INTEGRAL(unsigned short, size_short_);
+    SERIALIZE_NET_INTEGRAL(unsigned int,        size_int_);
+    SERIALIZE_NET_INTEGRAL(unsigned long,       size_long_);
+    SERIALIZE_NET_INTEGRAL(unsigned long long,  size_long_long_);
+    SERIALIZE_NET_INTEGRAL(unsigned short,      size_short_);
 #undef SERIALIZE_NET_INTEGRAL
-
-    // FIXME: Other sizes not handled for now. Should be easy to add.
-    BOOST_STATIC_ASSERT(sizeof(long long) == 8);
-    template <>
-    struct BinaryISerializer::Impl<unsigned long long>
-    {
-      static unsigned long long
-        get(const std::string& name, std::istream&,
-            BinaryISerializer& s)
-      {
-        union
-        {
-          struct { uint32_t high; uint32_t low; } in;
-          unsigned long long out;
-        } res;
-        res.in.high = s.unserialize<uint32_t>(name);
-        res.in.low = s.unserialize<uint32_t>(name);
-        return res.out;
-      }
-    };
 
     /*---------.
     | double.  |
