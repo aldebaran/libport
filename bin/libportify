@@ -257,7 +257,8 @@ sub libport_headers ($\$)
    }gxe;
 
   # Prefer aver to other assertion mechanisms.
-  s{<libport/contract.hh>}{<libport/cassert>}g;
+  s{<libport/(assert|contract).hh>}{<libport/cassert>}g;
+  s{<debug/gdebug.hh>}{<libport/debug.hh>}g;
 
   $$contents_ref = $_;
 }
@@ -335,7 +336,8 @@ sub libport_debug ($\$)
   local $_ = $$contents_ref;
 
   # TRACE(0, "foo: " << foo);
-  s{TRACE\s*\((\d),\s*(.*?)\)}
+  # GDEBUG (2, "getting associated content for hash: " << hash);
+  s{(?:GDEBUG|GERROR|GWARN|TRACE)\s*\((\d),\s*($balanced)\)}
    {gdebug(trace_num_to_category($1), to_format($2))}ges;
 
   # DEBUG_LOG("-> Remote") << "askForStreamDestruction (" << cnx_id << ")" << std::endl;
