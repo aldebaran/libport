@@ -16,6 +16,13 @@
 namespace sched
 {
   template <typename T>
+  CoroutineLocalStorage<T>::CoroutineLocalStorage()
+  {
+    add_coroutine_free_hook
+    (boost::bind(&CoroutineLocalStorage<T>::cleanup_, this, _1));
+  }
+
+  template <typename T>
   CoroutineLocalStorage<T>::~CoroutineLocalStorage()
   {
     typename map_type::iterator it = map_.begin();
@@ -35,8 +42,6 @@ namespace sched
     if (it == map_.end())
     {
       T* res = new T;
-      add_coroutine_free_hook
-        (boost::bind(&CoroutineLocalStorage<T>::cleanup_, this, _1));
       map_[token] = res;
       return *res;
     }

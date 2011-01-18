@@ -21,6 +21,7 @@ namespace sched
   class CoroutineLocalStorage
   {
   public:
+    CoroutineLocalStorage();
     ~CoroutineLocalStorage();
     T& get();
     const T& get() const;
