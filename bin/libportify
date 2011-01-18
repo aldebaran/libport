@@ -75,8 +75,8 @@ Display processed files.
 
 Traverse all the DIR and FILE... and process them.
 
-The steps are (starred items are the only one run for foreign
-packages):
+The steps are, in the execution order (starred items are the only ones
+run for foreign packages):
 
 =over 4
 
@@ -107,6 +107,11 @@ Update C<GD_DEBUG> calls.
 =item renamings
 
 Fix names and bad spelling.
+
+=item aver
+
+Convert C<aver(a, b)> to C<aver_eq(a, b) and so forth.  If the
+assertion fails, the values of C<a> and C<b> are reported.
 
 =back
 
@@ -146,42 +151,64 @@ my @step;
 # The current year.
 my $year = 1900 + (localtime)[5];
 
-# A regexp that matches 0 or more repetitions of either a
-# non-backtracking word with no parens/braces, or a braced group, or a
-# parenthezied group.
-#
-# Note that since it is greedy and non-backtracking, it might eat too
-# much.  Use $braced instead.
-my $balanced;
-$balanced =
-  qr{
-       (?:
-          (?> [^(){}\[\]]+ )         # Non-parens/braces without backtracking
-        |
-          \( (??{ $balanced }) \)     # Group with matching parens
-        |
-          \{ (??{ $balanced }) \}     # Group with matching braces
-        |
-          \[ (??{ $balanced }) \]     # Group with matching brackets
-       )*
-    }x;
-
-# Same as above, but allow backtracking on non-braced parts, so that
-# we don't eat places where we want to catch operators.
-my $braced =
-  qr{
-      (?:
-          \{ $balanced \}
-        | \( $balanced \)
-        | \[ $balanced \]
-        | [^(){}\[\]]+        # Non-parens/braces with backtracking
-      )*
-    }x;
-
-
 =head1 FUNCTIONS
 
 =over 4
+
+=item C<aver_name($op)>
+
+Map an operator name to its (alphabetical) suffix for aver.  For
+instance C<==> maps to C<aver_eq>.
+
+=cut
+
+sub aver_name($)
+{
+  my ($op) = @_;
+  my %op =
+    (
+     '!='  => 'ne',
+     '!==' => 'mne',
+     '<'   => 'lt',
+     '<='  => 'le',
+     '=='  => 'eq',
+     '===' => 'meq',
+     '>'   => 'gt',
+     '>='  => 'ge',
+    );
+  print STDERR "$op\n";
+  "aver_" . $op{$op};
+}
+
+=item C<libport_aver ($file, \$contents)>
+
+Convert uses such as C<aver(a == b)> into C<aver_eq(a, b)>.
+
+=cut
+
+sub libport_aver ($\$)
+{
+  my ($file, $contents_ref) = @_;
+
+  local $_ = $$contents_ref;
+
+  # aver_eq is clearer when there are failures.
+  #
+  # Be also woried about precedence.  1 < 2 == true should not be
+  # cut on `<'.  I don't feel like parsing urbi in Perl...
+  s{^(\s*)                 # $1 indentation
+     aver
+     \s*\(
+     ($braced)             # $2 lhs
+     \s*
+     (?<![!=])
+     (<|<=|>|>=|!=|==)     # $3 operator
+     \s*}
+   { $1 . aver_name($3) . '(' . strip ($2) . ", "}gmsex;
+
+  $$contents_ref = $_;
+}
+
 
 =item C<libport_headers ($file, \$contents)>
 
@@ -818,6 +845,7 @@ sub libportify ($$)
   my ($file, $contents) = @_;
   my %step =
     (
+     aver      => \&libport_aver,
      spaces    => \&libport_spaces,
      headers   => \&libport_headers,
      debug     => \&libport_debug,
@@ -966,7 +994,7 @@ sub getopt ()
   unless (@step)
   {
     @step = qw(spaces relicense copyright);
-    push @step, qw(headers debug renamings)
+    push @step, qw(headers debug renamings aver)
       unless $foreign;
   }
   verbose 2, "Steps: @step";
