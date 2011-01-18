@@ -17,6 +17,7 @@
 #include <libport/cstdio>
 #include <libport/debug.hh>
 #include <libport/escape.hh>
+#include <libport/fnmatch.h>
 #include <libport/foreach.hh>
 #include <libport/format.hh>
 #include <libport/ip-semaphore.hh>
@@ -64,12 +65,24 @@ namespace libport
     // Wether categories are enabled by default.
     static bool default_category_state = true;
 
-    categories_type& get_categories()
+
+    // Categories added so far.
+    categories_type&
+    categories()
     {
       static categories_type categories;
       return categories;
     }
 
+    // Patterns added so far.
+    categories_type&
+    patterns()
+    {
+      static categories_type patterns;
+      return patterns;
+    }
+
+    // Maximum category width.
     size_t&
     categories_largest()
     {
@@ -77,59 +90,135 @@ namespace libport
       return res;
     }
 
+    // Add a new category, look if it matches a pattern.
     Symbol
     add_category(Symbol name)
     {
-      if (!mhas(get_categories(), name))
-        get_categories()[name] = default_category_state;
+      foreach (categories_type::value_type& s, patterns())
+      {
+        if (fnmatch(s.first.name_get(), name.name_get()))
+          categories()[name] = s.second;
+      }
+
+      if (!mhas(categories(), name))
+        categories()[name] = default_category_state;
+
       size_t size = name.name_get().size();
       if (categories_largest() < size)
         categories_largest() = size;
+
       return name;
     }
 
-    int enable_category(Symbol name)
+    // Add a new category pattern.
+    int
+    enable_category(Symbol pattern)
     {
-      get_categories()[name] = true;
+      patterns()[pattern] = true;
+      foreach (categories_type::value_type& s, categories())
+      {
+        if (fnmatch(pattern.name_get(), s.first.name_get()))
+          s.second = true;
+      }
+
       return 42;
     }
 
-    int disable_category(Symbol name)
+    // Disable a new category pattern.
+    int
+    disable_category(Symbol pattern)
     {
-      get_categories()[name] = false;
+      patterns()[pattern] = false;
+      foreach (categories_type::value_type& s, categories())
+      {
+        if (fnmatch(pattern.name_get(), s.first.name_get()))
+          s.second = false;
+      }
+
+      return 42;
+    }
+
+    // Enable/Disable a new category pattern with modifier.
+    int
+    auto_category(Symbol pattern)
+    {
+      std::string p = pattern.name_get();
+      char modifier = p[0];
+      if (modifier == '+' || modifier == '-')
+        p = p.substr(1);
+      else
+        modifier = '+';
+      bool value = modifier == '+';
+
+      patterns()[Symbol(p)] = value;
+      foreach (categories_type::value_type& s, categories())
+      {
+        if (fnmatch(p, s.first.name_get()))
+          s.second = value;
+      }
+
       return 42;
     }
 
     bool test_category(Symbol name)
     {
-      return get_categories()[name];
+      return categories()[name];
     }
 
-    static void set_category_state(const char* list, bool state)
+    typedef enum
     {
-      // Set default to !state.
-      debug::default_category_state = !state;
-      // Also set existing to !state
-      foreach(categories_type::value_type& v, get_categories())
-        v.second = !state;
+      ENABLE,
+      DISABLE,
+      AUTO,
+    } category_modifier_type;
+
+    static void set_category_state(const char* list,
+                                   const category_modifier_type state)
+    {
+      if (state == ENABLE)
+        debug::default_category_state = false;
+      else
+        debug::default_category_state = true;
+
+      // Also set existing to default_category_state.
+      foreach(categories_type::value_type& v, categories())
+        v.second = debug::default_category_state;
+
       std::string s(list); // Do not pass temporary to make_tokenizer.
       tokenizer_type t = make_tokenizer(s, ",");
       foreach(const std::string& elem, t)
-        get_categories()[Symbol(elem)] = state;
+      {
+        Symbol pattern(elem);
+        switch(state)
+        {
+          case ENABLE:
+            enable_category(pattern);
+            break;
+          case DISABLE:
+            disable_category(pattern);
+            break;
+          case AUTO:
+            auto_category(pattern);
+            break;
+        }
+      }
     }
   }
-
-
 
   Debug::Debug()
     : locations_(getenv("GD_LOC"))
     , timestamps_(getenv("GD_TIME") || getenv("GD_TIMESTAMP_US"))
   {
-    // Process enabled/disabled categories in environment.
-    if (const char* enablelist = getenv("GD_ENABLE_CATEGORY"))
-      debug::set_category_state(enablelist, true);
-    if (const char* disablelist = getenv("GD_DISABLE_CATEGORY"))
-      debug::set_category_state(disablelist, false);
+    // Process enabled/disabled/auto categories in environment.
+    if (const char* autolist = getenv("GD_CATEGORY"))
+      debug::set_category_state(autolist, debug::AUTO);
+    else
+    {
+      if (const char* enablelist = getenv("GD_ENABLE_CATEGORY"))
+        debug::set_category_state(enablelist, debug::ENABLE);
+      if (const char* disablelist = getenv("GD_DISABLE_CATEGORY"))
+        debug::set_category_state(disablelist, debug::DISABLE);
+    }
 
     if (const char* lvl_c = getenv("GD_LEVEL"))
       filter(lvl_c);
