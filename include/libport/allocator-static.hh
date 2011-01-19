@@ -22,8 +22,13 @@ namespace libport
 
     static int initialize();
 
+    enum
+    {
+      chunk_size = (Size - 1) / sizeof(long long) + 1,
+    };
+
     // The objects memory pool.
-    static char objects_[Size * Max];
+    static long long objects_[chunk_size * Max];
     // The ring of free memory slots indexes.
     static unsigned pointers_[Max];
     // Pointer

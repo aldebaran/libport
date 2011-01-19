@@ -13,6 +13,10 @@
 
 using libport::test_suite;
 
+
+static int init =
+  libport::StaticallyAllocated<4, sizeof(int)>::initialize();
+
 class Int: public libport::StaticallyAllocated<4, sizeof(int)>
 {
 public:
