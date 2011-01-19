@@ -18,6 +18,7 @@ TESTSFLAGS = --log_level=$(LOG_LEVEL)
 
 # Program to check:
 TESTS_BINARIES =                                \
+  tests/libport/allocator-static.cc		\
   tests/libport/asio.cc                         \
   tests/libport/assert.cc                       \
   tests/libport/attributes.cc                   \
