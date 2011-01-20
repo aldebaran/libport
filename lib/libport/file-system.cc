@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -13,6 +13,7 @@
  ** \brief Implementation for file-system.hh
  */
 
+#include <libport/cstdio>
 #include <stdexcept>
 #include <fstream>
 #include <libport/file-system.hh>
@@ -50,10 +51,10 @@ namespace libport
     if (!s.good())
       throw std::runtime_error("Failed to open " + n +" for reading");
     std::string res;
-    char buf[BUFSIZ + 1];
+    char buf[LIBPORT_BUFSIZ];
     while (!s.eof())
     {
-      s.read(buf, sizeof buf - 1);
+      s.read(buf, sizeof buf);
       res += std::string(buf, s.gcount());
     }
     return res;

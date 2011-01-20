@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -15,6 +15,11 @@
 
 namespace libport
 {
+
+  /*-----------.
+  | IOStream.  |
+  `-----------*/
+
   IOStream::IOStream(StreamBuffer* buffer)
     : std::iostream(buffer_ = buffer)
   {}
@@ -25,20 +30,24 @@ namespace libport
     delete buffer_;
   }
 
+
+  /*---------------.
+  | StreamBuffer.  |
+  `---------------*/
   StreamBuffer::StreamBuffer()
     : ibuf_()
     , obuf_()
   {
     setg(ibuf_, ibuf_, ibuf_);
-    setp(obuf_, obuf_ + BUFSIZ - 1);
+    setp(obuf_, obuf_ + LIBPORT_BUFSIZ - 1);
   }
 
   StreamBuffer::~StreamBuffer()
-  {  }
+  {}
 
   int StreamBuffer::underflow()
   {
-    ssize_t c = read(ibuf_, BUFSIZ);
+    ssize_t c = read(ibuf_, LIBPORT_BUFSIZ);
     if (c == 0)
     {
       setg(ibuf_, ibuf_, ibuf_);
@@ -50,8 +59,8 @@ namespace libport
 
   int StreamBuffer::overflow(int c)
   {
-    obuf_[BUFSIZ - 1] = static_cast<char>(c);
-    setp(obuf_ + BUFSIZ, 0);
+    obuf_[LIBPORT_BUFSIZ - 1] = static_cast<char>(c);
+    setp(obuf_ + LIBPORT_BUFSIZ, 0);
     sync();
     return EOF + 1; // "A value different from EOF"
   }
@@ -61,7 +70,7 @@ namespace libport
     if (pptr() - obuf_)
     {
       write(obuf_, pptr() - obuf_);
-      setp(obuf_, obuf_ + BUFSIZ - 1);
+      setp(obuf_, obuf_ + LIBPORT_BUFSIZ - 1);
     }
     return 0; // Success
   }

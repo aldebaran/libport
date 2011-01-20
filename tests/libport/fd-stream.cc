@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -92,7 +92,7 @@ put(char c, int fd)
 static std::string
 get(int fd)
 {
-  char buf[BUFSIZ];
+  char buf[LIBPORT_BUFSIZ];
   return std::string(buf, read(fd, buf, sizeof buf));
 }
 
@@ -157,7 +157,7 @@ static void thread_write(int fd, int size)
 static void
 fd_read_jumbo(FdStream*& stream, int fd)
 {
-  static const int size = BUFSIZ * 3 / 2;
+  static const int size = LIBPORT_BUFSIZ * 3 / 2;
 
   pthread_t thread = libport::startThread(boost::bind(thread_write, fd, size));
 
@@ -185,7 +185,7 @@ thread_write_stream(FdStream* stream, int size)
 static void
 fd_write_jumbo(FdStream*& stream, int fd)
 {
-  static const int size = BUFSIZ * 3 / 2;
+  static const int size = LIBPORT_BUFSIZ * 3 / 2;
 
   stream->own_fd(true);
   libport::startThread(boost::bind(thread_write_stream, stream, size));

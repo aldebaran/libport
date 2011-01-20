@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010, 2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -51,8 +51,7 @@ dlsym(RTLD_HANDLE module, const char* name)
 static inline const char*
 dlerror(DWORD err = GetLastError())
 {
-  static char buf[1024];
-
+  static char buf[BUFSIZ];
   FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                 0, err, 0,
                 (LPTSTR)buf, sizeof buf,

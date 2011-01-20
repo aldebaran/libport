@@ -98,7 +98,7 @@ namespace libport
     {
       while (true)
       {
-        static char buf[BUFSIZ];
+        static char buf[LIBPORT_BUFSIZ];
         int r = read(data.fd, buf, sizeof buf);
         if (r < 0)
           FAIL("read error on fd = %s", data.fd);
@@ -193,7 +193,7 @@ namespace libport
   std::string
   read_fd(int fd)
   {
-    char buf[BUFSIZ];
+    char buf[LIBPORT_BUFSIZ];
     size_t len = read_fd(fd, buf, sizeof buf);
     return std::string(buf, len);
   }

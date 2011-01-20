@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -56,7 +56,7 @@ namespace libport
 `-------*/
 
 #ifdef WIN32
-# include <libport/cstdio> // BUFSIZ
+# include <libport/cstdio> // LIBPORT_BUFSIZ
 # include <libport/fcntl.h> // O_BINARY
 extern "C"
 {
@@ -64,7 +64,7 @@ extern "C"
   pipe(int pipefd[2])
   {
     // fds, memory to reserve, mode
-    return _pipe(pipefd, BUFSIZ, _O_BINARY);
+    return _pipe(pipefd, LIBPORT_BUFSIZ, _O_BINARY);
   }
 }
 #endif

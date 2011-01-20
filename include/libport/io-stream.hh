@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -49,8 +49,8 @@ namespace libport
     virtual int sync();
 
   private:
-    char ibuf_[BUFSIZ];
-    char obuf_[BUFSIZ];
+    char ibuf_[LIBPORT_BUFSIZ];
+    char obuf_[LIBPORT_BUFSIZ];
   };
 
 }
