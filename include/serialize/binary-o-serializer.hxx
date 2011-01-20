@@ -120,7 +120,7 @@ namespace libport
           BinaryOSerializer& s)                                 \
       {                                                         \
         GD_CATEGORY(Serialize.Output.Binary);                   \
-        GD_FINFO_DUMP("Value: %s", i);                          \
+        GD_FINFO_DUMP("Value:      %x", i);                     \
         switch (sizeof(Type))                                   \
         {                                                       \
           case 2:                                               \
