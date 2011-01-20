@@ -57,8 +57,8 @@ static void test()
 
   BOOST_CHECK_THROW(new Int, std::bad_alloc);
 
-  delete b;
-  b = new Int(4);
+  BOOST_CHECK_NO_THROW(delete b);
+  BOOST_CHECK_NO_THROW(b = new Int(4));
 
   BOOST_CHECK_EQUAL(*a, 0);
   BOOST_CHECK_EQUAL(*b, 4);

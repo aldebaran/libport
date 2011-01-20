@@ -11,13 +11,15 @@
 #ifndef ALLOCATOR_STATIC_HH
 # define ALLOCATOR_STATIC_HH
 
+# include <cstdlib>
+
 namespace libport
 {
-  template <unsigned Max, unsigned Size>
+  template <unsigned Max, size_t Size>
   class StaticallyAllocated
   {
   public:
-    void* operator new(unsigned int);
+    void* operator new(size_t);
     void operator delete(void* obj);
 
     static int initialize();

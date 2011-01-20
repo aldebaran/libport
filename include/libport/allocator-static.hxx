@@ -17,14 +17,15 @@
 
 namespace libport
 {
-  template <unsigned Max, unsigned Size>
+  template <unsigned Max, size_t Size>
   void*
-  StaticallyAllocated<Max, Size>::operator new(unsigned int size)
+  StaticallyAllocated<Max, Size>::operator new(size_t size)
   {
     (void)size;
 
     // Allocations exceeds the chunk size.
     assert_le(size / sizeof(long long), Size);
+
     if (size_ == Max)
       // Too many objects allocated.
       throw std::bad_alloc();
@@ -35,7 +36,7 @@ namespace libport
     return res;
   }
 
-  template <unsigned Max, unsigned Size>
+  template <unsigned Max, size_t Size>
   void
   StaticallyAllocated<Max, Size>::operator delete(void* obj)
   {
@@ -49,23 +50,28 @@ namespace libport
     size_--;
   }
 
-  template <unsigned Max, unsigned Size>
+  template <unsigned Max, size_t Size>
   int
   StaticallyAllocated<Max, Size>::initialize()
   {
-    for (unsigned i = 0; i < Max; ++i)
+    for (size_t i = 0; i < Max; ++i)
       pointers_[i] = i;
     where_ = size_ = 0;
     return 0;
   }
 
-  template <unsigned Max, unsigned Size>
-  long long StaticallyAllocated<Max, Size>::objects_[StaticallyAllocated<Max, Size>::chunk_size * Max];
-  template <unsigned Max, unsigned Size>
+  template <unsigned Max, size_t Size>
+  long long
+  StaticallyAllocated<Max, Size>::objects_
+    [StaticallyAllocated<Max, Size>::chunk_size * Max];
+
+  template <unsigned Max, size_t Size>
   unsigned StaticallyAllocated<Max, Size>::pointers_[Max];
-  template <unsigned Max, unsigned Size>
+
+  template <unsigned Max, size_t Size>
   unsigned StaticallyAllocated<Max, Size>::where_;
-  template <unsigned Max, unsigned Size>
+
+  template <unsigned Max, size_t Size>
   unsigned StaticallyAllocated<Max, Size>::size_;
 }
 
