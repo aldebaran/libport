@@ -34,7 +34,6 @@ add_coroutine_## EVENT ##_hook(coroutine_hook hook)                     \
                                                                         \
   coroutine_## EVENT ##_hook = &handle_coroutine_## EVENT ##_hooks;     \
   coroutine_## EVENT ##_hooks().push_back(hook);                        \
-  std::cerr << coroutine_## EVENT ##_hooks().size() << std::endl;       \
 }                                                                       \
                                                                         \
 static                                                                  \
