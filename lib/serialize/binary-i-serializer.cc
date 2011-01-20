@@ -28,10 +28,10 @@ namespace libport
       size_int_ = unserialize<unsigned char>("int size");
       size_long_ = unserialize<unsigned char>("long size");
       size_long_long_ = unserialize<unsigned char>("long long size");
-      GD_FINFO_DEBUG("short     size: %d", size_short_);
-      GD_FINFO_DEBUG("int       size: %d", size_int_);
-      GD_FINFO_DEBUG("long      size: %d", size_long_);
-      GD_FINFO_DEBUG("long long size: %d", size_long_long_);
+      GD_FINFO_DEBUG("short     size: %d", (int) size_short_);
+      GD_FINFO_DEBUG("int       size: %d", (int) size_int_);
+      GD_FINFO_DEBUG("long      size: %d", (int) size_long_);
+      GD_FINFO_DEBUG("long long size: %d", (int) size_long_long_);
     }
 
     BinaryISerializer::~BinaryISerializer()

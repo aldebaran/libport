@@ -118,11 +118,14 @@ namespace libport
                                      LSize, LType)              \
     case LSize:                                                 \
     {                                                           \
-      GD_CATEGORY(Serialize.Binary);                            \
+      GD_CATEGORY(Serialize.Input.Binary);                      \
                                                                 \
       LType val;                                                \
       input.read(reinterpret_cast<char*>(&val), s.Size);        \
+      GD_FINFO_DUMP("Normalized: 0x%x", val);                   \
       res = val = Function(val);                                \
+      GD_FINFO_DUMP("Long Value: 0x%x", res);                   \
+      GD_FINFO_DUMP("Value:      0x%x (%d)", val, val);         \
       if (val != res)                                           \
         throw Exception(str(error                               \
                             % static_cast<int>(s.Size)          \

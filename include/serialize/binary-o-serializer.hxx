@@ -120,7 +120,7 @@ namespace libport
           BinaryOSerializer& s)                                 \
       {                                                         \
         GD_CATEGORY(Serialize.Output.Binary);                   \
-        GD_FINFO_DUMP("Value:      %x", i);                     \
+        GD_FINFO_DUMP("Value:      0x%x (%d)", i, i);           \
         switch (sizeof(Type))                                   \
         {                                                       \
           case 2:                                               \
@@ -144,7 +144,7 @@ namespace libport
           default:                                              \
             unreachable();                                      \
         }                                                       \
-        GD_FINFO_DUMP("Normalized: %x", i);                     \
+        GD_FINFO_DUMP("Normalized: 0x%x", i);                   \
         write_(output, i);                                      \
       }                                                         \
     }
