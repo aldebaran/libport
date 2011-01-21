@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -26,10 +26,39 @@
 | Ufloat support.  |
 `-----------------*/
 
+  // numeric_cast must be hidden in the library as it uses Boost.
+  //
+  // Exporting template specializations does not seem to work the same
+  // way bw MSVC and GCC.  With GCC it suffices to export the template
+  // itself.  With MSVC we need to export explicitly all the
+  // instantiations, but not the template.  Weirdly enough MSVC does
+  // not see an explicit instantiation in this case, but truly a
+  // declaration (adding extern does not seem to be useful).  But GCC
+  // sees an explicit instantiation in this case, which is logical,
+  // but of course fails (the true instantiation is in ufloat.cc, and
+  // anyway the template definition is there too).
+  //
+  // So I could not find something to please both.
+
+  // Also used in libport/ufloat.cc and ulong-fixed-point.hh
+# define UFLOAT_CASTS                           \
+                                                \
+  UFLOAT_CAST(char);                            \
+  UFLOAT_CAST(unsigned char);                   \
+  UFLOAT_CAST(short);                           \
+  UFLOAT_CAST(unsigned short);                  \
+  UFLOAT_CAST(int);                             \
+  UFLOAT_CAST(unsigned int);                    \
+  UFLOAT_CAST(long);                            \
+  UFLOAT_CAST(unsigned long);                   \
+  UFLOAT_CAST(long long);                       \
+  UFLOAT_CAST(unsigned long long);
+
 # ifdef LIBPORT_URBI_UFLOAT_FLOAT
 namespace libport
 {
   typedef float ufloat;
+  typedef ufloat ufloat_native_type;
 }
 # endif
 
@@ -37,12 +66,18 @@ namespace libport
 namespace libport
 {
   typedef double ufloat;
+  typedef ufloat ufloat_native_type;
 #  define UFLT_EPSILON DBL_EPSILON
 }
 # endif
 
 # ifdef LIBPORT_URBI_UFLOAT_LONG
 #  include <libport/ulong-fixed-point.hh>
+namespace libport
+{
+  typedef ULongFixedPoint<16> ufloat;
+  typedef float ufloat_native_type;
+}
 # endif
 
 # ifdef LIBPORT_URBI_UFLOAT_LONG_LONG
@@ -118,33 +153,6 @@ namespace libport
     virtual const char *what() const throw();
   };
 
-  // numeric_cast must be hidden in the library as it uses Boost.
-  //
-  // Exporting template specializations does not seem to work the same
-  // way bw MSVC and GCC.  With GCC it suffices to export the template
-  // itself.  With MSVC we need to export explicitly all the
-  // instantiations, but not the template.  Weirdly enough MSVC does
-  // not see an explicit instantiation in this case, but truly a
-  // declaration (adding extern does not seem to be useful).  But GCC
-  // sees an explicit instantiation in this case, which is logical,
-  // but of course fails (the true instantiation is in ufloat.cc, and
-  // anyway the template definition is there too).
-  //
-  // So I could not find something to please both.
-
-  // Also used in libport/ufloat.cc.
-# define UFLOAT_CASTS                           \
-                                                \
-  UFLOAT_CAST(char);                            \
-  UFLOAT_CAST(unsigned char);                   \
-  UFLOAT_CAST(short);                           \
-  UFLOAT_CAST(unsigned short);                  \
-  UFLOAT_CAST(int);                             \
-  UFLOAT_CAST(unsigned int);                    \
-  UFLOAT_CAST(long);                            \
-  UFLOAT_CAST(unsigned long);                   \
-  UFLOAT_CAST(long long);                       \
-  UFLOAT_CAST(unsigned long long);
 
 # ifdef _MSC_VER
 
