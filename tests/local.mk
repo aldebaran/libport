@@ -49,3 +49,23 @@ endif
 
 #$(top_builddir)/build-aux/test.sh: $(top_srcdir)/build-aux/test.sh.in
 #	cd $(top_builddir) && ./config.status build-aux/test.sh
+
+## ------------- ##
+## Bench suite.  ##
+## ------------- ##
+
+BENCHES = tests/libport/utime.cc
+BENCH_LOGS = $(BENCHES:.cc=.bench)
+AM_BENCHFLAGS = --hook-module $(BENCH_MALLOC_HOOK) --format xls
+include $(top_srcdir)/build-aux/make/bench.mk
+
+bench: $(BENCH_MALLOC_HOOK)
+	$(MAKE) $(AM_MAKEFLAGS) LAZY_TEST_SUITE=$(LAZY_BENCH_SUITE) 	 \
+	  TESTS='$(BENCHES)' BENCHFLAGS='$(AM_BENCHFLAGS) $(BENCHFLAGS)' \
+	  $(BENCH_LOGS)
+	$(MAKE) $(AM_MAKEFLAGS) BENCHFLAGS='$(AM_BENCHFLAGS) $(BENCHFLAGS)' \
+	  TESTS='$(BENCHES)' $(BENCH_LOG_FILE)
+
+%.bench: %$(EXEEXT)
+	@$(BENCH_SCRIPT) -Q $(BENCHFLAGS) $< > $@.tmp
+	mv $@.tmp $@
