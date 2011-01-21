@@ -193,6 +193,18 @@ namespace libport
         return res;
       }
     };
+    template <>
+    struct BinaryISerializer::Impl<float>
+    {
+      static float get(const std::string&, std::istream& input,
+                        BinaryISerializer&)
+      {
+        // FIXME: non-portable
+        float res;
+        input.read(reinterpret_cast<char*>(&res), sizeof(float));
+        return res;
+      }
+    };
 
 /// Define the handling of To using the implementation for From.
 #define BOUNCE(From, To)                                                \

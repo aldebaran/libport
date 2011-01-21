@@ -170,6 +170,17 @@ namespace libport
       }
     };
 
+    template <>
+    struct BinaryOSerializer::Impl<float>
+    {
+      static void put(const std::string&, float d, std::ostream& output,
+                      BinaryOSerializer&)
+      {
+        // FIXME: non-portable
+        write_(output, d);
+      }
+    };
+
 #define BOUNCE(From, To)                                                \
     template <>                                                         \
     struct BinaryOSerializer::Impl<From>                                \
