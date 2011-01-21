@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -26,6 +26,9 @@
 
 namespace libport
 {
+  // Check Symbol is no more than a POD.
+  BOOST_STATIC_ASSERT(sizeof(Symbol) == sizeof(void*));
+
   //<<
   inline const std::string&
   Symbol::name_get () const
