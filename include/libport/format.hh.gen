@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright (C) 2009, 2010, Gostai S.A.S.
+# Copyright (C) 2009, 2010, 2011, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -28,13 +28,25 @@ namespace libport
   LIBPORT_API
   boost::format format_get(const std::string& s);
 
+  /// Report and rethrow a failure in Boost format.
+  /// Not inline to break dependencies bw Libport.Debug and Libport.Format.
+  LIBPORT_API ATTRIBUTE_NORETURN
+  void format_failure(const std::string& fmt, const std::exception& e);
+
   // Also accept 0-ary format strings.  Don't return it directly,
   // still consult boost::format to make sure there are no trailing
   // %s.
   inline
   std::string format(const std::string& fmt)
   {
-    return str(format_get(fmt));
+    try
+    {
+      return str(format_get(fmt));
+    }
+    catch (const std::exception& e)
+    {
+      format_failure(fmt, e);
+    }
   }
 ''')
 
@@ -52,7 +64,14 @@ for n in range(1, 9):
   inline
   std::string format(const std::string& fmt, %(formals)s)
   {
-    return str(format_get(fmt) %% %(format)s);
+    try
+    {
+      return str(format_get(fmt) %% %(format)s);
+    }
+    catch (const std::exception& e)
+    {
+      format_failure(fmt, e);
+    }
   }
 ''' % a)
 

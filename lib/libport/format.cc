@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010, 2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -9,6 +9,7 @@
  */
 
 #include <libport/format.hh>
+#include <libport/debug.hh>
 #include <boost/unordered_map.hpp>
 
 namespace libport
@@ -25,6 +26,15 @@ namespace libport
       return map[s].parse(s);
     else
       return i->second;
+  }
+
+  LIBPORT_API
+  void
+  format_failure(const std::string& fmt, const std::exception& e)
+  {
+    GD_CATEGORY(Libport.Format);
+    GD_FERROR("format: \"%s\": %s", fmt, e.what());
+    throw;
   }
 
 }
