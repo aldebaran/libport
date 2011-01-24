@@ -13,7 +13,7 @@
 
 using libport::test_suite;
 
-class Int: public libport::StaticallyAllocated<4, sizeof(int)>
+class Int: public libport::StaticallyAllocated<Int, 4>
 {
 public:
   Int(int i = 0)
@@ -35,9 +35,13 @@ public:
     return i_ == o;
   }
 
+  static const size_t allocator_static_max_size;
+
 private:
   int i_;
 };
+
+const size_t Int::allocator_static_max_size = sizeof(Int);
 
 static void test()
 {

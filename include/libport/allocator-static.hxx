@@ -17,9 +17,9 @@
 
 namespace libport
 {
-  template <unsigned Chunk, size_t Size>
+  template <typename Exact,unsigned Chunk>
   void*
-  StaticallyAllocated<Chunk, Size>::operator new(size_t size)
+  StaticallyAllocated<Exact, Chunk>::operator new(size_t size)
   {
     (void)size;
 
@@ -37,9 +37,9 @@ namespace libport
     return res;
   }
 
-  template <unsigned Chunk, size_t Size>
+  template <typename Exact, unsigned Chunk>
   void
-  StaticallyAllocated<Chunk, Size>::operator delete(void* obj)
+  StaticallyAllocated<Exact, Chunk>::operator delete(void* obj)
   {
     unsigned w = where_ - size_;
     // Fix overflow
@@ -49,31 +49,33 @@ namespace libport
     size_--;
   }
 
-  template <unsigned Chunk, size_t Size>
+  template <typename Exact, unsigned Chunk>
   void
-  StaticallyAllocated<Chunk, Size>::_grow()
+  StaticallyAllocated<Exact, Chunk>::_grow()
   {
-    char* pool = reinterpret_cast<char*>(malloc(Chunk * Size));
+    char* pool = reinterpret_cast<char*>
+      (malloc(Chunk * Exact::allocator_static_max_size));
     if (!pool)
       throw std::bad_alloc();
     pointers_.resize(storage_size_ + Chunk);
     for (unsigned i = 0; i < Chunk; ++i)
-      pointers_[storage_size_ + i] = pool + i * Size;
+      pointers_[storage_size_ + i] =
+        pool + i * Exact::allocator_static_max_size;
     where_ = storage_size_;
     storage_size_ += Chunk;
   }
 
-  template <unsigned Chunk, size_t Size>
-  std::vector<void*> StaticallyAllocated<Chunk, Size>::pointers_;
+  template <typename Exact, unsigned Chunk>
+  std::vector<void*> StaticallyAllocated<Exact, Chunk>::pointers_;
 
-  template <unsigned Chunk, size_t Size>
-  unsigned StaticallyAllocated<Chunk, Size>::where_ = 0;
+  template <typename Exact, unsigned Chunk>
+  unsigned StaticallyAllocated<Exact, Chunk>::where_ = 0;
 
-  template <unsigned Chunk, size_t Size>
-  unsigned StaticallyAllocated<Chunk, Size>::size_ = 0;
+  template <typename Exact, unsigned Chunk>
+  unsigned StaticallyAllocated<Exact, Chunk>::size_ = 0;
 
-  template <unsigned Chunk, size_t Size>
-  unsigned StaticallyAllocated<Chunk, Size>::storage_size_ = 0;
+  template <typename Exact, unsigned Chunk>
+  unsigned StaticallyAllocated<Exact, Chunk>::storage_size_ = 0;
 }
 
 #endif

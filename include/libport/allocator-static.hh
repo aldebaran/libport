@@ -16,7 +16,7 @@
 
 namespace libport
 {
-  template <unsigned Chunk, size_t Size>
+  template <typename Exact, unsigned Chunk>
   class StaticallyAllocated
   {
   public:
