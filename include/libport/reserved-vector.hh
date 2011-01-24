@@ -15,14 +15,19 @@
 
 namespace libport
 {
+  template<typename T, int R>
+  class ReservedVectorAllocator;
+
   /** Vector class that reserves \b R elements in constructor to improve
     * performances.
     */
   template<class T, int R=4>
   class ReservedVector
-    : public std::vector<T>
+    : public std::vector<T, ReservedVectorAllocator<T, R> >
   {
   public:
+    typedef ReservedVector<T, R> self_type;
+    typedef std::vector<T, ReservedVectorAllocator<T, R> > super_type;
     ReservedVector();
     ReservedVector(const self_type& other);
 
