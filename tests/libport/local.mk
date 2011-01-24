@@ -56,6 +56,7 @@ TESTS_BINARIES =                                \
   tests/libport/preproc.cc                      \
   tests/libport/pthread.cc                      \
   tests/libport/read-stdin.cc                   \
+  tests/libport/reserved-vector.cc		\
   tests/libport/safe-container.cc               \
   tests/libport/semaphore.cc                    \
   tests/libport/separate.cc                     \
