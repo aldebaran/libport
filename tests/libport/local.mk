@@ -40,6 +40,7 @@ TESTS_BINARIES =                                \
   tests/libport/fifo.cc                         \
   tests/libport/file-library.cc                 \
   tests/libport/finally.cc                      \
+  tests/libport/fnmatch.cc                      \
   tests/libport/foreach.cc                      \
   tests/libport/format.cc	                \
   tests/libport/has-if.cc                       \
