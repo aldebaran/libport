@@ -30,9 +30,10 @@ namespace libport
   template<typename I1, typename I2>
   inline
   ReservedVector<T, R>::ReservedVector(I1 b, I2 e)
-    : std::vector<T>(b, e)
+    : super_type()
   {
     this->reserve(R);
+    insert(this->end(), b, e);
   }
 
   template<class T, int R>
