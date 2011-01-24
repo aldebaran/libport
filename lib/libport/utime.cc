@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -9,6 +9,8 @@
  */
 
 #include <libport/config.h>
+#include <libport/detect-win32.h>
+#include <libport/sys/time.h>
 #include <libport/utime.hh>
 
 namespace libport
@@ -28,10 +30,89 @@ namespace libport
     reference = ref;
   }
 
+#if defined WIN32 || defined LIBPORT_WIN32
+
+# include <iostream>
+# include <libport/windows.hh>
+
+  namespace libport
+  {
+
+    namespace
+    {
+      static
+      inline
+      __int64
+      get_performance_counter()
+      {
+        LARGE_INTEGER res;
+        QueryPerformanceCounter(&res);
+        return *reinterpret_cast<const __int64*>(&res);
+      }
+
+      static
+      inline
+      __int64
+      get_performance_frequency()
+      {
+        LARGE_INTEGER res;
+        QueryPerformanceFrequency(&res);
+        return *reinterpret_cast<const __int64*>(&res);
+      }
+
+    }
+
+    static
+    inline
+    __int64
+    get_performance_frequency()
+    {
+      LARGE_INTEGER res;
+      inline
+        __int64
+        get_performance_frequency()
+      {
+        LARGE_INTEGER res;
+        QueryPerformanceFrequency(&res);
+        return *reinterpret_cast<const __int64*>(&res);
+      }
+
+    }
+
+    utime_t
+    utime()
+    {
+      // NOTE: casting an __int64 in a LARGE_INTEGER is "safe"
+      // according to MSDN.
+      static __int64 freq = get_performance_frequency();
+      __int64 now = get_performance_counter();
+      static __int64 base = now;
+
+      // Beware that this formula might cause an overflow, because of
+      // the multiplication before the division: (utime_t) ((now -
+      // base) * 1000000LL) / freq; Of course inverting the
+      // multiplication and the division is not a solution because of
+      // the precision loss.
+
+      // One solution: splitting the operation:
+      utime_t high =  (now - base)              / freq * 1000000LL;
+      utime_t low = (((now - base) * 1000000LL) / freq) % 1000000LL;
+      return high + low;
+    }
+  }
+
+
+#else
+
+# include <libport/ctime>
+
   utime_t
   utime()
   {
-    return (boost::posix_time::microsec_clock::universal_time()
-            - utime_reference()).total_microseconds();
+    timeval tv;
+    gettimeofday(&tv, 0);
+    static timeval t0 = tv;
+    return timeval_to_utime(tv - t0);
   }
+#endif
 }
