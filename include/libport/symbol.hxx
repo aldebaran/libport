@@ -26,9 +26,6 @@
 
 namespace libport
 {
-  // Check Symbol is no more than a POD.
-  BOOST_STATIC_ASSERT(sizeof(Symbol) == sizeof(void*));
-
   //<<
   inline const std::string&
   Symbol::name_get () const
