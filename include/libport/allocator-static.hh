@@ -11,32 +11,29 @@
 #ifndef ALLOCATOR_STATIC_HH
 # define ALLOCATOR_STATIC_HH
 
+# include <vector>
 # include <cstdlib>
 
 namespace libport
 {
-  template <unsigned Max, size_t Size>
+  template <unsigned Chunk, size_t Size>
   class StaticallyAllocated
   {
   public:
     void* operator new(size_t);
     void operator delete(void* obj);
 
-    static int initialize();
-
-    enum
-    {
-      chunk_size = (Size - 1) / sizeof(long long) + 1,
-    };
-
-    // The objects memory pool.
-    static long long objects_[chunk_size * Max];
-    // The ring of free memory slots indexes.
-    static unsigned pointers_[Max];
+  private:
+    // Increase the storage size by Chunk objects.
+    static void _grow();
+    // The ring of free memory slots.
+    static std::vector<void*> pointers_;
     // Pointer
     static unsigned where_;
     // Number of objects currently allocated.
     static unsigned size_;
+    // Number of objects slots available.
+    static unsigned storage_size_;
   };
 }
 

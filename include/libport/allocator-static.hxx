@@ -17,62 +17,63 @@
 
 namespace libport
 {
-  template <unsigned Max, size_t Size>
+  template <unsigned Chunk, size_t Size>
   void*
-  StaticallyAllocated<Max, Size>::operator new(size_t size)
+  StaticallyAllocated<Chunk, Size>::operator new(size_t size)
   {
     (void)size;
 
     // Allocations exceeds the chunk size.
     assert_le(size / sizeof(long long), Size);
 
-    if (size_ == Max)
-      // Too many objects allocated.
-      throw std::bad_alloc();
+    if (size_ == storage_size_)
+      _grow();
+    // Allocations exceeds the chunk size.
+    assert_le(size_, storage_size_);
 
     size_++;
-    void* res = &objects_[pointers_[where_] * chunk_size];
-    where_ = (where_ + 1) % Max;
+    void* res = pointers_[where_];
+    where_ = (where_ + 1) % storage_size_;
     return res;
   }
 
-  template <unsigned Max, size_t Size>
+  template <unsigned Chunk, size_t Size>
   void
-  StaticallyAllocated<Max, Size>::operator delete(void* obj)
+  StaticallyAllocated<Chunk, Size>::operator delete(void* obj)
   {
-    assert_ne(size_, 0u);
-    unsigned n = ((long long*)obj - (long long*)&objects_) / chunk_size;
     unsigned w = where_ - size_;
     // Fix overflow
-    if (w > Max)
-      w += Max;
-    pointers_[w] = n;
+    if (w > storage_size_)
+      w += storage_size_;
+    pointers_[w] = obj;
     size_--;
   }
 
-  template <unsigned Max, size_t Size>
-  int
-  StaticallyAllocated<Max, Size>::initialize()
+  template <unsigned Chunk, size_t Size>
+  void
+  StaticallyAllocated<Chunk, Size>::_grow()
   {
-    for (size_t i = 0; i < Max; ++i)
-      pointers_[i] = i;
-    where_ = size_ = 0;
-    return 0;
+    char* pool = reinterpret_cast<char*>(malloc(Chunk * Size));
+    if (!pool)
+      throw std::bad_alloc();
+    pointers_.resize(storage_size_ + Chunk);
+    for (unsigned i = 0; i < Chunk; ++i)
+      pointers_[storage_size_ + i] = pool + i * Size;
+    where_ = storage_size_;
+    storage_size_ += Chunk;
   }
 
-  template <unsigned Max, size_t Size>
-  long long
-  StaticallyAllocated<Max, Size>::objects_
-    [StaticallyAllocated<Max, Size>::chunk_size * Max];
+  template <unsigned Chunk, size_t Size>
+  std::vector<void*> StaticallyAllocated<Chunk, Size>::pointers_;
 
-  template <unsigned Max, size_t Size>
-  unsigned StaticallyAllocated<Max, Size>::pointers_[Max];
+  template <unsigned Chunk, size_t Size>
+  unsigned StaticallyAllocated<Chunk, Size>::where_ = 0;
 
-  template <unsigned Max, size_t Size>
-  unsigned StaticallyAllocated<Max, Size>::where_;
+  template <unsigned Chunk, size_t Size>
+  unsigned StaticallyAllocated<Chunk, Size>::size_ = 0;
 
-  template <unsigned Max, size_t Size>
-  unsigned StaticallyAllocated<Max, Size>::size_;
+  template <unsigned Chunk, size_t Size>
+  unsigned StaticallyAllocated<Chunk, Size>::storage_size_ = 0;
 }
 
 #endif

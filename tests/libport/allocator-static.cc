@@ -13,10 +13,6 @@
 
 using libport::test_suite;
 
-
-static int init =
-  libport::StaticallyAllocated<4, sizeof(int)>::initialize();
-
 class Int: public libport::StaticallyAllocated<4, sizeof(int)>
 {
 public:
@@ -49,37 +45,55 @@ static void test()
   Int* b = new Int(1);
   Int* c = new Int(2);
   Int* d = new Int(3);
+  Int* e = new Int(4);
+  Int* f = new Int(5);
+  Int* g = new Int(6);
+  Int* h = new Int(7);
 
   BOOST_CHECK_EQUAL(*a, 0);
   BOOST_CHECK_EQUAL(*b, 1);
   BOOST_CHECK_EQUAL(*c, 2);
   BOOST_CHECK_EQUAL(*d, 3);
-
-  BOOST_CHECK_THROW(new Int, std::bad_alloc);
+  BOOST_CHECK_EQUAL(*e, 4);
+  BOOST_CHECK_EQUAL(*f, 5);
+  BOOST_CHECK_EQUAL(*g, 6);
+  BOOST_CHECK_EQUAL(*h, 7);
 
   BOOST_CHECK_NO_THROW(delete b);
-  BOOST_CHECK_NO_THROW(b = new Int(4));
+  BOOST_CHECK_NO_THROW(b = new Int(8));
 
   BOOST_CHECK_EQUAL(*a, 0);
-  BOOST_CHECK_EQUAL(*b, 4);
+  BOOST_CHECK_EQUAL(*b, 8);
   BOOST_CHECK_EQUAL(*c, 2);
   BOOST_CHECK_EQUAL(*d, 3);
+  BOOST_CHECK_EQUAL(*e, 4);
+  BOOST_CHECK_EQUAL(*f, 5);
+  BOOST_CHECK_EQUAL(*g, 6);
+  BOOST_CHECK_EQUAL(*h, 7);
 
   delete a;
   delete c;
 
-  c = new Int(6);
-  a = new Int(5);
+  c = new Int(9);
+  a = new Int(10);
 
-  BOOST_CHECK_EQUAL(*a, 5);
-  BOOST_CHECK_EQUAL(*b, 4);
-  BOOST_CHECK_EQUAL(*c, 6);
+  BOOST_CHECK_EQUAL(*a, 10);
+  BOOST_CHECK_EQUAL(*b, 8);
+  BOOST_CHECK_EQUAL(*c, 9);
   BOOST_CHECK_EQUAL(*d, 3);
+  BOOST_CHECK_EQUAL(*e, 4);
+  BOOST_CHECK_EQUAL(*f, 5);
+  BOOST_CHECK_EQUAL(*g, 6);
+  BOOST_CHECK_EQUAL(*h, 7);
 
   delete a;
   delete b;
   delete c;
   delete d;
+  delete e;
+  delete f;
+  delete g;
+  delete h;
 }
 
 test_suite*
