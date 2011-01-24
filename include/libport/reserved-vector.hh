@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -24,6 +24,7 @@ namespace libport
   {
   public:
     ReservedVector();
+    ReservedVector(const self_type& other);
 
     template<typename I1, typename I2>
     ReservedVector(I1 b, I2 e);
