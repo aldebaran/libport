@@ -8,6 +8,8 @@
  * See the LICENSE file for more information.
  */
 
+#include <libport/cassert>
+
 namespace libport
 {
   template<class T, int R>
