@@ -68,15 +68,8 @@ namespace libport
     get_performance_frequency()
     {
       LARGE_INTEGER res;
-      inline
-        __int64
-        get_performance_frequency()
-      {
-        LARGE_INTEGER res;
-        QueryPerformanceFrequency(&res);
-        return *reinterpret_cast<const __int64*>(&res);
-      }
-
+      QueryPerformanceFrequency(&res);
+      return *reinterpret_cast<const __int64*>(&res);
     }
 
     utime_t
