@@ -8,7 +8,6 @@
  * See the LICENSE file for more information.
  */
 
-#include <fnmatch.h>
 #include <iostream>
 
 #include <boost/thread/tss.hpp>
@@ -65,18 +64,10 @@ namespace libport
     // Wether categories are enabled by default.
     static bool default_category_state = true;
 
-    categories_type&
-    get_categories()
+    categories_type& get_categories()
     {
       static categories_type categories;
       return categories;
-    }
-
-    categories_type&
-    get_patterns()
-    {
-      static categories_type patterns;
-      return patterns;
     }
 
     size_t&
@@ -86,135 +77,59 @@ namespace libport
       return res;
     }
 
-# define FNMATCH(Pattern, Symbol)                               \
-    (fnmatch(Pattern, Symbol.name_get().c_str(), 0) == 0)
-
     Symbol
     add_category(Symbol name)
     {
-      foreach (categories_type::value_type& s, get_patterns())
-      {
-        if (FNMATCH(s.first.name_get().c_str(), name))
-          get_categories()[name] = s.second;
-      }
-
       if (!mhas(get_categories(), name))
         get_categories()[name] = default_category_state;
-
       size_t size = name.name_get().size();
       if (categories_largest() < size)
         categories_largest() = size;
-
       return name;
     }
 
-    int
-    enable_category(Symbol pattern)
+    int enable_category(Symbol name)
     {
-      get_patterns()[pattern] = true;
-      foreach (categories_type::value_type& s, get_categories())
-      {
-        if (FNMATCH(pattern.name_get().c_str(), s.first))
-          s.second = true;
-      }
-
+      get_categories()[name] = true;
       return 42;
     }
 
-    int
-    disable_category(Symbol pattern)
+    int disable_category(Symbol name)
     {
-      get_patterns()[pattern] = false;
-      foreach (categories_type::value_type& s, get_categories())
-      {
-        if (FNMATCH(pattern.name_get().c_str(), s.first))
-          s.second = false;
-      }
-
+      get_categories()[name] = false;
       return 42;
     }
-
-    int
-    auto_category(Symbol pattern)
-    {
-      std::string p = pattern.name_get();
-      char modifier = p[0];
-      if (modifier == '+' || modifier == '-')
-        p = p.substr(1);
-      else
-        modifier = '+';
-      bool value = modifier == '+';
-
-      get_patterns()[Symbol(p)] = value;
-      foreach (categories_type::value_type& s, get_categories())
-      {
-        if (FNMATCH(p.c_str(), s.first))
-          s.second = value;
-      }
-
-      return 42;
-    }
-#undef FNMATCH
 
     bool test_category(Symbol name)
     {
       return get_categories()[name];
     }
 
-    typedef enum
+    static void set_category_state(const char* list, bool state)
     {
-      ENABLE,
-      DISABLE,
-      AUTO,
-    } category_modifier_type;
-
-    static void set_category_state(const char* list,
-                                   const category_modifier_type state)
-    {
-      if (state == ENABLE)
-        debug::default_category_state = false;
-      else
-        debug::default_category_state = true;
-
-      // Also set existing to default_category_state.
+      // Set default to !state.
+      debug::default_category_state = !state;
+      // Also set existing to !state
       foreach(categories_type::value_type& v, get_categories())
-        v.second = debug::default_category_state;
-
+        v.second = !state;
       std::string s(list); // Do not pass temporary to make_tokenizer.
       tokenizer_type t = make_tokenizer(s, ",");
       foreach(const std::string& elem, t)
-      {
-        Symbol pattern(elem);
-        switch(state)
-        {
-          case ENABLE:
-            enable_category(pattern);
-            break;
-          case DISABLE:
-            disable_category(pattern);
-            break;
-          case AUTO:
-            auto_category(pattern);
-            break;
-        }
-      }
+        get_categories()[Symbol(elem)] = state;
     }
   }
+
+
 
   Debug::Debug()
     : locations_(getenv("GD_LOC"))
     , timestamps_(getenv("GD_TIME") || getenv("GD_TIMESTAMP_US"))
   {
-    // Process enabled/disabled/auto categories in environment.
-    if (const char* autolist = getenv("GD_CATEGORY"))
-      debug::set_category_state(autolist, debug::AUTO);
-    else
-    {
-      if (const char* enablelist = getenv("GD_ENABLE_CATEGORY"))
-        debug::set_category_state(enablelist, debug::ENABLE);
-      if (const char* disablelist = getenv("GD_DISABLE_CATEGORY"))
-        debug::set_category_state(disablelist, debug::DISABLE);
-    }
+    // Process enabled/disabled categories in environment.
+    if (const char* enablelist = getenv("GD_ENABLE_CATEGORY"))
+      debug::set_category_state(enablelist, true);
+    if (const char* disablelist = getenv("GD_DISABLE_CATEGORY"))
+      debug::set_category_state(disablelist, false);
 
     if (const char* lvl_c = getenv("GD_LEVEL"))
       filter(lvl_c);

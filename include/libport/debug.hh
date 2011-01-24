@@ -42,7 +42,6 @@ namespace libport
     LIBPORT_API category_type add_category(category_type name);
     LIBPORT_API int enable_category(category_type name);
     LIBPORT_API int disable_category(category_type name);
-    LIBPORT_API int auto_category(category_type pattern);
 
     /// Reclaim the allocated memory.
     LIBPORT_API void clear();
