@@ -137,11 +137,15 @@ namespace libport
     {
       if (count > R)
       {
-        assert(reinterpret_cast<pointer>(p) != reinterpret_cast<pointer>(pool_));
+        assert_ne(reinterpret_cast<pointer>(p),
+                  reinterpret_cast<pointer>(pool_));
         free(p);
       }
       else
-        assert(reinterpret_cast<pointer>(p) == reinterpret_cast<pointer>(pool_));
+      {
+        assert_ne(reinterpret_cast<pointer>(p),
+                  reinterpret_cast<pointer>(pool_));
+      }
     }
 
   private:
