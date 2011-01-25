@@ -15,13 +15,13 @@
 
 #include <libport/fnmatch.h>
 
-#ifdef WIN32
+#ifdef _MSC_VER
 # include <Shlwapi.h>
 #endif
 
 namespace libport
 {
-#ifdef WIN32
+#ifdef _MSC_VER
   /// On Windows use PathMatchSpec.
   int
   fnmatch(const char* pattern, const char* string)

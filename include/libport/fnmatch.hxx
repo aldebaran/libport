@@ -13,14 +13,14 @@
 
 # include <libport/fnmatch.h>
 
-# ifndef WIN32
+# ifndef _MSC_VER
 #  include <fnmatch.h>
 # endif
 
 namespace libport
 {
 
-# ifndef WIN32
+# ifndef _MSC_VER
   /// If os is not Windows, bounce on bsd fnmatch.  Use no specific
   /// flags, and return boolean instead of integer.
   inline int
