@@ -96,6 +96,8 @@ libport_include_HEADERS +=				\
   include/libport/file-system.hh			\
   include/libport/finally.hh				\
   include/libport/finally.hxx				\
+  include/libport/fnmatch.h	 			\
+  include/libport/fnmatch.hxx				\
   include/libport/foreach.hh				\
   include/libport/fwd.hh				\
   include/libport/hash.hh				\
