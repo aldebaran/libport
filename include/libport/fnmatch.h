@@ -21,10 +21,13 @@
 namespace libport
 {
 
-  LIBPORT_API int
+#ifdef _MSC_VER
+  LIBPORT_API
+#endif
+  int
   fnmatch(const char* pattern, const char* string);
 
-  LIBPORT_API int
+  int
   fnmatch(const std::string& pattern, const std::string& string);
 }
 
