@@ -14,7 +14,7 @@
 # include <libport/export.hh>
 # include <libport/iostream>
 
-# ifdef WIN32
+# ifdef _MSC_VER
 #  define FNM_NOMATCH 1
 # endif
 
