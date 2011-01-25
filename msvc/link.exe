@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# Copyright (C) 2008-2010, Gostai S.A.S.
+# Copyright (C) 2008-2011, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -154,6 +154,38 @@ dll_2_lib ()
   echo "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/'
 }
 
+# quote_for_eval_arg ARG
+# ----------------------
+# Aesthetically quote ARG to be evaled later.
+# This function returns two values: QUOTE_FOR_EVAL_RESULT
+# is double-quoted, suitable for a subsequent eval, whereas
+# QUOTE_FOR_EVAL_UNQUOTED_RESULT has merely all characters
+# which are still active within double quotes backslashified.
+#
+# Taken from Libtool.
+quote_for_eval_arg ()
+{
+  case $1 in
+    (*[\\\`\"\$]*)
+      local quote_subst='s/\([`"$\\]\)/\\\1/g'
+      quote_for_eval_arg_unquoted_result=`echo "$1" | sed -e "$quote_subst"`;;
+    (*)
+      quote_for_eval_arg_unquoted_result="$1";;
+  esac
+
+  case $quote_for_eval_arg_unquoted_result in
+    # Double-quote args containing shell metacharacters to delay
+    # word splitting, command substitution and and variable
+    # expansion for a subsequent eval.
+    # Many Bourne shells cannot handle close brackets correctly
+    # in scan sets, so we specify it separately.
+    (*[\[\~\#\^\&\*\(\)\{\}\|\;\<\>\?\'\ \	]* | *]* | "")
+      quote_for_eval_arg_result="\"$quote_for_eval_arg_unquoted_result\"";;
+    (*)
+      quote_for_eval_arg_result="$quote_for_eval_arg_unquoted_result";;
+  esac
+}
+
 # append VARIABLE VALUES...
 # -------------------------
 # Append the VALUES to $VARIABLE, making sure it has all the needed
@@ -165,16 +197,9 @@ append ()
   local val
   for val
   do
-    case $val in
-      (*[''""\\\\\<\>\*\;\|]*)
-        # We use printf to avoid backslash-interpolation.
-        val="'"$(printf '%s' "$val" | sed -e 's/[''""\\\\]/\\&/g')"'"
-        ;;
-    esac
-    # Avoid useless spaces.
-    eval "$var+=\${$var:+ }\$val"
+    quote_for_eval_arg "$val"
+    eval "$var=\$$var\${$var:+ }\$quote_for_eval_arg_result"
   done
-#  eval verbose "$var=\$$var"
 }
 
 # linkargs ARG...
