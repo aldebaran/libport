@@ -15,17 +15,16 @@
 
 namespace libport
 {
-  static boost::posix_time::ptime reference =
-    boost::posix_time::microsec_clock::universal_time();
+  static utime_t reference = 0;
 
-  const boost::posix_time::ptime&
+  static inline utime_t
   utime_reference()
   {
     return reference;
   }
 
   void
-  utime_reference_set(const boost::posix_time::ptime& ref)
+  utime_reference_set(utime_t ref)
   {
     reference = ref;
   }
@@ -104,8 +103,7 @@ namespace libport
   {
     timeval tv;
     gettimeofday(&tv, 0);
-    static timeval t0 = tv;
-    return timeval_to_utime(tv - t0);
+    return timeval_to_utime(tv) - utime_reference();
   }
 #endif
 }
