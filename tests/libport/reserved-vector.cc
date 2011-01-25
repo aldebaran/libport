@@ -18,7 +18,7 @@ using libport::test_suite;
 
 // A value between the size of an std::vector (without the allocator)
 // and the distance between the stack and the heap (in bytes).
-#define VECTOR_BASE_SIZE 32
+#define VECTOR_BASE_SIZE 64
 
 static void test_stack()
 {
