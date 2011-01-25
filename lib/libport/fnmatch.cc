@@ -17,6 +17,7 @@
 
 #ifdef _MSC_VER
 # include <Shlwapi.h>
+# pragma comment(lib, "shlwapi.lib")
 #endif
 
 namespace libport
