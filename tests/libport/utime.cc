@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -33,20 +33,28 @@ conversions()
 }
 
 void
-check()
+check_immediate()
 {
-  BOOST_CHECK_LT(0, libport::utime());
-  sleep(1);
-  std::cerr << "Now: " << utime() << std::endl;
-  BOOST_CHECK_EQUAL(1, libport::utime() / 1000000LL);
+  libport::utime_t t1 = libport::utime();
+  libport::utime_t t2 = libport::utime();
+  BOOST_CHECK_LT(std::abs(t1 - t2), 1000LL);
 }
 
+void
+check_sleep()
+{
+  libport::utime_t start = libport::utime();
+  sleep(1);
+  libport::utime_t end = libport::utime();
+  BOOST_CHECK_LT(std::abs(end - start - 1000000LL), 10000LL);
+}
 
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::utime");
   suite->add(BOOST_TEST_CASE(conversions));
-  suite->add(BOOST_TEST_CASE(check));
+  suite->add(BOOST_TEST_CASE(check_immediate));
+  suite->add(BOOST_TEST_CASE(check_sleep));
   return suite;
 }
