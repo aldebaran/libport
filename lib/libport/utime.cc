@@ -58,7 +58,6 @@ namespace libport
     // according to MSDN.
     static __int64 freq = get_performance_frequency();
     __int64 now = get_performance_counter();
-    static __int64 base = now;
 
     // Beware that this formula might cause an overflow, because of
     // the multiplication before the division: (utime_t) ((now -
@@ -67,9 +66,9 @@ namespace libport
     // the precision loss.
 
     // One solution: splitting the operation:
-    utime_t high =  (now - base)              / freq * 1000000LL;
-    utime_t low = (((now - base) * 1000000LL) / freq) % 1000000LL;
-    return high + low;
+    utime_t high =  (now              / freq) * 1000000LL;
+    utime_t low  = ((now * 1000000LL) / freq) % 1000000LL;
+    return (high + low) - reference;
   }
 
 #else
