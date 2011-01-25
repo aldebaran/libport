@@ -49,6 +49,16 @@ check_sleep()
   BOOST_CHECK_LT(std::abs(end - start - 1000000LL), 20000LL);
 }
 
+void
+check_reference()
+{
+  libport::utime_t start = libport::utime();
+  libport::utime_reference_set(start);
+  sleep(1);
+  libport::utime_t end = libport::utime();
+  BOOST_CHECK_LT(std::abs(end - 1000000LL), 20000LL);
+}
+
 test_suite*
 init_test_suite()
 {
@@ -56,5 +66,6 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(conversions));
   suite->add(BOOST_TEST_CASE(check_immediate));
   suite->add(BOOST_TEST_CASE(check_sleep));
+  suite->add(BOOST_TEST_CASE(check_reference));
   return suite;
 }
