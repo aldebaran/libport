@@ -143,7 +143,7 @@ namespace libport
       }
       else
       {
-        assert_ne(reinterpret_cast<pointer>(p),
+        assert_eq(reinterpret_cast<pointer>(p),
                   reinterpret_cast<pointer>(pool_));
       }
     }
