@@ -91,13 +91,22 @@ namespace libport
   | Construction |
   `-------------*/
   public:
-    ReservedVectorAllocator()
+    ReservedVectorAllocator() throw()
 #ifndef NDEBUG
       : local_(false)
 #endif
-    {
+    {}
 
-    }
+#if _MSC_VER == 1500
+    // Visual C++ 2008 tries to construct an allocator with an
+    // allocator of a different type.
+    template <typename U>
+    ReservedVectorAllocator(const ReservedVectorAllocator<U, R>& allocator) throw()
+#ifndef NDEBUG
+      : local_(false)
+#endif
+    {}
+#endif
 
   /*--------------------.
   | Memory allocation.  |
