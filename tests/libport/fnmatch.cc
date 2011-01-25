@@ -12,6 +12,10 @@
 #include <libport/unit-test.hh>
 #include <libport/instrument.hh>
 
+#ifdef _MSC_VER
+# pragma comment(lib, "shlwapi.lib")
+#endif
+
 using libport::test_suite;
 
 static void test_fnmatch()
