@@ -32,12 +32,15 @@ conversions()
   BOOST_CHECK_EQUAL(utime_to_timeval(timeval_to_utime(t)), t);
 }
 
+// The static cast is required by msvc's std::abs
+#define MY_ABS(T) std::abs(static_cast<long>(T))
+
 void
 check_immediate()
 {
   libport::utime_t t1 = libport::utime();
   libport::utime_t t2 = libport::utime();
-  BOOST_CHECK_LT(std::abs(t1 - t2), 5000LL);
+  BOOST_CHECK_LT(MY_ABS(t1 - t2), 5000LL);
 }
 
 void
@@ -46,7 +49,7 @@ check_sleep()
   libport::utime_t start = libport::utime();
   sleep(1);
   libport::utime_t end = libport::utime();
-  BOOST_CHECK_LT(std::abs(end - start - 1000000LL), 20000LL);
+  BOOST_CHECK_LT(MY_ABS(end - start - 1000000LL), 20000LL);
 }
 
 void
@@ -56,7 +59,7 @@ check_reference()
   libport::utime_reference_set(start);
   sleep(1);
   libport::utime_t end = libport::utime();
-  BOOST_CHECK_LT(std::abs(end - 1000000LL), 20000LL);
+  BOOST_CHECK_LT(MY_ABS(end - 1000000LL), 20000LL);
 }
 
 test_suite*
