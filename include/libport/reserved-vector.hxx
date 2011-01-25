@@ -112,7 +112,16 @@ namespace libport
         assert(!local_);
         local_ = true;
 #endif
-        return reinterpret_cast<pointer>(pool_);
+        // Union hack to cast to a different pointer type;
+        // reinterpret_cast<pointer>(pool_) gives a type-punned
+        // warning with GCC 4.1.2.
+        union
+        {
+          align_type* in;
+          pointer out;
+        } conv;
+        conv.in = pool_;
+        return conv.out;
       }
       else
       {
