@@ -17,12 +17,6 @@ namespace libport
 {
   static utime_t reference = 0;
 
-  static inline utime_t
-  utime_reference()
-  {
-    return reference;
-  }
-
   void
   utime_reference_set(utime_t ref)
   {
@@ -103,7 +97,7 @@ namespace libport
   {
     timeval tv;
     gettimeofday(&tv, 0);
-    return timeval_to_utime(tv) - utime_reference();
+    return timeval_to_utime(tv) - reference;
   }
 #endif
 }

@@ -37,7 +37,7 @@ check_immediate()
 {
   libport::utime_t t1 = libport::utime();
   libport::utime_t t2 = libport::utime();
-  BOOST_CHECK_LT(std::abs(t1 - t2), 1000LL);
+  BOOST_CHECK_LT(std::abs(t1 - t2), 5000LL);
 }
 
 void
@@ -46,7 +46,7 @@ check_sleep()
   libport::utime_t start = libport::utime();
   sleep(1);
   libport::utime_t end = libport::utime();
-  BOOST_CHECK_LT(std::abs(end - start - 1000000LL), 10000LL);
+  BOOST_CHECK_LT(std::abs(end - start - 1000000LL), 20000LL);
 }
 
 test_suite*
