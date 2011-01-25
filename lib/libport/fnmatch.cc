@@ -27,7 +27,7 @@ namespace libport
   int
   fnmatch(const char* pattern, const char* string)
   {
-    return ::PathMatchSpec(string, pattern);
+    return ::PathMatchSpec(string, pattern)) ? 0 : FNM_NOMATCH;
   }
 #endif
 }

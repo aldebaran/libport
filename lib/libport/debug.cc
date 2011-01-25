@@ -96,7 +96,7 @@ namespace libport
     {
       foreach (categories_type::value_type& s, patterns())
       {
-        if (fnmatch(s.first.name_get(), name.name_get()))
+        if (fnmatch(s.first.name_get(), name.name_get()) == 0)
           categories()[name] = s.second;
       }
 
@@ -117,7 +117,7 @@ namespace libport
       patterns()[pattern] = true;
       foreach (categories_type::value_type& s, categories())
       {
-        if (fnmatch(pattern.name_get(), s.first.name_get()))
+        if (fnmatch(pattern.name_get(), s.first.name_get()) == 0)
           s.second = true;
       }
 
@@ -131,7 +131,7 @@ namespace libport
       patterns()[pattern] = false;
       foreach (categories_type::value_type& s, categories())
       {
-        if (fnmatch(pattern.name_get(), s.first.name_get()))
+        if (fnmatch(pattern.name_get(), s.first.name_get()) == 0)
           s.second = false;
       }
 
@@ -153,7 +153,7 @@ namespace libport
       patterns()[Symbol(p)] = value;
       foreach (categories_type::value_type& s, categories())
       {
-        if (fnmatch(p, s.first.name_get()))
+        if (fnmatch(p, s.first.name_get()) == 0)
           s.second = value;
       }
 

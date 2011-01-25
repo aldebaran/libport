@@ -11,14 +11,21 @@
 #ifndef LIBPORT_FNMATCH
 # define LIBPORT_FNMATCH
 
+# include <libport/export.hh>
 # include <libport/iostream>
+
+# ifdef WIN32
+#  define FNM_NOMATCH 1
+# endif
 
 namespace libport
 {
-  int
-  fnmatch (const char* pattern, const char* string);
-  int
-  fnmatch (const std::string pattern, const std::string string);
+
+  LIBPORT_API int
+  fnmatch(const char* pattern, const char* string);
+
+  LIBPORT_API int
+  fnmatch(const std::string& pattern, const std::string& string);
 }
 
 #include <libport/fnmatch.hxx>

@@ -26,12 +26,12 @@ namespace libport
   inline int
   fnmatch (const char* pattern, const char* string)
   {
-    return ! (bool)::fnmatch(pattern, string, 0);
+    return ::fnmatch(pattern, string, 0);
   }
 # endif
 
   inline int
-  fnmatch(const std::string pattern, const std::string string)
+  fnmatch(const std::string& pattern, const std::string& string)
   {
     return ::libport::fnmatch(pattern.c_str(), string.c_str());
   }

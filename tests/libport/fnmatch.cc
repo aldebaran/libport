@@ -20,14 +20,14 @@ using libport::test_suite;
 
 static void test_fnmatch()
 {
-  BOOST_CHECK(!libport::fnmatch("b*", "foo"));
-  BOOST_CHECK(libport::fnmatch("b*", "bar"));
-  BOOST_CHECK(libport::fnmatch("b*", "baz"));
-  BOOST_CHECK(!libport::fnmatch("*f", "foo"));
-  BOOST_CHECK(libport::fnmatch("*f*", "foo"));
-  BOOST_CHECK(libport::fnmatch("*b*", "foobar"));
-  BOOST_CHECK(libport::fnmatch("*foo*", "barfoo"));
-  BOOST_CHECK(libport::fnmatch("*foo*", "barfoobaz"));
+  BOOST_CHECK_EQUAL(libport::fnmatch("b*", "foo"), FNM_NOMATCH);
+  BOOST_CHECK_EQUAL(libport::fnmatch("b*", "bar"), 0);
+  BOOST_CHECK_EQUAL(libport::fnmatch("b*", "baz"), 0);
+  BOOST_CHECK_EQUAL(libport::fnmatch("*f", "foo"), FNM_NOMATCH);
+  BOOST_CHECK_EQUAL(libport::fnmatch("*f*", "foo"), 0);
+  BOOST_CHECK_EQUAL(libport::fnmatch("*b*", "foobar"), 0);
+  BOOST_CHECK_EQUAL(libport::fnmatch("*foo*", "barfoo"), 0);
+  BOOST_CHECK_EQUAL(libport::fnmatch("*foo*", "barfoobaz"), 0);
 }
 
 test_suite*
