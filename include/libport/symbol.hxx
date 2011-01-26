@@ -27,6 +27,12 @@
 namespace libport
 {
   //<<
+  inline Symbol::Symbol()
+  {
+    static const Symbol s("");
+    (*this) = s;
+  }
+
   inline const std::string&
   Symbol::name_get () const
   {

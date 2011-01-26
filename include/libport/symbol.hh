@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -49,10 +49,11 @@ namespace libport
     /** \name Ctor & Dtor.
      ** \{ */
   public:
+    explicit Symbol();
     /** \brief Construct a Symbol.
      ** \param s referenced string */
     explicit Symbol (const std::string& s);
-    explicit Symbol (const char* s = "");
+    explicit Symbol (const char* s);
     /** \} */
 
     /** \name Accessors.
