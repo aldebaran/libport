@@ -1,4 +1,4 @@
-## Copyright (C) 2006-2010, Gostai S.A.S.
+## Copyright (C) 2006-2011, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -56,10 +56,10 @@ endif
 
 BENCHES = tests/libport/utime.cc
 BENCH_LOGS = $(BENCHES:.cc=.bench)
-AM_BENCHFLAGS = --hook-module $(BENCH_MALLOC_HOOK) --format xls
+AM_BENCHFLAGS = --hook-module=$(BENCH_MALLOC_HOOK) --format=xls
 include $(top_srcdir)/build-aux/make/bench.mk
 
-bench: $(BENCH_MALLOC_HOOK)
+bench: build-aux/src/mhook.la
 	$(MAKE) $(AM_MAKEFLAGS) LAZY_TEST_SUITE=$(LAZY_BENCH_SUITE) 	 \
 	  TESTS='$(BENCHES)' BENCHFLAGS='$(AM_BENCHFLAGS) $(BENCHFLAGS)' \
 	  $(BENCH_LOGS)
@@ -67,5 +67,5 @@ bench: $(BENCH_MALLOC_HOOK)
 	  TESTS='$(BENCHES)' $(BENCH_LOG_FILE)
 
 %.bench: %$(EXEEXT)
-	@$(BENCH_SCRIPT) -Q $(BENCHFLAGS) $< > $@.tmp
-	mv $@.tmp $@
+	$(AM_V_GEN) $(BENCH_SCRIPT) -Q $(BENCHFLAGS) $< > $@.tmp
+	$(AM_V_at) mv $@.tmp $@
