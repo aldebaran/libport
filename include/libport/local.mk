@@ -52,6 +52,8 @@ sys_libport_include_HEADERS =			\
 libport_include_HEADERS +=				\
   include/libport/algorithm				\
   include/libport/algorithm.hxx				\
+  include/libport/allocator-static.hh			\
+  include/libport/allocator-static.hxx			\
   include/libport/asio.hh				\
   include/libport/asio.hxx				\
   include/libport/attributes.hh				\
