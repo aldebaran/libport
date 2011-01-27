@@ -1,4 +1,4 @@
-## Copyright (C) 2009-2010, Gostai S.A.S.
+## Copyright (C) 2009-2011, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -99,7 +99,7 @@ lib/libport/revision-stub.hh: $(VERSIONIFY)
 # Resolve stubs in libport.
 all-local: lib/libport/libport.unstub.stamp
 lib/libport/libport.unstub.stamp: lib/libport/libport$(LIBSFX).la $(VERSIONIFY_CACHE) $(VERSIONIFY)
-	$(VERSIONIFY_RUN) --resolve=$<
+	$(AT_V_PATCH) $(VERSIONIFY_RUN) $(if $(V:0=),-v,-q) --resolve=$<
 
 # Make sure nobody uses config.h instead of libport/config.h.
 #maintainer-check:
