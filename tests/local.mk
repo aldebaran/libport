@@ -59,12 +59,16 @@ BENCH_LOGS = $(BENCHES:.cc=.bench)
 AM_BENCHFLAGS = --hook-module=$(BENCH_MALLOC_HOOK) --format=xls
 include $(top_srcdir)/build-aux/make/bench.mk
 
-bench: build-aux/src/mhook.la
-	$(MAKE) $(AM_MAKEFLAGS) LAZY_TEST_SUITE=$(LAZY_BENCH_SUITE) 	 \
-	  TESTS='$(BENCHES)' BENCHFLAGS='$(AM_BENCHFLAGS) $(BENCHFLAGS)' \
+bench: $(BENCH_MALLOC_HOOK)
+	$(MAKE) $(AM_MAKEFLAGS) 			\
+	  LAZY_TEST_SUITE=$(LAZY_BENCH_SUITE)		\
+	  TESTS='$(BENCHES)'				\
+	  BENCHFLAGS='$(AM_BENCHFLAGS) $(BENCHFLAGS)'	\
 	  $(BENCH_LOGS)
-	$(MAKE) $(AM_MAKEFLAGS) BENCHFLAGS='$(AM_BENCHFLAGS) $(BENCHFLAGS)' \
-	  TESTS='$(BENCHES)' $(BENCH_LOG_FILE)
+	$(MAKE) $(AM_MAKEFLAGS)				\
+	  BENCHFLAGS='$(AM_BENCHFLAGS) $(BENCHFLAGS)'	\
+	  TESTS='$(BENCHES)'				\
+	  $(BENCH_LOG_FILE)
 
 %.bench: %$(EXEEXT)
 	$(AM_V_GEN) $(BENCH_SCRIPT) -Q $(BENCHFLAGS) $< > $@.tmp
