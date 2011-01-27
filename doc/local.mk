@@ -1,4 +1,4 @@
-## Copyright (C) 2006, 2009-2010, Gostai S.A.S.
+## Copyright (C) 2006, 2009-2011, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -28,8 +28,7 @@ html-local: doc/Doxyfile
 doc/Doxyfile: doc/doxygen.sh
 	$< doc
 
-clean-local:
-	rm -rf doc/html doc/latex
+CLEANDIRS += doc/html doc/latex
 
 EXTRA_DIST += doc/doxygen.sh.in
 CLEANFILES += doc/Doxyfile doc/doxygen.sh
