@@ -33,12 +33,44 @@ using namespace libport::serialize;
 #define UNSERIALIZE(Type, Value)                                \
     BOOST_CHECK_EQUAL(ser.unserialize<Type>("test"), Value);
 
+#define CHECK(Type, Value)                      \
+  do {                                          \
+    {                                           \
+      std::ofstream f(fn);                      \
+      BinaryOSerializer ser(f);                 \
+      SERIALIZE(Type, (Type) (Value));          \
+    }                                           \
+    {                                           \
+      std::ifstream f(fn);                      \
+      BOOST_CHECK(f.good());                    \
+      BinaryISerializer ser(f);                 \
+      UNSERIALIZE(Type, (Type) (Value));        \
+      f.peek();                                 \
+      BOOST_CHECK(f.eof());                     \
+    }                                           \
+  } while (false)
+
 GD_INIT();
 
 void binary_pod()
 {
+  const char *fn = BASE "binary_pod";
+
+  // Try isolated first, but also check when several values are
+  // serialized in a row.
+  CHECK(int, 42);
+  CHECK(bool, true);
+  CHECK(bool, false);
+  CHECK(std::string, "string ");
+  CHECK(float, 0.);
+  CHECK(float, -1.);
+  CHECK(float, 1234.567);
+  CHECK(double, 0.);
+  CHECK(double, -1.);
+  CHECK(double, 1234.567);
+
   {
-    std::ofstream f(BASE "binary_pod");
+    std::ofstream f(fn);
     BinaryOSerializer ser(f);
 
     SERIALIZE(int, 42);
@@ -54,7 +86,7 @@ void binary_pod()
     SERIALIZE(int*, NULL);
   }
   {
-    std::ifstream f(BASE "binary_pod");
+    std::ifstream f(fn);
     BOOST_CHECK(f.good());
     BinaryISerializer ser(f);
 
@@ -79,35 +111,22 @@ void binary_integers_size()
 {
   const char *fn = BASE "binary_integers_size";
 
-#define CHECK(Type)                                                     \
-  do {                                                                  \
-    {                                                                   \
-      std::ofstream f(fn);                                              \
-      BinaryOSerializer ser(f);                                         \
-      SERIALIZE(Type, (Type) (std::numeric_limits<Type>::max() / 2));   \
-    }                                                                   \
-    {                                                                   \
-      std::ifstream f(fn);                                              \
-      BOOST_CHECK(f.good());                                            \
-      BinaryISerializer ser(f);                                         \
-      UNSERIALIZE(Type, (Type) (std::numeric_limits<Type>::max() / 2)); \
-      f.peek();                                                         \
-      BOOST_CHECK(f.eof());                                             \
-    }                                                                   \
-  } while (false)
+#define CHECK_MAX(Type)                                 \
+  CHECK(Type, std::numeric_limits<Type>::max() / 2)
 
-  CHECK(unsigned short);
-  CHECK(unsigned int);
-  CHECK(unsigned long);
-  CHECK(unsigned long long);
-#undef CHECK
+  CHECK_MAX(unsigned short);
+  CHECK_MAX(unsigned int);
+  CHECK_MAX(unsigned long);
+  CHECK_MAX(unsigned long long);
+#undef CHECK_MAX
 }
 
 void binary_integers_size_portability()
 {
+  const char *fn = BASE "binary_integers_size";
   // Simulate fancy short size.
   {
-    std::ofstream f(BASE "binary_integers_size");
+    std::ofstream f(fn);
     BinaryOSerializer ser(f);
 
     // Change integers size.
@@ -125,7 +144,7 @@ void binary_integers_size_portability()
     f.close();
   }
   {
-    std::ifstream f(BASE "binary_integers_size");
+    std::ifstream f(fn);
     BOOST_CHECK(f.good());
     BinaryISerializer ser(f);
     UNSERIALIZE(unsigned short, 0);
@@ -163,8 +182,10 @@ struct Person
 
 void binary_class()
 {
+  const char *fn = BASE "binary_class";
+
   {
-    std::ofstream f(BASE "binary_class");
+    std::ofstream f(fn);
     BinaryOSerializer ser(f);
 
     Person ed("Draven", "Eric");
@@ -173,7 +194,7 @@ void binary_class()
     ser.serialize<Person>("test", cs);
   }
   {
-    std::ifstream f(BASE "binary_class");
+    std::ifstream f(fn);
     BinaryISerializer ser(f);
 
     Person ed = ser.unserialize<Person>("test");
@@ -267,8 +288,10 @@ struct Gentoo: public Linux
 
 void binary_hierarchy()
 {
+  const char *fn = BASE "binary_hier";
+
   {
-    std::ofstream f(BASE "binary_hier");
+    std::ofstream f(fn);
     BinaryOSerializer ser(f);
 
     Debian d("2.4", "sarge");
@@ -277,7 +300,7 @@ void binary_hierarchy()
     ser.serialize<Gentoo>("test", g);
   }
   {
-    std::ifstream f(BASE "binary_hier");
+    std::ifstream f(fn);
     BinaryISerializer ser(f);
 
     Unix* d_ = ser.unserialize<Unix>("test");
