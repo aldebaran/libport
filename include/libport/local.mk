@@ -226,8 +226,7 @@ EXTRA_DIST += $(generate_libport_config_h)
 # this for config.h.  Arguably, we could use _configs.sed, but it is
 # not documented.
 include/libport/config.h: $(CONFIG_HEADER) $(generate_libport_config_h)
-	$(AM_V_GEN)
-	$(AM_V_at)rm -f $@ $@.tmp
+	$(AM_V_GEN)rm -f $@ $@.tmp
 	$(AM_V_at)test -d $$(dirname $@) || $(mkdir_p) $$(dirname $@)
 	$(AM_V_at)$(generate_libport_config_h) $< $@.tmp
 	$(AM_V_at)mv $@.tmp $@
@@ -243,6 +242,5 @@ EXTRA_DIST += include/libport/format.hh.gen
 
 # revision.hh
 include/libport/revision.hh: $(top_srcdir)/.version $(VERSIONIFY)
-	$(AM_V_GEN)
-	$(AM_V_at)$(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --header=$@
+	$(AM_V_GEN)$(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --header=$@
 
