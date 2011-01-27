@@ -18,9 +18,11 @@
 
 # include <libport/config.h>
 # ifdef LIBPORT_ENABLE_SERIALIZATION
-# include <serialize/serialize.hh>
+#  include <serialize/serialize.hh>
 # endif
+
 //static bool pdbg_ = getenv("DBG_FPOINT");
+
 namespace libport
 {
   /** Fixed point implementation on a long. Point is the number of
@@ -46,7 +48,7 @@ namespace libport
   {
   public:
     double getDoubleValue() const { return (double)v / (double)(1<<point);}
-#ifndef NO_DOUBLE
+# ifndef NO_DOUBLE
     ULongFixedPoint(double d)
     {
       v = (base_t)(d* (double)(1<<point));
@@ -65,10 +67,11 @@ namespace libport
     {
       return getDoubleValue();
     }
-#endif
-    #define UFLOAT_CAST(t) ULongFixedPoint(t d) { v = (long)d << point;}
+# endif
+
+#define UFLOAT_CAST(t) ULongFixedPoint(t d) { v = (long)d << point;}
     UFLOAT_CASTS
-    #undef UFLOAT_CAST
+#undef UFLOAT_CAST
 
     ULongFixedPoint():v(0) {}
     ULongFixedPoint(const ULongFixedPoint<point> &b)
@@ -151,7 +154,7 @@ namespace libport
     }
     ULongFixedPoint& operator--()
     {
-      v =- DIVIDE_VALUE;
+      v -= DIVIDE_VALUE;
       return *this;
     }
 
@@ -355,28 +358,24 @@ namespace libport
   }
 
 
-template<int point>
-inline libport::ULongFixedPoint<point> pow(libport::ULongFixedPoint<point> v,
-                libport::ULongFixedPoint<point> e)
-{
-  return v.pow(e);
-}
+  template<int point>
+  inline
+  libport::ULongFixedPoint<point>
+  pow(libport::ULongFixedPoint<point> v, libport::ULongFixedPoint<point> e)
+  {
+    return v.pow(e);
+  }
 
-template<int point>
-inline long ceil(libport::ULongFixedPoint<point> v)
-{
-  return v.ceil();
-}
-template<int point>
-inline long round(libport::ULongFixedPoint<point> v)
-{
-  return v.round();
-}
-template<int point>
-inline long trunc(libport::ULongFixedPoint<point> v)
-{
-  return v.trunc();
-}
+#define BOUNCE(Op)                                      \
+  template<int point>                                   \
+  inline long Op(libport::ULongFixedPoint<point> v)     \
+  {                                                     \
+    return v.Op();                                      \
+  }
+
+  BOUNCE(ceil);
+  BOUNCE(round);
+  BOUNCE(trunk);
 
 }
 
