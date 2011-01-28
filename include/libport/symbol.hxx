@@ -30,7 +30,7 @@ namespace libport
   inline Symbol::Symbol()
   {
     static const Symbol s("");
-    (*this) = s;
+    str_ = s.str_;
   }
 
   inline const std::string&
