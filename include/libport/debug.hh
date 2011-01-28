@@ -37,8 +37,10 @@ namespace libport
   {
     typedef Symbol category_type;
     typedef boost::unordered_map<category_type, bool> categories_type;
+    typedef std::pair<bool,unsigned> pattern_infos_type;
+    typedef boost::unordered_map<category_type, pattern_infos_type> patterns_type;
 
-    categories_type& get_categories();
+    categories_type& categories();
     LIBPORT_API category_type add_category(category_type name);
     LIBPORT_API int enable_category(category_type name);
     LIBPORT_API int disable_category(category_type name);

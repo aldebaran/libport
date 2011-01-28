@@ -44,7 +44,6 @@ namespace libport
   LIBPORT_API Debug* debugger = 0;
   LIBPORT_API Debug::levels::Level Debug::filter_(levels::log);
 
-
   local_data&
   debugger_data_thread_local()
   {
@@ -65,7 +64,6 @@ namespace libport
     // Wether categories are enabled by default.
     static bool default_category_state = true;
 
-
     // Categories added so far.
     categories_type&
     categories()
@@ -74,11 +72,18 @@ namespace libport
       return categories;
     }
 
+    static unsigned
+    current_pattern()
+    {
+      static unsigned current = 0;
+      return current++;
+    }
+
     // Patterns added so far.
-    categories_type&
+    patterns_type&
     patterns()
     {
-      static categories_type patterns;
+      static patterns_type patterns;
       return patterns;
     }
 
@@ -94,14 +99,21 @@ namespace libport
     Symbol
     add_category(Symbol name)
     {
-      foreach (categories_type::value_type& s, patterns())
+      int order = -1;
+      bool value = default_category_state;
+      foreach (patterns_type::value_type& s, patterns())
       {
         if (fnmatch(s.first.name_get(), name.name_get()) == 0)
-          categories()[name] = s.second;
+        {
+          if (int(s.second.second) > order)
+          {
+            value = s.second.first;
+            order = s.second.second;
+          }
+        }
       }
 
-      if (!mhas(categories(), name))
-        categories()[name] = default_category_state;
+      categories()[name] = value;
 
       size_t size = name.name_get().size();
       if (categories_largest() < size)
@@ -114,7 +126,7 @@ namespace libport
     int
     enable_category(Symbol pattern)
     {
-      patterns()[pattern] = true;
+      patterns()[pattern] = std::make_pair(true, current_pattern());
       foreach (categories_type::value_type& s, categories())
       {
         if (fnmatch(pattern.name_get(), s.first.name_get()) == 0)
@@ -128,7 +140,7 @@ namespace libport
     int
     disable_category(Symbol pattern)
     {
-      patterns()[pattern] = false;
+      patterns()[pattern] = std::make_pair(false, current_pattern());
       foreach (categories_type::value_type& s, categories())
       {
         if (fnmatch(pattern.name_get(), s.first.name_get()) == 0)
@@ -150,7 +162,7 @@ namespace libport
         modifier = '+';
       bool value = modifier == '+';
 
-      patterns()[Symbol(p)] = value;
+      patterns()[Symbol(p)] = std::make_pair(value, current_pattern());
       foreach (categories_type::value_type& s, categories())
       {
         if (fnmatch(p, s.first.name_get()) == 0)
