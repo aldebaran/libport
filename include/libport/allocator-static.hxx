@@ -54,15 +54,16 @@ namespace libport
   StaticallyAllocated<Exact, Chunk>::_grow()
   {
     char* pool = reinterpret_cast<char*>
-      (malloc(Chunk * Exact::allocator_static_max_size));
+      (malloc(chunk_size_ * Exact::allocator_static_max_size));
     if (!pool)
       throw std::bad_alloc();
-    pointers_.resize(storage_size_ + Chunk);
-    for (unsigned i = 0; i < Chunk; ++i)
+    pointers_.resize(storage_size_ + chunk_size_);
+    for (unsigned i = 0; i < chunk_size_; ++i)
       pointers_[storage_size_ + i] =
         pool + i * Exact::allocator_static_max_size;
     where_ = storage_size_;
-    storage_size_ += Chunk;
+    storage_size_ += chunk_size_;
+    chunk_size_ *= 2;
   }
 
   template <typename Exact, unsigned Chunk>
@@ -76,6 +77,9 @@ namespace libport
 
   template <typename Exact, unsigned Chunk>
   unsigned StaticallyAllocated<Exact, Chunk>::storage_size_ = 0;
+
+  template <typename Exact, unsigned Chunk>
+  unsigned StaticallyAllocated<Exact, Chunk>::chunk_size_ = Chunk;
 }
 
 #endif

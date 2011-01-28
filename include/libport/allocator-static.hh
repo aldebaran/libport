@@ -34,6 +34,8 @@ namespace libport
     static unsigned size_;
     // Number of objects slots available.
     static unsigned storage_size_;
+    // Current chunk size to allocate.
+    static unsigned chunk_size_;
   };
 }
 
