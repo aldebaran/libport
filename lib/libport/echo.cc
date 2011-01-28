@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010, 2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <iostream>
 #include <libport/unistd.h>
+#define LIBPORT_ECHO_NO_WARNING
 #include <libport/echo.hh>
 
 namespace libport

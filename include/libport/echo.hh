@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010, 2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -10,6 +10,10 @@
 
 /// \file libport/echo.hh
 /// \brief Obsolete, don't use.  Will be removed.  Use debug.hh.
+
+#ifndef LIBPORT_ECHO_NO_WARNING
+# warning "use <libport.debug> instead"
+#endif
 
 #ifndef LIBPORT_ECHO_HH
 # define LIBPORT_ECHO_HH

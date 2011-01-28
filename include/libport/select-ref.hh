@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -13,10 +13,10 @@
  ** \brief Select between a non ref or a ref type.
  */
 
+# warning "use <libport/traits.hh> instead"
+
 #ifndef LIBPORT_SELECT_REF_HH
 # define LIBPORT_SELECT_REF_HH
-
-# warning "use libport/traits.hh instead."
 
 namespace libport
 {
