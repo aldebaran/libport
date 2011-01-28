@@ -9,8 +9,8 @@
  */
 
 /**
- ** \file libport/cstdio.cc
- ** \brief Implements file libport/cstdio.
+ ** \file libport/fnmatch.cc
+ ** \brief Implements file libport/fnmatch.h.
  */
 
 #include <libport/fnmatch.h>
