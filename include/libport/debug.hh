@@ -19,7 +19,7 @@
 #  include <libport/csignal>
 
 #  include <list>
-#  include <map>
+#  include <boost/unordered_map.hpp>
 #  include <sstream>
 
 #  include <libport/format.hh>
@@ -36,7 +36,7 @@ namespace libport
   namespace debug
   {
     typedef Symbol category_type;
-    typedef std::map<category_type, bool> categories_type;
+    typedef boost::unordered_map<category_type, bool> categories_type;
 
     categories_type& get_categories();
     LIBPORT_API category_type add_category(category_type name);
