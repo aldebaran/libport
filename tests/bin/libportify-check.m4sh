@@ -4,14 +4,14 @@ URBI_INIT
 exec 3>&2
 me=$as_me
 
-: ${PERL=perl}
+: ${PERL=perl5.10.0}
 
 $PERL -e 'use v5.10.0;' ||
   error SKIP "is not Perl 5.10: $PERL"
 
 libportify=$abs_top_srcdir/bin/libportify
 
-# xrun "--help" $PERL $libportify --help
+xrun "--help" $PERL $libportify --help
 
 in=$(absolute "$1")
 test -f "$in" ||
@@ -27,7 +27,7 @@ cp $in input.cc
 
 xrun "libportify" $PERL "$libportify" -v -v -v -v input.cc
 
-# Fix: this is not a nqice feature of rst_expect.
+# Fix: this is not a nice feature of rst_expect.
 mv input.cc output.raw
 cp output.raw output.eff
 cp $in input.cc
