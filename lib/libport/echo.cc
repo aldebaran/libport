@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <iostream>
 #include <libport/unistd.h>
-#define LIBPORT_ECHO_NO_WARNING
 #include <libport/echo.hh>
 
 namespace libport

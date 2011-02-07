@@ -11,7 +11,7 @@
 /// \file libport/echo.hh
 /// \brief Obsolete, don't use.  Will be removed.  Use debug.hh.
 
-#ifndef LIBPORT_ECHO_NO_WARNING
+#ifndef BUILDING_LIBPORT
 # warning "use <libport.debug> instead"
 #endif
 

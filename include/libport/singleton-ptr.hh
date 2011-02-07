@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -10,6 +10,11 @@
 
 #ifndef LIBPORT_SINGLETON_PTR_HH
 # define LIBPORT_SINGLETON_PTR_HH
+
+# if !defined BUILDING_LIBPORT
+#  warning "Libport.SingletonPtr is deprecated."
+#  warning "If you use it, please report to libport maintainers."
+# endif
 
 # include <libport/export.hh>
 
