@@ -18,27 +18,30 @@
 
 # include <libport/export.hh>
 
-# define STATIC_INSTANCE_(Cl, Name)					\
-  class Cl ## Name;							\
-  libport::SingletonPtr<Cl ## Name> Name;				\
-  template<> Cl ## Name* libport::SingletonPtr<Cl ## Name>::ptr = 0
+# define STATIC_INSTANCE_(Cl, Name)                             \
+  class Cl ## Name;                                             \
+  libport::SingletonPtr<Cl ## Name> Name;                       \
+  namespace libport                                             \
+  {                                                             \
+    template<> Cl ## Name* SingletonPtr<Cl ## Name>::ptr = 0;   \
+  }
 
 
-# define STATIC_INSTANCE_DECL_(Cl, Name)				\
-  class Cl ## Name							\
-    : public Cl								\
-  {};									\
+# define STATIC_INSTANCE_DECL_(Cl, Name)        \
+  class Cl ## Name                              \
+    : public Cl                                 \
+  {};                                           \
   STATIC_INSTANCE_(Cl, Name)
 
 
-# define EXTERN_STATIC_INSTANCE_EX(Cl, Name, Api)			\
-  class Api Cl ## Name							\
-    : public Cl								\
-  {};									\
+# define EXTERN_STATIC_INSTANCE_EX(Cl, Name, Api)       \
+  class Api Cl ## Name                                  \
+    : public Cl                                         \
+  {};                                                   \
   Api extern libport::SingletonPtr<Cl ## Name> Name;
 
 
-# define EXTERN_STATIC_INSTANCE(Cl, Name)				\
+# define EXTERN_STATIC_INSTANCE(Cl, Name)               \
   EXTERN_STATIC_INSTANCE_EX(Cl, Name, /* No API. */)
 
 // These _NS version are made to bypass vcxx error C2888
@@ -47,22 +50,27 @@
 // after changes done for liburbi Java.
 // Use them "outside" of any namespace.
 
-# define STATIC_INSTANCE_NS_EX(Cl, Name, NS, Api)			\
-  namespace NS {							\
-    Api libport::SingletonPtr<Cl ## Name> Name;				\
-  }									\
-  template<> NS::Cl ## Name*						\
-  libport::SingletonPtr<NS::Cl ## Name>::ptr = 0
+# define STATIC_INSTANCE_NS_EX(Cl, Name, NS, Api)       \
+  namespace NS                                          \
+  {							\
+    Api libport::SingletonPtr<Cl ## Name> Name;         \
+  }                                                     \
+  namespace libport                                     \
+  {                                                     \
+    template<> NS::Cl ## Name*                          \
+      SingletonPtr<NS::Cl ## Name>::ptr = 0;            \
+  }
 
-# define STATIC_INSTANCE_NS(Cl, Name, NS)				\
+# define STATIC_INSTANCE_NS(Cl, Name, NS)               \
   STATIC_INSTANCE_NS_EX(Cl, Name, NS, /* No API */)
 
-# define STATIC_INSTANCE_DECL_NS(Cl, Name, NS)				\
-  namespace NS {							\
-    class Cl ## Name							\
-      : public Cl							\
-    {};									\
-  }									\
+# define STATIC_INSTANCE_DECL_NS(Cl, Name, NS)  \
+  namespace NS                                  \
+  {                                             \
+    class Cl ## Name                            \
+      : public Cl                               \
+    {};                                         \
+  }                                             \
   STATIC_INSTANCE_NS(Cl, Name, NS)
 
 namespace libport

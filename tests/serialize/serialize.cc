@@ -206,12 +206,12 @@ void binary_class()
   }
 }
 
-class Unix;
-class Linux;
-class Gentoo;
-class Debian;
+struct Unix;
+struct Linux;
+struct Gentoo;
+struct Debian;
 
-class Unix: public libport::meta::Hierarchy<Unix, TYPELIST_2(Gentoo, Debian)>
+struct Unix: public libport::meta::Hierarchy<Unix, TYPELIST_2(Gentoo, Debian)>
 {
 
 };

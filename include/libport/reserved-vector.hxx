@@ -25,7 +25,7 @@ namespace libport
     : super_type()
   {
     this->reserve(R);
-    insert(this->end(), other.begin(), other.end());
+    this->insert(this->end(), other.begin(), other.end());
   }
 
   template<class T, int R>
@@ -35,7 +35,7 @@ namespace libport
     : super_type()
   {
     this->reserve(R);
-    insert(this->end(), b, e);
+    this->insert(this->end(), b, e);
   }
 
   template<class T, int R>
