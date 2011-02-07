@@ -1,0 +1,43 @@
+/*
+ * Copyright (C) 2011, Gostai S.A.S.
+ *
+ * This software is provided "as is" without warranty of any kind,
+ * either expressed or implied, including but not limited to the
+ * implied warranties of fitness for a particular purpose.
+ *
+ * See the LICENSE file for more information.
+ */
+
+#ifndef LIBPORT_CSTDINT
+# define LIBPORT_CSTDINT
+
+# include <libport/detect-win32.h>
+# include <libport/config.h>
+
+# if defined HAVE_CSTDINT
+#  include <cstdint>
+# elif defined HAVE_STDINT_H
+#  include <stdint.h>
+# endif
+
+# if defined WIN32
+#  include <boost/cstdint.hpp>
+extern "C"
+{
+#  ifndef LIBPORT_NO_CSTDINT_TYPES
+  using boost::uint32_t;
+  using boost::int32_t;
+  using boost::uint16_t;
+  using boost::int16_t;
+  using boost::uint8_t;
+  using boost::int8_t;
+#  endif
+}
+
+# endif // WIN32
+
+#endif // LIBPORT_CSTDINT
+
+// Local Variables:
+// mode: C++
+// End:

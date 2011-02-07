@@ -79,6 +79,9 @@ fi
 # libport/backtrace.
 AC_CHECK_HEADERS([execinfo.h])
 
+# libport/cstdint.
+AC_CHECK_HEADERS([cstdint stdint.h])
+
 # libport/semaphore.
 AC_CHECK_LIB([rt], [clock_gettime],
              [AC_SUBST([CLOCK_LIBS], [-lrt])])

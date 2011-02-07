@@ -205,24 +205,16 @@ extern "C"
 }
 # endif
 
-/*-------------------------------------.
-| usleep and base types from cstdint.  |
-`--------------------------------------*/
+/*---------.
+| usleep.  |
+`---------*/
 
 # if defined WIN32
-#  include <boost/cstdint.hpp>
+#  include <libport/cstdint>
 extern "C"
 {
   // Based on the value I have on my G4 -- Akim.
   typedef boost::uint32_t useconds_t;
-#  ifndef LIBPORT_NO_CSTDINT_TYPES
-  using boost::uint32_t;
-  using boost::int32_t;
-  using boost::uint16_t;
-  using boost::int16_t;
-  using boost::uint8_t;
-  using boost::int8_t;
-#  endif
 }
 
 // Some libraries define usleep as a macro. In this case, do not redefine

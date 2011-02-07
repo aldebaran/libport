@@ -251,6 +251,7 @@ sub libport_headers ($\$)
      |cerrno
      |cmath
      |csignal
+     |cstdint
      |cstdio
      |cstdlib
      |cstring

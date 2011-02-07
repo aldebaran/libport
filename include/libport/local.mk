@@ -14,6 +14,7 @@ libport_include_HEADERS =                       \
   include/libport/cmath                         \
   include/libport/cmath.hxx                     \
   include/libport/csignal                       \
+  include/libport/cstdint                       \
   include/libport/cstdio                        \
   include/libport/cstdlib                       \
   include/libport/cstdlib.hxx                   \
