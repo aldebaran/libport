@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -14,7 +14,7 @@
 
 #include <libport/backtrace.hh>
 #include <libport/foreach.hh>
-#include <libport/unit-test.hh>
+#include <libport/test.hh>
 #include <libport/compiler.hh>
 
 #include <iostream>
@@ -72,6 +72,7 @@ namespace object
 test_suite*
 init_test_suite()
 {
+  skip_if("Wine");
   test_suite* suite = BOOST_TEST_SUITE("libport::backtrace");
   suite->add(BOOST_TEST_CASE(freefunction::check));
   suite->add(BOOST_TEST_CASE(object::check));
