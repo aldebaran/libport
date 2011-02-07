@@ -10,6 +10,7 @@
 
 #include <libport/format.hh>
 #include <libport/debug.hh>
+#include <libport/lockable.hh>
 #include <boost/unordered_map.hpp>
 
 namespace libport
@@ -19,6 +20,8 @@ namespace libport
   boost::format
   format_get(const std::string& s)
   {
+    static libport::Lockable lock;
+    libport::BlockLock bl(lock);
     typedef boost::unordered_map<std::string, boost::format> map_type;
     static map_type map;
     map_type::iterator i = map.find(s);
