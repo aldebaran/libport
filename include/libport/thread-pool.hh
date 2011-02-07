@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -42,7 +42,7 @@ namespace libport
     typedef libport::intrusive_ptr<TaskLock> rTaskLock;
 
     /// Class representing a task.
-    class LIBPORT_API TaskHandle: public RefCounted
+    class LIBPORT_API TaskHandle: public ThreadSafeRefCounted
     {
     public:
       TaskFunc taskFunc;
@@ -62,7 +62,7 @@ namespace libport
     };
 
     /// Class storing a set of tasks that must not run in parallel.
-    class LIBPORT_API TaskLock: public RefCounted
+    class LIBPORT_API TaskLock: public ThreadSafeRefCounted
     {
     public:
       TaskLock();
@@ -99,7 +99,7 @@ namespace libport
     /// Cached number of locked tasks.
     size_t nLockedTasks_;
 
-    class LIBPORT_API Thread: public RefCounted
+    class LIBPORT_API Thread: public ThreadSafeRefCounted
     {
     public:
       /// Must have a dtor to avoid a g++ 'sorry, unimplemented' inlining error
