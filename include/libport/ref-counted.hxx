@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -85,6 +85,31 @@ namespace libport
   RefCounted::Ward::~Ward()
   {
     ref_counted_.count_--;
+  }
+
+  inline void
+  ThreadSafeRefCounted::counter_inc() const
+  {
+    libport::BlockLock bl(lock_);
+    RefCounted::counter_inc();
+  }
+  inline bool
+  ThreadSafeRefCounted::counter_dec() const
+  {
+    libport::BlockLock bl(lock_);
+    return RefCounted::counter_dec();
+  }
+  inline RefCounted::count_type
+  ThreadSafeRefCounted::counter_get() const
+  {
+    libport::BlockLock bl(lock_);
+    return RefCounted::counter_get();
+  }
+  inline void
+  ThreadSafeRefCounted::counter_reset() const
+  {
+    libport::BlockLock bl(lock_);
+    RefCounted::counter_reset();
   }
 }
 
