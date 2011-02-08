@@ -59,7 +59,7 @@ namespace sched
   `------*/
 
   inline void
-  Job::init_common(const libport::Symbol& name)
+  Job::init_common(const std::string& name)
   {
     state_ = to_start;
     frozen_since_ = 0;
@@ -73,7 +73,7 @@ namespace sched
   }
 
   inline
-  Job::Job(Scheduler& scheduler, const libport::Symbol& name)
+  Job::Job(Scheduler& scheduler, const std::string& name)
     : RefCounted()
     , scheduler_(scheduler)
   {
@@ -81,7 +81,7 @@ namespace sched
   }
 
   inline
-  Job::Job(const Job& model, const libport::Symbol& name)
+  Job::Job(const Job& model, const std::string& name)
     : RefCounted()
     , scheduler_(model.scheduler_)
   {
@@ -165,7 +165,7 @@ namespace sched
     return side_effect_free_;
   }
 
-  inline const libport::Symbol&
+  inline const std::string&
   Job::name_get() const
   {
     return name_;

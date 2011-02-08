@@ -94,7 +94,7 @@ namespace libport
     /** \name Factory methods.
      ** \{ */
     /** \brief Create a new unique symbol, forged from \a s. */
-    static Symbol fresh (const std::string& s = "a");
+    static std::string fresh_string (const std::string& s = "a");
     /** \brief Create a new unique symbol, forged from \a s. */
     static Symbol fresh (const Symbol& s);
     /** \brief Return (and cache) an empty symbol. */

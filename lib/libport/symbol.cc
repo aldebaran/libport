@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -57,8 +57,8 @@ namespace libport
   }
   //>>
 
-  Symbol
-  Symbol::fresh (const std::string& s)
+  std::string
+  Symbol::fresh_string (const std::string& s)
   {
     // Counter for unique symbols.
     static unsigned c = 0;
@@ -68,13 +68,13 @@ namespace libport
       o << s << "_" << c;
       ++c;
     } while (mhas(string_set_instance (), o.str ()));
-    return Symbol(o.str ());
+    return o.str ();
   }
 
   Symbol
   Symbol::fresh (const Symbol& s)
   {
-    return fresh(s.name_get ());
+    return Symbol(fresh_string(s.name_get ()));
   }
 
   std::ostream&

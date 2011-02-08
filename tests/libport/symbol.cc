@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -65,8 +65,8 @@ check_fresh()
   const Symbol a0 = Symbol::fresh(Symbol("a"));
   BOOST_CHECK_EQUAL(a0, Symbol("a_0"));
   const Symbol a1("a_1");
-  const Symbol a2 = Symbol::fresh("a");
-  BOOST_CHECK_EQUAL(a2, Symbol("a_2"));
+  std::string a2 = Symbol::fresh_string("a");
+  BOOST_CHECK_EQUAL(a2, "a_2");
 }
 
 void

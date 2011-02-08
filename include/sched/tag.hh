@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -67,7 +67,7 @@ namespace sched
   {
   public:
     // Create a new tag.
-    explicit Tag(libport::Symbol name);
+    explicit Tag(const std::string& name);
     virtual ~Tag();
 
     // Is this tag directly or indirectly frozen or blocked?
@@ -94,8 +94,8 @@ namespace sched
     void unblock();
     void stop(Scheduler&, const boost::any&) const;
 
-    const libport::Symbol& name_get() const;
-    void name_set(const libport::Symbol&);
+    const std::string& name_get() const;
+    void name_set(const std::string&);
     boost::signal0<void>& stop_hook_get();
     boost::signal0<void>& freeze_hook_get();
     boost::signal0<void>& unfreeze_hook_get();
@@ -105,7 +105,7 @@ namespace sched
 
     bool blocked_;
     bool frozen_;
-    libport::Symbol name_;
+    std::string name_;
     boost::any payload_;
     prio_type prio_;
     bool flow_control_;

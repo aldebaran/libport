@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -19,7 +19,7 @@ namespace sched
 {
 
   inline
-  Tag::Tag(libport::Symbol name)
+  Tag::Tag(const std::string& name)
     : blocked_(false)
     , frozen_(false)
     , name_(name)
@@ -80,14 +80,14 @@ namespace sched
     blocked_ = false;
   }
 
-  inline const libport::Symbol&
+  inline const std::string&
   Tag::name_get() const
   {
     return name_;
   }
 
   inline void
-  Tag::name_set(const libport::Symbol& name)
+  Tag::name_set(const std::string& name)
   {
     name_ = name;
   }
