@@ -14,7 +14,7 @@
 # include <libport/preproc.hh>
 # include <libport/traits.hh>
 
-/* ATTRIBUTE_{mode}(Type, Name, [Getter modifiers], [Setter modifiers], [Member modifier])
+/* ATTRIBUTE_{mode}(Type, Name, [Getter modifiers], [Setter modifiers], [Xetter modifier], [Member modifier])
  *
  * mode:
  * - nothing: generate only the membur.
@@ -34,32 +34,65 @@
 
 #define LIBPORT_VARIADIC(...) LIBPORT_LIST_TAIL(LIBPORT_LIST(__VA_ARGS__,))
 
-#define ATTRIBUTE(Type, ...)                  \
-  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), NONE , NONE , LIBPORT_VARIADIC(__VA_ARGS__)) \
+#define ATTRIBUTE(Type, ...)                                            \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   NONE, NONE, NONE, LIBPORT_VARIADIC(__VA_ARGS__))     \
 
-#define ATTRIBUTE_R(Type, ...)                  \
-  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), IMPL , NONE , LIBPORT_VARIADIC(__VA_ARGS__)) \
+#define ATTRIBUTE_R(Type, ...)                                          \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   IMPL, NONE, NONE, LIBPORT_VARIADIC(__VA_ARGS__))     \
 
-#define ATTRIBUTE_r(Type, ...)                  \
-  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), PROTO, NONE , LIBPORT_VARIADIC(__VA_ARGS__))   \
+#define ATTRIBUTE_r(Type, ...)                                          \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   PROTO, NONE, NONE, LIBPORT_VARIADIC(__VA_ARGS__))    \
 
-#define ATTRIBUTE_W(Type, ...)                  \
-  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), NONE , IMPL , LIBPORT_VARIADIC(__VA_ARGS__))   \
+#define ATTRIBUTE_W(Type, ...)                                          \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   NONE, IMPL, NONE, LIBPORT_VARIADIC(__VA_ARGS__))     \
 
-#define ATTRIBUTE_w(Type, ...)                  \
-  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), NONE , PROTO, LIBPORT_VARIADIC(__VA_ARGS__))   \
+#define ATTRIBUTE_w(Type, ...)                                          \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   NONE, PROTO, NONE, LIBPORT_VARIADIC(__VA_ARGS__))    \
 
-#define ATTRIBUTE_RW(Type, ...)                 \
-  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), IMPL , IMPL , LIBPORT_VARIADIC(__VA_ARGS__))   \
+#define ATTRIBUTE_RW(Type, ...)                                         \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   IMPL, IMPL, NONE, LIBPORT_VARIADIC(__VA_ARGS__))     \
 
-#define ATTRIBUTE_rw(Type, ...)                 \
-  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), PROTO, PROTO, LIBPORT_VARIADIC(__VA_ARGS__))   \
+#define ATTRIBUTE_rw(Type, ...)                                         \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   PROTO, PROTO, NONE, LIBPORT_VARIADIC(__VA_ARGS__))   \
 
-#define ATTRIBUTE_Rw(Type, ...)                 \
-  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), IMPL , PROTO, LIBPORT_VARIADIC(__VA_ARGS__))   \
+#define ATTRIBUTE_Rw(Type, ...)                                         \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   IMPL, PROTO, NONE, LIBPORT_VARIADIC(__VA_ARGS__))    \
 
-#define ATTRIBUTE_rW(Type, ...)                 \
-  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), PROTO, IMPL , LIBPORT_VARIADIC(__VA_ARGS__))   \
+#define ATTRIBUTE_rW(Type, ...)                                         \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   PROTO, IMPL, NONE, LIBPORT_VARIADIC(__VA_ARGS__))    \
+
+#define ATTRIBUTE_RX(Type, ...)                                         \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   IMPL, NONE, IMPL, LIBPORT_VARIADIC(__VA_ARGS__))     \
+
+#define ATTRIBUTE_rX(Type, ...)                                         \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   PROTO, NONE, IMPL, LIBPORT_VARIADIC(__VA_ARGS__))    \
+
+#define ATTRIBUTE_RWX(Type, ...)                                        \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   IMPL, IMPL, IMPL, LIBPORT_VARIADIC(__VA_ARGS__))     \
+
+#define ATTRIBUTE_rwX(Type, ...)                                        \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   PROTO, PROTO, IMPL, LIBPORT_VARIADIC(__VA_ARGS__))   \
+
+#define ATTRIBUTE_RwX(Type, ...)                                        \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   IMPL, PROTO, IMPL, LIBPORT_VARIADIC(__VA_ARGS__))    \
+
+#define ATTRIBUTE_rWX(Type, ...)                                        \
+  ATTRIBUTE_BOUNCE(Type, LIBPORT_LIST_HEAD(LIBPORT_LIST(__VA_ARGS__,)), \
+                   PROTO, IMPL, IMPL, LIBPORT_VARIADIC(__VA_ARGS__))    \
 
 
 /*----------.
@@ -70,10 +103,11 @@
   private:                                      \
   Mods Type Name ## _;                          \
 
-#define ATTRIBUTE_BOUNCE(Type, Name, Get, Set, Modifiers)               \
-  ATTRIBUTE_MEMBER(Type, Name, LIBPORT_LIST_NTH(2, Modifiers))          \
+#define ATTRIBUTE_BOUNCE(Type, Name, Get, Set, Xet, Modifiers)          \
+  ATTRIBUTE_MEMBER(Type, Name, LIBPORT_LIST_NTH(3, Modifiers))          \
   ATTRIBUTE_GETTER_##Get(Type, Name, LIBPORT_LIST_NTH(0, Modifiers))    \
   ATTRIBUTE_SETTER_##Set(Type, Name, LIBPORT_LIST_NTH(1, Modifiers))    \
+  ATTRIBUTE_XETTER_##Xet(Type, Name, LIBPORT_LIST_NTH(2, Modifiers))    \
 
 /*---------.
 | Getter.  |
@@ -108,5 +142,19 @@
 #define ATTRIBUTE_SETTER_IMPL(Type, Name, Mods) \
   ATTRIBUTE_SETTER(Type, Name, Mods)            \
   { Name ## _ = val; }                          \
+
+/*---------------.
+| Write getter.  |
+`---------------*/
+
+#define ATTRIBUTE_XETTER_NONE(Type, Name, Mods)
+
+#define ATTRIBUTE_XETTER_PROTO(Type, Name, Mods)                 \
+  ;public:                                                       \
+  Mods Type& Name ## _get()                                      \
+
+#define ATTRIBUTE_XETTER_IMPL(Type, Name, Mods) \
+  ATTRIBUTE_XETTER_PROTO(Type, Name, Mods)      \
+  { return Name ## _; }                         \
 
 #endif
