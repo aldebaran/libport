@@ -53,7 +53,8 @@ namespace libport
         QUEUED,
         RUNNING,
         FINISHED,
-        EXCEPTION
+        EXCEPTION,
+        DROPPED
       };
       State getState() const;
     private:
@@ -66,12 +67,18 @@ namespace libport
     {
     public:
       TaskLock();
+      /** Drop tasks so that the queue never gets bigger than maxSize-1 (0=inf)
+      * So maxSize=1 means that everything is dropped while another task is
+      * running.
+      */
+      TaskLock(unsigned int maxSize);
     private:
       std::list<rTaskHandle> waitingTasks;
       bool registered;
       /// Thread handling this task set.
       rThread handler;
       friend class ThreadPool;
+      unsigned int maxSize;
     };
 
     /// Create a new thread pool that can grow up to \b maxThreads threads.

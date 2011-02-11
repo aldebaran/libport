@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -127,6 +127,21 @@ static void test_lock()
   BOOST_CHECK_EQUAL(errors, 0U);
 }
 
+// Test the dropping feature
+static void test_drop()
+{
+  ThreadPool& tp = *new ThreadPool(10);
+  ThreadPool::rTaskLock l(new ThreadPool::TaskLock(1));
+  ThreadPool::rTaskHandle h1 = tp.queueTask(boost::bind(&usleep, 200000), l);
+  ThreadPool::rTaskHandle h2 = tp.queueTask(boost::bind(&usleep, 200000), l);
+  usleep(100000);
+  ThreadPool::rTaskHandle h3 = tp.queueTask(boost::bind(&usleep, 200000), l);
+  usleep(300000);
+  BOOST_CHECK_EQUAL(h1->getState(), ThreadPool::TaskHandle::FINISHED);
+  BOOST_CHECK_EQUAL(h2->getState(), ThreadPool::TaskHandle::DROPPED);
+  BOOST_CHECK_EQUAL(h3->getState(), ThreadPool::TaskHandle::DROPPED);
+}
+
 test_suite*
 init_test_suite()
 {
@@ -141,5 +156,6 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(test_many_slow));
   suite->add(BOOST_TEST_CASE(test_many_fast));
   suite->add(BOOST_TEST_CASE(test_lock));
+  suite->add(BOOST_TEST_CASE(test_drop));
   return suite;
 }

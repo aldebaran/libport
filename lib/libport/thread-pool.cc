@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -8,12 +8,13 @@
  * See the LICENSE file for more information.
  */
 
+#include <libport/utime.hh>
 #include <libport/thread-pool.hh>
 #include <libport/thread.hh>
 
 // Not using GD for debug, we need a 0-cost when disabled.
-#define debug(a)
-//#define debug(a) std::cerr << a << std::endl
+//#define debug(a)
+#define debug(a) std::cerr << libport::utime() << ' ' << a << std::endl
 
 namespace libport
 {
@@ -119,6 +120,12 @@ namespace libport
     libport::BlockLock bl(lock_);
     if (lock && lock->registered)
     {
+      if (lock->maxSize && lock->waitingTasks.size() >= lock->maxSize -1)
+      {
+        debug("queuetask: dropping task");
+        res->state_ = TaskHandle::DROPPED;
+        return res;
+      }
       debug("queuetask: registered taskLock");
       lock->waitingTasks.push_back(res);
       nLockedTasks_++;
@@ -145,6 +152,7 @@ namespace libport
       queue_.push_back(res);
     if (lock)
       lock->registered = true;
+    res->state_ = TaskHandle::QUEUED;
     return res;
   }
 
@@ -154,7 +162,20 @@ namespace libport
 
   ThreadPool::TaskLock::TaskLock()
     : registered(false)
+    , maxSize(0)
   {
+  }
+
+  ThreadPool::TaskLock::TaskLock(unsigned int maxSize)
+    : registered(false)
+    , maxSize(maxSize)
+  {
+  }
+
+  ThreadPool::TaskHandle::State
+  ThreadPool::TaskHandle::getState() const
+  {
+    return state_;
   }
 
   void
