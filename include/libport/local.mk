@@ -198,6 +198,7 @@ libport_include_HEADERS +=                              \
   include/libport/utime.hxx                             \
   include/libport/valgrind.hh                           \
   include/libport/version.hh                            \
+  include/libport/vector.hh                             \
   include/libport/warning-pop.hh                        \
   include/libport/warning-push.hh                       \
   include/libport/weak-ptr.hh                           \

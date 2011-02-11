@@ -74,6 +74,7 @@ TESTS_BINARIES =                                \
   tests/libport/unescape.cc                     \
   tests/libport/utime.cc			\
   tests/libport/utsname.cc			\
+  tests/libport/vector.cc			\
   tests/libport/xalloc.cc			\
   tests/libport/xltdl.cc
 
