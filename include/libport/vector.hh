@@ -87,7 +87,12 @@ namespace libport
       T* shrink(void* p, unsigned count)
       {
         if (count <= Floor)
-          return 0;
+        {
+          if (p == buffer_)
+            return 0;
+          else
+            return reinterpret_cast<T*>(buffer_);
+        }
         return super_type::shrink(p, count);
       }
 
@@ -166,8 +171,10 @@ namespace libport
     public:
       ATTRIBUTE_ALWAYS_INLINE
       ExponentialCapacity(unsigned size)
-        : size_(size)
-      {}
+        : size_(0)
+      {
+        grow(size);
+      }
 
       ATTRIBUTE_ALWAYS_INLINE
       void
@@ -175,9 +182,8 @@ namespace libport
       {
         if (!size_)
           size_ = 1;
-        else
-          while (size_ < size)
-            size_ <<= 1;
+        while (size_ < size)
+          size_ <<= 1;
       }
 
       ATTRIBUTE_ALWAYS_INLINE
@@ -225,9 +231,7 @@ namespace libport
       bool
       shrink(unsigned size)
       {
-        if (size < Floor)
-          return false;
-        return ExponentialCapacity::shrink(size);
+        return ExponentialCapacity::shrink(size >= Floor ? size : Floor);
       }
   };
 
