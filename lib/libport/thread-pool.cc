@@ -13,8 +13,8 @@
 #include <libport/thread.hh>
 
 // Not using GD for debug, we need a 0-cost when disabled.
-//#define debug(a)
-#define debug(a) std::cerr << libport::utime() << ' ' << a << std::endl
+#define debug(a)
+//#define debug(a) std::cerr << libport::utime() << ' ' << a << std::endl
 
 namespace libport
 {
