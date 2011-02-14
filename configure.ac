@@ -31,6 +31,7 @@ AM_SILENT_RULES([yes])
 URBI_COMPILATION_MODE
 # Look for a C++ compiler.
 URBI_PROG_CXX
+AC_LANG([C++])
 URBI_DIRS([libport])
 
 # We have some assembly for coroutine support.
