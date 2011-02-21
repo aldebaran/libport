@@ -122,6 +122,9 @@ namespace libport
                                                                 \
       LType val;                                                \
       input.read(reinterpret_cast<char*>(&val), s.Size);        \
+      if (input.gcount() != s.Size)                             \
+        throw Exception("Insufficient data to unserialize "     \
+                        #Type);                                 \
       GD_FINFO_DUMP("Normalized: 0x%x", val);                   \
       res = val = Function(val);                                \
       GD_FINFO_DUMP("Long Value: 0x%x", res);                   \
@@ -167,7 +170,11 @@ namespace libport
             return res.out;                                     \
           }                                                     \
           default:                                              \
+          {                                                     \
+            GD_CATEGORY(Serialize.Input.Binary);                \
+            GD_FERROR("Unexpected size %s for %s", (int)s.Size, #Type);\
             unreachable();                                      \
+          }                                                     \
         }                                                       \
       }                                                         \
     };                                                          \
@@ -344,6 +351,8 @@ namespace libport
         // FIXME: alloca
         char* buf = new char[l];
         input.read(buf, std::streamsize(l));
+        if (input.gcount() != std::streamsize(l))
+          throw Exception("Insufficient data to unserialize string");
         std::string res(buf, l);
         delete [] buf;
         return res;
