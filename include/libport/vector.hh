@@ -11,14 +11,13 @@
 #ifndef LIBPORT_VECTOR_HH
 # define LIBPORT_VECTOR_HH
 
-#include <cassert>
-#include <cstdlib>
-#include <iostream>
-#include <string>
-
-#include <boost/foreach.hpp>
+# include <libport/cstdlib>
+# include <iostream>
+# include <string>
+# include <boost/foreach.hpp>
 
 # include <libport/cassert>
+# include <libport/cast.hh>
 
 namespace libport
 {
@@ -68,7 +67,7 @@ namespace libport
       T* allocate(unsigned count)
       {
         if (count <= Floor)
-          return reinterpret_cast<T*>(buffer_);
+          return union_cast<Align*, T*>(buffer_);
         return super_type::allocate(count);
       }
 
@@ -95,7 +94,7 @@ namespace libport
           if (p == buffer_)
             return 0;
           else
-            return reinterpret_cast<T*>(buffer_);
+            return union_cast<Align*, T*>(buffer_);
         }
         return super_type::shrink(p, count);
       }

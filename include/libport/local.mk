@@ -65,6 +65,8 @@ libport_include_HEADERS +=                              \
   include/libport/boost-error.hh                        \
   include/libport/boost-error.hxx                       \
   include/libport/buffer-stream.hh                      \
+  include/libport/cast.hh                               \
+  include/libport/cast.hxx                              \
   include/libport/cli.hh                                \
   include/libport/cli.hxx                               \
   include/libport/compilation.hh                        \
