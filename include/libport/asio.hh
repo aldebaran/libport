@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -75,6 +75,8 @@ namespace libport
   LIBPORT_API boost::asio::io_service&
   get_io_service(bool startWorkerThread = true);
 
+  /// Get the handle associated to io_service polling thread.
+  LIBPORT_API pthread_t get_io_service_poll_thread();
   /** BaseSocket class.
    *
    * This class has a callback-based API: onReadFunc() and onErrorFunc().

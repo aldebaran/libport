@@ -339,6 +339,12 @@ namespace libport
   }
 
   static pthread_t asio_worker_thread;
+
+  pthread_t get_io_service_poll_thread()
+  {
+    return asio_worker_thread;
+  }
+
   boost::asio::io_service&
   get_io_service(bool startWorkerThread)
   {
