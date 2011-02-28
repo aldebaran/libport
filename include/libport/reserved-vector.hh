@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 
-#ifndef LIBORT_RESERVED_VECTOR_HH
+#ifndef LIBPORT_RESERVED_VECTOR_HH
 # define LIBPORT_RESERVED_VECTOR_HH
 
 # include <vector>
