@@ -223,7 +223,7 @@ namespace libport
       void
       grow(unsigned size)
       {
-        assert(size >= Floor);
+        aver_ge(size, Floor);
         ExponentialCapacity::grow(size);
       }
 
@@ -267,7 +267,7 @@ namespace libport
         , size_(end - begin)
         , data_(reinterpret_cast<T*>(allocation_.allocate(capacity_.size())))
       {
-        assert(begin <= end);
+        aver_le(begin, end);
         T* data = data_;
         for (; begin != end; ++begin)
           construction_.construct(data++, *begin);
@@ -408,7 +408,7 @@ namespace libport
 
       iterator erase(iterator it)
       {
-        assert(it >= data_ && it < data_ + size_);
+        aver_le_lt(data_, it, data_ + size_);
         construction_.destroy(it);
         const unsigned before = it - data_;
         const unsigned after  = size_ - before - 1;
