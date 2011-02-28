@@ -1,4 +1,4 @@
-## Copyright (C) 2009-2010, Gostai S.A.S.
+## Copyright (C) 2009-2011, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -26,6 +26,7 @@ TESTS_BINARIES =                                \
   tests/libport/backtrace.cc                    \
   tests/libport/cli.cc                          \
   tests/libport/cmath.cc                        \
+  tests/libport/compiler.cc                     \
   tests/libport/condition.cc                    \
   tests/libport/containers.cc                   \
   tests/libport/cstdlib.cc                      \

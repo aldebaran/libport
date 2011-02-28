@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -15,6 +15,7 @@
 # define LIBPORT_COMPILER_HH
 
 # include <libport/config.h>
+# include <libport/preproc.hh>
 
 /*----------------.
 | __attribute__.  |
@@ -46,6 +47,7 @@
 #  define ATTRIBUTE_PRINTF(Format, FirstArg)
 #  define ATTRIBUTE_STDCALL  __stdcall
 #  define ATTRIBUTE_UNUSED_RESULT /* FILLME */
+#  define ATTRIBUTE_USED          /* FILLME */
 
 # endif // _MSC_VER
 
@@ -72,8 +74,8 @@
 #    define ATTRIBUTE_NOINLINE __attribute__((__noinline__))
 #    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
 #    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
-#    define ATTRIBUTE_PRINTF(Format, FirstArg) \
-         __attribute__((format(printf, Format, FirstArg)))
+#    define ATTRIBUTE_PRINTF(Format, FirstArg)                  \
+       __attribute__((format(printf, Format, FirstArg)))
 
 // Only on i386 architectures.  Left undefined on purpose for other
 // architectures.
@@ -82,6 +84,7 @@
 #    endif
 
 #    define ATTRIBUTE_UNUSED_RESULT __attribute__((warn_unused_result))
+#    define ATTRIBUTE_USED __attribute__((used))
 #  endif
 # endif // !defined __attribute__
 
@@ -102,5 +105,23 @@
 # ifdef _MSC_VER
 #  define __PRETTY_FUNCTION__ __FUNCTION__
 # endif // _MSC_VER
+
+
+/*--------------.
+| LIBPORT_USE.  |
+`--------------*/
+
+// Declare that variables/arguments are used.
+//
+// LIBPORT_USE(Var1, Var2)
+
+# define LIBPORT_USE(...)                               \
+  do {                                                  \
+    BOOST_PP_SEQ_FOR_EACH(LIBPORT_USE_, ,               \
+                          LIBPORT_LIST(__VA_ARGS__,))   \
+  } while (false)
+
+# define LIBPORT_USE_(_, __, Var)               \
+  (void) Var;
 
 #endif // !LIBPORT_COMPILER_HH
