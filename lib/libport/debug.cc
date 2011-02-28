@@ -443,14 +443,14 @@ namespace libport
                              unsigned line)
   {
     debug(msg, types::info, category, fun, file, line);
-    debugger_data().indent++;
+    GD_INDENTATION_INC();
   }
 
   void
   ConsoleDebug::pop()
   {
     assert_gt(debugger_data().indent, 0u);
-    debugger_data().indent--;
+    GD_INDENTATION_DEC();
   }
 
   std::string gd_ihexdump(const unsigned char* data, unsigned size)
@@ -537,14 +537,14 @@ namespace libport
                             unsigned line)
   {
     debug(msg, types::info, category, fun, file, line);
-    debugger_data().indent++;
+    GD_INDENTATION_INC();
   }
 
   void
   SyslogDebug::pop()
   {
     assert_gt(debugger_data().indent, 0u);
-    debugger_data().indent--;
+    GD_INDENTATION_DEC();
   }
 #endif
 

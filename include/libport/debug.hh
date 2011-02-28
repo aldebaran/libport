@@ -188,7 +188,44 @@ namespace libport
   };
 } // namespace libport
 
-# ifndef LIBPORT_DEBUG_DISABLE
+
+
+# if defined LIBPORT_DEBUG_DISABLE
+
+
+/*=========================\
+| Libport.Debug disabled.  |
+\=========================*/
+
+#  define GD_CATEGORY(Cat)                                   LIBPORT_EMPTY
+#  define GD_CHECK_CATEGORY(Cat)                             LIBPORT_NOP
+#  define GD_CURRENT_LEVEL()                                 LIBPORT_NOP
+#  define GD_DEBUGGER                                        LIBPORT_NOP
+#  define GD_DISABLE_CATEGORY(Cat)                           LIBPORT_NOP
+#  define GD_ENABLE(Name)                                    LIBPORT_NOP
+#  define GD_ENABLE_CATEGORY(Cat)                            LIBPORT_NOP
+#  define GD_FILTER(Lvl)                                     LIBPORT_NOP
+#  define GD_FILTER_DEC()                                    LIBPORT_NOP
+#  define GD_FILTER_INC()                                    LIBPORT_NOP
+#  define GD_FPUSH_(...)                                     LIBPORT_NOP
+#  define GD_PUSH_(...)                                      LIBPORT_NOP
+#  define GD_IHEXDUMP(Data, Size)                            LIBPORT_NOP
+#  define GD_INDENTATION()                                   LIBPORT_NOP
+#  define GD_INDENTATION_INC()                               LIBPORT_NOP
+#  define GD_INDENTATION_DEC()                               LIBPORT_NOP
+#  define GD_INIT_DEBUG_PER_(DebugData, DebugInstantiation)  LIBPORT_EMPTY
+#  define GD_LEVEL(Lvl)                                      LIBPORT_NOP
+#  define GD_MESSAGE_(...)                                   LIBPORT_NOP
+#  define GD_QUIT()                                          LIBPORT_NOP
+#  define GD_SHOW_LEVEL(Lvl)                                 LIBPORT_NOP
+
+
+# else // ! LIBPORT_DEBUG_DISABLE
+
+
+/*========================\
+| Libport.Debug enabled.  |
+\========================*/
 
 namespace libport
 {
@@ -277,11 +314,24 @@ namespace libport
 
 #  define GD_FUNCTION __FUNCTION__
 
-#  define GD_ENABLED(Level)                             \
-  (GD_DEBUGGER && GD_DEBUGGER->enabled(::libport::Debug::levels::Level, GD_CATEGORY_GET()))
+#  define GD_ENABLED(Level)                                             \
+  (GD_DEBUGGER                                                          \
+   && GD_DEBUGGER->enabled(::libport::Debug::levels::Level,             \
+                           GD_CATEGORY_GET()))
+
+
+/*---------.
+| Indent.  |
+`---------*/
 
 #  define GD_INDENTATION()                      \
   GD_DEBUGGER->indentation()
+
+#  define GD_INDENTATION_INC()                  \
+  ++libport::debugger_data().indent
+
+#  define GD_INDENTATION_DEC()                  \
+  --libport::debugger_data().indent
 
 
 /*--------.
@@ -399,27 +449,7 @@ namespace libport
 
 #  include <libport/debug.hxx>
 
-# else // LIBPORT_DEBUG_DISABLE defined
-
-#  define GD_CATEGORY(Cat)                                   LIBPORT_EMPTY
-#  define GD_CHECK_CATEGORY(Cat)                             LIBPORT_NOP
-#  define GD_CURRENT_LEVEL()                                 LIBPORT_NOP
-#  define GD_DEBUGGER                                        LIBPORT_NOP
-#  define GD_DISABLE_CATEGORY(Cat)                           LIBPORT_NOP
-#  define GD_ENABLE(Name)                                    LIBPORT_NOP
-#  define GD_ENABLE_CATEGORY(Cat)                            LIBPORT_NOP
-#  define GD_FILTER(Lvl)                                     LIBPORT_NOP
-#  define GD_FILTER_DEC()                                    LIBPORT_NOP
-#  define GD_FILTER_INC()                                    LIBPORT_NOP
-#  define GD_FPUSH_(...)                                     LIBPORT_NOP
-#  define GD_PUSH_(...)                                      LIBPORT_NOP
-#  define GD_IHEXDUMP(Data, Size)                            LIBPORT_NOP
-#  define GD_INIT_DEBUG_PER_(DebugData, DebugInstantiation)  LIBPORT_EMPTY
-#  define GD_LEVEL(Lvl)                                      LIBPORT_NOP
-#  define GD_MESSAGE_(...)                                   LIBPORT_NOP
-#  define GD_QUIT()                                          LIBPORT_NOP
-#  define GD_SHOW_LEVEL(Lvl)                                 LIBPORT_NOP
-# endif //LIBPORT_DEBUG_DISABLE
+# endif //!LIBPORT_DEBUG_DISABLE
 
 
 
