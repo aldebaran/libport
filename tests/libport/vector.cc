@@ -75,11 +75,14 @@ static void test_push_back()
     BOOST_CHECK(v.empty());
     for (int i = 0; i < I; ++i)
     {
-      BOOST_CHECK_EQUAL(v.size(), i);
+      BOOST_CHECK_EQUAL(v.size(), size_t(i));
       v.push_back(T(i));
     }
-    BOOST_CHECK_EQUAL(v.size(), I);
-    BOOST_CHECK(!v.empty() || I == 0);
+    if (I)
+      BOOST_CHECK(!v.empty());
+    else
+      BOOST_CHECK(v.empty());
+    BOOST_CHECK_EQUAL(v.size(), size_t(I));
   }
   T::after();
 }
@@ -95,16 +98,16 @@ static void test_push_back_pop_back()
     BOOST_CHECK_EQUAL(v.size(), 0u);
     for (int i = 0; i < I; ++i)
     {
-      BOOST_CHECK_EQUAL(v.size(), i);
+      BOOST_CHECK_EQUAL(v.size(), size_t(i));
       v.push_back(T(i));
       int c = 0;
       foreach (T content, v)
         BOOST_CHECK_EQUAL(content.i, c++);
     }
-    BOOST_CHECK_EQUAL(v.size(), I);
+    BOOST_CHECK_EQUAL(v.size(), size_t(I));
     for (unsigned i = I; i; --i)
     {
-      BOOST_CHECK_EQUAL(v.size(), i);
+      BOOST_CHECK_EQUAL(v.size(), size_t(i));
       v.pop_back();
       int c = 0;
       foreach (T content, v)
@@ -132,7 +135,7 @@ static void test_push_pop_back()
       foreach (T content, v)
         BOOST_CHECK_EQUAL(content.i, c++);
     }
-    BOOST_CHECK_EQUAL(v.size(), I);
+    BOOST_CHECK_EQUAL(v.size(), size_t(I));
     for (unsigned i = I; i; --i)
     {
       v.pop_back();
@@ -154,7 +157,7 @@ static void test_clear()
     Vector v;
     for (unsigned i = I; i; --i)
       v.push_back(T(i));
-    BOOST_CHECK_EQUAL(v.size(), I);
+    BOOST_CHECK_EQUAL(v.size(), size_t(I));
     v.clear();
     BOOST_CHECK_EQUAL(v.size(), 0u);
     T::after();
@@ -173,17 +176,17 @@ static void test_copy()
       v.push_back(T(i));
 
     Vector v2(v);
-    BOOST_CHECK_EQUAL(v2.size(), I);
+    BOOST_CHECK_EQUAL(v2.size(), size_t(I));
     v.clear();
-    BOOST_CHECK_EQUAL(v2.size(), I);
+    BOOST_CHECK_EQUAL(v2.size(), size_t(I));
     int c = 0;
     foreach (T content, v2)
       BOOST_CHECK_EQUAL(content.i, c++);
 
     Vector v3(v2.begin(), v2.end());
-    BOOST_CHECK_EQUAL(v3.size(), I);
+    BOOST_CHECK_EQUAL(v3.size(), size_t(I));
     v2.clear();
-    BOOST_CHECK_EQUAL(v3.size(), I);
+    BOOST_CHECK_EQUAL(v3.size(), size_t(I));
     c = 0;
     foreach (T content, v3)
       BOOST_CHECK_EQUAL(content.i, c++);
@@ -206,7 +209,7 @@ static void test_push_front_pop_front()
       foreach (T content, v)
         BOOST_CHECK_EQUAL(content.i, c++);
     }
-    BOOST_CHECK_EQUAL(v.size(), I);
+    BOOST_CHECK_EQUAL(v.size(), size_t(I));
     for (int i = 0; i < I; ++i)
     {
       int c = i;
@@ -233,7 +236,7 @@ static void test_insert()
 
     for (int i = I / 4; i < 3 * I / 4; ++i)
       v.insert(v.begin() + i, T(i));
-    BOOST_CHECK_EQUAL(v.size(), I);
+    BOOST_CHECK_EQUAL(v.size(), size_t(I));
     int c = 0;
     foreach (T content, v)
       BOOST_CHECK_EQUAL(content.i, c++);
@@ -270,35 +273,35 @@ init_test_suite()
   test_suite* suite = BOOST_TEST_SUITE("libport::vector test suite");
 #define TEST_ITERS(Name, A, Ctor, Cap, Iters)                           \
   suite->add(BOOST_TEST_CASE((&test_##Name                              \
-                              <Iters, Content, A, Ctor, Cap>)));        \
+                              <Iters, Content, A, Ctor, Cap>)))
 
-#define TEST_POLICIES(Name, A, Ctor, Cap)       \
-    TEST_ITERS(Name, A, Ctor, Cap, 0);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 1);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 2);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 3);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 4);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 5);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 6);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 7);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 8);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 9);          \
-    TEST_ITERS(Name, A, Ctor, Cap, 14);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 15);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 16);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 17);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 30);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 31);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 32);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 33);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 62);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 63);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 64);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 65);         \
-    TEST_ITERS(Name, A, Ctor, Cap, 126);        \
-    TEST_ITERS(Name, A, Ctor, Cap, 127);        \
-    TEST_ITERS(Name, A, Ctor, Cap, 128);        \
-    TEST_ITERS(Name, A, Ctor, Cap, 129);        \
+#define TEST_POLICIES(Name, A, Ctor, Cap)      \
+    TEST_ITERS(Name, A, Ctor, Cap, 0);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 1);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 2);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 3);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 4);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 5);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 6);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 7);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 8);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 9);         \
+    TEST_ITERS(Name, A, Ctor, Cap, 14);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 15);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 16);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 17);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 30);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 31);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 32);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 33);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 62);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 63);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 64);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 65);        \
+    TEST_ITERS(Name, A, Ctor, Cap, 126);       \
+    TEST_ITERS(Name, A, Ctor, Cap, 127);       \
+    TEST_ITERS(Name, A, Ctor, Cap, 128);       \
+    TEST_ITERS(Name, A, Ctor, Cap, 129);
 
   typedef libport::FlooredAllocator<Content, 8> FlooredAllocator;
 
