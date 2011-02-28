@@ -260,7 +260,7 @@ namespace libport
         , construction_()
         , capacity_(0)
         , size_(0)
-        , data_(reinterpret_cast<T*>(allocation_.allocate(capacity_.size())))
+        , data_(allocation_.allocate(capacity_.size()))
       {}
 
       template <typename It>
@@ -269,7 +269,7 @@ namespace libport
         , construction_()
         , capacity_(end - begin)
         , size_(end - begin)
-        , data_(reinterpret_cast<T*>(allocation_.allocate(capacity_.size())))
+        , data_(allocation_.allocate(capacity_.size()))
       {
         aver_le(begin, end);
         T* data = data_;
@@ -282,7 +282,7 @@ namespace libport
         , construction_()
         , capacity_(model.size())
         , size_(0)
-        , data_(reinterpret_cast<T*>(allocation_.allocate(capacity_.size())))
+        , data_(allocation_.allocate(capacity_.size()))
       {
         T* data = data_;
         size_ = model.size();

@@ -326,4 +326,3 @@ init_test_suite()
     TEST(erase);
     return suite;
 }
-
