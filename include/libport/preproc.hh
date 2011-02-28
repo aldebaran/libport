@@ -511,24 +511,26 @@ for i in range(0, 10):
 # define LIBPORT_LIST_SEP_LIBPORT_FALSE(List, Sep) LIBPORT_LIST_HEAD(List) \
   LIBPORT_LIST_APPLY_AUX(LIBPORT_LIST_SEP_HELPER, LIBPORT_LIST_TAIL(List), Sep)
 # define LIBPORT_LIST_SEP_LIBPORT_TRUE(List, Sep)
-# define LIBPORT_LIST_SEP(List, Sep) LIBPORT_CAT(LIBPORT_LIST_SEP_, LIBPORT_LIST_EMPTY(List))(List, LIBPORT_WRAP(Sep))
+# define LIBPORT_LIST_SEP(List, Sep)                                    \
+  LIBPORT_CAT(LIBPORT_LIST_SEP_,                                        \
+              LIBPORT_LIST_EMPTY(List))(List, LIBPORT_WRAP(Sep))
 
 /*-------------------.
 | LIBPORT_LIST_ARG.  |
 `-------------------*/
 
-# define LIBPORT_LIST_ARG_HELPER(Macro, Args) Macro Args
-# define LIBPORT_LIST_ARG(Macro, List) LIBPORT_LIST_ARG_HELPER(Macro, (LIBPORT_LIST_SEP(List, LIBPORT_COMMA)))
+# define LIBPORT_LIST_ARG_HELPER(Macro, Args)   \
+  Macro Args
+# define LIBPORT_LIST_ARG(Macro, List)                                  \
+  LIBPORT_LIST_ARG_HELPER(Macro, (LIBPORT_LIST_SEP(List, LIBPORT_COMMA)))
 
-/*------------------------.
-| LIBPORT_LIST_DECORATE.  |
-`------------------------*/
+/*-----------------------.
+| LIBPORT_VAARGS_APPLY.  |
+`-----------------------*/
 
-#define LIBPORT_LIST_DECORATE
-
-/// Call Macro(useless, arg, elem) for each extra argument.
-#define LIBPORT_VAARGS_APPLY(Macro, arg, ...) \
-    BOOST_PP_SEQ_FOR_EACH(Macro, arg,         \
-    LIBPORT_LIST(__VA_ARGS__,))
+/// Call Macro(useless, Arg, elem) for each elem (extra argument).
+#define LIBPORT_VAARGS_APPLY(Macro, Arg, ...)           \
+  BOOST_PP_SEQ_FOR_EACH(Macro, Arg,                     \
+                        LIBPORT_LIST(__VA_ARGS__,))
 
 #endif
