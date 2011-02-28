@@ -35,9 +35,10 @@ namespace libport
   void
   format_failure(const std::string& fmt, const std::exception& e)
   {
+    LIBPORT_USE(fmt);
     GD_CATEGORY(Libport.Format);
     GD_FERROR("format: \"%s\": %s", fmt, e.what());
-    throw;
+    throw e;
   }
 
 }

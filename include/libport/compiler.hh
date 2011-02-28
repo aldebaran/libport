@@ -110,6 +110,16 @@
 
 
 /*--------------.
+| LIBPORT_NOP.  |
+`--------------*/
+
+// A no-op for macros that should expand to nothing, but not result in
+// warnings such as "warning: empty body in an if-statement".
+
+# define LIBPORT_NOP                            \
+  ((void) 0)
+
+/*--------------.
 | LIBPORT_USE.  |
 `--------------*/
 

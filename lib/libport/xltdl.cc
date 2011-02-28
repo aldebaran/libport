@@ -47,6 +47,7 @@ namespace libport
          errors += vasprintf(&msg, format, args) < 0;
          if (!errors && msg)
          {
+           LIBPORT_USE(level);
            GD_FINFO_DEBUG("%s%s", std::string(level * 2, ' '), msg);
            free(msg);
          }

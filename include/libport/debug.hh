@@ -14,22 +14,20 @@
 # include <libport/detect-win32.h>
 # include <libport/compiler.hh>
 
-# ifndef LIBPORT_DEBUG_DISABLE
+# include <libport/csignal>
 
-#  include <libport/csignal>
+# include <list>
+# include <boost/unordered_map.hpp>
+# include <sstream>
 
-#  include <list>
-#  include <boost/unordered_map.hpp>
-#  include <sstream>
-
-#  include <libport/format.hh>
-#  include <boost/function.hpp>
-#  include <libport/export.hh>
-#  include <libport/finally.hh>
-#  include <libport/local-data.hh>
-#  include <libport/option-parser.hh>
-#  include <libport/symbol.hh>
-#  include <libport/thread-data.hh>
+# include <libport/format.hh>
+# include <boost/function.hpp>
+# include <libport/export.hh>
+# include <libport/finally.hh>
+# include <libport/local-data.hh>
+# include <libport/option-parser.hh>
+# include <libport/symbol.hh>
+# include <libport/thread-data.hh>
 
 namespace libport
 {
@@ -37,8 +35,9 @@ namespace libport
   {
     typedef Symbol category_type;
     typedef boost::unordered_map<category_type, bool> categories_type;
-    typedef std::pair<bool,unsigned> pattern_infos_type;
-    typedef boost::unordered_map<category_type, pattern_infos_type> patterns_type;
+    typedef std::pair<bool, unsigned> pattern_infos_type;
+    typedef boost::unordered_map<category_type, pattern_infos_type>
+      patterns_type;
 
     categories_type& categories();
     LIBPORT_API category_type add_category(category_type name);
@@ -187,6 +186,12 @@ namespace libport
       bool _active;
     };
   };
+} // namespace libport
+
+# ifndef LIBPORT_DEBUG_DISABLE
+
+namespace libport
+{
   LIBPORT_API extern Debug* debugger;
 
   class LIBPORT_API ConsoleDebug: public Debug
@@ -396,24 +401,24 @@ namespace libport
 
 # else // LIBPORT_DEBUG_DISABLE defined
 
-#  define GD_CATEGORY(Cat)
-#  define GD_CHECK_CATEGORY(Cat)
-#  define GD_CURRENT_LEVEL()
-#  define GD_DEBUGGER
-#  define GD_DISABLE_CATEGORY(Cat)
-#  define GD_ENABLE(Name)
-#  define GD_ENABLE_CATEGORY(Cat)
-#  define GD_FILTER(Lvl)
-#  define GD_FILTER_DEC()
-#  define GD_FILTER_INC()
-#  define GD_FPUSH_(...)
-#  define GD_PUSH_(...)
-#  define GD_IHEXDUMP(Data, Size)
-#  define GD_INIT_DEBUG_PER_(DebugData, DebugInstantiation)
-#  define GD_LEVEL(Lvl)
-#  define GD_MESSAGE_(...)
-#  define GD_QUIT()
-#  define GD_SHOW_LEVEL(Lvl)
+#  define GD_CATEGORY(Cat)                                   LIBPORT_EMPTY
+#  define GD_CHECK_CATEGORY(Cat)                             LIBPORT_NOP
+#  define GD_CURRENT_LEVEL()                                 LIBPORT_NOP
+#  define GD_DEBUGGER                                        LIBPORT_NOP
+#  define GD_DISABLE_CATEGORY(Cat)                           LIBPORT_NOP
+#  define GD_ENABLE(Name)                                    LIBPORT_NOP
+#  define GD_ENABLE_CATEGORY(Cat)                            LIBPORT_NOP
+#  define GD_FILTER(Lvl)                                     LIBPORT_NOP
+#  define GD_FILTER_DEC()                                    LIBPORT_NOP
+#  define GD_FILTER_INC()                                    LIBPORT_NOP
+#  define GD_FPUSH_(...)                                     LIBPORT_NOP
+#  define GD_PUSH_(...)                                      LIBPORT_NOP
+#  define GD_IHEXDUMP(Data, Size)                            LIBPORT_NOP
+#  define GD_INIT_DEBUG_PER_(DebugData, DebugInstantiation)  LIBPORT_EMPTY
+#  define GD_LEVEL(Lvl)                                      LIBPORT_NOP
+#  define GD_MESSAGE_(...)                                   LIBPORT_NOP
+#  define GD_QUIT()                                          LIBPORT_NOP
+#  define GD_SHOW_LEVEL(Lvl)                                 LIBPORT_NOP
 # endif //LIBPORT_DEBUG_DISABLE
 
 
