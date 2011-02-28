@@ -151,12 +151,12 @@ namespace libport
     int unlink_errno = errno;
     if (c)
     {
-      (void) close_errno;
+      LIBPORT_USE(close_errno);
       errabort(close_errno, "sem_close");
     }
     if (u)
     {
-      (void) unlink_errno;
+      LIBPORT_USE(unlink_errno);
       errabort(unlink_errno, "sem_unlink");
     }
 # else

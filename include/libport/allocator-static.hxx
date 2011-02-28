@@ -21,7 +21,7 @@ namespace libport
   void*
   StaticallyAllocated<Exact, Chunk>::operator new(size_t size)
   {
-    (void)size;
+    LIBPORT_USE(size);
 
     // Allocations exceeds the chunk size.
     assert_le(size / sizeof(long long), Exact::allocator_static_max_size);

@@ -263,7 +263,7 @@ namespace libport
                  const std::string& port,
                  bool udp)
   {
-    (void)udp;
+    LIBPORT_USE(udp);
     aver(!udp);
     boost::system::error_code erc;
     erc = Socket::listenProto<boost::asio::ip::tcp>(

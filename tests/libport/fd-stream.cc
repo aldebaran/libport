@@ -171,7 +171,7 @@ fd_read_jumbo(FdStream*& stream, int fd)
 // Either a problem with libport::thread, either a QEmu pthread implementation
 // bug. Joining the thread is not an absolute necessity anyway.
 //  libport::joinThread(thread);
-  (void) thread;
+  LIBPORT_USE(thread);
 }
 
 static void

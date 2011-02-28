@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -12,6 +12,7 @@
 # define LIBPORT_PTHREAD_H
 
 # include <libport/config.h>
+# include <libport/compiler.hh>
 # include <libport/detect-win32.h>
 
 # if defined WIN32
@@ -44,7 +45,7 @@ int pthread_join(pthread_t thread, void** retval);
   do {                                          \
     if (int err = Function (__VA_ARGS__))       \
       {                                         \
-        (void) err;                             \
+        LIBPORT_USE(err);                       \
         errabort(err, #Function);               \
       }                                         \
   } while (false)
