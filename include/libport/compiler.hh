@@ -33,6 +33,7 @@
 #    define ATTRIBUTE_DLLEXPORT __declspec(dllexport)
 #    define ATTRIBUTE_DLLIMPORT __declspec(dllimport)
 #  endif
+#  define ATTRIBUTE_MALLOC  /* FILLME */
 #  define ATTRIBUTE_NOINLINE __declspec(noinline)
 #  define ATTRIBUTE_NORETURN __declspec(noreturn)
 #  define ATTRIBUTE_NOTHROW  __declspec(nothrow)
@@ -71,6 +72,7 @@
 #    endif
 #    define ATTRIBUTE_DLLIMPORT ATTRIBUTE_DLLEXPORT
 
+#    define ATTRIBUTE_MALLOC __attribute__((__malloc__))
 #    define ATTRIBUTE_NOINLINE __attribute__((__noinline__))
 #    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
 #    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))

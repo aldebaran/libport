@@ -28,6 +28,8 @@ namespace libport
   {
     public:
       ATTRIBUTE_ALWAYS_INLINE
+      ATTRIBUTE_UNUSED_RESULT
+      ATTRIBUTE_MALLOC
       T* allocate(unsigned count)
       {
         return reinterpret_cast<T*>(malloc(count * sizeof(T)));
@@ -61,6 +63,8 @@ namespace libport
       typedef Allocator<T> super_type;
 
       ATTRIBUTE_ALWAYS_INLINE
+      ATTRIBUTE_UNUSED_RESULT
+      ATTRIBUTE_MALLOC
       T* allocate(unsigned count)
       {
         if (count <= Floor)
