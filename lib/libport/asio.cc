@@ -137,9 +137,11 @@ namespace libport
     }
 
     void
-    UDPSocket::handle_receive(const boost::system::error_code&,
+    UDPSocket::handle_receive(const boost::system::error_code& err,
                               size_t sz)
     {
+      if (err)
+        return;
       boost::shared_ptr<UDPLink> l(new UDPLinkImpl(socket_, remote_endpoint_,
                                                    getDestructionLock()));
       onRead(&recv_buffer_[0], sz, l);
@@ -427,7 +429,19 @@ namespace libport
     }
     //waitForDestructionPermission();
   }
-
+  static std::map<unsigned short,  netdetail::UDPSocket*> udp_map;
+  bool Socket::closeUDP(unsigned short port)
+  {
+    netdetail::UDPSocket* s = libport::find0(udp_map, port);
+    if (s)
+    {
+      delete s;
+      udp_map.erase(port);
+      return true;
+    }
+    else
+      return false;
+  }
   unsigned short
   Socket::listenUDP(const std::string& host,
                     const std::string& port,
@@ -463,7 +477,9 @@ namespace libport
     return 0;
   ok:
     s->start_receive();
-    return s->getLocalPort();
+    unsigned short lp = s->getLocalPort();
+    udp_map[lp] = s;
+    return lp;
   }
 
   void

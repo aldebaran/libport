@@ -299,6 +299,8 @@ namespace libport
                             boost::asio::io_service& s
                               = libport::get_io_service());
 
+    /// Close UDP socket listening on \b port.
+    static bool closeUDP(unsigned short port);
     /** Listen using TCP or UDP.
      *
      * \param f a socket factory. For each new connection the function will
