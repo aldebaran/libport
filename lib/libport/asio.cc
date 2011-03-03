@@ -13,6 +13,7 @@
 #define LIBPORT_NO_SSL
 
 #include <libport/asio.hh>
+#include <libport/containers.hh>
 #include <libport/detect-win32.h>
 #include <libport/format.hh>
 #include <libport/thread.hh>
