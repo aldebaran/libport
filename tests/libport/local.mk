@@ -21,6 +21,7 @@ TESTS_BINARIES =                                \
   tests/libport/allocator-static.cc		\
   tests/libport/asio.cc                         \
   tests/libport/assert.cc                       \
+  tests/libport/atomic.cc			\
   tests/libport/attributes.cc                   \
   tests/libport/base64.cc                       \
   tests/libport/backtrace.cc                    \

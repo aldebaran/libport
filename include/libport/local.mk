@@ -57,6 +57,7 @@ libport_include_HEADERS +=                              \
   include/libport/allocator-static.hxx                  \
   include/libport/asio.hh                               \
   include/libport/asio.hxx                              \
+  include/libport/atomic.hh				\
   include/libport/attributes.hh                         \
   include/libport/backtrace.hh                          \
   include/libport/backtrace.hxx                         \
