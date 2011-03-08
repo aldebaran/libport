@@ -67,13 +67,18 @@ namespace libport
     LIBPORT_API void
     uninitialized_msg(const std::string& msg)
     {
-      static bool tail = false;
-      if (!tail++)
-        std::cerr << "[Libport.Debug] "
-                  << "Uninitialized debug, fallback to stderr." << std::endl;
-      std::cerr << "[Libport.Debug] " << msg;
-      if (msg.empty() || msg[msg.size() - 1] != '\n')
-        std::cerr << std::endl;
+      static bool dump =
+        getenv("GD_LEVEL") && libport::streq(getenv("GD_LEVEL"), "DUMP");
+      if (dump)
+      {
+        static bool tail = false;
+        if (!tail++)
+          std::cerr << "[Libport.Debug] "
+                    << "Uninitialized debug, fallback to stderr." << std::endl;
+        std::cerr << "[Libport.Debug] " << msg;
+        if (msg.empty() || msg[msg.size() - 1] != '\n')
+          std::cerr << std::endl;
+      }
     }
 
     // Categories added so far.
