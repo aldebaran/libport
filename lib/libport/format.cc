@@ -15,6 +15,23 @@
 
 namespace libport
 {
+  class FormatMap: public boost::unordered_map<std::string, boost::format>
+  {
+    public:
+      FormatMap(bool& ward)
+        : ward_(ward)
+      {
+        ward_ = true;
+      }
+
+      ~FormatMap()
+      {
+        ward_ = false;
+      }
+
+    private:
+      bool& ward_;
+  };
 
   LIBPORT_API
   boost::format
@@ -22,13 +39,18 @@ namespace libport
   {
     static libport::Lockable lock;
     libport::BlockLock bl(lock);
-    typedef boost::unordered_map<std::string, boost::format> map_type;
-    static map_type map;
-    map_type::iterator i = map.find(s);
-    if (i == map.end())
-      return map[s].parse(s);
+    static bool map_ok(false);
+    static FormatMap map(map_ok);
+    if (map_ok)
+    {
+      FormatMap::iterator i = map.find(s);
+      if (i == map.end())
+        return map[s].parse(s);
+      else
+        return i->second;
+    }
     else
-      return i->second;
+      return boost::format(s);
   }
 
   LIBPORT_API
