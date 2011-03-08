@@ -39,8 +39,8 @@ namespace libport
     typedef boost::unordered_map<category_type, pattern_infos_type>
       patterns_type;
 
-    void uninitialized_msg(const std::string& msg);
-
+    /// Report \a msg, completely bypassing Libport.Debug.
+    LIBPORT_API void uninitialized_msg(const std::string& msg);
 
     categories_type& categories();
     LIBPORT_API category_type add_category(category_type name);
