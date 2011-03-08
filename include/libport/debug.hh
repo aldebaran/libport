@@ -39,6 +39,9 @@ namespace libport
     typedef boost::unordered_map<category_type, pattern_infos_type>
       patterns_type;
 
+    void uninitialized_msg(const std::string& msg);
+
+
     categories_type& categories();
     LIBPORT_API category_type add_category(category_type name);
     LIBPORT_API int enable_category(category_type name);
@@ -315,9 +318,8 @@ namespace libport
 #  define GD_FUNCTION __FUNCTION__
 
 #  define GD_ENABLED(Level)                                             \
-  (GD_DEBUGGER                                                          \
-   && GD_DEBUGGER->enabled(::libport::Debug::levels::Level,             \
-                           GD_CATEGORY_GET()))
+  (GD_DEBUGGER->enabled(::libport::Debug::levels::Level,                \
+                        GD_CATEGORY_GET()))                             \
 
 
 /*---------.
@@ -341,11 +343,16 @@ namespace libport
 #  define GD_MESSAGE_(Type, Level, Message)                             \
   do                                                                    \
   {                                                                     \
-    if (GD_ENABLED(Level))                                              \
-      GD_DEBUGGER->debug(Message,                                       \
-                         ::libport::Debug::types::Type,                 \
-                         GD_CATEGORY_GET(),                             \
-                         GD_FUNCTION, __FILE__, __LINE__);              \
+    if (GD_DEBUGGER)                                                    \
+    {                                                                   \
+      if (GD_ENABLED(Level))                                            \
+        GD_DEBUGGER->debug(Message,                                     \
+                           ::libport::Debug::types::Type,               \
+                           GD_CATEGORY_GET(),                           \
+                           GD_FUNCTION, __FILE__, __LINE__);            \
+    }                                                                   \
+    else                                                                \
+      ::libport::debug::uninitialized_msg(Message);                     \
   }                                                                     \
   while (0)                                                             \
 
@@ -355,9 +362,15 @@ namespace libport
 #  define GD_PUSH_(Message, Level)                                      \
   libport::Debug::Indent BOOST_PP_CAT(_gd_indent_, __LINE__)            \
     (GD_DEBUGGER, GD_ENABLED(Level));                                   \
+  if (GD_DEBUGGER)                                                      \
+  {                                                                     \
   if (GD_ENABLED(Level))                                                \
     GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                       \
-                      GD_FUNCTION, __FILE__, __LINE__)                  \
+                      GD_FUNCTION, __FILE__, __LINE__);                 \
+  }                                                                     \
+  else                                                                  \
+    ::libport::debug::uninitialized_msg(Message);                       \
+
 
 /*-------------.
 | Categories.  |

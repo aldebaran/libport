@@ -64,6 +64,18 @@ namespace libport
     // Wether categories are enabled by default.
     static bool default_category_state = true;
 
+    LIBPORT_API void
+    uninitialized_msg(const std::string& msg)
+    {
+      static bool warned = false;
+      if (!warned)
+      {
+        std::cerr << "[Libport.Debug] Uninitialized debug, fallback to stderr." << std::endl;
+        warned = true;
+      }
+      std::cerr << "[Libport.Debug] " << msg << std::endl;
+    }
+
     // Categories added so far.
     categories_type&
     categories()
