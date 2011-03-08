@@ -37,12 +37,12 @@ namespace libport
   boost::format
   format_get(const std::string& s)
   {
-    static libport::Lockable lock;
-    libport::BlockLock bl(lock);
     static bool map_ok(false);
     static FormatMap map(map_ok);
     if (map_ok)
     {
+      static libport::Lockable lock;
+      libport::BlockLock bl(lock);
       FormatMap::iterator i = map.find(s);
       if (i == map.end())
         return map[s].parse(s);
