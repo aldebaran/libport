@@ -82,7 +82,9 @@ run for foreign packages):
 
 =item spaces *
 
-Clean up trailing spaces.
+Nuke trailing white spaces.  Convert from DOS to Unix if needed.  Map
+initial tabs to spaces.  Delete initial and final empty lines.  Ensure
+ending '\n'.
 
 =item relicense *
 
@@ -434,14 +436,20 @@ sub libport_renamings ($\$)
 }
 
 
-# libport_spaces ($FILE, \$CONTENTS)
-# ---------------------------------
-# Nuke trailing white spaces.  Convert from DOS to Unix if needed.
+=item C<libport_spaces ($file, \$contents)>
+
+Clean up blank uses.
+
+=cut
+
 sub libport_spaces ($\$)
 {
   my ($file, $contents_ref) = @_;
 
+  $$contents_ref =~ s{^(\t+)}{ " " x (8 * length($1)) }gme;
   $$contents_ref =~ s/[ \t\r]+$//gm;
+  $$contents_ref =~ s/\A\n+//;
+  $$contents_ref =~ s/\n*\Z/\n/;
 }
 
 
