@@ -141,13 +141,13 @@ namespace libport
 
     // Add a new category pattern.
     int
-    enable_category(Symbol pattern)
+    enable_category(Symbol pattern, bool enabled)
     {
       patterns()[pattern] = std::make_pair(true, current_pattern());
       foreach (categories_type::value_type& s, categories())
       {
         if (fnmatch(pattern.name_get(), s.first.name_get()) == 0)
-          s.second = true;
+          s.second = enabled;
       }
 
       return 42;
@@ -157,14 +157,7 @@ namespace libport
     int
     disable_category(Symbol pattern)
     {
-      patterns()[pattern] = std::make_pair(false, current_pattern());
-      foreach (categories_type::value_type& s, categories())
-      {
-        if (fnmatch(pattern.name_get(), s.first.name_get()) == 0)
-          s.second = false;
-      }
-
-      return 42;
+      return enable_category(pattern, false);
     }
 
     // Enable/Disable a new category pattern with modifier.
@@ -177,16 +170,7 @@ namespace libport
         p = p.substr(1);
       else
         modifier = '+';
-      bool value = modifier == '+';
-
-      patterns()[Symbol(p)] = std::make_pair(value, current_pattern());
-      foreach (categories_type::value_type& s, categories())
-      {
-        if (fnmatch(p, s.first.name_get()) == 0)
-          s.second = value;
-      }
-
-      return 42;
+      return enable_category(Symbol(p), modifier == '+');
     }
 
     bool test_category(Symbol name)
@@ -223,10 +207,8 @@ namespace libport
         switch (state)
         {
           case ENABLE:
-            enable_category(pattern);
-            break;
           case DISABLE:
-            disable_category(pattern);
+            enable_category(pattern, state == ENABLE);
             break;
           case AUTO:
             auto_category(pattern);
