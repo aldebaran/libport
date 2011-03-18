@@ -204,21 +204,23 @@ namespace libport
     static void set_category_state(const char* list,
                                    const category_modifier_type state)
     {
-      if (state == ENABLE)
-        debug::default_category_state = false;
-      else
-        debug::default_category_state = true;
+      // If the mode is "AUTO", then if the first specs is to enable
+      // ("+...") then the default is to disable, otherwise enable.
+      // If the mode if not AUTO, then the default is the converse of
+      // the mode: ENABLE -> false, and DISABLE => true.
+      debug::default_category_state =
+        state == AUTO ? (*list == '-') : (state != ENABLE);
 
       // Also set existing to default_category_state.
-      foreach(categories_type::value_type& v, categories())
+      foreach (categories_type::value_type& v, categories())
         v.second = debug::default_category_state;
 
       std::string s(list); // Do not pass temporary to make_tokenizer.
       tokenizer_type t = make_tokenizer(s, ",");
-      foreach(const std::string& elem, t)
+      foreach (const std::string& elem, t)
       {
         Symbol pattern(elem);
-        switch(state)
+        switch (state)
         {
           case ENABLE:
             enable_category(pattern);
@@ -239,14 +241,14 @@ namespace libport
     , timestamps_(getenv("GD_TIME") || getenv("GD_TIMESTAMP_US"))
   {
     // Process enabled/disabled/auto categories in environment.
-    if (const char* autolist = getenv("GD_CATEGORY"))
-      debug::set_category_state(autolist, debug::AUTO);
+    if (const char* cp = getenv("GD_CATEGORY"))
+      debug::set_category_state(cp, debug::AUTO);
     else
     {
-      if (const char* enablelist = getenv("GD_ENABLE_CATEGORY"))
-        debug::set_category_state(enablelist, debug::ENABLE);
-      if (const char* disablelist = getenv("GD_DISABLE_CATEGORY"))
-        debug::set_category_state(disablelist, debug::DISABLE);
+      if (const char* cp = getenv("GD_ENABLE_CATEGORY"))
+        debug::set_category_state(cp, debug::ENABLE);
+      if (const char* cp = getenv("GD_DISABLE_CATEGORY"))
+        debug::set_category_state(cp, debug::DISABLE);
     }
 
     if (const char* lvl_c = getenv("GD_LEVEL"))

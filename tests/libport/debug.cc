@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -83,7 +83,7 @@ concurrent_categories()
 test_suite*
 init_test_suite()
 {
-  test_suite* suite = BOOST_TEST_SUITE("libport::debug");
+  test_suite* suite = BOOST_TEST_SUITE("Libport.Debug");
   suite->add(BOOST_TEST_CASE(dynamic_level));
 
   // For some spurious reason, this test doesn't work with
