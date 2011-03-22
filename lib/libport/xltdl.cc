@@ -56,11 +56,12 @@ namespace libport
 
        void init()
        {
-         static bool tail = false;
-         if (!tail++)
+         static bool first = true;
+         if (first)
          {
            lt_dlinit();
            lt_dladd_log_function((lt_dllog_function*) &ltdebug, 0);
+           first = false;
          }
        }
      }

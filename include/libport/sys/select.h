@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -46,14 +46,20 @@ namespace std
   operator<< (std::ostream& o, const fd_set& s)
   {
     o << "fd_set {";
-    bool not_first = false;
+    bool first = true;
 # ifndef WIN32
     for (int i = 0; i < FD_SETSIZE; ++i)
       if (LIBPORT_FD_ISSET(i, &s))
-        o << (not_first++ ? ", " : "") << i;
+      {
+        o << (first ? "" : ", ") << i;
+        first = false;
+      }
 # else
     for (unsigned int i = 0; i < s.fd_count; ++i)
-      o << (not_first++ ? ", " : "") << s.fd_array[i];
+    {
+      o << (first ? "" : ", ") << s.fd_array[i];
+      first = false;
+    }
 # endif
     return o << " }";
   }

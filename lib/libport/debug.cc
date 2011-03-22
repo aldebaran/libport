@@ -71,10 +71,14 @@ namespace libport
         getenv("GD_LEVEL") && libport::streq(getenv("GD_LEVEL"), "DUMP");
       if (dump)
       {
-        static bool tail = false;
-        if (!tail++)
+        static bool first = true;
+        if (first)
+        {
           std::cerr << "[Libport.Debug] "
                     << "Uninitialized debug, fallback to stderr." << std::endl;
+          first = false;
+        }
+
         std::cerr << "[Libport.Debug] " << msg;
         if (msg.empty() || msg[msg.size() - 1] != '\n')
           std::cerr << std::endl;
