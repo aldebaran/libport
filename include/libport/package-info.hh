@@ -37,7 +37,12 @@ namespace libport
     /// Register a dependency (the package info of a sub library).
     void dependency_add(const PackageInfo& p);
 
+    /// Whether the key is defined.
+    bool has(const key_type& k) const;
+    /// A reference to the storage for key \a k.  Create on need.
     data_type& operator[](const key_type& k);
+    /// Return the value associated to \a k.
+    /// Raise on unknown keys.
     data_type get(const key_type& k) const;
 
     /// NAME version VERSION rev. REVISION.

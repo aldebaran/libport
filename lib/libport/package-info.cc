@@ -10,6 +10,7 @@
 
 #include <iostream>
 
+#include <libport/containers.hh>
 #include <libport/foreach.hh>
 #include <libport/package-info.hh>
 #include <libport/lexical-cast.hh>
@@ -43,8 +44,8 @@ namespace libport
     data_type res;
     res =
       name_version_revision() + "\n"
-      + "Copyright (C) " + get ("copyright-years")
-      + " " + get ("copyright-holder")
+      + "Copyright (C) " + get("copyright-years")
+      + " " + get("copyright-holder")
       + "."
       ;
 
@@ -65,6 +66,12 @@ namespace libport
   PackageInfo::operator[](const key_type& k)
   {
     return map_[k];
+  }
+
+  bool
+  PackageInfo::has(const key_type& k) const
+  {
+    return libport::has(map_, k);
   }
 
   PackageInfo::data_type
@@ -91,11 +98,11 @@ namespace libport
     return o;
   }
 
-#define DEFINE(Fun, Field)                              \
-  PackageInfo::integer_type                             \
-  PackageInfo::Fun() const                              \
-  {                                                     \
-    return lexical_cast<integer_type>(get(#Field));     \
+#define DEFINE(Fun, Field)                                              \
+  PackageInfo::integer_type                                             \
+  PackageInfo::Fun() const                                              \
+  {                                                                     \
+    return has(#Field) ? lexical_cast<integer_type>(get(#Field)) : 0;   \
   }
 
   DEFINE(version_major, "major")
