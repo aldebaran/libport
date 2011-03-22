@@ -116,7 +116,7 @@ namespace libport
       ATTRIBUTE_ALWAYS_INLINE
       void construct(void* m, unsigned count)
       {
-        for (int i = 0; i < count; ++i)
+        for (unsigned i = 0; i < count; ++i)
           construct(reinterpret_cast<T*>(m) + i);
       }
 
@@ -129,7 +129,7 @@ namespace libport
       ATTRIBUTE_ALWAYS_INLINE
       void construct(void* m, unsigned count, const T& val)
       {
-        for (int i = 0; i < count; ++i)
+        for (unsigned i = 0; i < count; ++i)
           construct(reinterpret_cast<T*>(m) + i, val);
       }
 
