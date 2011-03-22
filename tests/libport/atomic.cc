@@ -69,7 +69,7 @@ static void increment_decrement()
     pthread_join(inc2, 0);                                              \
                                                                         \
     for (long i = Start; i Comp 2 * max; Step i)			\
-      BOOST_CHECK(libport::mhas(set1, i) ^ libport::mhas(set2, i));     \
+      BOOST_CHECK(libport::has(set1, i) ^ libport::has(set2, i));       \
   }                                                                     \
 
 TEST(increment_fetch,  1, <=  , ++);

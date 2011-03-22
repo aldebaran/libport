@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -25,7 +25,9 @@
 # include <boost/unordered_map.hpp>
 # include <boost/unordered_set.hpp>
 
+# include <libport/compiler.hh>
 # include <libport/foreach.hh>
+# include <libport/traits.hh>
 
 namespace libport
 {
@@ -35,37 +37,39 @@ namespace libport
   void
   deep_clear(Container& c);
 
-  /// Find \a v in the whole \a c.
+  /// Find \a k in the whole \a c.
   template<typename Container>
   inline typename Container::const_iterator
-  find(const Container& c, const typename Container::value_type& v);
+  find(const Container& c, const typename traits::key_type<Container>::type& k);
 
-  /// Find \a v in the whole \a c.
+  /// Find \a k in the whole \a c.
   template<typename Container>
   inline typename Container::iterator
-  find(Container& c, const typename Container::value_type& v);
+  find(Container& c, const typename traits::key_type<Container>::type& k);
 
   /// Look up for \c k in \a c, return its value, or 0 if unknown.
   ///
   /// For associative containers mapping pointers.
   template<typename Container>
   inline typename Container::mapped_type
-  find0(Container& c, const typename Container::key_type& k);
+  find0(Container& c, const typename traits::key_type<Container>::type& k);
 
   /// Apply \a f to all the members of \a c, and return it.
   template<typename Container, typename Functor>
   inline Functor&
   for_each(Container& c, Functor& v);
 
-  /// Is \a v member of \a c?
+  /// Is \a k member of \a c?
   template<typename Container>
   inline bool
-  has(const Container& c, const typename Container::value_type& v);
+  has(const Container& c, const typename traits::key_type<Container>::type& k);
 
   /// Is \a v member of \a c?  Use member find (set, map, hash_map).
+  /// Use libport::has instead.
   template<typename Container>
+  ATTRIBUTE_DEPRECATED
   inline bool
-  mhas(const Container& c, const typename Container::key_type& v);
+  mhas(const Container& c, const typename traits::key_type<Container>::type& v);
 
   /// Insert or update \a key -> \a value in \a map, return iterator to it.
   template<typename Map>

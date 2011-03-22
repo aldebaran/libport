@@ -11,6 +11,9 @@
 #ifndef LIBPORT_TRAITS_HH
 # define LIBPORT_TRAITS_HH
 
+# include <list>
+# include <vector>
+
 # include <boost/tr1/type_traits.hpp>
 
 # include <libport/meta.hh>
@@ -19,9 +22,10 @@ namespace libport
 {
   namespace traits
   {
-    /*------.
-    | IsPOD |
-    `------*/
+
+    /*--------.
+    | IsPOD.  |
+    `--------*/
 
     /// Whether 'T' is a POD.
     template <typename T>
@@ -30,9 +34,9 @@ namespace libport
       static const bool res = std::tr1::is_pod<T>::value;
     };
 
-    /*---.
-    | Id |
-    `---*/
+    /*-----.
+    | Id.  |
+    `-----*/
 
     /// Identity
     template <typename T>
@@ -41,9 +45,9 @@ namespace libport
       typedef T res;
     };
 
-    /*------.
-    | Const |
-    `------*/
+    /*--------.
+    | Const.  |
+    `--------*/
 
     /// Constify T
     template <typename T>
@@ -52,9 +56,9 @@ namespace libport
       typedef const T res;
     };
 
-    /*----.
-    | Ptr |
-    `----*/
+    /*------.
+    | Ptr.  |
+    `------*/
 
     /// Make T a pointer
     template <typename T>
@@ -63,9 +67,9 @@ namespace libport
       typedef T* res;
     };
 
-    /*----.
-    | Ref |
-    `----*/
+    /*------.
+    | Ref.  |
+    `------*/
 
     /// Make T a reference
     template <typename T>
@@ -74,9 +78,9 @@ namespace libport
       typedef T& res;
     };
 
-    /*---------.
-    | ConstPtr |
-    `---------*/
+    /*-----------.
+    | ConstPtr.  |
+    `-----------*/
 
     /// Make T a const pointer
     template <typename T>
@@ -85,9 +89,9 @@ namespace libport
       typedef typename meta::Compose<Ptr, Const>::Res<T>::res res;
     };
 
-    /*---------.
-    | ConstRef |
-    `---------*/
+    /*-----------.
+    | ConstRef.  |
+    `-----------*/
 
     /// Make T a const reference
     template <typename T>
@@ -143,9 +147,9 @@ namespace libport
       typedef T res;
     };
 
-    /*----.
-    | Arg |
-    `----*/
+    /*------.
+    | Arg.  |
+    `------*/
 
     /// Give the best type for passing a T as argument
     /* That is, T if T is a POD, const T& otherwise.
@@ -157,9 +161,9 @@ namespace libport
       typedef typename meta::If<IsPOD<T>::res, T, const T&>::res res;
     };
 
-    /*--------.
-    | Compose |
-    `--------*/
+    /*----------.
+    | Compose.  |
+    `----------*/
 
     /// Compose meta functions.
     template <template <typename> class F1, template <typename> class F2>
@@ -172,15 +176,40 @@ namespace libport
       };
     };
 
-    /*--------.
-    | Flatten |
-    `--------*/
+    /*----------.
+    | Flatten.  |
+    `----------*/
 
     /// Remove all const and reference marks from T
     template <typename T>
     struct Flatten
     {
       typedef typename Compose<RemoveConst, RemoveReference>::fun<T>::res res;
+    };
+
+    /*-----------.
+    | key_type.  |
+    `-----------*/
+
+    /// For a container, the type of what can be given to find.
+    template <typename Container>
+    struct key_type
+    {
+      typedef typename Container::key_type type;
+    };
+
+    template < class T, class Allocator>
+    struct key_type<std::list<T, Allocator> >
+    {
+      typedef std::list<T, Allocator> container_type;
+      typedef typename container_type::value_type type;
+    };
+
+    template < class T, class Allocator>
+    struct key_type<std::vector<T, Allocator> >
+    {
+      typedef std::vector<T, Allocator> container_type;
+      typedef typename container_type::value_type type;
     };
   }
 }

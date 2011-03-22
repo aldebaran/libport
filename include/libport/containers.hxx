@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -23,6 +23,7 @@
 
 # include <boost/range.hpp>
 # include <boost/unordered_set.hpp>
+# include <boost/unordered_map.hpp>
 
 # include <libport/containers.hh>
 # include <libport/foreach.hh>
@@ -47,9 +48,9 @@ namespace libport
   {
     typedef Container container;
     typedef typename container::iterator iterator;
-    typedef typename container::value_type value_type;
+    typedef typename traits::key_type<container>::type key_type;
     static iterator
-    find(container& c, const value_type& v)
+    find(container& c, const key_type& v)
     {
       return std::find(begin(c), end(c), v);
     }
@@ -61,17 +62,23 @@ namespace libport
   {                                                     \
     typedef LIBPORT_UNWRAP(Type) container;             \
     typedef typename container::iterator iterator;      \
-    typedef typename container::value_type value_type;  \
+    typedef typename traits::key_type<container>::type key_type;\
     static iterator                                     \
-    find(container& c, const value_type& v)             \
+    find(container& c, const key_type& v)               \
     {                                                   \
       return c.find(v);                                 \
     }                                                   \
-  };                                                    \
+  }
 
   LIBPORT_CONTAINER_FIND_MEMBER(
-    (typename Value, typename Hash, typename Pred, typename Alloc),
-    (boost::unordered_set<Value, Hash, Pred, Alloc>));
+    (typename Key, typename Data, typename Hash, typename Pred, typename Alloc),
+    (boost::unordered_map<Key, Data, Hash, Pred, Alloc>));
+  LIBPORT_CONTAINER_FIND_MEMBER(
+    (typename Data, typename Hash, typename Pred, typename Alloc),
+    (boost::unordered_set<Data, Hash, Pred, Alloc>));
+  LIBPORT_CONTAINER_FIND_MEMBER(
+    (typename Key, typename Data, typename Compare, typename Alloc),
+    (std::map<Key, Data, Compare, Alloc>));
   LIBPORT_CONTAINER_FIND_MEMBER(
     (typename Key, typename Compare, typename Alloc),
     (std::set<Key, Compare, Alloc>));
@@ -81,22 +88,22 @@ namespace libport
   // Find \a v in the whole \a c.
   template<typename Container>
   inline typename Container::const_iterator
-  find(const Container& c, const typename Container::value_type& v)
+  find(const Container& c, const typename traits::key_type<Container>::type& v)
   {
-    return find(const_cast<Container&>(c), v);
+    return libport::find(const_cast<Container&>(c), v);
   }
 
   // Find \a v in the whole \a c.
   template<typename Container>
   inline typename Container::iterator
-  find(Container& c, const typename Container::value_type& v)
+  find(Container& c, const typename traits::key_type<Container>::type& v)
   {
     return Finder<Container>::find(c, v);
   }
 
   template<typename Container>
   inline typename Container::mapped_type
-  find0(Container& c, const typename Container::key_type& k)
+  find0(Container& c, const typename traits::key_type<Container>::type& k)
   {
     typename Container::const_iterator i = c.find(k);
     if (i != end(c))
@@ -111,7 +118,7 @@ namespace libport
   inline Functor&
   for_each(Container& c, Functor& f)
   {
-    foreach(const typename Container::value_type& i, c)
+    foreach(const typename traits::key_type<Container>::type& i, c)
       f(c);
     return f;
   }
@@ -120,19 +127,19 @@ namespace libport
   // Is \a v member of \a c?
   template<typename Container>
   inline bool
-  has(const Container& c, const typename Container::value_type& v)
+  has(const Container& c, const typename traits::key_type<Container>::type& v)
   {
     // We specify the instance to solve a conflict between the
     // two finds above, that compete against each other because
     // the parameter Container can embed a "const".
-    return find<Container>(c, v) != end(c);
+    return libport::find<Container>(c, v) != end(c);
   }
 
 
   // Is \a v member of \a c?
   template<typename Container>
   inline bool
-  mhas(const Container& c, const typename Container::key_type& v)
+  mhas(const Container& c, const typename traits::key_type<Container>::type& v)
   {
     return c.find(v) != end(c);
   }

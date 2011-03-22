@@ -64,10 +64,10 @@ namespace libport
     static unsigned c = 0;
     std::ostringstream o;
     do {
-      o.str ("");
+      o.str("");
       o << s << "_" << c;
       ++c;
-    } while (mhas(string_set_instance (), o.str ()));
+    } while (has(string_set_instance(), o.str()));
     return o.str ();
   }
 
