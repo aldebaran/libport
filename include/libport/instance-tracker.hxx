@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -35,7 +35,7 @@ namespace libport
   template <typename T>
   bool InstanceTracker<T>::check(T* inst) const
   {
-    return libport::mhas(instances_, inst);
+    return libport::has(instances_, inst);
   }
 
   template <typename T>

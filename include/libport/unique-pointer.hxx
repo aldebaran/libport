@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -24,7 +24,7 @@ namespace libport
     // We don't care about multiple registrations of 0.
     if (!t)
       return true;
-    else if (libport::mhas(set_, t))
+    else if (libport::has(set_, t))
       return false;
     else
     {
