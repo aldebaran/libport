@@ -27,6 +27,7 @@
 
 # include <libport/containers.hh>
 # include <libport/foreach.hh>
+# include <libport/fwd.hh>
 # include <libport/preproc.hh>
 
 namespace libport
@@ -56,18 +57,18 @@ namespace libport
     }
   };
 
-#define LIBPORT_CONTAINER_FIND_MEMBER(Template, Type)   \
-  template<LIBPORT_UNWRAP(Template)>                    \
-  struct Finder<LIBPORT_UNWRAP(Type)>                   \
-  {                                                     \
-    typedef LIBPORT_UNWRAP(Type) container;             \
-    typedef typename container::iterator iterator;      \
-    typedef typename traits::key_type<container>::type key_type;\
-    static iterator                                     \
-    find(container& c, const key_type& v)               \
-    {                                                   \
-      return c.find(v);                                 \
-    }                                                   \
+#define LIBPORT_CONTAINER_FIND_MEMBER(Template, Type)                   \
+  template<LIBPORT_UNWRAP(Template)>                                    \
+  struct Finder<LIBPORT_UNWRAP(Type)>                                   \
+  {                                                                     \
+    typedef LIBPORT_UNWRAP(Type) container;                             \
+    typedef typename container::iterator iterator;                      \
+    typedef typename traits::key_type<container>::type key_type;        \
+    static iterator                                                     \
+    find(container& c, const key_type& v)                               \
+    {                                                                   \
+      return c.find(v);                                                 \
+    }                                                                   \
   }
 
   LIBPORT_CONTAINER_FIND_MEMBER(
@@ -79,6 +80,9 @@ namespace libport
   LIBPORT_CONTAINER_FIND_MEMBER(
     (typename Key, typename Data, typename Compare, typename Alloc),
     (std::map<Key, Data, Compare, Alloc>));
+  LIBPORT_CONTAINER_FIND_MEMBER(
+    (typename Key, typename Data),
+    (libport::map<Key, Data>));
   LIBPORT_CONTAINER_FIND_MEMBER(
     (typename Key, typename Compare, typename Alloc),
     (std::set<Key, Compare, Alloc>));
@@ -141,7 +145,7 @@ namespace libport
   inline bool
   mhas(const Container& c, const typename traits::key_type<Container>::type& v)
   {
-    return c.find(v) != end(c);
+    return libport::has(c, v);
   }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -54,7 +54,8 @@ namespace libport
       unsigned long mask;
       unsigned long val;
     };
-    typedef C<real_value_type, std::allocator<real_value_type> > container_type_;
+    typedef std::allocator<real_value_type> allocator_type;
+    typedef C<real_value_type, allocator_type > container_type_;
 
     typedef typename container_type_::iterator base_iterator_;
 
@@ -141,6 +142,6 @@ namespace libport
   };
 }
 
-# include "libport/safe-container.hxx"
+# include <libport/safe-container.hxx>
 
 #endif

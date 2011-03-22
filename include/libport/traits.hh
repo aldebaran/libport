@@ -17,6 +17,9 @@
 # include <boost/tr1/type_traits.hpp>
 
 # include <libport/meta.hh>
+# include <libport/preproc.hh>
+# include <libport/safe-container.hh>
+# include <libport/vector.hh>
 
 namespace libport
 {
@@ -198,19 +201,25 @@ namespace libport
       typedef typename Container::key_type type;
     };
 
-    template < class T, class Allocator>
-    struct key_type<std::list<T, Allocator> >
-    {
-      typedef std::list<T, Allocator> container_type;
-      typedef typename container_type::value_type type;
-    };
+    // Define key_type as value_type for these types.
+# define DECLARE(Parameters, Type)                      \
+    template < LIBPORT_UNWRAP(Parameters)>              \
+    struct key_type<LIBPORT_UNWRAP(Type) >              \
+    {                                                   \
+      typedef LIBPORT_UNWRAP(Type) container_type;      \
+      typedef typename container_type::value_type type; \
+    }
 
-    template < class T, class Allocator>
-    struct key_type<std::vector<T, Allocator> >
-    {
-      typedef std::vector<T, Allocator> container_type;
-      typedef typename container_type::value_type type;
-    };
+    DECLARE((class T, class Allocator),
+            (std::list<T, Allocator>));
+    DECLARE((class T, class Allocator),
+            (std::vector<T, Allocator>));
+
+    DECLARE((template <class U, class V> class C, class T),
+            (SafeContainer<C, T>));
+    DECLARE((typename T, typename A, typename Cons, typename Capa),
+            (Vector<T, A, Cons, Capa>));
+# undef DECLARE
   }
 }
 

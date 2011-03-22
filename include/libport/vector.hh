@@ -22,6 +22,10 @@
 namespace libport
 {
 
+  /*------------.
+  | Allocator.  |
+  `------------*/
+
   template <typename T>
   class Allocator
   {
@@ -54,6 +58,11 @@ namespace libport
         return reinterpret_cast<T*>(malloc(count * sizeof(T)));
       }
   };
+
+
+  /*-------------------.
+  | FlooredAllocator.  |
+  `-------------------*/
 
   template <typename T, unsigned Floor>
   class FlooredAllocator: public Allocator<T>
@@ -103,6 +112,11 @@ namespace libport
       typedef long long Align;
       Align buffer_[((sizeof(T) - 1) / sizeof(Align) + 1) * Floor];
   };
+
+
+  /*--------------.
+  | Constructor.  |
+  `--------------*/
 
   template <typename T>
   class Constructor
@@ -169,6 +183,10 @@ namespace libport
       }
   };
 
+  /*----------------------.
+  | ExponentialCapacity.  |
+  `----------------------*/
+
   class ExponentialCapacity
   {
     public:
@@ -213,6 +231,10 @@ namespace libport
       unsigned size_;
   };
 
+  /*-----------------------------.
+  | FlooredExponentialCapacity.  |
+  `-----------------------------*/
+
   template <unsigned Floor>
   class FlooredExponentialCapacity: public ExponentialCapacity
   {
@@ -237,6 +259,11 @@ namespace libport
         return ExponentialCapacity::shrink(size >= Floor ? size : Floor);
       }
   };
+
+
+  /*---------.
+  | Vector.  |
+  `---------*/
 
   template <typename T,
             typename AllocationPolicy = Allocator<T>,
