@@ -125,14 +125,14 @@ namespace libport
     if (i == i_end)
       return ".";
 
-    bool tail = false;
+    bool first = true;
     if (absolute_get())
     {
       res = *i;
       ++i;
 #ifdef WIN32
       // Add a "\" after the drive letter or network share.
-      tail = true;
+      first = false;
 #endif
     }
 
@@ -141,8 +141,9 @@ namespace libport
       // Remove the "." and empty components.
       if (!i->empty() && *i != ".")
       {
-        if (tail++)
+        if (!first)
           res += separator_;
+        first = false;
         res += *i;
       }
     }

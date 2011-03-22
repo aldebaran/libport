@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -39,13 +39,14 @@ namespace libport
   inline std::ostream&
   separator<R, S>::operator() (std::ostream& o) const
   {
-    bool tail = false;
+    bool first = true;
     typedef typename boost::range_value<R>::type value_type;
     foreach (const value_type& e, container_)
     {
-      if (tail++)
+      if (!first)
         o << separator_;
       o << deref << e;
+      first = false;
     }
     return o;
   }

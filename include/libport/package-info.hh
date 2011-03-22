@@ -82,6 +82,7 @@ namespace libport
       bool operator <= (const Version& v) const;
     };
     Version version() const;
+
   private:
     map_type map_;
     /// Sub packages (Dependencies).
@@ -90,9 +91,10 @@ namespace libport
   };
 
   /// Report the signature of \a p on \a o.
-  LIBPORT_API std::ostream& operator<<(std::ostream& o, const PackageInfo& p);
-  LIBPORT_API std::ostream& operator<<(std::ostream& o,
-                                       const PackageInfo::Version& p);
+  LIBPORT_API std::ostream&
+  operator<<(std::ostream& o, const PackageInfo& p);
+  LIBPORT_API std::ostream&
+  operator<<(std::ostream& o, const PackageInfo::Version& p);
 }
 
 /// Define \a Var using information from config.h and version.hh.
@@ -124,9 +126,12 @@ namespace libport
 # define LIBPORT_PACKAGE_INFO_STATIC_VAR_(Prefix, Var)	\
   static libport::PackageInfo Var;                      \
   do {                                                  \
-    static bool tail = false;                           \
-    if (!tail++)                                        \
+    static bool first = true;                           \
+    if (first)                                          \
+    {                                                   \
+      first = false;                                    \
       LIBPORT_PACKAGE_INFO_INIT_(Prefix, Var);          \
+    }                                                   \
   } while (0)
 
 /// Define a static variable name \a Var.

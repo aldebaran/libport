@@ -82,9 +82,12 @@ namespace libport
   std::ostream&
   PackageInfo::dump(std::ostream& o) const
   {
-    bool tail = false;
+    bool first = true;
     foreach (value_type p, map_)
-      o << (tail++ ? ", " : "") << p.first << " = " << p.second;
+    {
+      o << (first ? "" : ", ") << p.first << " = " << p.second;
+      first = false;
+    }
     return o;
   }
 
