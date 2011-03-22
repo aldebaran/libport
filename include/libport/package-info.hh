@@ -105,7 +105,7 @@ namespace libport
 /// Define \a Var using information from config.h and version.hh.
 # define LIBPORT_PACKAGE_INFO_INIT_(Prefix, Var)                \
   do {                                                          \
-    (Var)["bug-report"]         = Prefix ## BUGREPORT;          \
+    (Var)["bug-report"]         = Prefix ## BUG_REPORT;         \
     (Var)["copyright-holder"]   = Prefix ## COPYRIGHT_HOLDER;   \
     (Var)["copyright-years"]    = Prefix ## COPYRIGHT_YEARS;    \
     (Var)["date"]               = Prefix ## DATE;               \
@@ -116,7 +116,7 @@ namespace libport
     (Var)["patch"]              = Prefix ## PATCH;              \
     (Var)["revision"]           = Prefix ## REVISION;           \
     (Var)["string"]             = Prefix ## STRING;             \
-    (Var)["subminor"]           = Prefix ## SUB_MINOR;           \
+    (Var)["subminor"]           = Prefix ## SUB_MINOR;          \
     (Var)["tarname"]            = Prefix ## TARNAME;            \
     (Var)["version"]            = Prefix ## VERSION;            \
     (Var)["version-rev"]        = Prefix ## VERSION_REV;        \
