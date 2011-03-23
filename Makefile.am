@@ -1,4 +1,4 @@
-## Copyright (C) 2006, 2008-2010, Gostai S.A.S.
+## Copyright (C) 2006, 2008-2011, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -22,7 +22,7 @@ ACLOCAL_AMFLAGS = -I build-aux/m4 -I build-aux
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status $@
 
-EXTRA_DIST += 					\
+EXTRA_DIST +=					\
   bootstrap					\
   LICENSE
 

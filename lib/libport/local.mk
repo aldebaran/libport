@@ -89,7 +89,7 @@ nodist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/revision-stub.hh
 BUILT_SOURCES += $(nodist_lib_libport_libport@LIBSFX@_la_SOURCES)
 lib/libport/revision-stub.hh: $(VERSIONIFY)
-	$(AT_V_GEN) $(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --stub=$@
+	$(AT_V_GEN) $(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_INFO_ --stub=$@
 
 # These are broken and someone will have to fix them...
 # libport_sources += 				\

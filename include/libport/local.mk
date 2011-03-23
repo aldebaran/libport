@@ -247,5 +247,5 @@ EXTRA_DIST += include/libport/format.hh.gen
 
 # revision.hh
 include/libport/revision.hh: $(top_srcdir)/.version $(VERSIONIFY)
-	$(AM_V_GEN)$(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --header=$@
+	$(AM_V_GEN) $(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --header=$@
 
