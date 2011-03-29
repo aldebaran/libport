@@ -136,4 +136,16 @@
 # define LIBPORT_USE_(_, __, Var)               \
   (void) Var;
 
+/*------------------.
+| LIBPORT_SECTION.  |
+`------------------*/
+
+// Each section must be pre-declared with its access rights, to do so, you
+// should include compiler-section.hh
+# ifdef _MSC_VER
+#  define LIBPORT_SECTION(Name) __declspec(allocate(#Name))
+# else
+#  define LIBPORT_SECTION(Name) __attribute__((section(#Name)))
+# endif
+
 #endif // !LIBPORT_COMPILER_HH
