@@ -128,12 +128,12 @@ namespace libport
                          types::Type type,
                          const std::string& fun = "",
                          const std::string& file = "",
-                         unsigned line = 0) = 0;
+                         unsigned line = 0) LIBPORT_COLD = 0;
     virtual void message_push(debug::category_type category,
                               const std::string& msg,
                               const std::string& fun = "",
                               const std::string& file = "",
-                              unsigned line = 0) = 0;
+                              unsigned line = 0) LIBPORT_COLD = 0;
 
     void locations(bool value);
     bool locations() const;
@@ -161,7 +161,7 @@ namespace libport
 
   protected:
     std::string category_format(debug::category_type cat) const;
-    virtual void pop() = 0;
+    virtual void pop() LIBPORT_COLD = 0;
 
   private:
     bool locations_;
@@ -243,13 +243,13 @@ namespace libport
                          types::Type type,
                          const std::string& fun = "",
                          const std::string& file = "",
-                         unsigned line = 0);
+                         unsigned line = 0) LIBPORT_COLD;
     virtual void message_push(debug::category_type category,
                               const std::string& msg,
                               const std::string& fun = "",
                               const std::string& file = "",
-                              unsigned line = 0);
-    virtual void pop();
+                              unsigned line = 0) LIBPORT_COLD;
+    virtual void pop() LIBPORT_COLD;
   };
 
 #  ifndef WIN32
@@ -263,13 +263,13 @@ namespace libport
                          types::Type type,
                          const std::string& fun,
                          const std::string& file,
-                         unsigned line);
+                         unsigned line) LIBPORT_COLD;
     virtual void message_push(debug::category_type category,
                               const std::string& msg,
                               const std::string& fun,
                               const std::string& file,
-                              unsigned line);
-    virtual void pop();
+                              unsigned line) LIBPORT_COLD;
+    virtual void pop() LIBPORT_COLD;
   };
 #  endif
 
