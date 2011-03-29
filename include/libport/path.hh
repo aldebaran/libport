@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -20,6 +20,8 @@
 # include <list>
 # include <libport/export.hh>
 # include <libport/detect-win32.h>
+
+# define BOOST_FILESYSTEM_VERSION 2
 # include <boost/filesystem.hpp>
 
 namespace libport
