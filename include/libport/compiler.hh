@@ -148,4 +148,16 @@
 #  define LIBPORT_SECTION(Name) __attribute__((section(#Name)))
 # endif
 
+/*-------------------.
+| LIBPORT_COLD/HOT.  |
+`-------------------*/
+
+# ifdef _MSC_VER
+#  define LIBPORT_COLD
+#  define LIBPORT_HOT
+# else
+#  define LIBPORT_COLD __attribute__ ((cold))
+#  define LIBPORT_HOT  __attribute__ ((hot))
+# endif
+
 #endif // !LIBPORT_COMPILER_HH

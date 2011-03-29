@@ -67,6 +67,8 @@
 // Other compilers, e.g., MSVC, dislike that a no-return function
 // has a non-void return type, which makes plenty of sense.
 # ifndef _MSC_VER
+ATTRIBUTE_NORETURN static inline int _libport_die_hard() LIBPORT_COLD;
+
 ATTRIBUTE_NORETURN
 static inline int
 _libport_die_hard()
