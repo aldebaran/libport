@@ -17,7 +17,7 @@
 # include <libport/config.h>
 # include <libport/preproc.hh>
 
-# define GCC_PREREQ(Major, Minor)                               \
+# define GCC_VERSION_GE(Major, Minor)                           \
   (defined __GNUC__                                             \
    && (Major < __GNUC__                                         \
        || Major == __GNUC__ && Minor <= __GNUC_MINOR__))
@@ -107,7 +107,7 @@
 | ATTRIBUTE_COLD/HOT.  |
 `---------------------*/
 
-# if GCC_PREREQ(4, 3)
+# if GCC_VERSION_GE(4, 3)
 #  define ATTRIBUTE_COLD __attribute__((cold))
 #  define ATTRIBUTE_HOT  __attribute__((hot))
 # else
@@ -128,6 +128,21 @@
   ((void) 0)
 
 
+
+/*------------------.
+| LIBPORT_SECTION.  |
+`------------------*/
+
+// Each section must be pre-declared with its access rights, to do so,
+// include compiler-section.hh.
+# ifdef _MSC_VER
+#  define LIBPORT_SECTION(Name) __declspec(allocate(#Name))
+# else
+#  define LIBPORT_SECTION(Name) __attribute__((section(#Name)))
+# endif
+
+
+
 /*--------------.
 | LIBPORT_USE.  |
 `--------------*/
@@ -145,18 +160,6 @@
 # define LIBPORT_USE_(_, __, Var)               \
   (void) Var;
 
-
-/*------------------.
-| LIBPORT_SECTION.  |
-`------------------*/
-
-// Each section must be pre-declared with its access rights, to do so,
-// include compiler-section.hh.
-# ifdef _MSC_VER
-#  define LIBPORT_SECTION(Name) __declspec(allocate(#Name))
-# else
-#  define LIBPORT_SECTION(Name) __attribute__((section(#Name)))
-# endif
 
 
 
