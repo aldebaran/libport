@@ -17,13 +17,18 @@
 # include <libport/config.h>
 # include <libport/preproc.hh>
 
+# define GCC_PREREQ(Major, Minor)                               \
+  (defined __GNUC__                                             \
+   && (Major < __GNUC__                                         \
+       || Major == __GNUC__ && Minor <= __GNUC_MINOR__))
+
 /*----------------.
 | __attribute__.  |
 `----------------*/
 
 # ifdef _MSC_VER
 
-#  define __attribute__(a)
+#  define __attribute__(_)
 #  define ATTRIBUTE_ALWAYS_INLINE __forceinline
 #  define ATTRIBUTE_DEPRECATED __declspec(deprecated)
 #  if defined STATIC_BUILD
@@ -98,15 +103,18 @@
 # endif
 
 
-/*----------------------.
-| __PRETTY_FUNCTION__.  |
-`----------------------*/
+/*---------------------.
+| ATTRIBUTE_COLD/HOT.  |
+`---------------------*/
 
-// __PRETTY_FUNCTION__ is a GNU extension.  MSVC has something somewhat
-// similar although it's less pretty.
-# ifdef _MSC_VER
-#  define __PRETTY_FUNCTION__ __FUNCTION__
-# endif // _MSC_VER
+# if GCC_PREREQ(4, 3)
+#  define ATTRIBUTE_COLD __attribute__((cold))
+#  define ATTRIBUTE_HOT  __attribute__((hot))
+# else
+#  define ATTRIBUTE_COLD
+#  define ATTRIBUTE_HOT
+# endif
+
 
 
 /*--------------.
@@ -118,6 +126,7 @@
 
 # define LIBPORT_NOP                            \
   ((void) 0)
+
 
 /*--------------.
 | LIBPORT_USE.  |
@@ -136,28 +145,30 @@
 # define LIBPORT_USE_(_, __, Var)               \
   (void) Var;
 
+
 /*------------------.
 | LIBPORT_SECTION.  |
 `------------------*/
 
-// Each section must be pre-declared with its access rights, to do so, you
-// should include compiler-section.hh
+// Each section must be pre-declared with its access rights, to do so,
+// include compiler-section.hh.
 # ifdef _MSC_VER
 #  define LIBPORT_SECTION(Name) __declspec(allocate(#Name))
 # else
 #  define LIBPORT_SECTION(Name) __attribute__((section(#Name)))
 # endif
 
-/*-------------------.
-| LIBPORT_COLD/HOT.  |
-`-------------------*/
 
+
+/*----------------------.
+| __PRETTY_FUNCTION__.  |
+`----------------------*/
+
+// __PRETTY_FUNCTION__ is a GNU extension.  MSVC has something somewhat
+// similar although it's less pretty.
 # ifdef _MSC_VER
-#  define LIBPORT_COLD
-#  define LIBPORT_HOT
-# else
-#  define LIBPORT_COLD __attribute__ ((cold))
-#  define LIBPORT_HOT  __attribute__ ((hot))
-# endif
+#  define __PRETTY_FUNCTION__ __FUNCTION__
+# endif // _MSC_VER
+
 
 #endif // !LIBPORT_COMPILER_HH

@@ -11,19 +11,18 @@
 #ifndef LIBPORT_DEBUG_HH
 # define LIBPORT_DEBUG_HH
 
-# include <libport/detect-win32.h>
-# include <libport/compiler.hh>
-
-# include <libport/csignal>
-
 # include <list>
-# include <boost/unordered_map.hpp>
 # include <sstream>
 
-# include <libport/format.hh>
 # include <boost/function.hpp>
+# include <boost/unordered_map.hpp>
+
+# include <libport/compiler.hh>
+# include <libport/csignal>
+# include <libport/detect-win32.h>
 # include <libport/export.hh>
 # include <libport/finally.hh>
+# include <libport/format.hh>
 # include <libport/local-data.hh>
 # include <libport/option-parser.hh>
 # include <libport/symbol.hh>
@@ -123,17 +122,19 @@ namespace libport
 
     // Report the message.
     // This is the backend.
+    ATTRIBUTE_COLD
     virtual void message(debug::category_type category,
                          const std::string& msg,
                          types::Type type,
                          const std::string& fun = "",
                          const std::string& file = "",
-                         unsigned line = 0) LIBPORT_COLD = 0;
+                         unsigned line = 0) = 0;
+    ATTRIBUTE_COLD
     virtual void message_push(debug::category_type category,
                               const std::string& msg,
                               const std::string& fun = "",
                               const std::string& file = "",
-                              unsigned line = 0) LIBPORT_COLD = 0;
+                              unsigned line = 0) = 0;
 
     void locations(bool value);
     bool locations() const;
@@ -161,7 +162,8 @@ namespace libport
 
   protected:
     std::string category_format(debug::category_type cat) const;
-    virtual void pop() LIBPORT_COLD = 0;
+    ATTRIBUTE_COLD
+    virtual void pop() = 0;
 
   private:
     bool locations_;
@@ -238,18 +240,21 @@ namespace libport
   {
   public:
     ConsoleDebug();
+    ATTRIBUTE_COLD
     virtual void message(debug::category_type category,
                          const std::string& msg,
                          types::Type type,
                          const std::string& fun = "",
                          const std::string& file = "",
-                         unsigned line = 0) LIBPORT_COLD;
+                         unsigned line = 0);
+    ATTRIBUTE_COLD
     virtual void message_push(debug::category_type category,
                               const std::string& msg,
                               const std::string& fun = "",
                               const std::string& file = "",
-                              unsigned line = 0) LIBPORT_COLD;
-    virtual void pop() LIBPORT_COLD;
+                              unsigned line = 0);
+    ATTRIBUTE_COLD
+    virtual void pop();
   };
 
 #  ifndef WIN32
@@ -258,18 +263,21 @@ namespace libport
   public:
     SyslogDebug(const std::string& program);
     ~SyslogDebug();
+    ATTRIBUTE_COLD
     virtual void message(debug::category_type category,
                          const std::string& msg,
                          types::Type type,
                          const std::string& fun,
                          const std::string& file,
-                         unsigned line) LIBPORT_COLD;
+                         unsigned line);
+    ATTRIBUTE_COLD
     virtual void message_push(debug::category_type category,
                               const std::string& msg,
                               const std::string& fun,
                               const std::string& file,
-                              unsigned line) LIBPORT_COLD;
-    virtual void pop() LIBPORT_COLD;
+                              unsigned line);
+    ATTRIBUTE_COLD
+    virtual void pop();
   };
 #  endif
 
