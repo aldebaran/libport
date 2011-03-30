@@ -12,6 +12,7 @@
 
 #include <libport/containers.hh>
 #include <libport/foreach.hh>
+#include <libport/format.hh>
 #include <libport/package-info.hh>
 #include <libport/lexical-cast.hh>
 
@@ -19,7 +20,12 @@
 
 namespace libport
 {
-  PackageInfo::PackageInfo ()
+
+  /*--------------.
+  | PackageInfo.  |
+  `--------------*/
+
+  PackageInfo::PackageInfo()
     : map_()
   {
   }
@@ -33,21 +39,26 @@ namespace libport
   PackageInfo::data_type
   PackageInfo::name_version_revision() const
   {
-    return (get ("name")
-	    + " version " + get ("version")
-	    + " rev. "    + get ("revision"));
+    return
+      (get("name")
+       + " "
+       + (has("version-rev")
+          ? get("version-rev")
+          : libport::format("version %s rev. %s",
+                            get("version"), get("revision"))));
   }
 
   PackageInfo::data_type
   PackageInfo::signature() const
   {
-    data_type res;
-    res =
-      name_version_revision() + "\n"
-      + "Copyright (C) " + get("copyright-years")
-      + " " + get("copyright-holder")
-      + "."
-      ;
+    data_type holder = get("copyright-holder");
+    data_type res =
+      libport::format("%s\n"
+                      "Copyright (C) %s %s%s",
+                      name_version_revision(),
+                      get("copyright-years"),
+                      holder,
+                      holder[holder.size() - 1] == '.' ? "" : ".");
 
     foreach (const PackageInfo *p, dependencies_)
       res += "\n\n"
@@ -59,7 +70,7 @@ namespace libport
   PackageInfo::data_type
   PackageInfo::report_bugs() const
   {
-    return "Report bugs to <" + get("bug-report") + ">.";
+    return libport::format("Report bugs to <%s>.", get("bug-report"));
   }
 
   PackageInfo::data_type&
@@ -118,6 +129,11 @@ namespace libport
     return o << p.signature();
   }
 
+
+  /*-----------------------.
+  | PackageInfo::Version.  |
+  `-----------------------*/
+
   PackageInfo::Version
   PackageInfo::version() const
   {
@@ -129,8 +145,8 @@ namespace libport
                                 integer_type minor,
                                 integer_type subMinor,
                                 integer_type patchLevel)
-  : subMinor(subMinor)
-  , patchLevel(patchLevel)
+    : subMinor(subMinor)
+    , patchLevel(patchLevel)
   {
     // Workaround glibc macros major(x) and minor(x)
     this->major = major;
