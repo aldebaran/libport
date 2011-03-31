@@ -81,7 +81,7 @@ namespace sched
   std::ostream&
   Job::dump(std::ostream& o) const
   {
-    o << "Job(" << name_ << ")"
+    o << "Job(" << this << ")"
       << " "
       << (child_job() ? "child job" : "root job")
       << " state: " << state_;

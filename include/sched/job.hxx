@@ -59,12 +59,11 @@ namespace sched
   `------*/
 
   inline void
-  Job::init_common(const std::string& name)
+  Job::init_common()
   {
     state_ = to_start;
     frozen_since_ = 0;
     time_shift_ = 0;
-    name_ = name;
     coro_ = coroutine_new();
     non_interruptible_ = false;
     side_effect_free_ = false;
@@ -73,19 +72,19 @@ namespace sched
   }
 
   inline
-  Job::Job(Scheduler& scheduler, const std::string& name)
+  Job::Job(Scheduler& scheduler)
     : RefCounted()
     , scheduler_(scheduler)
   {
-    init_common(name);
+    init_common();
   }
 
   inline
-  Job::Job(const Job& model, const std::string& name)
+  Job::Job(const Job& model)
     : RefCounted()
     , scheduler_(model.scheduler_)
   {
-    init_common(name);
+    init_common();
     time_shift_ = model.time_shift_;
   }
 
@@ -163,12 +162,6 @@ namespace sched
   Job::side_effect_free_get() const
   {
     return side_effect_free_;
-  }
-
-  inline const std::string&
-  Job::name_get() const
-  {
-    return name_;
   }
 
   inline bool

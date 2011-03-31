@@ -19,12 +19,11 @@ namespace sched
 {
 
   inline
-  Tag::Tag(const std::string& name)
+  Tag::Tag()
     : blocked_(false)
     , frozen_(false)
-    , name_(name)
-    , prio_(UPRIO_DEFAULT)
     , flow_control_(false)
+    , prio_(UPRIO_DEFAULT)
   {
   }
 
@@ -78,18 +77,6 @@ namespace sched
   {
     payload_ = 0;
     blocked_ = false;
-  }
-
-  inline const std::string&
-  Tag::name_get() const
-  {
-    return name_;
-  }
-
-  inline void
-  Tag::name_set(const std::string& name)
-  {
-    name_ = name;
   }
 
   inline prio_type

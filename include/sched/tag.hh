@@ -67,7 +67,7 @@ namespace sched
   {
   public:
     // Create a new tag.
-    explicit Tag(const std::string& name);
+    explicit Tag();
     virtual ~Tag();
 
     // Is this tag directly or indirectly frozen or blocked?
@@ -94,8 +94,6 @@ namespace sched
     void unblock();
     void stop(Scheduler&, const boost::any&) const;
 
-    const std::string& name_get() const;
-    void name_set(const std::string&);
     boost::signal0<void>& stop_hook_get();
     boost::signal0<void>& freeze_hook_get();
     boost::signal0<void>& unfreeze_hook_get();
@@ -105,11 +103,10 @@ namespace sched
 
     bool blocked_;
     bool frozen_;
-    std::string name_;
-    boost::any payload_;
-    prio_type prio_;
     bool flow_control_;
+    prio_type prio_;
     boost::signal0<void> stop_hook_;
+    boost::any payload_;
     boost::signal0<void> freeze_hook_;
     boost::signal0<void> unfreeze_hook_;
   };

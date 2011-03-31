@@ -97,7 +97,7 @@ namespace sched
     ///
     /// \param name The name of the new job, or a name derived from \a model
     ///        if none is provided.
-    Job(const Job& model, const std::string& name);
+    Job(const Job& model);
 
     /// Create a new job.
     ///
@@ -105,7 +105,7 @@ namespace sched
     ///
     /// \param name The name of the new job, or an automatically created
     ///        one if none is provided.
-    Job(Scheduler& scheduler, const std::string& name);
+    Job(Scheduler& scheduler);
 
     /// Job destructor.
     ///
@@ -214,11 +214,6 @@ namespace sched
     /// while resuming the job execution. For example, StopException
     /// may be raised from here if the job has been blocked by a tag.
     void check_for_pending_exception();
-
-    /// Get the job name
-    ///
-    /// \return The job name as set from the constructor.
-    const std::string& name_get() const;
 
     /// Throw an exception if the stack space for this job is near
     /// exhaustion.
@@ -405,9 +400,6 @@ namespace sched
     /// Scheduler in charge of this job. Do not delete.
     Scheduler& scheduler_;
 
-    /// This job name.
-    std::string name_;
-
     /// Other jobs to wake up when we terminate.
     jobs_type to_wake_up_;
 
@@ -426,7 +418,7 @@ namespace sched
     void resume_scheduler_();
 
     /// Helper functions for constructors.
-    void init_common(const std::string& name);
+    void init_common();
 
     /// Is the current job side-effect free?
     bool side_effect_free_;
