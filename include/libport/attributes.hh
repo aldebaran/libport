@@ -17,7 +17,7 @@
 /* ATTRIBUTE_{mode}(Type, Name, [Getter modifiers], [Setter modifiers], [Xetter modifier], [Member modifier])
  *
  * mode:
- * - nothing: generate only the membur.
+ * - nothing: generate only the member.
  * - R: generate a getter.
  * - W: generate a setter.
  * - RW: generate both.
