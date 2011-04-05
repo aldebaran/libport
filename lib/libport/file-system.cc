@@ -47,7 +47,7 @@ namespace libport
   std::string
   file_content(const std::string& n)
   {
-    std::ifstream s(n.c_str());
+    std::ifstream s(n.c_str(), std::ios::binary|std::ios::in);
     if (!s.good())
       throw std::runtime_error("Failed to open " + n +" for reading");
     std::string res;
