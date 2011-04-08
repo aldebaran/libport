@@ -26,22 +26,44 @@
 | __attribute__.  |
 `----------------*/
 
-# ifdef _MSC_VER
+/* This feature is available in gcc versions 2.5 and later.  */
+# if !defined __attribute__ && (defined _MSC_VER || ! GCC_VERSION_GE(2, 5))
+#  define __attribute__(Spec) /* empty */
+# endif
 
-#  define __attribute__(_)
-#  define ATTRIBUTE_ALWAYS_INLINE __forceinline
-#  define ATTRIBUTE_DEPRECATED __declspec(deprecated)
-#  if defined STATIC_BUILD
-#    define ATTRIBUTE_DLLEXPORT
-#    define ATTRIBUTE_DLLIMPORT
-#  else
-#    define ATTRIBUTE_DLLEXPORT __declspec(dllexport)
-#    define ATTRIBUTE_DLLIMPORT __declspec(dllimport)
-#  endif
-#  define ATTRIBUTE_MALLOC  /* FILLME */
-#  define ATTRIBUTE_NOINLINE __declspec(noinline)
-#  define ATTRIBUTE_NORETURN __declspec(noreturn)
-#  define ATTRIBUTE_NOTHROW  __declspec(nothrow)
+
+/*--------------------------------.
+| ATTRIBUTE_DLLEXPORT/DLLIMPORT.  |
+`--------------------------------*/
+
+// GCC 3 does not seem to support visibility, and generates tons of
+// annoying error messages.
+# if GCC_VERSION_GE(4, 0)
+#   define ATTRIBUTE_DLLEXPORT __attribute__((visibility("default")))
+#   define ATTRIBUTE_DLLIMPORT ATTRIBUTE_DLLEXPORT
+
+# elif defined _MSC_VER && ! defined STATIC_BUILD
+#  define ATTRIBUTE_DLLEXPORT __declspec(dllexport)
+#  define ATTRIBUTE_DLLIMPORT __declspec(dllimport)
+
+# else
+#  define ATTRIBUTE_DLLEXPORT
+#  define ATTRIBUTE_DLLIMPORT
+# endif
+
+/*--------------.
+| ATTRIBUTE_*.  |
+`--------------*/
+
+# if __GNUC__
+     // GCC 3.4 does not support "always_inline" without "inline".
+#  define ATTRIBUTE_ALWAYS_INLINE inline __attribute__((always_inline))
+#  define ATTRIBUTE_CONST      __attribute__((const))
+#  define ATTRIBUTE_DEPRECATED __attribute__((deprecated))
+#  define ATTRIBUTE_MALLOC     __attribute__((malloc))
+#  define ATTRIBUTE_NOINLINE   __attribute__((noinline))
+#  define ATTRIBUTE_NORETURN   __attribute__((noreturn))
+#  define ATTRIBUTE_NOTHROW    __attribute__((nothrow))
 
 /// Declare a function whose features printf-like arguments.
 /// \param Format   the number of the printf-like format string.
@@ -50,50 +72,20 @@
 ///                 argument is 2.
 /// \param FirstArg The number of the first varargs.  Should point to
 ///                 the "..." in the argument list.
-#  define ATTRIBUTE_PRINTF(Format, FirstArg)
-#  define ATTRIBUTE_STDCALL  __stdcall
-#  define ATTRIBUTE_UNUSED_RESULT /* FILLME */
-#  define ATTRIBUTE_USED          /* FILLME */
+#  define ATTRIBUTE_PRINTF(Format, FirstArg)                  \
+     __attribute__((format(printf, Format, FirstArg)))
 
-# endif // _MSC_VER
-
-# if !defined __attribute__
-/* This feature is available in gcc versions 2.5 and later.  */
-#  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 5) || __STRICT_ANSI__
-#   define __attribute__(Spec) /* empty */
-#  else
-     // GCC 3.4 does not support "always_inline" without "inline".
-#    define ATTRIBUTE_ALWAYS_INLINE inline __attribute__((__always_inline__))
-#    define ATTRIBUTE_DEPRECATED __attribute__((__deprecated__))
-
-// GCC 3 does not seem to support visibility, and generates tons of
-// annoying error messages.
-//
-// See also http://gcc.gnu.org/wiki/Visibility.
-#    if 4 <= __GNUC__
-#      define ATTRIBUTE_DLLEXPORT __attribute__((visibility("default")))
-#    else
-#      define ATTRIBUTE_DLLEXPORT
-#    endif
-#    define ATTRIBUTE_DLLIMPORT ATTRIBUTE_DLLEXPORT
-
-#    define ATTRIBUTE_MALLOC __attribute__((__malloc__))
-#    define ATTRIBUTE_NOINLINE __attribute__((__noinline__))
-#    define ATTRIBUTE_NORETURN __attribute__((__noreturn__))
-#    define ATTRIBUTE_NOTHROW  __attribute__((__nothrow__))
-#    define ATTRIBUTE_PRINTF(Format, FirstArg)                  \
-       __attribute__((format(printf, Format, FirstArg)))
+#  define ATTRIBUTE_PURE __attribute__((pure))
 
 // Only on i386 architectures.  Left undefined on purpose for other
 // architectures.
-#    if defined __i386__
-#     define ATTRIBUTE_STDCALL __attribute__((__stdcall__))
-#    endif
-
-#    define ATTRIBUTE_UNUSED_RESULT __attribute__((warn_unused_result))
-#    define ATTRIBUTE_USED __attribute__((used))
+#  if defined __i386__
+#    define ATTRIBUTE_STDCALL    __attribute__((stdcall))
 #  endif
-# endif // !defined __attribute__
+
+#  define ATTRIBUTE_UNUSED_RESULT __attribute__((warn_unused_result))
+#  define ATTRIBUTE_USED          __attribute__((used))
+# endif
 
 // For throw() vs. nothrow, see
 // http://www.nabble.com/Rest-of-trivial-decorations-td23114765.html
@@ -101,6 +93,24 @@
 #  undef ATTRIBUTE_NOTHROW
 #  define ATTRIBUTE_NOTHROW throw()
 # endif
+
+# ifdef _MSC_VER
+
+#  define ATTRIBUTE_ALWAYS_INLINE __forceinline
+#  define ATTRIBUTE_CONST
+#  define ATTRIBUTE_DEPRECATED __declspec(deprecated)
+#  define ATTRIBUTE_MALLOC
+#  define ATTRIBUTE_NOINLINE   __declspec(noinline)
+#  define ATTRIBUTE_NORETURN   __declspec(noreturn)
+#  define ATTRIBUTE_NOTHROW    __declspec(nothrow)
+#  define ATTRIBUTE_PRINTF(Format, FirstArg)
+#  define ATTRIBUTE_PURE
+#  define ATTRIBUTE_STDCALL    __stdcall
+#  define ATTRIBUTE_UNUSED_RESULT
+#  define ATTRIBUTE_USED
+
+# endif // _MSC_VER
+
 
 
 /*---------------------.
