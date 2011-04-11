@@ -224,6 +224,11 @@ namespace libport
     }
   }
 
+  BaseSocket::BaseSocket()
+  : readOnce(false)
+  {
+  }
+
   boost::asio::io_service&
   Socket::get_io_service()
   {

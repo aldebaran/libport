@@ -486,7 +486,7 @@ namespace libport
         bytesReceived_ += sz;
         if (onReadFunc)
           onReadFunc(readBuffer_);
-        if (isConnected())
+        if (isConnected() && !readOnce)
           read_or_recv(this, lock);
       }
     }
@@ -518,7 +518,8 @@ namespace libport
         s->setBase(wrapper);
         s->onConnect();
         // Start reading.
-        wrapper->startReader();
+        if (s->getAutoRead())
+          wrapper->startReader();
       }
       else
       {
@@ -585,7 +586,8 @@ namespace libport
         if (!b)
           s->onError(make_error_code(errorcodes::operation_canceled));
         b->link(s->getDestructionLock());
-        b->startReader();
+        if (s->getAutoRead())
+          b->startReader();
         s->onConnect();
       }
     }
@@ -712,7 +714,8 @@ template<class Proto, class BaseFactory>
       // Do not die until newS is gone, since it will call our virtual
       // functions.
       newS->link(getDestructionLock());
-      newS->startReader();
+      if (autostart_reader_)
+        newS->startReader();
       onConnect();
     }
     return erc;

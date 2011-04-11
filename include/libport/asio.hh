@@ -84,6 +84,7 @@ namespace libport
   class LIBPORT_API BaseSocket: public AsioDestructible
   {
   public:
+    BaseSocket();
     virtual ~BaseSocket(){}
     libport::Finally deletor;
     /// Write data asynchronously to the socket.
@@ -128,6 +129,8 @@ namespace libport
     boost::function1<void, boost::system::error_code> onErrorFunc;
     /// Mutex to protect access to the above callbacks.
     Lockable callbackLock;
+    /// If set, do not restart reader once callback returned.
+    bool readOnce;
   };
 
   /// Endpoint on an UDP socket.
@@ -163,6 +166,7 @@ namespace libport
     Socket(boost::asio::io_service& io = libport::get_io_service())
       : base_(0)
       , io_(io)
+      , autostart_reader_(true)
     {}
     virtual ~Socket();
     /* Set underlying BaseSocket object, setup its callbacks to call
@@ -212,7 +216,7 @@ namespace libport
     void syncWrite(const std::string& s);
 
     /// Synchronously read and return exactly 'length' bytes.
-    std::string read(size_t length)
+    std::string syncRead(size_t length)
     {
       CHECK;
       if (base_)
@@ -220,6 +224,11 @@ namespace libport
       else
         throw std::runtime_error("Socket not initialized");
     }
+
+    /** Asynchronous reading, once. Will call onRead or onError once.
+     * Socket must have been opened with autoRead off.
+     */
+    void readOnce();
 
     void close()
     {
@@ -355,6 +364,15 @@ namespace libport
      */
     static void sleep(useconds_t duration);
     boost::asio::io_service& get_io_service();
+
+   /** Set whether this socket will automatically read.
+    * Default is on. It can only be disabled before connecting the Socket, but
+    * can be enabled anytime.
+    * If off, you must call syncRead() or readOnce() to read from the Socket.
+    */
+   void setAutoRead(bool enable);
+   /// Get current autoRead state.
+   bool getAutoRead();
   protected:
     virtual void doDestroy();
     bool onRead_(boost::asio::streambuf&);
@@ -368,6 +386,7 @@ namespace libport
     connectProto(const std::string& host, const std::string& port,
                  useconds_t timeout, bool async, BaseFactory bf);
     boost::asio::io_service& io_;
+    bool autostart_reader_; //autoread state flag
   };
 #undef CHECK
   /** Wrapper of libport::Socket to be able to use Socket without inherit from

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -77,7 +77,8 @@ namespace libport
       (netdetail::SocketImplBase*)netdetail::create(s);
     // (netdetail::SocketImplBase*)netdetail::SocketImpl<Sock>::create(s);
     setBase(b);
-    b->startReader();
+    if (autostart_reader_)
+      b->startReader();
   }
 
   inline void
@@ -93,5 +94,37 @@ namespace libport
       base_->syncWrite(data, length);
     else
       throw std::runtime_error("Socket is not bound");
+  }
+
+  inline void
+  Socket::setAutoRead(bool enable)
+  {
+    if (enable == autostart_reader_)
+      return;
+    if (!enable && base_ && base_->isConnected())
+      throw std::runtime_error("Cannot disable autoRead on a connected socket");
+    autostart_reader_ = enable;
+    if (enable && base_ && base_->isConnected())
+    {
+      base_->readOnce = false;
+      base_->startReader();
+    }
+  }
+
+  inline bool
+  Socket::getAutoRead()
+  {
+    return autostart_reader_;
+  }
+
+  inline void
+  Socket::readOnce()
+  {
+    if (autostart_reader_)
+      throw std::runtime_error("readOnce: Reader was automatically started");
+    if (!base_ || !base_->isConnected())
+      throw std::runtime_error("readOnce: not connected");
+    base_->readOnce = true;
+    base_->startReader();
   }
 }
