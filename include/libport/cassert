@@ -118,7 +118,7 @@ _libport_die_hard()
 /// \def aver(Assertion)
 /// Same as assert, but on failure, dump \a Message on std::cerr.
 # define aver(Assertion)                                        \
-  __passert(Assertion,                                          \
+  __passert(likely(Assertion),                                  \
             "failed assertion: " << #Assertion << std::endl)
 
 

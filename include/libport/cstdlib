@@ -29,11 +29,13 @@ namespace libport
   /// noreturn (which is not the case of std::abort with MSVC).
   /// Also dumps the stack trace.
   LIBPORT_API
+  ATTRIBUTE_COLD
   ATTRIBUTE_NORETURN
   void abort();
 
   /// If set, abort() throws instead of aborting. Useful for tests.
   LIBPORT_API
+  ATTRIBUTE_COLD
   void abort_throw(bool v = true);
 }
 
