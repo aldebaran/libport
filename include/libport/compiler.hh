@@ -87,13 +87,6 @@
 #  define ATTRIBUTE_USED          __attribute__((used))
 # endif
 
-// For throw() vs. nothrow, see
-// http://www.nabble.com/Rest-of-trivial-decorations-td23114765.html
-# ifdef __cplusplus
-#  undef ATTRIBUTE_NOTHROW
-#  define ATTRIBUTE_NOTHROW throw()
-# endif
-
 # ifdef _MSC_VER
 
 #  define ATTRIBUTE_ALWAYS_INLINE __forceinline
@@ -111,6 +104,16 @@
 
 # endif // _MSC_VER
 
+/*---------------------------.
+| ATTRIBUTE_NOTHROW in C++.  |
+`---------------------------*/
+
+// For throw() vs. nothrow, see
+// http://www.nabble.com/Rest-of-trivial-decorations-td23114765.html
+# ifdef __cplusplus
+#  undef ATTRIBUTE_NOTHROW
+#  define ATTRIBUTE_NOTHROW throw()
+# endif
 
 
 /*---------------------.
