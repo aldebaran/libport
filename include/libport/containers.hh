@@ -39,11 +39,13 @@ namespace libport
 
   /// Find \a k in the whole \a c.
   template<typename Container>
+  ATTRIBUTE_CONST
   inline typename Container::const_iterator
   find(const Container& c, const typename traits::key_type<Container>::type& k);
 
   /// Find \a k in the whole \a c.
   template<typename Container>
+  ATTRIBUTE_CONST
   inline typename Container::iterator
   find(Container& c, const typename traits::key_type<Container>::type& k);
 
@@ -51,6 +53,7 @@ namespace libport
   ///
   /// For associative containers mapping pointers.
   template<typename Container>
+  ATTRIBUTE_CONST
   inline typename Container::mapped_type
   find0(Container& c, const typename traits::key_type<Container>::type& k);
 
@@ -61,12 +64,14 @@ namespace libport
 
   /// Is \a k member of \a c?
   template<typename Container>
+  ATTRIBUTE_CONST
   inline bool
   has(const Container& c, const typename traits::key_type<Container>::type& k);
 
   /// Is \a v member of \a c?  Use member find (set, map, hash_map).
   /// Use libport::has instead.
   template<typename Container>
+  ATTRIBUTE_CONST
   ATTRIBUTE_DEPRECATED
   inline bool
   mhas(const Container& c, const typename traits::key_type<Container>::type& v);

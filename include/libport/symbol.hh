@@ -103,6 +103,7 @@ namespace libport
 
   private:
     /// Return the set of strings.
+    ATTRIBUTE_CONST
     static string_set_type& string_set_instance ();
 
     /// Pointer to the unique referenced string.

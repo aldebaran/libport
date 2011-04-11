@@ -50,6 +50,7 @@ namespace libport
     typedef Container container;
     typedef typename container::iterator iterator;
     typedef typename traits::key_type<container>::type key_type;
+    ATTRIBUTE_CONST
     static iterator
     find(container& c, const key_type& v)
     {
@@ -64,6 +65,7 @@ namespace libport
     typedef LIBPORT_UNWRAP(Type) container;                             \
     typedef typename container::iterator iterator;                      \
     typedef typename traits::key_type<container>::type key_type;        \
+    ATTRIBUTE_CONST                                                     \
     static iterator                                                     \
     find(container& c, const key_type& v)                               \
     {                                                                   \
