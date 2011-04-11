@@ -728,7 +728,7 @@ namespace libport
     if (h == INVALID_HANDLE_VALUE)
       throw std::runtime_error
            (libport::format("CreateFile(%s): %s",
-                            name, strerror(0)));
+                            path, strerror(0)));
 #else
     int mode = 0;
     switch (m)
@@ -744,7 +744,7 @@ namespace libport
     if (h == -1)
       throw std::runtime_error(std::string("open:") + strerror(errno));
 #endif
-    setNativeFD(h);
+    setNativeFD((native_handle_type)h);
   }
 
   boost::system::error_code
