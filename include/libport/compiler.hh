@@ -107,6 +107,13 @@
 | ATTRIBUTE_COLD/HOT.  |
 `---------------------*/
 
+// Suggests the compiler that path executing the function annotated with one
+// of the following attributes is either unlikely to be executed (cold) or
+// likely to be executed (hot).  It is hard to determine which functions are
+// hot, but cold function can be identified because they handle error,
+// fallbacks and that they will never be called in a normal running process.
+
+
 # if GCC_VERSION_GE(4, 3)
 #  define ATTRIBUTE_COLD __attribute__((cold))
 #  define ATTRIBUTE_HOT  __attribute__((hot))
@@ -161,6 +168,25 @@
   (void) Var;
 
 
+/*-------------------.
+| likely, unlikely.  |
+`-------------------*/
+
+// Instrumentation of conditionnal values. (hand made profiling)
+//
+// if (unlikely(condition))
+// {
+//   // Handle fallback, errors and this will never be executed in a
+//   // normal running process.
+// }
+
+# if GCC_VERSION_GE(4, 3)
+# define unlikely(expr) __builtin_expect (!!(expr), 0)
+# define likely(expr) __builtin_expect (!!(expr), 1)
+# else
+# define unlikely(expr) expr
+# define likely(expr) expr
+# endif
 
 
 /*----------------------.
