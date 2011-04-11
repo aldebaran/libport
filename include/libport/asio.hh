@@ -278,6 +278,25 @@ namespace libport
     open_serial(const std::string& device, unsigned int rate,
                 bool async_reader = true);
 
+    enum OpenMode
+    {
+      READ       = 1,
+      WRITE      = 2,
+      READ_WRITE = 3,
+      USE_FLAGS  = 0 // ignore OpenMode and use flags.
+    };
+
+    /** Open a file. Throws on error.
+     *  @param path the path of the file to open
+     *  @param m mode in which to open(read and/or write)
+     *  @param extraFlags extra flags to pass to the underlying system call.
+     *         Expects unix flags (O_APPEND, O_CREAT...)
+     *  @param createMode permissions to use if file must be created
+     *
+     */
+    void
+    open_file(const std::string& path, OpenMode m, int extraFlags = 0,
+              int createMode = 0);
 # endif
 
     /** Make an asynchronous connection attempt to a remote host.
@@ -356,9 +375,11 @@ namespace libport
     native_handle_type stealFD();
     /// Get file descriptor from Socket.
     native_handle_type getFD();
-    /// Set file descriptor
+    /// Set file descriptor from a native socket file descriptor
     template<class Sock>
     void setFD(native_handle_type fd, typename Sock::protocol_type proto);
+    /// Set file descriptor from a native plain file descriptor
+    void setNativeFD(native_handle_type fd);
     /** Sleep for specified amount of time, polling if current thread is
      * the asio worker thread
      */

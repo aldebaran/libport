@@ -25,6 +25,90 @@ namespace libport
 
   namespace netdetail
   {
+#ifndef WIN32
+    // epoll does not work on basic file descriptors. Cheat
+    class PosixIO: public SocketImplBase
+    {
+    public:
+      PosixIO(boost::asio::io_service& io): fd(-1), io_(io) {};
+      PosixIO(boost::asio::io_service& io, int fd) : fd(fd), io_(io) {}
+      ~PosixIO() { close();}
+      void write(const void* data, size_t length);
+      bool isConnected() const {return fd != -1;}
+      void close() {if (fd != -1) ::close(fd);fd=-1;}
+      unsigned short getRemotePort() const { return 0;}
+      std::string getRemoteHost() const { return std::string();}
+      unsigned short getLocalPort() const { return 0;}
+      std::string getLocalHost() const { return std::string();}
+      void syncWrite(const void* data, size_t length)
+      {
+        write(data, length);
+      }
+      std::string read(size_t length);
+      void startReader();
+      native_handle_type stealFD(){ int res = fd; fd = -1; return res;}
+      native_handle_type getFD() { return fd;}
+      unsigned long bytesReceived() const { return 0;}
+      unsigned long bytesSent() const { return 0;}
+      void readOne();
+    private:
+      int fd;
+      boost::asio::io_service& io_;
+    };
+
+    void PosixIO::write(const void* data, size_t length)
+    {
+      if (::write(fd, data, length)==-1)
+      {
+        if (onErrorFunc)
+          onErrorFunc(netdetail::errorcodes::make_error_code(
+                       netdetail::errorcodes::bad_file_descriptor));
+      }
+    }
+
+    std::string PosixIO::read(size_t length)
+    {
+      std::string s;
+      s.resize(length);
+      unsigned pos = 0;
+      while (pos < length)
+      {
+        ssize_t res = ::read(fd, &s[pos], length-pos);
+        if (res <=0)
+          throw std::string("read: ") + strerror(errno);
+        pos += res;
+      }
+      return s;
+    }
+
+    void PosixIO::startReader()
+    {
+      ::libport::asyncCall(boost::bind(&PosixIO::readOne, this), 10,
+                         io_);
+    }
+
+    void PosixIO::readOne()
+    {
+      char buffer[BUFSIZ];
+      ssize_t res = ::read(fd, buffer, BUFSIZ);
+      if (res <= 0)
+      {
+        if (onErrorFunc)
+        onErrorFunc(netdetail::errorcodes::make_error_code(
+                     netdetail::errorcodes::bad_file_descriptor));
+      }
+      else
+      {
+        std::ostream stream(&readBuffer_);
+        stream.write(buffer, res);
+        if (onReadFunc)
+          onReadFunc(readBuffer_);
+      }
+      if (fd!= -1 && !readOnce)
+        startReader();
+    }
+#endif
+
     // Wrap a boost::asio stream adding Socket interface
     template<typename T> class SocketWrapper: public T
     {
@@ -565,6 +649,100 @@ namespace libport
   }
 
 # if 103600 <= BOOST_VERSION
+
+  void
+  Socket::setNativeFD(native_handle_type h)
+  {
+#ifdef WIN32
+    typedef netdetail::SocketWrapper<boost::asio::windows_stream_handle>
+      Wrapper;
+    BaseSocket* b = netdetail::SocketImpl<Wrapper>::create(
+      new Wrapper(get_io_service(), h));
+#else
+    typedef netdetail::SocketWrapper<boost::asio::posix::stream_descriptor>
+      Wrapper;
+    /* Regular files do not work with epoll API which boost::asio uses.
+     * So provides a dummy implementation of our frontend API.
+     */
+     // Try anyway in case file is a pipe or something.
+     BaseSocket* b;
+     try {
+       b = netdetail::SocketImpl<Wrapper>::create(
+          new Wrapper(get_io_service(), h));
+     }
+     catch(...)
+     {
+       b = new netdetail::PosixIO(get_io_service(), h);
+     }
+#endif
+    setBase(b);
+    if (autostart_reader_)
+      b->startReader();
+    onConnect();
+  }
+
+  void
+  Socket::open_file(const std::string& path, OpenMode m, int extraFlags,
+                    int createMode)
+  {
+    boost::system::error_code erc;
+#ifdef WIN32
+    DWORD mode = 0;
+    switch (m)
+    {
+    case READ: mode = GENERIC_READ; break;
+    case WRITE: mode = GENERIC_WRITE; break;
+    case READ_WRITE: mode = GENERIC_READ|GENERIC_WRITE; break;
+    case USE_FLAGS:
+      {
+        if (extraFlags & O_RDWR)
+          mode |= GENERIC_READ|GENERIC_WRITE;
+        if (extraFlags & O_WRONLY)
+          mode |= GENERIC_WRITE;
+        if (extraFlags& O_RDONLY)
+          mode |= GENERIC_READ;
+      }
+    default:
+      throw std::runtime_error("Invalid open mode specified"); break;
+    }
+    // Convert known stuffs in extraFlags
+    DWORD createDis;
+    if (extraFlags & O_CREAT)
+      if (extraFlags & O_TRUNC)
+        createDis = CREATE_ALWAYS;
+      else
+        createDis = OPEN_ALWAYS;
+    else
+      if (extraFlags & O_TRUNC)
+        createDis = TRUNCATE_EXISTING;
+      else
+        createDis = OPEN_EXISTING;
+    if (extraFlags& O_APPEND)
+      GD_WARN("O_APPEND open flag not supported, ignoring");
+    HANDLE h = CreateFile(path.c_str(), mode, 0, NULL, OPEN_EXISTING,
+                          SECURITY_ANONYMOUS | FILE_FLAG_OVERLAPPED,
+                          NULL);
+    if (h == INVALID_HANDLE_VALUE)
+      throw std::runtime_error
+           (libport::format("CreateFile(%s): %s",
+                            name, strerror(0)));
+#else
+    int mode = 0;
+    switch (m)
+    {
+    case READ: mode = O_RDONLY; break;
+    case WRITE: mode = O_WRONLY; break;
+    case READ_WRITE: mode = O_RDWR; break;
+    case USE_FLAGS: break;
+    default:
+      throw std::runtime_error("Invalid open mode specified"); break;
+    }
+    int h = open(path.c_str(), O_CLOEXEC | mode| extraFlags, createMode);
+    if (h == -1)
+      throw std::runtime_error(std::string("open:") + strerror(errno));
+#endif
+    setNativeFD(h);
+  }
 
   boost::system::error_code
   Socket::open_serial(const std::string& device,
