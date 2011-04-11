@@ -654,7 +654,7 @@ namespace libport
   Socket::setNativeFD(native_handle_type h)
   {
 #ifdef WIN32
-    typedef netdetail::SocketWrapper<boost::asio::windows_stream_handle>
+    typedef netdetail::SocketWrapper<boost::asio::windows::stream_handle>
       Wrapper;
     BaseSocket* b = netdetail::SocketImpl<Wrapper>::create(
       new Wrapper(get_io_service(), h));
