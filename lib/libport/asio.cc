@@ -13,12 +13,15 @@
 #define LIBPORT_NO_SSL
 
 #include <libport/asio.hh>
+#include <libport/debug.hh>
 #include <libport/containers.hh>
 #include <libport/detect-win32.h>
 #include <libport/format.hh>
 #include <libport/thread.hh>
 
 #include "asio-impl.hxx"
+
+GD_CATEGORY(Libport.Asio);
 
 namespace libport
 {
@@ -657,7 +660,7 @@ namespace libport
     typedef netdetail::SocketWrapper<boost::asio::windows::stream_handle>
       Wrapper;
     BaseSocket* b = netdetail::SocketImpl<Wrapper>::create(
-      new Wrapper(get_io_service(), h));
+      new Wrapper(get_io_service(), (HANDLE)h));
 #else
     typedef netdetail::SocketWrapper<boost::asio::posix::stream_descriptor>
       Wrapper;
