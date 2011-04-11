@@ -740,7 +740,7 @@ namespace libport
     default:
       throw std::runtime_error("Invalid open mode specified"); break;
     }
-    int h = open(path.c_str(), O_CLOEXEC | mode| extraFlags, createMode);
+    int h = open(path.c_str(), mode| extraFlags, createMode);
     if (h == -1)
       throw std::runtime_error(std::string("open:") + strerror(errno));
 #endif
