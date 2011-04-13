@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -54,7 +54,7 @@ namespace libport
 	default:
 	  if (*p == delimiter_)
 	    o << '\\' << *p;
-	  else if (std::isprint (*p))
+	  else if (std::isprint ((unsigned char) *p))
 	    o << *p;
 	  else
 	    o << "\\x" << std::setw (2) << (int) (unsigned char) *p;
