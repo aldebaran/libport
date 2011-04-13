@@ -28,7 +28,6 @@ namespace libport
 
   namespace netdetail
   {
-#ifndef WIN32
     // epoll does not work on basic file descriptors. Cheat
     class PosixIO: public SocketImplBase
     {
@@ -110,7 +109,6 @@ namespace libport
       if (fd!= -1 && !readOnce)
         startReader();
     }
-#endif
 
     // Wrap a boost::asio stream adding Socket interface
     template<typename T> class SocketWrapper: public T
@@ -689,47 +687,6 @@ namespace libport
                     int createMode)
   {
     boost::system::error_code erc;
-#ifdef WIN32
-    DWORD mode = 0;
-    switch (m)
-    {
-    case READ: mode = GENERIC_READ; break;
-    case WRITE: mode = GENERIC_WRITE; break;
-    case READ_WRITE: mode = GENERIC_READ|GENERIC_WRITE; break;
-    case USE_FLAGS:
-      {
-        if (extraFlags & O_RDWR)
-          mode |= GENERIC_READ|GENERIC_WRITE;
-        if (extraFlags & O_WRONLY)
-          mode |= GENERIC_WRITE;
-        if (extraFlags& O_RDONLY)
-          mode |= GENERIC_READ;
-      }
-    default:
-      throw std::runtime_error("Invalid open mode specified"); break;
-    }
-    // Convert known stuffs in extraFlags
-    DWORD createDis;
-    if (extraFlags & O_CREAT)
-      if (extraFlags & O_TRUNC)
-        createDis = CREATE_ALWAYS;
-      else
-        createDis = OPEN_ALWAYS;
-    else
-      if (extraFlags & O_TRUNC)
-        createDis = TRUNCATE_EXISTING;
-      else
-        createDis = OPEN_EXISTING;
-    if (extraFlags& O_APPEND)
-      GD_WARN("O_APPEND open flag not supported, ignoring");
-    HANDLE h = CreateFile(path.c_str(), mode, 0, NULL, OPEN_EXISTING,
-                          SECURITY_ANONYMOUS | FILE_FLAG_OVERLAPPED,
-                          NULL);
-    if (h == INVALID_HANDLE_VALUE)
-      throw std::runtime_error
-           (libport::format("CreateFile(%s): %s",
-                            path, strerror(0)));
-#else
     int mode = 0;
     switch (m)
     {
@@ -743,8 +700,17 @@ namespace libport
     int h = open(path.c_str(), mode| extraFlags, createMode);
     if (h == -1)
       throw std::runtime_error(std::string("open:") + strerror(errno));
-#endif
+#if defined WIN32
+    // CreateFile then setNativFD should work, but it does not
+    // for reasons unknown at this time.
+    BaseSocket* b = new netdetail::PosixIO(get_io_service(), h);
+    setBase(b);
+    if (autostart_reader_)
+      b->startReader();
+    onConnect();
+#else
     setNativeFD((native_handle_type)h);
+#endif
   }
 
   boost::system::error_code
