@@ -85,9 +85,8 @@
 
 #  define ATTRIBUTE_UNUSED_RESULT __attribute__((warn_unused_result))
 #  define ATTRIBUTE_USED          __attribute__((used))
-# endif
 
-# ifdef _MSC_VER
+# elif defined _MSC_VER
 
 #  define ATTRIBUTE_ALWAYS_INLINE __forceinline
 #  define ATTRIBUTE_CONST
@@ -102,8 +101,22 @@
 #  define ATTRIBUTE_UNUSED_RESULT
 #  define ATTRIBUTE_USED
 
-# endif // _MSC_VER
+# else // !__GNUC__ && !_MSC_VER, e.g., Swig.
 
+#  define ATTRIBUTE_ALWAYS_INLINE
+#  define ATTRIBUTE_CONST
+#  define ATTRIBUTE_DEPRECATED
+#  define ATTRIBUTE_MALLOC
+#  define ATTRIBUTE_NOINLINE
+#  define ATTRIBUTE_NORETURN
+#  define ATTRIBUTE_NOTHROW
+#  define ATTRIBUTE_PRINTF(Format, FirstArg)
+#  define ATTRIBUTE_PURE
+#  define ATTRIBUTE_STDCALL
+#  define ATTRIBUTE_UNUSED_RESULT
+#  define ATTRIBUTE_USED
+
+# endif
 /*---------------------------.
 | ATTRIBUTE_NOTHROW in C++.  |
 `---------------------------*/
