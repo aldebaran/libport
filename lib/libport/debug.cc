@@ -13,6 +13,7 @@
 #include <boost/thread/tss.hpp>
 
 #include <libport/cassert>
+#include <libport/compiler.hh>
 #include <libport/containers.hh>
 #include <libport/cstdio>
 #include <libport/debug.hh>
@@ -61,7 +62,7 @@ namespace libport
 
   namespace debug
   {
-    // Wether categories are enabled by default.
+    // Whether categories are enabled by default.
     static bool default_category_state = true;
 
     LIBPORT_API void
@@ -86,6 +87,7 @@ namespace libport
     }
 
     // Categories added so far.
+    ATTRIBUTE_PURE
     categories_type&
     categories()
     {
@@ -93,66 +95,73 @@ namespace libport
       return categories;
     }
 
-    static unsigned
-    current_pattern()
+    namespace
     {
-      static unsigned current = 0;
-      return current++;
+
+      ATTRIBUTE_PURE
+      static unsigned
+      current_pattern()
+      {
+        static unsigned current = 0;
+        return current++;
+      }
+
+      // Patterns added so far.
+      ATTRIBUTE_PURE
+      patterns_type&
+      patterns()
+      {
+        static patterns_type patterns;
+        return patterns;
+      }
+
+      // Maximum category width.
+      ATTRIBUTE_PURE
+      size_t&
+      categories_largest()
+      {
+        static size_t res = 0;
+        return res;
+      }
+
+      inline
+      bool
+      match(Symbol globbing, Symbol string)
+      {
+        return fnmatch(globbing.name_get(), string.name_get()) == 0;
+      }
     }
 
-    // Patterns added so far.
-    patterns_type&
-    patterns()
-    {
-      static patterns_type patterns;
-      return patterns;
-    }
-
-    // Maximum category width.
-    size_t&
-    categories_largest()
-    {
-      static size_t res = 0;
-      return res;
-    }
-
-    // Add a new category, look if it matches a pattern.
+    /// Add a new category, look if it matches a pattern.
     Symbol
     add_category(Symbol name)
     {
       int order = -1;
       bool value = default_category_state;
       foreach (patterns_type::value_type& s, patterns())
-      {
-        if (fnmatch(s.first.name_get(), name.name_get()) == 0)
+        if (match(s.first, name)
+            && order < int(s.second.second))
         {
-          if (int(s.second.second) > order)
-          {
-            value = s.second.first;
-            order = s.second.second;
-          }
+          value = s.second.first;
+          order = s.second.second;
         }
-      }
 
       categories()[name] = value;
 
-      size_t size = name.name_get().size();
-      if (categories_largest() < size)
-        categories_largest() = size;
+      categories_largest() =
+        std::max(categories_largest(), name.name_get().size());
 
       return name;
     }
 
-    // Add a new category pattern.
+    /// Add a new category pattern.
     int
     enable_category(Symbol pattern, bool enabled)
     {
-      patterns()[pattern] = std::make_pair(true, current_pattern());
+      patterns()[pattern] = std::make_pair(enabled, current_pattern());
       foreach (categories_type::value_type& s, categories())
-      {
-        if (fnmatch(pattern.name_get(), s.first.name_get()) == 0)
+        if (match(pattern, s.first))
           s.second = enabled;
-      }
 
       return 42;
     }
@@ -189,19 +198,27 @@ namespace libport
       AUTO,
     } category_modifier_type;
 
-    static void set_category_state(const char* list,
-                                   const category_modifier_type state)
+    /// Enable/disable categories, already seen or future.
+    ///
+    /// Called by GD_INIT.
+    ///
+    /// \param list  the value of the environment var (GD_CATEGORY, etc.).
+    /// \param state the associated state (AUTO, ENABLE, DISABLE).
+    static
+    void
+    set_category_state(const char* list, const category_modifier_type state)
     {
       // If the mode is "AUTO", then if the first specs is to enable
-      // ("+...") then the default is to disable, otherwise enable.
+      // ("-...") then the default is to enable, otherwise disable.
       // If the mode if not AUTO, then the default is the converse of
       // the mode: ENABLE -> false, and DISABLE => true.
-      debug::default_category_state =
+      default_category_state =
         state == AUTO ? (*list == '-') : (state != ENABLE);
 
-      // Also set existing to default_category_state.
+      // Set all the existing categories to the default behavior
+      // before running the per-pattern tests.
       foreach (categories_type::value_type& v, categories())
-        v.second = debug::default_category_state;
+        v.second = default_category_state;
 
       std::string s(list); // Do not pass temporary to make_tokenizer.
       tokenizer_type t = make_tokenizer(s, ",");
