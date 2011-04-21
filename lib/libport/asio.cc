@@ -511,6 +511,7 @@ namespace libport
       BlockLock bl(base_->callbackLock);
       base_->onReadFunc = 0;
       base_->onErrorFunc = 0;
+      base_->unlinkAll();
       base_ = 0;
     }
     // FIXME: optimize
@@ -804,5 +805,20 @@ namespace libport
     //No reader at b2 end.
     s.first->onConnect();
     s.second->onConnect();
+  }
+  void Socket::close()
+  {
+    if (base_)
+    {
+      Destructible::DestructionLock l = base_->getDestructionLock();
+      base_->close();
+      // We never reuse base_ once clodes
+      base_->destroy();
+      BlockLock bl(base_->callbackLock);
+      base_->onReadFunc = 0;
+      base_->onErrorFunc = 0;
+      base_->unlinkAll();
+      base_ = 0;
+    }
   }
 }

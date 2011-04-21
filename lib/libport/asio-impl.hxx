@@ -76,6 +76,7 @@ namespace libport
       {}
       ~SocketImpl()
       {
+        close();
         wasDestroyed();
         waitForDestructionPermission();
         delete base_;
@@ -249,9 +250,9 @@ namespace libport
     void
     SocketImpl<Stream>::close()
     {
-      Destructible::DestructionLock l = getDestructionLock();
       if (base_->lowest_layer().is_open())
       {
+        Destructible::DestructionLock l = getDestructionLock();
         // Error code is ignored on purpose, after all, we're closing.
         boost::system::error_code erc;
         base_->lowest_layer().shutdown(
@@ -436,7 +437,6 @@ namespace libport
       {
         if (onErrorFunc)
           onErrorFunc(er);
-        close();
         return;
       }
       else
@@ -477,9 +477,6 @@ namespace libport
       {
         if (onErrorFunc)
           onErrorFunc(erc);
-        close();
-        // We no longuer need our owner socket to stay alive, we wont call it.
-        unlinkAll();
       }
       else
       {

@@ -230,11 +230,7 @@ namespace libport
      */
     void readOnce();
 
-    void close()
-    {
-      if (base_)
-        base_->close();
-    }
+    void close();
 
     unsigned short getRemotePort() const { CHECK;return base_->getRemotePort();}
     std::string getRemoteHost() const    { CHECK;return base_->getRemoteHost();}
