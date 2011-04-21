@@ -68,6 +68,9 @@ namespace libport
     /// Virtual destructor.
     virtual ~Destructible();
 
+    /// Release all held destruction locks
+    void unlinkAll();
+
     protected:
 
     /** Call this to warn Destructible that the destructor was called.
@@ -87,8 +90,6 @@ namespace libport
     /// Override this function to change the effective destruction behavior.
     virtual void doDestroy();
 
-    /// Release all held destruction locks
-    void unlinkAll();
     private:
     inline void take();
     inline void release();
