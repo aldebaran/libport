@@ -22,16 +22,38 @@
 
 # if defined WIN32
 #  include <boost/cstdint.hpp>
+
+namespace libport
+{
+  typedef boost::uint32_t uint32_t;
+  typedef boost::int32_t int32_t;
+  typedef boost::uint16_t uint16_t;
+  typedef boost::int16_t int16_t;
+  typedef boost::uint8_t uint8_t;
+  typedef boost::int8_t int8_t;
+}
+
+#  ifndef LIBPORT_NO_CSTDINT_TYPES
 extern "C"
 {
-#  ifndef LIBPORT_NO_CSTDINT_TYPES
-  using boost::uint32_t;
-  using boost::int32_t;
-  using boost::uint16_t;
-  using boost::int16_t;
-  using boost::uint8_t;
-  using boost::int8_t;
+  using libport::uint32_t;
+  using libport::int16_t;
+  using libport::uint16_t;
+  using libport::int8_t;
+  using libport::uint8_t;
+}
 #  endif
+
+# else // WIN32
+
+namespace libport
+{
+  typedef ::uint32_t uint32_t;
+  typedef ::int32_t int32_t;
+  typedef ::uint16_t uint16_t;
+  typedef ::int16_t int16_t;
+  typedef ::uint8_t uint8_t;
+  typedef ::int8_t int8_t;
 }
 
 # endif // WIN32
