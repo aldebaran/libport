@@ -116,7 +116,7 @@ namespace libport
 #if ! defined WIN32
       int stealFD();
 #endif
-      native_handle_type getFD();
+      native_handle_type getFD() const;
       // Effective backend
       std::string read_(size_t length);
     protected:
@@ -177,7 +177,8 @@ namespace libport
       {
         return invalid_handle;
       }
-      native_handle_type getFD();
+      native_handle_type getFD() const;
+
     private:
       Acceptor* base_;
     };
@@ -221,7 +222,7 @@ namespace libport
 
     template<class Acceptor>
     native_handle_type
-    AcceptorImpl<Acceptor>::getFD()
+    AcceptorImpl<Acceptor>::getFD() const
     {
       return base_->native();
     }
@@ -402,7 +403,7 @@ namespace libport
 
     template<typename Stream>
     native_handle_type
-    SocketImpl<Stream>::getFD()
+    SocketImpl<Stream>::getFD() const
     {
       // We need the C-cast here, because underlying type changes with Stream.
       return (native_handle_type)base_->lowest_layer().native();

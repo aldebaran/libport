@@ -117,7 +117,7 @@ namespace libport
   }
 
   inline bool
-  Socket::getAutoRead()
+  Socket::getAutoRead() const
   {
     return autostart_reader_;
   }

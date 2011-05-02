@@ -120,7 +120,7 @@ namespace libport
 #if ! defined WIN32
     virtual native_handle_type stealFD() = 0;
 #endif
-    virtual native_handle_type getFD() = 0;
+    virtual native_handle_type getFD() const = 0;
     virtual unsigned long bytesReceived() const = 0;
     virtual unsigned long bytesSent() const = 0;
     /// Callback function called each time new data is available.
@@ -240,7 +240,7 @@ namespace libport
     std::string getLocalHost() const     { CHECK;return base_->getLocalHost();}
     unsigned long bytesReceived() const  { CHECK;return base_->bytesReceived();}
     unsigned long bytesSent() const      { CHECK;return base_->bytesSent();}
-    bool isConnected() const      {return base_ ? base_->isConnected() : false;}
+    bool isConnected() const             {return base_ && base_->isConnected();}
 
     /** Connect to a remote host.
      * \param host hostname to connect to.
@@ -312,21 +312,27 @@ namespace libport
 
 
     typedef boost::function0<Socket*> SocketFactory;
-    /** Listen using udp.
+
+    /// Type of onRead.
+    typedef
+      boost::function3<void, const void*, size_t, boost::shared_ptr<UDPLink> >
+      onread_type;
+
+    /** Listen using UDP.
      * Call onRead(data, length, link) for each new packet. Link can be used
      * to reply to the sender through its UDPLink::reply() method.
      * @return the local port that was bound.
      */
-    static unsigned short listenUDP(const std::string& host,
-                                    const std::string& port,
-                            boost::function3<void, const void*, size_t,
-                            boost::shared_ptr<UDPLink> > onRead,
-                            boost::system::error_code& erc,
-                            boost::asio::io_service& s
-                              = libport::get_io_service());
+    static
+    unsigned short
+    listenUDP(const std::string& host, const std::string& port,
+              onread_type onRead,
+              boost::system::error_code& erc,
+              boost::asio::io_service& s = libport::get_io_service());
 
     /// Close UDP socket listening on \b port.
     static bool closeUDP(unsigned short port);
+
     /** Listen using TCP or UDP.
      *
      * \param f a socket factory. For each new connection the function will
@@ -391,7 +397,7 @@ namespace libport
     */
    void setAutoRead(bool enable);
    /// Get current autoRead state.
-   bool getAutoRead();
+   bool getAutoRead() const;
 
   protected:
     virtual void doDestroy();

@@ -49,7 +49,7 @@ namespace libport
       std::string read(size_t length);
       void startReader();
       native_handle_type stealFD(){ int res = fd; fd = -1; return res;}
-      native_handle_type getFD() { return fd;}
+      native_handle_type getFD() const { return fd; }
       unsigned long bytesReceived() const { return 0;}
       unsigned long bytesSent() const { return 0;}
       void readOne();

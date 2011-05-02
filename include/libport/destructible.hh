@@ -84,7 +84,7 @@ namespace libport
     void waitForDestructionPermission();
 
     /// Returns true if no destruction locks are acquired.
-    bool checkDestructionPermission();
+    bool checkDestructionPermission() const;
 
     /// Override this function to change the effective destruction behavior.
     virtual void doDestroy();

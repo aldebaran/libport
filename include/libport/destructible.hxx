@@ -108,7 +108,7 @@ namespace libport
   }
 
   inline bool
-  Destructible::checkDestructionPermission()
+  Destructible::checkDestructionPermission() const
   {
     return !count_;
   }
