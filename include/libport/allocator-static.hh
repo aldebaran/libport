@@ -41,8 +41,11 @@ namespace libport
     // Current chunk size to allocate.
     static unsigned chunk_size_;
 # if !defined NDEBUG
-    // The only thread allow to access the static allocator.
-    static pthread_t thread_;
+  public:
+    // The only thread allow to access the static allocator.  This field is
+    // public to be redefined when another thread is manipulating the
+    // allocator safely.
+    static pthread_t thread;
 # endif
   };
 }
