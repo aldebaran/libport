@@ -14,6 +14,10 @@
 # include <vector>
 # include <cstdlib>
 
+# if !defined NDEBUG
+#  include <libport/pthread.h>
+# endif
+
 namespace libport
 {
   template <typename Exact, unsigned Chunk>
@@ -36,6 +40,10 @@ namespace libport
     static unsigned storage_size_;
     // Current chunk size to allocate.
     static unsigned chunk_size_;
+# if !defined NDEBUG
+    // The only thread allow to access the static allocator.
+    static pthread_t thread_;
+# endif
   };
 }
 
