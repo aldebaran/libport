@@ -14,13 +14,24 @@
 # include <libport/detect-win32.h>
 # include <libport/config.h>
 
-# if defined HAVE_CSTDINT
-#  include <cstdint>
-# elif defined HAVE_STDINT_H
-#  include <stdint.h>
-# endif
+# if defined HAVE_CSTDINT || defined HAVE_STDINT_H
+#  if defined HAVE_CSTDINT
+#   include <cstdint>
+#  else
+#   include <stdint.h>
+#  endif
 
-# if defined WIN32
+namespace libport
+{
+  typedef std::uint32_t uint32_t;
+  typedef std::int32_t int32_t;
+  typedef std::uint16_t uint16_t;
+  typedef std::int16_t int16_t;
+  typedef std::uint8_t uint8_t;
+  typedef std::int8_t int8_t;
+}
+
+# else // ! HAVE_CSTDINT && ! HAVE_STDINT_H
 #  include <boost/cstdint.hpp>
 
 namespace libport
@@ -33,7 +44,9 @@ namespace libport
   typedef boost::int8_t int8_t;
 }
 
-#  ifndef LIBPORT_NO_CSTDINT_TYPES
+# endif
+
+# if !defined LIBPORT_NO_CSTDINT_TYPES
 extern "C"
 {
   using libport::uint32_t;
@@ -42,21 +55,7 @@ extern "C"
   using libport::int8_t;
   using libport::uint8_t;
 }
-#  endif
-
-# else // WIN32
-
-namespace libport
-{
-  typedef ::uint32_t uint32_t;
-  typedef ::int32_t int32_t;
-  typedef ::uint16_t uint16_t;
-  typedef ::int16_t int16_t;
-  typedef ::uint8_t uint8_t;
-  typedef ::int8_t int8_t;
-}
-
-# endif // WIN32
+# endif
 
 #endif // LIBPORT_CSTDINT
 
