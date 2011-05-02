@@ -232,6 +232,8 @@ namespace libport
     void
     deletor(T* ptr)
     {
+      GD_CATEGORY(Libport.Asio);
+      GD_FINFO_TRACE("deletor %p", ptr);
       delete ptr;
     }
 

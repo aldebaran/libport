@@ -57,7 +57,7 @@ namespace libport
     DestructionLock getDestructionLock();
 
     /// Ask if a destruction request was received.
-    bool pendingDestruction();
+    bool pendingDestruction() const;
 
     /// Hold destruction lock \b l until destroyed.
     void link(DestructionLock l);

@@ -11,6 +11,8 @@
 #ifndef LIBPORT_DESTRUCTIBLE_HXX
 # define LIBORT_DESTRUCTIBLE_HXX
 
+# include <libport/debug.hh>
+
 namespace libport
 {
 
@@ -35,9 +37,9 @@ namespace libport
   `---------------*/
 
   inline Destructible::Destructible()
-    :destructionPending_(false)
-     , destructionEnacted_(false)
-     ,  count_(0)
+    : destructionPending_(false)
+    , destructionEnacted_(false)
+    , count_(0)
   {
   }
 
@@ -47,8 +49,9 @@ namespace libport
     return DestructionLock(new Lock(*this));
   }
 
-  inline bool
-  Destructible::pendingDestruction()
+  inline
+  bool
+  Destructible::pendingDestruction() const
   {
     return destructionPending_;
   }
@@ -56,6 +59,8 @@ namespace libport
   inline void
   Destructible::destroy()
   {
+    GD_CATEGORY(Libport.Destructible);
+    GD_FINFO_TRACE("%p->Destructible::destroy", this);
     //Cant use BlockLock: must unlock before doDestroy.
     threadLock_.lock();
     destructionPending_ = true;
@@ -71,11 +76,15 @@ namespace libport
 
   inline Destructible::~Destructible()
   {
+    GD_CATEGORY(Libport.Destructible);
+    GD_FINFO_TRACE("%p->Destructible::~Destructible", this);
   }
 
   inline void
   Destructible::doDestroy()
   {
+    GD_CATEGORY(Libport.Destructible);
+    GD_FINFO_TRACE("%p->Destructible::doDestroy", this);
     delete this;
   }
 

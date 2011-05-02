@@ -377,6 +377,7 @@ namespace libport
   void
   AsioDestructible::doDestroy()
   {
+    GD_FINFO_TRACE("%p->AsioDestructible::doDestroy()", this);
     get_io_service().post(boost::bind(netdetail::deletor<AsioDestructible>,
                                       this));
   }
@@ -384,6 +385,7 @@ namespace libport
   void
   Socket::doDestroy()
   {
+    GD_FINFO_TRACE("%p->Socket::doDestroy()", this);
     io_.post(boost::bind(netdetail::deletor<AsioDestructible>,
                                       this));
   }
@@ -486,6 +488,7 @@ namespace libport
   void
   Socket::destroy()
   {
+    GD_FINFO_TRACE("%p->Socket::destroy()", this);
     // Lock in case the user calls destroy() in its error handler.
     Destructible::DestructionLock l = getDestructionLock();
     // It is safe to reach that point with an open socket.
@@ -495,6 +498,7 @@ namespace libport
 
   Socket::~Socket()
   {
+    GD_FINFO_TRACE("%p->Socket::~Socket()", this);
     /* FIXME: ensure no false positive before activating
        if (!checkDestructionPermission())
        std::cerr <<"WARNING, attempting to delete a Socket that is still in use."
