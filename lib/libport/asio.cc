@@ -516,16 +516,14 @@ namespace libport
     }
     // FIXME: optimize
     while (!checkDestructionPermission())
-    {
       sleep(100);
-    }
     //waitForDestructionPermission();
   }
+
   static std::map<unsigned short,  netdetail::UDPSocket*> udp_map;
   bool Socket::closeUDP(unsigned short port)
   {
-    netdetail::UDPSocket* s = libport::find0(udp_map, port);
-    if (s)
+    if (netdetail::UDPSocket* s = libport::find0(udp_map, port))
     {
       delete s;
       udp_map.erase(port);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -13,6 +13,11 @@
 
 namespace libport
 {
+
+  /*---------------------.
+  | Destructible::Lock.  |
+  `---------------------*/
+
   inline Destructible::Lock::Lock(Destructible& parent)
     : parent_(parent)
   {
@@ -23,6 +28,11 @@ namespace libport
   {
     parent_.release();
   }
+
+
+  /*---------------.
+  | Destructible.  |
+  `---------------*/
 
   inline Destructible::Destructible()
     :destructionPending_(false)

@@ -39,13 +39,13 @@ namespace libport
    */
   class Destructible
   {
-    public:
+  public:
     class Lock: public libport::ThreadSafeRefCounted
     {
-      public:
+    public:
       Lock(Destructible& parent);
       ~Lock();
-      private:
+    private:
       Destructible& parent_;
     };
 
@@ -71,8 +71,7 @@ namespace libport
     /// Release all held destruction locks
     void unlinkAll();
 
-    protected:
-
+  protected:
     /** Call this to warn Destructible that the destructor was called.
       * Only required if your object's destructor can be directly called.
       */
@@ -90,7 +89,7 @@ namespace libport
     /// Override this function to change the effective destruction behavior.
     virtual void doDestroy();
 
-    private:
+  private:
     inline void take();
     inline void release();
     Condition canDestroy_;

@@ -146,10 +146,12 @@ namespace libport
     }
   };
 
-  #define CHECK do{ \
-    if (!base_) throw std::runtime_error("Transport endpoint not connected");\
-  }\
-    while(0)
+#define CHECK                                                           \
+  do {                                                                  \
+    if (!base_)                                                         \
+      throw std::runtime_error("Transport endpoint not connected");     \
+  } while (false)
+
   /** Socket class with a higher API.
    *
    * It is recommended that you always asynchronously destroy Socket instances
@@ -390,11 +392,13 @@ namespace libport
    void setAutoRead(bool enable);
    /// Get current autoRead state.
    bool getAutoRead();
+
   protected:
     virtual void doDestroy();
     bool onRead_(boost::asio::streambuf&);
     std::string buffer;
     BaseSocket* base_;
+
   private:
     template<typename Proto, typename BaseFactory> boost::system::error_code
     listenProto(SocketFactory f, const std::string& host,

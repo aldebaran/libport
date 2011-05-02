@@ -157,8 +157,10 @@ namespace libport
         return false;
       }
       void close();
+
 #define ACCEPTOR_FAIL                                                   \
-    {throw std::runtime_error("Call not implemented for Acceptors");}
+      {throw std::runtime_error("Call not implemented for Acceptors");}
+
       void write(const void*, size_t) ACCEPTOR_FAIL
       std::string read(size_t) ACCEPTOR_FAIL
       unsigned short getRemotePort() const ACCEPTOR_FAIL
@@ -168,6 +170,7 @@ namespace libport
       unsigned long bytesSent() const ACCEPTOR_FAIL
       unsigned long bytesReceived() const ACCEPTOR_FAIL
 #undef ACCEPTOR_FAIL
+
       unsigned short getLocalPort() const;
       std::string getLocalHost() const;
       native_handle_type stealFD()
@@ -222,6 +225,7 @@ namespace libport
     {
       return base_->native();
     }
+
     // FIXME: use the delete_ptr in boost::lambda.
     template<class T>
     void
@@ -229,12 +233,13 @@ namespace libport
     {
       delete ptr;
     }
+
     // Bind the Socket, the SocketImpl, and the boost socket together.
     template<class Sock, class Factory>
     SocketImplBase*
     bind_or_delete(Socket* sock, Factory f, Sock* s)
     {
-      if (SocketImplBase* base =  static_cast<SocketImplBase*>(f(s)))
+      if (SocketImplBase* base = static_cast<SocketImplBase*>(f(s)))
       {
         sock->setBase(base);
         return base;
@@ -730,7 +735,8 @@ template<class Proto, class BaseFactory>
     if (erc)
       return erc;
     typename Proto::acceptor* a;
-    try {
+    try
+    {
       a = new typename Proto::acceptor(get_io_service(), ep);
     }
     catch(const boost::system::system_error& se)

@@ -27,8 +27,10 @@ namespace libport
     LIBPORT_API BaseSocket* makeSSLLayer(SSLSettings settings,
                              boost::asio::ip::tcp::socket* s);
 #endif
+
     template<class Stream>
     class SocketImpl;
+
     class LIBPORT_API SocketImplBase
       : public BaseSocket
       , protected libport::Lockable
@@ -52,15 +54,18 @@ namespace libport
       friend class libport::Socket;
       template<class Stream> friend class SocketImpl;
     };
+
     template<typename T> SocketImplBase* create(T* s)
     {
       return SocketImpl<T>::create(s);
     }
+
     inline size_t SocketImplBase::getWriteBufferContentSize() const
     {
       return pending_ ? buffers_[1-current_].size() : 0;
     }
   }
+
   template<class Sock>
   inline void
   Socket::setFD(native_handle_type  fd, typename Sock::protocol_type proto)
