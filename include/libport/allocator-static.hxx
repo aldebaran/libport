@@ -39,7 +39,7 @@ namespace libport
     void* res = 0;
     std::swap(res, pointers_[where_]);
     aver(res);
-    aver(*(unsigned long*) res == 0x0C0C0C0C);
+    aver(*(unsigned*) res == 0x0C0C0C0C);
     where_ = (where_ + 1) % storage_size_;
     return res;
   }
@@ -58,7 +58,7 @@ namespace libport
     if (w > storage_size_)
       w += storage_size_;
     std::swap(pointers_[w], obj);
-    *((unsigned long*) pointers_[w]) = 0x0C0C0C0C;
+    *((unsigned*) pointers_[w]) = 0x0C0C0C0C;
     aver(obj == 0);
     size_--;
   }
@@ -79,7 +79,7 @@ namespace libport
     {
       pointers_[storage_size_ + i] =
         pool + i * Exact::allocator_static_max_size;
-      *(unsigned long*) pointers_[storage_size_ + i] = 0x0C0C0C0C;
+      *(unsigned*) pointers_[storage_size_ + i] = 0x0C0C0C0C;
     }
     where_ = storage_size_;
     storage_size_ += chunk_size_;
