@@ -110,6 +110,8 @@ namespace sched
       // or we would get removed abruptly from the scheduler pending_
       // list.
       state_ = running;
+      if (stats_.logging)
+        stats_.last_resume = scheduler_.get_time();
       try
       {
         if (has_pending_exception()
@@ -156,6 +158,7 @@ namespace sched
       }
     }
 
+    copy_stats_to_parent();
     terminate_cleanup();
 
     // We should never go there as the scheduler will have terminated us.
@@ -200,10 +203,34 @@ namespace sched
   }
 
   void
+  Job::stats_type::thread_stats_type::add(const thread_stats_type& t)
+  {
+    running.add_samples(t.running);
+    waiting.add_samples(t.waiting);
+    sleeping.add_samples(t.sleeping);
+    nb_fork += t.nb_fork;
+    nb_join += t.nb_join;
+    nb_exn += t.nb_exn;
+  }
+
+  void
+  Job::copy_stats_to_parent()
+  {
+    if (parent_ && parent_->stats_.logging)
+    {
+      parent_->stats_.job.nb_join++;
+      parent_->stats_.terminated_children.add(stats_.job);
+    }
+  }
+
+  void
   Job::register_child(const rJob& child, Collector& children)
   {
     aver(!child->parent_);
     child->parent_ = this;
+    child->stats_.logging = stats_.logging;
+    if (stats_.logging)
+      stats_.job.nb_fork++;
     children.push_back(child);
     children_.push_back(child);
   }
@@ -263,6 +290,9 @@ namespace sched
   void
   Job::async_throw(const exception& e, bool force_async)
   {
+    if (stats_.logging)
+      stats_.job.nb_exn++;
+
     // A job which has received an exception is no longer non-interruptible.
     non_interruptible_ = false;
     // If this is the current job we are talking about, the exception
@@ -328,6 +358,7 @@ namespace sched
   void
   Job::hook_resumed() const
   { /* nothing*/ }
+
 
   /*------------.
   | jobs_type.  |

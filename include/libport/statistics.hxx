@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -11,6 +11,7 @@
 #ifndef LIBPORT_STATISTICS_HXX
 # define LIBPORT_STATISTICS_HXX
 
+# include <libport/cassert>
 # include <libport/cmath>
 
 namespace libport
@@ -96,6 +97,22 @@ namespace libport
     // Update sums.
     sum_ += value;
     sum2_ += value * value;
+  }
+
+  template<typename T, typename R>
+  inline void
+  Statistics<T, R>::add_samples(const self_type& s)
+  {
+    if (capacity_ || s.capacity_)  // Running
+      pabort("FIXME: implement add_samples");
+
+    count_ += s.count_;
+    sum_ += s.sum_;
+    sum2_ += s.sum2_;
+    min_ = (!s.min_ok_ || (min_ok_ && min_ < s.min_)) ? min_ : s.min_;
+    max_ = (!s.max_ok_ || (max_ok_ && s.max_ < max_)) ? max_ : s.max_;
+    min_ok_ = min_ok_ && s.min_ok_;
+    max_ok_ = max_ok_ && s.max_ok_;
   }
 
   template<typename T, typename R>

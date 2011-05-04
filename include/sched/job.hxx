@@ -74,6 +74,7 @@ namespace sched
   Job::Job(Scheduler& scheduler)
     : RefCounted()
     , scheduler_(scheduler)
+    , stats_()
   {
     init_common();
   }
@@ -82,6 +83,7 @@ namespace sched
   Job::Job(const Job& model, size_t stack_size)
     : RefCounted()
     , scheduler_(model.scheduler_)
+    , stats_()
   {
     init_common(stack_size);
     time_shift_ = model.time_shift_;
@@ -268,8 +270,85 @@ namespace sched
   Job::resume_scheduler_()
   {
     hook_preempted();
-    scheduler_.resume_scheduler(this);
+    if (stats_.logging)
+    {
+      job_state last_state = state_;
+      libport::utime_t start_resume = scheduler_.get_time();
+      stats_.job.running.add_sample(
+        start_resume - stats_.last_resume);
+
+      scheduler_.resume_scheduler(this);
+
+      stats_.last_resume = scheduler_.get_time();
+      switch (last_state)
+      {
+        case waiting:
+          stats_.job.waiting.add_sample(
+            stats_.last_resume - start_resume);
+          break;
+        case sleeping:
+          stats_.job.sleeping.add_sample(
+            stats_.last_resume - start_resume);
+          break;
+        default:
+          break;
+      }
+    }
+    else
+      scheduler_.resume_scheduler(this);
     hook_resumed();
+  }
+
+  /*--------.
+  | Stats.  |
+  `--------*/
+
+  inline
+  const Job::stats_type&
+  Job::stats_get() const
+  {
+    return stats_;
+  }
+
+  inline
+  Job::stats_type&
+  Job::stats_get()
+  {
+    return stats_;
+  }
+
+  inline
+  Job::stats_type::stats_type()
+    : logging(true)
+  {
+    job.reset();
+    terminated_children.reset();
+  }
+
+  inline void
+  Job::stats_type::thread_stats_type::reset()
+  {
+    running.resize(0);
+    waiting.resize(0);
+    sleeping.resize(0);
+    nb_fork = 0;
+    nb_join = 0;
+    nb_exn = 0;
+  }
+
+  inline void
+  Job::stats_reset()
+  {
+    stats_.job.reset();
+    stats_.terminated_children.reset();
+  }
+
+  inline void
+  Job::stats_log(bool log)
+  {
+    stats_.logging = log;
+    if (log)
+      stats_.last_resume = scheduler_.get_time();
   }
 
   /*-----------------.

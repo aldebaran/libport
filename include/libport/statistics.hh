@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -24,12 +24,15 @@ namespace libport
   class Statistics
   {
   public:
+    typedef Statistics<T, R> self_type;
+
     Statistics(size_t capacity = 0);
     void resize(size_t capacity);
     size_t capacity() const;
     size_t size() const;
     bool empty() const;
     void add_sample(T value);
+    void add_samples(const self_type& s);
     size_t n_samples() const;
     R mean() const;
     R variance() const;

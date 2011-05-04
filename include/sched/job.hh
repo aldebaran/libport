@@ -345,6 +345,51 @@ namespace sched
     /// Whether \a this is an ancester of \a that.
     bool ancester_of(const rJob& that) const;
 
+    /// List of stats aggregated on the job.
+    struct stats_type
+    {
+      stats_type();
+
+      typedef libport::Statistics<libport::utime_t, libport::ufloat>
+        time_stat_type;
+
+      struct thread_stats_type
+      {
+        /// Time spent in each mode.
+        time_stat_type running, waiting, sleeping;
+        /// Number of children spawn and joinned.
+        unsigned long nb_fork, nb_join;
+        /// Number of exceptions raised.
+        unsigned nb_exn;
+
+        void reset();
+
+        void add(const thread_stats_type& t);
+      };
+
+      bool logging;
+      libport::utime_t last_resume;
+      thread_stats_type job;
+      thread_stats_type terminated_children;
+    };
+
+    /// Get current mean and standard deviation (in libport::utime_t units) of
+    /// the scheduler so far.
+    ///
+    /// \return Some scheduler statistics.
+    const stats_type& stats_get() const;
+    stats_type& stats_get();
+
+    /// Reset statistics.
+    void stats_reset();
+
+    /// Should the job stats be logged.
+    void stats_log(bool);
+
+  private:
+    /// Copy his own stats to its parent job.
+    void copy_stats_to_parent();
+
   protected:
     /// Called before control is returned to the scheduler.
     virtual void hook_preempted() const;
@@ -393,6 +438,9 @@ namespace sched
 
     /// Coro structure corresponding to this job.
     Coro* coro_;
+
+    // Statistics of this job.
+    stats_type stats_;
 
   protected:
 
