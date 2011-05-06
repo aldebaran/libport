@@ -195,11 +195,13 @@ libport_include_HEADERS +=                              \
   include/libport/ufloat.hxx                            \
   include/libport/ull-fixed-point.hh                    \
   include/libport/ulong-fixed-point.hh                  \
+  include/libport/umatrix.hh                            \
   include/libport/unique-pointer.hh                     \
   include/libport/unique-pointer.hxx                    \
   include/libport/unit-test.hh                          \
   include/libport/utime.hh                              \
   include/libport/utime.hxx                             \
+  include/libport/uvector.hh                            \
   include/libport/valgrind.hh                           \
   include/libport/version.hh                            \
   include/libport/vector.hh                             \
