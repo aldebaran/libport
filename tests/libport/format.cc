@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010, 2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -14,17 +14,18 @@
 using libport::test_suite;
 using namespace libport;
 
+#define CHECK(Out, ...)                                 \
+  BOOST_CHECK_EQUAL(libport::format(__VA_ARGS__), Out)
+
 void
 check_numbers()
 {
-#define CHECK(Out, ...)                                 \
-  BOOST_CHECK_EQUAL(libport::format(__VA_ARGS__), Out)
   // Check that small integer values are always displayed as integers
   // with %s.
-  CHECK("1",   "%s", 1);
-  CHECK("1",   "%s", 1);
-  CHECK("1",   "%s", 1.0);
-  CHECK("1",   "%s", 1.0);
+  CHECK("1", "%s", 1);
+  CHECK("1", "%s", 1);
+  CHECK("1", "%s", 1.0);
+  CHECK("1", "%s", 1.0);
 
   CHECK("4294967296",   "%s", 4294967296ll);
   CHECK("21474836470",  "%s", 21474836470ll);
@@ -44,10 +45,18 @@ check_numbers()
   CHECK("1",   "%f", 1);
 }
 
+void
+check_chars()
+{
+  CHECK("ab", "%c%c", 'a', char('a' + 1));
+  CHECK("ab", "%s%s", 'a', char('a' + 1));
+}
+
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE(__FILE__);
+  suite->add(BOOST_TEST_CASE(check_chars));
   suite->add(BOOST_TEST_CASE(check_numbers));
   return suite;
 }
