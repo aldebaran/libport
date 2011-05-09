@@ -185,21 +185,6 @@ namespace sched
     /// \sa yield(), yield_for(), yield_until_terminated(), yield_until()
     void yield_until_things_changed();
 
-    /// Mark the current job as side-effect free.
-    ///
-    /// \param s True if the job is now side-effect free.
-    ///
-    /// Indicate whether the current state of a job may influence other
-    /// parts of the system. This is used by the scheduler to choose
-    /// whether other jobs need scheduling or not. The default value
-    /// for \c side_effect_free is false.
-    void side_effect_free_set(bool s);
-
-    /// Is the current job side-effect free?
-    ///
-    /// \return True if the job is currently side-effect free.
-    bool side_effect_free_get() const;
-
     /// Raise an exception next time this job will be resumed,
     /// or right now if this is the current job.
     ///
@@ -419,9 +404,6 @@ namespace sched
 
     /// Helper functions for constructors.
     void init_common();
-
-    /// Is the current job side-effect free?
-    bool side_effect_free_;
 
     /// The next exception to be propagated if any.
     exception_ptr pending_exception_;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -133,11 +133,6 @@ namespace sched
     /// \return The currently non-terminated known jobs.
     jobs_type jobs_get() const;
 
-    /// Tell the scheduler that the world has changed because
-    /// of an external event.
-    ///
-    void signal_world_change();
-
     /// Get current mean and standard deviation (in libport::utime_t units) of
     /// the scheduler so far.
     ///
@@ -166,6 +161,9 @@ namespace sched
 
     /// Set the job that gets scheduled after execute_round.
     void idle_job_set(rJob job);
+
+    /// Notify the scheduler that one of its jobs was woken up.
+    void job_was_woken_up();
   private:
     /// Execute one round in the scheduler.
     ///
@@ -194,9 +192,11 @@ namespace sched
     /// Coroutine corresponding to the scheduler.
     Coro coro_;
 
-    /// Has there been a possible side-effect since last time we reset
-    /// this field?
-    bool possible_side_effect_;
+    /// Has a new job been created?
+    bool new_job_;
+
+    /// Has a new job been woken by an explicit set_state?
+    bool awoken_job_;
 
     /// Cycles counter.
     unsigned int cycle_;

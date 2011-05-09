@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -53,12 +53,6 @@ namespace sched
   }
 
   inline void
-  Scheduler::signal_world_change()
-  {
-    possible_side_effect_ = true;
-  }
-
-  inline void
   Scheduler::real_time_behavior_set()
   {
     real_time_behavior_ = true;
@@ -94,6 +88,11 @@ namespace sched
     return deadline_;
   }
 
+  inline void
+  Scheduler::job_was_woken_up()
+  {
+    awoken_job_ = true;
+  }
 } // namespace sched
 
 #endif // !SCHED_SCHEDULER_HXX

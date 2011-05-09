@@ -37,7 +37,8 @@ namespace sched
   Scheduler::Scheduler(boost::function0<libport::utime_t> get_time)
     : get_time_(get_time)
     , current_job_(0)
-    , possible_side_effect_(true)
+    , new_job_(false)
+    , awoken_job_(false)
     , cycle_(0)
     , ready_to_die_(false)
     , real_time_behavior_(false)
@@ -78,6 +79,7 @@ namespace sched
       pending_.insert(next_job_p_, job);
     else
       jobs_.push_back(job);
+    new_job_ = true;
   }
 
   libport::utime_t
@@ -121,9 +123,7 @@ namespace sched
   libport::utime_t
   Scheduler::execute_round()
   {
-    // Run all the jobs in the run queue once. If any job declares upon entry or
-    // return that it is not side-effect free, we remember that for the next
-    // cycle.
+    // Run all the jobs in the run queue once.
     pending_.clear();
     std::swap(pending_, jobs_);
 
@@ -147,8 +147,6 @@ namespace sched
     // job.
     libport::utime_t start_time = get_time_();
     deadline_ = start_time +  3600000000LL;
-    bool start_waiting = possible_side_effect_;
-    possible_side_effect_ = false;
     bool at_least_one_started = false;
 
     GD_FINFO_DUMP("%s jobs in the queue for this round", pending_.size());
@@ -233,8 +231,7 @@ namespace sched
 	// the previous run may have had some. Without it, we may miss some
 	// changes if the watching job is after the modifying job in the queue
 	// and the watched condition gets true for only one cycle.
-	start = (start_waiting || possible_side_effect_) &&
-          ( !job->frozen() || job->has_pending_exception());
+	start =  !job->frozen() || job->has_pending_exception();
 	break;
       case joining:
 	break;
@@ -251,16 +248,12 @@ namespace sched
       if (start || job->has_pending_exception())
       {
 	at_least_one_started = true;
-	GD_FINFO_DUMP("will resume job %s%s", *job,
-                      job->side_effect_free_get() ? " (side-effect free)" : "");
-	possible_side_effect_ |= !job->side_effect_free_get();
+	GD_FINFO_DUMP("will resume job %s", *job);
 	aver(!current_job_);
 	coroutine_switch_to(&coro_, job->coro_get());
 	aver(current_job_);
 	current_job_ = 0;
-	possible_side_effect_ |= !job->side_effect_free_get();
-	GD_FINFO_DUMP("back from job %s%s", *job,
-                      job->side_effect_free_get() ? " (side-effect free)" : "");
+	GD_FINFO_DUMP("back from job %s", *job);
 	switch (job->state_get())
 	{
 	case running:
@@ -278,10 +271,14 @@ namespace sched
     }
 
     // If during this cycle a new job has been created by an existing job,
-    // start it. Also start if a possible side effect happened, it may have
-    // occurred later then the waiting jobs in the cycle.
-    if (possible_side_effect_)
+    // start it.
+    // If during this cycle a job has been marked running behind our back, rerun
+    // immediately.
+    // Same thing if we are ready to die, finish the job ASAP.
+    if (new_job_ || awoken_job_ || ready_to_die_)
       deadline_ = SCHED_IMMEDIATE;
+    new_job_ = false;
+    awoken_job_ = false;
 
     // If we are ready to die and there are no jobs left, then die.
     if (ready_to_die_ && jobs_.empty())
@@ -297,20 +294,9 @@ namespace sched
   void
   Scheduler::resume_scheduler(rJob job)
   {
-    // If the job has not terminated and is side-effect free, then we
-    // assume it will not take a long time as we are probably evaluating
-    // a condition. In order to reduce the number of cycles spent to evaluate
-    // the condition, continue until it asks to be suspended in another
-    // way or until it is no longer side-effect free.
-
-    bool side_effect_free_save = job->side_effect_free_get();
-
-    if (job->state_get() == running && side_effect_free_save)
-      return;
-
     if (job->state_get() == running
-	&& UPRIO_RT_MIN <= job->prio_get()
-	&& !job->frozen())
+        && UPRIO_RT_MIN <= job->prio_get()
+        && !job->frozen())
       return;
 
     // We may have to suspend the job several time in case it makes no sense
@@ -356,17 +342,14 @@ namespace sched
       if (!job->frozen())
 	break;
 
-      // Ok, we are frozen. Let's requeue ourselves after setting
-      // the side_effect_free flag, and we will be in waiting mode.
-      job->side_effect_free_set(true);
+      // Ok, we are frozen. Let's requeue ourselves,
+      // we will be in waiting mode.
+
       job->state_set(waiting);
     }
 
     // Check that we are not near exhausting the stack space.
     job->check_stack_space();
-
-    // Restore the side_effect_free flag
-    job->side_effect_free_set(side_effect_free_save);
 
     // Resume job execution
   }

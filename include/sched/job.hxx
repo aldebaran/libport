@@ -66,7 +66,6 @@ namespace sched
     time_shift_ = 0;
     coro_ = coroutine_new();
     non_interruptible_ = false;
-    side_effect_free_ = false;
     check_stack_space_ = true;
     alive_jobs_++;
   }
@@ -152,18 +151,6 @@ namespace sched
     scheduler_.add_job(this);
   }
 
-  inline void
-  Job::side_effect_free_set(bool s)
-  {
-    side_effect_free_ = s;
-  }
-
-  inline bool
-  Job::side_effect_free_get() const
-  {
-    return side_effect_free_;
-  }
-
   inline bool
   Job::non_interruptible_get() const
   {
@@ -201,6 +188,8 @@ namespace sched
   Job::state_set(job_state state)
   {
     state_ = state;
+    if (state_ == running)
+      scheduler_get().job_was_woken_up();
   }
 
   inline libport::utime_t

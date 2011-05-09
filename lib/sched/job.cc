@@ -23,6 +23,8 @@
 
 #include <sched/job.hh>
 
+GD_CATEGORY(Sched);
+
 namespace sched
 {
   StopException::StopException(unsigned depth, boost::any payload)
@@ -100,7 +102,6 @@ namespace sched
     // called back. So perform RAII in a subblock to ensure that GD_CATEGORY
     // releases its memory.
     {
-      GD_CATEGORY(Sched);
       aver_eq(state_, to_start);
       GD_FINFO_DEBUG("job %s: run", this);
 
@@ -179,7 +180,10 @@ namespace sched
     // Wake-up waiting jobs.
     foreach (const rJob& job, to_wake_up_)
       if (!job->terminated())
+      {
+        GD_FINFO_DEBUG("job %s: waking up dependent job %s", this, *job);
 	job->state_set(running);
+      }
     to_wake_up_.clear();
     state_ = zombie;
     resume_scheduler_();
@@ -249,9 +253,7 @@ namespace sched
   void
   Job::async_throw(const exception& e, bool force_async)
   {
-    // A job which has received an exception is no longer side effect
-    // free or non-interruptible.
-    side_effect_free_ = false;
+    // A job which has received an exception is no longer non-interruptible.
     non_interruptible_ = false;
     // If this is the current job we are talking about, the exception
     // is synchronous.
