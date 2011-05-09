@@ -59,7 +59,9 @@
      // GCC 3.4 does not support "always_inline" without "inline".
 #  define ATTRIBUTE_ALWAYS_INLINE inline __attribute__((always_inline))
 #  define ATTRIBUTE_CONST      __attribute__((const))
-#  define ATTRIBUTE_DEPRECATED __attribute__((deprecated))
+#  ifndef ATTRIBUTE_DEPRECATED
+#   define ATTRIBUTE_DEPRECATED __attribute__((deprecated))
+#  endif
 #  define ATTRIBUTE_MALLOC     __attribute__((malloc))
 #  define ATTRIBUTE_NOINLINE   __attribute__((noinline))
 #  define ATTRIBUTE_NORETURN   __attribute__((noreturn))
@@ -90,7 +92,9 @@
 
 #  define ATTRIBUTE_ALWAYS_INLINE __forceinline
 #  define ATTRIBUTE_CONST
-#  define ATTRIBUTE_DEPRECATED __declspec(deprecated)
+#  ifndef ATTRIBUTE_DEPRECATED
+#    define ATTRIBUTE_DEPRECATED __declspec(deprecated)
+#  endif
 #  define ATTRIBUTE_MALLOC
 #  define ATTRIBUTE_NOINLINE   __declspec(noinline)
 #  define ATTRIBUTE_NORETURN   __declspec(noreturn)
@@ -105,7 +109,9 @@
 
 #  define ATTRIBUTE_ALWAYS_INLINE
 #  define ATTRIBUTE_CONST
-#  define ATTRIBUTE_DEPRECATED
+#  ifndef ATTRIBUTE_DEPRECATED
+#    define ATTRIBUTE_DEPRECATED
+#  endif
 #  define ATTRIBUTE_MALLOC
 #  define ATTRIBUTE_NOINLINE
 #  define ATTRIBUTE_NORETURN
@@ -123,7 +129,7 @@
 
 // For throw() vs. nothrow, see
 // http://www.nabble.com/Rest-of-trivial-decorations-td23114765.html
-# ifdef __cplusplus
+# if defined __cplusplus
 #  undef ATTRIBUTE_NOTHROW
 #  define ATTRIBUTE_NOTHROW throw()
 # endif
@@ -168,7 +174,7 @@
 
 // Each section must be pre-declared with its access rights, to do so,
 // include compiler-section.hh.
-# ifdef _MSC_VER
+# if defined _MSC_VER
 #  define LIBPORT_SECTION(Name) __declspec(allocate(#Name))
 # else
 #  define LIBPORT_SECTION(Name) __attribute__((section(#Name)))
@@ -207,11 +213,11 @@
 // }
 
 # if GCC_VERSION_GE(4, 3)
-# define unlikely(expr) __builtin_expect (!!(expr), 0)
-# define likely(expr) __builtin_expect (!!(expr), 1)
+#  define unlikely(expr) __builtin_expect (!!(expr), 0)
+#  define likely(expr) __builtin_expect (!!(expr), 1)
 # else
-# define unlikely(expr) expr
-# define likely(expr) expr
+#  define unlikely(expr) expr
+#  define likely(expr) expr
 # endif
 
 
@@ -221,7 +227,7 @@
 
 // __PRETTY_FUNCTION__ is a GNU extension.  MSVC has something somewhat
 // similar although it's less pretty.
-# ifdef _MSC_VER
+# if defined _MSC_VER
 #  define __PRETTY_FUNCTION__ __FUNCTION__
 # endif // _MSC_VER
 
