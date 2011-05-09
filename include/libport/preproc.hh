@@ -11,12 +11,10 @@
 #ifndef LIBPORT_PREPROC_HH
 # define LIBPORT_PREPROC_HH
 
-# include <boost/function.hpp>
 # include <boost/preprocessor/tuple/elem.hpp>
 # include <boost/preprocessor/seq/for_each.hpp>
 # include <boost/preprocessor/seq/remove.hpp>
 # include <boost/preprocessor/seq/transform.hpp>
-
 
 /// Expand to nothing.
 ///
@@ -59,12 +57,12 @@
 # define LIBPORT_MAP_HELPER(R, Macro, Elt) (Macro(Elt))
 /// Return \a Seq, with \a Macro applied on every element.
 # define LIBPORT_MAP(Macro, Seq)                                 \
-  BOOST_PP_SEQ_FOR_EACH(LIBPORT_MAP_HELPER, Macro, Seq)          \
+  BOOST_PP_SEQ_FOR_EACH(LIBPORT_MAP_HELPER, Macro, Seq)
 
 # define LIBPORT_APPLY_HELPER(R, Macro, Elt) Macro(Elt)
 /// Apply \a Macro applied on every element of \a Seq.
 # define LIBPORT_APPLY(Macro, Seq)                               \
-  BOOST_PP_SEQ_FOR_EACH(LIBPORT_APPLY_HELPER, Macro, Seq)        \
+  BOOST_PP_SEQ_FOR_EACH(LIBPORT_APPLY_HELPER, Macro, Seq)
 
 /// Return the first element of \a Pair
 # define LIBPORT_FIRST(Pair) BOOST_PP_TUPLE_ELEM(2, 0, Pair)
@@ -72,18 +70,22 @@
 # define LIBPORT_SECOND(Pair) BOOST_PP_TUPLE_ELEM(2, 1, Pair)
 
 /// Return the first element of \a Seq
-# define LIBPORT_HEAD(Seq) BOOST_PP_SEQ_HEAD(Seq)
+# define LIBPORT_HEAD(Seq)                      \
+  BOOST_PP_SEQ_HEAD(Seq)
 /// Return \a Seq, minus the first element
-# define LIBPORT_TAIL(Seq) BOOST_PP_SEQ_TAIL(Seq)
+# define LIBPORT_TAIL(Seq)                      \
+  BOOST_PP_SEQ_TAIL(Seq)
 
 # define LIBPORT_SEPARATE_HELPER(Elt) , Elt
 /// Separate \a Seq with commas
 # define LIBPORT_SEPARATE(Seq)                                          \
-  LIBPORT_HEAD(Seq) LIBPORT_APPLY(LIBPORT_SEPARATE_HELPER, LIBPORT_TAIL(Seq))
+  LIBPORT_HEAD(Seq)                                                     \
+  LIBPORT_APPLY(LIBPORT_SEPARATE_HELPER, LIBPORT_TAIL(Seq))
 
 /// Separate \a Seq with \a Sep
 # define LIBPORT_ENUM(Seq, Sep)                                         \
-  LIBPORT_HEAD(Seq) BOOST_PP_SEQ_FOR_EACH(LIBPORT_ENUM_HELPER, Sep, BOOST_PP_SEQ_TAIL(Seq))
+  LIBPORT_HEAD(Seq)                                                     \
+  BOOST_PP_SEQ_FOR_EACH(LIBPORT_ENUM_HELPER, Sep, BOOST_PP_SEQ_TAIL(Seq))
 # define LIBPORT_ENUM_HELPER(Data, Sep, Elt) Sep Elt
 
 /// Separate \a Seq with \a LSep for the last separator and \a Sep everywhere else.
@@ -285,9 +287,9 @@ for i in range(10):
 #define LIBPORT_LIST_HELPER(M, A) M A
 
 #define LIBPORT_LIST(...)                                               \
-  LIBPORT_LIST_HELPER(                                                 \
-  LIBPORT_CAT(LIBPORT_LIST_BUILD_, LIBPORT_LIST_VASIZE((__VA_ARGS__))),        \
-  (__VA_ARGS__))                                                       \
+  LIBPORT_LIST_HELPER(                                                  \
+  LIBPORT_CAT(LIBPORT_LIST_BUILD_, LIBPORT_LIST_VASIZE((__VA_ARGS__))), \
+  (__VA_ARGS__))
 
 /*---------------.
 | LIBPORT_SIZE.  |
@@ -349,36 +351,46 @@ for i in range(10):
 | LIBPORT_LIST_MAP.  |
 `-------------------*/
 
-# define LIBPORT_LIST_MAP_HELPER(Unused, Macro, Elt) Macro(Elt)
-# define LIBPORT_LIST_MAP(Macro, List) BOOST_PP_SEQ_TRANSFORM(LIBPORT_LIST_MAP_HELPER, Macro, List)
+# define LIBPORT_LIST_MAP_HELPER(Unused, Macro, Elt)    \
+  Macro(Elt)
+# define LIBPORT_LIST_MAP(Macro, List)                          \
+  BOOST_PP_SEQ_TRANSFORM(LIBPORT_LIST_MAP_HELPER, Macro, List)
 
 /*-------------------.
 | LIBPORT_LIST_AUX.  |
 `-------------------*/
 
-# define LIBPORT_LIST_MAP_AUX_HELPER(Unused, Aux, Elt) BOOST_PP_TUPLE_ELEM(2, 0, Aux)(Elt, BOOST_PP_TUPLE_ELEM(2, 1, Aux))
-# define LIBPORT_LIST_MAP_AUX(Macro, List, Aux) BOOST_PP_SEQ_TRANSFORM(LIBPORT_LIST_MAP_AUX_HELPER, (Macro, Aux), List)
+# define LIBPORT_LIST_MAP_AUX_HELPER(Unused, Aux, Elt)                  \
+  BOOST_PP_TUPLE_ELEM(2, 0, Aux)(Elt, BOOST_PP_TUPLE_ELEM(2, 1, Aux))
+# define LIBPORT_LIST_MAP_AUX(Macro, List, Aux)                         \
+  BOOST_PP_SEQ_TRANSFORM(LIBPORT_LIST_MAP_AUX_HELPER, (Macro, Aux), List)
 
 /*---------------------.
 | LIBPORT_LIST_APPLY.  |
 `---------------------*/
 
-# define LIBPORT_LIST_APPLY_HELPER(Unused, Macro, Elt) Macro(Elt)
-# define LIBPORT_LIST_APPLY(Macro, List) BOOST_PP_SEQ_FOR_EACH(LIBPORT_LIST_APPLY_HELPER, Macro, List)
+# define LIBPORT_LIST_APPLY_HELPER(Unused, Macro, Elt)  \
+  Macro(Elt)
+# define LIBPORT_LIST_APPLY(Macro, List)                        \
+  BOOST_PP_SEQ_FOR_EACH(LIBPORT_LIST_APPLY_HELPER, Macro, List)
 
 /*--------------------------.
 | LIBPORT_LIST_APPLY_ARGS.  |
 `--------------------------*/
 
-# define LIBPORT_LIST_APPLY_ARGS_HELPER(Unused, Macro, Elt) Macro Elt
-# define LIBPORT_LIST_APPLY_ARGS(Macro, List) BOOST_PP_SEQ_FOR_EACH(LIBPORT_LIST_APPLY_ARGS_HELPER, Macro, List)
+# define LIBPORT_LIST_APPLY_ARGS_HELPER(Unused, Macro, Elt)     \
+  Macro Elt
+# define LIBPORT_LIST_APPLY_ARGS(Macro, List)                           \
+  BOOST_PP_SEQ_FOR_EACH(LIBPORT_LIST_APPLY_ARGS_HELPER, Macro, List)
 
 /*-------------------.
 | LIBPORT_LIST_AUX.  |
 `-------------------*/
 
-# define LIBPORT_LIST_APPLY_AUX_HELPER(Unused, Aux, Elt) BOOST_PP_TUPLE_ELEM(2, 0, Aux)(Elt, BOOST_PP_TUPLE_ELEM(2, 1, Aux))
-# define LIBPORT_LIST_APPLY_AUX(Macro, List, Aux) BOOST_PP_SEQ_FOR_EACH(LIBPORT_LIST_APPLY_AUX_HELPER, (Macro, Aux), List)
+# define LIBPORT_LIST_APPLY_AUX_HELPER(Unused, Aux, Elt)                \
+  BOOST_PP_TUPLE_ELEM(2, 0, Aux)(Elt, BOOST_PP_TUPLE_ELEM(2, 1, Aux))
+# define LIBPORT_LIST_APPLY_AUX(Macro, List, Aux)                       \
+  BOOST_PP_SEQ_FOR_EACH(LIBPORT_LIST_APPLY_AUX_HELPER, (Macro, Aux), List)
 
 /*-------------------.
 | LIBPORT_LIST_NTH.  |
@@ -507,8 +519,10 @@ for i in range(0, 10):
 | LIBPORT_LIST_SEP.  |
 `-------------------*/
 
-# define LIBPORT_LIST_SEP_HELPER(Elt, Sep) LIBPORT_UNWRAP(Sep) Elt
-# define LIBPORT_LIST_SEP_LIBPORT_FALSE(List, Sep) LIBPORT_LIST_HEAD(List) \
+# define LIBPORT_LIST_SEP_HELPER(Elt, Sep)      \
+  LIBPORT_UNWRAP(Sep) Elt
+# define LIBPORT_LIST_SEP_LIBPORT_FALSE(List, Sep)                      \
+  LIBPORT_LIST_HEAD(List)                                               \
   LIBPORT_LIST_APPLY_AUX(LIBPORT_LIST_SEP_HELPER, LIBPORT_LIST_TAIL(List), Sep)
 # define LIBPORT_LIST_SEP_LIBPORT_TRUE(List, Sep)
 # define LIBPORT_LIST_SEP(List, Sep)                                    \
