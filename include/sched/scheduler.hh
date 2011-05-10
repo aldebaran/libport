@@ -170,6 +170,9 @@ namespace sched
     /// \return See work().
     libport::utime_t execute_round();
 
+    /// Compute and return next job to wake up.
+    void switch_to_next_(Coro* current, bool first_call = false);
+
     /// Function to retrieve the current system time.
     boost::function0<libport::utime_t> get_time_;
 
@@ -216,6 +219,11 @@ namespace sched
 
     /// Deadline for next round
     libport::utime_t deadline_;
+
+    // execute_round context
+    libport::utime_t start_time_;
+    bool at_least_one_started_;
+    jobs_type::iterator job_p_;
   };
 
 } // namespace sched

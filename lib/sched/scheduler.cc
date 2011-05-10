@@ -68,6 +68,8 @@ namespace sched
     aver(job);
     aver(!libport::has(jobs_, job));
     aver(!libport::has(pending_, job));
+    if (ready_to_die_)
+      GD_WARN("add_job called on a ready to die scheduler");
     // If we are currently in a job, add it to the pending_ queue so that
     // the job is started in the course of the current round. To make sure
     // that it is not started too late even if the creator is located after
@@ -90,18 +92,6 @@ namespace sched
                   " cycle %s", cycle_);
 
     libport::utime_t deadline = execute_round();
-
-    GD_INFO_DUMP(deadline
-                 ? libport::format("Scheduler asking to be woken up in %ss",
-                                   (deadline - get_time_()) / 1000000L)
-                 : "Scheduler asking to be woken up ASAP");
-    if (idle_job_)
-    {
-      aver(!current_job_);
-      coroutine_switch_to(&coro_, idle_job_->coro_get());
-      aver(current_job_);
-      current_job_ = 0;
-    }
     return deadline;
   }
 
@@ -123,6 +113,10 @@ namespace sched
   libport::utime_t
   Scheduler::execute_round()
   {
+    // We are using a direct coro-to-coro switch.
+    // Just initialize our loop variables here, all the per-job logic is in
+    // switch_to_next_.
+
     // Run all the jobs in the run queue once.
     pending_.clear();
     std::swap(pending_, jobs_);
@@ -145,26 +139,59 @@ namespace sched
     // new job to start. Also, run waiting jobs only if the previous round
     // may have add a side effect and reset this indication for the current
     // job.
-    libport::utime_t start_time = get_time_();
-    deadline_ = start_time +  3600000000LL;
-    bool at_least_one_started = false;
+    start_time_ = get_time_();
+    deadline_ = start_time_ +  3600000000LL;
+    at_least_one_started_ = false;
 
     GD_FINFO_DUMP("%s jobs in the queue for this round", pending_.size());
 
-    // Do not use libport::foreach here, as the list of jobs may grow if
-    // add_job() is called during the iteration.
-    for (jobs_type::iterator job_p = pending_.begin();
-	 job_p != pending_.end();
-	 ++job_p)
+    job_p_ = pending_.begin();
+    switch_to_next_(&coro_, true);
+    // When we reach here, IDLE job has already been executed.
+    GD_FINFO_DUMP("Back to execute_round, nj=%s, aj=%s, die=%s, returning %d",
+                  new_job_, awoken_job_, ready_to_die_, deadline_);
+    new_job_ = false;
+    awoken_job_ = false;
+    // If we are ready to die and there are no jobs left, then die.
+    if (ready_to_die_ && jobs_.empty())
+      deadline_ = SCHED_EXIT;
+    return deadline_;
+  }
+
+  void
+  Scheduler::switch_to_next_(Coro* current_coro, bool first)
+  {
+    /* We are using a direct coro-to-coro switch now. Which means code after
+     * the coro_switch_to line is not executed immediately when the coro
+     * returns. So all locations with a coro_switch_to are returning immediately
+     * after, to the caller resume_scheduler().
+     *
+     * Care must be taken to not hold any job ref when switching, we may never
+     * come back if the current job was terminated.
+     */
+    GD_FINFO_DUMP("switch_to_next from %s (%s)", current_coro, first);
+    // To simplify, idle_job_ is also yielding through this function.
+    if (idle_job_ && current_coro == idle_job_->coro_get())
     {
-      rJob job = *job_p;
+      coroutine_switch_to(current_coro, &coro_);
+      return;
+    }
+    while (true)
+    {
+      if (!first)
+        ++job_p_;
+      first = false;
+      // If we are done, return to scheduler main coro
+      if (job_p_ == pending_.end())
+        break;
+      rJob job = *job_p_;
       // Store the next job so that insertions happen before it.
-      next_job_p_ = job_p;
+      next_job_p_ = job_p_;
       ++next_job_p_;
       // If the job has terminated during the previous round, remove the
       // references we have on it by just skipping it.
       if (job->terminated())
-	continue;
+        continue;
 
       // Should the job be started?
       bool start = false;
@@ -191,16 +218,15 @@ namespace sched
         // destroyed. However, to prevent the job from being
         // prematurely destroyed, we set current_job_ (global to the
         // scheduler) to the rJob.
-	GD_FINFO_DUMP("Starting job %s", *job);
-	current_job_ = job;
 	GD_FINFO_DUMP("Job %s is starting", *job);
+        current_job_ = job;
 	job = 0;
-	coroutine_start(&coro_,
+        deadline_ = SCHED_IMMEDIATE;
+	at_least_one_started_ = true;
+	coroutine_start(current_coro,
                         current_job_->coro_get(), run_job, current_job_.get());
-	current_job_ = 0;
-	deadline_ = SCHED_IMMEDIATE;
-	at_least_one_started = true;
-	continue;
+        GD_INFO_DUMP("Back at #2, returning from switch_to_next_");
+	return;
       }
       case zombie:
 	pabort("zombie");
@@ -247,28 +273,21 @@ namespace sched
       // A job with an exception will start unconditionally.
       if (start || job->has_pending_exception())
       {
-	at_least_one_started = true;
+	at_least_one_started_ = true;
 	GD_FINFO_DUMP("will resume job %s", *job);
-	aver(!current_job_);
-	coroutine_switch_to(&coro_, job->coro_get());
-	aver(current_job_);
-	current_job_ = 0;
-	GD_FINFO_DUMP("back from job %s", *job);
-	switch (job->state_get())
-	{
-	case running:
-	  deadline_ = SCHED_IMMEDIATE;
-	  break;
-	case sleeping:
-	  deadline_ = std::min(deadline_, job->deadline_get());
-	  break;
-	default:
-	  break;
-	}
+        current_job_ = job;
+        job = 0;
+	coroutine_switch_to(current_coro, current_job_->coro_get());
+        GD_INFO_DUMP("Back at #3, returning from switch_to_next_");
+        return;
       }
       else
 	jobs_.push_back(job);   // Job not started, keep it in queue
     }
+    GD_FINFO_DUMP("Round finished, back to main coro (switch = %s)",
+                  current_coro != &coro_);
+    current_job_ = 0;
+
 
     // If during this cycle a new job has been created by an existing job,
     // start it.
@@ -277,18 +296,22 @@ namespace sched
     // Same thing if we are ready to die, finish the job ASAP.
     if (new_job_ || awoken_job_ || ready_to_die_)
       deadline_ = SCHED_IMMEDIATE;
-    new_job_ = false;
-    awoken_job_ = false;
-
-    // If we are ready to die and there are no jobs left, then die.
-    if (ready_to_die_ && jobs_.empty())
-      deadline_ = SCHED_EXIT;
-
+    GD_INFO_DUMP(deadline_
+                 ? libport::format("Scheduler asking to be woken up in %ss",
+                                   (double)(deadline_ - get_time_())
+                                     / 1000000.0)
+                 : "Scheduler asking to be woken up ASAP");
     // Compute statistics
-    if (at_least_one_started)
-      stats_.add_sample(get_time_() - start_time);
-
-    return deadline_;
+    if (at_least_one_started_)
+      stats_.add_sample(get_time_() - start_time_);
+    if (idle_job_)
+    {
+      coroutine_switch_to(current_coro,  idle_job_->coro_get());
+      current_job_ = 0;
+    }
+    else if (current_coro != &coro_)
+      coroutine_switch_to(current_coro, &coro_);
+    GD_INFO_DUMP("Back at #1, returning from switch_to_next_");
   }
 
   void
@@ -325,13 +348,25 @@ namespace sched
       Coro* current_coro = job->coro_get();
       if (job->terminated())
 	job = 0;
-      coroutine_switch_to(current_coro, &coro_);
+      else
+        switch (job->state_get())
+	{
+	case running:
+	  deadline_ = SCHED_IMMEDIATE;
+	  break;
+	case sleeping:
+	  deadline_ = std::min(deadline_, job->deadline_get());
+	  break;
+	default:
+	  break;
+	}
+      // Calling switch_to_next_ from IDLE job is ok
+        switch_to_next_(current_coro);
 
       // If we regain control, we are not dead.
       aver(job);
 
       // We regained control, we are again in the context of the job.
-      aver(!current_job_);
       current_job_ = job;
       GD_FINFO_DUMP("job %s resumed", *job);
 
