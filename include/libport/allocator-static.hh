@@ -17,6 +17,7 @@
 # if !defined NDEBUG
 #  include <libport/pthread.h>
 # endif
+# include <libport/instrument.hh>
 
 namespace libport
 {
@@ -40,12 +41,19 @@ namespace libport
     static unsigned storage_size_;
     // Current chunk size to allocate.
     static unsigned chunk_size_;
+
 # if !defined NDEBUG
   public:
     // The only thread allow to access the static allocator.  This field is
     // public to be redefined when another thread is manipulating the
     // allocator safely.
     static pthread_t thread;
+# endif
+
+# ifndef NVALGRIND
+    // This is necessary to identify the pool in Valgrind.
+    static int* initialize_pool();
+    static int* pool_header;
 # endif
   };
 }

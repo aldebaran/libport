@@ -38,6 +38,7 @@ namespace libport
     size_++;
     void* res = 0;
     std::swap(res, pointers_[where_]);
+    POOL_ALLOC(pool_header, res, size);
     aver(res);
     aver(*(unsigned*) res == 0x0C0C0C0C);
     where_ = (where_ + 1) % storage_size_;
@@ -54,11 +55,12 @@ namespace libport
     aver(obj != 0);
     unsigned w = where_ - size_;
 
-    // Fix overflow
+    // Fix overflow // i-e w < 0, or where_ < size_
     if (w > storage_size_)
       w += storage_size_;
     std::swap(pointers_[w], obj);
     *((unsigned*) pointers_[w]) = 0x0C0C0C0C;
+    POOL_FREE(pool_header, pointers_[w]);
     aver(obj == 0);
     size_--;
   }
@@ -104,6 +106,19 @@ namespace libport
 # if !defined NDEBUG
   template <typename Exact, unsigned Chunk>
   pthread_t StaticallyAllocated<Exact, Chunk>::thread = pthread_self();
+# endif
+
+# ifndef NVALGRIND
+  template <typename Exact, unsigned Chunk>
+  int* StaticallyAllocated<Exact, Chunk>::initialize_pool()
+  {
+    int* header = reinterpret_cast<int*>(malloc(sizeof(int)));
+    POOL_CREATE(header, 0, false);
+    return header;
+  }
+
+  template <typename Exact, unsigned Chunk>
+  int* StaticallyAllocated<Exact, Chunk>::pool_header = initialize_pool();
 # endif
 }
 
