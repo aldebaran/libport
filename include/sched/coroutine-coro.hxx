@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -11,11 +11,12 @@
 #ifndef SCHED_COROUTINE_CORO_HXX
 # define SCHED_COROUTINE_CORO_HXX
 
+# include <libport/config.h>
 # include <libport/debug.hh>
 # include <libport/local-data.hh>
 # include <libport/thread-data.hh>
 
-# ifndef __UCLIBC__
+# if ! defined __UCLIBC__ && defined LIBPORT_SCHED_MULTITHREAD
 typedef ::libport::LocalSingleton<Coro*, ::libport::localdata::Thread>
   LocalCoroPtr;
 # else
