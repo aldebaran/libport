@@ -446,7 +446,8 @@ sub libport_spaces ($\$)
 {
   my ($file, $contents_ref) = @_;
 
-  $$contents_ref =~ s{^(\t+)}{ " " x (8 * length($1)) }gme;
+  $$contents_ref =~ s{^(\t+)}{ " " x (8 * length($1)) }gme
+    unless file_type($file) eq "makefile";
   $$contents_ref =~ s/[ \t\r]+$//gm;
   $$contents_ref =~ s/\A\n+//;
   $$contents_ref =~ s/\n*\Z/\n/;
@@ -644,6 +645,8 @@ sub libport_license_setup ()
 
 The proper license notice based on the C<%group>.
 
+C<$type> is the file type.
+
 =cut
 
 sub libport_license ($%)
@@ -658,14 +661,18 @@ sub libport_license ($%)
 
   my $res = license($type, $group{years}) . "\n";
 
-  $res .= "/// \\file $group{file}\n"
-    if defined $group{file};
+ {
+   my $info = '';
+   $info .= "\\file $group{file}\n"
+     if defined $group{file};
+   $info .= "\\brief $group{brief}\n"
+     if defined $group{brief};
+   $info .= "This file is part of $group{project}.\n"
+     if defined $group{project};
 
-  $res .= "/// \\brief $group{brief}\n"
-    if defined $group{brief};
-
-  $res .= "// This file is part of $group{project}.\n\n"
-    if defined $group{project};
+   $res .= make_comment($type, $info, 1) . "\n"
+     if $info;
+ }
 
   $res;
 }
@@ -677,6 +684,8 @@ is expected to be pure text, strip from comment markup.  Trailing and
 starting white spaces are stripped.
 
 Return 1 if there was an updated, 0 otherwise.
+
+C<$type> is the file type.
 
 =cut
 
