@@ -661,18 +661,18 @@ sub libport_license ($%)
 
   my $res = license($type, $group{years}) . "\n";
 
- {
-   my $info = '';
-   $info .= "\\file $group{file}\n"
-     if defined $group{file};
-   $info .= "\\brief $group{brief}\n"
-     if defined $group{brief};
-   $info .= "This file is part of $group{project}.\n"
-     if defined $group{project};
+  {
+    my $info = '';
+    $info .= "\\file $group{file}\n"
+      if defined $group{file};
+    $info .= "\\brief $group{brief}\n"
+      if defined $group{brief};
+    $info .= "This file is part of $group{project}.\n"
+      if defined $group{project};
 
-   $res .= make_comment($type, $info, 1) . "\n"
-     if $info;
- }
+    $res .= make_comment($type, $info, 1) . "\n"
+      if $info;
+  }
 
   $res;
 }
