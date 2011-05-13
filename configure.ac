@@ -129,6 +129,15 @@ if test x$enable_boost_serialization = xyes; then
   URBI_BOOST([SERIALIZATION])
 fi
 
+# Multithread support in sched
+URBI_ARG_ENABLE([enable-sched-multithread],
+                [enable multithread support in libsched],
+                [yes|no], [no])
+if test x$enable_sched_multithread = xyes; then
+  AC_DEFINE([LIBPORT_SCHED_MULTITHREAD], [1],
+            [Define to 1 to enable multithread support in libsched.])
+fi
+
 WITH_XENOMAI
 URBI_LIB_SUFFIX
 AC_CONFIG_FILES([Makefile])
