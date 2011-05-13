@@ -60,6 +60,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =   \
   lib/libport/input-arguments.cc                \
   lib/libport/io-stream.cc                      \
   lib/libport/ip-semaphore.cc                   \
+  lib/libport/locale.cc	                        \
   lib/libport/markup-ostream.cc                 \
   lib/libport/option-parser.cc                  \
   lib/libport/package-info.cc                   \
