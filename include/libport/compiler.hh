@@ -17,6 +17,17 @@
 # include <libport/config.h>
 # include <libport/preproc.hh>
 
+
+/*-----------.
+| restrict.  |
+`-----------*/
+
+# if defined libport_restrict && ! defined restrict
+#  define restrict libport_restrict
+# endif
+
+
+
 # define GCC_VERSION_GE(Major, Minor)                           \
   (defined __GNUC__                                             \
    && (Major < __GNUC__                                         \

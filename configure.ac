@@ -32,6 +32,8 @@ URBI_COMPILATION_MODE
 # Look for a C++ compiler.
 URBI_PROG_CXX
 AC_LANG([C++])
+# Does it support "restrict" in one way or another?
+AC_C_RESTRICT
 URBI_DIRS([libport])
 
 # We have some assembly for coroutine support.
