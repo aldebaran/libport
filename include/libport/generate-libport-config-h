@@ -26,10 +26,8 @@ EOF
   #    restrict; if so, hopefully it defines __RESTRICT like Sun C does.  */
   while ($_ = $in->getline())
   {
-    s{^(/\*)?\s*#undef  *([A-Z_])}        {$1# undef LIBPORT_$2};
-    s{^(/\*)?\s*#undef  *([a-z])}         {$1# undef _libport_$2};
-    s{^(/\*)?\s*#define  *([A-Z_]\w+)(.*)}{$1# define LIBPORT_$2 $3};
-    s{^(/\*)?\s*#define  *([a-z]\w+)(.*)} {$1# define libport_$2 $3};
+    s{^((?:/\*)?\s*#(?:define|undef))\s+([A-Z_])}{$1 LIBPORT_$2};
+    s{^((?:/\*)?\s*#(?:define|undef))\s+([a-z])} {$1 libport_$2};
     print $out $_;
   }
 
