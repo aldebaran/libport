@@ -46,7 +46,7 @@ namespace libport
   template <>								\
   LIBPORT_API								\
   Type									\
-  strto_c<Type>(const char* restrict nptr, char** restrict end = 0)
+  strto_c<Type>(const char* restrict nptr, char** restrict end)
 
   DECLARE(float);
   DECLARE(double);
