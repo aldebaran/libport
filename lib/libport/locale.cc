@@ -8,8 +8,10 @@
  * See the LICENSE file for more information.
  */
 
-#include <libport/locale.hh>
+#include <libport/cstdlib>
+#include <libport/detect-win32.h>
 #include <libport/format.hh>
+#include <libport/locale.hh>
 
 #define FRAISE(Format, ...)                                             \
   throw std::runtime_error(libport::format(Format, ## __VA_ARGS__))
@@ -35,12 +37,17 @@ namespace libport
 #undef CASE
     if (c == -1)
       FRAISE("invalid category: %s", cat);
+
+    // Under Windows, the environment is not used for default locale.
+    // So instead of being not-portable, handle envvar ourselves.
+    if (loc && *loc == 0)
+      loc = ::xgetenv("LC_ALL",
+		      ::xgetenv(cat.c_str(),
+				::xgetenv("LANG", "C")));
     if (const char *r = ::setlocale(c, loc))
       return r;
     if (!loc)
       FRAISE("cannot get locale %s", cat);
-    else if (*loc == 0)
-      FRAISE("cannot set locale %s", cat);
     else
       FRAISE("cannot set locale %s to %s", cat, loc);
   }
