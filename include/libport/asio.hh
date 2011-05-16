@@ -245,6 +245,7 @@ namespace libport
     /** Connect to a remote host.
      * \param host hostname to connect to.
      * \param port port to connect to, as a service name or an int.
+     * \param udp  whether UDP instead of TCP.
      * \param usTimeout timeout in microseconds, 0 meaning none.
      * \param asynchronous make an asynchronous attempt. The function will
      *    return immediately, and either onConnect will be called when the
@@ -254,12 +255,12 @@ namespace libport
      */
     boost::system::error_code
     connect(const std::string& host, const std::string& port,
-            bool udp=false, useconds_t usTimeout = 0,
+            bool udp = false, useconds_t usTimeout = 0,
             bool asynchronous = false);
 
     boost::system::error_code
     connect(const std::string& host, unsigned port,
-            bool udp=false, useconds_t usTimeout = 0,
+            bool udp = false, useconds_t usTimeout = 0,
             bool asynchronous = false);
 
 # if 103600 <= BOOST_VERSION
