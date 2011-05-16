@@ -125,6 +125,7 @@ libport_include_HEADERS +=                              \
   include/libport/local-data.hh                         \
   include/libport/local-data.hxx                        \
   include/libport/locale.hh                             \
+  include/libport/locale.hxx                            \
   include/libport/lockable.hh                           \
   include/libport/lockable.hxx                          \
   include/libport/map.hh                                \

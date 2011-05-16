@@ -17,7 +17,7 @@
 namespace libport
 {
   std::string
-  setlocale(const std::string& cat, boost::optional<std::string> loc)
+  setlocale(const std::string& cat, const char* loc)
   {
     int c = -1;
 #define CASE(Name)                              \
@@ -35,13 +35,13 @@ namespace libport
 #undef CASE
     if (c == -1)
       FRAISE("invalid category: %s", cat);
-    if (const char *r = ::setlocale(c, loc ? loc.get().c_str() : 0))
+    if (const char *r = ::setlocale(c, loc))
       return r;
     if (!loc)
       FRAISE("cannot get locale %s", cat);
-    else if (loc.get() == "")
+    else if (*loc == 0)
       FRAISE("cannot set locale %s", cat);
     else
-      FRAISE("cannot set locale %s to %s", cat, loc.get());
+      FRAISE("cannot set locale %s to %s", cat, loc);
   }
 }

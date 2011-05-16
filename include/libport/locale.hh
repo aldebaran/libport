@@ -11,7 +11,6 @@
 #ifndef LIBPORT_LOCALE_HH
 # define LIBPORT_LOCALE_HH
 
-# include <boost/optional.hpp>
 # include <locale.h>
 # include <string>
 # include <libport/export.hh>
@@ -26,8 +25,12 @@ namespace libport
   /// \throw std::runtime_error on invalid combinations.
   LIBPORT_API
   std::string
-  setlocale(const std::string& cat,
-            boost::optional<std::string> loc = std::string(""));
+  setlocale(const std::string& cat, const char* loc);
+
+  std::string
+  setlocale(const std::string& cat, const std::string& loc);
 }
+
+# include <libport/locale.hxx>
 
 #endif // !LIBPORT_LOCALE_HH
