@@ -40,7 +40,6 @@ namespace libport
     std::swap(res, pointers_[where_]);
     POOL_ALLOC(pool_header, res, size);
     aver(res);
-    aver(*(unsigned*) res == 0x0C0C0C0C);
     where_ = (where_ + 1) % storage_size_;
     return res;
   }
@@ -59,7 +58,6 @@ namespace libport
     if (w > storage_size_)
       w += storage_size_;
     std::swap(pointers_[w], obj);
-    *((unsigned*) pointers_[w]) = 0x0C0C0C0C;
     POOL_FREE(pool_header, pointers_[w]);
     aver(obj == 0);
     size_--;
