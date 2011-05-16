@@ -196,18 +196,24 @@ void test_one(bool proto)
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 }
 
+static
+void
+test_safe_destruction()
+{
+  BOOST_TEST_MESSAGE("##Safe destruction");
+  TestSocket* s = new TestSocket(false, false);
+  s->connect(connect_host, S_AVAIL_PORT, false);
+  s->destroy();
+  usleep(delay);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
+}
 
 static
 void
 test()
 {
   // Basic TCP
-  BOOST_TEST_MESSAGE("##Safe destruction");
   boost::system::error_code err;
-  TestSocket* s = new TestSocket(false, false);
-  s->connect(connect_host, S_AVAIL_PORT, false);
-  s->destroy();
-  usleep(delay);
   libport::Socket* h = new libport::Socket();
   // Try listening on an IP that is not ours.
   BOOST_TEST_MESSAGE("Invalid IP in listen()");
@@ -393,6 +399,7 @@ init_test_suite()
   skip_if("Qemu");
   skip_if("Wine");
   test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
+  suite->add(BOOST_TEST_CASE(test_safe_destruction));
   suite->add(BOOST_TEST_CASE(test));
   suite->add(BOOST_TEST_CASE(test_pipe));
   return suite;
