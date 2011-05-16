@@ -732,6 +732,10 @@ sub libport_relicense ($\$)
     verbose 1, "don't know how to issue comments for $file";
     return;
   }
+  # Historically, we have promoted the /* ... */ comment style for C++
+  # too.
+  $type = 'c'
+    if $type eq 'c++';
 
   my $updated = 0;
 
