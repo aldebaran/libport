@@ -35,7 +35,7 @@ namespace libport
 #undef CASE
     if (c == -1)
       FRAISE("invalid category: %s", cat);
-    if (const char *r = std::setlocale(c, loc ? loc.get().c_str() : 0))
+    if (const char *r = ::setlocale(c, loc ? loc.get().c_str() : 0))
       return r;
     if (!loc)
       FRAISE("cannot get locale %s", cat);
