@@ -14,8 +14,8 @@
 # include <libport/detect-win32.h>
 # include <libport/config.h>
 
-# if defined HAVE_CSTDINT || defined HAVE_STDINT_H
-#  if defined HAVE_CSTDINT
+# if defined LIBPORT_HAVE_CSTDINT || defined LIBPORT_HAVE_STDINT_H
+#  if defined LIBPORT_HAVE_CSTDINT
 #   include <cstdint>
 #  else
 #   include <stdint.h>
@@ -31,7 +31,7 @@ namespace libport
   typedef std::int8_t int8_t;
 }
 
-# else // ! HAVE_CSTDINT && ! HAVE_STDINT_H
+# else // ! LIBPORT_HAVE_CSTDINT && ! LIBPORT_HAVE_STDINT_H
 #  include <boost/cstdint.hpp>
 
 namespace libport
