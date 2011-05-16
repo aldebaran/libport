@@ -42,7 +42,6 @@ namespace libport
     else if (loc.get() == "")
       FRAISE("cannot set locale %s", cat);
     else
-      FRAISE("cannot set locale %s to %s", cat, loc);
+      FRAISE("cannot set locale %s to %s", cat, loc.get());
   }
 }
-
