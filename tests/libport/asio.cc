@@ -84,21 +84,27 @@ void echo(const void* d, int s, boost::shared_ptr<libport::UDPLink> l)
     l->reply(d, s);
 }
 
+/*-------------.
+| TestSocket.  |
+`-------------*/
+
 class TestSocket: public libport::Socket
 {
-  public:
+public:
   TestSocket()
     : nRead(0), echo(false), dump(false), destroyOnError(true)
-    {
-      BOOST_CHECK(!abort_ctor);
-      nInstance++;
-    }
+  {
+    BOOST_CHECK(!abort_ctor);
+    nInstance++;
+  }
+
   TestSocket(bool echo, bool dump)
     : nRead(0), echo(echo), dump(dump), destroyOnError(true)
-    {
-      BOOST_CHECK(!abort_ctor);
-      nInstance++;
-    }
+  {
+    BOOST_CHECK(!abort_ctor);
+    nInstance++;
+  }
+
   virtual ~TestSocket()
   {
     nInstance--;
@@ -124,6 +130,7 @@ class TestSocket: public libport::Socket
     if (destroyOnError)
       destroy();
   }
+
   // Number of times read callback was called
   size_t nRead;
   // Echo back what is received.
@@ -135,21 +142,24 @@ class TestSocket: public libport::Socket
   std::string received;
   boost::system::error_code lastError;
   static TestSocket* factory()
-    {
-      return lastInstance = new TestSocket();
-    }
+  {
+    return lastInstance = new TestSocket();
+  }
   static TestSocket* factoryEx(bool echo, bool dump)
-    {
-      return lastInstance = new TestSocket(echo, dump);
-    }
+  {
+    return lastInstance = new TestSocket(echo, dump);
+  }
   static size_t nInstance;
   // Last factory-created instance.
   static TestSocket* lastInstance;
 };
 
-
 size_t TestSocket::nInstance = 0u;
 TestSocket* TestSocket::lastInstance = 0;
+
+
+
+
 
 // Delay in microseconds used to sleep when something asynchronous
 // is happening.
@@ -157,6 +167,8 @@ static const useconds_t delay = 200000;
 
 static const int AVAIL_PORT = 7890;
 static const std::string S_AVAIL_PORT = string_cast(AVAIL_PORT);
+
+
 
 void test_one(bool proto)
 {
@@ -200,7 +212,7 @@ test()
   // Try listening on an IP that is not ours.
   BOOST_TEST_MESSAGE("Invalid IP in listen()");
   err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
-        "1.2.3.4", "1212", false);
+                  "1.2.3.4", "1212", false);
   BOOST_CHECK(err);
   err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
                   listen_host, S_AVAIL_PORT, false);
