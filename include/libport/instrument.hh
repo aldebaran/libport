@@ -39,7 +39,7 @@
 `-------------*/
 
 # if defined NVALGRIND
-#  define INSTRUMENTFLAGS(Flags) LIBPORT_EMPTY()
+#  define INSTRUMENTFLAGS(Flags) LIBPORT_EMPTY
 # else
 #  define INSTRUMENTFLAGS(Flags)					\
   const char* LIBPORT_CAT(libport_instrument, __LINE__) =		\
@@ -58,20 +58,20 @@
 // access the variables.  This are means to check for bad memory writes
 // which are made on specific variables.
 # if defined NVALGRIND
-#  define MEM(Right, Addr, Size)          LIBPORT_EMPTY()
+#  define MEM(Right, Addr, Size)           LIBPORT_NOP
+#  define POOL_CREATE(Pool, RedZone, Init) LIBPORT_NOP
+#  define POOL_ALLOC(Pool, Addr, Size)     LIBPORT_NOP
+#  define POOL_FREE(Pool, Addr)		   LIBPORT_NOP
 # else
 #  define MEM(Right, Addr, Size)                        \
   LIBPORT_CAT(VALGRIND_MAKE_MEM_, Right) (Addr, Size)
-# endif
-
-# define POOL_CREATE(Pool, RedZone, Init)      \
+# define POOL_CREATE(Pool, RedZone, Init)	\
   VALGRIND_CREATE_MEMPOOL(Pool, RedZone, Init)
-
-# define POOL_ALLOC(Pool, Addr, Size)          \
+# define POOL_ALLOC(Pool, Addr, Size)		\
   VALGRIND_MEMPOOL_ALLOC(Pool, Addr, Size)
-
 # define POOL_FREE(Pool, Addr)			\
   VALGRIND_MEMPOOL_FREE(Pool, Addr)
+# endif
 
 # define MEM_NOACCESS(Addr, Size)  MEM(NOACCESS, Addr, Size)
 # define MEM_UNDEFINED(Addr, Size) MEM(UNDEFINED, Addr, Size)
