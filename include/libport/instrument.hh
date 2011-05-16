@@ -38,14 +38,12 @@
 | INSTRUMENT.  |
 `-------------*/
 
-# if defined NVALGRIND
-#  define INSTRUMENTFLAGS(Flags) LIBPORT_EMPTY
-# else
-#  define INSTRUMENTFLAGS(Flags)					\
+// Always define it, even if NVALGRIND, as it protects us from running
+// Valgrind in place where it does not work properly.  See for
+// instance tests/libport/cstdlib.
+# define INSTRUMENTFLAGS(Flags)					\
   const char* LIBPORT_CAT(libport_instrument, __LINE__) =		\
     "INSTRUMENTFLAGS=" __HERE__ ":" #Flags
-# endif
-
 # define INSTRUMENT_DISABLE()                   \
   INSTRUMENTFLAGS(--mode=none)
 

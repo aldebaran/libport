@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -54,11 +54,11 @@ static void test_environ()
   BOOST_CHECK(!libport::getenv(var));
 }
 
+static void test_system()
+{
 // Testing system under windows is a pain. We're probably not actually
 // going to use it anyway ...
 #ifndef WIN32
-static void test_system()
-{
   // Unfortunately, boost::unit_test implodes if any child has a non null
   // return value, so we cannot test the failing case.
 
@@ -67,17 +67,14 @@ static void test_system()
   BOOST_CHECK_NO_THROW(int ignored = libport::system("true"); (void)ignored);
   // BOOST_CHECK_THROW(int ignored = libport::system("false"); (void)ignored,
   //                   std::exception);
-}
 #endif
+}
 
 test_suite*
 init_test_suite()
 {
-  test_suite* suite = BOOST_TEST_SUITE("libport::cstdlib");
+  test_suite* suite = BOOST_TEST_SUITE("Libport.Cstdlib");
   suite->add(BOOST_TEST_CASE(test_environ));
-
-#ifndef WIN32
   suite->add(BOOST_TEST_CASE(test_system));
-#endif
   return suite;
 }
