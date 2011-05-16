@@ -8,6 +8,7 @@
  * See the LICENSE file for more information.
  */
 
+#include <libport/cassert>
 #include <libport/cstdlib>
 #include <libport/cerrno>
 #include <libport/xlocale.hh>
@@ -19,7 +20,19 @@ namespace libport
   `-----------*/
 
 #if LIBPORT_HAVE_XLOCALE_H
-  static locale_t cloc = newlocale(LC_CTYPE_MASK, 0, 0);
+
+  static
+  locale_t
+  get_c_locale()
+  {
+    // OS X can be given 0 instead of "C", but GNU Libc then returns 0.
+    locale_t res = newlocale(LC_CTYPE_MASK, "C", 0);
+    if (!res)
+      pabort("cannot create C locale: " << strerror(errno));
+    return res;
+  }
+
+  static locale_t cloc = assert_exp(get_c_locale());
 
 # define DEFINE(Name, Type)                                     \
   Type                                                          \
