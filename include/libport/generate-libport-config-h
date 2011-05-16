@@ -15,12 +15,21 @@ sub rewrite($$)
 # define LIBPORT_CONFIG_H
 
 EOF
+
+  # Make some efforts on the regexp, so that we don't catch #define
+  # in comments such as the one from AC_C_RESTRICT:
+  #
+  # /* Work around a bug in Sun C++: it does not support _Restrict or
+  #    __restrict__, even though the corresponding Sun C compiler ends up with
+  #    "#define restrict _Restrict" or "#define restrict __restrict__" in the
+  #    previous line.  Perhaps some future version of Sun C++ will work with
+  #    restrict; if so, hopefully it defines __RESTRICT like Sun C does.  */
   while ($_ = $in->getline())
   {
-    s/#undef  *([A-Z_])/# undef LIBPORT_$1/;
-    s/#undef  *([a-z])/# undef _libport_$1/;
-    s/#define  *([A-Z_]\w+)(.*)/# define LIBPORT_$1 $2/;
-    s/#define  *([a-z]\w+)(.*)/# define libport_$1 $2/;
+    s{^(/\*)?\s*#undef  *([A-Z_])}        {$1# undef LIBPORT_$2};
+    s{^(/\*)?\s*#undef  *([a-z])}         {$1# undef _libport_$2};
+    s{^(/\*)?\s*#define  *([A-Z_]\w+)(.*)}{$1# define LIBPORT_$2 $3};
+    s{^(/\*)?\s*#define  *([a-z]\w+)(.*)} {$1# define libport_$2 $3};
     print $out $_;
   }
 
