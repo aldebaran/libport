@@ -18,7 +18,16 @@ using libport::test_suite;
 // numbers.
 static void test_strto_c()
 {
-  BOOST_CHECK(libport::setlocale("LC_ALL", "fr_FR") != "");
+  try
+  {
+    std::string loc = libport::setlocale("LC_ALL", "fr_FR");
+    BOOST_CHECK(loc != "");
+  }
+  catch (const std::runtime_error& e)
+  {
+    BOOST_TEST_MESSAGE(std::string("cannot run locale tests: ") + e.what());
+    return;
+  }
   BOOST_CHECK_EQUAL(libport::strtof_c("12.3", 0), 12.3f);
   BOOST_CHECK_EQUAL(libport::strtod_c("12.3", 0), 12.3);
   BOOST_CHECK_EQUAL(libport::strto_c<float>("12.3", 0), 12.3f);

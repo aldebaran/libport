@@ -22,14 +22,42 @@ namespace libport
 {
   /// Wrapper around std::strto*_l with the C locale.
   /// Sets errno to 0 beforehand.
-  float       strtof_c(const char* restrict nptr, char** restrict end);
-  double      strtod_c(const char* restrict nptr, char** restrict end);
-  long double strtold_c(const char* restrict nptr, char** restrict end);
+  LIBPORT_API
+  float       strtof_c(const char* restrict nptr, char** restrict end = 0);
+  LIBPORT_API
+  double      strtod_c(const char* restrict nptr, char** restrict end = 0);
+  // Warning: does not work on MSVC, as it uses "double" internally.
+  LIBPORT_API
+  long double strtold_c(const char* restrict nptr, char** restrict end = 0);
 
-  // Template version for float, double, and long double.
+
+  /*------------------------------------------------------.
+  | Template version for float, double, and long double.  |
+  `------------------------------------------------------*/
+
+  // No way to please GCC and MSVC with the same code.  See also
+  // ufloat.hh.
+# if defined _MSC_VER
   template <typename T>
   T
-  strto_c(const char* restrict nptr, char** restrict end);
+  strto_c(const char* restrict nptr, char** restrict end = 0);
+
+#  define DECLARE(Type)							\
+  template <>								\
+  LIBPORT_API								\
+  Type									\
+  strto_c<Type>(const char* restrict nptr, char** restrict end = 0)
+
+  DECLARE(float);
+  DECLARE(double);
+  DECLARE(long double);
+#  undef DECLARE
+
+# else // !defined _MSC_VER
+  template <typename T>
+  T
+  strto_c(const char* restrict nptr, char** restrict end = 0);
+# endif
 }
 
 #endif // !LIBPORT_LOCALE_HH
