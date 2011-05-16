@@ -14,33 +14,41 @@
 # include <libport/config.h>
 # include <libport/preproc.hh>
 
-# ifdef LIBPORT_HAVE_VALGRIND_VALGRIND_H
-#  ifndef USE_VALGRIND
-#   define NVALGRIND 1
-#  endif
-# else
-#  define RUNNING_ON_VALGRIND 0
-#  define NVALGRIND 1
-#  ifdef USE_VALGRIND
-#   undef USE_VALGRIND
-#  endif
+// Keep NVALGRIND and USE_VALGRIND consistent.  Prefer NVALGRIND.
+// NVALGRIND overrides USE_VALGRIND.
+# if defined NVALGRIND
+#  undef USE_VALGRIND
 # endif
 
-# ifndef NVALGRIND
+// USE_VALGRIND disables Valgrind.
+# if ! defined USE_VALGRIND
+#  define NVALGRIND 1
+# endif
+
+# ifdef LIBPORT_HAVE_VALGRIND_VALGRIND_H
+// Load these even if NVALGRIND, as it takes care itself of disabling
+// itself.
 #  include <valgrind/valgrind.h>
 #  include <valgrind/memcheck.h>
+# else
+#  define RUNNING_ON_VALGRIND 0
 # endif
 
 /*-------------.
 | INSTRUMENT.  |
 `-------------*/
 
-# define INSTRUMENTFLAGS(Flags)					\
-  const char* LIBPORT_CAT(libport_instrument, __LINE__) =	\
+# if defined NVALGRIND
+#  define INSTRUMENTFLAGS(Flags) LIBPORT_EMPTY()
+# else
+#  define INSTRUMENTFLAGS(Flags)					\
+  const char* LIBPORT_CAT(libport_instrument, __LINE__) =		\
     "INSTRUMENTFLAGS=" __HERE__ ":" #Flags
+# endif
 
 # define INSTRUMENT_DISABLE()                   \
   INSTRUMENTFLAGS(--mode=none)
+
 
 /*--------------------------------.
 | Valgrind Memory Access Rights.  |
@@ -49,26 +57,21 @@
 // These macros are used to ensure that no other part of the program can
 // access the variables.  This are means to check for bad memory writes
 // which are made on specific variables.
-# ifndef NVALGRIND
-
+# if defined NVALGRIND
+#  define MEM(Right, Addr, Size)          LIBPORT_EMPTY()
+# else
 #  define MEM(Right, Addr, Size)                        \
   LIBPORT_CAT(VALGRIND_MAKE_MEM_, Right) (Addr, Size)
-
-#  define POOL_CREATE(pool, redZone, init)      \
-  VALGRIND_CREATE_MEMPOOL(pool, redZone, init);
-
-#  define POOL_ALLOC(pool, addr, size)          \
-  VALGRIND_MEMPOOL_ALLOC(pool, addr, size);
-
-#  define POOL_FREE(pool, addr)                 \
-  VALGRIND_MEMPOOL_FREE(pool, addr);
-
-# else
-#  define MEM(Right, Addr, Size)
-#  define POOL_CREATE(pool, redZone, init)
-#  define POOL_ALLOC(pool, addr, size)
-#  define POOL_FREE(pool, addr)
 # endif
+
+# define POOL_CREATE(Pool, RedZone, Init)      \
+  VALGRIND_CREATE_MEMPOOL(Pool, RedZone, Init)
+
+# define POOL_ALLOC(Pool, Addr, Size)          \
+  VALGRIND_MEMPOOL_ALLOC(Pool, Addr, Size)
+
+# define POOL_FREE(Pool, Addr)			\
+  VALGRIND_MEMPOOL_FREE(Pool, Addr)
 
 # define MEM_NOACCESS(Addr, Size)  MEM(NOACCESS, Addr, Size)
 # define MEM_UNDEFINED(Addr, Size) MEM(UNDEFINED, Addr, Size)
@@ -77,6 +80,5 @@
 # define VAR_NOACCESS(Val)  MEM_NOACCESS(&Val, sizeof(Val))
 # define VAR_UNDEFINED(Val) MEM_UNDEFINED(&Val, sizeof(Val))
 # define VAR_DEFINED(Val)   MEM_DEFINED(&Val, sizeof(Val))
-
 
 #endif
