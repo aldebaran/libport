@@ -37,6 +37,8 @@ using libport::test_suite;
 #include <libport/utime.hh>
 #include <libport/unistd.h>
 
+using boost::system::error_code;
+
 bool abort_ctor = false;
 
 const char* msg = "coincoin\n";
@@ -124,7 +126,7 @@ public:
     return size;
   }
 
-  void onError(boost::system::error_code erc)
+  void onError(error_code erc)
   {
     lastError = erc;
     if (destroyOnError)
@@ -140,7 +142,7 @@ public:
   // Destroy socket onError.
   bool destroyOnError;
   std::string received;
-  boost::system::error_code lastError;
+  error_code lastError;
   static TestSocket* factory()
   {
     return lastInstance = new TestSocket();
@@ -169,25 +171,24 @@ static const int AVAIL_PORT = 7890;
 static const std::string S_AVAIL_PORT = string_cast(AVAIL_PORT);
 
 
-
-void test_one(bool proto)
+/// \param udp  whether UDP instead of TCP.
+void test_one(bool udp)
 {
   TestSocket* client = new TestSocket(false, true);
-  boost::system::error_code err
-    = client->connect(connect_host, S_AVAIL_PORT, proto);
+  error_code err = client->connect(connect_host, S_AVAIL_PORT, udp);
   BOOST_REQUIRE_MESSAGE(!err, err.message());
   BOOST_CHECK_NO_THROW(client->send(msg));
   usleep(delay);
-  BOOST_CHECK_EQUAL(TestSocket::nInstance, proto ? 1u : 2u);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, udp ? 1u : 2u);
   BOOST_CHECK_EQUAL(client->received, msg);
-  if (!proto)
+  if (!udp)
     BOOST_CHECK_EQUAL(TestSocket::lastInstance->received,
                       msg);
   BOOST_CHECK_EQUAL(client->getRemotePort(), AVAIL_PORT);
-  if (!proto)
+  if (!udp)
     BOOST_CHECK_EQUAL(TestSocket::lastInstance->getLocalPort(),
                       AVAIL_PORT);
-  if (!proto)
+  if (!udp)
     BOOST_CHECK_EQUAL(TestSocket::lastInstance->getRemotePort(),
                       client->getLocalPort());
   // Close client-end. Should send error both ways and destroy all sockets.
@@ -200,7 +201,6 @@ static
 void
 test_safe_destruction()
 {
-  BOOST_TEST_MESSAGE("##Safe destruction");
   TestSocket* s = new TestSocket(false, false);
   s->connect(connect_host, S_AVAIL_PORT, false);
   s->destroy();
