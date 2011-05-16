@@ -171,6 +171,7 @@ static const int AVAIL_PORT = 7890;
 static const std::string S_AVAIL_PORT = string_cast(AVAIL_PORT);
 
 
+/// A server is ready to be use, exercise it.
 /// \param udp  whether UDP instead of TCP.
 void test_one(bool udp)
 {
@@ -210,18 +211,25 @@ test_safe_destruction()
 
 static
 void
+test_invalid_ip()
+{
+  // Try listening on an IP that is not ours.
+  libport::Socket* h = new libport::Socket();
+  error_code err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
+			     "1.2.3.4", "1212", false);
+  BOOST_CHECK_MESSAGE(err, err);
+  h->destroy();
+}
+
+
+static
+void
 test()
 {
   // Basic TCP
-  boost::system::error_code err;
   libport::Socket* h = new libport::Socket();
-  // Try listening on an IP that is not ours.
-  BOOST_TEST_MESSAGE("Invalid IP in listen()");
-  err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
-                  "1.2.3.4", "1212", false);
-  BOOST_CHECK(err);
-  err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
-                  listen_host, S_AVAIL_PORT, false);
+  error_code err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
+			     listen_host, S_AVAIL_PORT, false);
   BOOST_CHECK_MESSAGE(!err, err.message());
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
 
@@ -326,49 +334,51 @@ test()
     usleep(delay);
     abort_ctor = false;
   }
+}
 
+static
+void
+test_udp()
+{
+  error_code err;
+  libport::Socket::listenUDP(listen_host, S_AVAIL_PORT, &echo, err);
+  BOOST_CHECK_MESSAGE(!err, err.message());
+  test_one(true);
+  usleep(delay);
+  test_one(true);
 
-  BOOST_TEST_MESSAGE("##UDP");
-  {
-    libport::Socket::listenUDP(listen_host, S_AVAIL_PORT, &echo, err);
-    BOOST_CHECK_MESSAGE(!err, err.message());
-    test_one(true);
-    usleep(delay);
-    test_one(true);
+  TestSocket* client = new TestSocket();
+  err = client->connect("auunsinsr.nosuch.hostaufisgiu.com.", "20000", true);
+  BOOST_CHECK_MESSAGE(err, err.message());
 
-    TestSocket* client = new TestSocket();
-    err = client->connect("auunsinsr.nosuch.hostaufisgiu.com.", "20000", true);
-    BOOST_CHECK_MESSAGE(err, err.message());
+  err = client->connect(connect_host, "nosuchport", true);
+  BOOST_CHECK_MESSAGE(err, err.message());
 
-    err = client->connect(connect_host, "nosuchport", true);
-    BOOST_CHECK_MESSAGE(err, err.message());
+  // Try to reuse that wasted socket.
+  err = client->connect(connect_host, S_AVAIL_PORT, true);
+  BOOST_CHECK_MESSAGE(!err, err.message());
+  // Destroy without closing.
+  client->destroy();
+  usleep(delay);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 
-    // Try to reuse that wasted socket.
-    err = client->connect(connect_host, S_AVAIL_PORT, true);
-    BOOST_CHECK_MESSAGE(!err, err.message());
-    // Destroy without closing.
-    client->destroy();
-    usleep(delay);
-    BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
+  // Check one-write-one-packet semantic
+  client = new TestSocket(false, true);
+  err = client->connect(connect_host, S_AVAIL_PORT, true);
+  BOOST_CHECK_MESSAGE(!err, err.message());
+  client->send("coin");
+  client->send("pan");
+  usleep(delay*2);
+  BOOST_CHECK_EQUAL(client->received, "coinpan");
+  BOOST_CHECK_EQUAL(client->nRead, 2u);
 
-    // Check one-write-one-packet semantic
-    client = new TestSocket(false, true);
-    err = client->connect(connect_host, S_AVAIL_PORT, true);
-    BOOST_CHECK_MESSAGE(!err, err.message());
-    client->send("coin");
-    client->send("pan");
-    usleep(delay*2);
-    BOOST_CHECK_EQUAL(client->received, "coinpan");
-    BOOST_CHECK_EQUAL(client->nRead, 2u);
-
-    enable_delay = true;
-    client = new TestSocket(false, true);
-    err = client->connect(connect_host, S_AVAIL_PORT, true);
-    BOOST_CHECK_MESSAGE(!err, err.message());
-    client->send("coin");
-    usleep(500000+delay);
-    BOOST_CHECK_EQUAL(client->received, "hop hop\n");
-  }
+  enable_delay = true;
+  client = new TestSocket(false, true);
+  err = client->connect(connect_host, S_AVAIL_PORT, true);
+  BOOST_CHECK_MESSAGE(!err, err.message());
+  client->send("coin");
+  usleep(500000+delay);
+  BOOST_CHECK_EQUAL(client->received, "hop hop\n");
 }
 
 static void test_pipe()
@@ -399,7 +409,9 @@ init_test_suite()
   skip_if("windows");
   test_suite* suite = BOOST_TEST_SUITE("Libport.Asio");
   suite->add(BOOST_TEST_CASE(test_safe_destruction));
+  suite->add(BOOST_TEST_CASE(test_invalid_ip));
   suite->add(BOOST_TEST_CASE(test));
+  suite->add(BOOST_TEST_CASE(test_udp));
   suite->add(BOOST_TEST_CASE(test_pipe));
   return suite;
 }
