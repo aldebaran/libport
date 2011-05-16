@@ -182,18 +182,19 @@ void test_one(bool udp)
   usleep(delay);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, udp ? 1u : 2u);
   BOOST_CHECK_EQUAL(client->received, msg);
-  if (!udp)
-    BOOST_CHECK_EQUAL(TestSocket::lastInstance->received,
-                      msg);
   BOOST_CHECK_EQUAL(client->getRemotePort(), AVAIL_PORT);
   if (!udp)
+  {
+    BOOST_CHECK_EQUAL(TestSocket::lastInstance->received,
+                      msg);
     BOOST_CHECK_EQUAL(TestSocket::lastInstance->getLocalPort(),
                       AVAIL_PORT);
-  if (!udp)
     BOOST_CHECK_EQUAL(TestSocket::lastInstance->getRemotePort(),
                       client->getLocalPort());
+  }
   // Close client-end. Should send error both ways and destroy all sockets.
   client->close();
+  client->destroy();
   usleep(delay);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 }
@@ -228,11 +229,12 @@ test()
 {
   // Basic TCP
   libport::Socket* h = new libport::Socket();
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
   error_code err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
 			     listen_host, S_AVAIL_PORT, false);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
   BOOST_CHECK_MESSAGE(!err, err.message());
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
-
   BOOST_TEST_MESSAGE("##One client");
   test_one(false);
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
