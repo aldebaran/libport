@@ -214,6 +214,7 @@ libport_include_HEADERS +=                              \
   include/libport/windows.hh                            \
   include/libport/xalloc.hh                             \
   include/libport/xalloc.hxx                            \
+  include/libport/xlocale.hh                            \
   include/libport/xltdl.hh                              \
   include/libport/xltdl.hxx
 

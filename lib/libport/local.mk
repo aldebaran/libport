@@ -86,6 +86,7 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =   \
   lib/libport/uvector.cc                        \
   lib/libport/version.cc                        \
   lib/libport/xalloc.cc                         \
+  lib/libport/xlocale.cc                        \
   lib/libport/xltdl.cc
 
 nodist_lib_libport_libport@LIBSFX@_la_SOURCES =	\

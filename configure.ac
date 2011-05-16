@@ -101,6 +101,9 @@ AC_CHECK_HEADERS([sys/wait.h])
 # libport/valgrind.
 AC_CHECK_HEADERS([valgrind/valgrind.h])
 
+# libport/xlocale.
+AC_CHECK_HEADERS([xlocale.h])
+
 ## ---------- ##
 ## Libsched.  ##
 ## ---------- ##

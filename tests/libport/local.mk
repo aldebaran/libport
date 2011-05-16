@@ -18,10 +18,10 @@ TESTSFLAGS = --log_level=$(LOG_LEVEL)
 
 # Program to check:
 TESTS_BINARIES =                                \
-  tests/libport/allocator-static.cc		\
+  tests/libport/allocator-static.cc             \
   tests/libport/asio.cc                         \
   tests/libport/assert.cc                       \
-  tests/libport/atomic.cc			\
+  tests/libport/atomic.cc                       \
   tests/libport/attributes.cc                   \
   tests/libport/base64.cc                       \
   tests/libport/backtrace.cc                    \
@@ -44,40 +44,41 @@ TESTS_BINARIES =                                \
   tests/libport/finally.cc                      \
   tests/libport/fnmatch.cc                      \
   tests/libport/foreach.cc                      \
-  tests/libport/format.cc	                \
+  tests/libport/format.cc                       \
   tests/libport/has-if.cc                       \
   tests/libport/hash.cc                         \
-  tests/libport/hmac-sha1.cc			\
+  tests/libport/hmac-sha1.cc                    \
   tests/libport/indent.cc                       \
-  tests/libport/input-arguments.cc		\
+  tests/libport/input-arguments.cc              \
   tests/libport/intrusive-ptr.cc                \
   tests/libport/io-stream.cc                    \
   tests/libport/markup-ostream.cc               \
-  tests/libport/option-parser.cc		\
+  tests/libport/option-parser.cc                \
   tests/libport/path.cc                         \
   tests/libport/pid-file.cc                     \
   tests/libport/preproc.cc                      \
   tests/libport/pthread.cc                      \
   tests/libport/read-stdin.cc                   \
-  tests/libport/reserved-vector.cc		\
+  tests/libport/reserved-vector.cc              \
   tests/libport/safe-container.cc               \
   tests/libport/semaphore.cc                    \
   tests/libport/separate.cc                     \
   tests/libport/singleton-ptr.cc                \
   tests/libport/statistics.cc                   \
   tests/libport/symbol.cc                       \
-  tests/libport/synchronizer.cc			\
-  tests/libport/thread-pool.cc			\
+  tests/libport/synchronizer.cc                 \
+  tests/libport/thread-pool.cc                  \
   tests/libport/time.cc                         \
   tests/libport/timer.cc                        \
   tests/libport/tokenizer.cc                    \
-  tests/libport/traits.cc			\
+  tests/libport/traits.cc                       \
   tests/libport/ufloat-double.cc                \
   tests/libport/unescape.cc                     \
-  tests/libport/utime.cc			\
-  tests/libport/utsname.cc			\
-  tests/libport/vector.cc			\
-  tests/libport/xalloc.cc			\
+  tests/libport/utime.cc                        \
+  tests/libport/utsname.cc                      \
+  tests/libport/vector.cc                       \
+  tests/libport/xalloc.cc                       \
+  tests/libport/xlocale.cc                      \
   tests/libport/xltdl.cc
 
 # ufloat-float.cc is commented out as we do not support ufloat /=
