@@ -25,7 +25,7 @@ namespace libport
   /// \throw std::runtime_error on invalid combinations.
   LIBPORT_API
   std::string
-  setlocale(const std::string& cat, const char* loc);
+  setlocale(const std::string& cat, const char* loc = "");
 
   std::string
   setlocale(const std::string& cat, const std::string& loc);
