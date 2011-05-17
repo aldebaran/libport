@@ -217,11 +217,13 @@ void test_one(bool udp)
                       client->getLocalPort());
   }
   // Close client-end. Should send error both ways and destroy all sockets.
-  client->close();
-  client->destroy();
+  BOOST_CHECK_NO_THROW(client->close());
+  // Not needed, as we have autoclose.
+  // BOOST_CHECK_NO_THROW(client->destroy());
   usleep(delay);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 }
+
 
 void
 test_safe_destruction()
@@ -232,6 +234,7 @@ test_safe_destruction()
   usleep(delay);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 }
+
 
 void
 test_invalid_ip()
@@ -247,6 +250,8 @@ test_invalid_ip()
 }
 
 
+# define TEST_TCP() BOOST_CHECK_NO_THROW(test_one(false))
+# define TEST_UDP() BOOST_CHECK_NO_THROW(test_one(true))
 void
 test()
 {
@@ -258,12 +263,13 @@ test()
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
   BOOST_CHECK_MESSAGE(!err, err.message());
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
+
   BOOST_TEST_MESSAGE("##One client");
-  test_one(false);
+  TEST_TCP();
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
-  test_one(false);
+  TEST_TCP();
   BOOST_CHECK_EQUAL(h->getLocalPort(), AVAIL_PORT);
-  test_one(false);
+  TEST_TCP();
   BOOST_TEST_MESSAGE("Socket on stack");
   {
     TestSocket s(false, true);
@@ -274,8 +280,8 @@ test()
   }
   usleep(delay*2);
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
+  TEST_TCP();
 
-  test_one(false);
   BOOST_TEST_MESSAGE("##many clients");
   std::vector<TestSocket*> clients;
   for (int i=0; i<10; i++)
@@ -361,15 +367,16 @@ test()
   }
 }
 
+
 void
 test_udp()
 {
   error_code err;
   libport::Socket::listenUDP(listen_host, S_AVAIL_PORT, &echo, err);
   BOOST_CHECK_MESSAGE(!err, err.message());
-  test_one(true);
+  TEST_UDP();
   usleep(delay);
-  test_one(true);
+  TEST_UDP();
 
   TestSocket* client = new TestSocket();
   err = client->connect("auunsinsr.nosuch.hostaufisgiu.com.", "20000", true);
@@ -405,6 +412,7 @@ test_udp()
   BOOST_CHECK_EQUAL(client->received, "hop hop\n");
 }
 
+
 void test_pipe()
 {
   TestSocket* s1 = new TestSocket(false, true);
@@ -426,6 +434,7 @@ void test_pipe()
   s2->destroy();
   usleep(delay*2);
 }
+
 
 test_suite*
 init_test_suite()
