@@ -438,29 +438,29 @@ namespace libport
     template<typename Stream>
     void
     SocketImpl<Stream>::continueWrite(DestructionLock lock,
-                                      boost::system::error_code er,
+                                      boost::system::error_code erc,
                                       size_t sz)
     {
-      if (er)
+      BlockLock blc(callbackLock);
+      if (erc)
       {
         if (onErrorFunc)
-          onErrorFunc(er);
-        return;
+          onErrorFunc(erc);
       }
-      else
-        bytesSent_ += sz;
-      libport::BlockLock bl(this);
-      current_ = 1 - current_;
-      if (pending_)
-        boost::asio::async_write(
-          *base_, buffers_[current_],
-          boost::bind(&SocketImpl<Stream>::continueWrite,
-                      this, lock,  _1, _2));
       else
       {
-        current_ = -1;
+        bytesSent_ += sz;
+        libport::BlockLock bl(this);
+        current_ = 1 - current_;
+        if (pending_)
+          boost::asio::async_write(
+            *base_, buffers_[current_],
+            boost::bind(&SocketImpl<Stream>::continueWrite,
+                        this, lock,  _1, _2));
+        else
+          current_ = -1;
+        pending_ = false;
       }
-      pending_ = false;
     }
 
 
