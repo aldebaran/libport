@@ -521,17 +521,7 @@ namespace libport
        << std::endl;
     */
     wasDestroyed();
-    if (base_)
-    {
-      Destructible::DestructionLock l = base_->getDestructionLock();
-      base_->close();
-      base_->destroy();
-      BlockLock bl(base_->callbackLock);
-      base_->onReadFunc = 0;
-      base_->onErrorFunc = 0;
-      base_->unlinkAll();
-      base_ = 0;
-    }
+    close();
     // FIXME: optimize
     while (!checkDestructionPermission())
       sleep(100);
