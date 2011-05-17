@@ -821,17 +821,26 @@ namespace libport
   void
   Socket::close()
   {
+    using netdetail::errorcodes::make_error_code;
     if (base_)
     {
-      Destructible::DestructionLock l = base_->getDestructionLock();
-      base_->close();
-      // We never reuse base_ once clodes
-      base_->destroy();
-      BlockLock bl(base_->callbackLock);
-      base_->onReadFunc = 0;
-      base_->onErrorFunc = 0;
-      base_->unlinkAll();
+      BaseSocket* b = base_;
       base_ = 0;
+      Destructible::DestructionLock l = b->getDestructionLock();
+      if (b->isConnected())
+      {
+         boost::system::error_code erc;
+         erc = make_error_code(netdetail::errorcodes::connection_reset);
+         if (b->onErrorFunc)
+           b->onErrorFunc(erc);
+      }
+      b->close();
+      // We never reuse base_ once closed
+      b->destroy();
+      BlockLock bl(b->callbackLock);
+      b->onReadFunc = 0;
+      b->onErrorFunc = 0;
+      b->unlinkAll();
     }
   }
 }
