@@ -93,9 +93,11 @@ void echo(const void* d, int s, boost::shared_ptr<libport::UDPLink> l)
 class TestSocket: public libport::Socket
 {
 public:
+  typedef libport::Socket super_type;
   TestSocket()
     : nRead(0), echo(false), dump(false), destroyOnError(true)
   {
+    BOOST_TEST_MESSAGE("TestSocket::TestSocket => " << this);
     BOOST_CHECK(!abort_ctor);
     nInstance++;
   }
@@ -103,6 +105,7 @@ public:
   TestSocket(bool echo, bool dump)
     : nRead(0), echo(echo), dump(dump), destroyOnError(true)
   {
+    BOOST_TEST_MESSAGE("TestSocket::TestSocket => " << this);
     BOOST_CHECK(!abort_ctor);
     nInstance++;
   }
@@ -110,9 +113,24 @@ public:
   virtual ~TestSocket()
   {
     nInstance--;
-    // BOOST_TEST_MESSAGE(this << " dying, in " << K_get()
-    //                    << " lasterror=" << lastError.message());
+    BOOST_TEST_MESSAGE(this << "->~TestSocket, "
+                       << "lastError=" << lastError
+                       << ": " << lastError.message()
+                       << ", nInstance now: " << nInstance);
+
     // aver(false);
+  }
+
+  virtual void destroy()
+  {
+    BOOST_TEST_MESSAGE(this << "->TestSocket::destroy");
+    super_type::destroy();
+  }
+
+  virtual void close()
+  {
+    BOOST_TEST_MESSAGE(this << "->TestSocket::close");
+    super_type::close();
   }
 
   size_t onRead(const void* data, size_t size)
@@ -128,6 +146,8 @@ public:
 
   void onError(error_code erc)
   {
+    BOOST_TEST_MESSAGE(this << "->TestSocket::onError(" << erc
+                       << ": " << erc.message() << ")");
     lastError = erc;
     if (destroyOnError)
       destroy();
@@ -145,11 +165,15 @@ public:
   error_code lastError;
   static TestSocket* factory()
   {
-    return lastInstance = new TestSocket();
+    lastInstance = new TestSocket();
+    BOOST_TEST_MESSAGE("factory => " << lastInstance);
+    return lastInstance;
   }
   static TestSocket* factoryEx(bool echo, bool dump)
   {
-    return lastInstance = new TestSocket(echo, dump);
+    lastInstance = new TestSocket(echo, dump);
+    BOOST_TEST_MESSAGE("factoryEx => " << lastInstance);
+    return lastInstance;
   }
   static size_t nInstance;
   // Last factory-created instance.
@@ -199,7 +223,6 @@ void test_one(bool udp)
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 }
 
-static
 void
 test_safe_destruction()
 {
@@ -210,7 +233,6 @@ test_safe_destruction()
   BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 }
 
-static
 void
 test_invalid_ip()
 {
@@ -220,10 +242,11 @@ test_invalid_ip()
 			     "1.2.3.4", "1212", false);
   BOOST_CHECK_MESSAGE(err, err);
   h->destroy();
+  usleep(delay);
+  BOOST_CHECK_EQUAL(TestSocket::nInstance, 0u);
 }
 
 
-static
 void
 test()
 {
@@ -338,7 +361,6 @@ test()
   }
 }
 
-static
 void
 test_udp()
 {
@@ -383,7 +405,7 @@ test_udp()
   BOOST_CHECK_EQUAL(client->received, "hop hop\n");
 }
 
-static void test_pipe()
+void test_pipe()
 {
   TestSocket* s1 = new TestSocket(false, true);
   TestSocket* s2 = new TestSocket(false, true);
