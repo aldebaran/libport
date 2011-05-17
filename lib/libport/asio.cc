@@ -420,6 +420,7 @@ namespace libport
     res->async_wait(boost::bind(&netdetail::timer_trigger, res, callback, _1));
     return res;
   }
+
   void
   runIoService(boost::asio::io_service* io)
   {
@@ -464,6 +465,19 @@ namespace libport
     }
     return *io;
   }
+
+  /*---------.
+  | Socket.  |
+  `---------*/
+
+  Socket::Socket(boost::asio::io_service& io)
+    : base_(0)
+    , io_(io)
+    , autostart_reader_(true)
+  {
+    GD_FINFO_TRACE("%p->Socket::Socket", this);
+  }
+
 
 #if ! defined WIN32
   int
@@ -580,6 +594,7 @@ namespace libport
   Socket::setBase(BaseSocket* b)
   {
     base_ = b;
+    GD_FINFO_TRACE("%p->Socket::setBase(%p)", this, base_);
     BlockLock bl(base_->callbackLock);
     base_-> onReadFunc = boost::bind(&Socket::onRead_, this, _1);
     base_->onErrorFunc = boost::bind(&Socket::onError, this, _1);
@@ -622,13 +637,17 @@ namespace libport
       usleep(duration);
   }
 
-  static void stop_io_service(boost::asio::io_service& io,
-                              bool& timer_called)
+  static
+  void
+  stop_io_service(boost::asio::io_service& io,
+                  bool& timer_called)
   {
     timer_called = true;
     io.stop();
   }
-  size_t pollFor(useconds_t duration, bool once, boost::asio::io_service& io)
+
+  size_t
+  pollFor(useconds_t duration, bool once, boost::asio::io_service& io)
   {
     boost::asio::io_service::work work(io);
     io.reset();
@@ -808,7 +827,9 @@ namespace libport
     s.first->onConnect();
     s.second->onConnect();
   }
-  void Socket::close()
+
+  void
+  Socket::close()
   {
     if (base_)
     {

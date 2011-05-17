@@ -165,12 +165,9 @@ namespace libport
   class LIBPORT_API Socket: public AsioDestructible
   {
   public:
-    Socket(boost::asio::io_service& io = libport::get_io_service())
-      : base_(0)
-      , io_(io)
-      , autostart_reader_(true)
-    {}
+    Socket(boost::asio::io_service& io = libport::get_io_service());
     virtual ~Socket();
+
     /* Set underlying BaseSocket object, setup its callbacks to call
      * our virtual functions.
      */

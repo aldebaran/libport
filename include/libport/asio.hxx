@@ -68,7 +68,7 @@ namespace libport
 
   template<class Sock>
   inline void
-  Socket::setFD(native_handle_type  fd, typename Sock::protocol_type proto)
+  Socket::setFD(native_handle_type fd, typename Sock::protocol_type proto)
   {
     if (base_ && base_->isConnected())
     {
