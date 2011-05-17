@@ -441,7 +441,7 @@ init_test_suite()
 {
   skip_if("Qemu");
   skip_if("Wine");
-  test_suite* suite = BOOST_TEST_SUITE("libport::asio test suite");
+  test_suite* suite = BOOST_TEST_SUITE("Libport.Asio");
   suite->add(BOOST_TEST_CASE(test_safe_destruction));
   suite->add(BOOST_TEST_CASE(test_invalid_ip));
   suite->add(BOOST_TEST_CASE(test));

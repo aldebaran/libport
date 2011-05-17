@@ -23,6 +23,9 @@
 
 GD_CATEGORY(Libport.Asio);
 
+#define FRAISE(...)                                             \
+  throw std::runtime_error(libport::format(__VA_ARGS__))
+
 namespace libport
 {
 
@@ -70,17 +73,17 @@ namespace libport
 
     std::string PosixIO::read(size_t length)
     {
-      std::string s;
-      s.resize(length);
+      std::string res;
+      res.resize(length);
       unsigned pos = 0;
       while (pos < length)
       {
-        ssize_t res = ::read(fd, &s[pos], length-pos);
-        if (res <=0)
-          throw std::string("read: ") + strerror(errno);
-        pos += res;
+        ssize_t r = ::read(fd, &res[pos], length - pos);
+        if (r <= 0)
+          FRAISE("read: %s", strerror(errno));
+        pos += r;
       }
-      return s;
+      return res;
     }
 
     void PosixIO::startReader()
@@ -96,8 +99,8 @@ namespace libport
       if (res <= 0)
       {
         if (onErrorFunc)
-        onErrorFunc(netdetail::errorcodes::make_error_code(
-                     netdetail::errorcodes::bad_file_descriptor));
+          onErrorFunc(netdetail::errorcodes::make_error_code(
+                         netdetail::errorcodes::bad_file_descriptor));
       }
       else
       {
@@ -707,11 +710,11 @@ namespace libport
     case READ_WRITE: mode = O_RDWR; break;
     case USE_FLAGS: break;
     default:
-      throw std::runtime_error("Invalid open mode specified"); break;
+      FRAISE("Invalid open mode specified"); break;
     }
     int h = open(path.c_str(), mode| extraFlags, createMode);
     if (h == -1)
-      throw std::runtime_error(std::string("open:") + strerror(errno));
+      FRAISE("open: %s", strerror(errno));
 #if defined WIN32
     // CreateFile then setNativFD should work, but it does not
     // for reasons unknown at this time.
@@ -778,9 +781,7 @@ namespace libport
         PIPE_TYPE_BYTE | PIPE_READMODE_BYTE,
         2, 512, 512, 0, NULL);
     if (h1 == INVALID_HANDLE_VALUE)
-      throw std::runtime_error
-        (libport::format("CreateNamedPipe(%s): %s",
-                         name, strerror(0)));
+      FRAISE("CreateNamedPipe(%s): %s", name, strerror(0));
     BaseSocket* b1 =
       SocketImpl<SocketWrapper<windows::stream_handle> >::create
       (new SocketWrapper<windows::stream_handle>(io, h1));
@@ -792,9 +793,7 @@ namespace libport
                            SECURITY_ANONYMOUS | FILE_FLAG_OVERLAPPED,
                            NULL);
    if (h2 == INVALID_HANDLE_VALUE)
-         throw std::runtime_error
-           (libport::format("CreateFile(%s): %s",
-                            name, strerror(0)));
+     FRIASE("CreateFile(%s): %s", name, strerror(0));
     BaseSocket* b2 =
           SocketImpl<SocketWrapper<windows::stream_handle> >::create
           (new SocketWrapper<windows::stream_handle>(io, h2));
@@ -802,7 +801,7 @@ namespace libport
     // implement using POSIX pipe()
     int fd[2];
     if (pipe(fd) == -1)
-      throw std::runtime_error(std::string("pipe:") + strerror(errno));
+      FRAISE("pipe: %s", strerror(errno));
     BaseSocket* b1 =
       SocketImpl<SocketWrapper<posix::stream_descriptor> >::create(
        new SocketWrapper<posix::stream_descriptor>(io, fd[0]));

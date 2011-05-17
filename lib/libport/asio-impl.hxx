@@ -161,14 +161,14 @@ namespace libport
 #define ACCEPTOR_FAIL                                                   \
       {throw std::runtime_error("Call not implemented for Acceptors");}
 
-      void write(const void*, size_t) ACCEPTOR_FAIL
-      std::string read(size_t) ACCEPTOR_FAIL
+      void write(const void*, size_t)      ACCEPTOR_FAIL
+      std::string read(size_t)             ACCEPTOR_FAIL
       unsigned short getRemotePort() const ACCEPTOR_FAIL
-      std::string getRemoteHost() const ACCEPTOR_FAIL
-      void startReader() ACCEPTOR_FAIL
-      void syncWrite(const void*, size_t) ACCEPTOR_FAIL
-      unsigned long bytesSent() const ACCEPTOR_FAIL
-      unsigned long bytesReceived() const ACCEPTOR_FAIL
+      std::string getRemoteHost() const    ACCEPTOR_FAIL
+      void startReader()                   ACCEPTOR_FAIL
+      void syncWrite(const void*, size_t)  ACCEPTOR_FAIL
+      unsigned long bytesSent() const      ACCEPTOR_FAIL
+      unsigned long bytesReceived() const  ACCEPTOR_FAIL
 #undef ACCEPTOR_FAIL
 
       unsigned short getLocalPort() const;
@@ -376,9 +376,8 @@ namespace libport
 
     template<>
     inline std::string
-    read_dispatch<boost::asio::ip::udp::socket>(
-                                                SocketImpl<boost::asio::ip::udp::socket>*,
-                                            size_t)
+    read_dispatch<boost::asio::ip::udp::socket>
+       (SocketImpl<boost::asio::ip::udp::socket>*, size_t)
     {
       throw std::runtime_error("Not implemented");
     }
@@ -572,6 +571,7 @@ namespace libport
       // Else we got aborted, do nothing
       sem++;
     }
+
     template<typename Proto, class BaseFactory>
     void
     async_connect(typename Proto::socket* bs,
@@ -654,7 +654,8 @@ namespace libport
       return typename Proto::endpoint();
     return *iter;
   }
-template<class Proto, class BaseFactory>
+
+  template<class Proto, class BaseFactory>
   boost::system::error_code
   Socket::connectProto(const std::string& host,
                        const std::string& port,
@@ -725,6 +726,7 @@ template<class Proto, class BaseFactory>
     }
     return erc;
   }
+
   template<typename Proto, typename BaseFactory>
   boost::system::error_code
   Socket::listenProto(SocketFactory f,
