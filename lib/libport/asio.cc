@@ -523,7 +523,11 @@ namespace libport
     close();
     // FIXME: optimize
     while (!checkDestructionPermission())
+    {
+      GD_FINFO_TRACE("!%s.checkDestructionPermission",
+                     static_cast<Destructible&>(*this));
       sleep(100);
+    }
     //waitForDestructionPermission();
   }
 
@@ -808,6 +812,16 @@ namespace libport
   }
 
   void
+  connection_reset(Socket& s, Destructible::DestructionLock& l)
+  {
+    // What matters about l (a lock on s) is its scope.
+    LIBPORT_USE(l);
+    GD_INFO_TRACE("connection_reset start");
+    s.onError(make_error_code(netdetail::errorcodes::connection_reset));
+    GD_INFO_TRACE("connection_reset done");
+  }
+
+  void
   Socket::close()
   {
     if (base_)
@@ -815,10 +829,14 @@ namespace libport
       BaseSocket* b = base_;
       base_ = 0;
       Destructible::DestructionLock l = b->getDestructionLock();
-      using netdetail::errorcodes::connection_reset;
-      if (b->isConnected() && b->onErrorFunc)
-        b->onErrorFunc(make_error_code(connection_reset));
-      // We never reuse base_ once closed.
+      if (b->isConnected())
+      {
+        GD_FINFO_TRACE("asyncCall(connection_reset(%p))", this);
+        asyncCall(boost::bind(&connection_reset,
+                              boost::ref(*this), getDestructionLock()),
+                  10,
+                  get_io_service());
+      }
       b->close();
       b->destroy();
       BlockLock bl(b->callbackLock);

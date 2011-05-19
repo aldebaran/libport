@@ -71,6 +71,9 @@ namespace libport
     /// Release all held destruction locks
     void unlinkAll();
 
+    /// For debugging.
+    std::ostream& dump(std::ostream& o) const;
+
   protected:
     /** Call this to warn Destructible that the destructor was called.
       * Only required if your object's destructor can be directly called.
@@ -100,6 +103,9 @@ namespace libport
     std::vector<DestructionLock> links_;
     friend class Lock;
   };
+
+  /// Bounce to Destructible::dump.
+  std::ostream& operator<<(std::ostream& o, const Destructible& d);
 }
 
 # include "libport/destructible.hxx"

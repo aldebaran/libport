@@ -139,6 +139,26 @@ namespace libport
   {
     links_.clear();
   }
+
+  inline
+  std::ostream&
+  Destructible::dump(std::ostream& o) const
+  {
+    return o << "Destructible{count_ = " << count_ << "}";
+  }
+
+
+  /*----------------.
+  | Free standing.  |
+  `----------------*/
+
+  inline
+  std::ostream&
+  operator<<(std::ostream& o, const Destructible& d)
+  {
+    return d.dump(o);
+  }
+
 }
 
 #endif
