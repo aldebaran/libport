@@ -63,12 +63,10 @@ namespace libport
 
     void PosixIO::write(const void* data, size_t length)
     {
-      if (::write(fd, data, length)==-1)
-      {
-        if (onErrorFunc)
-          onErrorFunc(netdetail::errorcodes::make_error_code(
-                       netdetail::errorcodes::bad_file_descriptor));
-      }
+      using netdetail::errorcodes::bad_file_descriptor;
+      if (::write(fd, data, length) == -1
+          && onErrorFunc)
+        onErrorFunc(make_error_code(bad_file_descriptor));
     }
 
     std::string PosixIO::read(size_t length)
@@ -95,21 +93,21 @@ namespace libport
     void PosixIO::readOne()
     {
       char buffer[BUFSIZ];
-      ssize_t res = ::read(fd, buffer, BUFSIZ);
-      if (res <= 0)
+      ssize_t r = ::read(fd, buffer, BUFSIZ);
+      if (r <= 0)
       {
+        using netdetail::errorcodes::bad_file_descriptor;
         if (onErrorFunc)
-          onErrorFunc(netdetail::errorcodes::make_error_code(
-                         netdetail::errorcodes::bad_file_descriptor));
+          onErrorFunc(make_error_code(bad_file_descriptor));
       }
       else
       {
         std::ostream stream(&readBuffer_);
-        stream.write(buffer, res);
+        stream.write(buffer, r);
         if (onReadFunc)
           onReadFunc(readBuffer_);
       }
-      if (fd!= -1 && !readOnce)
+      if (fd != -1 && !readOnce)
         startReader();
     }
 
@@ -257,7 +255,7 @@ namespace libport
     {
       if (erc)
       {
-        std::cerr <<"Socket error: " << erc.message() << std::endl;
+        GD_FINFO_TRACE("Socket error: %s", erc.message());
         BlockLock bl(s->callbackLock);
         if (s->onErrorFunc)
           s->onErrorFunc(erc);
@@ -774,45 +772,39 @@ namespace libport
       libport::format("\\\\.\\pipe\\libport-%s-%s-%s",
                       getpid(), utime(), rand());
 
+    HANDLE fd[2];
     // Do not forget the OVERLAPPED flag as boost::asio does...asio.
-    HANDLE h1 =
-      CreateNamedPipe(name.c_str(),
-        PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
-        PIPE_TYPE_BYTE | PIPE_READMODE_BYTE,
-        2, 512, 512, 0, NULL);
-    if (h1 == INVALID_HANDLE_VALUE)
+    fd[1] = CreateNamedPipe(name.c_str(),
+                            PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
+                            PIPE_TYPE_BYTE | PIPE_READMODE_BYTE,
+                            2, 512, 512, 0, NULL);
+    if (fd[1] == INVALID_HANDLE_VALUE)
       FRAISE("CreateNamedPipe(%s): %s", name, strerror(0));
-    BaseSocket* b1 =
-      SocketImpl<SocketWrapper<windows::stream_handle> >::create
-      (new SocketWrapper<windows::stream_handle>(io, h1));
+    typedef SocketWrapper<windows::stream_handle> socket_wrapper;
 
     // Calling CreatePipe should work for the second end but it fails with
     // 'access denied'.
-    HANDLE h2 = CreateFile(name.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE,
-                           NULL, OPEN_EXISTING,
-                           SECURITY_ANONYMOUS | FILE_FLAG_OVERLAPPED,
-                           NULL);
-   if (h2 == INVALID_HANDLE_VALUE)
-     FRIASE("CreateFile(%s): %s", name, strerror(0));
-    BaseSocket* b2 =
-          SocketImpl<SocketWrapper<windows::stream_handle> >::create
-          (new SocketWrapper<windows::stream_handle>(io, h2));
+    fd[2] = CreateFile(name.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE,
+                       NULL, OPEN_EXISTING,
+                       SECURITY_ANONYMOUS | FILE_FLAG_OVERLAPPED,
+                       NULL);
+    if (fd[2] == INVALID_HANDLE_VALUE)
+      FRAISE("CreateFile(%s): %s", name, strerror(0));
 #else
-    // implement using POSIX pipe()
+    // Implement using POSIX pipe().
     int fd[2];
     if (pipe(fd) == -1)
       FRAISE("pipe: %s", strerror(errno));
-    BaseSocket* b1 =
-      SocketImpl<SocketWrapper<posix::stream_descriptor> >::create(
-       new SocketWrapper<posix::stream_descriptor>(io, fd[0]));
-    BaseSocket* b2 =
-      SocketImpl<SocketWrapper<posix::stream_descriptor> >::create(
-      new SocketWrapper<posix::stream_descriptor>(io, fd[1]));
+    typedef SocketWrapper<posix::stream_descriptor> socket_wrapper;
 #endif
+    BaseSocket* b1 =
+      SocketImpl<socket_wrapper>::create(new socket_wrapper(io, fd[0]));
+    BaseSocket* b2 =
+      SocketImpl<socket_wrapper>::create(new socket_wrapper(io, fd[1]));
     s.first->setBase(b1);
     s.second->setBase(b2);
     b1->startReader();
-    //No reader at b2 end.
+    // No reader at b2 end.
     s.first->onConnect();
     s.second->onConnect();
   }
@@ -820,21 +812,16 @@ namespace libport
   void
   Socket::close()
   {
-    using netdetail::errorcodes::make_error_code;
     if (base_)
     {
       BaseSocket* b = base_;
       base_ = 0;
       Destructible::DestructionLock l = b->getDestructionLock();
-      if (b->isConnected())
-      {
-         boost::system::error_code erc;
-         erc = make_error_code(netdetail::errorcodes::connection_reset);
-         if (b->onErrorFunc)
-           b->onErrorFunc(erc);
-      }
+      using netdetail::errorcodes::connection_reset;
+      if (b->isConnected() && b->onErrorFunc)
+        b->onErrorFunc(make_error_code(connection_reset));
+      // We never reuse base_ once closed.
       b->close();
-      // We never reuse base_ once closed
       b->destroy();
       BlockLock bl(b->callbackLock);
       b->onReadFunc = 0;
