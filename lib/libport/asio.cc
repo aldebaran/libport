@@ -772,21 +772,21 @@ namespace libport
 
     HANDLE fd[2];
     // Do not forget the OVERLAPPED flag as boost::asio does...asio.
-    fd[1] = CreateNamedPipe(name.c_str(),
+    fd[0] = CreateNamedPipe(name.c_str(),
                             PIPE_ACCESS_INBOUND | FILE_FLAG_OVERLAPPED,
                             PIPE_TYPE_BYTE | PIPE_READMODE_BYTE,
                             2, 512, 512, 0, NULL);
-    if (fd[1] == INVALID_HANDLE_VALUE)
+    if (fd[0] == INVALID_HANDLE_VALUE)
       FRAISE("CreateNamedPipe(%s): %s", name, strerror(0));
     typedef SocketWrapper<windows::stream_handle> socket_wrapper;
 
     // Calling CreatePipe should work for the second end but it fails with
     // 'access denied'.
-    fd[2] = CreateFile(name.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE,
+    fd[1] = CreateFile(name.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE,
                        NULL, OPEN_EXISTING,
                        SECURITY_ANONYMOUS | FILE_FLAG_OVERLAPPED,
                        NULL);
-    if (fd[2] == INVALID_HANDLE_VALUE)
+    if (fd[1] == INVALID_HANDLE_VALUE)
       FRAISE("CreateFile(%s): %s", name, strerror(0));
 #else
     // Implement using POSIX pipe().
