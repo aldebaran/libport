@@ -86,8 +86,7 @@ namespace libport
 
     void PosixIO::startReader()
     {
-      ::libport::asyncCall(boost::bind(&PosixIO::readOne, this), 10,
-                         io_);
+      asyncCall(boost::bind(&PosixIO::readOne, this), 10, io_);
     }
 
     void PosixIO::readOne()
@@ -415,8 +414,7 @@ namespace libport
   asyncCall(boost::function0<void> callback, useconds_t usDelay,
             boost::asio::io_service& io)
   {
-    AsyncCallHandler
-      res(new boost::asio::deadline_timer(io));
+    AsyncCallHandler res(new boost::asio::deadline_timer(io));
     res->expires_from_now(boost::posix_time::microseconds(usDelay));
     res->async_wait(boost::bind(&netdetail::timer_trigger, res, callback, _1));
     return res;
