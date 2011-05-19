@@ -90,13 +90,13 @@ namespace libport
   std::vector<void*> StaticallyAllocated<Exact, Chunk>::pointers_;
 
   template <typename Exact, unsigned Chunk>
-  unsigned StaticallyAllocated<Exact, Chunk>::where_ = 0;
+  volatile unsigned StaticallyAllocated<Exact, Chunk>::where_ = 0;
 
   template <typename Exact, unsigned Chunk>
-  unsigned StaticallyAllocated<Exact, Chunk>::size_ = 0;
+  volatile unsigned StaticallyAllocated<Exact, Chunk>::size_ = 0;
 
   template <typename Exact, unsigned Chunk>
-  unsigned StaticallyAllocated<Exact, Chunk>::storage_size_ = 0;
+  volatile unsigned StaticallyAllocated<Exact, Chunk>::storage_size_ = 0;
 
   template <typename Exact, unsigned Chunk>
   unsigned StaticallyAllocated<Exact, Chunk>::chunk_size_ = Chunk;

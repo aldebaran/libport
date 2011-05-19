@@ -34,11 +34,11 @@ namespace libport
     // The ring of free memory slots.
     static std::vector<void*> pointers_;
     // Pointer
-    static unsigned where_;
+    static volatile unsigned where_;
     // Number of objects currently allocated.
-    static unsigned size_;
+    static volatile unsigned size_;
     // Number of objects slots available.
-    static unsigned storage_size_;
+    static volatile unsigned storage_size_;
     // Current chunk size to allocate.
     static unsigned chunk_size_;
 
