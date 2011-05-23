@@ -38,6 +38,7 @@ namespace libport
    * case virtual methods are used.
    */
   class Destructible
+    : private boost::noncopyable
   {
   public:
     class Lock: public libport::ThreadSafeRefCounted

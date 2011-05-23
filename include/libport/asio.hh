@@ -59,7 +59,8 @@ namespace libport
   static const native_handle_type invalid_handle = -1;
 #endif
 
-  class LIBPORT_API AsioDestructible: public Destructible
+  class LIBPORT_API AsioDestructible
+    : public Destructible
   {
   protected:
     virtual void doDestroy();
@@ -77,11 +78,16 @@ namespace libport
 
   /// Get the handle associated to io_service polling thread.
   LIBPORT_API pthread_t get_io_service_poll_thread();
+
   /** BaseSocket class.
    *
    * This class has a callback-based API: onReadFunc() and onErrorFunc().
+   *
+   * Non-copyable (cannot derive from noncopyable again, done by
+   * libport::Destructible).
    */
-  class LIBPORT_API BaseSocket: public AsioDestructible
+  class LIBPORT_API BaseSocket
+    : public AsioDestructible
   {
   public:
     BaseSocket();
@@ -161,8 +167,12 @@ namespace libport
    * - call wasDestroyed()
    * - call waitForDestructionPermission(), if the io_service is running in
    *   another thread(the default behavior).
+   *
+   * Non-copyable (cannot derive from noncopyable again, done by
+   * libport::Destructible).
    */
-  class LIBPORT_API Socket: public AsioDestructible
+  class LIBPORT_API Socket
+    : public AsioDestructible
   {
   public:
     Socket(boost::asio::io_service& io = libport::get_io_service());
