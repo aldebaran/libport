@@ -22,8 +22,8 @@ namespace libport
   void*
   StaticallyAllocated<Exact, Chunk>::operator new(size_t size)
   {
-# if !defined NDEBUG
-    aver(thread == pthread_self());
+# if DEBUG_SA_UNIQ_THREAD_CHECK
+    aver_eq(thread, pthread_self());
 # endif
     LIBPORT_USE(size);
 
@@ -48,8 +48,8 @@ namespace libport
   void
   StaticallyAllocated<Exact, Chunk>::operator delete(void* obj)
   {
-# if !defined NDEBUG
-    aver(thread == pthread_self());
+# if DEBUG_SA_UNIQ_THREAD_CHECK
+    aver_eq(thread, pthread_self());
 # endif
     aver(obj != 0);
     unsigned w = where_ - size_;
@@ -67,8 +67,8 @@ namespace libport
   void
   StaticallyAllocated<Exact, Chunk>::_grow()
   {
-# if !defined NDEBUG
-    aver(thread == pthread_self());
+# if DEBUG_SA_UNIQ_THREAD_CHECK
+    aver_eq(thread, pthread_self());
 # endif
     char* pool = reinterpret_cast<char*>
       (malloc(chunk_size_ * Exact::allocator_static_max_size));
@@ -101,7 +101,7 @@ namespace libport
   template <typename Exact, unsigned Chunk>
   unsigned StaticallyAllocated<Exact, Chunk>::chunk_size_ = Chunk;
 
-# if !defined NDEBUG
+# if DEBUG_SA_UNIQ_THREAD_CHECK
   template <typename Exact, unsigned Chunk>
   pthread_t StaticallyAllocated<Exact, Chunk>::thread = pthread_self();
 # endif

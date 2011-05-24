@@ -14,7 +14,25 @@
 # include <vector>
 # include <cstdlib>
 
-# if !defined NDEBUG
+// This macro guards assertions which are verifying that the statically
+// allocated is still used in one uniq thread.
+//
+// Windows compilation of urbi makes this assertion fail when urbi.exe is
+// killed with 2 Ctrl-C, which cause another thread to make 3 deletions.
+// Due to the lack of debugging symbols and to the un-risky circumstances in
+// which the bug appear, it seems to be easier to ignore this assertion and
+// rely Linux builds to detect logical errors.
+//
+// see Bug #4672
+//
+# if !defined NDEBUG && !defined WIN32
+#  define DEBUG_SA_UNIQ_THREAD_CHECK 1
+# else
+#  define DEBUG_SA_UNIQ_THREAD_CHECK 0
+# endif
+
+
+# if DEBUG_SA_UNIQ_THREAD_CHECK
 #  include <libport/pthread.h>
 # endif
 # include <libport/instrument.hh>
@@ -42,7 +60,7 @@ namespace libport
     // Current chunk size to allocate.
     static unsigned chunk_size_;
 
-# if !defined NDEBUG
+# if DEBUG_SA_UNIQ_THREAD_CHECK
   public:
     // The only thread allow to access the static allocator.  This field is
     // public to be redefined when another thread is manipulating the
