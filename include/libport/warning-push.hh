@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -11,6 +11,10 @@
 #ifdef _MSC_VER
 
 # pragma warning( push )
+
+/*-------.
+| 40xx.  |
+`-------*/
 
 // C4003: not enough actual parameters for macro
 //
@@ -32,6 +36,11 @@
 // New comment: this is actually very important, since it does make a
 // difference when exporting the symbols in the DLLs.  If defined as
 // "class" and forward declared as "struct", then linking will fail.
+# pragma warning(disable: 4003 4061)
+
+/*-------.
+| 41xx.  |
+`-------*/
 
 // C4121: 'symbol' : alignment of a member was sensitive to packing
 // "A structure member is aligned on a memory offset whose value is not a
@@ -76,6 +85,12 @@
 // how to work around the problem, but anyway, GCC works properly on
 // this issue, so we can rely on GCC only to catch such genuine errors.
 // See also libport/msvc/pimpl/.
+# pragma warning(disable: 4121 4127 4150)
+
+
+/*-------.
+| 42xx.  |
+`-------*/
 
 // C4251: 'urbi::UList::array' : class 'std::vector<_Ty>' needs
 // to have dll-interface to be used by clients of class 'urbi::UList'
@@ -98,7 +113,11 @@
 // specifications that are ignored during compilation may need to be
 // recompiled and linked to be reused in future versions supporting
 // exception specifications.
+# pragma warning(disable: 4251 4275 4290)
 
+/*-------.
+| 43xx.  |
+`-------*/
 // C4347: behavior change: 'non_template_func()' is called instead of
 // 'templat_func()'.  According to the MSDN: "In Visual Studio .NET,
 // if you had a template function and a nontemplate function with the
@@ -144,6 +163,9 @@
 # pragma warning(disable: 4355)
 
 
+/*-------.
+| 45xx.  |
+`-------*/
 // C4503: 'identifier' : decorated name length exceeded, name was
 // truncated
 //
@@ -174,7 +196,11 @@
 //
 // #pragma warning : there is no warning number 'number'
 // this often occurs in Boost headers, and we really don't care.
+# pragma warning(disable: 4503 4512 4514 4571)
 
+/*-------.
+| 46xx.  |
+`-------*/
 // When a base class hides its copy constructor (private):
 // C4625: 'classname' : copy constructor could not be generated because
 //                              a base class copy constructor is inaccessible
@@ -195,15 +221,25 @@
 //
 //         static std::map<TypeInfo, Id> res;
 
-
 // C4668, level 4: http://msdn.microsoft.com/en-us/library/4dt9kyhy(VS.80).aspx
 //        'MACRO' is not defined as a preprocessor macro, replacing
 //                 with '0' for '#if/#elif'
+# pragma warning(disable: 4619 4625 4626 4628 4640 4668)
+
+
+/*-------.
+| 47xx.  |
+`-------*/
 
 // C4710: 'method_inline' : function not inlined
 
 // C4711: 'method' selected for inline expansion
+# pragma warning(disable:4710 4711)
 
+
+/*-------.
+| 48xx.  |
+`-------*/
 // C4800: 'type' : forcing value to bool 'true' or 'false' (performance
 //                warning)
 // "This warning is generated when a value that is not bool is assigned or
@@ -212,13 +248,6 @@
 
 // C4820: 'classname' : 'N' bytes padding added after data member 'foo'
 
-# pragma warning(disable:                       \
-                 4003 4061                      \
-                 4121 4127 4150                 \
-                 4251 4275 4290                 \
-                 4503 4512 4514 4571            \
-                 4619 4625 4626 4628 4640 4668  \
-                 4710 4711                      \
-                 4800 4820)
+# pragma warning(disable: 4800 4820)
 
 #endif

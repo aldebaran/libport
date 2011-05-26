@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -49,4 +49,24 @@
                  4640                           \
                  4826                           \
   )
+
+/*-------.
+| 49xx.  |
+`-------*/
+// vcxx8/VC/include/memory:93: warning C4996:
+//   'std::_Uninit_copy' was declared deprecated
+// vcxx8/VC/include/memory:82: note:
+//    see declaration of 'std::_Uninit_copy'
+//    Message: 'You have used a std:: construct that is not safe.
+//              See documentation on how to use the Safe Standard C++ Library'
+// boost_1_38/boost/numeric/ublas/storage.hpp:94: note:
+//    see reference to function template instantiation
+//   '_FwdIt std::uninitialized_copy<const double*,double*>(_InIt,_InIt,_FwdIt)'
+//   being compiled with
+//         [
+//             _FwdIt=double *,
+//             _InIt=const double *
+//         ]
+# pragma warning(disable: 4996)
+
 #endif
