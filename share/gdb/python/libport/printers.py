@@ -17,7 +17,7 @@ from libport.tools import *
 # the typename to make it shorter.
 @gdb_pretty_printer
 class BoostOptional(object):
-    "Pretty Printer for boost::optional (Boost.Optional)"
+    "Pretty Printer for boost::optional"
 
     regex = re.compile('^boost::optional<(.*)>$')
     @staticmethod
@@ -63,6 +63,69 @@ class BoostOptional(object):
             return "%s?()" % self.param
         else:
             return "%s?(%s)" % (self.param, self.__iter__().next())
+
+# This class is inspired from
+# http://stackoverflow.com/questions/2804641/pretty-printing-boostunordered-map-on-gdb
+@gdb_pretty_printer
+class BoostUnorderedMap:
+    "Pretty Printer for boost::unordered_map"
+
+    regex = re.compile('^boost::unordered_map<(.*)>$')
+    @staticmethod
+    def supports(type):
+        return BoostUnorderedMap.regex.search(type.tag)
+
+    class _iterator:
+        def __init__ (self, value, parent):
+            self.buckets = value['table_']['buckets_']
+            self.bucket_count = value['table_']['bucket_count_']
+            self.current_bucket = 0
+            self.pair_pointer = parent.pair_pointer
+            self.base_pointer = parent.base_pointer
+            self.node_pointer = parent.node_pointer
+            self.node = self.buckets[self.current_bucket]['next_']
+
+        def __iter__(self):
+            return self
+
+        def next(self):
+            while not self.node:
+                self.current_bucket += 1
+                if self.current_bucket >= self.bucket_count:
+                    raise StopIteration
+                self.node = self.buckets[self.current_bucket]['next_']
+
+            iterator = self.node
+            iterator = iterator.cast(self.node_pointer)
+            iterator = iterator.cast(self.base_pointer)
+            iterator = iterator.cast(self.pair_pointer)
+            iterator = iterator.dereference()
+            self.node = self.node['next_']
+
+            return (iterator['first'], iterator['second'])
+
+    def __init__(self, value):
+        self.value = value
+        type = cleanTypeOf(value)
+        type_1 = type.template_argument(0)
+        type_2 = type.template_argument(1)
+        pair = "std::pair<%s const, %s>" % (type_1, type_2)
+        self.pair_pointer = gdb.lookup_type(pair).pointer()
+        self.base_pointer = gdb.lookup_type("boost::unordered_detail::value_base< %s >" % pair).pointer()
+        self.node_pointer = gdb.lookup_type("boost::unordered_detail::hash_node<std::allocator< %s >, boost::unordered_detail::ungrouped>" % pair).pointer()
+
+    def __iter__(self):
+        return self._iterator(self.value, self)
+
+    def children(self):
+        return self.__iter__()
+
+    def display_hint(self):
+        return 'map'
+
+    def to_string(self):
+        return "{%s}" % ", ".join([ "%s: %s" % (k, v) for k, v in self.__iter__() ])
+
 
 @gdb_pretty_printer
 class LibportIntrusivePtr(object):
