@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -116,7 +116,7 @@ namespace libport
   public:
     OptionNamed(const std::string& doc,
                 const std::string& name_long,
-               char name_short = '\0');
+                char name_short = '\0');
     bool test_name(const std::string& arg) const;
 
   protected:
@@ -243,14 +243,20 @@ namespace libport
     values_type values_;
   };
 
+
   /*-------------.
   | OptionsEnd.  |
   `-------------*/
 
+  /// Gather everything that's after `--', or what is not an option.
   class LIBPORT_API OptionsEnd: public Option
   {
   public:
     typedef std::vector<std::string> values_type;
+    /// \param end_on_nonoption
+    ///    If set, also gather everything that starts with the first
+    ///    argument that does not look like an option (i.e., does not
+    ///    start with `-').
     OptionsEnd(bool end_on_nonoption = false);
     virtual bool test(cli_args_type& args);
     virtual void init();
