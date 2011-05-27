@@ -120,7 +120,7 @@ assertion fails, the values of C<a> and C<b> are reported.
 =cut
 
 # We need a fairly recent version of Perl to have powerful regexps.
-use v5.10.0;
+use 5.010_000;
 
 BEGIN
 {
