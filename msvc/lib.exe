@@ -84,13 +84,14 @@ load_msvc_env ()
 # libltdl/.libs/libltdlc.lax/loadlibrary.lib/libltdl/loaders/.libs/loadlibrary.o
 run_lib_exe ()
 {
+  local status=0
   verbose "command: $@"
-  "$lib_exe" "$@" >$tmpdir.out 2>$tmpdir.err
-  status=$?
+  "$lib_exe" "$@" >$tmpdir.out 2>$tmpdir.err || status=$?
 
   # Warnings from wine.
-  sed -e '/err:secur32:SECUR32_initSchannelSP libgnutls not found/d' \
-    <$tmpdir.err 2>&1
+  sed -e '/err:secur32:SECUR32_initSchannelSP libgnutls not found/d'    \
+      -e '/fixme:heap:HeapSetInformation (nil) 1 (nil) 0/d'             \
+    <$tmpdir.err >&2
 
   sed -e '/Microsoft (R) Library Manager/d'             \
       -e '/Copyright (C) Microsoft Corporation/d'       \

@@ -49,6 +49,25 @@ run ()
   "$@"
 }
 
+# Same as run, but neutralize Wine warnings, and Microsoft banners.
+run_filter ()
+{
+  local status=0
+  run "$@" >$stdout 2>$stderr || status=$?
+
+  # Warnings from wine.
+  sed -e '/err:secur32:SECUR32_initSchannelSP libgnutls not found/d'    \
+      -e '/fixme:heap:HeapSetInformation (nil) 1 (nil) 0/d'             \
+    <$stderr >&2
+
+  sed -e '/Microsoft (R) Windows (R) Resource Compiler/d'       \
+      -e '/Copyright (C) Microsoft Corporation/d'               \
+      -e 's/\r//g'                                              \
+      -e '/^ *$/d'                                              \
+    <$stdout
+  return $status
+}
+
 error ()
 {
   local exit="$1"
@@ -726,7 +745,7 @@ case $repath:$output in
 #include <winuser.h>
 1 RT_MANIFEST {"$(cat $output.escaped.manifest)"}
 EOF
-  run "$VCXX_BIN/rc.exe" -r "$(transform $output).auto.rc"
+  run_filter "$VCXX_BIN/rc.exe" -r "$(transform $output).auto.rc"
   cmd="\"$VCXX_BIN/$PROG\" $outargs $linkargs \"$(transform $output).auto.RES\""
   verbose "Running: $cmd"
   status=0
