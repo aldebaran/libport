@@ -120,8 +120,8 @@ while (<>)
       ($_ eq basename $source)
       ||
       # cl : Command line warning D9024 :
-      # unrecognized source file type '"'"'FOO.o'"'"', object file assumed
-      /Command line warning D9024 : unrecognized source file type '"'"'.*\.o'"'"'/
+      # unrecognized source file type 'FOO.o', object file assumed
+      /Command line warning D9024 : unrecognized source file type '.*\.o'/
       ||
       # LINK : warning LNK4068: /MACHINE not specified; defaulting to X86
       m{LINK : warning LNK4068: /MACHINE not specified; defaulting to X86}
