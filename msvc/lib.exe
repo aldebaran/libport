@@ -11,6 +11,7 @@
 PROG=lib.exe
 
 me=$(basename "$0")
+tmpdir=$(dirname "$0")
 
 stderr ()
 {
@@ -61,6 +62,44 @@ load_msvc_env ()
  return 1
 }
 
+
+# lib.exe pollutes the output with version info, which is
+# troublesome for post-processing.  For instance:
+#
+# bf-4 $ [...]c:/vcxx8/VC/bin/lib.exe /LIST 'libltdl\.libs\libltdlc.lib'
+# Microsoft (R) Library Manager Version 8.00.50727.42
+# Copyright (C) Microsoft Corporation.  All rights reserved.
+#
+# libltdl/loaders/.libs/libltdl_libltdlc_la-preopen.o
+# libltdl/.libs/libltdl_libltdlc_la-lt__alloc.o
+# libltdl/.libs/libltdl_libltdlc_la-lt__debug.o
+# libltdl/.libs/libltdl_libltdlc_la-lt_dlloader.o
+# libltdl/.libs/libltdl_libltdlc_la-lt_error.o
+# libltdl/.libs/libltdl_libltdlc_la-ltdl.o
+# libltdl/.libs/libltdl_libltdlc_la-slist.o
+# libltdl/.libs/argz.o
+# libltdl/.libs/lt__dirent.o
+# libltdl/.libs/lt__strl.o
+# libltdl/.libs/libltdlcS.o
+# libltdl/.libs/libltdlc.lax/loadlibrary.lib/libltdl/loaders/.libs/loadlibrary.o
+run_lib_exe ()
+{
+  verbose "command: $@"
+  "$lib_exe" "$@" >$tmpdir.out 2>$tmpdir.err
+  status=$?
+
+  # Warnings from wine.
+  sed -e '/err:secur32:SECUR32_initSchannelSP libgnutls not found/d' \
+    <$tmpdir.err 2>&1
+
+  sed -e '/Microsoft (R) Library Manager/d'             \
+      -e '/Copyright (C) Microsoft Corporation/d'       \
+      -e 's/\r//g'                                      \
+      -e '/^ *$/d'                                      \
+    <$tmpdir.out
+  return $status
+}
+
 load_msvc_env
 
 repaths='cygpath winepath'
@@ -80,34 +119,35 @@ lib_exe=$VCXX_BIN/$PROG
 test -x "$lib_exe" ||
   error 176 "$PROG not found in $VCXX_BIN"
 
+: ${TMPDIR=/tmp}
+tmpdir=$TMPDIR/$me.$$
+case $VERBOSE in
+  (x) ;;
+  (*) trap "exit=\$?; rm -rf $tmpdir; exit \$exit" 0;;
+esac
+mkdir -p $tmpdir
+
 outargs=/nologo
 linkargs=
-got_output_arg=false
-source=
-transform()
-{
-  # winepath -w $1
-  echo "$1"
-}
 
 case $1 in
   (cru)
     shift
-    outargs+=" /OUT:$(transform "$1")" ; shift
+    outargs+=" /OUT:$1" ; shift
     ;;
   (x)  #gnah, we have to remove them one by one
     shift
     lib=$($repath -w $1)
-    for f in $("$lib_exe" /LIST $lib |tail -n +4 |sed -e 's/\r//g'); do
+    for f in $(run_lib_exe /LIST $lib); do
       mkdir -p $(dirname "$f")
-      "$lib_exe" $outargs "/EXTRACT:$f" "/OUT:$f" $lib
+      run_lib_exe $outargs "/EXTRACT:$f" "/OUT:$f" $lib
     done
     exit
     ;;
  (t)
     shift
     lib=$($repath -w $1)
-    "$lib_exe" $outargs /LIST $lib |tail -n +4 |sed -e 's/\r//g'
+    run_lib_exe $outargs /LIST $lib
     exit
     ;;
 esac
@@ -116,15 +156,14 @@ while ! test -z $1; do
   larg=
   carg=
   case $1 in
-    (-L*)   larg=/LIBPATH:$(transform "${1#-L}") ;;
+    (-L*)   larg=/LIBPATH:${1#-L} ;;
     (-l*)   larg=${1#-l}.lib ;;
     (*.lib) larg=$1;;
-    (*)     carg=$1;; # $(echo $1 | sed -e 's@/@\\@g');;
+    (*)     carg=$1;;
   esac
   outargs+=" $carg"
   linkargs+=" $larg"
   shift
 done
 
-verbose "command: \"$lib_exe\" $outargs $linkargs"
-"$lib_exe" $outargs $linkargs
+run_lib_exe $outargs $linkargs
