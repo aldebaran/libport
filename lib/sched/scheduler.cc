@@ -347,7 +347,12 @@ namespace sched
                     *job, job->terminated() ? "" : "not ", job->state_get());
       Coro* current_coro = job->coro_get();
       if (job->terminated())
+      {
+        // The deadline is set to be an hint for the scheduler.
+        if (job->deadline_get() == SCHED_IMMEDIATE)
+          deadline_ = SCHED_IMMEDIATE;
 	job = 0;
+      }
       else
         switch (job->state_get())
 	{

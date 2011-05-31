@@ -370,8 +370,11 @@ namespace sched
     /// scheduler.
     job_state state_;
 
-    /// Current job deadline. The deadline is only meaningful when the
-    /// job state is \c sleeping.
+    /// Current job deadline. When the job state is \c sleeping, the
+    /// deadline represents the time before waking up the job. When the job
+    /// is a \c zombie the deadline is an hint for the scheduler.  A 0
+    /// deadline (immediate) indicate warn the scheduler that the world may
+    /// have changed after the death of this job.
     libport::utime_t deadline_;
 
     /// The last time we have been frozen (in system time), or 0 if we
