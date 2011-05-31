@@ -18,13 +18,14 @@ include build-aux/make/m4sh.mk
 TESTS =
 include build-aux/make/check.mk
 
-ACLOCAL_AMFLAGS = -I build-aux/m4 -I build-aux
+ACLOCAL_AMFLAGS = -I build-aux/m4
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status $@
 
 EXTRA_DIST +=					\
   bootstrap					\
   LICENSE
+VERSIONIFYFLAGS += -vvv
 
 include bin/local.mk
 include doc/local.mk

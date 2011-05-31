@@ -251,7 +251,6 @@ EXTRA_DIST += include/libport/format.hh.gen
 	$(AM_V_at)$(top_srcdir)/build-aux/bin/move-if-change --color $@.tmp $@
 	$(AM_V_at)touch $@
 
-# revision.hh
-include/libport/revision.hh: $(top_srcdir)/.version $(VERSIONIFY)
-	$(AM_V_GEN) $(VERSIONIFY_RUN) --prefix=LIBPORT_PACKAGE_ --header=$@
-
+# revision.hh.
+VERSIONIFYFLAGS += \
+  --prefix=LIBPORT_PACKAGE_ --header=include/libport/revision.hh
