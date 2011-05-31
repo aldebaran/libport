@@ -91,8 +91,9 @@ dist_lib_libport_libport@LIBSFX@_la_SOURCES =   \
 
 nodist_lib_libport_libport@LIBSFX@_la_SOURCES =	\
   lib/libport/revision-stub.hh
+lib/libport/revision-stub.hh:| $(VERSIONIFY_CACHE)
 BUILT_SOURCES += $(nodist_lib_libport_libport@LIBSFX@_la_SOURCES)
-VERSIONIFYFLAGS += \
+VERSIONIFY_CACHE_RUN += \
   --prefix=LIBPORT_PACKAGE_INFO_ --stub=lib/libport/revision-stub.hh
 
 # These are broken and someone will have to fix them...
@@ -103,7 +104,7 @@ VERSIONIFYFLAGS += \
 # Resolve stubs in libport.
 all-local: lib/libport/libport.unstub.stamp
 lib/libport/libport.unstub.stamp: lib/libport/libport$(LIBSFX).la $(VERSIONIFY_CACHE) $(VERSIONIFY)
-	$(AT_V_PATCH) $(VERSIONIFY_RUN) $(if $(V:0=),-v,-q) --resolve=$<
+	$(AT_V_PATCH) $(VERSIONIFY_RUN) --resolve=$<
 
 # Make sure nobody uses config.h instead of libport/config.h.
 #maintainer-check:

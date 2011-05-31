@@ -54,9 +54,8 @@ CLEANFILES += $(PDF)
 
 REVISION_FILE = revision.sty
 CLEANFILES += $(REVISION_FILE)
-BUILT_SOURCES += $(REVISION_FILE)
-$(REVISION_FILE):
-	$(VERSIONIFY) --directory --cache=$(top_srcdir)/.version --latex=$@
+$(REVISION_FILE): | $(VERSIONIFY_CACHE)
+VERSIONIFY_CACHE_RUN += --latex=$@
 
 libport_sources =				\
   $(call ls_files,doc/*.cc)			\

@@ -25,7 +25,6 @@ libtool: $(LIBTOOL_DEPS)
 EXTRA_DIST +=					\
   bootstrap					\
   LICENSE
-VERSIONIFYFLAGS += -vvv
 
 include bin/local.mk
 include doc/local.mk

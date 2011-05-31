@@ -252,5 +252,6 @@ EXTRA_DIST += include/libport/format.hh.gen
 	$(AM_V_at)touch $@
 
 # revision.hh.
-VERSIONIFYFLAGS += \
+VERSIONIFY_CACHE_RUN +=							\
   --prefix=LIBPORT_PACKAGE_ --header=include/libport/revision.hh
+include/libport/revision.hh: | $(VERSIONIFY_CACHE)
