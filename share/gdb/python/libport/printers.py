@@ -146,7 +146,7 @@ class LibportIntrusivePtr(object):
     def to_string(self):
         # should used param.pointer().tag here, but this returns None :(
         val = self.pointer()
-        vtype = val.dynamic_type
+        vtype = dynamicType(val)
         if vtype != None and vtype.target() != None:
             return '(%s) %s' % (vtype, val)
         else:
@@ -200,24 +200,33 @@ class LibportVector(object):
                 raise StopIteration
 
     def __iter__(self):
+        return self._iterator(*self.array())
+
+    @require_gdb_version(']... 7.2]')
+    def array(self):
+        """Return the raw array behind libport::Vector typed with the
+        current size."""
         size = self.value['size_']
         data = self.value['data_']
-        tab = None
+        return data, size
+
+    @require_gdb_version(']7.2 ...[')
+    def array(self):
+        size = self.value['size_']
+        data = self.value['data_']
         if size > 0:
             # Strangely we need to dereference the pointer before making the
             # cast to the array type.
-            tab = data.dereference().cast(data.type.target().array(size - 1))
-        return self._iterator(tab, size)
+            data = data.dereference().cast(data.type.target().array(size - 1))
+        return data, size
+
 
     def display_hint(self):
         return 'array'
 
     def to_string(self):
-        tab = self.__iter__().tab
-        if tab:
-            return "%s" % tab
-        else:
-            return "{}"
+        it = self.__iter__()
+        return "{%s}" % ", ".join([ str(i) for i in it ])
 
 
 gdb_register_commands()

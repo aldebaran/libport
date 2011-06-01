@@ -35,7 +35,7 @@ class SchedJob(object):
         parent = self.value['parent_']
         if parent:
             child = " (child of %s)" % parent
-        state = extract_state.match(str(self.value['state_']))
+        state = self.extract_state.match(str(self.value['state_']))
         if state:
             state = state.group('state')
         else:
