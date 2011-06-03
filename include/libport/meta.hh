@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -10,6 +10,8 @@
 
 #ifndef LIBPORT_META_HH
 # define LIBPORT_META_HH
+
+# include <boost/tr1/type_traits.hpp>
 
 # include <libport/errors.hh>
 
@@ -113,6 +115,89 @@ namespace libport
         };
     };
 
+     // Not in boost yet :(
+     template<typename T> struct member_function_0_trait
+      {
+        typedef False is_valid;
+      };
+      template<typename T, typename R>
+      struct member_function_0_trait<R (T::*)()>
+      {
+        typedef True is_valid;
+        typedef True is_member_function;
+        typedef T class_type;
+        typedef R return_type;
+        typedef typename std::tr1::remove_const<typename std::tr1::remove_reference<R>::type >::type
+          base_return_type;
+      };
+      template<typename T, typename R>
+      struct member_function_0_trait<R (T::*)() const>
+      {
+        typedef True is_valid;
+        typedef True is_member_function;
+        typedef T class_type;
+        typedef R return_type;
+        typedef typename
+          std::tr1::remove_const<
+            typename std::tr1::remove_reference<R>::type >::type
+          base_return_type;
+      };
+      template<typename T, typename R>
+      struct member_function_0_trait<R (*)(T)>
+      {
+        typedef True is_valid;
+        typedef False is_member_function;
+        typedef T class_type;
+        typedef R return_type;
+        typedef typename
+          std::tr1::remove_const<
+            typename std::tr1::remove_reference<R>::type >::type
+          base_return_type;
+      };
+
+      template<typename T> struct member_function_1_trait
+      {
+        typedef False is_valid;
+      };
+      template<typename T, typename R, typename P1>
+      struct member_function_1_trait<R (T::*)(P1)>
+      {
+        typedef True is_valid;
+        typedef True is_member_function;
+        typedef T class_type;
+        typedef R return_type;
+        typedef P1 argument_1_type;
+        typedef typename std::tr1::remove_const<typename std::tr1::remove_reference<P1>::type >::type
+          base_argument_1_type;
+        typedef typename std::tr1::remove_const<typename std::tr1::remove_reference<R>::type >::type
+          base_return_type;
+      };
+      template<typename T, typename R, typename P1>
+      struct member_function_1_trait<R (T::*)(P1) const>
+      {
+        typedef True is_valid;
+        typedef True is_member_function;
+        typedef T class_type;
+        typedef R return_type;
+        typedef P1 argument_1_type;
+        typedef typename std::tr1::remove_const<typename std::tr1::remove_reference<P1>::type >::type
+          base_argument_1_type;
+        typedef typename std::tr1::remove_const<typename std::tr1::remove_reference<R>::type >::type
+          base_return_type;
+      };
+      template<typename T, typename R, typename P1>
+      struct member_function_1_trait<R (*)(T, P1)>
+      {
+        typedef True is_valid;
+        typedef False is_member_function;
+        typedef T class_type;
+        typedef R return_type;
+        typedef P1 argument_1_type;
+        typedef typename std::tr1::remove_const<typename std::tr1::remove_reference<P1>::type >::type
+          base_argument_1_type;
+        typedef typename std::tr1::remove_const<typename std::tr1::remove_reference<R>::type >::type
+          base_return_type;
+      };
   }
 }
 
