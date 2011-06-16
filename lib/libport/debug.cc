@@ -146,8 +146,8 @@ namespace libport
       int order = -1;
       bool value = default_category_state;
       foreach (patterns_type::value_type& s, patterns())
-        if (match(s.first, name)
-            && order < int(s.second.second))
+        if (order < int(s.second.second)
+            && match(s.first, name))
         {
           value = s.second.first;
           order = s.second.second;
@@ -226,21 +226,17 @@ namespace libport
         v.second = default_category_state;
 
       std::string s(list); // Do not pass temporary to make_tokenizer.
-      tokenizer_type t = make_tokenizer(s, ",");
-      foreach (const std::string& elem, t)
-      {
-        Symbol pattern(elem);
+      foreach (const std::string& elem, make_tokenizer(s, ","))
         switch (state)
         {
-          case ENABLE:
-          case DISABLE:
-            enable_category(pattern, state == ENABLE);
-            break;
-          case AUTO:
-            auto_category(pattern);
-            break;
+        case ENABLE:
+        case DISABLE:
+          enable_category(Symbol(elem), state == ENABLE);
+          break;
+        case AUTO:
+          auto_category(Symbol(elem));
+          break;
         }
-      }
     }
   }
 
