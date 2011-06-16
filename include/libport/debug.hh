@@ -372,9 +372,9 @@ namespace libport
     (GD_DEBUGGER, GD_ENABLED(Level));                                   \
   if (GD_DEBUGGER)                                                      \
   {                                                                     \
-  if (GD_ENABLED(Level))                                                \
-    GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                       \
-                      GD_FUNCTION, __FILE__, __LINE__);                 \
+    if (GD_ENABLED(Level))                                              \
+      GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                     \
+                        GD_FUNCTION, __FILE__, __LINE__);               \
   }                                                                     \
   else                                                                  \
     ::libport::debug::uninitialized_msg(Message);                       \
@@ -386,23 +386,20 @@ namespace libport
 
 #  define GD_CATEGORY_GET() _libport_gd_category
 
-#  define GD_CATEGORY(Name)                                             \
+#  define GD_CATEGORY(Cat)                                              \
   static ::libport::debug::category_type GD_CATEGORY_GET() =            \
-    ::libport::debug::add_category(::libport::debug::category_type(#Name))
+    ::libport::debug::add_category(::libport::debug::category_type(#Cat))
 
-// #  define GD_GET_CATEGORY(Name)
-//   _gd_category_##Name
+#  define GD_DISABLE_CATEGORY(Cat)                      \
+  static int _gd_category_disable_ ## __LINE__ =        \
+    ::libport::debug::disable_category(::libport::debug::category_type(#Cat))
 
-#  define GD_DISABLE_CATEGORY(Cat)                                      \
-  static int _gd_category_disable_##Cat =                               \
-    ::libport::debug::disable_category(GD_GET_CATEGORY(Cat))
+#  define GD_ENABLE_CATEGORY(Cat)               \
+  static int _gd_category_enable_ ## __LINE__ = \
+    ::libport::debug::enable_category(::libport::debug::category_type(#Cat))
 
-#  define GD_ENABLE_CATEGORY(Cat)                \
-  static int _gd_category_enable_##Cat =         \
-    ::libport::debug::enable_category(GD_GET_CATEGORY(Cat))
-
-// #  define GD_CHECK_CATEGORY(Cat)
-//   GD_DEBUGGER->test_category(GD_GET_CATEGORY(Cat))
+#  define GD_CHECK_CATEGORY(Cat)                \
+  ::libport::debug::test_category(::libport::debug::category_type(#Cat))
 
 /*--------.
 | Level.  |
@@ -474,9 +471,9 @@ namespace libport
 
 
 
-/*=============================================\
-| Bouncing macros, do not need to be undefined |
-\=============================================*/
+/*================================================\
+| Macros independent of enabled/disabled status.  |
+\================================================*/
 
 /*-------------.
 | Assertions.  |
