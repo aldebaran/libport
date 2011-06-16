@@ -139,25 +139,31 @@ namespace libport
       }
     }
 
-    // New category.
-    Symbol
-    add_category(Symbol name)
+    /// Given a category name, see whether it should be enabled or disabled.
+    /// Do not store it in the list of declared categories.
+    static
+    bool
+    category_name_enabled(category_type name)
     {
       int order = -1;
-      bool value = default_category_state;
+      bool res = default_category_state;
       foreach (patterns_type::value_type& s, patterns())
         if (order < int(s.second.second)
             && match(s.first, name))
         {
-          value = s.second.first;
+          res = s.second.first;
           order = s.second.second;
         }
+      return res;
+    }
 
-      categories()[name] = value;
-
+    // New category.
+    category_type
+    add_category(category_type name)
+    {
+      categories()[name] = category_name_enabled(name);
       categories_largest() =
         std::max(categories_largest(), name.name_get().size());
-
       return name;
     }
 
@@ -193,48 +199,39 @@ namespace libport
 
     bool test_category(category_type name)
     {
-      return categories()[name];
+      return
+        libport::has(categories(), name)
+        ? categories()[name]
+        : category_name_enabled(name);
     }
 
-    typedef enum
-    {
-      ENABLE,
-      DISABLE,
-      AUTO,
-    } category_modifier_type;
-
-    /// Enable/disable categories, already seen or future.
-    ///
-    /// Called by GD_INIT.
-    ///
-    /// \param list  the value of the environment var (GD_CATEGORY, etc.).
-    /// \param state the associated state (AUTO, ENABLE, DISABLE).
-    static
     void
-    set_category_state(const char* list, const category_modifier_type state)
+    set_categories_state(const std::string& specs,
+                         const category_modifier_type state)
     {
       // If the mode is "AUTO", then if the first specs is to enable
       // ("-...") then the default is to enable, otherwise disable.
       // If the mode if not AUTO, then the default is the converse of
       // the mode: ENABLE -> false, and DISABLE => true.
       default_category_state =
-        state == AUTO ? (*list == '-') : (state != ENABLE);
+        state == AUTO
+        ? (!specs.empty() && specs[0] == '-')
+        : (state != ENABLE);
 
       // Set all the existing categories to the default behavior
       // before running the per-pattern tests.
       foreach (categories_type::value_type& v, categories())
         v.second = default_category_state;
 
-      std::string s(list); // Do not pass temporary to make_tokenizer.
-      foreach (const std::string& elem, make_tokenizer(s, ","))
+      foreach (const std::string& elem, make_tokenizer(specs, ","))
         switch (state)
         {
         case ENABLE:
         case DISABLE:
-          enable_category(Symbol(elem), state == ENABLE);
+          enable_category(category_type(elem), state == ENABLE);
           break;
         case AUTO:
-          auto_category(Symbol(elem));
+          auto_category(category_type(elem));
           break;
         }
     }
@@ -246,13 +243,13 @@ namespace libport
   {
     // Process enabled/disabled/auto categories in environment.
     if (const char* cp = getenv("GD_CATEGORY"))
-      debug::set_category_state(cp, debug::AUTO);
+      debug::set_categories_state(cp, debug::AUTO);
     else
     {
       if (const char* cp = getenv("GD_ENABLE_CATEGORY"))
-        debug::set_category_state(cp, debug::ENABLE);
+        debug::set_categories_state(cp, debug::ENABLE);
       if (const char* cp = getenv("GD_DISABLE_CATEGORY"))
-        debug::set_category_state(cp, debug::DISABLE);
+        debug::set_categories_state(cp, debug::DISABLE);
     }
 
     if (const char* lvl_c = getenv("GD_LEVEL"))

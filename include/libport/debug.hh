@@ -39,7 +39,7 @@ namespace libport
     LIBPORT_API void uninitialized_msg(const std::string& msg);
 
     /// All the known categories, enabled or not.
-    categories_type& categories();
+    LIBPORT_API categories_type& categories();
 
     /// Create a new category.
     /// Enabled or disabled depending on the environment.
@@ -53,10 +53,28 @@ namespace libport
     /// \return dummy value.
     LIBPORT_API int disable_category(category_type pattern);
 
+    /// Whether name is enabled.
+    LIBPORT_API bool test_category(category_type name);
+
+    typedef enum
+    {
+      ENABLE,
+      DISABLE,
+      AUTO,
+    } category_modifier_type;
+
+    /// Enable/disable all the categories (seen/future) based on \a specs.
+    ///
+    /// \param specs  a comma-separated of specification (i.e.,
+    ///               category patterns with an optional leading + or -).
+    /// \param state  the associated state (AUTO, ENABLE, DISABLE).
+    LIBPORT_API
+    void
+    set_categories_state(const std::string& list,
+                         const category_modifier_type specs);
+
     /// Reclaim the allocated memory.
-    /// \return dummy value.
     LIBPORT_API void clear();
-    bool test_category(category_type name);
   }
 
   struct LIBPORT_API local_data
