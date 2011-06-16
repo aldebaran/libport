@@ -41,6 +41,8 @@ GD_CATEGORY(Libport.Debug);
 
 namespace libport
 {
+
+
   LIBPORT_API boost::function0<local_data&> debugger_data;
   LIBPORT_API Debug* debugger = 0;
   LIBPORT_API Debug::levels::Level Debug::filter_(levels::log);
@@ -95,6 +97,11 @@ namespace libport
       return categories;
     }
 
+
+    typedef std::pair<bool, unsigned> pattern_infos_type;
+    typedef boost::unordered_map<category_type, pattern_infos_type>
+      patterns_type;
+
     namespace
     {
 
@@ -126,13 +133,13 @@ namespace libport
 
       inline
       bool
-      match(Symbol globbing, Symbol string)
+      match(category_type globbing, category_type string)
       {
         return fnmatch(globbing.name_get(), string.name_get()) == 0;
       }
     }
 
-    /// Add a new category, look if it matches a pattern.
+    // New category.
     Symbol
     add_category(Symbol name)
     {
@@ -154,9 +161,8 @@ namespace libport
       return name;
     }
 
-    /// Add a new category pattern.
     int
-    enable_category(Symbol pattern, bool enabled)
+    enable_category(category_type pattern, bool enabled)
     {
       patterns()[pattern] = std::make_pair(enabled, current_pattern());
       foreach (categories_type::value_type& s, categories())
@@ -166,16 +172,15 @@ namespace libport
       return 42;
     }
 
-    // Disable a new category pattern.
     int
-    disable_category(Symbol pattern)
+    disable_category(category_type pattern)
     {
       return enable_category(pattern, false);
     }
 
     // Enable/Disable a new category pattern with modifier.
-    int
-    auto_category(Symbol pattern)
+    static int
+    auto_category(category_type pattern)
     {
       std::string p = pattern.name_get();
       char modifier = p[0];
@@ -183,10 +188,10 @@ namespace libport
         p = p.substr(1);
       else
         modifier = '+';
-      return enable_category(Symbol(p), modifier == '+');
+      return enable_category(category_type(p), modifier == '+');
     }
 
-    bool test_category(Symbol name)
+    bool test_category(category_type name)
     {
       return categories()[name];
     }

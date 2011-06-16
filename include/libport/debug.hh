@@ -34,20 +34,27 @@ namespace libport
   {
     typedef Symbol category_type;
     typedef boost::unordered_map<category_type, bool> categories_type;
-    typedef std::pair<bool, unsigned> pattern_infos_type;
-    typedef boost::unordered_map<category_type, pattern_infos_type>
-      patterns_type;
 
     /// Report \a msg, completely bypassing Libport.Debug.
     LIBPORT_API void uninitialized_msg(const std::string& msg);
 
+    /// All the known categories, enabled or not.
     categories_type& categories();
+
+    /// Create a new category.
+    /// Enabled or disabled depending on the environment.
     LIBPORT_API category_type add_category(category_type name);
-    LIBPORT_API int enable_category(category_type name, bool enabled = true);
-    LIBPORT_API int disable_category(category_type name);
-    LIBPORT_API int auto_category(category_type pattern);
+
+    /// Enable/disable all the categories that match \a pattern.
+    /// \return dummy value.
+    LIBPORT_API int enable_category(category_type pattern, bool enabled = true);
+
+    /// Disable all the categories matching \a name.
+    /// \return dummy value.
+    LIBPORT_API int disable_category(category_type pattern);
 
     /// Reclaim the allocated memory.
+    /// \return dummy value.
     LIBPORT_API void clear();
     bool test_category(category_type name);
   }
@@ -348,21 +355,18 @@ namespace libport
 | Print.  |
 `--------*/
 
-#  define GD_MESSAGE_(Type, Level, Message)                             \
-  do                                                                    \
-  {                                                                     \
-    if (GD_DEBUGGER)                                                    \
-    {                                                                   \
-      if (GD_ENABLED(Level))                                            \
-        GD_DEBUGGER->debug(Message,                                     \
-                           ::libport::Debug::types::Type,               \
-                           GD_CATEGORY_GET(),                           \
-                           GD_FUNCTION, __FILE__, __LINE__);            \
-    }                                                                   \
-    else                                                                \
-      ::libport::debug::uninitialized_msg(Message);                     \
-  }                                                                     \
-  while (0)                                                             \
+#  define GD_MESSAGE_(Type, Level, Message)                     \
+  do                                                            \
+  {                                                             \
+    if (!GD_DEBUGGER)                                           \
+      ::libport::debug::uninitialized_msg(Message);             \
+    else if (GD_ENABLED(Level))                                 \
+      GD_DEBUGGER->debug(Message,                               \
+                         ::libport::Debug::types::Type,         \
+                         GD_CATEGORY_GET(),                     \
+                         GD_FUNCTION, __FILE__, __LINE__);      \
+  }                                                             \
+  while (false)
 
 
 // PUSH
@@ -370,14 +374,11 @@ namespace libport
 #  define GD_PUSH_(Message, Level)                                      \
   libport::Debug::Indent BOOST_PP_CAT(_gd_indent_, __LINE__)            \
     (GD_DEBUGGER, GD_ENABLED(Level));                                   \
-  if (GD_DEBUGGER)                                                      \
-  {                                                                     \
-    if (GD_ENABLED(Level))                                              \
-      GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                     \
-                        GD_FUNCTION, __FILE__, __LINE__);               \
-  }                                                                     \
-  else                                                                  \
+  if (!GD_DEBUGGER)                                                     \
     ::libport::debug::uninitialized_msg(Message);                       \
+  else if (GD_ENABLED(Level))                                           \
+    GD_DEBUGGER->push(GD_CATEGORY_GET(), Message,                       \
+                      GD_FUNCTION, __FILE__, __LINE__)
 
 
 /*-------------.
