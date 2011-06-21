@@ -36,8 +36,9 @@ namespace libport
       , protected libport::Lockable
     {
     public:
-      SocketImplBase()
-        : current_(-1)
+      SocketImplBase(boost::asio::io_service& io)
+        : BaseSocket(io)
+        , current_(-1)
         , pending_(false)
       {}
       /// Return ammount of data in write buffer

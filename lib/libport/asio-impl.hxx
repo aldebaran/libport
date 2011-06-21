@@ -69,8 +69,9 @@ namespace libport
     class SocketImpl : public SocketImplBase
     {
     public:
-      SocketImpl()
-        : base_(0)
+      SocketImpl(boost::asio::io_service& io)
+        : SocketImplBase(io)
+        , base_(0)
         , bytesReceived_(0)
         , bytesSent_(0)
       {}
@@ -150,7 +151,7 @@ namespace libport
       : public BaseSocket
     {
     public:
-      AcceptorImpl(Acceptor* base);
+      AcceptorImpl(boost::asio::io_service& io, Acceptor* base);
       ~AcceptorImpl();
       bool isConnected() const
       {
@@ -184,8 +185,11 @@ namespace libport
     };
 
     template<class Acceptor>
-    AcceptorImpl<Acceptor>::AcceptorImpl(Acceptor* base)
-      : base_(base)
+    AcceptorImpl<Acceptor>::AcceptorImpl(
+      boost::asio::io_service& io,
+      Acceptor* base)
+      : BaseSocket(io)
+      , base_(base)
     {
     }
 
@@ -553,7 +557,7 @@ namespace libport
     BaseSocket*
     SocketImpl<Stream>::create(Stream*s)
     {
-      SocketImpl<Stream>* bs = new SocketImpl<Stream>;
+      SocketImpl<Stream>* bs = new SocketImpl<Stream>(s->get_io_service());
       bs->base_ = s;
       return bs;
     }
@@ -749,7 +753,7 @@ namespace libport
       return se.code();
     }
     BaseSocket* impl =
-      new netdetail::AcceptorImpl<typename Proto::acceptor>(a);
+      new netdetail::AcceptorImpl<typename Proto::acceptor>(get_io_service(), a);
     setBase(impl);
     netdetail::SocketImpl<typename Proto::socket>::acceptOne(
       get_io_service(), f, a, bf);

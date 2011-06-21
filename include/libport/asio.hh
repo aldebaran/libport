@@ -59,13 +59,6 @@ namespace libport
   static const native_handle_type invalid_handle = -1;
 #endif
 
-  class LIBPORT_API AsioDestructible
-    : public Destructible
-  {
-  protected:
-    virtual void doDestroy();
-  };
-
   //FIXME: extend to provide a way to ensure workerThread not started.
   /** Get the io_service handling all asynchronous operations.
    *
@@ -79,6 +72,23 @@ namespace libport
   /// Get the handle associated to io_service polling thread.
   LIBPORT_API pthread_t get_io_service_poll_thread();
 
+
+  class LIBPORT_API AsioDestructible
+    : public Destructible
+  {
+  public:
+    AsioDestructible(boost::asio::io_service& io);
+
+    boost::asio::io_service& get_io_service();
+
+  protected:
+    virtual void doDestroy();
+
+    // This is necessary for destructing the object.
+  protected:
+    boost::asio::io_service& io_;
+  };
+
   /** BaseSocket class.
    *
    * This class has a callback-based API: onReadFunc() and onErrorFunc().
@@ -90,7 +100,7 @@ namespace libport
     : public AsioDestructible
   {
   public:
-    BaseSocket();
+    BaseSocket(boost::asio::io_service& io);
     virtual ~BaseSocket(){}
     libport::Finally deletor;
     /// Write data asynchronously to the socket.
@@ -396,7 +406,6 @@ namespace libport
      * the asio worker thread
      */
     static void sleep(useconds_t duration);
-    boost::asio::io_service& get_io_service();
 
    /** Set whether this socket will automatically read.
     * Default is on. It can only be disabled before connecting the Socket, but
@@ -420,7 +429,6 @@ namespace libport
     template<typename Proto, typename BaseFactory> boost::system::error_code
     connectProto(const std::string& host, const std::string& port,
                  useconds_t timeout, bool async, BaseFactory bf);
-    boost::asio::io_service& io_;
     bool autostart_reader_; //autoread state flag
   };
 #undef CHECK

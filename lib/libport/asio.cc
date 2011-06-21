@@ -35,8 +35,10 @@ namespace libport
     class PosixIO: public SocketImplBase
     {
     public:
-      PosixIO(boost::asio::io_service& io): fd(-1), io_(io) {};
-      PosixIO(boost::asio::io_service& io, int fd) : fd(fd), io_(io) {}
+      PosixIO(boost::asio::io_service& io)
+        : SocketImplBase(io), fd(-1) {};
+      PosixIO(boost::asio::io_service& io, int fd)
+        : SocketImplBase(io), fd(fd) {}
       ~PosixIO() { close();}
       void write(const void* data, size_t length);
       bool isConnected() const {return fd != -1;}
@@ -58,7 +60,6 @@ namespace libport
       void readOne();
     private:
       int fd;
-      boost::asio::io_service& io_;
     };
 
     void PosixIO::write(const void* data, size_t length)
@@ -309,18 +310,11 @@ namespace libport
     }
   }
 
-  BaseSocket::BaseSocket()
-  : readOnce(false)
+  BaseSocket::BaseSocket(boost::asio::io_service& io)
+    : AsioDestructible(io)
+    , readOnce(false)
   {
   }
-
-  boost::asio::io_service&
-  Socket::get_io_service()
-  {
-    return io_;
-  }
-
-
 
   boost::system::error_code
   Socket::connect(const std::string& host,
@@ -372,6 +366,17 @@ namespace libport
                  bool udp)
   {
     return listen(f, host, string_cast(port), udp);
+  }
+
+  AsioDestructible::AsioDestructible(boost::asio::io_service& io)
+    : io_(io)
+  {
+  }
+
+  boost::asio::io_service&
+  AsioDestructible::get_io_service()
+  {
+    return io_;
   }
 
   void
@@ -470,8 +475,8 @@ namespace libport
   `---------*/
 
   Socket::Socket(boost::asio::io_service& io)
-    : base_(0)
-    , io_(io)
+    : AsioDestructible(io)
+    , base_(0)
     , autostart_reader_(true)
   {
     GD_FINFO_TRACE("%p->Socket::Socket", this);
