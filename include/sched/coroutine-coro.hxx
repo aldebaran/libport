@@ -53,10 +53,14 @@ coroutine_new(size_t stack_size)
   GD_CATEGORY(Sched.Coroutine);
   Coro* res = Coro_new();
   GD_FINFO_TRACE("Create coroutine: %s.", res);
+  // Coro_allocStackIfNeeded used these values to allocate stack space and
+  // add 16 bytes for its meta-data.  As we use power of 2 for stack space,
+  // we don't want to allocate 2^x + 16, because this may be a source of
+  // inefficiency.
   Coro_setStackSize_(res,
-                     (stack_size
-                      ? stack_size
-                      : sched::configuration.default_stack_size));
+                     (stack_size > 16
+                      ? stack_size - 16
+                      : sched::configuration.default_stack_size - 16));
   if (coroutine_new_hook)
     coroutine_new_hook(res);
   return res;
