@@ -59,14 +59,14 @@ namespace sched
   `------*/
 
   inline void
-  Job::init_common()
+  Job::init_common(size_t stack_size)
   {
     state_ = to_start;
     frozen_since_ = 0;
     time_shift_ = 0;
-    coro_ = coroutine_new();
+    coro_ = coroutine_new(stack_size);
     non_interruptible_ = false;
-    check_stack_space_ = true;
+    check_stack_space_ = stack_size == 0;
     alive_jobs_++;
   }
 
@@ -79,11 +79,11 @@ namespace sched
   }
 
   inline
-  Job::Job(const Job& model)
+  Job::Job(const Job& model, size_t stack_size)
     : RefCounted()
     , scheduler_(model.scheduler_)
   {
-    init_common();
+    init_common(stack_size);
     time_shift_ = model.time_shift_;
   }
 

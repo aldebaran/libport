@@ -97,7 +97,7 @@ namespace sched
     ///
     /// \param name The name of the new job, or a name derived from \a model
     ///        if none is provided.
-    Job(const Job& model);
+    Job(const Job& model, size_t stack_size = 0);
 
     /// Create a new job.
     ///
@@ -406,7 +406,7 @@ namespace sched
     void resume_scheduler_();
 
     /// Helper functions for constructors.
-    void init_common();
+    void init_common(size_t stack_size = 0);
 
     /// The next exception to be propagated if any.
     exception_ptr pending_exception_;
