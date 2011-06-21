@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -31,26 +31,31 @@ namespace libport
 
   inline
   pthread_t
-  startThread(boost::function0<void> func)
+  startThread(boost::function0<void> func, size_t stack_size)
   {
     boost::function0<void> *cp = new boost::function0<void>(func);
+    pthread_attr_t attr;
     pthread_t pt;
-    PTHREAD_RUN(pthread_create, &pt, 0, &_startThread, cp);
+    PTHREAD_RUN(pthread_attr_init, &attr);
+    if (stack_size != 0)
+      PTHREAD_RUN(pthread_attr_setstacksize, &attr, stack_size);
+    PTHREAD_RUN(pthread_create, &pt, &attr, &_startThread, cp);
+    PTHREAD_RUN(pthread_attr_destroy, &attr);
     return pt;
   }
 
   template<class T>
   pthread_t
-  startThread(T* obj)
+  startThread(T* obj, size_t stack_size)
   {
-    return startThread(boost::bind(&T::operator(), obj));
+    return startThread(boost::bind(&T::operator(), obj), stack_size);
   }
 
   template<class T>
   pthread_t
-  startThread(T * obj, void (T::*func)(void))
+  startThread(T * obj, void (T::*func)(void), size_t stack_size)
   {
-    return startThread(boost::bind(func, obj));
+    return startThread(boost::bind(func, obj), stack_size);
   }
 
   /*---------------.

@@ -26,8 +26,18 @@
 # endif
 
 # if defined WIN32
+
+#  define PTHREAD_STACK_MIN 16384
+
 typedef DWORD pthread_t;
-typedef void pthread_attr_t;
+// The win32 implementation reproduce the implementation of the
+// pthread_attr_setstacksize
+typedef size_t pthread_attr_t;
+
+int pthread_attr_init(pthread_attr_t *attr);
+int pthread_attr_destroy(pthread_attr_t *attr);
+
+int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize);
 
 pthread_t pthread_self() throw ();
 

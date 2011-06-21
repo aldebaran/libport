@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -16,6 +16,29 @@
 
 typedef HANDLE (WINAPI *OT)(DWORD, BOOL, DWORD);
 
+inline int
+pthread_attr_init(pthread_attr_t *attr)
+{
+  *attr = 0; /* default value to unknown stack value */
+  return 0;
+}
+
+inline int
+pthread_attr_destroy(pthread_attr_t *)
+{
+  return 0;
+}
+
+
+inline int
+pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
+{
+  if (stacksize < PTHREAD_STACK_MIN)
+    return EINVAL;
+  *attr = stacksize;
+  return 0;
+}
+
 inline pthread_t
 pthread_self() throw ()
 {
@@ -23,10 +46,14 @@ pthread_self() throw ()
 }
 
 inline int
-pthread_create(pthread_t *thread, const pthread_attr_t *,
+pthread_create(pthread_t *thread, const pthread_attr_t *attr,
 	       void *(*start_routine) (void *), void *arg)
 {
-  return !CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)start_routine,
+  size_t stacksize = 0;
+  if (attr)
+    stacksize = *attr;
+  return !CreateThread(NULL, stacksize,
+                       (LPTHREAD_START_ROUTINE)start_routine,
 		       arg, 0, thread);
 }
 

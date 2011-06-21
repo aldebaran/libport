@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -20,15 +20,15 @@ namespace libport
 {
 
   pthread_t
-  startThread(boost::function0<void> func);
+  startThread(boost::function0<void> func, size_t stack_size = 0);
 
   template<class T>
   pthread_t
-  startThread(T* obj);
+  startThread(T* obj, size_t stack_size = 0);
 
   template<class T>
   pthread_t
-  startThread(T* obj, void (T::*func)(void));
+  startThread(T* obj, void (T::*func)(void), size_t stack_size = 0);
 
   /// Simple interface to run a function in a separate thread.
   template<typename Res>
