@@ -221,7 +221,7 @@ namespace sched
 	GD_FINFO_DUMP("Job %s is starting", *job);
         current_job_ = job;
 	job = 0;
-        deadline_ = SCHED_IMMEDIATE;
+        signal_work_next_round();
 	at_least_one_started_ = true;
 	coroutine_start(current_coro,
                         current_job_->coro_get(), run_job, current_job_.get());
@@ -295,7 +295,7 @@ namespace sched
     // immediately.
     // Same thing if we are ready to die, finish the job ASAP.
     if (new_job_ || awoken_job_ || ready_to_die_)
-      deadline_ = SCHED_IMMEDIATE;
+      signal_work_next_round();
     GD_INFO_DUMP(deadline_
                  ? libport::format("Scheduler asking to be woken up in %ss",
                                    (double)(deadline_ - get_time_())
@@ -347,17 +347,12 @@ namespace sched
                     *job, job->terminated() ? "" : "not ", job->state_get());
       Coro* current_coro = job->coro_get();
       if (job->terminated())
-      {
-        // The deadline is set to be an hint for the scheduler.
-        if (job->deadline_get() == SCHED_IMMEDIATE)
-          deadline_ = SCHED_IMMEDIATE;
 	job = 0;
-      }
       else
         switch (job->state_get())
 	{
 	case running:
-	  deadline_ = SCHED_IMMEDIATE;
+	  signal_work_next_round();
 	  break;
 	case sleeping:
 	  deadline_ = std::min(deadline_, job->deadline_get());
@@ -467,12 +462,6 @@ namespace sched
     // Handle the current job situation.
     if (current_job_)
       current_job_->register_stopped_tag(tag, payload);
-  }
-
-  void
-  Scheduler::signal_work_next_round()
-  {
-    deadline_ = SCHED_IMMEDIATE;
   }
 
   jobs_type

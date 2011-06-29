@@ -46,6 +46,12 @@ namespace sched
     return cycle_;
   }
 
+  inline void
+  Scheduler::signal_work_next_round()
+  {
+    deadline_ = SCHED_IMMEDIATE;
+  }
+
   inline libport::utime_t
   Scheduler::get_time() const
   {

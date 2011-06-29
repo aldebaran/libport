@@ -118,43 +118,37 @@ namespace sched
             && dynamic_cast<SchedulerException*>(pending_exception_.get()))
           check_for_pending_exception();
         work();
-        deadline_ = 1;
       }
       catch (TerminateException&)
       {
         // Normal termination requested.
         GD_FINFO_DEBUG("job %s: TerminateException", this);
-        deadline_ = 1;
       }
       catch (StopException&)
       {
         // Termination through "stop" or "block" on a top-level tag,
         // that is a tag inherited at the job creation time.
         GD_FINFO_DEBUG("job %s: StopException", this);
-        deadline_ = 1;
       }
       catch (const exception& e)
       {
-        deadline_ = 1;
         // Rethrow the exception into the parent job if it exists.
         if (parent_)
         {
           parent_->async_throw(ChildException(e.clone()));
           // Warn the scheduler that the world may have changed.
-          deadline_ = 0;
+          scheduler_.signal_work_next_round();
         }
       }
       catch (const std::exception& e)
       {
         GD_FERROR("job %s: Exception `%s' caught, losing it", this,
                   e.what());
-        deadline_ = 1;
       }
       catch (...)
       {
         // Exception is lost and cannot be propagated properly.
         GD_FERROR("job %s: Unknown exception caught, losing it", this);
-        deadline_ = 1;
       }
     }
 
