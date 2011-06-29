@@ -469,6 +469,12 @@ namespace sched
       current_job_->register_stopped_tag(tag, payload);
   }
 
+  void
+  Scheduler::signal_work_next_round()
+  {
+    deadline_ = SCHED_IMMEDIATE;
+  }
+
   jobs_type
   Scheduler::jobs_get() const
   {

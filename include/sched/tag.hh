@@ -88,10 +88,10 @@ namespace sched
     virtual bool flow_control_get() const;
 
     // Act on a tag and make the scheduler take it into account
-    void freeze();
-    void unfreeze();
+    void freeze(Scheduler&);
+    void unfreeze(Scheduler&);
     void block(Scheduler&, const boost::any&);
-    void unblock();
+    void unblock(Scheduler&);
     void stop(Scheduler&, const boost::any&) const;
 
     boost::signal0<void>& stop_hook_get();

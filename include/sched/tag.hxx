@@ -45,7 +45,7 @@ namespace sched
   }
 
   inline void
-  Tag::freeze()
+  Tag::freeze(Scheduler&)
   {
     if (frozen_)
       return;
@@ -54,11 +54,12 @@ namespace sched
   }
 
   inline void
-  Tag::unfreeze()
+  Tag::unfreeze(Scheduler& sched)
   {
     if (!frozen_)
       return;
     frozen_ = false;
+    sched.signal_work_next_round();
     unfreeze_hook_();
   }
 
@@ -73,10 +74,11 @@ namespace sched
   }
 
   inline void
-  Tag::unblock()
+  Tag::unblock(Scheduler& sched)
   {
     payload_ = 0;
     blocked_ = false;
+    sched.signal_work_next_round();
   }
 
   inline prio_type

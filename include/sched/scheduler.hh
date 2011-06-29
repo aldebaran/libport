@@ -118,6 +118,10 @@ namespace sched
     /// action.
     void signal_stop(const Tag& tag, const boost::any& payload);
 
+    /// Signal that an event implies that the scheduler should execute a new
+    /// round after the current one.
+    void signal_work_next_round();
+
     /// Get the current cycle number.
     ///
     /// \return The current cycle index, increasing by 1 at each cycle.
