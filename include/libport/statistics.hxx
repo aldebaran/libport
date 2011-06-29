@@ -111,8 +111,8 @@ namespace libport
     sum2_ += s.sum2_;
     min_ = (!s.min_ok_ || (min_ok_ && min_ < s.min_)) ? min_ : s.min_;
     max_ = (!s.max_ok_ || (max_ok_ && s.max_ < max_)) ? max_ : s.max_;
-    min_ok_ = min_ok_ && s.min_ok_;
-    max_ok_ = max_ok_ && s.max_ok_;
+    min_ok_ = min_ok_ || s.min_ok_;
+    max_ok_ = max_ok_ || s.max_ok_;
   }
 
   template<typename T, typename R>
