@@ -50,6 +50,7 @@ namespace sched
     if (frozen_)
       return;
     frozen_ = true;
+    step_++;
     freeze_hook_();
   }
 
@@ -59,6 +60,7 @@ namespace sched
     if (!frozen_)
       return;
     frozen_ = false;
+    step_++;
     sched.signal_work_next_round();
     unfreeze_hook_();
   }
@@ -78,6 +80,7 @@ namespace sched
   {
     payload_ = 0;
     blocked_ = false;
+    step_++;
     sched.signal_work_next_round();
   }
 
@@ -90,6 +93,7 @@ namespace sched
   inline prio_type
   Tag::prio_set(Scheduler& sched, prio_type prio)
   {
+    step_++;
     if (prio >= UPRIO_RT_MIN)
       sched.real_time_behavior_set();
     prio_ = std::min(std::max(prio, prio_type(UPRIO_MIN)),
@@ -107,6 +111,12 @@ namespace sched
   Tag::flow_control_get() const
   {
     return flow_control_;
+  }
+
+  inline unsigned long
+  Tag::get_step_number()
+  {
+    return step_;
   }
 
 } // namespace sched

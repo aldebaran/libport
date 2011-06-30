@@ -98,6 +98,9 @@ namespace sched
     boost::signal0<void>& freeze_hook_get();
     boost::signal0<void>& unfreeze_hook_get();
 
+    // Used to check the validity of cached results made on tag status.
+    static unsigned long get_step_number();
+
   private:
     explicit Tag(const Tag&);
 
@@ -109,6 +112,7 @@ namespace sched
     boost::any payload_;
     boost::signal0<void> freeze_hook_;
     boost::signal0<void> unfreeze_hook_;
+    static unsigned long step_;
   };
 
 } // namespace sched

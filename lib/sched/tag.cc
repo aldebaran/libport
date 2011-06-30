@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -18,6 +18,7 @@ namespace sched
   void
   Tag::stop(Scheduler& sched, const boost::any& payload) const
   {
+    step_++;
     stop_hook_();
     sched.signal_stop(*this, payload);
   }
@@ -46,5 +47,7 @@ namespace sched
   {
     return unfreeze_hook_;
   }
+
+  unsigned long Tag::step_ = 0;
 
 } // namespace sched
