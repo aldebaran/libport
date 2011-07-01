@@ -58,7 +58,7 @@ namespace libport
   //>>
 
   std::string
-  Symbol::fresh_string (const std::string& s)
+  fresh_string (const std::string& s)
   {
     // Counter for unique symbols.
     static unsigned c = 0;
@@ -67,8 +67,14 @@ namespace libport
       o.str("");
       o << s << "_" << c;
       ++c;
-    } while (has(string_set_instance(), o.str()));
+    } while (has(Symbol::string_set_instance(), o.str()));
     return o.str ();
+  }
+
+  Symbol
+  Symbol::fresh (const std::string& s)
+  {
+    return Symbol(fresh_string(s));
   }
 
   Symbol

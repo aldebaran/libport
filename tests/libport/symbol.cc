@@ -65,7 +65,7 @@ check_fresh()
   const Symbol a0 = Symbol::fresh(Symbol("a"));
   BOOST_CHECK_EQUAL(a0, Symbol("a_0"));
   const Symbol a1("a_1");
-  std::string a2 = Symbol::fresh_string("a");
+  std::string a2 = fresh_string("a");
   BOOST_CHECK_EQUAL(a2, "a_2");
 }
 
