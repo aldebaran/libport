@@ -33,7 +33,7 @@
 namespace libport
 {
 
-  std::string fresh_string (const std::string& s = "a");
+  LIBPORT_API std::string fresh_string (const std::string& s = "a");
 
   /** \brief Define class Symbol.
    **
@@ -96,7 +96,7 @@ namespace libport
     /** \name Factory methods.
      ** \{ */
     /** \brief Create a new unique symbol, forged from \a s. */
-    friend std::string fresh_string (const std::string&);
+    friend LIBPORT_API std::string fresh_string (const std::string&);
     /** \brief Create a new unique symbol, forged from \a s. */
     static Symbol fresh (const std::string& s = "a");
     /** \brief Create a new unique symbol, forged from \a s. */
