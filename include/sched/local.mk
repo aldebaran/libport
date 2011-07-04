@@ -13,8 +13,6 @@ sched_include_HEADERS =				\
   include/sched/coroutine.hh			\
   include/sched/coroutine.hxx			\
   include/sched/coroutine-coro.hxx		\
-  include/sched/coroutine-data.hh		\
-  include/sched/coroutine-data.hxx		\
   include/sched/coroutine-hooks.hh		\
   include/sched/coroutine-local-storage.hh	\
   include/sched/coroutine-local-storage.hxx	\

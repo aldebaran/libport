@@ -29,7 +29,6 @@
 #include <libport/unistd.h>
 #include <libport/utime.hh>
 #include <libport/windows.hh>
-#include <sched/coroutine-data.hh>
 
 #ifndef WIN32
 # include <syslog.h>

@@ -23,7 +23,6 @@
 # include <libport/export.hh>
 # include <libport/finally.hh>
 # include <libport/format.hh>
-# include <libport/local-data.hh>
 # include <libport/option-parser.hh>
 # include <libport/symbol.hh>
 # include <libport/thread-data.hh>

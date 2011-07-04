@@ -33,7 +33,7 @@ namespace sched
     typedef boost::unordered_map<Coro*, T*> map_type;
     map_type map_;
     void cleanup_(Coro* coro);
- };
+  };
 }
 
 # include <sched/coroutine-local-storage.hxx>
