@@ -165,6 +165,12 @@ handle_lib ()
 {
   local lib=$1
 
+  # This is used to compile against Webots Controller library.
+  if test "$lib" = "-lController"; then
+      handle_lib_res="Controller.lib"
+      return
+  fi
+
   # If $systemlibs is not defined, set it up.  It saves time (and
   # traces) to do it only on demand instead of always.
   system_libs=$medir/system-libs.txt
