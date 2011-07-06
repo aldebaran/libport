@@ -72,7 +72,6 @@ namespace object
 test_suite*
 init_test_suite()
 {
-  skip_if("Wine");
   test_suite* suite = BOOST_TEST_SUITE("libport::backtrace");
   suite->add(BOOST_TEST_CASE(freefunction::check));
   suite->add(BOOST_TEST_CASE(object::check));
