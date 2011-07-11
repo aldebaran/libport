@@ -425,6 +425,7 @@ namespace libport
     return res;
   }
 
+  ATTRIBUTE_NORETURN
   void
   runIoService(boost::asio::io_service* io)
   {

@@ -137,6 +137,7 @@ namespace sched
     void start_job();
 
     /// Run the job. This function is called from the scheduler.
+    ATTRIBUTE_NORETURN
     void run();
 
     /// Terminate the job. The job will execute its cleanup method
