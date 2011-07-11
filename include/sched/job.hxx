@@ -270,11 +270,17 @@ namespace sched
   Job::resume_scheduler_()
   {
     hook_preempted();
+
+    job_state last_state = state_;
+    if (frozen())
+    {
+      last_state = waiting;
+      if (non_interruptible_)
+        scheduling_error("attempt to wait in non-interruptible code");
+    }
+
     if (stats_.logging)
     {
-      job_state last_state = state_;
-      if (frozen())
-        last_state = waiting;
       libport::utime_t start_resume = scheduler_.get_time();
       stats_.job.running.add_sample(
         start_resume - stats_.last_resume);

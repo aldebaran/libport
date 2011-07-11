@@ -182,8 +182,13 @@ namespace sched
     /// job in the collection.
     void yield_until_terminated(const jobs_type& jobs);
 
-    /// Wait for any other task to be scheduled.
+    /// Wait for any other task to be scheduled.  This function is no longer
+    /// a good way to wait for changes.  The current methods used is to
+    /// create a tag which is added to the job and to freeze the tag.
+    /// Waking up the job is done by unfreezing the tag.
+    ///
     /// \sa yield(), yield_for(), yield_until_terminated(), yield_until()
+    ATTRIBUTE_DEPRECATED
     void yield_until_things_changed();
 
     /// Raise an exception next time this job will be resumed,
