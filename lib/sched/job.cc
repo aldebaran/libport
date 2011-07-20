@@ -287,8 +287,6 @@ namespace sched
     if (stats_.logging)
       stats_.job.nb_exn++;
 
-    // A job which has received an exception is no longer non-interruptible.
-    non_interruptible_ = false;
     // If this is the current job we are talking about, the exception
     // is synchronous.
     if (!force_async && scheduler_.is_current_job(this))

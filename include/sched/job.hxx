@@ -279,6 +279,10 @@ namespace sched
         scheduling_error("attempt to wait in non-interruptible code");
     }
 
+    // Ensure that a non-interruptible job does not let other job scheduled
+    // between the beginning and the end.
+    aver(!non_interruptible_);
+
     if (stats_.logging)
     {
       libport::utime_t start_resume = scheduler_.get_time();
