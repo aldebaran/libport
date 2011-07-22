@@ -28,7 +28,7 @@ namespace libport
     LIBPORT_USE(size);
 
     // Allocations exceeds the chunk size.
-    assert_le(size / sizeof(long long), Exact::allocator_static_max_size);
+    assert_le(size, Exact::allocator_static_max_size);
 
     if (size_ == storage_size_)
       _grow();
