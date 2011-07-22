@@ -18,7 +18,7 @@
 
 namespace libport
 {
-  template <typename Exact,unsigned Chunk>
+  template <typename Exact, size_t Chunk>
   void*
   StaticallyAllocated<Exact, Chunk>::operator new(size_t size)
   {
@@ -32,19 +32,29 @@ namespace libport
 
     if (size_ == storage_size_)
       _grow();
-    // Allocations exceeds the chunk size.
+
+    size_t where = where_; // Avoid volatile side-effects.
+
+    // Number of allocated area exceeds the storage capacity.
     assert_le(size_, storage_size_);
 
     size_++;
     void* res = 0;
-    std::swap(res, pointers_[where_]);
+    std::swap(res, pointers_[where]);
     POOL_ALLOC(pool_header, res, size);
     aver(res);
-    where_ = (where_ + 1) % storage_size_;
+
+    // Do not use a modulo here because this is costly.
+    assert_le(where, storage_size_);
+    if (++where == storage_size_)
+      where = 0;
+
+    // Store after usage.
+    where_ = where;
     return res;
   }
 
-  template <typename Exact, unsigned Chunk>
+  template <typename Exact, size_t Chunk>
   void
   StaticallyAllocated<Exact, Chunk>::operator delete(void* obj)
   {
@@ -52,18 +62,26 @@ namespace libport
     aver_eq(thread, pthread_self());
 # endif
     aver(obj != 0);
-    unsigned w = where_ - size_;
 
-    // Fix overflow // i-e w < 0, or where_ < size_
-    if (w > storage_size_)
-      w += storage_size_;
-    std::swap(pointers_[w], obj);
-    POOL_FREE(pool_header, pointers_[w]);
+    // Avoid volatile side-effects.
+    size_t size = size_;
+
+    // Avoid underflow caused by (where_ - size_)
+    size_t index = where_;
+    if (index < size)
+      index += storage_size_;
+    index -= size;
+
+    std::swap(pointers_[index], obj);
+    POOL_FREE(pool_header, pointers_[index]);
     aver(obj == 0);
-    size_--;
+    size--;
+
+    // Store after usage.
+    size_ = size;
   }
 
-  template <typename Exact, unsigned Chunk>
+  template <typename Exact, size_t Chunk>
   void
   StaticallyAllocated<Exact, Chunk>::_grow()
   {
@@ -75,7 +93,7 @@ namespace libport
     if (!pool)
       throw std::bad_alloc();
     pointers_.resize(storage_size_ + chunk_size_);
-    for (unsigned i = 0; i < chunk_size_; ++i)
+    for (size_t i = 0; i < chunk_size_; ++i)
       pointers_[storage_size_ + i] =
         pool + i * Exact::allocator_static_max_size;
     where_ = storage_size_;
@@ -83,28 +101,28 @@ namespace libport
     chunk_size_ *= 2;
   }
 
-  template <typename Exact, unsigned Chunk>
+  template <typename Exact, size_t Chunk>
   std::vector<void*> StaticallyAllocated<Exact, Chunk>::pointers_;
 
-  template <typename Exact, unsigned Chunk>
-  volatile unsigned StaticallyAllocated<Exact, Chunk>::where_ = 0;
+  template <typename Exact, size_t Chunk>
+  volatile size_t StaticallyAllocated<Exact, Chunk>::where_ = 0;
 
-  template <typename Exact, unsigned Chunk>
-  volatile unsigned StaticallyAllocated<Exact, Chunk>::size_ = 0;
+  template <typename Exact, size_t Chunk>
+  volatile size_t StaticallyAllocated<Exact, Chunk>::size_ = 0;
 
-  template <typename Exact, unsigned Chunk>
-  volatile unsigned StaticallyAllocated<Exact, Chunk>::storage_size_ = 0;
+  template <typename Exact, size_t Chunk>
+  volatile size_t StaticallyAllocated<Exact, Chunk>::storage_size_ = 0;
 
-  template <typename Exact, unsigned Chunk>
-  unsigned StaticallyAllocated<Exact, Chunk>::chunk_size_ = Chunk;
+  template <typename Exact, size_t Chunk>
+  size_t StaticallyAllocated<Exact, Chunk>::chunk_size_ = Chunk;
 
 # if DEBUG_SA_UNIQ_THREAD_CHECK
-  template <typename Exact, unsigned Chunk>
+  template <typename Exact, size_t Chunk>
   pthread_t StaticallyAllocated<Exact, Chunk>::thread = pthread_self();
 # endif
 
 # ifndef NVALGRIND
-  template <typename Exact, unsigned Chunk>
+  template <typename Exact, size_t Chunk>
   int* StaticallyAllocated<Exact, Chunk>::initialize_pool()
   {
     int* header = reinterpret_cast<int*>(malloc(sizeof(int)));
@@ -112,7 +130,7 @@ namespace libport
     return header;
   }
 
-  template <typename Exact, unsigned Chunk>
+  template <typename Exact, size_t Chunk>
   int* StaticallyAllocated<Exact, Chunk>::pool_header = initialize_pool();
 # endif
 }

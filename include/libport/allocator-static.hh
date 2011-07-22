@@ -39,7 +39,7 @@
 
 namespace libport
 {
-  template <typename Exact, unsigned Chunk>
+  template <typename Exact, size_t Chunk>
   class StaticallyAllocated
   {
   public:
@@ -52,13 +52,13 @@ namespace libport
     // The ring of free memory slots.
     static std::vector<void*> pointers_;
     // Pointer
-    static volatile unsigned where_;
+    static volatile size_t where_;
     // Number of objects currently allocated.
-    static volatile unsigned size_;
+    static volatile size_t size_;
     // Number of objects slots available.
-    static volatile unsigned storage_size_;
+    static volatile size_t storage_size_;
     // Current chunk size to allocate.
-    static unsigned chunk_size_;
+    static size_t chunk_size_;
 
 # if DEBUG_SA_UNIQ_THREAD_CHECK
   public:
