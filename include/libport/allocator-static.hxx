@@ -76,11 +76,8 @@ namespace libport
       throw std::bad_alloc();
     pointers_.resize(storage_size_ + chunk_size_);
     for (unsigned i = 0; i < chunk_size_; ++i)
-    {
       pointers_[storage_size_ + i] =
         pool + i * Exact::allocator_static_max_size;
-      *(unsigned*) pointers_[storage_size_ + i] = 0x0C0C0C0C;
-    }
     where_ = storage_size_;
     storage_size_ += chunk_size_;
     chunk_size_ *= 2;
