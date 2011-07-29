@@ -19,7 +19,7 @@
 # - a test suite :(  Many bugs were regularly introduced.
 #
 # - support link.exe -dump -symbols
-#   currenty we do junk
+#   currenty we do junk.  In other words, merge dumpbin.exe in.
 
 set -e
 
@@ -31,6 +31,10 @@ trace ()
 }
 
 trace
+
+## ---------------------------------------------- ##
+## CODE DUPLICATION BW DUMPBIN.EXE and LINK.EXE.  ##
+## ---------------------------------------------- ##
 
 me=$(basename "$0")
 
@@ -47,25 +51,6 @@ run ()
 {
   verbose "run: $*"
   "$@"
-}
-
-# Same as run, but neutralize Wine warnings, and Microsoft banners.
-run_filter ()
-{
-  local status=0
-  run "$@" >$stdout 2>$stderr || status=$?
-
-  # Warnings from wine.
-  sed -e '/err:secur32:SECUR32_initSchannelSP libgnutls not found/d'    \
-      -e '/fixme:heap:HeapSetInformation (nil) 1 (nil) 0/d'             \
-    <$stderr >&2
-
-  sed -e '/Microsoft (R) Windows (R) Resource Compiler/d'       \
-      -e '/Copyright (C) Microsoft Corporation/d'               \
-      -e 's/\r//g'                                              \
-      -e '/^ *$/d'                                              \
-    <$stdout
-  return $status
 }
 
 error ()
@@ -88,6 +73,75 @@ verbose ()
 fatal ()
 {
   error 1 "$@"
+}
+
+# Look for, and load, `msvc_env.sh'.
+load_msvc_env ()
+{
+  local i
+  # Skip if we can't run it.
+  for i in ~/share/wine ~/.wine/drive_c "$(dirname "$0")" ~/bin
+  do
+    local f="$i/msvc_env.sh"
+    verbose "trying to load $f"
+    if test -f "$f"; then
+      . "$f"
+      verbose "loaded $f"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# setup
+# -----
+# Load our configuration script and set up $repath; $VS_PATH,
+# $VCXX_PATH and $VCXX_BIN (Unix paths).
+setup ()
+{
+  load_msvc_env ||
+    error 176 "cannot load msvc_env.sh"
+
+  repaths='cygpath winepath'
+  for repath in $repaths ''
+  do
+    $repath --version >/dev/null 2>&1 &&
+      break
+  done
+  test -n "$repath" ||
+    error 176 "program not found: $repaths"
+
+  VS_PATH=$($repath -u "$VSINSTALLDIR")
+  VCXX_PATH=$($repath -u "$VCINSTALLDIR")
+  VCXX_BIN=$VCXX_PATH/bin
+
+  test -x "$VCXX_BIN/cl.exe" ||
+    error 176 "cl.exe not found in $VCXX_BIN"
+}
+
+
+## ----------------------------------------------------- ##
+## END OF CODE DUPLICATION BW DUMPBIN.EXE and LINK.EXE.  ##
+## ----------------------------------------------------- ##
+
+
+# Same as run, but neutralize Wine warnings, and Microsoft banners.
+run_filter ()
+{
+  local status=0
+  run "$@" >$stdout 2>$stderr || status=$?
+
+  # Warnings from wine.
+  sed -e '/err:secur32:SECUR32_initSchannelSP libgnutls not found/d'    \
+      -e '/fixme:heap:HeapSetInformation (nil) 1 (nil) 0/d'             \
+    <$stderr >&2
+
+  sed -e '/Microsoft (R) Windows (R) Resource Compiler/d'       \
+      -e '/Copyright (C) Microsoft Corporation/d'               \
+      -e 's/\r//g'                                              \
+      -e '/^ *$/d'                                              \
+    <$stdout
+  return $status
 }
 
 transform ()
@@ -569,25 +623,6 @@ compiler_verbose_message ()
 '
 }
 
-# Look for, and load, `msvc_env.sh'.
-load_msvc_env ()
-{
-  local i
-  # Skip if we can't run it.
-  for i in ~/share/wine ~/.wine/drive_c "$(dirname "$0")" ~/bin
-  do
-    local f="$i/msvc_env.sh"
-    verbose "trying to load $f"
-    if test -f "$f"; then
-      . "$f"
-      verbose "loaded $f"
-      return 0
-    fi
-  done
-  return 1
-}
-
-
 ## ------ ##
 ## Main.  ##
 ## ------ ##
@@ -644,24 +679,7 @@ mkdir -p $tmp
 stdout=$tmp/stdout
 stderr=$tmp/stderr
 
-load_msvc_env ||
-  error 176 "cannot load msvc_env.sh"
-
-repaths='cygpath winepath'
-for repath in $repaths ''
-do
-  $repath --version >/dev/null 2>&1 &&
-    break
-done
-test -n "$repath" ||
-  error 176 "program not found: $repaths"
-
-VS_PATH=$($repath -u "$VSINSTALLDIR")
-VCXX_PATH=$($repath -u "$VCINSTALLDIR")
-VCXX_BIN=$VCXX_PATH/bin
-
-test -x "$VCXX_BIN/cl.exe" ||
-  error 176 "cl.exe not found in $VCXX_BIN"
+setup
 
 case $PROG in
   (cl.exe) outargs "-nologo" "-EHsc";;

@@ -9,6 +9,7 @@
 EXTRA_DIST +=					\
   msvc/cl.exe					\
   msvc/cygpath					\
+  msvc/dumpbin.exe				\
   msvc/filter-cl-logs				\
   msvc/lib					\
   msvc/lib.exe					\
