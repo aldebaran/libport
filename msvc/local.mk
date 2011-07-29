@@ -14,7 +14,8 @@ EXTRA_DIST +=					\
   msvc/lib					\
   msvc/lib.exe					\
   msvc/link.exe					\
-  msvc/makedepend
+  msvc/makedepend				\
+  msvc/msvc-common.sh
 
 # compilation
 EXTRA_DIST += msvc/compilation.m4sh
