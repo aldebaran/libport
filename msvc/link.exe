@@ -32,9 +32,9 @@ trace ()
 
 trace
 
-## ---------------------------------------------- ##
-## CODE DUPLICATION BW DUMPBIN.EXE and LINK.EXE.  ##
-## ---------------------------------------------- ##
+## ------------------------------------------------------- ##
+## CODE DUPLICATION BW DUMPBIN.EXE, LIB.EXE and LINK.EXE.  ##
+## ------------------------------------------------------- ##
 
 me=$(basename "$0")
 
@@ -120,9 +120,9 @@ setup ()
 }
 
 
-## ----------------------------------------------------- ##
-## END OF CODE DUPLICATION BW DUMPBIN.EXE and LINK.EXE.  ##
-## ----------------------------------------------------- ##
+## -------------------------------------------------------------- ##
+## END OF CODE DUPLICATION BW DUMPBIN.EXE, LIB.EXE and LINK.EXE.  ##
+## -------------------------------------------------------------- ##
 
 
 # Same as run, but neutralize Wine warnings, and Microsoft banners.
