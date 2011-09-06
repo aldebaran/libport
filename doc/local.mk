@@ -43,10 +43,17 @@ share_dir = $(srcdir)/doc/document-aux
 share_bin_dir = $(share_dir)/bin
 share_make_dir = $(share_dir)/make
 include doc/document-aux/make/tex.mk
-EXTRA_DIST +=								   \
-  $(addprefix doc/document-aux/,$(call ls_files_in_dir,$(share_dir)))
+EXTRA_DIST +=					\
+  $(call ls_files,@{doc/document-aux})
 
 TEXI2DVIFLAGS += -I $(top_srcdir) -I doc -~
+
+MAKEINDEXFLAGS = -s headings.ist
+TEX_ENVIRONMENT =				\
+  PATH=$$PATH:$(abspath $(share_bin_dir))	\
+  MAKEINDEX="makeindex $(MAKEINDEXFLAGS)"	\
+  TEXINDY="texindy $(TEXINDYFLAGS)"		\
+  TEX4HT="tex4ht -cunihtf -utf8"
 
 PDF = doc/libport.pdf
 EXTRA_DATA += $(PDF)
