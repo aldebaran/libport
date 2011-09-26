@@ -393,9 +393,9 @@ get_options ()
             linkargs "$handle_lib_res";;
 
     # Preprocessor options.
-    (-E)  mode=preprocess; outargs "$1";;
-    (-I|-isystem) outargs "-I$(transform "$2")"     ; shift;;
-    (-I*) outargs "-I$(transform "${1#-I}")";;
+    (-E)          mode=preprocess; outargs "$1";;
+    (-I|-isystem) outargs "-I$2"; shift;;
+    (-I*)         outargs "$1";;
 
     # Dependencies.
     # Automake invocations look like:
@@ -445,9 +445,14 @@ get_options ()
     (*.dll) outargs "$(transform "$(dll_2_lib "$1")")";;
 
     # Sources.
-    (-include)  shift;     outargs "-FI$(transform "$1")";;
-    (*.S)       source=$1; outargs "-Tp$(transform "$source")";;
-    (*.c|*.cc)  source=$1; outargs    "$(transform "$source")";;
+    # Using -Tp/-Tc to make explicit the input file has the advantage
+    # that we can use Unix-style paths.  This is sometimes expected
+    # by the sources (e.g., LOCATION_HERE in Urbi SDK), where we
+    # "subtract" SRCDIR (Unix-style) from __FILE__ (which, therefore,
+    # should be Unix style).
+    (-include)  shift;     outargs "-FI$1";;
+    (*.S|*.cc)  source=$1; outargs "-Tp$source";;
+    (*.c)       source=$1; outargs "-Tc$source";;
     (*.i)       source=$1; outargs "-Tc$(transform "$source")"
                 preprocessed=true;;
     (*.ii)      source=$1; outargs "-Tp$(transform "$source")"
