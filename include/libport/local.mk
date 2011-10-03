@@ -175,6 +175,8 @@ libport_include_HEADERS +=                              \
   include/libport/singleton-ptr.hxx                     \
   include/libport/specific-ptr.hh                       \
   include/libport/specific-ptr.hxx                      \
+  include/libport/sstream                               \
+  include/libport/sstream.hxx                           \
   include/libport/statistics.hh                         \
   include/libport/statistics.hxx                        \
   include/libport/symbol.hh                             \

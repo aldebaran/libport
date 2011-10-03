@@ -12,7 +12,7 @@
 # define LIBPORT_DEBUG_HH
 
 # include <list>
-# include <sstream>
+# include <libport/sstream>
 
 # include <boost/function.hpp>
 # include <boost/unordered_map.hpp>
@@ -306,26 +306,6 @@ namespace libport
 #  endif
 
   LIBPORT_API std::string gd_ihexdump(const unsigned char* data, unsigned size);
-
-
-  class StreamWrapper
-  {
-  public:
-    template <typename T>
-    const StreamWrapper& operator <<(const T& e) const
-    {
-      stream_ << e;
-      return *this;
-    }
-
-    std::string str() const
-    {
-      return stream_.str();
-    }
-  private:
-    mutable std::stringstream stream_;
-  };
-
 
   namespace opts
   {
