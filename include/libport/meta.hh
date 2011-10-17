@@ -11,8 +11,7 @@
 #ifndef LIBPORT_META_HH
 # define LIBPORT_META_HH
 
-# include <boost/tr1/type_traits.hpp>
-
+# include <libport/tr1/type_traits>
 # include <libport/errors.hh>
 
 #define TYPE(T)                                 \

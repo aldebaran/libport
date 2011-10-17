@@ -95,6 +95,9 @@ AC_CHECK_HEADERS([sys/utsname.h])
 # libport/sys/wait.h
 AC_CHECK_HEADERS([sys/wait.h])
 
+# libport/tr1/type_traits.
+AC_CHECK_HEADERS([tr1/type_traits])
+
 # libport/valgrind.
 AC_CHECK_HEADERS([valgrind/valgrind.h])
 

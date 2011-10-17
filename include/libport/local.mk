@@ -48,6 +48,11 @@ sys_libport_include_HEADERS =                   \
   include/libport/sys/utsname.hxx               \
   include/libport/sys/wait.h
 
+# tr1/ headers
+tr1_libport_includedir = $(libport_includedir)/tr1
+tr1_libport_include_HEADERS =                   \
+  include/libport/tr1/type_traits
+
 
 # C++ headers.
 libport_include_HEADERS +=                              \

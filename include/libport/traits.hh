@@ -14,7 +14,7 @@
 # include <list>
 # include <vector>
 
-# include <boost/tr1/type_traits.hpp>
+# include <libport/tr1/type_traits>
 
 # include <libport/meta.hh>
 # include <libport/preproc.hh>

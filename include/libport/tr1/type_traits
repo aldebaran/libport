@@ -1,0 +1,41 @@
+/*
+ * Copyright (C) 2011, Gostai S.A.S.
+ *
+ * This software is provided "as is" without warranty of any kind,
+ * either expressed or implied, including but not limited to the
+ * implied warranties of fitness for a particular purpose.
+ *
+ * See the LICENSE file for more information.
+ */
+
+#ifndef LIBPORT_TR1_TYPE_TRAITS
+# define LIBPORT_TR1_TYPE_TRAITS
+
+// Including both G++'s tr1/type_traits and Boost's
+// boost/tr1/type_traits.hpp breaks (multiple definitions).  We could
+// just include Boost's, but the Libstc++ (at least the one with G++
+// 4.6) includes tr1/type_traits when using _GLIBCXX_PROFILE for
+// instance.
+//
+// So rather include G++'s one if available, Boost's otherwise.  Yet,
+// this is a danger that Boost defined things for itself, so reading
+// boost/tr1/type_traits.hpp shows that it merely includes two files,
+// and then import its boost:: stuff in std::tr1:: (this real cause of
+// the conflict).  So just load these two files, just in case.
+
+# include <libport/config.h>
+
+# if LIBPORT_HAVE_TR1_TYPE_TRAITS
+#  include <tr1/type_traits>
+#  include <boost/type_traits.hpp>
+#  include <boost/type_traits/is_base_of_tr1.hpp>
+#  define BOOST_TR1_TYPE_TRAITS_HPP_INCLUDED
+# else
+#  include <boost/tr1/type_traits.hpp>
+# endif // !LIBPORT_HAVE_TR1_TYPE_TRAITS
+
+#endif // !LIBPORT_TR1_TYPE_TRAITS
+
+// Local Variables:
+// mode: C++
+// End:
