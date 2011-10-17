@@ -25,7 +25,7 @@
 
 # include <libport/config.h>
 
-# if LIBPORT_HAVE_TR1_TYPE_TRAITS
+# ifdef LIBPORT_HAVE_TR1_TYPE_TRAITS
 #  include <tr1/type_traits>
 #  include <boost/type_traits.hpp>
 #  include <boost/type_traits/is_base_of_tr1.hpp>
