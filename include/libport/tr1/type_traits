@@ -16,19 +16,11 @@
 // just include Boost's, but the Libstc++ (at least the one with G++
 // 4.6) includes tr1/type_traits when using _GLIBCXX_PROFILE for
 // instance.
-//
-// So rather include G++'s one if available, Boost's otherwise.  Yet,
-// this is a danger that Boost defined things for itself, so reading
-// boost/tr1/type_traits.hpp shows that it merely includes two files,
-// and then import its boost:: stuff in std::tr1:: (this real cause of
-// the conflict).  So just load these two files, just in case.
 
 # include <libport/config.h>
 
 # ifdef LIBPORT_HAVE_TR1_TYPE_TRAITS
 #  include <tr1/type_traits>
-#  include <boost/type_traits.hpp>
-#  include <boost/type_traits/is_base_of_tr1.hpp>
 #  define BOOST_TR1_TYPE_TRAITS_HPP_INCLUDED
 # else
 #  include <boost/tr1/type_traits.hpp>
