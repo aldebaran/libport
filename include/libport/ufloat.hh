@@ -17,6 +17,7 @@
 # include <libport/config.h>
 # include <libport/export.hh>
 
+# include <string>
 # include <libport/cmath> // M_PI
 # include <cfloat>
 # include <exception>
@@ -94,6 +95,12 @@ namespace libport
   // FIXME: remove.
   static const ufloat PI(M_PI);
   static const ufloat UINFINITY(999999999999999.0);
+
+  // Convert a string into an UFloat, applying the same rules as in
+  // urbiscript (underscores etc.).
+  // \throws boost::bad_lexical_cast when not a valid number.
+  LIBPORT_API
+  ufloat as_ufloat(const std::string& s);
 }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -9,6 +9,10 @@
  */
 
 #include <iostream>
+#include <boost/lexical_cast.hpp>
+#include <boost/mpl/integral_c.hpp>
+#include <boost/numeric/conversion/converter.hpp>
+
 #include <libport/cmath>
 
 #include <libport/ufloat.hh>
@@ -21,8 +25,6 @@
 # include <libport/uffloat.cc>
 #endif
 
-#include <boost/mpl/integral_c.hpp>
-#include <boost/numeric/conversion/converter.hpp>
 
 namespace libport
 {
@@ -125,9 +127,9 @@ namespace libport
 
 #endif
 
-/*------------------.
-| cast exceptions.  |
-`------------------*/
+  /*------------------.
+  | cast exceptions.  |
+  `------------------*/
 
   const char *bad_numeric_cast::what() const throw()
   {
@@ -144,10 +146,60 @@ namespace libport
     return "bad numeric conversion: positive overflow";
   }
 
+  /*------------------------.
+  | From string to ufloat.  |
+  `------------------------*/
 
-/*-------------------.
-| ufloat converter.  |
-`-------------------*/
+  // Remove underscores, allowed only between two digits.
+  static
+  std::string
+  as_ufloat_strip(const std::string& s, int(is_digit)(int))
+  {
+    std::string res;
+    size_t len = s.size();
+    for (size_t i = 0; i < len; /* nothing */)
+      if (s[i] == '_')
+      {
+        // Look for the next non-underscore character.
+        size_t next = s.find_first_not_of("_", i);
+        if (res.empty()
+            || !is_digit(res[res.size() - 1])
+            || !(next < len)
+            || !is_digit(s[next]))
+          throw boost::bad_lexical_cast();
+        i = next;
+      }
+      else
+      {
+        res.append(1, s[i]);
+        ++i;
+      }
+    return res;
+  }
+
+  ufloat
+  as_ufloat(const std::string& s)
+  {
+    // Convert.
+    if (s.substr(0, 2) == "0x")
+    {
+      std::string pure = as_ufloat_strip(s, std::isxdigit);
+      char* end = 0;
+      ufloat res = strtoll(pure.c_str(), &end, 0);
+      // Refuse garbage after.
+      if (end && *end)
+        throw boost::bad_lexical_cast();
+      return res;
+    }
+    else
+      return boost::lexical_cast<libport::ufloat>
+        (as_ufloat_strip(s, std::isdigit));
+  }
+
+
+  /*-------------------.
+  | ufloat converter.  |
+  `-------------------*/
 
   template<typename S>
   struct ExactFloat2IntRounderPolicy
