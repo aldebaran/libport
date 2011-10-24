@@ -14,7 +14,7 @@
 #include <boost/numeric/conversion/converter.hpp>
 
 #include <libport/cmath>
-
+#include <libport/cstdlib>
 #include <libport/ufloat.hh>
 
 #ifdef LIBPORT_URBI_UFLOAT_LONG_LONG
@@ -150,10 +150,22 @@ namespace libport
   | From string to ufloat.  |
   `------------------------*/
 
-  // Remove underscores, allowed only between two digits.
+  // MSVC makes it uselessly complex to pass isdigit-like functions by
+  // pointer.
+  /// \param xdigit  whether hexadecimal instead of decimal.
+  static inline
+  bool
+  is_digit(int c, bool xdigit)
+  {
+    return xdigit ? isxdigit(c) : isdigit(c);
+  }
+
+  /// Remove underscores, allowed only between two digits.
+  ///
+  /// \param xdigit  whether hexadecimal instead of decimal.
   static
   std::string
-  as_ufloat_strip(const std::string& s, int(is_digit)(int))
+  as_ufloat_strip(const std::string& s, bool xdigit)
   {
     std::string res;
     size_t len = s.size();
@@ -163,9 +175,9 @@ namespace libport
         // Look for the next non-underscore character.
         size_t next = s.find_first_not_of("_", i);
         if (res.empty()
-            || !is_digit(res[res.size() - 1])
+            || !is_digit(res[res.size() - 1], xdigit)
             || !(next < len)
-            || !is_digit(s[next]))
+            || !is_digit(s[next], xdigit))
           throw boost::bad_lexical_cast();
         i = next;
       }
@@ -183,7 +195,7 @@ namespace libport
     // Convert.
     if (s.substr(0, 2) == "0x")
     {
-      std::string pure = as_ufloat_strip(s, std::isxdigit);
+      std::string pure = as_ufloat_strip(s, true);
       char* end = 0;
       ufloat res = strtoll(pure.c_str(), &end, 0);
       // Refuse garbage after.
@@ -193,7 +205,7 @@ namespace libport
     }
     else
       return boost::lexical_cast<libport::ufloat>
-        (as_ufloat_strip(s, std::isdigit));
+        (as_ufloat_strip(s, false));
   }
 
 
