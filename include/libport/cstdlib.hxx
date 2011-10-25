@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -7,6 +7,10 @@
  *
  * See the LICENSE file for more information.
  */
+
+# if defined __APPLE__
+# include <crt_externs.h>
+# endif
 
 #ifndef LIBPORT_CSTDLIB_HXX
 # define LIBPORT_CSTDLIB_HXX
@@ -27,6 +31,23 @@ namespace libport
 }
 
 # endif
+
+/*-------------.
+| getenviron.  |
+`-------------*/
+
+
+namespace libport
+{
+  inline char** getenviron()
+  {
+# if defined __APPLE__
+    return (*_NSGetEnviron ());
+# else
+    return environ;
+# endif
+  }
+}
 
 /*---------.
 | setenv.  |
