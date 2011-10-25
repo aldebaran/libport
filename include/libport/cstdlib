@@ -55,7 +55,7 @@ namespace libport
 
 namespace libport
 {
-  LIBPORT_API
+  // Return an array of environment variables.
   char** getenviron();
 }
 
