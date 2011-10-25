@@ -161,59 +161,69 @@ namespace libport
   };
 
 
-# ifdef _MSC_VER
+  /*-----------------------------------------------.
+  | numeric_castable, numeric_cast, rouding_cast.  |
+  `-----------------------------------------------*/
 
-  /*---------------.
-  | numeric_cast.  |
-  `---------------*/
+# if !defined _MSC_VER
 
   /// Can the conversion be performed properly?
   template <typename T>
+  LIBPORT_API
   bool numeric_castable(ufloat v);
+
+  /// Convert a libport::ufloat to T.
+  ///
+  /// \throw libport::bad_numeric_cast if the provided argument is not
+  /// directly convertible to a T.  Catches overflows, and loss of
+  /// precision (i.e., casting 1.5 to int will fail, see
+  /// rouding_cast).
+  template <typename T>
+  LIBPORT_API
+  T numeric_cast(ufloat v) throw (bad_numeric_cast);
+
+  /// Convert a libport::ufloat to the nearest T.  Note that its
+  /// behavior (on purpose) can be suprising: 0.5 -> 0, 1.5 -> 2.
+  /// This is "round to nearest even"
+  /// (http://en.wikipedia.org/wiki/Rounding#Round_half_to_even).
+  ///
+  /// \throw libport::bad_numeric_cast on overflows, see numeric_cast.
+  template <typename T>
+  LIBPORT_API
+  T rounding_cast(ufloat v) throw (bad_numeric_cast);
+
+# else // _MSC_VER
+
+  template <typename T>
+  bool numeric_castable(ufloat v);
+
+  template <typename T>
+  T numeric_cast(ufloat v) throw (bad_numeric_cast);
+
+  template <typename T>
+  T rounding_cast(ufloat v) throw (bad_numeric_cast);
 
 #  define UFLOAT_CAST(Type)                                     \
   template                                                      \
   LIBPORT_API                                                   \
-  bool numeric_castable<Type>(ufloat v);
-
-  // Declare the casts.
-  UFLOAT_CASTS
-
-#  undef UFLOAT_CAST
-
-
-  /// Convert a libport::ufloat to T. Raise
-  /// libport::bad_numeric_cast if the provided argument is not
-  /// directly convertible to a T.
-  template <typename T>
-  T numeric_cast(ufloat v) throw (bad_numeric_cast);
-
-#  define UFLOAT_CAST(Type)                                     \
+  bool numeric_castable<Type>(ufloat v);                        \
+                                                                \
   template                                                      \
   Type                                                          \
   LIBPORT_API                                                   \
-  numeric_cast<Type>(ufloat v) throw (bad_numeric_cast);
+  numeric_cast<Type>(ufloat v) throw (bad_numeric_cast);        \
+                                                                \
+  template                                                      \
+  Type                                                          \
+  LIBPORT_API                                                   \
+  rounding_cast<Type>(ufloat v) throw (bad_numeric_cast)
 
   // Declare the casts.
   UFLOAT_CASTS
 
 #  undef UFLOAT_CAST
 
-# else // ! _MSC_VER
-
-  /// Can the conversion be performed properly?
-  template <typename T>
-  LIBPORT_API
-  bool numeric_castable(ufloat v);
-
-  /// Convert a libport::ufloat to T. Raise
-  /// libport::bad_numeric_cast if the provided argument is not
-  /// directly convertible to a T.
-  template <typename T>
-  LIBPORT_API
-  T numeric_cast(ufloat v) throw (bad_numeric_cast);
-
-# endif
+# endif // _MSC_VER
 
 } // namespace libport
 

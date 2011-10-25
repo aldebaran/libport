@@ -10,6 +10,7 @@
 
 #include <limits>
 #include <libport/ufloat.hh>
+#include <libport/tr1/type_traits>
 #include <libport/unit-test.hh>
 
 using libport::test_suite;
@@ -62,7 +63,7 @@ static void check_unsigned_range()
   CHECK_LIMIT(min);
   CHECK_TO_AND_FRO(0);
   CHECK_TO_AND_FRO(1);
-  CHECK_TO_AND_FRO(10000);
+  CHECK_TO_AND_FRO(100);
 }
 
 template <typename T>
@@ -70,11 +71,41 @@ static void check_signed_range()
 {
   check_unsigned_range<T>();
   CHECK_TO_AND_FRO(-1);
-  CHECK_TO_AND_FRO(-10000);
+  CHECK_TO_AND_FRO(-100);
 }
 
-# undef CHECK_LIMIT
-# undef CHECK_TO_AND_FRO
+#undef CHECK_LIMIT
+#undef CHECK_TO_AND_FRO
+
+template <typename T>
+static void check_rounding_cast()
+{
+#define CHECK_(In, Out)                                          \
+  BOOST_CHECK_EQUAL(libport::rounding_cast<T>(ufloat(In)),  Out)
+#define CHECK(In, Out)                          \
+  do {                                          \
+    CHECK_(In, Out);                            \
+    std::cerr << "Unsigned: " << std::tr1::is_unsigned<T>::value << std::endl; \
+    if (!std::tr1::is_unsigned<T>::value)        \
+      CHECK_(-In, -Out);                        \
+  } while (false)
+  CHECK(0,       0);
+  CHECK(0.4999,  0);
+  CHECK(0.5,     0);
+  CHECK(0.50001, 1);
+  CHECK(0.9999,  1);
+  CHECK(1,       1);
+  CHECK(1.4,     1);
+  CHECK(1.45,    1);
+  CHECK(1.49999, 1);
+  CHECK(1.5,     2);
+  CHECK(1.50001, 2);
+  CHECK(255.0, 255);
+#undef CHECK
+#undef CHECK_
+}
+
+
 
 
 /*-------------------.
@@ -119,9 +150,10 @@ init_test_suite()
   //
   // unknown location(0): fatal error in "check_signed_range<int>":
   // memory access violation
-#define CHECK(Type)                                     \
-  suite->add(BOOST_TEST_CASE(&check_signed_range<int>)); \
-  suite->add(BOOST_TEST_CASE(&check_max<int>));
+#define CHECK(Type)                                             \
+  suite->add(BOOST_TEST_CASE(&check_signed_range<Type>));       \
+  suite->add(BOOST_TEST_CASE(&check_max<Type>));                \
+  suite->add(BOOST_TEST_CASE(&check_rounding_cast<Type>));
 
   CHECK(char);
   CHECK(unsigned char);
@@ -141,15 +173,18 @@ init_test_suite()
 
   // unsigned long.
   suite->add(BOOST_TEST_CASE(&check_unsigned_range<unsigned long>));
+  suite->add(BOOST_TEST_CASE(&check_rounding_cast<unsigned long>));
 #if !(defined LIBPORT_URBI_UFLOAT_DOUBLE && _LP64)
   suite->add(BOOST_TEST_CASE(&check_max<unsigned long>));
 #endif
 
   // long long.
   suite->add(BOOST_TEST_CASE(&check_signed_range<long long>));
+  suite->add(BOOST_TEST_CASE(&check_rounding_cast<long long>));
 
   // unsigned long long.
   suite->add(BOOST_TEST_CASE(&check_unsigned_range<unsigned long long>));
+  suite->add(BOOST_TEST_CASE(&check_rounding_cast<unsigned long long>));
 
   // We can't represent these values in doubles.
   // suite->add(BOOST_TEST_CASE(check_max<long long>));

@@ -295,10 +295,44 @@ namespace libport
 #undef RETHROW
   }
 
+  /*----------------.
+  | rounding_cast.  |
+  `----------------*/
+
+  template <typename T>
+  T
+  rounding_cast(ufloat val) throw (bad_numeric_cast)
+  {
+    try
+    {
+      static boost::numeric::converter
+        <T,
+        ufloat,
+        boost::numeric::conversion_traits<T, ufloat>,
+        boost::numeric::def_overflow_handler,
+        boost::numeric::RoundEven<ufloat> > converter;
+
+      return converter(val);
+    }
+#define RETHROW(Name)                           \
+    catch (boost::numeric::Name&)               \
+    {                                           \
+      throw Name();                             \
+    }
+    RETHROW(negative_overflow)
+    RETHROW(positive_overflow)
+    RETHROW(bad_numeric_cast)
+#undef RETHROW
+  }
+
 # define UFLOAT_CAST(Type)                                      \
   template                                                      \
   Type                                                          \
-  numeric_cast<Type>(ufloat v) throw (bad_numeric_cast);
+  numeric_cast<Type>(ufloat v) throw (bad_numeric_cast);        \
+                                                                \
+  template                                                      \
+  Type                                                          \
+  rounding_cast<Type>(ufloat v) throw (bad_numeric_cast);
 
   // Instantiate.
   UFLOAT_CASTS
