@@ -127,24 +127,6 @@ namespace libport
 
 #endif
 
-  /*------------------.
-  | cast exceptions.  |
-  `------------------*/
-
-  const char *bad_numeric_cast::what() const throw()
-  {
-    return "bad numeric conversion: overflow or non empty fractional part";
-  }
-
-  const char *negative_overflow::what() const throw()
-  {
-    return "bad numeric conversion: negative overflow";
-  }
-
-  const char *positive_overflow::what() const throw()
-  {
-    return "bad numeric conversion: positive overflow";
-  }
 
   /*------------------------.
   | From string to ufloat.  |
@@ -209,6 +191,26 @@ namespace libport
   }
 
 
+  /*------------------.
+  | cast exceptions.  |
+  `------------------*/
+
+  const char *bad_numeric_cast::what() const throw()
+  {
+    return "bad numeric conversion: overflow or non empty fractional part";
+  }
+
+  const char *negative_overflow::what() const throw()
+  {
+    return "bad numeric conversion: negative overflow";
+  }
+
+  const char *positive_overflow::what() const throw()
+  {
+    return "bad numeric conversion: positive overflow";
+  }
+
+
   /*-------------------.
   | ufloat converter.  |
   `-------------------*/
@@ -227,7 +229,7 @@ namespace libport
     }
 
     typedef boost::mpl::integral_c<std::float_round_style,std::round_to_nearest>
-      round_style ;
+      round_style;
   };
 
 

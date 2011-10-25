@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -9,11 +9,11 @@
  */
 
 #include <limits>
-#include <libport/ufloat.h>
-
+#include <libport/ufloat.hh>
 #include <libport/unit-test.hh>
 
 using libport::test_suite;
+using libport::ufloat;
 
 static void check_comparison()
 {
@@ -38,7 +38,7 @@ static void check_comparison()
 | numeric_cast.  |
 `---------------*/
 
-# define CHECK_TO_AND_FRO(Value)                                \
+#define CHECK_TO_AND_FRO(Value)                                 \
   do {                                                          \
     T value = Value;                                            \
     BOOST_TEST_MESSAGE("Checking " #Value " = " << value);      \
@@ -46,9 +46,8 @@ static void check_comparison()
                       value);                                   \
   } while (0)
 
-# define CHECK_LIMIT(Name)                                     \
+#define CHECK_LIMIT(Name)                               \
   CHECK_TO_AND_FRO(std::numeric_limits<T>::Name())
-
 
 template <typename T>
 static void check_max()
@@ -130,22 +129,26 @@ init_test_suite()
   CHECK(unsigned short);
   CHECK(int);
   CHECK(unsigned int);
-
 #undef CHECK
 
+  // long.
   suite->add(BOOST_TEST_CASE(&check_signed_range<long>));
-
+  suite->add(BOOST_TEST_CASE(&check_rounding_cast<long>));
   // On 64 bits, long is like long long, see below...
 #if !(defined LIBPORT_URBI_UFLOAT_DOUBLE && _LP64)
   suite->add(BOOST_TEST_CASE(&check_max<long>));
 #endif
 
+  // unsigned long.
   suite->add(BOOST_TEST_CASE(&check_unsigned_range<unsigned long>));
 #if !(defined LIBPORT_URBI_UFLOAT_DOUBLE && _LP64)
   suite->add(BOOST_TEST_CASE(&check_max<unsigned long>));
 #endif
+
+  // long long.
   suite->add(BOOST_TEST_CASE(&check_signed_range<long long>));
 
+  // unsigned long long.
   suite->add(BOOST_TEST_CASE(&check_unsigned_range<unsigned long long>));
 
   // We can't represent these values in doubles.
