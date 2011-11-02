@@ -18,6 +18,7 @@
 # include <libport/detect-win32.h>
 # include <libport/export.hh>
 
+# undef environ
 
 /*-----------------.
 | libport::abort.  |
@@ -55,8 +56,9 @@ namespace libport
 
 namespace libport
 {
+  LIBPORT_API
   // Return an array of environment variables.
-  char** getenviron();
+  const char** getenviron();
 }
 
 /*-------.

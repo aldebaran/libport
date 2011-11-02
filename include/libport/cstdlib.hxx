@@ -8,9 +8,6 @@
  * See the LICENSE file for more information.
  */
 
-# if defined __APPLE__
-#  include <crt_externs.h>
-# endif
 
 #ifndef LIBPORT_CSTDLIB_HXX
 # define LIBPORT_CSTDLIB_HXX
@@ -32,22 +29,6 @@ namespace libport
 
 # endif
 
-/*-------------.
-| getenviron.  |
-`-------------*/
-
-
-namespace libport
-{
-  inline char** getenviron()
-  {
-# if defined __APPLE__
-    return (*_NSGetEnviron ());
-# else
-    return environ;
-# endif
-  }
-}
 
 /*---------.
 | setenv.  |

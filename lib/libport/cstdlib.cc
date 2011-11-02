@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -29,6 +29,11 @@
 
 # ifdef _MSC_VER
 #  include <crtdbg.h> // _CrtDbgBreak
+#  include <libport/windows.hh>
+# endif
+
+# if defined __APPLE__
+#  include <crt_externs.h>
 # endif
 
 #ifdef _MSC_VER
@@ -86,6 +91,49 @@ extern "C"
 }
 
 #endif
+
+/*-------------.
+| getenviron.  |
+`-------------*/
+
+namespace libport
+{
+  const char** getenviron()
+  {
+# if defined __APPLE__
+    const char** res = const_cast<const char**>((*_NSGetEnviron()));
+    return res;
+# elif defined _MSC_VER || defined __MINGW32__
+    char* environ = GetEnvironmentStrings();
+    char* head = environ;
+    int environlen = 0;
+    while (strlen(environ))
+    {
+      environ += strlen(environ) + 1;
+      environlen++;
+    }
+    // One more space for a NULL pointer.
+    char** envArray = new char*[environlen + 1];
+    environ = head;
+    int i = 0;
+    while (strlen(environ))
+    {
+      int len = strlen(environ);
+      char* env = new char[len];
+      memcpy(env, environ, len);
+      environ += len + 1;
+      envArray[i++] = environ;
+    }
+    envArray[i] = 0;
+    FreeEnvironmentStrings(head);
+    const char** res = const_cast<const char**>(envArray);
+    return res;
+# else
+    const char** res = const_cast<const char**>(environ);
+    return res;
+# endif
+  }
+}
 
 /*--------.
 | abort.  |
