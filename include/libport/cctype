@@ -14,8 +14,8 @@
 # include <libport/detect-win32.h>
 
 # if defined WIN32
-# undef isascii
-# undef isblank
+#  undef isascii
+#  undef isblank
 
 extern "C"
 {
