@@ -8,13 +8,14 @@
  * See the LICENSE file for more information.
  */
 
-#include <libport/compiler.hh>
-#include <libport/detect-win32.h>
-#include <libport/export.hh>
+#ifndef LIBPORT_CCTYPE
+# define LIBPORT_CCTYPE
 
-#if defined WIN32
-#undef isascii
-#undef isblank
+# include <libport/detect-win32.h>
+
+# if defined WIN32
+# undef isascii
+# undef isblank
 
 extern "C"
 {
@@ -25,9 +26,11 @@ extern "C"
   int isblank(int c);
 }
 
-#endif
+# endif
 
-#include <libport/cctype.hxx>
+# include <libport/cctype.hxx>
+
+#endif
 
 // Local Variables:
 // mode: C++

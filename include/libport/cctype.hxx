@@ -15,13 +15,13 @@ extern "C"
   inline
   int isascii(int c)
   {
-    return c > 0 && c < 128;
+    return 0 <= c && c < 128;
   }
 
   inline
   int isblank(int c)
   {
-    return c == '\t' || c == ' ';
+    return c == ' ' || c == '\t';
   }
 }
 
