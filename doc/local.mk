@@ -14,7 +14,7 @@
 # implied warranties of fitness for a particular purpose.
 #
 # See the LICENSE file for more information.
-# For comments, bug reports and feedback: http://www.urbiforge.com
+# For comments, bug reports and feedback: http://www.urbiforge.org
 
 DOXYGEN = doxygen
 
