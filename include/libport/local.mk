@@ -10,6 +10,8 @@
 libport_includedir = $(includedir)/libport
 libport_include_HEADERS =                       \
   include/libport/cassert                       \
+  include/libport/cctype                        \
+  include/libport/cctype.hxx                    \
   include/libport/cerrno                        \
   include/libport/cmath                         \
   include/libport/cmath.hxx                     \
