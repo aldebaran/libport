@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -513,9 +513,9 @@ namespace libport
   namespace opts
   {
     OptionFlag
-      help("display this message and exit successfully", "help",    'h'),
+      help("output this message and exit successfully", "help",    'h'),
       verbose("be more verbose",                         "verbose", 'v'),
-      version("display version information",             "version");
+      version("output version information and exit successfully", "version");
 
     OptionValue
     // Client.
