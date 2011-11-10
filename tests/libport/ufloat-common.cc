@@ -12,6 +12,7 @@
 #include <libport/ufloat.hh>
 #include <libport/tr1/type_traits>
 #include <libport/unit-test.hh>
+#include <iostream>
 
 using libport::test_suite;
 using libport::ufloat;
