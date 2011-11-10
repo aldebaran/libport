@@ -360,7 +360,7 @@ namespace libport
     OptionValued::callback_type cb_debug(cb_debug_fun);
 
     OptionValue
-    debug("set the debug level in NONE, LOG (default), TRACE, DEBUG, DUMP",
+    debug("set log verbosity (NONE, LOG, TRACE, DEBUG, DUMP) [LOG]",
           "debug", 'd', "LEVEL", cb_debug);
 
   }
