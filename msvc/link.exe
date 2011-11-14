@@ -41,8 +41,8 @@ run_filter ()
   run "$@" >$stdout 2>$stderr || status=$?
 
   # Warnings from wine.
-  sed -e '/err:secur32:SECUR32_initSchannelSP libgnutls not found/d'    \
-      -e '/fixme:heap:HeapSetInformation (nil) 1 (nil) 0/d'             \
+  sed -e '/err:secur32:SECUR32_initSchannelSP.*not found/d'     \
+      -e '/fixme:heap:HeapSetInformation (nil) 1 (nil) 0/d'     \
     <$stderr >&2
 
   sed -e '/Microsoft (R) Windows (R) Resource Compiler/d'       \
