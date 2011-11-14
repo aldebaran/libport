@@ -121,7 +121,7 @@ while (<>)
       ||
       # cl : Command line warning D9024 :
       # unrecognized source file type 'FOO.o', object file assumed
-      /Command line warning D9024 : unrecognized source file type '.*\.o'/
+      m{Command line warning D9024 : unrecognized source file type '.*\.o'}
       ||
       # LINK : warning LNK4068: /MACHINE not specified; defaulting to X86
       m{LINK : warning LNK4068: /MACHINE not specified; defaulting to X86}
@@ -135,7 +135,7 @@ while (<>)
       ||
       m{fixme:rpc:NdrStubCall2 new correlation description not implemented}
       ||
-      m{err:secur32:SECUR32_initSchannelSP libgnutls not found, SSL connections will fail}
+      m{err:secur32:SECUR32_initSchannelSP .* not found, SSL connections will fail}
       ||
       # Appears alone on the output.  Probably due to Boost when it
       # decides to use the decltype of Visual.
