@@ -613,7 +613,7 @@ my %license_field =
  holder    => q{(?:Gostai (?:SAS|S.A.S.?)?|Jean-Christophe Baillie)},
  project   => q{[^\\n]*},
  urbiforge => q{For (?:comments, bug reports and feedback|more information,
-                comments, bug reports): http://www\.urbiforge\.(?:com|net)},
+                comments, bug reports): http://www\.urbiforge\.(?:com|net|org)},
  years     => q{[\\d\\-]+(?:,\s*[\\d\\-]+)*},
 );
 

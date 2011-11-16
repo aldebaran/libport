@@ -220,11 +220,11 @@ This MSVC++ wrapper presents a CC-like interface.  It adds some options
 of its own.
 
 Options:
-  --help          display this message and that of MSVC and exit
+  --help          output this message and that of MSVC and exit
   --runtime=KIND  specify whether using "debug" or "release" runtime
                   [$runtime]
-  --version       display the version of this script and that of MSVC and exit
-  --verbose       display debugging information about this script
+  --version       output the version of this script and that of MSVC and exit
+  --verbose       output debugging information about this script
 
 MSVC help:
                          C/C++ COMPILER OPTIONS

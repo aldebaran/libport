@@ -15,6 +15,8 @@
 
 namespace libport
 {
+  using boost::uint64_t;
+  using boost::int64_t;
   using boost::uint32_t;
   using boost::int32_t;
   using boost::uint16_t;
@@ -26,6 +28,9 @@ namespace libport
 # if !defined LIBPORT_NO_CSTDINT_TYPES
 extern "C"
 {
+  using libport::int64_t;
+  using libport::uint64_t;
+  using libport::int32_t;
   using libport::uint32_t;
   using libport::int16_t;
   using libport::uint16_t;
