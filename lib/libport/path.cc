@@ -269,7 +269,7 @@ namespace libport
     }
     catch (Exception& e)
     {
-      throw Exception(libport::format("cannot rename file %s: %s",
+      throw Exception(libport::format("cannot rename directory %s: %s",
                                       *this, format_boost_fs_error(e.what())));
     }
 
