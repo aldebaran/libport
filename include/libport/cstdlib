@@ -13,6 +13,7 @@
 
 # include <cstdlib>
 # include <string>
+# include <map>
 
 # include <libport/compiler.hh>
 # include <libport/detect-win32.h>
@@ -58,7 +59,7 @@ namespace libport
 {
   LIBPORT_API
   // Return an array of environment variables.
-  const char** getenviron();
+  std::map<std::string, std::string> getenviron();
 }
 
 /*-------.

@@ -98,27 +98,28 @@ extern "C"
 
 namespace libport
 {
-  const char** getenviron()
+  std::map<std::string, std::string> getenviron()
   {
+    std::map<std::string, std::string> res;
+    char** envArray;
 # if defined __APPLE__
-    const char** res = const_cast<const char**>((*_NSGetEnviron()));
-    return res;
+    envArray = (*_NSGetEnviron());
 # elif defined _MSC_VER || defined __MINGW32__
     char* environ = GetEnvironmentStrings();
     char* head = environ;
     int environlen = 0;
-    while (strlen(environ))
+    while (size_t s = strlen(environ))
     {
-      environ += strlen(environ) + 1;
+      environ += s + 1;
       environlen++;
     }
     // One more space for a NULL pointer.
-    char** envArray = new char*[environlen + 1];
+    envArray = new char*[environlen + 1];
     environ = head;
     int i = 0;
-    while (strlen(environ))
+    while (size_t s = strlen(environ))
     {
-      int len = strlen(environ);
+      int len = s;
       char* env = new char[len];
       memcpy(env, environ, len);
       environ += len + 1;
@@ -126,12 +127,24 @@ namespace libport
     }
     envArray[i] = 0;
     FreeEnvironmentStrings(head);
-    const char** res = const_cast<const char**>(envArray);
-    return res;
 # else
-    const char** res = const_cast<const char**>(environ);
-    return res;
+     envArray = environ;
 # endif
+    for (int i = 0; envArray[i]; ++i)
+    {
+      std::string str = std::string(envArray[i]);
+# if defined _MSC_VER || defined __MINGW32__
+      delete envArray[i];
+# endif
+      int pos = str.find("=");
+      std::string k = str.substr(0, pos);
+      std::string v = str.substr(pos + 1);
+      res.insert (std::pair<std::string, std::string>(k, v));
+    }
+# if defined _MSC_VER || defined __MINGW32__
+    delete envArray;
+# endif
+    return res;
   }
 }
 
