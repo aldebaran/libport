@@ -135,6 +135,7 @@ namespace libport
   `-----------*/
   inline
   Lockable::Lockable()
+    : lock_()
   {
     initLock(lock_);
   }
@@ -193,14 +194,16 @@ namespace libport
 
   inline
   ScopedTryLock::ScopedTryLock(Lockable& l)
-    : lockable_(l)
+    : hasLock_(false)
+    , lockable_(l)
   {
     hasLock_ = lockable_.tryLock();
   }
 
   inline
   ScopedTryLock::ScopedTryLock(Lockable* l)
-    : lockable_(*l)
+    : hasLock_(false)
+    , lockable_(*l)
   {
     hasLock_ = lockable_.tryLock();
   }

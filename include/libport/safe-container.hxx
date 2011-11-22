@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -13,20 +13,11 @@
 
 # include <stdexcept>
 # include <iostream>
-
+# include <libport/preproc.hh>
 # include <boost/foreach.hpp>
 
 namespace libport
 {
-
-  template<template<class, class>class C, class T>
-  inline
-  SafeContainer<C, T>::SafeContainer()
-   : currentMask(0)
-   , invalidationMask(0)
-   , inUse(0)
-  {
-  }
 
 #define CONTAINER                               \
   SafeContainer<C, T>
@@ -39,6 +30,14 @@ namespace libport
 
 #define CONTAINER_METHOD(Ret)                           \
   CONTAINER_SMETHOD(typename CONTAINER::Ret)
+
+
+  CONTAINER_SMETHOD(__) SafeContainer()
+    : currentMask(0)
+    , invalidationMask(0)
+    , inUse(0)
+  {
+  }
 
   CONTAINER_METHOD(iterator::value_type&) iterator::operator*()
   {

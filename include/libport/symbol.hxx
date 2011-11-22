@@ -28,6 +28,7 @@ namespace libport
 {
   //<<
   inline Symbol::Symbol()
+    : str_()
   {
     static const Symbol s("");
     str_ = s.str_;

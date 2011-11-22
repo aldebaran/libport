@@ -26,7 +26,7 @@ namespace libport
     public:
       typedef OSerializer<BinaryOSerializer> super_type;
       BinaryOSerializer(std::ostream& output);
-      ~BinaryOSerializer();
+      virtual ~BinaryOSerializer();
       template <typename T>
       struct Impl;
       template<typename T>

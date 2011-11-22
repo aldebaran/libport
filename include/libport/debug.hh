@@ -194,7 +194,7 @@ namespace libport
     bool timestamps_;
 
   public:
-    class Indent
+    class Indent: public boost::noncopyable
     {
     public:
       ATTRIBUTE_ALWAYS_INLINE

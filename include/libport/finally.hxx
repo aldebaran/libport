@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -21,6 +21,7 @@ namespace libport
 
   inline
   Finally::Finally()
+    : actions_()
   {
     actions_.reserve(4);
   }
@@ -34,6 +35,7 @@ namespace libport
 
   inline
   Finally::Finally(const action_type& a)
+    : actions_()
   {
     actions_.reserve(4);
     *this << a;
@@ -41,6 +43,7 @@ namespace libport
 
   inline
   Finally::Finally(unsigned int n)
+    : actions_()
   {
     actions_.reserve(n);
   }
