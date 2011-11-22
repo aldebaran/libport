@@ -22,6 +22,7 @@
 # include <set>
 # include <vector>
 
+# include <boost/circular_buffer.hpp>
 # include <boost/unordered_map.hpp>
 # include <boost/unordered_set.hpp>
 
@@ -106,6 +107,7 @@ namespace std
   `---------------------*/
 
 #define APPLY_ON_BACK_INSERTION_CONTAINERS(Macro)       \
+  Macro(::boost::circular_buffer);                      \
   Macro(::std::deque);                                  \
   Macro(::std::list);                                   \
   Macro(::std::vector);
