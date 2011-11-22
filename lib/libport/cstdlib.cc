@@ -98,55 +98,46 @@ extern "C"
 
 namespace libport
 {
-  std::map<std::string, std::string> getenviron()
+  inline environ_type
+  build_env(char ** envArray)
   {
-    std::map<std::string, std::string> res;
-    char** envArray;
+    environ_type res;
+    for (size_t i = 0; envArray[i]; ++i)
+    {
+      std::string str = std::string(envArray[i]);
+      size_t pos = str.find("=");
+      std::string k = str.substr(0, pos);
+      std::string v = str.substr(pos + 1);
+      res[k] = v;
+    }
+    return res;
+  }
+
+  environ_type getenviron()
+  {
+    environ_type res;
 # if defined __APPLE__
-    envArray = (*_NSGetEnviron());
+    res = build_env(*_NSGetEnviron());
 # elif defined _MSC_VER || defined __MINGW32__
     char* environ = GetEnvironmentStrings();
     char* head = environ;
-    int environlen = 0;
     while (size_t s = strlen(environ))
     {
+      std::string env = std::string(environ, s);
+      size_t pos = env.find("=");
+      std::string k = env.substr(0, pos);
+      std::string v = env.substr(pos + 1);
+      res[k] = v;
       environ += s + 1;
-      environlen++;
     }
-    // One more space for a NULL pointer.
-    envArray = new char*[environlen + 1];
-    environ = head;
-    int i = 0;
-    while (size_t s = strlen(environ))
-    {
-      int len = s;
-      char* env = new char[len];
-      memcpy(env, environ, len);
-      environ += len + 1;
-      envArray[i++] = environ;
-    }
-    envArray[i] = 0;
     FreeEnvironmentStrings(head);
 # else
-     envArray = environ;
-# endif
-    for (int i = 0; envArray[i]; ++i)
-    {
-      std::string str = std::string(envArray[i]);
-# if defined _MSC_VER || defined __MINGW32__
-      delete envArray[i];
-# endif
-      int pos = str.find("=");
-      std::string k = str.substr(0, pos);
-      std::string v = str.substr(pos + 1);
-      res.insert (std::pair<std::string, std::string>(k, v));
-    }
-# if defined _MSC_VER || defined __MINGW32__
-    delete envArray;
+     res = build_env(environ);
 # endif
     return res;
   }
 }
+
 
 /*--------.
 | abort.  |

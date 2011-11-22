@@ -57,9 +57,11 @@ namespace libport
 
 namespace libport
 {
+  typedef std::map<std::string, std::string> environ_type;
+
   LIBPORT_API
-  // Return an array of environment variables.
-  std::map<std::string, std::string> getenviron();
+  // Return a map of environment variables.
+  environ_type getenviron();
 }
 
 /*-------.
