@@ -85,22 +85,32 @@ static void check_rounding_cast()
   BOOST_CHECK_EQUAL(libport::rounding_cast<T>(ufloat(In)),  Out)
 #define CHECK(In, Out)                          \
   do {                                          \
-    CHECK_(In, Out);                            \
-    if (!std::tr1::is_unsigned<T>::value)        \
+    if (std::tr1::is_unsigned<T>::value)        \
+      CHECK_(In, Out##u);                       \
+    else                                        \
+    {                                           \
+      CHECK_( In,  Out);                        \
       CHECK_(-In, -Out);                        \
+    }                                           \
   } while (false)
-  CHECK(0,       0);
+  CHECK(0.0,     0);
   CHECK(0.4999,  0);
   CHECK(0.5,     0);
   CHECK(0.50001, 1);
   CHECK(0.9999,  1);
-  CHECK(1,       1);
+  CHECK(1.0,     1);
   CHECK(1.4,     1);
   CHECK(1.45,    1);
   CHECK(1.49999, 1);
   CHECK(1.5,     2);
   CHECK(1.50001, 2);
-  CHECK(255.0, 255);
+  // Does not with too long types, where the precision is lost in
+  // ufloat.
+  if (sizeof(T) <= 4)
+  {
+    CHECK_(std::numeric_limits<T>::min(), std::numeric_limits<T>::min());
+    CHECK_(std::numeric_limits<T>::max(), std::numeric_limits<T>::max());
+  }
 #undef CHECK
 #undef CHECK_
 }
@@ -121,7 +131,7 @@ check_castable()
   BOOST_CHECK(!libport::numeric_castable<int>(4294967296.0));
 
   // Does not work on 32b machines where int == long.
-  if (32 <= sizeof(long))
+  if (4 <= sizeof(long))
   {
     BOOST_CHECK( libport::numeric_castable<long>(4294967296.0));
     BOOST_CHECK(!libport::numeric_castable<long>(4294967296.1));
