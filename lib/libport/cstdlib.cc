@@ -98,41 +98,38 @@ extern "C"
 
 namespace libport
 {
-  inline environ_type
-  build_env(char ** envArray)
+
+  inline
+  void
+  env_add(environ_type& env, const char *var)
+  {
+    const char* eq = strchr(var, '=');
+    env[std::string(var, eq - var)] = std::string(eq + 1);
+  }
+
+  inline
+  environ_type
+  env_build(char **env)
   {
     environ_type res;
-    for (size_t i = 0; envArray[i]; ++i)
-    {
-      std::string str = std::string(envArray[i]);
-      size_t pos = str.find("=");
-      std::string k = str.substr(0, pos);
-      std::string v = str.substr(pos + 1);
-      res[k] = v;
-    }
+    for (size_t i = 0; env[i]; ++i)
+      env_add(res, env[i]);
     return res;
   }
 
-  environ_type getenviron()
+  environ_type
+  getenviron()
   {
     environ_type res;
 # if defined __APPLE__
-    res = build_env(*_NSGetEnviron());
+    res = env_build(*_NSGetEnviron());
 # elif defined _MSC_VER || defined __MINGW32__
     char* environ = GetEnvironmentStrings();
-    char* head = environ;
-    while (size_t s = strlen(environ))
-    {
-      std::string env = std::string(environ, s);
-      size_t pos = env.find("=");
-      std::string k = env.substr(0, pos);
-      std::string v = env.substr(pos + 1);
-      res[k] = v;
-      environ += s + 1;
-    }
-    FreeEnvironmentStrings(head);
+    for (char* cp = environ; *cp; cp += strlen(cp) + 1)
+      env_add(res, cp);
+    FreeEnvironmentStrings(environ);
 # else
-     res = build_env(environ);
+     res = env_build(environ);
 # endif
     return res;
   }
