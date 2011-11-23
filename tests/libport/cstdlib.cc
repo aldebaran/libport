@@ -9,6 +9,7 @@
  */
 
 #include <libport/cstdlib>
+#include <libport/containers.hh>
 #include <libport/unit-test.hh>
 #include <libport/instrument.hh>
 
@@ -36,10 +37,18 @@ using libport::test_suite;
 
 static void test_environ()
 {
+  libport::environ_type env = libport::getenviron();
   // Variables we know to be defined.
-  const char* path = libport::getenv("PATH");
-  BOOST_CHECK(!!path);
+  BOOST_CHECK(!!libport::getenv("PATH"));
+  // Keep a copy of the current value of PATH, used for a later check.
+  const std::string path = libport::getenv("PATH");
+  BOOST_CHECK(!path.empty());
+  BOOST_CHECK(libport::has(env, "PATH"));
+  BOOST_CHECK_EQUAL(env["PATH"], path);
+
   BOOST_CHECK(!!libport::getenv("SRCDIR"));
+  BOOST_CHECK(libport::has(env, "SRCDIR"));
+  BOOST_CHECK_EQUAL(env["SRCDIR"], libport::getenv("SRCDIR"));
 
   // setenv should not override by default.
   BOOST_CHECK(!setenv("PATH", "TOTO", 0));
@@ -48,6 +57,7 @@ static void test_environ()
   // Variables we know (hope) not to be defined.
   const char* var = "__THIS_IS_AN_UNLIKELY_VARIABLE_NAME__";
   BOOST_CHECK(!libport::getenv(var));
+  BOOST_CHECK(!libport::has(env, var));
   BOOST_CHECK(!setenv(var, "23", 0));
   BOOST_CHECK_EQUAL("23", libport::getenv(var));
   BOOST_CHECK(!unsetenv(var));
@@ -56,8 +66,8 @@ static void test_environ()
 
 static void test_system()
 {
-// Testing system under windows is a pain. We're probably not actually
-// going to use it anyway ...
+  // Testing system under windows is a pain. We're probably not
+  // actually going to use it anyway ...
 #ifndef WIN32
   // Unfortunately, boost::unit_test implodes if any child has a non null
   // return value, so we cannot test the failing case.
