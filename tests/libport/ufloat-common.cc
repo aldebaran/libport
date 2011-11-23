@@ -86,7 +86,6 @@ static void check_rounding_cast()
 #define CHECK(In, Out)                          \
   do {                                          \
     CHECK_(In, Out);                            \
-    std::cerr << "Unsigned: " << std::tr1::is_unsigned<T>::value << std::endl; \
     if (!std::tr1::is_unsigned<T>::value)        \
       CHECK_(-In, -Out);                        \
   } while (false)
