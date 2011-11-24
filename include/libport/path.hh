@@ -84,6 +84,8 @@ namespace libport
     std::string volume_get() const;
     path dirname() const;
     bool exists() const;
+    bool is_dir() const;
+    bool is_reg() const;
     /// Remove the file.
     /// \return true iff no error.
     void remove() const;

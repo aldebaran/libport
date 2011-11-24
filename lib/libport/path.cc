@@ -20,6 +20,7 @@
 #include <libport/detect-win32.h>
 #include <libport/exception.hh>
 #include <libport/fcntl.h>
+#include <libport/file-system.hh>
 #include <libport/format.hh>
 #include <libport/path.hh>
 #include <libport/sys/stat.h>
@@ -114,6 +115,18 @@ namespace libport
   path::dump(std::ostream& o) const
   {
     return o << operator std::string();
+  }
+
+  bool
+  path::is_dir() const
+  {
+    return libport::is_dir(to_string());
+  }
+
+  bool
+  path::is_reg() const
+  {
+    return libport::is_reg(to_string());
   }
 
   std::string
