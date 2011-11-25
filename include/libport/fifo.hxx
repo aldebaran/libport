@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -29,7 +29,7 @@ namespace libport
     , first_item_(buffer_)
     , next_item_(buffer_)
   {
-    passert(buffer_, buffer_);
+    aver(buffer_);
     *buffer_ = Terminator;
   }
 
@@ -111,7 +111,7 @@ namespace libport
 	pointer old_buffer = buffer_;
 	size_type old_capacity = capacity_;
 	buffer_ = allocator_.allocate(capacity_ * sizeof(value_type));
-	passert(buffer_, buffer_);
+	aver(buffer_);
 	memcpy(buffer_, first_item_, size() * sizeof(value_type));
 	allocator_.deallocate(old_buffer, old_capacity * sizeof(value_type));
       }

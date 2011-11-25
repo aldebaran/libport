@@ -28,7 +28,7 @@ namespace libport
     // OS X can be given 0 instead of "C", but GNU Libc then returns 0.
     locale_t res = newlocale(LC_CTYPE_MASK, "C", 0);
     if (!res)
-      pabort("cannot create C locale: " << strerror(errno));
+      errnoabort("cannot create C locale");
     return res;
   }
 

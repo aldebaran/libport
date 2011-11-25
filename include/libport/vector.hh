@@ -364,7 +364,7 @@ namespace libport
 
       void pop_front()
       {
-        assert(size_);
+        aver(size_);
         erase(begin());
       }
 
