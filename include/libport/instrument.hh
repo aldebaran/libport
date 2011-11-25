@@ -41,8 +41,8 @@
 // Always define it, even if NVALGRIND, as it protects us from running
 // Valgrind in place where it does not work properly.  See for
 // instance tests/libport/cstdlib.
-# define INSTRUMENTFLAGS(Flags)					\
-  const char* LIBPORT_CAT(libport_instrument, __LINE__) =		\
+# define INSTRUMENTFLAGS(Flags)                                 \
+  const char* LIBPORT_CAT(libport_instrument, __LINE__) =       \
     "INSTRUMENTFLAGS=" __HERE__ ":" #Flags
 # define INSTRUMENT_DISABLE()                   \
   INSTRUMENTFLAGS(--mode=none)
@@ -56,18 +56,18 @@
 // access the variables.  This are means to check for bad memory writes
 // which are made on specific variables.
 # if defined NVALGRIND
-#  define MEM(Right, Addr, Size)           LIBPORT_NOP
-#  define POOL_CREATE(Pool, RedZone, Init) LIBPORT_NOP
-#  define POOL_ALLOC(Pool, Addr, Size)     LIBPORT_NOP
-#  define POOL_FREE(Pool, Addr)		   LIBPORT_NOP
+#  define MEM(Right, Addr, Size)           LIBPORT_NOP()
+#  define POOL_CREATE(Pool, RedZone, Init) LIBPORT_NOP()
+#  define POOL_ALLOC(Pool, Addr, Size)     LIBPORT_NOP()
+#  define POOL_FREE(Pool, Addr)            LIBPORT_NOP()
 # else
 #  define MEM(Right, Addr, Size)                        \
   LIBPORT_CAT(VALGRIND_MAKE_MEM_, Right) (Addr, Size)
-# define POOL_CREATE(Pool, RedZone, Init)	\
+# define POOL_CREATE(Pool, RedZone, Init)       \
   VALGRIND_CREATE_MEMPOOL(Pool, RedZone, Init)
-# define POOL_ALLOC(Pool, Addr, Size)		\
+# define POOL_ALLOC(Pool, Addr, Size)           \
   VALGRIND_MEMPOOL_ALLOC(Pool, Addr, Size)
-# define POOL_FREE(Pool, Addr)			\
+# define POOL_FREE(Pool, Addr)                  \
   VALGRIND_MEMPOOL_FREE(Pool, Addr)
 # endif
 
