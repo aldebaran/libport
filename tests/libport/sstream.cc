@@ -22,8 +22,6 @@ static void test_stream_wrapper()
   CHECK("a", "a");
   CHECK("1a", 1 << "a");
   CHECK("1afoo", 1 << "a" << std::string("foo"));
-
-  pabort(1 << 2);
 }
 
 test_suite*
