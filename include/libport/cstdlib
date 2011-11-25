@@ -74,7 +74,7 @@ namespace libport
 # if defined _MSC_VER
 
 # define LIBPORT_ABORT(Arg)
-  (::libport::abort(__FILE__, __LINE__, libport::format(__VA_ARGS__)), 0)
+  (::libport::abort(__FILE__, __LINE__, Arg, 0)
 
 # else // ! _MSC_VER
 
