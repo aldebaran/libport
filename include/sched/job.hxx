@@ -92,7 +92,7 @@ namespace sched
   inline
   Job::~Job()
   {
-    passert(children_, children_.empty());
+    aver(children_.empty(), children_);
     coroutine_free(coro_);
     alive_jobs_--;
   }

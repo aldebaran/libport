@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -44,7 +44,7 @@ namespace libport
           default:
             // Catch other cases that should not exit.
             // http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01194.html
-            pabort("invalid way: " << int(way));
+            fabort("invalid way: %s", int(way));
           }
           if (cur < eback())
             cur = eback();

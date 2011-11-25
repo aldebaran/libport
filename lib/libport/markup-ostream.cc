@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -45,7 +45,7 @@ namespace libport
     void etable()
     {
       sync();
-      passert(in_table_, "not in table mode");
+      aver(in_table_, "not in table mode");
       typedef std::vector<size_t> widths_type;
       widths_type widths;
       foreach (const row_type& row, table_)
@@ -94,7 +94,7 @@ namespace libport
     void table()
     {
       sync();
-      passert(!in_table_, "already in table mode");
+      aver(!in_table_, "already in table mode");
       in_table_ = true;
     }
 
