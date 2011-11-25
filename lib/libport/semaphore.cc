@@ -111,7 +111,7 @@ namespace libport
     if (sem_init(sem_, 0, value))
     {
       destroy();
-      errnoabort("sem_init(" << value << ')');
+      errnoabort("sem_init(%s)", value);
     }
 # endif
     ++instances_;
