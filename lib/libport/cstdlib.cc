@@ -147,21 +147,35 @@ namespace libport
   {
     abort_throw_ = v;
   }
+
   void
-  abort()
+  abort(const std::string& msg)
   {
     if (abort_throw_)
-      throw std::runtime_error("abortion");
+      throw std::runtime_error(msg);
     else
+    {
+      std::cerr << msg << " (backtrace follows)" << std::endl;
       foreach(const std::string& str, libport::backtrace())
-        std::cerr << str << std::endl;
+        std::cerr << "  " << str << std::endl;
 # ifdef _MSC_VER
-    if (getenv("_DEBUG_VCXX"))
-      _CrtDbgBreak();
-    else
+      if (getenv("_DEBUG_VCXX"))
+        _CrtDbgBreak();
+      else
 # endif
-      std::abort();
+        std::abort();
+    }
   }
+
+  void
+  abort(const char* file, int line, const std::string& msg)
+  {
+    std::string err = libport::format("%s:%s: abort", file, line);
+    if (!msg.empty())
+      err += ": " + msg;
+    abort(err);
+  }
+
 
 }
 

@@ -49,43 +49,6 @@
 # endif
 
 
-/*-------------------------.
-| pabort -- Pretty abort.  |
-`-------------------------*/
-
-/// \def pabort(Msg)
-///
-/// Same as abort, but if LIBPORT_ASSERT_VERBOSE is set, report the
-/// Msg using the operator<< on std::cerr.  Msg may include << itself.
-/// So if Msg is complex, beware of predence issues with << and use
-/// parens on the invocation side.
-
-// Unfortunately, some old compilers (namely gcc 3) complain when the
-// last operand of the comma operator has 'no effect' - which is otherwise
-// perfectly legitimate. Work around them with this function.
-//
-// Other compilers, e.g., MSVC, dislike that a no-return function
-// has a non-void return type, which makes plenty of sense.
-# ifndef _MSC_VER
-ATTRIBUTE_COLD
-ATTRIBUTE_NORETURN
-static inline int _libport_die_hard();
-
-ATTRIBUTE_NORETURN
-static inline int
-_libport_die_hard()
-{
-  libport::abort();
-}
-
-#  define pabort(Msg)                                     \
-  (ASSERT_ECHO(__FILE__, __LINE__, "abort: " << Msg),     \
-   _libport_die_hard())
-# else
-#  define pabort(Msg)                                     \
-  (ASSERT_ECHO(__FILE__, __LINE__, "abort: " << Msg),     \
-   ::libport::abort(), 0)
-# endif
 
 /*-----------------------------------------------------.
 | __passert -- Pretty assert with additional message.  |
@@ -119,7 +82,7 @@ _libport_die_hard()
 /// Same as assert, but on failure, dump \a Message on std::cerr.
 # define aver(Assertion)                                        \
   __passert(likely(Assertion),                                  \
-            "failed assertion: " << #Assertion << std::endl)
+            "failed assertion: " << #Assertion)
 
 
 /*---------------------------------------------------------.
@@ -140,44 +103,8 @@ _libport_die_hard()
 /// Same as assert, but on failure, dump \a Subject of std::cerr.
 #  define passert(Subject, Assertion)                           \
   __passert(Assertion,                                          \
-            "failed assertion: " << #Assertion << std::endl	\
+            "failed assertion: " << #Assertion << '\n'          \
             << "\t with " << #Subject << " = " << Subject)
-
-
-/*----------------------------------------------.
-| errabort -- perror (well, strerror) + abort.  |
-`----------------------------------------------*/
-
-/// \def errabort(Err, Msg)
-///
-/// It is on purpose that Err is not evaluated when NDEBUG: Err could
-/// be costly, or have side effects.  Rather, use ERRNO_RUN, or
-/// PTHREAD_RUN and so forth.
-# define errabort(Err, Msg)                     \
-  pabort(libport::strerror(Err) << ": " << Msg)
-
-/// \def errnoabort(Msg)
-# define errnoabort(Msg)                        \
-  errabort(errno, Msg)
-
-/// \def unreachable()
-///
-/// This call should never be reached, just abort.
-# define unreachable()                          \
-  pabort("unreachable code reached")
-
-/// \def ERRNO_RUN(Function, ...)
-/// Run Function(...) and use errnoabort on errors.
-///
-/// It is considered that there is an error when Function returns a
-/// negative value.  Alternatively we could set errno to 0 before
-/// calling the function, and checking it afterwards, but it's more
-/// expensive.
-# define ERRNO_RUN(Function, ...)               \
-  do {                                          \
-    if (Function (__VA_ARGS__) < 0)             \
-      errnoabort(#Function);                    \
-  } while (false)
 
 
 
