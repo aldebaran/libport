@@ -21,7 +21,6 @@
 # include <libport/export.hh>
 # include <libport/format.hh>
 
-# undef environ
 
 /*-----------------.
 | libport::abort.  |
