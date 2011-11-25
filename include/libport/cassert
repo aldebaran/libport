@@ -49,22 +49,16 @@
 # endif
 
 
+/*---------------------------------------------------.
+| enforce: like assert, but not disabled by NDEBUG.  |
+`---------------------------------------------------*/
 
-/*-----------------------------------------------------.
-| __passert -- Pretty assert with additional message.  |
-`-----------------------------------------------------*/
+# define enforce(Assertion, ...)                        \
+  ((void) ((Assertion)                                  \
+	   ? 0                                          \
+	   : fabort("assertion failed: " #Assertion     \
+                    , ## __VA_ARGS__)))
 
-/// \def __passert(Assertion, Message)
-/// Same as assert, but on failure, dump \a Message on std::cerr.
-# if defined NDEBUG
-#  define __passert(Assertion, Message)         \
-  ((void) 0)
-# else
-#  define __passert(Assertion, Message)			\
-  ((void) ((Assertion)					\
-	   ? 0						\
-	   : pabort(Message)))
-# endif
 
 
 /*-------------------------------------------------------------------.
@@ -78,11 +72,13 @@
 | the standard one.                                                  |
 `-------------------------------------------------------------------*/
 
-/// \def aver(Assertion)
-/// Same as assert, but on failure, dump \a Message on std::cerr.
-# define aver(Assertion)                                        \
-  __passert(likely(Assertion),                                  \
-            "failed assertion: " << #Assertion)
+/// \def aver(Assertion, Message...)
+/// Same as enforce, but can be disabled by NDEBUG.
+# if defined NDEBUG
+#  define aver  LIBPORT_NOP
+# else
+#  define aver  enforce
+# endif
 
 
 /*---------------------------------------------------------.
@@ -102,10 +98,9 @@
 /// \def passert(Subject, Assertion)
 /// Same as assert, but on failure, dump \a Subject of std::cerr.
 #  define passert(Subject, Assertion)                           \
-  __passert(Assertion,                                          \
-            "failed assertion: " << #Assertion << '\n'          \
-            << "\t with " << #Subject << " = " << Subject)
-
+  aver(Assertion,                                               \
+       "failed assertion: %s\n\twith %s = %s",                  \
+       #Assertion, #Subject, Subject)
 
 
 /*--------------------------------------------------------.
@@ -124,10 +119,7 @@ namespace libport
   assert_exp_(T t, const char* file, int line, const char* msg)
   {
     if (!t)
-    {
-      ASSERT_ECHO(file, line, "failed assertion: " << msg);
-      libport::abort();
-    }
+      fabort("%s:%s: failed assertion: %s", file, line, msg);
     return t;
   }
 }
@@ -143,15 +135,15 @@ namespace libport
 | assert_<op> -- compare two values, show both of them if fail.  |
 `---------------------------------------------------------------*/
 
-#  define DEFINE_AVER_OP(OpName, Op)                                    \
+#  define DEFINE_ENFORCE_OP(OpName, Op)                                 \
 namespace libport                                                       \
 {                                                                       \
   template <typename T, typename U>                                     \
   inline                                                                \
   void                                                                  \
-  aver_ ## OpName(const T& lhs, const U& rhs,                           \
-                  const char* lstr, const char* rstr,                   \
-                  const char* file, int line)                           \
+  enforce_ ## OpName(const T& lhs, const U& rhs,                        \
+                     const char* lstr, const char* rstr,                \
+                     const char* file, int line)                        \
   {                                                                     \
     if (!(lhs Op rhs))                                                  \
     {                                                                   \
@@ -164,39 +156,62 @@ namespace libport                                                       \
   }                                                                     \
 }
 
-  DEFINE_AVER_OP(eq, ==)
-  DEFINE_AVER_OP(ge, >=)
-  DEFINE_AVER_OP(gt, > )
-  DEFINE_AVER_OP(le, <=)
-  DEFINE_AVER_OP(lt, < )
-  DEFINE_AVER_OP(ne, !=)
+  DEFINE_ENFORCE_OP(eq, ==)
+  DEFINE_ENFORCE_OP(ge, >=)
+  DEFINE_ENFORCE_OP(gt, > )
+  DEFINE_ENFORCE_OP(le, <=)
+  DEFINE_ENFORCE_OP(lt, < )
+  DEFINE_ENFORCE_OP(ne, !=)
+
+#  define enforce_eq(A, B) ::libport::enforce_eq(A, B, #A, #B, __FILE__, __LINE__)
+#  define enforce_ge(A, B) ::libport::enforce_ge(A, B, #A, #B, __FILE__, __LINE__)
+#  define enforce_gt(A, B) ::libport::enforce_gt(A, B, #A, #B, __FILE__, __LINE__)
+#  define enforce_le(A, B) ::libport::enforce_le(A, B, #A, #B, __FILE__, __LINE__)
+#  define enforce_lt(A, B) ::libport::enforce_lt(A, B, #A, #B, __FILE__, __LINE__)
+#  define enforce_ne(A, B) ::libport::enforce_ne(A, B, #A, #B, __FILE__, __LINE__)
+
+  // X <= Y && Y <= Z
+# define enforce_le_le(X, Y, Z)                 \
+  do {                                          \
+    enforce_le(X, Y);                           \
+    enforce_le(Y, Z);                           \
+  } while (false);
+
+  // X <= Y && Y < Z
+# define enforce_le_lt(X, Y, Z)                 \
+  do {                                          \
+    enforce_le(X, Y);                           \
+    enforce_lt(Y, Z);                           \
+  } while (false);
+
 
 # if defined NDEBUG
 
-#  define aver_eq(A, B)
-#  define aver_ge(A, B)
-#  define aver_gt(A, B)
-#  define aver_le(A, B)
-#  define aver_lt(A, B)
-#  define aver_ne(A, B)
+#  define aver_eq  LIBPORT_NOP
+#  define aver_ge  LIBPORT_NOP
+#  define aver_gt  LIBPORT_NOP
+#  define aver_le  LIBPORT_NOP
+#  define aver_lt  LIBPORT_NOP
+#  define aver_ne  LIBPORT_NOP
 
 # elif LIBPORT_ASSERT_VERBOSE
 
-#  define aver_eq(A, B) ::libport::aver_eq(A, B, #A, #B, __FILE__, __LINE__)
-#  define aver_ge(A, B) ::libport::aver_ge(A, B, #A, #B, __FILE__, __LINE__)
-#  define aver_gt(A, B) ::libport::aver_gt(A, B, #A, #B, __FILE__, __LINE__)
-#  define aver_le(A, B) ::libport::aver_le(A, B, #A, #B, __FILE__, __LINE__)
-#  define aver_lt(A, B) ::libport::aver_lt(A, B, #A, #B, __FILE__, __LINE__)
-#  define aver_ne(A, B) ::libport::aver_ne(A, B, #A, #B, __FILE__, __LINE__)
+#  define aver_eq  enforce_eq
+#  define aver_ge  enforce_ge
+#  define aver_gt  enforce_gt
+#  define aver_le  enforce_le
+#  define aver_lt  enforce_lt
+#  define aver_ne  enforce_ne
 
 # else // !defined NDEBUG && !LIBPORT_ASSERT_VERBOSE
 
-#  define aver_eq(A, B) aver(A == B)
-#  define aver_ge(A, B) aver(A >= B)
-#  define aver_gt(A, B) aver(A >  B)
-#  define aver_le(A, B) aver(A <= B)
-#  define aver_lt(A, B) aver(A <  B)
-#  define aver_ne(A, B) aver(A != B)
+#  define aver_eq(A, B) enforce(A == B)
+#  define aver_ge(A, B) enforce(A >= B)
+#  define aver_gt(A, B) enforce(A >  B)
+#  define aver_le(A, B) enforce(A <= B)
+#  define aver_lt(A, B) enforce(A <  B)
+#  define aver_ne(A, B) enforce(A != B)
+
 # endif
 
   // X <= Y && Y <= Z
@@ -212,7 +227,6 @@ namespace libport                                                       \
     aver_le(X, Y);                              \
     aver_lt(Y, Z);                              \
   } while (false);
-
 
 
   // Backward compatibility.
