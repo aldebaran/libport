@@ -65,6 +65,7 @@ TESTS_BINARIES =                                \
   tests/libport/separate.cc                     \
   tests/libport/singleton-ptr.cc                \
   tests/libport/statistics.cc                   \
+  tests/libport/sstream.cc                      \
   tests/libport/symbol.cc                       \
   tests/libport/synchronizer.cc                 \
   tests/libport/thread-pool.cc                  \
