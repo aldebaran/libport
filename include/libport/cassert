@@ -60,7 +60,8 @@ namespace libport
   enforce_(const char* file, int line, bool exp, const std::string& msg)
   {
     if (!exp)
-      fabort("%s:%s: failed assertion: %s", file, line, msg);
+      libport::abort(file, line,
+                     libport::format("failed assertion: %s", msg));
     return true;
   }
 
@@ -70,7 +71,8 @@ namespace libport
            const T1& t1)
   {
     if (!exp)
-      fabort("%s:%s: failed assertion: %s: %s", file, line, msg, t1);
+      libport::abort(file, line,
+                     libport::format("failed assertion: %s: %s", msg, t1));
     return true;
   }
 
@@ -81,9 +83,10 @@ namespace libport
            const T1& t1)
   {
     if (!exp)
-      fabort("%s:%s: failed assertion: %s: %s",
-             file, line, assertion,
-             libport::format(msg, t1));
+      libport::abort(file, line,
+                     libport::format("failed assertion: %s: %s",
+                                     assertion,
+                                     libport::format(msg, t1)));
     return true;
   }
 
@@ -94,9 +97,10 @@ namespace libport
            const T1& t1, const T2& t2)
   {
     if (!exp)
-      fabort("%s:%s: failed assertion: %s: %s",
-             file, line, assertion,
-             libport::format(msg, t1, t2));
+      libport::abort(file, line,
+                     libport::format("failed assertion: %s: %s",
+                                     assertion,
+                                     libport::format(msg, t1, t2)));
     return true;
   }
 }
@@ -163,7 +167,8 @@ namespace libport
   assert_exp_(T t, const char* file, int line, const char* msg)
   {
     if (!t)
-      fabort("%s:%s: failed assertion: %s", file, line, msg);
+      libport::abort(file, line,
+                     libport::format("failed assertion: %s", msg));
     return t;
   }
 }
