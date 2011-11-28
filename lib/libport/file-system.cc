@@ -23,7 +23,7 @@
 
 namespace libport
 {
-  path
+  std::string
   get_current_directory()
   {
     // The various getcwd() documentations are not clear on whether the
