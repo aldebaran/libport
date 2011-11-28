@@ -119,7 +119,7 @@ namespace libport
 /// \def aver(Assertion, Message...)
 /// Same as enforce, but can be disabled by NDEBUG.
 # if defined NDEBUG
-#  define aver(Exp, ...)  likely(Exp)
+#  define aver(Exp, ...)  ((void) likely(Exp))
 # else
 #  define aver  enforce
 # endif
