@@ -215,7 +215,7 @@
 | likely, unlikely.  |
 `-------------------*/
 
-// Instrumentation of conditionnal values. (hand made profiling)
+// Instrumentation of conditional values (hand made profiling).
 //
 // if (unlikely(condition))
 // {
@@ -224,11 +224,11 @@
 // }
 
 # if GCC_VERSION_GE(4, 3)
-#  define unlikely(expr) __builtin_expect (!!(expr), 0)
-#  define likely(expr) __builtin_expect (!!(expr), 1)
+#  define likely(Exp)   __builtin_expect(!!(Exp), 1)
+#  define unlikely(Exp) __builtin_expect(!!(Exp), 0)
 # else
-#  define unlikely(expr) expr
-#  define likely(expr) expr
+#  define likely(Exp)   (Exp)
+#  define unlikely(Exp) (Exp)
 # endif
 
 

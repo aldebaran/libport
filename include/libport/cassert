@@ -102,7 +102,7 @@ namespace libport
 }
 
 #  define enforce(Exp, ...)                                             \
-  libport::enforce_(__FILE__, __LINE__ , Exp, #Exp, ##__VA_ARGS__)
+  libport::enforce_(__FILE__, __LINE__ , likely(Exp), #Exp, ##__VA_ARGS__)
 
 
 /*-------------------------------------------------------------------.
@@ -119,7 +119,7 @@ namespace libport
 /// \def aver(Assertion, Message...)
 /// Same as enforce, but can be disabled by NDEBUG.
 # if defined NDEBUG
-#  define aver  LIBPORT_NOP
+#  define aver(Exp, ...)  likely(Exp)
 # else
 #  define aver  enforce
 # endif
