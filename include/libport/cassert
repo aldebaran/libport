@@ -53,12 +53,56 @@
 | enforce: like assert, but not disabled by NDEBUG.  |
 `---------------------------------------------------*/
 
-# define enforce(Assertion, ...)                        \
-  ((void) ((Assertion)                                  \
-	   ? 0                                          \
-	   : fabort("assertion failed: " #Assertion     \
-                    , ## __VA_ARGS__)))
+namespace libport
+{
+  inline
+  bool
+  enforce_(const char* file, int line, bool exp, const std::string& msg)
+  {
+    if (!exp)
+      fabort("%s:%s: failed assertion: %s", file, line, msg);
+    return true;
+  }
 
+  template <typename T1>
+  bool
+  enforce_(const char* file, int line, bool exp, const std::string& msg,
+           const T1& t1)
+  {
+    if (!exp)
+      fabort("%s:%s: failed assertion: %s: %s", file, line, msg, t1);
+    return true;
+  }
+
+  template <typename T1>
+  bool
+  enforce_(const char* file, int line, bool exp, const std::string& assertion,
+           const std::string& msg,
+           const T1& t1)
+  {
+    if (!exp)
+      fabort("%s:%s: failed assertion: %s: %s",
+             file, line, assertion,
+             libport::format(msg, t1));
+    return true;
+  }
+
+  template <typename T1, typename T2>
+  bool
+  enforce_(const char* file, int line, bool exp, const std::string& assertion,
+           const std::string& msg,
+           const T1& t1, const T2& t2)
+  {
+    if (!exp)
+      fabort("%s:%s: failed assertion: %s: %s",
+             file, line, assertion,
+             libport::format(msg, t1, t2));
+    return true;
+  }
+}
+
+#  define enforce(Exp, ...)                                             \
+  libport::enforce_(__FILE__, __LINE__ , Exp, #Exp, ##__VA_ARGS__)
 
 
 /*-------------------------------------------------------------------.

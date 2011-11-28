@@ -73,8 +73,8 @@ namespace libport
 
 # if defined _MSC_VER
 
-# define LIBPORT_ABORT(Arg)
-  (::libport::abort(__FILE__, __LINE__, Arg, 0)
+# define LIBPORT_ABORT(Arg)                     \
+  (::libport::abort(__FILE__, __LINE__, Arg), 0)
 
 # else // ! _MSC_VER
 
@@ -100,7 +100,7 @@ _libport_die_hard(const char* file, int line, const std::string& msg)
 | pabort(Arg1 << Arg2...).  |
 `--------------------------*/
 
-#  define fabort(...)                                                   \
+#  define fabort(...)                           \
   LIBPORT_ABORT(libport::format(__VA_ARGS__))
 // Backward.
 # define pabort(Msg)                                            \
@@ -117,12 +117,22 @@ _libport_die_hard(const char* file, int line, const std::string& msg)
 /// It is on purpose that Err is not evaluated when NDEBUG: Err could
 /// be costly, or have side effects.  Rather, use ERRNO_RUN, or
 /// PTHREAD_RUN and so forth.
-# define errabort(Err, Msg, ...)                                         \
+# if defined _MSC_VER
+// Contrary to what has been reported, ", ## __VA_ARGS" does not
+// always remove the previous comma
+// (http://msdn.microsoft.com/en-us/library/ms177415(v=vs.80).aspx).
+// So for Visual, don't have a comma before __VA_ARGS__.  Yet it seems
+// to work properly below for errnoabort...
+#  define errabort(Err, ...)                                            \
+  fabort("%s: %s", libport::strerror(Err), libport::format(__VA_ARGS__))
+# else
+#  define errabort(Err, Msg, ...)                               \
   fabort("%s: " Msg, libport::strerror(Err), ## __VA_ARGS__)
+# endif
 
-/// \def errnoabort(Msg)
-# define errnoabort(Msg)                        \
-  errabort(errno, Msg)
+/// \def errnoabort(Msg, ...)
+# define errnoabort(Msg, ...)                   \
+   errabort(errno, Msg, ## __VA_ARGS__)
 
 /// \def unreachable()
 ///
