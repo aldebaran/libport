@@ -78,15 +78,22 @@ static void check_signed_range()
 #undef CHECK_LIMIT
 #undef CHECK_TO_AND_FRO
 
+
+
+
+/*----------------.
+| rounding_cast.  |
+`----------------*/
+
 template <typename T>
 static void check_rounding_cast()
 {
 #define CHECK_(In, Out)                                          \
-  BOOST_CHECK_EQUAL(libport::rounding_cast<T>(ufloat(In)),  Out)
+  BOOST_CHECK_EQUAL(libport::rounding_cast<T>(ufloat(In)),  T(Out))
 #define CHECK(In, Out)                          \
   do {                                          \
     if (std::tr1::is_unsigned<T>::value)        \
-      CHECK_(In, Out##u);                       \
+      CHECK_(In, Out);                          \
     else                                        \
     {                                           \
       CHECK_( In,  Out);                        \
@@ -104,7 +111,7 @@ static void check_rounding_cast()
   CHECK(1.49999, 1);
   CHECK(1.5,     2);
   CHECK(1.50001, 2);
-  // Does not with too long types, where the precision is lost in
+  // Does not work with too long types, where the precision is lost in
   // ufloat.
   if (sizeof(T) <= 4)
   {
@@ -131,7 +138,7 @@ check_castable()
   BOOST_CHECK(!libport::numeric_castable<int>(4294967296.0));
 
   // Does not work on 32b machines where int == long.
-  if (4 <= sizeof(long))
+  if (4 < sizeof(long))
   {
     BOOST_CHECK( libport::numeric_castable<long>(4294967296.0));
     BOOST_CHECK(!libport::numeric_castable<long>(4294967296.1));
