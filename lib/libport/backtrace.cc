@@ -125,7 +125,7 @@ namespace libport
 
       // Call after all previous information have been stored because
       // functions could sahre buffers.
-      if (SymGetLineFromAddr64(process, (size_t) array[i],  &displacement, line))
+      if (SymGetLineFromAddr64(process, (size_t) array[i], &displacement, line))
       {
         printable = true;
         ostr << line->FileName << ":" << std::dec << line->LineNumber << " ";
