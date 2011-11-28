@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -25,6 +25,7 @@ namespace libport
 {
   LIBPORT_API path get_current_directory();
   LIBPORT_API bool is_dir(const std::string& f);
+  LIBPORT_API bool is_reg(const std::string& f);
   /// Return the whole content of a file.
   LIBPORT_API std::string file_content(const std::string& name);
 }
