@@ -149,8 +149,8 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(&check_unsigned_range<unsigned long long>));
 
   // We can't represent these values in doubles.
-  // suite->add(BOOST_TEST_CASE(check_max<long long>));
-  // suite->add(BOOST_TEST_CASE(check_max<unsigned long long>));
+  // suite->add(BOOST_TEST_CASE(&check_max<long long>));
+  // suite->add(BOOST_TEST_CASE(&check_max<unsigned long long>));
 
   return suite;
 }
