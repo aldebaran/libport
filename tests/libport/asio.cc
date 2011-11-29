@@ -439,8 +439,7 @@ void test_pipe()
 test_suite*
 init_test_suite()
 {
-  skip_if("Qemu");
-  skip_if("Wine");
+  skip_if("windows");
   test_suite* suite = BOOST_TEST_SUITE("Libport.Asio");
   suite->add(BOOST_TEST_CASE(test_safe_destruction));
   suite->add(BOOST_TEST_CASE(test_invalid_ip));

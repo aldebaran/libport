@@ -150,7 +150,7 @@ init_test_suite()
     seed = boost::lexical_cast<unsigned int>(sseed);
   test_suite* suite = BOOST_TEST_SUITE("libport::ThreadPool test suite");
   BOOST_TEST_MESSAGE("Seed is " << seed);
-  if (running("Wine"))
+  if (running("windows"))
     dfactor = 10;
   srand(seed);
   suite->add(BOOST_TEST_CASE(test_many_slow));

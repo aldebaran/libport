@@ -39,22 +39,19 @@ void skip(const std::string& env);
 
 inline
 void
-skip(const std::string& env)
+skip(const std::string& why)
 {
-  BOOST_TEST_MESSAGE("SKIP: running " << env);
+  BOOST_TEST_MESSAGE("SKIP: " << why);
   exit(EX_SKIP);
 }
 
 inline
 bool
-running(const std::string& env)
+running(const char* env)
 {
-  const std::string val =
-    libport::xgetenv(libport::format("RUNNING_%s", boost::to_upper_copy(env)));
-  bool res = !val.empty();
-  if (res)
-    BOOST_TEST_MESSAGE("Running under " << env);
-  return res;
+  std::string val = libport::xgetenv("BUILDFARM_OS");
+  BOOST_TEST_MESSAGE("BUILDFARM_OS=" << val);
+  return val == env;
 }
 
 inline
@@ -62,7 +59,7 @@ void
 skip_if(const char* env)
 {
   if (running(env))
-    skip(env);
+    skip(libport::format("BUILDFARM_OS=%s", env));
 }
 
 #endif // !LIBPORT_TEST_HH
