@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2010, 2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -56,15 +56,10 @@ test_hash_map()
 test_suite*
 init_test_suite()
 {
-  // This test does not pass under Wine, for unknown reasons.  It did
-  // not pass when we were on top of stdext::hash_map, it does not
-  // pass either when we use Boost.Unordered.
-  skip_if("Wine");
-
-  test_suite* suite = BOOST_TEST_SUITE("libport::hash test suite");
+  test_suite* suite = BOOST_TEST_SUITE("Libport.Hash");
 
 # define def(Type)                                            \
-  suite->add(BOOST_TEST_CASE(test_hash_map<Type>))
+  suite->add(BOOST_TEST_CASE(&test_hash_map<Type>))
 
   def(const char*);
   def(char*);
