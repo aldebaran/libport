@@ -4,10 +4,10 @@ URBI_INIT
 exec 3>&2
 me=$as_me
 
-: ${PERL=perl5.10.0}
+: ${PERL=perl}
 
 $PERL -e 'use 5.010_000;' ||
-  error SKIP "is not Perl 5.10: $PERL"
+  error SKIP "SKIP: is not Perl 5.10+: $PERL"
 
 in=$(absolute "$1")
 test -f "$in" ||
