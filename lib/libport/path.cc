@@ -58,7 +58,7 @@ namespace libport
 #ifdef WIN32
     // We want "/" to mean "the root of the current volume" on windows.
     if (p[0] == '/')
-      value_ = boost::filesystem::current_path().root_name() + p;
+      value_ = boostfs::current_path().root_name() + p;
     else
 #endif
     value_ = p;
@@ -193,7 +193,7 @@ namespace libport
     bool res;
     try
     {
-      res = boost::filesystem::exists(value_);
+      res = boostfs::exists(value_);
     }
     catch (...)
     {
@@ -206,7 +206,7 @@ namespace libport
   path
   path::cwd()
   {
-    return path(boost::filesystem::current_path().string());
+    return path(boostfs::current_path().string());
   }
 
 
@@ -224,7 +224,7 @@ namespace libport
       return path(volume_get().append(1, separator_));
 
     const std::string parent_path =
-      boost::filesystem::path(to_string()).parent_path().string();
+      boostfs::path(to_string()).parent_path().string();
 
     if (parent_path.empty())
       return cwd();
@@ -235,8 +235,8 @@ namespace libport
   std::time_t
   path::last_write_time() const
   {
-    return boost::filesystem::last_write_time(
-      boost::filesystem::path(to_string()));
+    return boostfs::last_write_time(
+      boostfs::path(to_string()));
   }
 
   bool path::create() const
@@ -270,7 +270,7 @@ namespace libport
   void
   path::remove() const
   {
-    if (!boost::filesystem::remove(value_))
+    if (!boostfs::remove(value_))
       throw Exception(libport::format("cannot unlink file %s", *this));
   }
 
@@ -279,7 +279,7 @@ namespace libport
   {
     try
     {
-      boost::filesystem::rename(value_, dst);
+      boostfs::rename(value_, dst);
     }
     catch (Exception& e)
     {
