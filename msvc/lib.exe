@@ -34,7 +34,7 @@ PROG=lib.exe
 lib_exe=$VCXX_BIN/$PROG
 
 test -x "$lib_exe" ||
-  error 176 "$PROG not found in $VCXX_BIN"
+  error 72 "$PROG not found in $VCXX_BIN"
 
 : ${TMPDIR=/tmp}
 tmpdir=$TMPDIR/$me.$$

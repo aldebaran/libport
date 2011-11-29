@@ -70,7 +70,7 @@ load_msvc_env ()
 setup ()
 {
   load_msvc_env ||
-    error 176 "cannot load msvc_env.sh"
+    error 72 "cannot load msvc_env.sh"
 
   repaths='cygpath winepath'
   for repath in $repaths ''
@@ -79,14 +79,14 @@ setup ()
       break
   done
   test -n "$repath" ||
-    error 176 "program not found: $repaths"
+    error 72 "program not found: $repaths"
 
   VS_PATH=$($repath -u "$VSINSTALLDIR")
   VCXX_PATH=$($repath -u "$VCINSTALLDIR")
   VCXX_BIN=$VCXX_PATH/bin
 
   test -x "$VCXX_BIN/cl.exe" ||
-    error 176 "cl.exe not found in $VCXX_BIN"
+    error 72 "cl.exe not found in $VCXX_BIN"
 }
 
 # Same as run, but neutralize Wine warnings, and Microsoft banners.
