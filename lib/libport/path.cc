@@ -20,7 +20,6 @@
 #include <libport/detect-win32.h>
 #include <libport/exception.hh>
 #include <libport/fcntl.h>
-#include <libport/file-system.hh>
 #include <libport/format.hh>
 #include <libport/path.hh>
 #include <libport/sys/stat.h>
