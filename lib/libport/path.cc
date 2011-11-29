@@ -32,6 +32,8 @@ GD_CATEGORY(Libport.Path);
 // Implementation detail: if components() is empty and not absolute
 // then the path is '.'.
 
+namespace boostfs = boost::filesystem;
+
 namespace libport
 {
   path::path(const std::string& p)
@@ -120,13 +122,13 @@ namespace libport
   bool
   path::is_dir() const
   {
-    return libport::is_dir(to_string());
+    return boostfs::is_directory(to_string());
   }
 
   bool
   path::is_reg() const
   {
-    return libport::is_reg(to_string());
+    return boostfs::is_regular_file(to_string());
   }
 
   std::string

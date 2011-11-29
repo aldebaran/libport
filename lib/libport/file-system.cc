@@ -35,24 +35,6 @@ namespace libport
     return cwd;
   }
 
-  bool
-  is_dir(const std::string& f)
-  {
-    struct stat st;
-    if (stat(f.c_str(), &st))
-      return false;
-    return S_ISDIR(st.st_mode);
-  }
-
-  bool
-  is_reg(const std::string& f)
-  {
-    struct stat st;
-    if (stat(f.c_str(), &st))
-      return false;
-    return S_ISREG(st.st_mode);
-  }
-
   std::string
   file_content(const std::string& n)
   {
