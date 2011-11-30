@@ -21,8 +21,7 @@ template <typename K, typename V>
 std::ostream&
 operator<<(std::ostream& o, const boost::unordered_map<K, V>& m)
 {
-  typedef boost::unordered_map<K, V> map_type;
-  typedef map_type::value_type       value_type;
+  typedef typename boost::unordered_map<K, V>::value_type value_type;
   foreach (const value_type& p, m)
     o << p.first << " -> " << p.second << std::endl;
   return o;
@@ -38,14 +37,14 @@ test_hash_map()
   BOOST_CHECK_EQUAL(map.size(), 0u);
 
   BOOST_CHECK_NO_THROW(map[T("foo")] = "foo");
-  BOOST_TEST_MESSAGE(map);
+  std::cerr << (map);
   BOOST_CHECK(!map.empty());
   BOOST_CHECK_EQUAL(map.size(), 1u);
   BOOST_CHECK_EQUAL(map[T("foo")], "foo");
-  BOOST_TEST_MESSAGE(map);
+  std::cerr << (map);
 
   BOOST_CHECK_NO_THROW(map[T("bar")] = "bar");
-  BOOST_TEST_MESSAGE(map);
+  std::cerr << (map);
   BOOST_CHECK(!map.empty());
   BOOST_CHECK_EQUAL(map.size(), 2u);
   BOOST_CHECK_EQUAL(map[T("foo")], "foo");
@@ -56,16 +55,16 @@ test_hash_map()
   BOOST_CHECK_EQUAL(map.size(), 2u);
   BOOST_CHECK_EQUAL(map[T("foo")], "foo");
   BOOST_CHECK_EQUAL(map[T("bar")], "baz");
-  BOOST_TEST_MESSAGE(map);
+  std::cerr << (map);
 
   BOOST_CHECK_NO_THROW(map.erase(T("foo")));
-  BOOST_TEST_MESSAGE(map);
+  std::cerr << (map);
   BOOST_CHECK(!map.empty());
   BOOST_CHECK_EQUAL(map.size(), 1u);
   BOOST_CHECK_EQUAL(map[T("bar")], "baz");
 
   BOOST_CHECK_NO_THROW(map.erase(T("bar")));
-  BOOST_TEST_MESSAGE(map);
+  std::cerr << (map);
   BOOST_CHECK(map.empty());
   BOOST_CHECK_EQUAL(map.size(), 0u);
 }
