@@ -6,8 +6,7 @@ medir=$(absolute "$0").dir
 mkcd $medir
 
 case $host in
-  (*mingw32) export PATH=$abs_srcdir/msvc:$PATH
-             cc=cl.exe
+  (*mingw32) cc=$abs_srcdir/msvc/cl.exe
              exeext=.exe
              objext=.obj;;
   (*)        cc=g++
