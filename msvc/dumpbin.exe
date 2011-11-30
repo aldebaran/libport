@@ -4,4 +4,3 @@
 
 setup
 exec $VCXX_BIN/link.exe -dump -symbols "$@"
-

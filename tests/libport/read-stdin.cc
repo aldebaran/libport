@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -59,6 +59,9 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(boost::bind(test_read_fd, short_file)));
   // Make sure we can read the same file several times.
   suite->add(BOOST_TEST_CASE(boost::bind(test_read_fd, short_file)));
+
+  // If you have a failure in that test, then maybe there are \r\n in
+  // the Makefile.  Get rid of them.
   suite->add(BOOST_TEST_CASE(boost::bind(test_read_fd, long_file)));
   return suite;
 }

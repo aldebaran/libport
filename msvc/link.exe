@@ -327,9 +327,17 @@ version ()
 MS VC++ wrapper.
 
 EOF
-  # Simply don't pass /nologo.
-  # The version info is on stderr.
-  "$VCXX_BIN/cl.exe" 2>&1 >/dev/null
+  # Simply don't pass /nologo.  The version info is on stderr.
+  "$VCXX_BIN/cl.exe" 2>&1 |
+    # Convert the end of line.  This is actually not gratuitous:
+    # URBI_CXX uses this --version to get the version of the compiler,
+    # and it is pasted in Makefile, which in turn is used to check that
+    # that libport::read_stding works properly.  Unfortunately if we
+    # have a \r\n in the file, then reading binary/text will make a
+    # difference.
+    dos2unix |
+    filter_wine |
+    sed -ne '/./p'
   exit 0
 }
 

@@ -89,6 +89,15 @@ setup ()
     error 72 "cl.exe not found in $VCXX_BIN"
 }
 
+# filter_wine()
+# -------------
+# Stdin -> Stdout.
+filter_wine()
+{
+  sed -e '/err:secur32:SECUR32_initSchannelSP.*not found/d'     \
+      -e '/fixme:heap:HeapSetInformation (nil) 1 (nil) 0/d'
+}
+
 # Same as run, but neutralize Wine warnings, and Microsoft banners.
 # Needs $stdout, $stderr and return status.
 run_filter ()
@@ -97,9 +106,7 @@ run_filter ()
   run "$@" >$stdout 2>$stderr || status=$?
 
   # Warnings from wine.
-  sed -e '/err:secur32:SECUR32_initSchannelSP.*not found/d'     \
-      -e '/fixme:heap:HeapSetInformation (nil) 1 (nil) 0/d'     \
-    <$stderr >&2
+  filter_wine <$stderr >&2
 
   sed -e '/Microsoft (R) Library Manager/d'                     \
       -e '/Microsoft (R) Windows (R) Resource Compiler/d'       \
