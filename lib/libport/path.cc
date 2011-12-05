@@ -235,8 +235,7 @@ namespace libport
   std::time_t
   path::last_write_time() const
   {
-    return boostfs::last_write_time(
-      boostfs::path(to_string()));
+    return boostfs::last_write_time(boostfs::path(to_string()));
   }
 
   bool path::create() const
@@ -281,10 +280,10 @@ namespace libport
     {
       boostfs::rename(value_, dst);
     }
-    catch (Exception& e)
+    catch (const boostfs::filesystem_error& e)
     {
       throw Exception(libport::format("cannot rename directory %s: %s",
-                                      *this, format_boost_fs_error(e.what())));
+                                      *this, format_error(e)));
     }
 
     *this = dst;
@@ -316,15 +315,16 @@ namespace libport
   }
 
   std::string
-  format_boost_fs_error(const char* what)
+  format_error(const boostfs::filesystem_error& e)
   {
-    static const std::string ns = "boost::filesystem::";
-    // Get rid of function namespace.
-    std::string error = std::string(what).substr(ns.size());
-    // Get rid of function name and ": ".
-    error = error.substr(error.find(":") + 2);
-    // Urbi errors begin with a lower case letter.
-    error[0] = tolower(error[0]);
-    return error;
+    std::string res = e.code().message();
+    res[0] = tolower(res[0]);
+    // Boost includes quotes in the error messages, which does not
+    // match our style.
+    if (!e.path1().empty())
+      res += libport::format(": %s", e.path1());
+    if (!e.path2().empty())
+      res += libport::format(": %s", e.path2());
+    return res;
   }
 }

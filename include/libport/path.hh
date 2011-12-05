@@ -147,7 +147,7 @@ namespace libport
   };
 
   LIBPORT_API
-  std::string format_boost_fs_error(const char*);
+  std::string format_error(const boost::filesystem::filesystem_error& e);
 
   /// Dump \a p on \a o.
   std::ostream& operator<<(std::ostream& o, const path& p);
