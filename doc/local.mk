@@ -43,8 +43,26 @@ share_dir = $(srcdir)/doc/document-aux
 share_bin_dir = $(share_dir)/bin
 share_make_dir = $(share_dir)/make
 include doc/document-aux/make/tex.mk
-EXTRA_DIST +=								   \
-  $(addprefix doc/document-aux/,$(call ls_files_in_dir,$(share_dir)))
+# Ship what we need from document-aux.  Something more automatic is
+# needed.
+EXTRA_DIST +=						\
+  doc/document-aux/bin/texi2dvi				\
+  $(call ls_files,@{doc/document-aux}/styles/ldf/*)	\
+  doc/document-aux/styles/fixme.sty			\
+  doc/document-aux/styles/gostai-documentation.sty	\
+  doc/document-aux/styles/gostai-report.sty		\
+  doc/document-aux/styles/hevea.sty			\
+  doc/document-aux/styles/misc.hva			\
+  doc/document-aux/styles/misc.sty			\
+  doc/document-aux/styles/mycxx.sty			\
+  doc/document-aux/styles/myhyperref.sty		\
+  doc/document-aux/styles/myifthen.hva			\
+  doc/document-aux/styles/myifthen.sty			\
+  doc/document-aux/styles/myindex.sty			\
+  doc/document-aux/styles/mylistings.hva		\
+  doc/document-aux/styles/mylistings.sty		\
+  doc/document-aux/styles/texi.hva			\
+  doc/document-aux/styles/texi.sty
 
 TEXI2DVIFLAGS += -I $(top_srcdir) -I doc -~
 
