@@ -4,23 +4,27 @@ URBI_INIT
 exec 3>&2
 me=$as_me
 
-: ${PERL=perl5.10.0}
+: ${PERL=perl}
 
-$PERL -e 'use v5.10.0;' ||
-  error SKIP "is not Perl 5.10: $PERL"
-
-libportify=$abs_top_srcdir/bin/libportify
-
-xrun "--help" $PERL $libportify --help
+$PERL -e 'use 5.010_000;' ||
+  skip "is not Perl 5.10+: $PERL"
 
 in=$(absolute "$1")
 test -f "$in" ||
   fatal "no such file: $in"
 
-base=$(basename "$in" "lpc")
+# /Users/akim/src/kernel/sdk-remote/libport/tests/bin/libportify/blanks-1.lpc
+# -> tests/bin/libportify/blanks-1
+export in
+export abs_top_srcdir
+base=$(perl -e 'print substr($ENV{in}, length($ENV{abs_top_srcdir}."/"), -4), "\n";')
 
 # Move to a private dir.
 mkcd $base.dir
+
+# Check that Perl is good enough to run libportify.
+libportify=$abs_top_srcdir/bin/libportify
+xrun "--help" $PERL $libportify --help
 
 # libportify modifies the file.
 cp $in input.cc
