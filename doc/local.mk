@@ -50,7 +50,7 @@ EXTRA_DIST +=						\
   $(call ls_files,@{doc/document-aux}/styles/ldf/*)	\
   doc/document-aux/styles/fixme.sty			\
   doc/document-aux/styles/gostai-documentation.sty	\
-  doc/document-aux/styles/gostai-report.sty		\
+  doc/document-aux/styles/gostai.sty			\
   doc/document-aux/styles/hevea.sty			\
   doc/document-aux/styles/misc.hva			\
   doc/document-aux/styles/misc.sty			\
