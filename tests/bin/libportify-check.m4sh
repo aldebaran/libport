@@ -7,7 +7,7 @@ me=$as_me
 : ${PERL=perl}
 
 $PERL -e 'use 5.010_000;' ||
-  error SKIP "SKIP: is not Perl 5.10+: $PERL"
+  skip "is not Perl 5.10+: $PERL"
 
 in=$(absolute "$1")
 test -f "$in" ||
@@ -15,7 +15,9 @@ test -f "$in" ||
 
 # /Users/akim/src/kernel/sdk-remote/libport/tests/bin/libportify/blanks-1.lpc
 # -> tests/bin/libportify/blanks-1
-base=$(echo "$in" | sed -e 's,.*/libport/,,;s/\.lpc$//')
+export in
+export abs_top_srcdir
+base=$(perl -e 'print substr($ENV{in}, length($ENV{abs_top_srcdir}."/"), -4), "\n";')
 
 # Move to a private dir.
 mkcd $base.dir
