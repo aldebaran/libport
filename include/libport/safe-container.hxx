@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -14,7 +14,7 @@
 # include <stdexcept>
 # include <iostream>
 
-# include <boost/foreach.hpp>
+# include <libport/foreach.hh>
 
 namespace libport
 {
@@ -131,8 +131,8 @@ namespace libport
         // It would not be safe to use b.base_iterator_::operator== as it
         // might have been invalidated.
         flag = owner->getFlag();
-        BOOST_FOREACH(real_value_type& v, owner->container)
-          if ( (v.mask & b.flag.mask) != b.flag.val)
+        foreach (real_value_type& v, owner->container)
+          if ((v.mask & b.flag.mask) != b.flag.val)
             break;
           else
             v.mask ^= flag.mask;
