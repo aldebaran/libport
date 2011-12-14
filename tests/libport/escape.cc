@@ -15,6 +15,7 @@
 #include <sstream>
 #include <libport/escape.hh>
 #include <libport/unit-test.hh>
+#include <libport/lexical-cast.hh>
 
 using libport::escape;
 using libport::test_suite;
@@ -41,10 +42,29 @@ check()
 }
 
 
+#include <boost/version.hpp>
+
+void
+check_lexical_cast()
+{
+# define CHECK(In, Out)                                 \
+  BOOST_CHECK_EQUAL(string_cast(escape In), Out)
+
+  CHECK(("\""), "\\\"");
+  CHECK(("'"),  "'");
+  // This does not work in Boost 1.48, see
+  // https://svn.boost.org/trac/boost/ticket/6132.
+#if BOOST_VERSION != 104800
+  CHECK((""),   "");
+#endif
+# undef CHECK
+}
+
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::escape");
   suite->add(BOOST_TEST_CASE(check));
+  suite->add(BOOST_TEST_CASE(check_lexical_cast));
   return suite;
 }
