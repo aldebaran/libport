@@ -25,17 +25,19 @@ check()
 # define CHECK(In, Out)                         \
   do {                                          \
     std::ostringstream o;                       \
-    o << In;                                    \
+    o << escape In;                             \
     BOOST_CHECK_EQUAL(o.str(), Out);            \
   } while (0)
 
-  CHECK(escape("\a\b\f\n\r\t\v\\\""), "\\x07\\b\\f\\n\\r\\t\\v\\\\\\\"");
+  CHECK(("\a\b\f\n\r\t\v\\\""), "\\x07\\b\\f\\n\\r\\t\\v\\\\\\\"");
 
-  CHECK(escape("\""), "\\\"");
-  CHECK(escape("'"), "'");
+  CHECK(("\""), "\\\"");
+  CHECK(("'"),  "'");
+  CHECK((""),   "");
 
-  CHECK(escape("'",  '\''), "\\\'");
-  CHECK(escape("\"", '\''), "\"");
+  CHECK(("'",  '\''), "\\\'");
+  CHECK(("\"", '\''), "\"");
+# undef CHECK
 }
 
 
