@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -20,7 +20,7 @@ using libport::escape;
 using libport::test_suite;
 
 void
-check ()
+check()
 {
 # define CHECK(In, Out)                         \
   do {                                          \

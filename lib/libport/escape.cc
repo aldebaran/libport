@@ -38,8 +38,8 @@ namespace libport
     // static std::locale locale ("");
     //
     // if (std::isprint (*p, locale))
-    std::ios_base::fmtflags flags = o.flags (std::ios_base::hex);
-    char fill = o.fill ('0');
+    std::ios_base::fmtflags flags = o.flags(std::ios_base::hex);
+    char fill = o.fill('0');
 
     for (std::string::const_iterator p = es.begin (); p != es.end (); ++p)
       switch (*p)
@@ -54,14 +54,14 @@ namespace libport
 	default:
 	  if (*p == delimiter_)
 	    o << '\\' << *p;
-	  else if (std::isprint ((unsigned char) *p))
+	  else if (std::isprint((unsigned char) *p))
 	    o << *p;
 	  else
-	    o << "\\x" << std::setw (2) << (int) (unsigned char) *p;
+	    o << "\\x" << std::setw(2) << (int) (unsigned char) *p;
       }
 
-    o.fill (fill);
-    o.flags (flags);
+    o.fill(fill);
+    o.flags(flags);
     return o;
   }
 
