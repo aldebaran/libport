@@ -223,15 +223,15 @@ namespace std
   | Container << Container.  |
   `-------------------------*/
 
-#define INSERT(Cont1, Cont2)                    \
-  template<typename Lhs, typename Alloc1,       \
-           typename Rhs, typename Alloc2>       \
-  Cont1<Lhs, Alloc1>&                           \
-  operator<<(Cont1<Lhs, Alloc1>& c,             \
-             const Cont2<Rhs, Alloc2>& vs)      \
-  {                                             \
-    c.insert(c.end(), vs.begin(), vs.end());    \
-    return c;                                   \
+#define INSERT(Cont1, Cont2)                                    \
+  template<typename Lhs, typename Alloc1,                       \
+           typename Rhs, typename Alloc2>                       \
+  Cont1<Lhs, Alloc1>&                                           \
+  operator<<(Cont1<Lhs, Alloc1>& c,                             \
+             const Cont2<Rhs, Alloc2>& vs)                      \
+  {                                                             \
+    c.insert(boost::end(c), boost::begin(vs), boost::end(vs));  \
+    return c;                                                   \
   }
 
   INSERT(::std::deque,  ::std::deque);
