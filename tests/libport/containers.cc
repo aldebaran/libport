@@ -128,6 +128,14 @@ static void check_find_std_set()
   BOOST_CHECK_LT(logging_string_comparisons, 5u);
 }
 
+static void check_strings()
+{
+  std::string digits = "0123456789";
+
+  BOOST_CHECK(libport::has(digits, '0'));
+  BOOST_CHECK(!libport::has(digits, 'a'));
+}
+
 test_suite*
 init_test_suite()
 {
@@ -136,5 +144,6 @@ init_test_suite()
   suite->add(BOOST_TEST_CASE(check_find_vector));
   suite->add(BOOST_TEST_CASE(check_find_unordered_set));
   suite->add(BOOST_TEST_CASE(check_find_std_set));
+  suite->add(BOOST_TEST_CASE(check_strings));
   return suite;
 }

@@ -220,6 +220,13 @@ namespace libport
     DECLARE((typename T, typename A, typename Cons, typename Capa),
             (Vector<T, A, Cons, Capa>));
 # undef DECLARE
+
+    template <>
+    struct key_type< std::string >
+    {
+      typedef std::string container_type;
+      typedef char type;
+    };
   }
 }
 
