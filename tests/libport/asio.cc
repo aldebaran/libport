@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -200,7 +200,7 @@ test()
   // Try listening on an IP that is not ours.
   BOOST_TEST_MESSAGE("Invalid IP in listen()");
   err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
-	"1.2.3.4", "1212", false);
+        "1.2.3.4", "1212", false);
   BOOST_CHECK(err);
   err = h->listen(boost::bind(&TestSocket::factoryEx, true, true),
                   listen_host, S_AVAIL_PORT, false);

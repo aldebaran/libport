@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -23,7 +23,7 @@ static void test()
     "/johnsmith/photos/puppy.jpg";
   std::string key = "uV3F3YluFJax1cknvbcGwgjvx4QpvB+leU8dUj2o";
   BOOST_CHECK_EQUAL(libport::base64(libport::hmac_sha1(msg, key)),
-		    "xXjDGYUmKxnwqr5KXNPGldn5LbA=");
+                    "xXjDGYUmKxnwqr5KXNPGldn5LbA=");
 #endif
 }
 

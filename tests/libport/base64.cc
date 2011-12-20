@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -24,7 +24,7 @@ static void test()
     c[i] = -i;
   c[9] = 0;
   BOOST_CHECK_EQUAL(libport::base64(std::string((char*) c, 10)),
-		    "AP/+/fz7+vn4AA==");
+                    "AP/+/fz7+vn4AA==");
 }
 
 test_suite*
