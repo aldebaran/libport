@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -26,8 +26,8 @@
 // here too.
 using boost::lexical_cast;
 
-// Implemented as a macro to avoid having to provide differents
-// implementation, depending on the argument passing method.
+// Implemented as a macro to avoid having to provide different
+// implementations, depending on the argument passing method.
 # define string_cast lexical_cast<std::string>
 
 #endif // !LIBPORT_LEXICAL_CAST_HH
