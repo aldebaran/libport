@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2007-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -15,34 +15,56 @@
 #include <sstream>
 #include <libport/escape.hh>
 #include <libport/unit-test.hh>
+#include <libport/lexical-cast.hh>
 
 using libport::escape;
 using libport::test_suite;
 
 void
-check ()
+check()
 {
 # define CHECK(In, Out)                         \
   do {                                          \
     std::ostringstream o;                       \
-    o << In;                                    \
+    o << escape In;                             \
     BOOST_CHECK_EQUAL(o.str(), Out);            \
   } while (0)
 
-  CHECK(escape("\a\b\f\n\r\t\v\\\""), "\\x07\\b\\f\\n\\r\\t\\v\\\\\\\"");
+  CHECK(("\a\b\f\n\r\t\v\\\""), "\\x07\\b\\f\\n\\r\\t\\v\\\\\\\"");
 
-  CHECK(escape("\""), "\\\"");
-  CHECK(escape("'"), "'");
+  CHECK(("\""), "\\\"");
+  CHECK(("'"),  "'");
+  CHECK((""),   "");
 
-  CHECK(escape("'",  '\''), "\\\'");
-  CHECK(escape("\"", '\''), "\"");
+  CHECK(("'",  '\''), "\\\'");
+  CHECK(("\"", '\''), "\"");
+# undef CHECK
 }
 
+
+#include <boost/version.hpp>
+
+void
+check_lexical_cast()
+{
+# define CHECK(In, Out)                                 \
+  BOOST_CHECK_EQUAL(string_cast(escape In), Out)
+
+  CHECK(("\""), "\\\"");
+  CHECK(("'"),  "'");
+  // This does not work in Boost 1.48, see
+  // https://svn.boost.org/trac/boost/ticket/6132.
+#if BOOST_VERSION != 104800
+  CHECK((""),   "");
+#endif
+# undef CHECK
+}
 
 test_suite*
 init_test_suite()
 {
   test_suite* suite = BOOST_TEST_SUITE("libport::escape");
   suite->add(BOOST_TEST_CASE(check));
+  suite->add(BOOST_TEST_CASE(check_lexical_cast));
   return suite;
 }

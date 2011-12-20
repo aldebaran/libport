@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -12,7 +12,7 @@
 
 #include <libport/pid-file.hh>
 #include <libport/program-name.hh>
-#include <libport/test.hh>
+#include "test.hh"
 #include <libport/unistd.h>
 #include <libport/fcntl.h>
 

@@ -8,7 +8,6 @@
  * See the LICENSE file for more information.
  */
 
-
 #include <libport/foreach.hh>
 #include <libport/vector.hh>
 #include <libport/unit-test.hh>

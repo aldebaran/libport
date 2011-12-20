@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010, 2011, Gostai S.A.S.
+ * Copyright (C) 2010-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -12,7 +12,7 @@
 #include <libport/foreach.hh>
 #include <libport/hash.hh>
 #include <libport/symbol.hh>
-#include <libport/test.hh>
+#include "test.hh"
 
 using boost::bind;
 using libport::test_suite;

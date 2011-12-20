@@ -14,7 +14,6 @@
 # include <libport/cstdlib>
 # include <iostream>
 # include <string>
-# include <boost/foreach.hpp>
 
 # include <libport/cassert>
 # include <libport/cast.hh>

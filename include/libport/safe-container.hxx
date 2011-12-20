@@ -14,7 +14,7 @@
 # include <stdexcept>
 # include <iostream>
 # include <libport/preproc.hh>
-# include <boost/foreach.hpp>
+# include <libport/foreach.hh>
 
 namespace libport
 {
@@ -130,8 +130,8 @@ namespace libport
         // It would not be safe to use b.base_iterator_::operator== as it
         // might have been invalidated.
         flag = owner->getFlag();
-        BOOST_FOREACH(real_value_type& v, owner->container)
-          if ( (v.mask & b.flag.mask) != b.flag.val)
+        foreach (real_value_type& v, owner->container)
+          if ((v.mask & b.flag.mask) != b.flag.val)
             break;
           else
             v.mask ^= flag.mask;

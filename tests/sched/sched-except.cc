@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <sched/coroutine.hh>
-#include <libport/test.hh>
+#include <tests/libport/test.hh>
 
 // Do not test coroutine with valgrind if it is not enabled.
 # include <libport/instrument.hh>

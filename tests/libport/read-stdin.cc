@@ -12,7 +12,7 @@
 #include <libport/fcntl.h>
 #include <libport/instrument.hh>
 #include <libport/read-stdin.hh>
-#include <libport/test.hh>
+#include "test.hh"
 
 using libport::test_suite;
 

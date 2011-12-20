@@ -14,7 +14,7 @@
 
 #include <libport/backtrace.hh>
 #include <libport/foreach.hh>
-#include <libport/test.hh>
+#include "test.hh"
 #include <libport/compiler.hh>
 
 #include <iostream>

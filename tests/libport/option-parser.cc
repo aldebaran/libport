@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2008-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -16,7 +16,7 @@
 
 #include <libport/containers.hh>
 #include <libport/option-parser.hh>
-#include <libport/test.hh>
+#include "test.hh"
 
 using libport::test_suite;
 using namespace libport;

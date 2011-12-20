@@ -10,7 +10,7 @@
 
 #include <libport/bind.hh>
 #include <libport/lexical-cast.hh>
-#include <libport/test.hh>
+#include "test.hh"
 
 #include <libport/unistd.h>
 #include <libport/thread-pool.hh>
@@ -18,8 +18,16 @@
 // For atomic increment
 #include <boost/interprocess/detail/atomic.hpp>
 
-using boost::interprocess::detail::atomic_inc32;
-using boost::interprocess::detail::atomic_read32;
+#include <boost/version.hpp>
+namespace ipcdetail =
+#if BOOST_VERSION < 104800
+   boost::interprocess::detail;
+#else
+   boost::interprocess::ipcdetail;
+#endif
+
+using ipcdetail::atomic_inc32;
+using ipcdetail::atomic_read32;
 
 
 using libport::test_suite;
