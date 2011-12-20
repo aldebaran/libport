@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2011, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <sched/coroutine.hh>
-#include <libport/test.hh>
+#include <tests/libport/test.hh>
 
 // do not test coroutine with valgrind if it is not enabled.
 #if ! defined USE_VALGRIND || defined NVALGRIND

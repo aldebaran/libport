@@ -16,7 +16,7 @@
 
 #include <libport/containers.hh>
 #include <libport/option-parser.hh>
-#include <libport/test.hh>
+#include "test.hh"
 
 using libport::test_suite;
 using namespace libport;

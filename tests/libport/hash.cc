@@ -11,7 +11,7 @@
 #include <libport/bind.hh>
 #include <libport/hash.hh>
 #include <libport/symbol.hh>
-#include <libport/test.hh>
+#include "test.hh"
 
 using boost::bind;
 using libport::test_suite;

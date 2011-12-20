@@ -17,7 +17,7 @@
 #include <libport/input-arguments.hh>
 #include <libport/containers.hh>
 #include <libport/separate.hh>
-#include <libport/test.hh>
+#include "test.hh"
 
 using libport::test_suite;
 using namespace libport;

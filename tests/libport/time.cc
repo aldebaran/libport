@@ -9,7 +9,7 @@
  */
 
 #include <libport/time.hh>
-#include <libport/test.hh>
+#include "test.hh"
 #include <libport/instrument.hh>
 
 using libport::test_suite;

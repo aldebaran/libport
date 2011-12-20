@@ -9,7 +9,7 @@
  */
 
 #include <libport/bind.hh>
-#include <libport/test.hh>
+#include "test.hh"
 #include <libport/path.hh>
 
 using boost::bind;

@@ -26,7 +26,7 @@
 //        buckets_.resize(num_buckets, bucket);
 //
 
-#include <libport/test.hh>
+#include "test.hh"
 #include <libport/sysexits.hh>
 
 using libport::test_suite;

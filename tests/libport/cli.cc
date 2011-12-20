@@ -15,7 +15,7 @@
 #include <sstream>
 
 #include <libport/cli.hh>
-#include <libport/test.hh>
+#include "test.hh"
 
 using libport::test_suite;
 using namespace libport;

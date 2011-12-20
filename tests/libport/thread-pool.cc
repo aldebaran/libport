@@ -10,7 +10,7 @@
 
 #include <libport/bind.hh>
 #include <libport/lexical-cast.hh>
-#include <libport/test.hh>
+#include "test.hh"
 
 #include <libport/unistd.h>
 #include <libport/thread-pool.hh>
