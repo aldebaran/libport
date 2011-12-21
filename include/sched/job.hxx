@@ -396,6 +396,7 @@ namespace sched
   ChildException::rethrow_child_exception() const
   {
     child_exception_->rethrow();
+    abort(); // Help clang++ 2.1.
   }
 
 
