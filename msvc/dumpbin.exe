@@ -1,0 +1,6 @@
+#! /bin/sh
+
+. $(dirname "$0")/msvc-common.sh
+
+setup
+exec $VCXX_BIN/link.exe -dump -symbols "$@"

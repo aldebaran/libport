@@ -1,4 +1,4 @@
-## Copyright (C) 2009-2010, Gostai S.A.S.
+## Copyright (C) 2009-2011, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -9,10 +9,13 @@
 EXTRA_DIST +=					\
   msvc/cl.exe					\
   msvc/cygpath					\
+  msvc/dumpbin.exe				\
+  msvc/filter-cl-logs				\
   msvc/lib					\
   msvc/lib.exe					\
   msvc/link.exe					\
-  msvc/makedepend
+  msvc/makedepend				\
+  msvc/msvc-common.sh
 
 # compilation
 EXTRA_DIST += msvc/compilation.m4sh

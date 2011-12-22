@@ -6,9 +6,15 @@ medir=$(absolute "$0").dir
 mkcd $medir
 
 export PATH=$abs_srcdir/msvc:$PATH
+if run "--version" cl.exe --version; then :; else
+  sta=$?
+  if test $sta = 72; then
+    error SKIP "SKIP: cannot run cl.exe on this machine"
+  else
+    error $sta "cl.exe --version fails"
+  fi
+fi
 set -x
-run "--version" cl.exe --version ||
-  error $? "cannot run cl.exe"
 
 SHELL='/bin/sh'
 depcc=cl.exe

@@ -1,0 +1,209 @@
+#! /usr/bin/perl
+
+use Cwd (getcwd);
+use English;
+use Fcntl;   # For O_RDWR, O_CREAT, etc.
+use File::Path (mkpath);
+use File::Basename;
+use DBI;
+
+# A file into which we store the conversion table.  We do not leave
+# this file in the current directory: trailing files that all our
+# "clean" rules should be educated to handle (including foreign
+# packages such as libjpeg).  A useless burden.
+my $cache_dir = $medir;
+my $cache_file = "$cache_dir/$repath.cache";
+
+if (! -d $cache_dir)
+{
+  mkpath $cache_dir
+    or warn "cannot create $cache_dir";
+}
+
+# Do not let errors show up: they cause ccache to not cache.
+#
+# On Cygwin the directory component of the dbname is ignored.  To work
+# around this issue, look for Win32.pm (something like
+# /usr/lib/perl5/5.10/i686-cygwin/Win32.pm), and replace
+#
+# $real = join '', grep { defined } Win32::GetShortPathName($dir), $file, $suffix;
+
+# with
+#
+# $real = join '', Win32::GetShortPathName($dir), $file, $suffix
+#   if defined Win32::GetShortPathName($dir);
+#
+my $dbh = DBI->connect("dbi:SQLite:dbname=$cache_file", "", "",
+                       {
+                         PrintError => 0,
+                         RaiseError => 0,
+                       })
+  || die "cannot connect to $cache_file: $DBI::errstr";
+
+# It will fail if the db exists.
+eval {
+  $dbh->do("CREATE TABLE files
+            (
+               windows VARCHAR NOT NULL PRIMARY KEY,
+               unix VARCHAR NOT NULL
+            )");
+};
+
+# Convert a single path from Windows to linux.
+sub convert_path ($)
+{
+  my ($path) = @_;
+  my $res;
+
+  # Check whether SQLite knows it.
+  my $rows =
+    $dbh->selectrow_arrayref("SELECT unix FROM files WHERE windows = ?",
+                             {},
+                             $path);
+
+  if (defined $rows)
+  {
+    $res = $rows->[0];
+  }
+  else
+  {
+    # Not yet cached.
+    #
+    # Do not convert files that do not need it, as it makes them
+    # longer (from relative to absolute).
+    #
+    # Two different kinds of changes are needed.
+    #
+    # Absolute paths need to be handled by winepath.  Relative paths
+    # should be kept relative so that Make can track dependencies
+    # properly (Make does not like files addressed under different
+    # names, such as absolute vs. relative).
+    #
+    # Unfortunately MSVC sometimes mixes forward- and backward-
+    # slashes (if for instance you use forward slash in -Ifoo/bar, it
+    # will use a backslash and result in "foo/bar\baz.h").  Since
+    # apparently there is no problem with using slashes instead of
+    # backslashes, let us first use only slashes.
+
+    $res = $path;
+    # For some reason, the outcome looks like
+    # "C:\\vcxx8\\VC\\INCLUDE\istream", with some backslashes escaped,
+    # and not others.
+    $res =~ s,\\\\?,/,g;
+    if ($res =~ /^\w:/)
+    {
+      # Convert them to Linux format.
+      $res = `$repath -u "$res"`;
+      chomp $res;
+    }
+    # Save in SQLite.
+    $dbh->do("INSERT INTO files VALUES (?,?)", {},
+             $path, $res);
+  }
+  print STDERR "convert: $path -> $res\n"
+    if $verbose;
+  return $res;
+}
+
+my %res;
+while (<>)
+{
+  chop;
+  s/\r$//;
+  if (
+      # For some (bad) reason, cl.exe dumps on STDOUT the name of the
+      # file being compiled.  This makes ccache believe something went
+      # wrong, in which case it does not cache.
+      #
+      # Usually it is on the first line, but Wine sometimes issues
+      # warnings before.
+      ($_ eq basename $source)
+      ||
+      # cl : Command line warning D9024 :
+      # unrecognized source file type 'FOO.o', object file assumed
+      m{Command line warning D9024 : unrecognized source file type '.*\.o'}
+      ||
+      # LINK : warning LNK4068: /MACHINE not specified; defaulting to X86
+      m{LINK : warning LNK4068: /MACHINE not specified; defaulting to X86}
+      ||
+      # Bad features from Wine.
+      m{fixme:heap:HeapSetInformation \(nil\) 1 \(nil\) 0}
+      ||
+      m{fixme:ole:NdrCorrelationInitialize (.*): stub}
+      ||
+      m{fixme:ole:NdrCorrelationFree (.*): stub}
+      ||
+      m{fixme:rpc:NdrStubCall2 new correlation description not implemented}
+      ||
+      m{err:secur32:SECUR32_initSchannelSP .* not found, SSL connections will fail}
+      ||
+      # Appears alone on the output.  Probably due to Boost when it
+      # decides to use the decltype of Visual.
+      m{using native typeof}
+      )
+  {
+    print STDERR "Ignoring: {{{$_}}}\n"
+      if $verbose;
+  }
+  # Note: including file: C:\\vcxx8\\VC\\INCLUDE\iostream
+  # Note: including file:  C:\\vcxx8\\VC\\INCLUDE\istream
+  elsif (s/Note: including file: *//)
+  {
+    $res{$_} = 1;
+  }
+  else
+  {
+    # Convert paths to ease debugging under Unix.
+    # Convert the "notes" syntax from MSVC to GCC: put the indentation
+    # after the location, and insert "note:" so that Emacs know that
+    # this is not another error, but a single multi-line error.
+    s{^(\s*)([:\-\w\\\\/.]+)\((\d+)\)\s*:}
+     {convert_path ($2) . ":$3:" . ($1 ? " note:$1" : "")}e;
+    print STDERR "$_\n";
+  }
+}
+
+# Generate the dependency.
+if ($deps_file)
+{
+  my @files = map { convert_path($_) } sort keys %res;
+
+  # Make does not like colons in file names, which is something that
+  # does happen with cl.exe
+  # (/home/build/.wine/dosdevices/c:/vcxx8/VC/include/stdio.h).
+  # Escape them.  Spaces are a problem too.  They seem to be well
+  # accepted by GNU Make on Cygwin.
+  map { s/[\s:]/\\$&/g } @files;
+  $source =~ s/[\s:]/\\$1/g;
+
+  use IO::File;
+  my $deps = new IO::File ">$deps_file"
+    or die "cannot create $deps_file: $!\n";
+  print $deps join ("\t\\\n  ", "$deps_target: $source", @files), "\n";
+
+  if ($deps_phony)
+  {
+    map { print $deps "$_:\n\n"; } @files;
+  }
+}
+
+print STDERR "DB errors: $DBI::errstr\n"
+  if $verbose && $dbh->err;
+$dbh->disconnect
+
+### Setup "Gostai" style for perl-mode and cperl-mode.
+## Local Variables:
+## perl-indent-level: 2
+## perl-continued-statement-offset: 2
+## perl-continued-brace-offset: -2
+## perl-brace-offset: 0
+## perl-brace-imaginary-offset: 0
+## perl-label-offset: -2
+## cperl-indent-level: 2
+## cperl-brace-offset: 0
+## cperl-continued-brace-offset: -2
+## cperl-label-offset: -2
+## cperl-extra-newline-before-brace: t
+## cperl-merge-trailing-else: nil
+## cperl-continued-statement-offset: 2
+## End:

@@ -19,7 +19,7 @@
 # - a test suite :(  Many bugs were regularly introduced.
 #
 # - support link.exe -dump -symbols
-#   currenty we do junk
+#   currenty we do junk.  In other words, merge dumpbin.exe in.
 
 set -e
 
@@ -32,45 +32,7 @@ trace ()
 
 trace
 
-me=$(basename "$0")
-
-stderr ()
-{
-  local i
-  for i
-  do
-    echo >&2 "$me (wrapper): $i"
-  done
-}
-
-run ()
-{
-  verbose "run: $*"
-  "$@"
-}
-
-error ()
-{
-  local exit="$1"
-  shift
-  stderr "$@"
-  exit $exit
-}
-
-verbose ()
-{
-  # Don't
-  case "$verbose: $VERBOSE " in
-    (true:* | *" cl.exe "* | *" link.exe "* | *" x "*)
-      stderr "$@"
-      ;;
-  esac
-}
-
-fatal ()
-{
-  error 1 "$@"
-}
+. $(dirname "$0")/msvc-common.sh
 
 transform ()
 {
@@ -92,6 +54,12 @@ transform ()
 handle_lib ()
 {
   local lib=$1
+
+  # This is used to compile against Webots Controller library.
+  if test "$lib" = "-lController"; then
+      handle_lib_res="Controller.lib"
+      return
+  fi
 
   # If $systemlibs is not defined, set it up.  It saves time (and
   # traces) to do it only on demand instead of always.
@@ -152,6 +120,14 @@ handle_lib ()
 dll_2_lib ()
 {
   echo "$1" | sed -re 's/(-[0-9]*)?.dll/.lib/'
+}
+
+# all_2_pdb ()
+# ------------
+# Return the PDB name of the corresponding output.
+all_2_pdb ()
+{
+  echo "$1" | sed -re 's/\.[^.]*/.pdb/'
 }
 
 # quote_for_eval_arg ARG
@@ -232,115 +208,12 @@ Options:
   --verbose       output debugging information about this script
 
 MSVC help:
-                         C/C++ COMPILER OPTIONS
+(See also <URL:http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx>)
 
-
-                              -OPTIMIZATION-
-
-/O1 minimize space                      /O2 maximize speed
-/Ob<n> inline expansion (default n=0)   /Od disable optimizations (default)
-/Og enable global optimization          /Oi[-] enable intrinsic functions
-/Os favor code space                    /Ot favor code speed
-/Ox maximum optimizations               /Oy[-] enable frame pointer omission
-
-                             -CODE GENERATION-
-
-/GF enable read-only string pooling     /Gm[-] enable minimal rebuild
-/Gy[-] separate functions for linker    /GS[-] enable security checks
-/GR[-] enable C++ RTTI                  /GX[-] enable C++ EH (same as /EHsc)
-/EHs enable C++ EH (no SEH exceptions)  /EHa enable C++ EH (w/ SEH exceptions)
-/EHc extern "C" defaults to nothrow
-/fp:<except[-]|fast|precise|strict> choose floating-point model:
-    except[-] - consider floating-point exceptions when generating code
-    fast - "fast" floating-point model; results are less predictable
-    precise - "precise" floating-point model; results are predictable
-    strict - "strict" floating-point model (implies /fp:except)
-/GL[-] enable link-time code generation /GA optimize for Windows Application
-/Ge force stack checking for all funcs  /Gs[num] control stack checking calls
-/Gh enable _penter function call        /GH enable _pexit function call
-/GT generate fiber-safe TLS accesses    /RTC1 Enable fast checks (/RTCsu)
-/RTCc Convert to smaller type checks    /RTCs Stack Frame runtime checking
-/RTCu Uninitialized local usage checks
-/clr[:option] compile for common language runtime, where option is:
-    pure - produce IL-only output file (no native executable code)
-    safe - produce IL-only verifiable output file
-    oldSyntax - accept the Managed Extensions syntax from Visual C++ 2002/2003
-    initialAppDomain - enable initial AppDomain behavior of Visual C++ 2002
-    noAssembly - do not produce an assembly
-/Gd __cdecl calling convention          /Gr __fastcall calling convention
-/Gz __stdcall calling convention        /GZ Enable stack checks (/RTCs)
-/QIfist[-] use FIST instead of ftol()
-/hotpatch ensure function padding for hotpatchable images
-/arch:<SSE|SSE2> minimum CPU architecture requirements, one of:
-    SSE - enable use of instructions available with SSE enabled CPUs
-    SSE2 - enable use of instructions available with SSE2 enabled CPUs
-
-                              -OUTPUT FILES-
-
-/Fa[file] name assembly listing file    /FA[scu] configure assembly listing
-/Fd[file] name .PDB file                /Fe<file> name executable file
-/Fm[file] name map file                 /Fo<file> name object file
-/Fp<file> name precompiled header file  /Fr[file] name source browser file
-/FR[file] name extended .SBR file
-/doc[file] process XML documentation comments and optionally name the .xdc file
-
-                              -PREPROCESSOR-
-
-/AI<dir> add to assembly search path    /FU<file> forced using assembly/module
-/C don't strip comments                 /D<name>{=|#}<text> define macro
-/E preprocess to stdout                 /EP preprocess to stdout, no #line
-/P preprocess to file                   /Fx merge injected code to file
-/FI<file> name forced include file      /U<name> remove predefined macro
-/u remove all predefined macros         /I<dir> add to include search path
-/X ignore "standard places"
-
-                                -LANGUAGE-
-
-/Zi enable debugging information        /Z7 enable old-style debug info
-/Zp[n] pack structs on n-byte boundary  /Za disable extensions
-/Ze enable extensions (default)         /Zl omit default library name in .OBJ
-/Zg generate function prototypes        /Zs syntax check only
-/vd{0|1|2} disable/enable vtordisp      /vm<x> type of pointers to members
-/Zc:arg1[,arg2] C++ language conformance, where arguments can be:
-    forScope[-] - enforce Standard C++ for scoping rules
-    wchar_t[-] - wchar_t is the native type, not a typedef
-/ZI enable Edit and Continue debug info
-/openmp enable OpenMP 2.0 language extensions
-
-                              -MISCELLANEOUS-
-
-@<file> options response file           /?, /help print this help message
-/bigobj generate extended object format /c compile only, no link
-/errorReport:option Report internal compiler errors to Microsoft
-    none - do not send report
-    prompt - prompt to immediately send report
-    queue - at next admin logon, prompt to send report (default)
-    send - send report automatically
-/FC use full pathnames in diagnostics   /H<num> max external name length
-/J default char type is unsigned        /nologo suppress copyright message
-/showIncludes show include file names   /Tc<source file> compile file as .c
-/Tp<source file> compile file as .cpp   /TC compile all files as .c
-/TP compile all files as .cpp           /V<string> set version string
-/w disable all warnings                 /wd<n> disable warning n
-/we<n> treat warning n as an error      /wo<n> issue warning n once
-/w<l><n> set warning level 1-4 for n    /W<n> set warning level (default n=1)
-/Wall enable all warnings               /WL enable one line diagnostics
-/WX treat warnings as errors            /Yc[file] create .PCH file
-/Yd put debug info in every .OBJ        /Yl[sym] inject .PCH ref for debug lib
-/Yu[file] use .PCH file                 /Y- disable all PCH options
-/Zm<n> max memory alloc (% of default)  /Wp64 enable 64 bit porting warnings
-
-                                -LINKING-
-
-/LD Create .DLL                         /LDd Create .DLL debug library
-/LN Create a .netmodule                 /F<num> set stack size
-/link [linker options and libraries]    /MD link with MSVCRT.LIB
-/MT link with LIBCMT.LIB                /MDd link with MSVCRTD.LIB debug lib
-/MTd link with LIBCMTD.LIB debug lib
-
-
-See also <URL:http://msdn.microsoft.com/en-us/library/fwkeyyhe.aspx>.
 EOF
+  "$VCXX_BIN/cl.exe" -help 2>&1 |
+    dos2unix |
+    filter_wine
   exit 0
 }
 
@@ -351,9 +224,17 @@ version ()
 MS VC++ wrapper.
 
 EOF
-  # Simply don't pass /nologo.
-  # The version info is on stderr.
-  "$VCXX_BIN/cl.exe" 2>&1 >/dev/null
+  # Simply don't pass /nologo.  The version info is on stderr.
+  "$VCXX_BIN/cl.exe" 2>&1 |
+    # Convert the end of line.  This is actually not gratuitous:
+    # URBI_CXX uses this --version to get the version of the compiler,
+    # and it is pasted in Makefile, which in turn is used to check that
+    # that libport::read_stding works properly.  Unfortunately if we
+    # have a \r\n in the file, then reading binary/text will make a
+    # difference.
+    dos2unix |
+    filter_wine |
+    sed -ne '/./p'
   exit 0
 }
 
@@ -424,7 +305,15 @@ get_options ()
     (-Wno-inline)
         outargs -wd4710
         ;;
-    (-g|-ggdb) ;; # outargs "-Zi";;
+    (-g|-ggdb)
+        # Use Z7 option because it store debug information inside the *.obj
+        # file instead of adding information inside a global file.  This
+        # prevent failures of parallel builds.  The 'old-style' correspond
+        # to non-incremental generation of debug symbols which does not
+        # corespond to our usage as we are not using an interactive IDE for
+        # windows builds.
+        outargs "-Z7"
+        ;;
 
     # Optimizations.
     (-fno-strict-aliasing);;
@@ -482,207 +371,15 @@ dump_log ()
 {
   local file="$1"
   verbose "processing log file $file"
-  perl -e "my \$deps_file = '$deps_file';" \
-       -e "my \$deps_phony = '$deps_phony';" \
-       -e "my \$deps_target = '$deps_target';" \
-       -e "my \$medir = '$medir';" \
-       -e "my \$repath = '$repath';" \
-       -e "my \$source = '$source';" \
-       -e "my \$verbose = '$verbose' eq 'true';" \
-       -e '
-#! /usr/bin/perl
-
-use Cwd (getcwd);
-use English;
-use Fcntl;   # For O_RDWR, O_CREAT, etc.
-use File::Path (mkpath);
-use File::Basename;
-use DBI;
-
-# A file into which we store the conversion table.  We do not leave
-# this file in the current directory: trailing files that all our
-# "clean" rules should be educated to handle (including foreign
-# packages such as libjpeg).  A useless burden.
-my $cache_dir = $medir;
-my $cache_file = "$cache_dir/$repath.cache";
-
-if (! -d $cache_dir)
-{
-  mkpath $cache_dir
-    or warn "cannot create $cache_dir";
-}
-
-# Do not let errors show up: they cause ccache to not cache.
-#
-# On Cygwin the directory component of the dbname is ignored.  To work
-# around this issue, look for Win32.pm (something like
-# /usr/lib/perl5/5.10/i686-cygwin/Win32.pm), and replace
-#
-# $real = join '', grep { defined } Win32::GetShortPathName($dir), $file, $suffix;
-
-# with
-#
-# $real = join '', Win32::GetShortPathName($dir), $file, $suffix
-#   if defined Win32::GetShortPathName($dir);
-#
-my $dbh = DBI->connect("dbi:SQLite:dbname=$cache_file", "", "",
-                       {
-                         PrintError => 0,
-                         RaiseError => 0,
-                       })
-  || die "cannot connect to $cache_file: $DBI::errstr";
-
-# It will fail if the db exists.
-eval {
-  $dbh->do("CREATE TABLE files
-            (
-               windows VARCHAR NOT NULL PRIMARY KEY,
-               unix VARCHAR NOT NULL
-            )");
-};
-
-# Convert a single path from Windows to linux.
-sub convert_path ($)
-{
-  my ($path) = @_;
-  my $res;
-
-  # Check whether SQLite knows it.
-  my $rows =
-    $dbh->selectrow_arrayref("SELECT unix FROM files WHERE windows = ?",
-                             {},
-                             $path);
-
-  if (defined $rows)
-  {
-    $res = $rows->[0];
-  }
-  else
-  {
-    # Not yet cached.
-    #
-    # Do not convert files that do not need it, as it makes them
-    # longer (from relative to absolute).
-    #
-    # Two different kinds of changes are needed.
-    #
-    # Absolute paths need to be handled by winepath.  Relative paths
-    # should be kept relative so that Make can track dependencies
-    # properly (Make does not like files addressed under different
-    # names, such as absolute vs. relative).
-    #
-    # Unfortunately MSVC sometimes mixes forward- and backward-
-    # slashes (if for instance you use forward slash in -Ifoo/bar, it
-    # will use a backslash and result in "foo/bar\baz.h").  Since
-    # apparently there is no problem with using slashes instead of
-    # backslashes, let us first use only slashes.
-
-    $res = $path;
-    # For some reason, the outcome looks like
-    # "C:\\vcxx8\\VC\\INCLUDE\istream", with some backslashes escaped,
-    # and not others.
-    $res =~ s,\\\\?,/,g;
-    if ($res =~ /^\w:/)
-    {
-      # Convert them to Linux format.
-      $res = `$repath -u "$res"`;
-      chomp $res;
-    }
-    # Save in SQLite.
-    $dbh->do("INSERT INTO files VALUES (?,?)", {},
-             $path, $res);
-  }
-  print STDERR "convert: $path -> $res\n"
-    if $verbose;
-  return $res;
-}
-
-my %res;
-while (<>)
-{
-  chop;
-  s/\r$//;
-  if (
-      # For some (bad) reason, cl.exe dumps on STDOUT the name of the
-      # file being compiled.  This makes ccache believe something went
-      # wrong, in which case it does not cache.
-      #
-      # Usually it is on the first line, but Wine sometimes issues
-      # warnings before.
-      ($_ eq basename $source)
-      ||
-      # cl : Command line warning D9024 :
-      # unrecognized source file type '"'"'FOO.o'"'"', object file assumed
-      /Command line warning D9024 : unrecognized source file type '"'"'.*\.o'"'"'/
-      ||
-      # LINK : warning LNK4068: /MACHINE not specified; defaulting to X86
-      m{LINK : warning LNK4068: /MACHINE not specified; defaulting to X86}
-      ||
-      # Bad features from Wine.
-      m{fixme:heap:HeapSetInformation \(nil\) 1 \(nil\) 0}
-      ||
-      m{fixme:ole:NdrCorrelationInitialize (.*): stub}
-      ||
-      m{fixme:ole:NdrCorrelationFree (.*): stub}
-      ||
-      m{fixme:rpc:NdrStubCall2 new correlation description not implemented}
-      ||
-      m{err:secur32:SECUR32_initSchannelSP libgnutls not found, SSL connections will fail}
-      ||
-      # Appears alone on the output.  Probably due to Boost when it
-      # decides to use the decltype of Visual.
-      m{using native typeof}
-      )
-  {
-    print STDERR "Ignoring: {{{$_}}}\n"
-      if $verbose;
-  }
-  # Note: including file: C:\\vcxx8\\VC\\INCLUDE\iostream
-  # Note: including file:  C:\\vcxx8\\VC\\INCLUDE\istream
-  elsif (s/Note: including file: *//)
-  {
-    $res{$_} = 1;
-  }
-  else
-  {
-    # Convert paths to ease debugging under Unix.
-    # Convert the "notes" syntax from MSVC to GCC: put the indentation
-    # after the location, and insert "note:" so that Emacs know that
-    # this is not another error, but a single multi-line error.
-    s{^(\s*)([:\-\w\\\\/.]+)\((\d+)\)\s*:}
-     {convert_path ($2) . ":$3:" . ($1 ? " note:$1" : "")}e;
-    print STDERR "$_\n";
-  }
-}
-
-# Generate the dependency.
-if ($deps_file)
-{
-  my @files = map { convert_path($_) } sort keys %res;
-
-  # Make does not like colons in file names, which is something that
-  # does happen with cl.exe
-  # (/home/build/.wine/dosdevices/c:/vcxx8/VC/include/stdio.h).
-  # Escape them.  Spaces are a problem too.  They seem to be well
-  # accepted by GNU Make on Cygwin.
-  map { s/[\s:]/\\$&/g } @files;
-  $source =~ s/[\s:]/\\$1/g;
-
-  use IO::File;
-  my $deps = new IO::File ">$deps_file"
-    or die "cannot create $deps_file: $!\n";
-  print $deps join ("\t\\\n  ", "$deps_target: $source", @files), "\n";
-
-  if ($deps_phony)
-  {
-    map { print $deps "$_:\n\n"; } @files;
-  }
-}
-
-print STDERR "DB errors: $DBI::errstr\n"
-  if $verbose && $dbh->err;
-$dbh->disconnect;
-' < $file
+  perl -e "our \$deps_file = '$deps_file';"              \
+       -e "our \$deps_phony = '$deps_phony';"            \
+       -e "our \$deps_target = '$deps_target';"          \
+       -e "our \$medir = '$medir';"                      \
+       -e "our \$repath = '$repath';"                    \
+       -e "our \$source = '$source';"                    \
+       -e "our \$verbose = '$verbose' eq 'true';"        \
+       -e "require '$(dirname $0)/filter-cl-logs';"      \
+    < $file
   ! $compiler_verbose ||
     compiler_verbose_message >&2
 }
@@ -732,25 +429,6 @@ compiler_verbose_message ()
 '
 }
 
-# Look for, and load, `msvc_env.sh'.
-load_msvc_env ()
-{
-  local i
-  # Skip if we can't run it.
-  for i in ~/share/wine ~/.wine/drive_c "$(dirname "$0")" ~/bin
-  do
-    local f="$i/msvc_env.sh"
-    verbose "trying to load $f"
-    if test -f "$f"; then
-      . "$f"
-      verbose "loaded $f"
-      return 0
-    fi
-  done
-  return 1
-}
-
-
 ## ------ ##
 ## Main.  ##
 ## ------ ##
@@ -791,7 +469,6 @@ PROG=$me
 for i
 do
   case $i in
-    (--help) usage;;
     (--verbose) verbose=true;;
   esac
 done
@@ -807,24 +484,7 @@ mkdir -p $tmp
 stdout=$tmp/stdout
 stderr=$tmp/stderr
 
-load_msvc_env ||
-  error 176 "cannot load msvc_env.sh"
-
-repaths='cygpath winepath'
-for repath in $repaths ''
-do
-  $repath --version >/dev/null 2>&1 &&
-    break
-done
-test -n "$repath" ||
-  error 176 "program not found: $repaths"
-
-VS_PATH=$($repath -u "$VSINSTALLDIR")
-VCXX_PATH=$($repath -u "$VCINSTALLDIR")
-VCXX_BIN=$VCXX_PATH/bin
-
-test -x "$VCXX_BIN/cl.exe" ||
-  error 176 "cl.exe not found in $VCXX_BIN"
+setup
 
 case $PROG in
   (cl.exe) outargs "-nologo" "-EHsc";;
@@ -833,7 +493,9 @@ esac
 get_options "$@"
 
 case $runtime in
-  (debug)   outargs '-MDd';;
+  (debug)
+    outargs '-MDd'
+    ;;
   (release) outargs '-MD';;
   (*) fatal "invalid \$runtime: $runtime";;
 esac
@@ -852,6 +514,15 @@ case $mode in
       (*)        outargs "-Fe$(transform "$output")";;
     esac
     linkargs "-SUBSYSTEM:console" "-MANIFEST" "Kernel32.Lib"
+    ;;
+esac
+
+case $runtime:$mode in
+  (debug:link)
+    # Produce a pdb file with the name of the library / binary which has
+    # the same name.  The produced PDB file should be in the same
+    # directory as the produced binary.
+    outargs "-Zi" "-Fd$(transform "$(all_2_pdb "$output")")"
     ;;
 esac
 
@@ -924,7 +595,7 @@ case $repath:$output in
 #include <winuser.h>
 1 RT_MANIFEST {"$(cat $output.escaped.manifest)"}
 EOF
-  run "$VCXX_BIN/rc.exe" -r "$(transform $output).auto.rc"
+  run_filter "$VCXX_BIN/rc.exe" -r "$(transform $output).auto.rc"
   cmd="\"$VCXX_BIN/$PROG\" $outargs $linkargs \"$(transform $output).auto.RES\""
   verbose "Running: $cmd"
   status=0
