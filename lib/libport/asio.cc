@@ -462,8 +462,9 @@ namespace libport
       if (startWorkerThread)
       {
         hasWorkerThread = true;
-        asio_worker_thread =
-          startThread(boost::bind(&runIoService, io));
+        // clang does not want "&runIoService" here.  If MSVC wants it,
+        // we will have to use cpp.
+        asio_worker_thread = startThread(boost::bind(runIoService, io));
       }
       else
         asio_worker_thread = pthread_self();
