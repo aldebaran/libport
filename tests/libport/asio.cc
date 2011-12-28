@@ -440,6 +440,7 @@ test_suite*
 init_test_suite()
 {
   skip_if("windows");
+  skip_if("macos"); // FIXME: Do not install in Urbi 3.
   test_suite* suite = BOOST_TEST_SUITE("Libport.Asio");
   suite->add(BOOST_TEST_CASE(test_safe_destruction));
   suite->add(BOOST_TEST_CASE(test_invalid_ip));

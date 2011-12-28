@@ -45,13 +45,24 @@ skip(const std::string& why)
   exit(EX_SKIP);
 }
 
+// Make no difference between "darwin" and "macos" and "macosx".
+inline
+std::string
+os_normalize(const std::string& s)
+{
+  if (s == "darwin" || s == "macos" || s == "macosx")
+    return "darwin";
+  else
+    return s;
+}
+
 inline
 bool
 running(const char* env)
 {
   std::string val = libport::xgetenv("BUILDFARM_OS");
   BOOST_TEST_MESSAGE("BUILDFARM_OS=" << val);
-  return val == env;
+  return os_normalize(val) == os_normalize(env);
 }
 
 inline
