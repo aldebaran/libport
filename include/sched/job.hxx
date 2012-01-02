@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011, Gostai S.A.S.
+ * Copyright (C) 2009-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -295,12 +295,10 @@ namespace sched
       switch (last_state)
       {
         case waiting:
-          stats_.job.waiting.add_sample(
-            stats_.last_resume - start_resume);
+          stats_.job.waiting.add_sample(stats_.last_resume - start_resume);
           break;
         case sleeping:
-          stats_.job.sleeping.add_sample(
-            stats_.last_resume - start_resume);
+          stats_.job.sleeping.add_sample(stats_.last_resume - start_resume);
           break;
         default:
           break;
