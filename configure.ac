@@ -1,5 +1,5 @@
 # This file is part of Urbi SDK.
-# Copyright (C) 2006-2011, Gostai S.A.S.
+# Copyright (C) 2006-2012, Gostai S.A.S.
 #
 # This software is provided "as is" without warranty of any kind,
 # either expressed or implied, including but not limited to the
@@ -15,7 +15,7 @@
 
 AC_INIT([Libport], [UNDEFINED], [libport-bugs@lists.gostai.com])
 URBI_PACKAGE_VERSION
-URBI_PACKAGE_COPYRIGHT([Gostai S.A.S.], [2006-2011])
+URBI_PACKAGE_COPYRIGHT([Gostai S.A.S.], [2005-2012])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux])
 URBI_DISTCHECK_CONFIGURE_FLAGS

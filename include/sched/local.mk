@@ -1,4 +1,4 @@
-## Copyright (C) 2009-2010, Gostai S.A.S.
+## Copyright (C) 2009-2010, 2012, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -6,8 +6,7 @@
 ##
 ## See the LICENSE file for more information.
 
-# Currently we don't want to install libsched headers.
-sched_includedir =
+sched_includedir = $(includedir)/sched
 sched_include_HEADERS =				\
   include/sched/configuration.hh		\
   include/sched/coroutine.hh			\
