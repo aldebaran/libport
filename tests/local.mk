@@ -1,4 +1,4 @@
-## Copyright (C) 2006-2011, Gostai S.A.S.
+## Copyright (C) 2006-2012, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -25,7 +25,7 @@ endif
 #
 # Program to check:
 # check_PROGRAMS = testme
-# nodist_check_SCRIPTS += $(top_builddir)/build-aux/test.sh
+# nodist_check_SCRIPTS += $(top_builddir)/build-aux/bin/test.sh
 # testme_SOURCES = testme.cc
 
 # If your test programs includes header from the source tree:
@@ -40,15 +40,15 @@ endif
 
 #$(TESTS):
 #	for i in $(TESTS); do \
-#          $(LN_S) -f $(top_builddir)/build-aux/test.sh $$i || exit 1; \
+#          $(LN_S) -f $(top_builddir)/build-aux/bin/test.sh $$i || exit 1; \
 #        done
 
 #EXTRA_DIST += $(TESTS:.test=.stdout)
 #CLEANFILES += *.my_stdout *.my_stderr
 #TESTS_ENVIRONMENT += SRCDIR=$(srcdir)
 
-#$(top_builddir)/build-aux/test.sh: $(top_srcdir)/build-aux/test.sh.in
-#	cd $(top_builddir) && ./config.status build-aux/test.sh
+#$(top_builddir)/build-aux/bin/test.sh: $(top_srcdir)/build-aux/bin/test.sh.in
+#	cd $(top_builddir) && ./config.status build-aux/bin/test.sh
 
 ## ------------- ##
 ## Bench suite.  ##

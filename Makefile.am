@@ -1,4 +1,4 @@
-## Copyright (C) 2006, 2008-2010, Gostai S.A.S.
+## Copyright (C) 2006, 2008-2010, 2012, Gostai S.A.S.
 ##
 ## This software is provided "as is" without warranty of any kind,
 ## either expressed or implied, including but not limited to the
@@ -90,4 +90,4 @@ check-buildfarm installcheck-buildfarm: clean-semaphores
 # Manually list the files you're using from build-aux here.
 # Note: Automake already takes care of the .mk and .m4 files you use.
 EXTRA_DIST +=					\
-  build-aux/test.sh
+  build-aux/bin/test.sh

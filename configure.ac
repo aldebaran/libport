@@ -139,6 +139,6 @@ WITH_XENOMAI
 URBI_LIB_SUFFIX
 AC_CONFIG_FILES([Makefile share/pkgconfig/libport.pc])
 
-URBI_CONFIG_SCRIPTS([doc/doxygen.sh], [build-aux/test.sh])
+URBI_CONFIG_SCRIPTS([doc/doxygen.sh])
 
 AC_OUTPUT
