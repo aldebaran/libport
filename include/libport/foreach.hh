@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011, Gostai S.A.S.
+ * Copyright (C) 2008-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -33,16 +33,9 @@
 // foreach before including the header.
 //
 // And never use boost/foreach.hpp, only libport/foreach.hh.
-//
-// Unfortunately MacPorts ship a fixed version of Boost.Foreach, in
-// which case the definition of "foreach" must come after
-// (https://trac.macports.org/ticket/32558).  I don't know a better
-// (simple) way to detect this situation other than checking for
-// __APPLE__, which is wrong of course: the user may have installed a
-// non-MacPorts Boost.
 
 # include <boost/version.hpp>
-# if defined __APPLE__ && BOOST_VERSION == 104800
+# if 104800 < BOOST_VERSION
 #  define LIBPORT_FOREACH_INCLUDE_FIRST 1
 # else
 #  define LIBPORT_FOREACH_INCLUDE_FIRST 0
