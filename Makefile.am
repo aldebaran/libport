@@ -86,8 +86,3 @@ CHECK_BUILDFARM_FLAGS = -j4 AM_COLOR_TESTS=no VERBOSE=1 INSTRUMENTATION=1
 check-buildfarm installcheck-buildfarm: clean-semaphores
 	$(MAKE) $(AM_MAKEFLAGS)			\
 	  $(CHECK_BUILDFARM_FLAGS) check-html
-
-# Manually list the files you're using from build-aux here.
-# Note: Automake already takes care of the .mk and .m4 files you use.
-EXTRA_DIST +=					\
-  build-aux/bin/test.sh
