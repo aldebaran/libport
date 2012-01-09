@@ -28,4 +28,12 @@ sched_include_HEADERS =				\
   include/sched/tag.hh				\
   include/sched/tag.hxx
 
-include include/sched/libcoroutine/local.mk
+libcoroutine_includedir = $(sched_includedir)/libcoroutine
+libcoroutine_include_HEADERS =			\
+  include/sched/libcoroutine/386-ucontext.h	\
+  include/sched/libcoroutine/Common.h		\
+  include/sched/libcoroutine/Coro.h		\
+  include/sched/libcoroutine/amd64-ucontext.h	\
+  include/sched/libcoroutine/power-ucontext.h	\
+  include/sched/libcoroutine/taskimpl.h
+
