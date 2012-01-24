@@ -13,6 +13,7 @@
 
 # include <boost/date_time/posix_time/posix_time.hpp>
 
+# include <libport/ctime>
 # include <libport/export.hh>
 # include <libport/sys/time.h>
 # include <libport/ufloat.hh>
