@@ -40,7 +40,7 @@ check_immediate()
 {
   libport::utime_t t1 = libport::utime();
   libport::utime_t t2 = libport::utime();
-  BOOST_CHECK_LT(MY_ABS(t1 - t2), 5000LL);
+  BOOST_CHECK_LT(t2 - t1, 5000LL);
 }
 
 void

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011, Gostai S.A.S.
+ * Copyright (C) 2008-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -54,7 +54,7 @@ void check_timeout()
   BOOST_CHECK_EQUAL(sem.uget(1000000), false);
   CHECK_SEM(0);
   libport::utime_t t2 = libport::utime() - t1;
-  BOOST_CHECK(t2 < 1500000);
+  BOOST_CHECK_LT(t2, 1500000);
   PTHREAD_RUN(pthread_join, th, 0);
   CHECK_SEM(1);
 }
