@@ -26,6 +26,9 @@ namespace libport
   template <typename Unit>
   utime_t seconds_to_utime(Unit seconds);
 
+  /// From timespec to utime.
+  utime_t utime(const timespec& t);
+
   /// From timeval to utime.
   utime_t utime(const timeval& t);
 

@@ -9,6 +9,7 @@
  */
 
 #include <libport/config.h>
+#include <libport/ctime>
 #include <libport/detect-win32.h>
 #include <libport/sys/time.h>
 #include <libport/utime.hh>
@@ -78,8 +79,8 @@ namespace libport
   utime_t
   utime()
   {
-    timeval t;
-    gettimeofday(&t, 0);
+    timespec t;
+    clock_gettime(CLOCK_MONOTONIC, &t);
     return utime(t) - reference;
   }
 #endif

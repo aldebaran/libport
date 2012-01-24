@@ -23,6 +23,13 @@ namespace libport
 
   inline
   utime_t
+  utime(const timespec& t)
+  {
+    return seconds_to_utime(t.tv_sec) + t.tv_nsec / 1000;
+  }
+
+  inline
+  utime_t
   utime(const timeval& t)
   {
     return seconds_to_utime(t.tv_sec) + t.tv_usec;
