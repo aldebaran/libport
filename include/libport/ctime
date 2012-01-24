@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2010, 2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -15,27 +15,48 @@
 
 # include <libport/detect-win32.h>
 # include <libport/export.hh>
-
 # if defined WIN32
 #  include <libport/windows.hh>
+# endif
 
-#  define CLOCK_REALTIME 0
+/*-----------.
+| timespec.  |
+`-----------*/
 
+# if defined WIN32
 struct timespec
 {
   time_t tv_sec;
   long tv_nsec;
 };
+# endif
 
-LIBPORT_API
-int clock_gettime(int, struct timespec* t);
+/*--------------.
+| localtime_r.  |
+`--------------*/
+
+# if defined WIN32
 
 // Warning: this implementation is not thread safe.
 LIBPORT_API
-struct tm *
-localtime_r(const time_t *clock, struct tm *result);
-
+struct tm*
+localtime_r(const time_t* clock, struct tm* result);
 # endif
+
+/*---------------------------.
+| clockid_t, clock_gettime.  |
+`---------------------------*/
+
+# if defined WIN32 || defined __APPLE__
+enum clockid_t
+{
+  CLOCK_REALTIME  = 0,
+  CLOCK_MONOTONIC = 1,
+};
+
+LIBPORT_API
+int clock_gettime(clockid_t id, struct timespec* t);
+#endif
 
 #endif // ! LIBPORT_CTIME
 
