@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011, Gostai S.A.S.
+ * Copyright (C) 2008-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -78,9 +78,9 @@ namespace libport
   utime_t
   utime()
   {
-    timeval tv;
-    gettimeofday(&tv, 0);
-    return timeval_to_utime(tv) - reference;
+    timeval t;
+    gettimeofday(&t, 0);
+    return utime(t) - reference;
   }
 #endif
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010, Gostai S.A.S.
+ * Copyright (C) 2009-2010, 2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -23,7 +23,7 @@ namespace libport
 
   inline
   utime_t
-  timeval_to_utime(const timeval& t)
+  utime(const timeval& t)
   {
     return seconds_to_utime(t.tv_sec) + t.tv_usec;
   }

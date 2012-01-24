@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011, Gostai S.A.S.
+ * Copyright (C) 2008-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -27,7 +27,7 @@ namespace libport
   utime_t seconds_to_utime(Unit seconds);
 
   /// From timeval to utime.
-  utime_t timeval_to_utime(const timeval& t);
+  utime_t utime(const timeval& t);
 
   /// Return elapsed time from an arbitrary basis in microseconds.
   LIBPORT_API utime_t utime();
