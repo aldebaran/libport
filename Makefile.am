@@ -74,15 +74,3 @@ AM_CPPFLAGS += $(BOOST_CPPFLAGS)
 TEST_LOGS = $(addsuffix .log,$(basename $(TESTS)))
 check-clean-local:
 	rm -rf $(TEST_LOGS:.log=.dir)
-
-
-## --------------- ##
-## Extra targets.  ##
-## --------------- ##
-
-# The targets run by the buildfarm.  Yes, it run installcheck, but it
-# makes no sense for Libport, so just bounce to regular check.
-CHECK_BUILDFARM_FLAGS = -j4 AM_COLOR_TESTS=no VERBOSE=1 INSTRUMENTATION=1
-check-buildfarm installcheck-buildfarm: clean-semaphores
-	$(MAKE) $(AM_MAKEFLAGS)			\
-	  $(CHECK_BUILDFARM_FLAGS) check-html
