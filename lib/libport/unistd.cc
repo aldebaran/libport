@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011, Gostai S.A.S.
+ * Copyright (C) 2008-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -21,6 +21,9 @@
 #include <libport/separate.hh>
 #include <libport/unistd.h>
 
+#define FRAISE(...)                             \
+  throw std::runtime_error(format(__VA_ARGS__))
+
 namespace libport
 {
 
@@ -34,10 +37,10 @@ namespace libport
     else
       execv(argv[0], argv);
 
-    throw std::runtime_error(format("failed to %s(%s): %s",
-                                    path_lookup ? "execvp" : "execv",
-                                    libport::separate(args, " "),
-                                    strerror(errno)));
+    FRAISE("failed to %s(%s): %s",
+           path_lookup ? "execvp" : "execv",
+           libport::separate(args, " "),
+           strerror(errno));
   }
 
   void
@@ -49,6 +52,23 @@ namespace libport
       as << s.c_str();
     exec(as, path_lookup);
   }
+
+  std::string gethostname()
+  {
+    static const size_t hostname_length_max = 1024;
+    char result[hostname_length_max];
+    if (::gethostname(result, hostname_length_max))
+    {
+      if (errno == ENAMETOOLONG)
+        FRAISE("hostname is too long (maximum is %s characters).",
+               hostname_length_max);
+      else
+        FRAISE("unable to get hostname");
+    }
+    return result;
+  }
+
+
 }
 
 /*-------.
