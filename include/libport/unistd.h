@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011, Gostai S.A.S.
+ * Copyright (C) 2008-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -117,6 +117,16 @@ namespace libport
   /// \param path_lookup whether args[0] should be looked for in PATH.
   ATTRIBUTE_NORETURN LIBPORT_API
   void exec(const std::vector<std::string>& args, bool path_lookup = false);
+}
+
+/*--------------.
+| gethostname.  |
+`--------------*/
+
+namespace libport
+{
+  LIBPORT_API
+  std::string gethostname();
 }
 
 /*--------------.

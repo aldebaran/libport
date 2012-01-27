@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011, Gostai S.A.S.
+ * Copyright (C) 2009-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -24,12 +24,12 @@ using namespace libport;
 void
 conversions()
 {
-  BOOST_CHECK_EQUAL(timeval_to_utime(utime_to_timeval(123456789)),
+  BOOST_CHECK_EQUAL(utime(utime_to_timeval(123456789)),
                     123456789);
 
   // Cannot work with gettimeofday, we overflow utime.
   timeval t = { 1234, 5678 };
-  BOOST_CHECK_EQUAL(utime_to_timeval(timeval_to_utime(t)), t);
+  BOOST_CHECK_EQUAL(utime_to_timeval(utime(t)), t);
 }
 
 // The static cast is required by msvc's std::abs
@@ -40,7 +40,7 @@ check_immediate()
 {
   libport::utime_t t1 = libport::utime();
   libport::utime_t t2 = libport::utime();
-  BOOST_CHECK_LT(MY_ABS(t1 - t2), 5000LL);
+  BOOST_CHECK_LT(t2 - t1, 5000LL);
 }
 
 void

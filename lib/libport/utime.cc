@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011, Gostai S.A.S.
+ * Copyright (C) 2008-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -9,6 +9,7 @@
  */
 
 #include <libport/config.h>
+#include <libport/ctime>
 #include <libport/detect-win32.h>
 #include <libport/sys/time.h>
 #include <libport/utime.hh>
@@ -78,9 +79,9 @@ namespace libport
   utime_t
   utime()
   {
-    timeval tv;
-    gettimeofday(&tv, 0);
-    return timeval_to_utime(tv) - reference;
+    timespec t;
+    clock_gettime(CLOCK_MONOTONIC, &t);
+    return utime(t) - reference;
   }
 #endif
 }
