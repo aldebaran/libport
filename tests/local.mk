@@ -13,7 +13,7 @@ STRICT_TEST_LOGS = $(shell $(LIST_FAILED_TEST_LOGS))
 # Program to check:
 TESTS += $(TESTS_BINARIES)
 
-include tests/bin/local.mk
+#include tests/bin/local.mk
 include tests/libport/local.mk
 include tests/sched/local.mk
 if ENABLE_SERIALIZATION
