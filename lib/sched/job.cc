@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011, Gostai S.A.S.
+ * Copyright (C) 2009-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -327,7 +327,7 @@ namespace sched
   {
     // If an exception has been stored for further rethrow, now is
     // a good time to do so.
-    if (has_pending_exception())
+    if (has_pending_exception() && !ignore_pending_exceptions_get())
     {
       // Reset pending_exception_ by copying it into a local variable
       // first. This ensures that the exception will be destroyed

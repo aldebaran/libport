@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011, Gostai S.A.S.
+ * Copyright (C) 2009-2012, Gostai S.A.S.
  *
  * This software is provided "as is" without warranty of any kind,
  * either expressed or implied, including but not limited to the
@@ -253,6 +253,13 @@ namespace sched
     ///        notice.
     void non_interruptible_set(bool ni);
 
+    /** Get state of ignore_pending_exceptions flag.
+    * If set, pending exceptions will be left untouched but not
+    * rethrown.
+    */
+    bool ignore_pending_exceptions_get() const;
+    void ignore_pending_exceptions_set(bool);
+
     /// Remember the time we have been frozen since if not remembered
     /// yet.
     ///
@@ -470,6 +477,9 @@ namespace sched
 
     /// Check stack space from time to time.
     bool check_stack_space_;
+
+    /// Ignore pending exceptions
+    bool ignore_pending_exceptions_;
 
     /// Number of jobs created and not yet destroyed.
     static unsigned int alive_jobs_;

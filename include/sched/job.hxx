@@ -67,6 +67,7 @@ namespace sched
     coro_ = coroutine_new(stack_size);
     non_interruptible_ = false;
     check_stack_space_ = stack_size == 0;
+    ignore_pending_exceptions_ = false;
     alive_jobs_++;
   }
 
@@ -359,6 +360,18 @@ namespace sched
     stats_.logging = log;
     if (log)
       stats_.last_resume = scheduler_.get_time();
+  }
+
+  inline bool
+  Job::ignore_pending_exceptions_get() const
+  {
+    return ignore_pending_exceptions_;
+  }
+
+  inline void
+  Job::ignore_pending_exceptions_set(bool v)
+  {
+    ignore_pending_exceptions_ = v;
   }
 
   /*-----------------.
