@@ -99,6 +99,11 @@ void Coro_allocStackIfNeeded(Coro *self)
 	if (!self->stack)
 	{
 		self->stack = (void *)malloc(self->requestedStackSize + 16);
+		if (!self->stack)
+		{
+		  fprintf(stderr, "malloc returned 0\n");
+		  abort();
+		}
 		self->allocatedStackSize = self->requestedStackSize;
 		//printf("Coro_%p allocating stack size %i\n", (void *)self, self->requestedStackSize);
 		STACK_REGISTER(self);
