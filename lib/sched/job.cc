@@ -151,7 +151,15 @@ namespace sched
         GD_FERROR("job %s: Unknown exception caught, losing it", this);
       }
     }
-
+    // Write stats for this last run
+    if (stats_.logging)
+    {
+      libport::utime_t start_resume = scheduler_.get_time();
+      stats_.job.running.add_sample(
+        start_resume - stats_.last_resume);
+      // Just a precaution in case we end up in resume_scheduler_.
+      stats_.last_resume = start_resume;
+    }
     copy_stats_to_parent();
     terminate_cleanup();
 
@@ -171,7 +179,17 @@ namespace sched
   Job::terminate_asap()
   {
     if (!terminated())
+    {
+      if (stats_.logging)
+      {
+        libport::utime_t start_resume = scheduler_.get_time();
+        stats_.job.running.add_sample(
+          start_resume - stats_.last_resume);
+        // Just a precaution in case we end up in resume_scheduler_.
+        stats_.last_resume = start_resume;
+      }
       async_throw(TerminateException());
+    }
   }
 
   void
