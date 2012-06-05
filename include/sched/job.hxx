@@ -374,6 +374,18 @@ namespace sched
     ignore_pending_exceptions_ = v;
   }
 
+  inline rJob
+  Job::parent_get() const
+  {
+    return parent_;
+  }
+
+  inline const jobs_type
+  Job::children_get() const
+  {
+    return children_;
+  }
+
   /*-----------------.
   | ChildException.  |
   `-----------------*/

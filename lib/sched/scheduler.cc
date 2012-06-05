@@ -51,6 +51,12 @@ namespace sched
   Scheduler::~Scheduler()
   {
     GD_INFO_DUMP("Destroying scheduler");
+    if (!terminated_jobs_.empty())
+      GD_FWARN("%s terminated jobs remaining", terminated_jobs_.size());
+    if (!pending_.empty())
+      GD_FWARN("%s pending jobs remaining", pending_.size());
+    if (!jobs_.empty())
+      GD_FWARN("s jobs remaining", jobs_.size());
   }
 
   // This function is required to start a new job using the libcoroutine.
@@ -410,17 +416,20 @@ namespace sched
     if (current_job_)
     {
       ancester = current_job_;
-      // FIXME: How can this work?  What guarantee do we have to have
-      // the oldest ancester?
-      foreach (const rJob& job, jobs_get())
-        if (job->ancester_of(ancester))
-          ancester = job;
+      while (ancester->parent_get())
+        ancester = ancester->parent_get();
     }
-
+    GD_FINFO_TRACE("Current %s, root %s", current_job_, ancester);
     foreach (const rJob& job, jobs_get())
+    {
+      GD_FINFO_TRACE("Considering job %s", job);
       if (!ancester || !ancester->ancester_of(job))
-	job->terminate_now();
-
+      {
+        GD_INFO_TRACE("Terminating");
+	      job->terminate_now();
+	    }
+	  }
+	  GD_INFO_TRACE("Terminating ancester");
     if (ancester)
     {
       // If the ancester is just the current job, we can kill it now.

@@ -358,6 +358,9 @@ namespace sched
     /// Whether \a this is an ancester of \a that.
     bool ancester_of(const rJob& that) const;
 
+    rJob parent_get() const;
+
+    const jobs_type children_get() const;
     /// List of stats aggregated on the job.
     struct stats_type
     {
