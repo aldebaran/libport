@@ -99,6 +99,13 @@ namespace sched
   {
     awoken_job_ = true;
   }
+
+  inline bool
+  Scheduler::is_dying() const
+  {
+    return ready_to_die_;
+  }
+
 } // namespace sched
 
 #endif // !SCHED_SCHEDULER_HXX

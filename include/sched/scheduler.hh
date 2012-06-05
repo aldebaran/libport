@@ -168,6 +168,10 @@ namespace sched
 
     /// Notify the scheduler that one of its jobs was woken up.
     void job_was_woken_up();
+
+    /// Returns whether the scheduler is terminating.
+    bool is_dying() const;
+
   private:
     /// Execute one round in the scheduler.
     ///
