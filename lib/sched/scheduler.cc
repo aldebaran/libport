@@ -398,6 +398,7 @@ namespace sched
   void
   Scheduler::killall_jobs()
   {
+    GD_INFO_TRACE("Killing all jobs");
     // Mark the scheduler as ready to die when all the jobs are
     // really dead.
     ready_to_die_ = true;

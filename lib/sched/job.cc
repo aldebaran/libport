@@ -202,6 +202,8 @@ namespace sched
   void
   Job::terminate_cleanup()
   {
+    GD_FINFO_DEBUG("job %s: terminate_cleanup, considering %s jobs",
+      this, to_wake_up_.size());
     // Wake-up waiting jobs.
     foreach (const rJob& job, to_wake_up_)
       if (!job->terminated())
@@ -267,16 +269,18 @@ namespace sched
       state_ = joining;
       try
       {
-	resume_scheduler_();
+        GD_FINFO_DEBUG("job %s: queued to %s, waiting", this, &other);
+        resume_scheduler_();
       }
       catch (...)
       {
-	// We have been awoken by an exception; in this case,
-	// dequeue ourselves from the other thread queue if
-	// we are still enqueued there.
-	libport::erase_if(other.to_wake_up_,
-                          boost::bind(job_compare, this, _1));
-	throw;
+        GD_FINFO_DEBUG("job %s: dequeued by exception", this);
+        // We have been awoken by an exception; in this case,
+        // dequeue ourselves from the other thread queue if
+        // we are still enqueued there.
+        libport::erase_if(other.to_wake_up_,
+          boost::bind(job_compare, this, _1));
+        throw;
       }
     }
   }
@@ -378,7 +382,10 @@ namespace sched
   terminate_jobs(jobs_type& jobs)
   {
     foreach (rJob& job, jobs)
+    {
+      GD_FINFO_TRACE("Terminating %s", job);
       job->terminate_now();
+    }
     jobs.clear();
   }
 
