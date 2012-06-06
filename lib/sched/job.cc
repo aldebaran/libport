@@ -228,13 +228,20 @@ namespace sched
   }
 
   void
+  Job::copy_stats_to(rJob& b)
+  {
+    if (b && b->stats_.logging)
+    {
+      b->stats_.job.nb_join++;
+      b->stats_.terminated_children.add(stats_.job);
+    }
+  }
+
+  void
   Job::copy_stats_to_parent()
   {
-    if (parent_ && parent_->stats_.logging)
-    {
-      parent_->stats_.job.nb_join++;
-      parent_->stats_.terminated_children.add(stats_.job);
-    }
+    if (parent_)
+      copy_stats_to(parent_);
   }
 
   void

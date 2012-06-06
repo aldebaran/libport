@@ -402,6 +402,9 @@ namespace sched
     /// Should the job stats be logged.
     void stats_log(bool);
 
+    /// Copy own stats to an other job
+    void copy_stats_to(rJob& b);
+
   private:
     /// Copy his own stats to its parent job.
     void copy_stats_to_parent();
