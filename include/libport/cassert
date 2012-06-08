@@ -57,7 +57,7 @@ namespace libport
 {
   inline
   bool
-  enforce_(const char* file, int line, bool exp, const std::string& msg)
+  enforce_(const char* file, int line, bool exp, const char* msg)
   {
     if (!exp)
       libport::abort(file, line,
@@ -67,7 +67,7 @@ namespace libport
 
   template <typename T1>
   bool
-  enforce_(const char* file, int line, bool exp, const std::string& msg,
+  enforce_(const char* file, int line, bool exp, const char* msg,
            const T1& t1)
   {
     if (!exp)
@@ -78,8 +78,8 @@ namespace libport
 
   template <typename T1>
   bool
-  enforce_(const char* file, int line, bool exp, const std::string& assertion,
-           const std::string& msg,
+  enforce_(const char* file, int line, bool exp, const char* assertion,
+           const char* msg,
            const T1& t1)
   {
     if (!exp)
@@ -92,8 +92,8 @@ namespace libport
 
   template <typename T1, typename T2>
   bool
-  enforce_(const char* file, int line, bool exp, const std::string& assertion,
-           const std::string& msg,
+  enforce_(const char* file, int line, bool exp, const char* assertion,
+           const char* msg,
            const T1& t1, const T2& t2)
   {
     if (!exp)
