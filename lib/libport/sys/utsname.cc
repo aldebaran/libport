@@ -13,7 +13,8 @@
 #include <iostream>
 #include <sstream>
 
-#if ! defined LIBPORT_HAVE_SYS_UTSNAME_H
+#ifdef WIN32
+//#if ! defined LIBPORT_HAVE_SYS_UTSNAME_H
 // Replacement for Windows.
 int
 uname(struct utsname* u)

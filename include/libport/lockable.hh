@@ -25,14 +25,12 @@ namespace libport
 {
   typedef HANDLE Lock;
 }
-# elif LIBPORT_HAVE_PTHREAD_H
+# else LIBPORT_HAVE_PTHREAD_H
 # include <libport/pthread.h>
 namespace libport
 {
   typedef pthread_mutex_t Lock;
 }
-# else
-#  error "pthreads are required"
 # endif
 
 

@@ -19,9 +19,6 @@
 #  include <libport/windows.hh>
 #  include <winbase.h>
 # else
-#  if !defined LIBPORT_HAVE_PTHREAD_H || !LIBPORT_HAVE_PTHREAD_H
-#   error "pthread.h is required"
-#  endif
 # include <pthread.h>
 # endif
 

@@ -11,6 +11,7 @@
 #include <boost/static_assert.hpp>
 #include <libport/cassert>
 #include <libport/format.hh>
+#include <dlfcn.h>
 
 namespace libport
 {
@@ -38,7 +39,7 @@ namespace libport
     throw (xlt_handle::exception)
   {
     aver(handle);
-    void* res = lt_dlsym(handle, s.c_str());
+    void* res = dlsym(handle, s.c_str());
     if (!res)
       fail(libport::format("failed to dlsym %s", s));
     // GCC 3.4.6 on x86_64 at least requires that we go through a

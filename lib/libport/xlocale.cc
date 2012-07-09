@@ -19,7 +19,7 @@ namespace libport
   | strto*_c.  |
   `-----------*/
 
-#if LIBPORT_HAVE_XLOCALE_H
+#ifndef WIN32
 
   static
   locale_t

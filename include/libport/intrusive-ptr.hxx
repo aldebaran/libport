@@ -200,7 +200,7 @@ namespace libport
     return out << p.get();
   }
 
-#ifndef LIBPORT_NO_BOOST
+#ifdef CANRARD
   template <typename T>
   template <typename Archive>
   ATTRIBUTE_ALWAYS_INLINE

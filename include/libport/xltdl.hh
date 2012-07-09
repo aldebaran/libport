@@ -18,8 +18,7 @@
 # include <libport/export.hh>
 # include <libport/file-library.hh>
 
-# include <ltdl.h>
-
+typedef void* lt_dlhandle;
 namespace libport
 {
 
@@ -53,8 +52,8 @@ namespace libport
     /// Does not use the search path.  Can return 0.
     lt_dlhandle dlopen_(const std::string& s) const throw (exception);
 
-    lt_dladvise advise_;
     file_library path_;
+    bool global_;
   };
 
 

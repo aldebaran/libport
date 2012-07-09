@@ -17,7 +17,9 @@
 # if LIBPORT_HAVE_XLOCALE_H
 #  include <xlocale.h>
 # endif
-
+#ifndef restrict
+#define restrict
+#endif
 namespace libport
 {
   /// Wrapper around std::strto*_l with the C locale.

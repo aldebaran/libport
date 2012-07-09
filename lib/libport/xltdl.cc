@@ -59,8 +59,6 @@ namespace libport
          static bool first = true;
          if (first)
          {
-           lt_dlinit();
-           lt_dladd_log_function((lt_dllog_function*) &ltdebug, 0);
            first = false;
          }
        }
@@ -85,9 +83,8 @@ namespace libport
      throw(xlt_advise::exception)
      : path_()
    {
+     global_ = true;
      xlt::details::init();
-     if (lt_dladvise_init(&advise_))
-       fail("failed to initialize dladvise");
   }
 
   // FIXME: Bad: dtors must not throw.
@@ -95,17 +92,13 @@ namespace libport
     throw(xlt_advise::exception)
   {
     // FIXME: lt_dlexit when we refcount.
-    if (lt_dladvise_destroy(&advise_))
-      fail("failed to destroy dladvise");
   }
 
   xlt_advise&
   xlt_advise::global(bool global)
     throw(xlt_advise::exception)
   {
-    if (global ? lt_dladvise_global(&advise_) : lt_dladvise_local(&advise_))
-      fail(libport::format("failed to set dladvise to %s",
-                           global ? "global" : "local"));
+    this->global_ = global;
     return *this;
   }
 
@@ -113,8 +106,6 @@ namespace libport
   xlt_advise::ext()
     throw(xlt_advise::exception)
   {
-    if (lt_dladvise_ext(&advise_))
-      fail("failed to set dladvise to ext");
     return *this;
   }
 
@@ -141,15 +132,25 @@ namespace libport
   xlt_advise::dlopen_(const std::string& s) const
     throw(xlt_advise::exception)
   {
-    lt_dlhandle res = lt_dlopenadvise(s.c_str(), advise_);
+    lt_dlhandle res = dlopen(s.c_str(), global_?RTLD_GLOBAL:RTLD_LOCAL);
     GD_FINFO_TRACE("loading %s: %s", s, res ? "pass" : "fail");
     return res;
   }
 
+#if defined WIN32
+# define APPLE_LINUX_WINDOWS(Apple, Linux, Windows) Windows
+#elif defined __APPLE__
+# define APPLE_LINUX_WINDOWS(Apple, Linux, Windows) Apple
+#else
+# define APPLE_LINUX_WINDOWS(Apple, Linux, Windows) Linux
+#endif
+
+
   xlt_handle
-  xlt_advise::open(const std::string& s)
+  xlt_advise::open(const std::string& ss)
     throw(xlt_advise::exception)
   {
+    std::string s(ss);
     GD_FINFO_TRACE("loading %s", s);
 
     // Clear the error flags from previous runs.
@@ -161,20 +162,27 @@ namespace libport
     // need to complete this patch with a means to ensure that the
     // error flags is restored to its previous state (typically
     // no-error) when eventually we managed to load the file.
-    lt_dlerror();
 
     lt_dlhandle res = 0;
+    const char* libext = APPLE_LINUX_WINDOWS(".dylib", ".so", ".dll");
+    if (s.substr(s.length() - strlen(libext)) != libext)
+      s += libext;
     // We cannot simply use search_file in file_library, because we
     // don't know the extension of the file we are looking for (*.la,
     // *.so, *.dyld etc.).  That's an implementation detail that ltdl
     // saves us from.
     if (path_.search_path_get().empty() || libport::path(s).absolute_get())
+    {
+      std::cerr <<"try " << s << std::endl;
       res = dlopen_(s);
+    }
     else
       foreach (const libport::path& p, path_.search_path_get())
+      {
+        std::cerr << "try " << p << " " << s << std::endl;
         if ((res = dlopen_(p / s)))
           break;
-
+      }
     if (!res)
       fail(libport::format("failed to open %s", s));
 
@@ -188,9 +196,10 @@ namespace libport
   xlt_advise::fail(std::string msg)
     throw(xlt_advise::exception)
   {
+   std::cerr << dlerror() << std::endl;
+    perror("fail");
     msg += ": ";
-    const char* err = lt_dlerror();
-    msg += err ? err : "(no available error message)";
+    msg += dlerror();
     throw exception(msg);
   }
 
@@ -220,7 +229,7 @@ namespace libport
   {
     if (handle)
     {
-      int errors = lt_dlclose(handle);
+      int errors = dlclose(handle);
       handle = 0;
       if (errors)
         fail("cannot close");

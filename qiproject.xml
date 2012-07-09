@@ -1,0 +1,6 @@
+<project name="libport">
+  <!-- Add your project dependencies here -->
+  <!--
+  <depends buildtime="true" runtime="true" names="foo" />
+  -->
+</project>

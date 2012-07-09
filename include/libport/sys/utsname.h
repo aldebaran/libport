@@ -16,7 +16,8 @@
 # include <libport/config.h>
 # include <libport/export.hh>
 
-# if defined LIBPORT_HAVE_SYS_UTSNAME_H
+# ifndef WIN32
+//# if defined LIBPORT_HAVE_SYS_UTSNAME_H
 #  include <sys/utsname.h>
 # else
 

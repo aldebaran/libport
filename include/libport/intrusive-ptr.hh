@@ -20,7 +20,7 @@
 # include <libport/meta.hh>
 # include <libport/ref-counted.hh>
 
-# ifndef LIBPORT_NO_BOOST
+# ifdef LIBPORT_BOOST_SERIALIZATION
 #  include <boost/serialization/serialization.hpp>
 # endif
 
@@ -125,7 +125,7 @@ namespace libport
   private:
     T* pointee_;
 
-# ifndef LIBPORT_NO_BOOST
+# ifdef LIBPORT_BOOST_SERIALIZATION
   private:
     /// Serialization.
     friend class boost::serialization::access;
