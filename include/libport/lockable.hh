@@ -25,7 +25,7 @@ namespace libport
 {
   typedef HANDLE Lock;
 }
-# else LIBPORT_HAVE_PTHREAD_H
+# else // LIBPORT_HAVE_PTHREAD_H
 # include <libport/pthread.h>
 namespace libport
 {
