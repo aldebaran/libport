@@ -64,14 +64,14 @@ namespace libport
   std::string
   path::basename() const
   {
-    return value_.filename();
+    return value_.filename().string();
   }
 
   inline
   std::string
   path::extension() const
   {
-    return value_.extension();
+    return value_.extension().string();
   }
 
   inline

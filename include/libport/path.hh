@@ -21,7 +21,6 @@
 # include <libport/export.hh>
 # include <libport/detect-win32.h>
 
-# define BOOST_FILESYSTEM_VERSION 2
 # include <boost/filesystem.hpp>
 
 namespace libport

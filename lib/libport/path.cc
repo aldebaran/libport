@@ -47,7 +47,7 @@ namespace libport
 
   path::path(const value_type& p)
   {
-    init(p.file_string());
+    init(p.string());
   }
 
   void
@@ -101,7 +101,7 @@ namespace libport
     if (!value_.is_complete() && components().empty())
       return WIN32_IF(volume_get().empty() ? "." : volume_get(), ".");
 
-    return value_.file_string();
+    return value_.string();
   }
 
   bool
@@ -142,7 +142,7 @@ namespace libport
     bool first = true;
     if (absolute_get())
     {
-      res = *i;
+      res = i->string();
       ++i;
 #ifdef WIN32
       // Add a "\" after the drive letter or network share.
@@ -158,7 +158,7 @@ namespace libport
         if (!first)
           res += separator_;
         first = false;
-        res += *i;
+        res += i->string();
       }
     }
     return res.empty() ? "." : res;
@@ -184,7 +184,7 @@ namespace libport
     if (components().empty())
       return *this;
 
-    std::string res = value_.parent_path().directory_string();
+    std::string res = value_.parent_path().string();
     return path(res.empty() ? "." : res);
   }
 
@@ -309,7 +309,7 @@ namespace libport
     }
     for (;i != i_end; ++i)
       if (!i->empty() && *i != ".")
-        path_.push_back(*i);
+        path_.push_back(i->string());
 
     return path_;
   }
