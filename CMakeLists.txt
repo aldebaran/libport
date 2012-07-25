@@ -392,7 +392,7 @@ qi_stage_lib(port)
 
 qi_create_lib(sched
   SRC ${SCHED_SOURCES}
-  DEPENDS port BOOST BOOST_THREAD)
+  DEPENDS port BOOST BOOST_SIGNALS BOOST_THREAD)
 
 qi_stage_lib(sched)
 
@@ -400,6 +400,7 @@ qi_create_lib(serialize
   SRC ${SERIALIZE_SOURCES}
   DEPENDS port BOOST BOOST_THREAD
 )
+qi_stage_lib(serialize)
 
 
 
