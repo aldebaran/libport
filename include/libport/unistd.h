@@ -20,7 +20,7 @@
 # include <vector>
 
 // This is traditional Unix file.
-# ifdef LIBPORT_HAVE_UNISTD_H
+# ifndef WIN32
 #  include <unistd.h>
 # endif
 
