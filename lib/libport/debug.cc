@@ -117,8 +117,10 @@ namespace libport
       patterns_type&
       patterns()
       {
-        static patterns_type patterns;
-        return patterns;
+        static patterns_type* patterns = 0;
+        if (!patterns)
+          patterns = new patterns_type();
+        return *patterns;
       }
 
       // Maximum category width.
