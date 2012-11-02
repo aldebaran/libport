@@ -196,10 +196,11 @@ namespace libport
   xlt_advise::fail(std::string msg)
     throw(xlt_advise::exception)
   {
-   std::cerr << dlerror() << std::endl;
     perror("fail");
     msg += ": ";
-    msg += dlerror();
+    const char* dle = dlerror();
+    if (dle)
+      msg += dle;
     throw exception(msg);
   }
 
