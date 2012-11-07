@@ -258,7 +258,7 @@ namespace libport
   intrusive_ptr<U>
   unsafe_cast(const intrusive_ptr<T>& p)
   {
-    return p.unsafe_cast<U>();
+    return p.template unsafe_cast<U>();
   }
 
   template <typename T>

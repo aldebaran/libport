@@ -12,6 +12,7 @@
 # define LIBPORT_TYPE_INFO_HH
 
 # include <string>
+# include <typeinfo>
 
 namespace libport
 {
