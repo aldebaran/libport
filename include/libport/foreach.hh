@@ -47,6 +47,18 @@
 #  include <libport/system-warning-pop.hh>
 # endif
 
+namespace boost
+{
+  // Fix for the 'boost::BOOST_FOREACH has not been declared' bug
+  // See https://svn.boost.org/trac/boost/ticket/6131
+
+  #if BOOST_VERSION != 104900
+  namespace BOOST_FOREACH = foreach;
+  #endif
+
+} // namespace boost
+
+
 # ifndef foreach
 #  define foreach BOOST_FOREACH
 # endif
