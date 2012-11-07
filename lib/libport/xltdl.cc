@@ -132,7 +132,7 @@ namespace libport
   xlt_advise::dlopen_(const std::string& s) const
     throw(xlt_advise::exception)
   {
-    lt_dlhandle res = dlopen(s.c_str(), global_?RTLD_GLOBAL:RTLD_LOCAL);
+    lt_dlhandle res = dlopen(s.c_str(), RTLD_LAZY | (global_?RTLD_GLOBAL:RTLD_LOCAL));
     GD_FINFO_TRACE("loading %s: %s", s, res ? "pass" : "fail");
     return res;
   }
