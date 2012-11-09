@@ -7,6 +7,24 @@ find_package(qibuild)
 # Add a simple test:
 enable_testing()
 
+
+set(LIBPORT_COMPILATION_MODE_SPEED OFF)
+set(LIBPORT_COMPILATION_MODE_DEBUG OFF)
+set(LIBPORT_COMPILATION_MODE_SPACE OFF)
+
+if (CMAKE_BUILD_TYPE STREQUAL Release)
+  set(LIBPORT_COMPILATION_MODE_SPEED ON)
+endif()
+
+if (CMAKE_BUILD_TYPE STREQUAL Debug)
+  set(LIBPORT_COMPILATION_MODE_DEBUG ON)
+endif()
+
+if (CMAKE_BUILD_TYPE STREQUAL MinSizeRel)
+  set(LIBPORT_COMPILATION_MODE_SPACE ON)
+endif()
+
+
 qi_create_config_h(CONFIG_H
    include/libport/config.h.in
    libport/config.h
