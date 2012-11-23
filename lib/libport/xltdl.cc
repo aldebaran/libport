@@ -167,6 +167,7 @@ namespace libport
     const char* libext = APPLE_LINUX_WINDOWS(".dylib", ".so", ".dll");
     if (s.substr(s.length() - strlen(libext)) != libext)
       s += libext;
+    std::string errors;
     // We cannot simply use search_file in file_library, because we
     // don't know the extension of the file we are looking for (*.la,
     // *.so, *.dyld etc.).  That's an implementation detail that ltdl
@@ -182,10 +183,14 @@ namespace libport
         std::cerr << "try " << p << " " << s << std::endl;
         if ((res = dlopen_(p / s)))
           break;
+       const char* e = dlerror();
+       errors += boost::lexical_cast<std::string>(p)  + " : " + (e?e:"unknown error") + "\n";
       }
     if (!res)
-      fail(libport::format("failed to open %s", s));
-
+    {
+      GD_FINFO_TRACE("errors where: %s", errors);
+      throw exception(errors);
+    }
     return res;
   }
 
@@ -198,9 +203,8 @@ namespace libport
   {
     perror("fail");
     msg += ": ";
-    const char* dle = dlerror();
-    if (dle)
-      msg += dle;
+    const char* err = dlerror();
+    msg += err?err:"unknown error";
     throw exception(msg);
   }
 
