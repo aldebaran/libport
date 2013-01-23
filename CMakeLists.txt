@@ -36,11 +36,17 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/sched/libcoroutine)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+find_program(_python_executable
+    NAMES python2 python python.exe
+    NO_CMAKE_FIND_ROOT_PATH)
+if (NOT _python_executable)
+    qi_error("needs python executable in PATH")
+endif()
 
 qi_generate_header(
    ${CMAKE_CURRENT_BINARY_DIR}/include/libport/format.hh
    SRC include/libport/format.hh.gen
-   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/include/libport/format.hh.gen > ${CMAKE_CURRENT_BINARY_DIR}/include/libport/format.hh
+   COMMAND ${_python_executable} ${CMAKE_CURRENT_SOURCE_DIR}/include/libport/format.hh.gen > ${CMAKE_CURRENT_BINARY_DIR}/include/libport/format.hh
 )
 
 
