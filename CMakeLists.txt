@@ -31,6 +31,7 @@ qi_create_config_h(CONFIG_H
 )
 
 add_definitions(-DLIBPORT_URBI_UFLOAT_DOUBLE)
+add_definitions(-D_USE_MATH_DEFINES)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/sched/libcoroutine)
