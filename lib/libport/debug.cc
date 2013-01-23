@@ -42,8 +42,20 @@ namespace libport
 {
 
 
-  LIBPORT_API boost::function0<local_data&> debugger_data;
-  LIBPORT_API Debug* debugger = 0;
+  static boost::function0<local_data&> debugger_data;
+  static Debug* _debugger = 0;
+  LIBPORT_API Debug* debugger()
+  {
+   return _debugger;
+  }
+  LIBPORT_API void setDebugger(Debug* dbg)
+  {
+    _debugger = dbg;
+  }
+  LIBPORT_API void setDebuggerData(boost::function0<local_data&> dd)
+  {
+    debugger_data = dd;
+  }
   LIBPORT_API Debug::levels::Level Debug::filter_(levels::log);
 
   local_data&

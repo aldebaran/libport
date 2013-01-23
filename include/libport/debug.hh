@@ -81,7 +81,7 @@ namespace libport
     local_data();
     unsigned indent;
   };
-  LIBPORT_API extern boost::function0<local_data&> debugger_data;
+
   LIBPORT_API local_data& debugger_data_thread_local();
 
   class LIBPORT_API Debug
@@ -258,7 +258,9 @@ namespace libport
 
 namespace libport
 {
-  LIBPORT_API extern Debug* debugger;
+  LIBPORT_API Debug* debugger();
+  LIBPORT_API void setDebugger(Debug* dbg);
+  LIBPORT_API void setDebuggerData(boost::function0<local_data&> dd);
 
   class LIBPORT_API ConsoleDebug: public Debug
   {
@@ -319,7 +321,7 @@ namespace libport
 | Helpers.  |
 `----------*/
 
-#  define GD_DEBUGGER ::libport::debugger
+#  define GD_DEBUGGER ::libport::debugger()
 
 #  define GD_FORMAT(Msg, ...)                   \
   libport::format(Msg, __VA_ARGS__)
@@ -342,10 +344,10 @@ namespace libport
   GD_DEBUGGER->indentation()
 
 #  define GD_INDENTATION_INC()                  \
-  ++libport::debugger_data().indent
+  ++libport::debugger_data_thread_local().indent
 
 #  define GD_INDENTATION_DEC()                  \
-  --libport::debugger_data().indent
+  --libport::debugger_data_thread_local().indent
 
 
 /*--------.
@@ -450,8 +452,8 @@ namespace libport
         GD_ERROR("GD was already initialized");                         \
       else                                                              \
       {                                                                 \
-        ::libport::debugger = new DebugInstantiation;                   \
-        ::libport::debugger_data = DebugData;                           \
+        ::libport::setDebugger(new DebugInstantiation);                 \
+        ::libport::setDebuggerData(DebugData);                          \
         GD_INFO_TRACE("Initialize GD with backend "                     \
                       #DebugInstantiation ", storage " #DebugData       \
                       ".");                                             \
