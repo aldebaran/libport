@@ -414,22 +414,37 @@ qi_create_lib(port
   SRC ${PORT_SOURCES} ${PORT_HEADERS}
   DEPENDS BOOST BOOST_FILESYSTEM BOOST_DATE_TIME BOOST_SYSTEM BOOST_THREAD)
 
+set_target_properties(port
+  PROPERTIES
+    COMPILE_FLAGS -DBUILDING_LIBPORT)
+
 if (NOT APPLE AND NOT WIN32)
  qi_use_lib(port RT)
 endif()
 
 qi_stage_lib(port)
 
+
 qi_create_lib(sched
   SRC ${SCHED_SOURCES}
   DEPENDS port BOOST BOOST_SIGNALS BOOST_THREAD)
 
+set_target_properties(sched
+  PROPERTIES
+    COMPILE_FLAGS -DBUILDING_LIBSCHED)
+
 qi_stage_lib(sched)
+
 
 qi_create_lib(serialize
   SRC ${SERIALIZE_SOURCES}
   DEPENDS port BOOST BOOST_THREAD
 )
+
+set_target_properties(serialize
+  PROPERTIES
+    COMPILE_FLAGS -DBUILDING_LIBSERIALIZE)
+
 qi_stage_lib(serialize)
 
 
