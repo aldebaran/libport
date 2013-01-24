@@ -54,7 +54,7 @@ namespace libport
     static iterator
     find(container& c, const key_type& v)
     {
-      return std::find(begin(c), end(c), v);
+      return std::find(c.begin(), c.end(), v);
     }
   };
 
@@ -138,7 +138,7 @@ namespace libport
     // We specify the instance to solve a conflict between the
     // two finds above, that compete against each other because
     // the parameter Container can embed a "const".
-    return libport::find<Container>(c, v) != end(c);
+    return libport::find<Container>(c, v) != c.end();
   }
 
 
@@ -160,7 +160,7 @@ namespace libport
     // See ``Efficient STL''.
     typename Map::iterator i = map.lower_bound(key);
 
-    if (i != end(map) && !map.key_comp()(key, i->first))
+    if (i != map.end() && !map.key_comp()(key, i->first))
       {
 	// Update.
 	i->second = value;
@@ -178,16 +178,16 @@ namespace libport
   inline bool
   has_if(const Container& c, const Functor& f)
   {
-    typename Container::const_iterator end_c = end(c);
-    return std::find_if(begin(c), end_c, f) != end_c;
+    typename Container::const_iterator end_c = c.end();
+    return std::find_if(c.begin(), end_c, f) != end_c;
   }
 
   template<typename Container, typename Functor>
   inline void
   erase_if(Container& c, const Functor& f)
   {
-    typename Container::iterator end_c = end(c);
-    c.erase(std::remove_if(begin(c), end_c, f), end_c);
+    typename Container::iterator end_c = c.end();
+    c.erase(std::remove_if(c.begin(), end_c, f), end_c);
   }
 
 } // namespace libport
@@ -230,7 +230,7 @@ namespace std
   operator<<(Cont1<Lhs, Alloc1>& c,                             \
              const Cont2<Rhs, Alloc2>& vs)                      \
   {                                                             \
-    c.insert(boost::end(c), boost::begin(vs), boost::end(vs));  \
+    c.insert(c.begin(), vs.begin(), vs.end());                  \
     return c;                                                   \
   }
 
