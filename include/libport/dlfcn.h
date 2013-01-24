@@ -52,7 +52,7 @@ dlsym(RTLD_HANDLE module, const char* name)
 static inline int
 dlclose(RTLD_HANDLE module)
 {
-  return !FreeLibrary(handle);
+  return !FreeLibrary(module);
 }
 
 static inline const char*
