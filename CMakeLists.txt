@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(libport)
+enable_language(ASM)
 
 find_package(qibuild)
 
@@ -344,7 +345,6 @@ lib/sched/job.cc
 lib/sched/libcoroutine/Base.h
 lib/sched/libcoroutine/Coro.cc
 lib/sched/libcoroutine/asm.S
-lib/sched/libcoroutine/context.c
 lib/sched/libcoroutine/context.cc
 lib/sched/scheduler.cc
 lib/sched/tag.cc
