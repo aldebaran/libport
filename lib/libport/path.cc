@@ -58,7 +58,7 @@ namespace libport
 #ifdef WIN32
     // We want "/" to mean "the root of the current volume" on windows.
     if (p[0] == '/')
-      value_ = boostfs::current_path().root_name() + p;
+      value_ = boostfs::current_path().root_name().to_string() + p;
     else
 #endif
     value_ = p;
