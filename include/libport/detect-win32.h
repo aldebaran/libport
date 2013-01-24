@@ -29,8 +29,9 @@
 // Boost 1.47 uses InitializeCriticalSectionAndSpinCount which is
 // defined starting at 0x403
 // (http://msdn.microsoft.com/en-us/library/windows/desktop/ms683476(v=vs.85).aspx).
+// Also uses UnregisterWaitEx (asio) that requires 0501
 
-#   define _WIN32_WINNT 0x0403
+#   define _WIN32_WINNT 0x0501
 #  endif
 
 # endif /* !WIN32 */
