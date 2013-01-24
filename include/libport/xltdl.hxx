@@ -11,7 +11,7 @@
 #include <boost/static_assert.hpp>
 #include <libport/cassert>
 #include <libport/format.hh>
-#include <dlfcn.h>
+#include <libport/dlfcn.h>
 
 namespace libport
 {
