@@ -24,6 +24,7 @@ if (CMAKE_BUILD_TYPE STREQUAL MinSizeRel)
   set(LIBPORT_COMPILATION_MODE_SPACE ON)
 endif()
 
+find_path(LIBPORT_HAVE_XLOCALE_H xlocale.h)
 
 qi_create_config_h(CONFIG_H
    include/libport/config.h.in
