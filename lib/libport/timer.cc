@@ -18,8 +18,6 @@
 #include <iostream>
 #include <iomanip>
 
-# include <sys/times.h>
-
 # include <libport/utime.hh>
 # include <libport/detect-win32.h>
 
