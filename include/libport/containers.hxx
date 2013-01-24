@@ -112,7 +112,7 @@ namespace libport
   find0(Container& c, const typename traits::key_type<Container>::type& k)
   {
     typename Container::const_iterator i = c.find(k);
-    if (i != end(c))
+    if (i != c.end())
       return i->second;
     else
       return 0;
