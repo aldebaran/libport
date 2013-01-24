@@ -42,7 +42,7 @@ namespace libport
 {
 
 
-  static boost::function0<local_data&> debugger_data;
+  static boost::function0<local_data&> _debugger_data;
   static Debug* _debugger = 0;
   LIBPORT_API Debug* debugger()
   {
@@ -54,8 +54,13 @@ namespace libport
   }
   LIBPORT_API void setDebuggerData(boost::function0<local_data&> dd)
   {
-    debugger_data = dd;
+    _debugger_data = dd;
   }
+  LIBPORT_API local_data& debugger_data()
+  {
+    return _debugger_data();
+  }
+
   LIBPORT_API Debug::levels::Level Debug::filter_(levels::log);
 
   local_data&
@@ -299,7 +304,7 @@ namespace libport
   unsigned
   Debug::indentation() const
   {
-    return debugger_data().indent;
+    return _debugger_data().indent;
   }
 
   Debug::levels::Level
@@ -454,7 +459,7 @@ namespace libport
     }
 #endif
     ostr << color(c);
-    for (unsigned i = 0; i < debugger_data().indent; ++i)
+    for (unsigned i = 0; i < _debugger_data().indent; ++i)
       ostr << "  ";
     // As syslog would do, don't issue the users' \n.
     if (!msg.empty() && msg[msg.size() - 1] == '\n')
@@ -477,12 +482,13 @@ namespace libport
   {
     debug(msg, types::info, category, fun, file, line);
     GD_INDENTATION_INC();
+    assert_gt(_debugger_data().indent, 0u);
   }
 
   void
   ConsoleDebug::pop()
   {
-    assert_gt(debugger_data().indent, 0u);
+    assert_gt(_debugger_data().indent, 0u);
     GD_INDENTATION_DEC();
   }
 
@@ -549,7 +555,7 @@ namespace libport
   {
     std::stringstream s;
     s << "[" << category_format(category) << "] ";
-    for (unsigned i = 0; i < debugger_data().indent; ++i)
+    for (unsigned i = 0; i < _debugger_data().indent; ++i)
       s << "  ";
     // As syslog would do, don't issue the users' \n.
     if (!msg.empty() && msg[msg.size() - 1] == '\n')
@@ -576,7 +582,7 @@ namespace libport
   void
   SyslogDebug::pop()
   {
-    assert_gt(debugger_data().indent, 0u);
+    assert_gt(_debugger_data().indent, 0u);
     GD_INDENTATION_DEC();
   }
 #endif

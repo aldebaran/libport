@@ -261,6 +261,7 @@ namespace libport
   LIBPORT_API Debug* debugger();
   LIBPORT_API void setDebugger(Debug* dbg);
   LIBPORT_API void setDebuggerData(boost::function0<local_data&> dd);
+  LIBPORT_API local_data& debugger_data();
 
   class LIBPORT_API ConsoleDebug: public Debug
   {
@@ -344,10 +345,10 @@ namespace libport
   GD_DEBUGGER->indentation()
 
 #  define GD_INDENTATION_INC()                  \
-  ++libport::debugger_data_thread_local().indent
+  ++libport::debugger_data().indent
 
 #  define GD_INDENTATION_DEC()                  \
-  --libport::debugger_data_thread_local().indent
+  --libport::debugger_data().indent
 
 
 /*--------.
@@ -448,7 +449,7 @@ namespace libport
     DebugInitialize()                                                   \
     {                                                                   \
       GD_CATEGORY(Libport.Debug);                                       \
-      if (::libport::debugger)                                          \
+      if (::libport::debugger())                                        \
         GD_ERROR("GD was already initialized");                         \
       else                                                              \
       {                                                                 \
