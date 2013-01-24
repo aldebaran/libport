@@ -26,6 +26,7 @@
 #  define RTLD_LAZY 0
 #  define RTLD_NOW 0
 #  define RTLD_GLOBAL 0
+#  define RTLD_LOCAL 0
 
 typedef HMODULE RTLD_HANDLE;
 
@@ -46,6 +47,12 @@ static inline void*
 dlsym(RTLD_HANDLE module, const char* name)
 {
   return GetProcAddress(module, name);
+}
+
+static inline int
+dlclose(RTLD_HANDLE module)
+{
+  return !FreeLibrary(handle);
 }
 
 static inline const char*
