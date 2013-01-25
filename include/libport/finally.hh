@@ -13,6 +13,9 @@
 #ifndef LIBPORT_FINALLY_HH
 # define LIBPORT_FINALLY_HH
 
+// Include before boost headers in case they use foreach
+# include <libport/foreach.hh>
+
 # include <libport/system-warning-push.hh>
 # include <boost/function.hpp>
 # include <boost/typeof/typeof.hpp>
@@ -22,7 +25,6 @@
 # include <libport/bind.hh>
 # include <vector>
 
-# include <libport/foreach.hh>
 # include <libport/preproc.hh>
 
 # define FINALLY_ATTR_DECLARE(Attr)             \
