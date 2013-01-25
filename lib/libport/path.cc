@@ -170,7 +170,7 @@ namespace libport
 #ifndef WIN32
     return "";
 #else
-    std::string res = value_.root_name();
+    std::string res = value_.root_name().string();
     if (res.find("//") == 0)
       res.replace(0, 2, "\\\\");
     return res;
