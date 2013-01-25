@@ -343,12 +343,15 @@ lib/sched/coroutine-hooks.cc
 lib/sched/job.cc
 lib/sched/libcoroutine/Base.h
 lib/sched/libcoroutine/Coro.cc
-lib/sched/libcoroutine/asm.S
 lib/sched/libcoroutine/context.cc
 lib/sched/scheduler.cc
 lib/sched/tag.cc
 lib/sched/uclibc-workaround.cc
 )
+
+if (NOT WIN32)
+  list(APPEND SCHED_SOURCES lib/sched/libcoroutine/asm.S)
+endif()
 
 set(SCHED_HEADERS
 include/sched/exception.hh
