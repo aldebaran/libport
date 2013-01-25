@@ -28,16 +28,16 @@
 #  define RTLD_GLOBAL 0
 #  define RTLD_LOCAL 0
 
-typedef HMODULE RTLD_HANDLE;
+typedef void* RTLD_HANDLE;
 
 static inline RTLD_HANDLE
 dlopen(const char* name, int)
 {
-  RTLD_HANDLE res = LoadLibrary(name);
+  RTLD_HANDLE res = (RTLD_HANDLE)LoadLibrary(name);
   if (res)
   {
     char buf[BUFSIZ];
-    GetModuleFileName(res, buf, sizeof buf - 1);
+    GetModuleFileName((HMODULE)res, buf, sizeof buf - 1);
     buf[sizeof buf - 1] = 0;
   }
   return res;
@@ -46,13 +46,13 @@ dlopen(const char* name, int)
 static inline void*
 dlsym(RTLD_HANDLE module, const char* name)
 {
-  return GetProcAddress(module, name);
+  return GetProcAddress((HMODULE)module, name);
 }
 
 static inline int
 dlclose(RTLD_HANDLE module)
 {
-  return !FreeLibrary(module);
+  return !FreeLibrary((HMODULE)module);
 }
 
 static inline const char*
