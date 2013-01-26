@@ -230,7 +230,7 @@ namespace std
   operator<<(Cont1<Lhs, Alloc1>& c,                             \
              const Cont2<Rhs, Alloc2>& vs)                      \
   {                                                             \
-    c.insert(c.begin(), vs.begin(), vs.end());                  \
+    c.insert(c.end(), vs.begin(), vs.end());                  \
     return c;                                                   \
   }
 
