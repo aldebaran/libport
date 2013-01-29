@@ -35,17 +35,13 @@
 // And never use boost/foreach.hpp, only libport/foreach.hh.
 
 # include <boost/version.hpp>
-# if 104800 < BOOST_VERSION
-#  define LIBPORT_FOREACH_INCLUDE_FIRST 1
-# else
-#  define LIBPORT_FOREACH_INCLUDE_FIRST 0
-# endif
 
-# if LIBPORT_FOREACH_INCLUDE_FIRST
-#  include <libport/system-warning-push.hh>
-#   include <boost/foreach.hpp>
-#  include <libport/system-warning-pop.hh>
-# endif
+
+
+# include <libport/system-warning-push.hh>
+#  include <boost/foreach.hpp>
+# include <libport/system-warning-pop.hh>
+
 
 # ifndef foreach
 #  define foreach BOOST_FOREACH
@@ -54,11 +50,5 @@
 /// \def rforeach
 /// \brief Shortcut for \a BOOST_REVERSE_FOREACH
 # define rforeach BOOST_REVERSE_FOREACH
-
-# if ! LIBPORT_FOREACH_INCLUDE_FIRST
-#  include <libport/system-warning-push.hh>
-#   include <boost/foreach.hpp>
-#  include <libport/system-warning-pop.hh>
-# endif
 
 #endif // !LIBPORT_FOREACH_HH
