@@ -57,8 +57,10 @@ namespace libport
       throw invalid_path("Path can't be empty.");
 #ifdef WIN32
     // We want "/" to mean "the root of the current volume" on windows.
-    if (p[0] == '/')
-      value_ = boostfs::current_path().root_name().string() + p;
+    if (p == "/")
+      value_ = boostfs::current_path().root_name().string();
+    else if (p[0] == '/')
+      value_ = boostfs::current_path().root_name().string() + p.substr(1);
     else
 #endif
     value_ = p;
@@ -130,38 +132,26 @@ namespace libport
     return boostfs::is_regular_file(to_string());
   }
 
-  std::string
+  path::value_type
   path::clean() const
   {
-    std::string res;
+
     value_type::iterator i = value_.begin();
     value_type::iterator i_end = value_.end();
     if (i == i_end)
-      return ".";
-
-    bool first = true;
-    if (absolute_get())
-    {
-      res = i->string();
-      ++i;
-#ifdef WIN32
-      // Add a "\" after the drive letter or network share.
-      first = false;
-#endif
-    }
+      return value_type(".");
+    value_type res = *i;
+    ++i;
 
     for (;i != i_end; ++i)
     {
       // Remove the "." and empty components.
       if (!i->empty() && *i != ".")
       {
-        if (!first)
-          res += separator_;
-        first = false;
-        res += i->string();
+        res /= *i;
       }
     }
-    return res.empty() ? "." : res;
+    return res;
   }
 
   std::string

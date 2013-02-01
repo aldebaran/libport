@@ -133,7 +133,7 @@ namespace libport
   private:
 
     /// Clean a clean path string from value_.
-    std::string clean() const;
+    value_type clean() const;
 
     /// Init object with path \a p.
     void init(const std::string& p);
