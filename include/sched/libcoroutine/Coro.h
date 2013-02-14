@@ -34,7 +34,7 @@
 #endif
 
 #else
-#define CORO_API
+#define CORO_API __attribute__((visibility("default")))
 #endif
 
 
