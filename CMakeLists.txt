@@ -8,6 +8,12 @@ find_package(qibuild)
 # Add a simple test:
 enable_testing()
 
+qi_sanitize_compile_flags(HIDDEN_SYMBOLS)
+
+if (APPLE)
+  # Workaround clang bug http://llvm.org/bugs/show_bug.cgi?id=14116
+  set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -O1")
+endif()
 
 set(LIBPORT_COMPILATION_MODE_SPEED OFF)
 set(LIBPORT_COMPILATION_MODE_DEBUG OFF)
@@ -452,7 +458,6 @@ set_target_properties(serialize
     COMPILE_FLAGS -DBUILDING_SERIALIZE)
 
 qi_stage_lib(serialize)
-
 
 
 
