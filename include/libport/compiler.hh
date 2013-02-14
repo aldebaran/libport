@@ -68,7 +68,12 @@
 
 # if __GNUC__
      // GCC 3.4 does not support "always_inline" without "inline".
+// Workaround clang bug
+#ifdef __APPLE__
+#  define ATTRIBUTE_ALWAYS_INLINE inline
+#else
 #  define ATTRIBUTE_ALWAYS_INLINE inline __attribute__((always_inline))
+#endif
 #  define ATTRIBUTE_CONST      __attribute__((const))
 #  ifndef ATTRIBUTE_DEPRECATED
 #   define ATTRIBUTE_DEPRECATED __attribute__((deprecated))
