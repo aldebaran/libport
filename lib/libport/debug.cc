@@ -109,8 +109,10 @@ namespace libport
     categories_type&
     categories()
     {
-      static categories_type categories;
-      return categories;
+      static categories_type* categories = 0;
+      if (!categories)
+        categories = new categories_type();
+      return *categories;
     }
 
 
