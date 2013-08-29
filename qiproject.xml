@@ -1,6 +1,3 @@
 <project name="libport">
-  <!-- Add your project dependencies here -->
-  <!--
-  <depends buildtime="true" runtime="true" names="foo" />
-  -->
+  <depends buildtime="true" runtime="true" names="boost" />
 </project>
