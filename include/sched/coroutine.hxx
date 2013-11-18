@@ -14,7 +14,7 @@
 # include <sched/configuration.hh>
 
 // Implementation based on libcoroutine.
-# if !defined LIBPORT_SCHED_CORO_OSTHREAD
+# if !defined LIBPORT_SCHED_CORO_OSTHREAD and !defined SCHED_USE_BOOST_CORO
 #  include <sched/coroutine-coro.hxx>
 # endif
 

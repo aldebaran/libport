@@ -343,13 +343,22 @@ qi_install_header(${PORT_HEADERS_SYS} SUBFOLDER libport/sys)
 qi_install_header(${PORT_HEADERS_ARPA} SUBFOLDER libport/arpa)
 qi_install_header(${PORT_HEADERS_TR1} SUBFOLDER libport/tr1)
 
+if (USE_BOOST_CORO)
+  add_definitions(-DSCHED_USE_BOOST_CORO)
+  set(SCHED_DEPS BOOST_COROUTINE)
+else()
+  set(SCHED_EXTRA_SOURCES
+    lib/sched/libcoroutine/Base.h
+    lib/sched/libcoroutine/Coro.cc
+    lib/sched/libcoroutine/context.cc
+  )
+endif()
+
 set(SCHED_SOURCES
+${SCHED_EXTRA_SOURCES}
 lib/sched/configuration.cc
 lib/sched/coroutine-hooks.cc
 lib/sched/job.cc
-lib/sched/libcoroutine/Base.h
-lib/sched/libcoroutine/Coro.cc
-lib/sched/libcoroutine/context.cc
 lib/sched/scheduler.cc
 lib/sched/tag.cc
 lib/sched/uclibc-workaround.cc
@@ -364,6 +373,7 @@ include/sched/exception.hh
 include/sched/coroutine.hh
 include/sched/local.mk
 include/sched/exception.hxx
+include/sched/coroutine-boost.hxx
 include/sched/coroutine-hooks.hh
 include/sched/coroutine-coro.hxx
 include/sched/scheduler.hxx
@@ -438,7 +448,7 @@ qi_stage_lib(port)
 qi_create_lib(sched
   SRC ${SCHED_SOURCES}
   SHARED
-  DEPENDS port BOOST BOOST_SIGNALS BOOST_THREAD BOOST_CHRONO)
+  DEPENDS port BOOST BOOST_SIGNALS BOOST_THREAD BOOST_CHRONO ${SCHED_DEPS})
 
 set_target_properties(sched
   PROPERTIES

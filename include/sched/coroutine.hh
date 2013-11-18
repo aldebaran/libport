@@ -22,7 +22,12 @@
 // the library, otherwise they are inlined.
 #  define SCHED_CORO_API SCHED_API
 # else
-#  include <sched/libcoroutine/Coro.h>
+#  if defined SCHED_USE_BOOST_CORO
+#   include <boost/context/all.hpp>
+typedef boost::context::fcontext_t Coro;
+#  else
+#   include <sched/libcoroutine/Coro.h>
+#  endif
 #  define SCHED_CORO_API
 # endif
 
@@ -91,5 +96,9 @@ SCHED_CORO_API
 Coro* coroutine_main();
 
 # include <sched/coroutine.hxx>
+
+#ifdef SCHED_USE_BOOST_CORO
+# include <sched/coroutine-boost.hxx>
+#endif
 
 #endif // SCHED_COROUTINE_HH
