@@ -19,8 +19,8 @@
 
 # include <libport/config.h>
 
-# ifdef LIBPORT_HAVE_TR1_TYPE_TRAITS
-#  include <tr1/type_traits>
+# if defined(LIBPORT_HAVE_TR1_TYPE_TRAITS) || (_MSC_VER >= 1700)
+#  include <type_traits>
 #  define BOOST_TR1_TYPE_TRAITS_HPP_INCLUDED
 # else
 #  include <boost/tr1/type_traits.hpp>
