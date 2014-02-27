@@ -13,7 +13,7 @@
 
 # include <libport/detect-win32.h>
 
-# if defined WIN32
+# if defined(WIN32) && (_MSC_VER < 1700)
 #  undef isascii
 #  undef isblank
 

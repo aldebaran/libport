@@ -8,7 +8,7 @@
  * See the LICENSE file for more information.
  */
 
-#if defined WIN32
+#if defined(WIN32) && (_MSC_VER < 1700)
 
 extern "C"
 {
