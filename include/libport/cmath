@@ -36,6 +36,9 @@
   "Either include <libport/cmath> first, or #define _USE_MATH_DEFINES before yourself."
 #  endif
 
+
+#if (_MSC_VER < 1700)
+
 namespace std
 {
 
@@ -55,6 +58,8 @@ namespace std
 #  undef LIBPORT_BOUNCE
 
 }
+
+#endif
 
 # endif // ! defined _MSC_VER
 
