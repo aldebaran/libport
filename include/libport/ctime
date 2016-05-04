@@ -23,7 +23,7 @@
 | timespec.  |
 `-----------*/
 
-# if defined WIN32
+# if defined WIN32 && (_MSC_VER < 1900)
 struct timespec
 {
   time_t tv_sec;

@@ -29,7 +29,7 @@ These defines are helpful for doing OS specific checks in the code.
 
 #if defined(WIN32) || defined(__WINS__) || defined(__MINGW32__) || defined(_MSC_VER)
 #define inline __inline
-#if defined _MSC_VER
+#if  (_MSC_VER < 1900)
 # define snprintf _snprintf
 #endif
 #define usleep(x) Sleep(((x)+999)/1000)
