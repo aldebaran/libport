@@ -38,7 +38,7 @@ namespace sched
 /// Define an optional field Name, and accessors.
 #define ADD_FIELD(Type, Name)						\
  public:                                                                \
-   bool Name ## _is_set() const { return Name ## _; };			\
+   bool Name ## _is_set() const { return bool(Name ## _); };			\
    const Type& Name ## _get() const { return Name ## _ .get(); };	\
    void Name ## _set(const Type& data) { Name ## _ = data; };		\
  private:								\
